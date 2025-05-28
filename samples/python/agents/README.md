@@ -14,6 +14,10 @@ Sample agent to (mock) fill out expense reports. Showcases multi-turn interactio
 * [**AG2 MCP Agent with A2A Protocol**](/samples/python/agents/ag2/README.md)  
 Demonstrates an MCP-enabled agent built with [AG2](https://github.com/ag2ai/ag2) that is exposed through the A2A protocol.
 
+
+* [**Azure AI Foundry Agent Service**](/samples/python/agents/azureaifoundry_sdk/azurefoundryagent/README.md)  
+Sample agent build with [Azure AI Foundry Agent Service](https://learn.microsoft.com/en-us/azure/ai-services/agents/overview)
+
 * [**LangGraph**](/samples/python/agents/langgraph/README.md)  
 Sample agent which can convert currency using tools. Showcases multi-turn interactions, tool usage, and streaming updates. 
 

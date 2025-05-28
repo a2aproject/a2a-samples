@@ -17,7 +17,6 @@ from a2a.types import (
 from a2a.utils import new_agent_text_message, new_task
 from a2a.utils.errors import ServerError
 from a2a_mcp.common.base_agent import BaseAgent
-from typing_extensions import override
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +28,6 @@ class GenericAgentExecutor(AgentExecutor):
     def __init__(self, agent: BaseAgent):
         self.agent = agent
 
-    @override
     async def execute(
         self,
         context: RequestContext,
@@ -103,7 +101,7 @@ class GenericAgentExecutor(AgentExecutor):
     def _validate_request(self, context: RequestContext) -> bool:
         return False
 
-    @override
+
     async def cancel(
         self, request: RequestContext, event_queue: EventQueue
     ) -> Task | None:

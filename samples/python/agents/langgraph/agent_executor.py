@@ -18,7 +18,6 @@ from a2a.utils import (
 )
 from a2a.utils.errors import ServerError
 from agent import CurrencyAgent
-from typing_extensions import override
 
 
 logging.basicConfig(level=logging.INFO)

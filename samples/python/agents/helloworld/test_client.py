@@ -80,19 +80,16 @@ async def main() -> None:
 
         response = await client.send_message(request)
         print(response.model_dump(mode='json', exclude_none=True))
-        # The HelloWorld agent doesn't support streaming requests. Validate
-        # this throws an error.
-        try:
-            streaming_request = SendStreamingMessageRequest(
+       
+        streaming_request = SendStreamingMessageRequest(
                 params=MessageSendParams(**send_message_payload)
             )
 
-            stream_response = client.send_message_streaming(streaming_request)
-            print("Got an unexpected response:")
-            async for chunk in stream_response:
-                print(chunk.model_dump(mode='json', exclude_none=True))
-        except Exception:
-          pass
+        stream_response = client.send_message_streaming(streaming_request)
+        
+        async for chunk in stream_response:
+            print(chunk.model_dump(mode='json', exclude_none=True))
+        
 
 
 if __name__ == '__main__':

@@ -26,7 +26,6 @@ from agents.llama_index_file_chat.agent import (
     LogEvent,
     ParseAndChat,
 )
-from typing_extensions import override
 
 
 logger = logging.getLogger(__name__)

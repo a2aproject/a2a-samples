@@ -10,12 +10,10 @@ from a2a.types import (
 )
 from a2a.utils import (
     new_agent_text_message,
-    new_data_artifact,
     new_task,
     new_text_artifact,
 )
 from agent import SemanticKernelTravelAgent
-from typing_extensions import override
 
 
 logging.basicConfig(level=logging.INFO)

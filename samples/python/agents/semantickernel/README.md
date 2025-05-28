@@ -53,16 +53,39 @@ sequenceDiagram
 cd samples/python/agents/semantickernel
 ```
 
-2. **Create an environment file (.env) with your API key and the model ID (e.g., "gpt-4.1"):**:
+2. **Configure environment variables**:
+
+Create a `.env` file based on `.envexample` file. The agent automatically detects whether to use Azure OpenAI or standard OpenAI based on which environment variables are set.
+
+**For OpenAI:**
 
 ```bash
 OPENAI_API_KEY="your_api_key_here"
 OPENAI_CHAT_MODEL_ID="your-model-id"
 ```
 
+**For Azure OpenAI (default):**
+
+```bash
+AZURE_OPENAI_API_KEY="your-azure-api-key-here"
+AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
+AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="your-deployment-name"
+AZURE_OPENAI_API_VERSION="2024-12-01-preview"
+```
+
+> [!NOTE]
+> The agent will use Azure OpenAI if all four Azure variables are set, otherwise it will use standard OpenAI if both OpenAI variables are set.
+
+> [!NOTE]
+> Other LLMs can be used as well, but you will need to modify the code to use the appropriate AI connector via the chat completion service method. See Semantic Kernel [documentation](https://learn.microsoft.com/en-us/semantic-kernel/concepts/ai-services/chat-completion/?tabs=csharp-AzureOpenAI%2Cpython-AzureOpenAI%2Cjava-AzureOpenAI&pivots=programming-language-python#creating-a-chat-completion-service) for more details on how to configure other AI services.
+
+> [!NOTE]
+> For details on environment variables, refer to the [Semantic Kernel AI Service Settings](https://github.com/microsoft/semantic-kernel/blob/main/python/samples/concepts/setup/ALL_SETTINGS.md#semantic-kernel-settings) document.
+
 3. **Set up the Python Environment**:
 
-> Note: pin the Python version to your desired version (3.10+)
+> [!NOTE]
+> pin the Python version to your desired version (3.10+)
 
 ```bash
 uv python pin 3.12
@@ -73,6 +96,7 @@ source .venv/bin/activate
 
 Choose one of the following options:
 
+> [!NOTE]
 > Make sure you run `uv run .` from the following directory: `samples/python/agents/semantickernel`
 
 ```bash
@@ -88,6 +112,7 @@ uv run . --host 0.0.0.0 --port 8080
 
 5. **In a separate terminal, run the A2A client**:
 
+> [!NOTE]
 > Make sure you run `uv run . --agent http://localhost:10020` from the following directory: `samples/python/hosts/cli`
 
 ```bash

@@ -1,16 +1,16 @@
 [project]
-name = "adk-auth-example"
+name = "helloworld"
 version = "0.1.0"
-description = "Calendar agent example"
+description = "HelloWorld agent example that only returns Messages"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "a2a-sdk",
+    "a2a-sdk>=0.2.5",
     "click>=8.1.8",
     "dotenv>=0.9.9",
     "httpx>=0.28.1",
-    "google-genai>=1.9.0",
-    "google-adk>=1.0.0",
+    "langchain-google-genai>=2.1.4",
+    "langgraph>=0.4.1",
     "pydantic>=2.11.4",
     "python-dotenv>=1.1.0",
     "uvicorn>=0.34.2",
@@ -18,9 +18,6 @@ dependencies = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
-
-[tool.uv.sources]
-a2a-sdk = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

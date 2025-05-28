@@ -8,7 +8,6 @@ from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore, InMemoryPushNotifier
 from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent_executor import SemanticKernelTravelAgentExecutor
-from common.types import AgentCapabilities, AgentCard, AgentSkill
 from dotenv import load_dotenv
 
 

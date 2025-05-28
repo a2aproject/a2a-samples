@@ -14,7 +14,6 @@ from a2a.utils import (
     new_task,
     new_text_artifact,
 )
-from typing_extensions import override
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

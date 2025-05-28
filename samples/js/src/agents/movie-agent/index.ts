@@ -1,181 +1,306 @@
+import express from "express";
+import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs
+
 import {
-  A2AServer,
-  TaskContext,
-  TaskYieldUpdate,
-  schema
+  InMemoryTaskStore,
+  TaskStore,
+  schema,
+  A2AExpressApp,
+  AgentExecutor,
+  RequestContext,
+  IExecutionEventBus,
+  DefaultRequestHandler
 } from "../../server/index.js";
 import { MessageData } from "genkit";
 import { ai } from "./genkit.js";
 import { searchMovies, searchPeople } from "./tools.js";
 
-if (!process.env.GEMINI_API_KEY || !process.env.TMDB_API_KEY) {  
+if (!process.env.GEMINI_API_KEY || !process.env.TMDB_API_KEY) {
   console.error("GEMINI_API_KEY and TMDB_API_KEY environment variables are required")
   process.exit(1);
 }
 
-// Load the prompt defined in movie_agent.prompt
-const movieAgentPrompt = ai.prompt("movie_agent");
+// Simple store for contexts
+const contexts: Map<string, schema.Message[]> = new Map();
+
+// Load the Genkit prompt
+const movieAgentPrompt = ai.prompt('movie_agent');
 
 /**
- * Task Handler for the Movie Agent.
+ * MovieAgentExecutor implements the agent's core logic.
  */
-async function* movieAgentHandler(
-  context: TaskContext
-): AsyncGenerator<TaskYieldUpdate> {
-  console.log(
-    `[MovieAgent] Processing task ${context.task.id} with state ${context.task.status.state}`
-  );
+class MovieAgentExecutor implements AgentExecutor {
+  async execute(
+    requestContext: RequestContext,
+    eventBus: IExecutionEventBus
+  ): Promise<void> {
+    const userMessage = requestContext.userMessage;
+    const existingTask = requestContext.task;
 
-  // Yield an initial "working" status
-  yield {
-    state: "working",
-    message: {
-      role: "agent",
-      parts: [{ type:"text", text: "Processing your question, hang tight!" }],
-    },
-  };
-
-  // Prepare messages for Genkit prompt using the full history from context
-  const messages: MessageData[] = (context.history ?? []) // Use history if available, default to empty array
-    .map((m) => ({
-      // Map roles explicitly and assert the type for Genkit
-      role: (m.role === "agent" ? "model" : "user") as "user" | "model",
-      content: m.parts
-        .filter((p): p is schema.TextPart => !!(p as schema.TextPart).text) // Filter for text parts
-        .map((p) => ({
-          text: p.text,
-        })),
-    }))
-    // Filter out messages with no text content after mapping
-    .filter((m) => m.content.length > 0);
-
-  // Add a check in case history was empty or only contained non-text parts
-  if (messages.length === 0) {
-    console.warn(
-      `[MovieAgent] No valid text messages found in history for task ${context.task.id}. Cannot proceed.`
-    );
-    yield {
-      state: "failed",
-      message: {
-        role: "agent",
-        parts: [{ type:"text", text: "No message found to process." }],
-      },
-    };
-    return; // Stop processing
-  }
-
-  // Include the goal from the initial task metadata if available
-  const goal = context.task.metadata?.goal as string | undefined;
-
-  try {
-    // Run the Genkit prompt
-    const response = await movieAgentPrompt(
-      { goal: goal, now: new Date().toISOString() }, // Pass goal from metadata
-      {
-        messages,
-        tools: [searchMovies, searchPeople],
-      }
-    );
-
-    const responseText = response.text; // Access the text property directly
-    const lines = responseText.trim().split("\n");
-    const finalStateLine = lines.at(-1)?.trim().toUpperCase(); // Get last line, uppercase for robust comparison
-    const agentReply = lines
-      .slice(0, lines.length - 1)
-      .join("\n")
-      .trim(); // Get all lines except the last
-
-    let finalState: schema.TaskState = "unknown";
-
-    // Map prompt output instruction to A2A TaskState
-    if (finalStateLine === "COMPLETED") {
-      finalState = "completed";
-    } else if (finalStateLine === "AWAITING_USER_INPUT") {
-      finalState = "input-required";
-    } else {
-      console.warn(
-        `[MovieAgent] Unexpected final state line from prompt: ${finalStateLine}. Defaulting to 'completed'.`
-      );
-      // If the LLM didn't follow instructions, default to completed
-      finalState = "completed";
-    }
-
-    // Yield the final result
-    yield {
-      state: finalState,
-      message: {
-        role: "agent",
-        parts: [{ type: "text", text: agentReply }],
-      },
-    };
+    // Determine IDs for the task and context
+    const taskId = existingTask?.id || uuidv4();
+    const contextId = userMessage.contextId || existingTask?.contextId || uuidv4(); // DefaultRequestHandler should ensure userMessage.contextId
 
     console.log(
-      `[MovieAgent] Task ${context.task.id} finished with state: ${finalState}`
+      `[MovieAgentExecutor] Processing message ${userMessage.messageId} for task ${taskId} (context: ${contextId})`
     );
-  } catch (error: any) {
-    console.error(
-      `[MovieAgent] Error processing task ${context.task.id}:`,
-      error
-    );
-    // Yield a failed state if the prompt execution fails
-    yield {
-      state: "failed",
-      message: {
-        role: "agent",
-        parts: [{ type: "text", text: `Agent error: ${error.message}` }],
+
+    // 1. Publish initial Task event if it's a new task
+    if (!existingTask) {
+      const initialTask: schema.Task = {
+        kind: 'task',
+        id: taskId,
+        contextId: contextId,
+        status: {
+          state: schema.TaskState.Submitted,
+          timestamp: new Date().toISOString(),
+        },
+        history: [userMessage], // Start history with the current user message
+        metadata: userMessage.metadata, // Carry over metadata from message if any
+      };
+      eventBus.publish(initialTask);
+    }
+
+    // 2. Publish "working" status update
+    const workingStatusUpdate: schema.TaskStatusUpdateEvent = {
+      kind: 'status-update',
+      taskId: taskId,
+      contextId: contextId,
+      status: {
+        state: schema.TaskState.Working,
+        message: {
+          kind: 'message',
+          role: 'agent',
+          messageId: uuidv4(),
+          parts: [{ kind: 'text', text: 'Processing your question, hang tight!' }],
+          taskId: taskId,
+          contextId: contextId,
+        },
+        timestamp: new Date().toISOString(),
       },
+      final: false,
     };
+    eventBus.publish(workingStatusUpdate);
+
+    // 3. Prepare messages for Genkit prompt
+    const historyForGenkit = contexts.get(contextId) || [];
+    if (!historyForGenkit.find(m => m.messageId === userMessage.messageId)) {
+      historyForGenkit.push(userMessage);
+    }
+    contexts.set(contextId, historyForGenkit)
+
+    const messages: MessageData[] = historyForGenkit
+      .map((m) => ({
+        role: (m.role === 'agent' ? 'model' : 'user') as 'user' | 'model',
+        content: m.parts
+          .filter((p): p is schema.TextPart => p.kind === 'text' && !!(p as schema.TextPart).text)
+          .map((p) => ({
+            text: (p as schema.TextPart).text,
+          })),
+      }))
+      .filter((m) => m.content.length > 0);
+
+    if (messages.length === 0) {
+      console.warn(
+        `[MovieAgentExecutor] No valid text messages found in history for task ${taskId}.`
+      );
+      const failureUpdate: schema.TaskStatusUpdateEvent = {
+        kind: 'status-update',
+        taskId: taskId,
+        contextId: contextId,
+        status: {
+          state: schema.TaskState.Failed,
+          message: {
+            kind: 'message',
+            role: 'agent',
+            messageId: uuidv4(),
+            parts: [{ kind: 'text', text: 'No message found to process.' }],
+            taskId: taskId,
+            contextId: contextId,
+          },
+          timestamp: new Date().toISOString(),
+        },
+        final: true,
+      };
+      eventBus.publish(failureUpdate);
+      return;
+    }
+
+    const goal = existingTask?.metadata?.goal as string | undefined || userMessage.metadata?.goal as string | undefined;
+
+    try {
+      // 4. Run the Genkit prompt
+      const response = await movieAgentPrompt(
+        { goal: goal, now: new Date().toISOString() },
+        {
+          messages,
+          tools: [searchMovies, searchPeople],
+        }
+      );
+
+      // Check if the request has been cancelled
+      if (requestContext.isCancelled()) {
+        console.log(`[MovieAgentExecutor] Request cancelled for task: ${taskId}`);
+
+        const cancelledUpdate: schema.TaskStatusUpdateEvent = {
+          kind: 'status-update',
+          taskId: taskId,
+          contextId: contextId,
+          status: {
+            state: schema.TaskState.Canceled,
+            timestamp: new Date().toISOString(),
+          },
+          final: true, // Cancellation is a final state
+        };
+        eventBus.publish(cancelledUpdate);
+        return;
+      }
+
+      const responseText = response.text; // Access the text property using .text()
+      console.info(`[MovieAgentExecutor] Prompt response: ${responseText}`);
+      const lines = responseText.trim().split('\n');
+      const finalStateLine = lines.at(-1)?.trim().toUpperCase();
+      const agentReplyText = lines.slice(0, lines.length - 1).join('\n').trim();
+
+      let finalA2AState: schema.TaskState = schema.TaskState.Unknown;
+
+      if (finalStateLine === 'COMPLETED') {
+        finalA2AState = schema.TaskState.Completed;
+      } else if (finalStateLine === 'AWAITING_USER_INPUT') {
+        finalA2AState = schema.TaskState.InputRequired;
+      } else {
+        console.warn(
+          `[MovieAgentExecutor] Unexpected final state line from prompt: ${finalStateLine}. Defaulting to 'completed'.`
+        );
+        finalA2AState = schema.TaskState.Completed; // Default if LLM deviates
+      }
+
+      // 5. Publish final task status update
+      const agentMessage: schema.Message = {
+        kind: 'message',
+        role: 'agent',
+        messageId: uuidv4(),
+        parts: [{ kind: 'text', text: agentReplyText || "Completed." }], // Ensure some text
+        taskId: taskId,
+        contextId: contextId,
+      };
+      historyForGenkit.push(agentMessage);
+      contexts.set(contextId, historyForGenkit)
+
+      const finalUpdate: schema.TaskStatusUpdateEvent = {
+        kind: 'status-update',
+        taskId: taskId,
+        contextId: contextId,
+        status: {
+          state: finalA2AState,
+          message: agentMessage,
+          timestamp: new Date().toISOString(),
+        },
+        final: true,
+      };
+      eventBus.publish(finalUpdate);
+
+      console.log(
+        `[MovieAgentExecutor] Task ${taskId} finished with state: ${finalA2AState}`
+      );
+
+    } catch (error: any) {
+      console.error(
+        `[MovieAgentExecutor] Error processing task ${taskId}:`,
+        error
+      );
+      const errorUpdate: schema.TaskStatusUpdateEvent = {
+        kind: 'status-update',
+        taskId: taskId,
+        contextId: contextId,
+        status: {
+          state: schema.TaskState.Failed,
+          message: {
+            kind: 'message',
+            role: 'agent',
+            messageId: uuidv4(),
+            parts: [{ kind: 'text', text: `Agent error: ${error.message}` }],
+            taskId: taskId,
+            contextId: contextId,
+          },
+          timestamp: new Date().toISOString(),
+        },
+        final: true,
+      };
+      eventBus.publish(errorUpdate);
+    }
   }
 }
 
 // --- Server Setup ---
 
 const movieAgentCard: schema.AgentCard = {
-  name: "Movie Agent",
-  description:
-    "An agent that can answer questions about movies and actors using TMDB.",
-  url: "http://localhost:41241", // Default port used in the script
+  name: 'Movie Agent',
+  description: 'An agent that can answer questions about movies and actors using TMDB.',
+  // Adjust the base URL and port as needed. /a2a is the default base in A2AExpressApp
+  url: 'http://localhost:41241/', // Example: if baseUrl in A2AExpressApp 
   provider: {
-    organization: "A2A Samples",
+    organization: 'A2A Samples',
+    url: 'https://example.com/a2a-samples' // Added provider URL
   },
-  version: "0.0.1",
+  version: '0.0.2', // Incremented version
   capabilities: {
-    // Although it yields multiple updates, it doesn't seem to implement full A2A streaming via TaskYieldUpdate artifacts
-    // It uses Genkit streaming internally, but the A2A interface yields start/end messages.
-    // State history seems reasonable as it processes history.
-    streaming: false,
-    pushNotifications: false,
-    stateTransitionHistory: true,
+    streaming: true, // The new framework supports streaming
+    pushNotifications: false, // Assuming not implemented for this agent yet
+    stateTransitionHistory: true, // Agent uses history
   },
-  authentication: null,
-  defaultInputModes: ["text"],
-  defaultOutputModes: ["text"],
+  // authentication: null, // Property 'authentication' does not exist on type 'AgentCard'.
+  securitySchemes: undefined, // Or define actual security schemes if any
+  security: undefined,
+  defaultInputModes: ['text'],
+  defaultOutputModes: ['text', 'task-status'], // task-status is a common output mode
   skills: [
     {
-      id: "general_movie_chat",
-      name: "General Movie Chat",
-      description:
-        "Answer general questions or chat about movies, actors, directors.",
-      tags: ["movies", "actors", "directors"],
+      id: 'general_movie_chat',
+      name: 'General Movie Chat',
+      description: 'Answer general questions or chat about movies, actors, directors.',
+      tags: ['movies', 'actors', 'directors'],
       examples: [
-        "Tell me about the plot of Inception.",
-        "Recommend a good sci-fi movie.",
-        "Who directed The Matrix?",
-        "What other movies has Scarlett Johansson been in?",
-        "Find action movies starring Keanu Reeves",
-        "Which came out first, Jurassic Park or Terminator 2?",
+        'Tell me about the plot of Inception.',
+        'Recommend a good sci-fi movie.',
+        'Who directed The Matrix?',
+        'What other movies has Scarlett Johansson been in?',
+        'Find action movies starring Keanu Reeves',
+        'Which came out first, Jurassic Park or Terminator 2?',
       ],
+      inputModes: ['text'], // Explicitly defining for skill
+      outputModes: ['text', 'task-status'] // Explicitly defining for skill
     },
-    // The specific tools are used internally by the Genkit agent,
-    // but from the A2A perspective, it exposes one general chat skill.
   ],
+  supportsAuthenticatedExtendedCard: false,
 };
 
-// Create server with the task handler. Defaults to InMemoryTaskStore.
-const server = new A2AServer(movieAgentHandler, { card: movieAgentCard });
+async function main() {
+  // 1. Create TaskStore
+  const taskStore: TaskStore = new InMemoryTaskStore();
 
-// Start the server
-server.start(); // Defaults to port 41241
+  // 2. Create AgentExecutor
+  const agentExecutor: AgentExecutor = new MovieAgentExecutor();
 
-console.log("[MovieAgent] Server started on http://localhost:41241");
-console.log("[MovieAgent] Press Ctrl+C to stop the server");
+  // 3. Create DefaultRequestHandler
+  const requestHandler = new DefaultRequestHandler(
+    movieAgentCard,
+    taskStore,
+    agentExecutor
+  );
+
+  // 4. Create and setup A2AExpressApp
+  const appBuilder = new A2AExpressApp(requestHandler);
+  const expressApp = appBuilder.setupRoutes(express());
+
+  // 5. Start the server
+  const PORT = process.env.PORT || 41241;
+  expressApp.listen(PORT, () => {
+    console.log(`[MovieAgent] Server using new framework started on http://localhost:${PORT}`);
+    console.log(`[MovieAgent] Agent Card: http://localhost:${PORT}/.well-known/agent.json`);
+    console.log('[MovieAgent] Press Ctrl+C to stop the server');
+  });
+}
+
+main().catch(console.error);
+

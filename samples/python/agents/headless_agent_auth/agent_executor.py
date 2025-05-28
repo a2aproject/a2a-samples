@@ -1,5 +1,4 @@
 from agent import HRAgent
-from typing_extensions import override
 
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events.event_queue import EventQueue
@@ -19,7 +18,7 @@ class HRAgentExecutor(AgentExecutor):
     def __init__(self):
         self.agent = HRAgent()
 
-    @override
+    
     async def execute(
         self,
         context: RequestContext,
@@ -77,7 +76,7 @@ class HRAgentExecutor(AgentExecutor):
                     )
                 )
 
-    @override
+    
     async def cancel(
         self, request: RequestContext, event_queue: EventQueue
     ) -> Task | None:

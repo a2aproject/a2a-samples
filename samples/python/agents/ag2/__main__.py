@@ -1,9 +1,7 @@
 import logging
 import os
-import sys
 
 import click
-import httpx
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler

@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+from enum import Enum
 
 from collections.abc import AsyncIterable
 from typing import TYPE_CHECKING, Annotated, Any, Literal
@@ -11,6 +12,7 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
 from semantic_kernel.connectors.ai.open_ai import (
+    AzureChatCompletion,
     OpenAIChatCompletion,
     OpenAIChatPromptExecutionSettings,
 )
@@ -22,13 +24,126 @@ from semantic_kernel.contents import (
 )
 from semantic_kernel.functions import KernelArguments, kernel_function
 
-
 if TYPE_CHECKING:
     from semantic_kernel.contents import ChatMessageContent
+    from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
 
 logger = logging.getLogger(__name__)
 
 load_dotenv()
+
+# region Chat Service Configuration
+
+
+class ChatServices(str, Enum):
+    """Enum for supported chat completion services."""
+    
+    AZURE_OPENAI = "azure_openai"
+    OPENAI = "openai"
+
+
+service_id = "default"
+
+
+def get_chat_completion_service(service_name: ChatServices) -> "ChatCompletionClientBase":
+    """Return an appropriate chat completion service based on the service name.
+    
+    Args:
+        service_name (ChatServices): Service name.
+        
+    Returns:
+        ChatCompletionClientBase: Configured chat completion service.
+        
+    Raises:
+        ValueError: If the service name is not supported or required environment variables are missing.
+    """
+    if service_name == ChatServices.AZURE_OPENAI:
+        return _get_azure_openai_chat_completion_service()
+    elif service_name == ChatServices.OPENAI:
+        return _get_openai_chat_completion_service()
+    else:
+        raise ValueError(f"Unsupported service name: {service_name}")
+
+
+def _get_azure_openai_chat_completion_service() -> AzureChatCompletion:
+    """Return Azure OpenAI chat completion service.
+    
+    Returns:
+        AzureChatCompletion: The configured Azure OpenAI service.
+        
+    Raises:
+        ValueError: If required environment variables are not set.
+    """
+    required_env_vars = {
+        'AZURE_OPENAI_ENDPOINT': os.getenv('AZURE_OPENAI_ENDPOINT'),
+        'AZURE_OPENAI_API_KEY': os.getenv('AZURE_OPENAI_API_KEY'),
+        'AZURE_OPENAI_CHAT_DEPLOYMENT_NAME': os.getenv('AZURE_OPENAI_CHAT_DEPLOYMENT_NAME'),
+        'AZURE_OPENAI_API_VERSION': os.getenv('AZURE_OPENAI_API_VERSION')
+    }
+    
+    missing_vars = [var_name for var_name, var_value in required_env_vars.items() if not var_value]
+    if missing_vars:
+        raise ValueError(
+            f"Missing required Azure OpenAI environment variables: {', '.join(missing_vars)}"
+        )
+    
+    return AzureChatCompletion(service_id=service_id)
+
+
+def _get_openai_chat_completion_service() -> OpenAIChatCompletion:
+    """Return OpenAI chat completion service.
+    
+    Returns:
+        OpenAIChatCompletion: Configured OpenAI service.
+        
+    Raises:
+        ValueError: If required environment variables are not set.
+    """
+    required_env_vars = {
+        'OPENAI_API_KEY': os.getenv('OPENAI_API_KEY'),
+        'OPENAI_MODEL_ID': os.getenv('OPENAI_MODEL_ID')
+    }
+    
+    missing_vars = [var_name for var_name, var_value in required_env_vars.items() if not var_value]
+    if missing_vars:
+        raise ValueError(
+            f"Missing required OpenAI environment variables: {', '.join(missing_vars)}"
+        )
+    
+    return OpenAIChatCompletion(service_id=service_id)
+
+
+def auto_detect_chat_service() -> "ChatCompletionClientBase":
+    """Auto-detect and return an appropriate chat completion service based on available environment variables set in the .env file.
+    
+    Returns:
+        ChatCompletionClientBase: The first available and properly configured chat service.
+        
+    Raises:
+        ValueError: If no supported service configuration is found.
+    """
+    # Try Azure OpenAI first
+    try:
+        return get_chat_completion_service(ChatServices.AZURE_OPENAI)
+    except ValueError:
+        pass
+    
+    # Try OpenAI next
+    try:
+        return get_chat_completion_service(ChatServices.OPENAI)
+    except ValueError:
+        pass
+    
+    # If no chat completion service is available, raise an error
+    raise ValueError(
+        "No supported chat completion service configuration found. "
+        "Please set either Azure OpenAI environment variables "
+        "(AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_API_KEY, AZURE_OPENAI_CHAT_DEPLOYMENT_NAME, AZURE_OPENAI_API_VERSION) "
+        "or OpenAI environment variables (OPENAI_API_KEY, OPENAI_MODEL_ID)."
+    )
+
+
+# endregion
 
 # region Plugin
 
@@ -65,7 +180,7 @@ class CurrencyPlugin:
             rate = data['rates'][currency_to]
             return f'1 {currency_from} = {rate} {currency_to}'
         except Exception as e:
-            return f'Currency API call failed: {str(e)}'
+            return f'Currency API call failed: {e!s}'
 
 
 # endregion
@@ -93,18 +208,14 @@ class SemanticKernelTravelAgent:
     SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
 
     def __init__(self):
-        api_key = os.getenv('OPENAI_API_KEY', None)
-        if not api_key:
-            raise ValueError('OPENAI_API_KEY environment variable not set.')
-
-        model_id = os.getenv('OPENAI_CHAT_MODEL_ID', 'gpt-4.1')
-
-        # Define a CurrencyExchangeAgent to handle currency-related tasks
+        # Auto-detect and configure the chat completion service
+        # To explicitly specify a service, use: 
+        # chat_service = get_chat_completion_service(ChatServices.AZURE_OPENAI)
+        # or chat_service = get_chat_completion_service(ChatServices.OPENAI)
+        chat_service = auto_detect_chat_service()
+            
         currency_exchange_agent = ChatCompletionAgent(
-            service=OpenAIChatCompletion(
-                api_key=api_key,
-                ai_model_id=model_id,
-            ),
+            service=chat_service,
             name='CurrencyExchangeAgent',
             instructions=(
                 'You specialize in handling currency-related requests from travelers. '
@@ -117,10 +228,7 @@ class SemanticKernelTravelAgent:
 
         # Define an ActivityPlannerAgent to handle activity-related tasks
         activity_planner_agent = ChatCompletionAgent(
-            service=OpenAIChatCompletion(
-                api_key=api_key,
-                ai_model_id=model_id,
-            ),
+            service=chat_service,
             name='ActivityPlannerAgent',
             instructions=(
                 'You specialize in planning and recommending activities for travelers. '
@@ -133,10 +241,7 @@ class SemanticKernelTravelAgent:
 
         # Define the main TravelManagerAgent to delegate tasks to the appropriate agents
         self.agent = ChatCompletionAgent(
-            service=OpenAIChatCompletion(
-                api_key=api_key,
-                ai_model_id=model_id,
-            ),
+            service=chat_service,
             name='TravelManagerAgent',
             instructions=(
                 "Your role is to carefully analyze the traveler's request and forward it to the appropriate agent based on the "

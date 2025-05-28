@@ -7,7 +7,6 @@ from a2a.types import InternalError, TaskState, UnsupportedOperationError
 from a2a.utils import new_agent_text_message, new_task
 from a2a.utils.errors import ServerError
 from agent import MindsDBAgent
-from typing_extensions import override
 
 
 logging.basicConfig(level=logging.INFO)
