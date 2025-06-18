@@ -1,6 +1,6 @@
 # type: ignore
 
-from typing import Any, List, Literal, Optional, Union
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -21,56 +21,53 @@ class PlannerTask(BaseModel):
     description: str = Field(
         description='Clear description of the task to be executed.'
     )
-    status: Optional[
-        Union[
-            Any,
-            Literal[
-                'input_required',
-                'completed',
-                'error',
-                'pending',
-                'incomplete',
-                'todo',
-                'not_started',
-            ],
+    status: (
+        Any
+        | Literal[
+            'input_required',
+            'completed',
+            'error',
+            'pending',
+            'incomplete',
+            'todo',
+            'not_started',
         ]
-    ] = Field(description='Status of the task', default='input_required')
+        | None
+    ) = Field(description='Status of the task', default='input_required')
 
 
 class TripInfo(BaseModel):
     """Trip Info."""
 
-    total_budget: Optional[str] = Field(description='Total Budget for the trip')
-    origin: Optional[str] = Field(description='Trip Origin')
-    destination: Optional[str] = Field(description='Trip destination')
-    type: Optional[str] = Field(description='Trip type, business or leisure')
-    start_date: Optional[str] = Field(description='Trip Start Date')
-    end_date: Optional[str] = Field(description='Trip End Date')
-    travel_class: Optional[str] = Field(
+    total_budget: str | None = Field(description='Total Budget for the trip')
+    origin: str | None = Field(description='Trip Origin')
+    destination: str | None = Field(description='Trip destination')
+    type: str | None = Field(description='Trip type, business or leisure')
+    start_date: str | None = Field(description='Trip Start Date')
+    end_date: str | None = Field(description='Trip End Date')
+    travel_class: str | None = Field(
         description='Travel class, first, business or economy'
     )
-    accomodation_type: Optional[str] = Field(
+    accomodation_type: str | None = Field(
         description='Luxury Hotel, Budget Hotel, AirBnB, etc'
     )
-    room_type: Optional[str] = Field(description='Suite, Single, Double etc.')
-    is_car_rental_required: Optional[str] = Field(
+    room_type: str | None = Field(description='Suite, Single, Double etc.')
+    is_car_rental_required: str | None = Field(
         description='Whether a rental car is required in the trip.'
     )
-    type_of_car: Optional[str] = Field(
+    type_of_car: str | None = Field(
         description='Type of the car, SUV, Sedan, Truck etc.'
     )
-    no_of_travellers: Optional[str] = Field(
+    no_of_travellers: str | None = Field(
         description='Total number of travellers in the trip'
     )
 
-    checkin_date: Optional[str] = Field(description='Hotel Checkin Date')
-    checkout_date: Optional[str] = Field(description='Hotel Checkout Date')
-    car_rental_start_date: Optional[str] = Field(
+    checkin_date: str | None = Field(description='Hotel Checkin Date')
+    checkout_date: str | None = Field(description='Hotel Checkout Date')
+    car_rental_start_date: str | None = Field(
         description='Car Rental Start Date'
     )
-    car_rental_end_date: Optional[str] = Field(
-        description='Car Rental End Date'
-    )
+    car_rental_end_date: str | None = Field(description='Car Rental End Date')
 
     @model_validator(mode='before')
     @classmethod
@@ -93,13 +90,13 @@ class TripInfo(BaseModel):
 class TaskList(BaseModel):
     """Output schema for the Planner Agent."""
 
-    original_query: Optional[str] = Field(
+    original_query: str | None = Field(
         description='The original user query for context.'
     )
 
-    trip_info: Optional[TripInfo] = Field(description='Trip information')
+    trip_info: TripInfo | None = Field(description='Trip information')
 
-    tasks: List[PlannerTask] = Field(
+    tasks: list[PlannerTask] = Field(
         description='A list of tasks to be executed sequentially.'
     )
 
@@ -107,9 +104,7 @@ class TaskList(BaseModel):
 class AgentResponse(BaseModel):
     """Output schema for the Agent."""
 
-    content: Union[str, dict] = Field(
-        description='The content of the response.'
-    )
+    content: str | dict = Field(description='The content of the response.')
     is_task_complete: bool = Field(description='Whether the task is complete.')
     require_user_input: bool = Field(
         description='Whether the agent requires user input.'

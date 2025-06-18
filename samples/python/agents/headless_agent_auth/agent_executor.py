@@ -1,5 +1,3 @@
-from agent import HRAgent
-
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events.event_queue import EventQueue
 from a2a.types import (
@@ -10,6 +8,7 @@ from a2a.types import (
     TaskStatusUpdateEvent,
 )
 from a2a.utils import new_agent_text_message, new_task, new_text_artifact
+from agent import HRAgent
 
 
 class HRAgentExecutor(AgentExecutor):
@@ -18,7 +17,6 @@ class HRAgentExecutor(AgentExecutor):
     def __init__(self):
         self.agent = HRAgent()
 
-    
     async def execute(
         self,
         context: RequestContext,
@@ -29,12 +27,12 @@ class HRAgentExecutor(AgentExecutor):
 
         if not task:
             task = new_task(context.message)
-            event_queue.enqueue_event(task)
+            await event_queue.enqueue_event(task)
         # invoke the underlying agent, using streaming results
         async for event in self.agent.stream(query, task.contextId):
             task_state = TaskState(event['task_state'])
             if event['is_task_complete']:
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=False,
                         contextId=task.contextId,
@@ -47,7 +45,7 @@ class HRAgentExecutor(AgentExecutor):
                         ),
                     )
                 )
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(state=task_state),
                         final=True,
@@ -56,7 +54,7 @@ class HRAgentExecutor(AgentExecutor):
                     )
                 )
             else:
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(
                             state=task_state,
@@ -66,7 +64,8 @@ class HRAgentExecutor(AgentExecutor):
                                 task.id,
                             ),
                         ),
-                        final=task_state in {
+                        final=task_state
+                        in {
                             TaskState.input_required,
                             TaskState.failed,
                             TaskState.unknown,
@@ -76,7 +75,6 @@ class HRAgentExecutor(AgentExecutor):
                     )
                 )
 
-    
     async def cancel(
         self, request: RequestContext, event_queue: EventQueue
     ) -> Task | None:

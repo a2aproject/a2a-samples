@@ -9,7 +9,10 @@ from state.state import AppState, StateConversation
 def conversation_list(conversations: list[StateConversation]):
     """Conversation list component"""
     df_data: dict[str, list[str | int]] = {
-        'ID': [], 'Name': [], 'Status': [], 'Messages': [],
+        'ID': [],
+        'Name': [],
+        'Status': [],
+        'Messages': [],
     }
     for conversation in conversations:
         df_data['ID'].append(conversation.conversation_id)

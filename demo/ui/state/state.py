@@ -1,6 +1,3 @@
-import mesop as me
-from typing import Literal, Tuple, Any
-from pydantic.dataclasses import dataclass
 import dataclasses
 
 from typing import Any, Literal
@@ -32,7 +29,7 @@ class StateMessage:
     context_id: str = ''
     role: str = ''
     # Each content entry is a content, media type pair.
-    content: list[Tuple[ContentPart, str]] = dataclasses.field(
+    content: list[tuple[ContentPart, str]] = dataclasses.field(
         default_factory=list
     )
 
@@ -45,7 +42,7 @@ class StateTask:
     context_id: str | None = None
     state: str | None = None
     message: StateMessage = dataclasses.field(default_factory=StateMessage)
-    artifacts: list[list[Tuple[ContentPart, str]]] = dataclasses.field(
+    artifacts: list[list[tuple[ContentPart, str]]] = dataclasses.field(
         default_factory=list
     )
 
@@ -67,7 +64,7 @@ class StateEvent:
     role: str = ''
     id: str = ''
     # Each entry is a pair of (content, media type)
-    content: list[Tuple[ContentPart, str]] = dataclasses.field(
+    content: list[tuple[ContentPart, str]] = dataclasses.field(
         default_factory=list
     )
 

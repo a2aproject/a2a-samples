@@ -1,8 +1,7 @@
+import asyncio
 import base64
 import json
 import uuid
-
-from typing import List
 
 import httpx
 
@@ -44,16 +43,26 @@ class HostAgent:
         self.httpx_client = http_client
         self.remote_agent_connections: dict[str, RemoteAgentConnections] = {}
         self.cards: dict[str, AgentCard] = {}
-        for address in remote_agent_addresses:
-            card_resolver = A2ACardResolver(http_client, address)
-            card = card_resolver.get_agent_card()
-            remote_connection = RemoteAgentConnections(http_client, card)
-            self.remote_agent_connections[card.name] = remote_connection
-            self.cards[card.name] = card
-        agent_info = []
-        for ra in self.list_remote_agents():
-            agent_info.append(json.dumps(ra))
-        self.agents = '\n'.join(agent_info)
+        self.agents: str = ''
+        loop = asyncio.get_running_loop()
+        loop.create_task(
+            self.init_remote_agent_addresses(remote_agent_addresses)
+        )
+
+    async def init_remote_agent_addresses(
+        self, remote_agent_addresses: list[str]
+    ):
+        async with asyncio.TaskGroup() as task_group:
+            for address in remote_agent_addresses:
+                task_group.create_task(self.retrieve_card(address))
+        # The task groups run in the background and complete.
+        # Once completed the self.agents string is set and the remote
+        # connections are established.
+
+    async def retrieve_card(self, address: str):
+        card_resolver = A2ACardResolver(self.httpx_client, address)
+        card = await card_resolver.get_agent_card()
+        self.register_agent_card(card)
 
     def register_agent_card(self, card: AgentCard):
         remote_connection = RemoteAgentConnections(self.httpx_client, card)
@@ -222,9 +231,9 @@ async def convert_parts(parts: list[Part], tool_context: ToolContext):
 async def convert_part(part: Part, tool_context: ToolContext):
     if part.root.kind == 'text':
         return part.root.text
-    elif part.root.kind == 'data':
+    if part.root.kind == 'data':
         return part.root.data
-    elif part.root.kind == 'file':
+    if part.root.kind == 'file':
         # Repackage A2A FilePart to google.genai Blob
         # Currently not considering plain text as files
         file_id = part.root.file.name

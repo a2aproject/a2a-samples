@@ -2,11 +2,11 @@ import dataclasses
 import json
 import uuid
 
-from typing import Any, Literal, Tuple
+from typing import Any, Literal
 
 import mesop as me
 
-from a2a.types import DataPart, Message, TextPart, Role, Part
+from a2a.types import DataPart, Message, Part, Role, TextPart
 from state.host_agent_service import SendMessage
 from state.state import AppState, StateMessage
 
@@ -142,7 +142,7 @@ def render_form_card(message: StateMessage, data: dict[str, Any] | None):
 
 def generate_form_elements(
     message: StateMessage,
-) -> Tuple[str, list[FormElement]]:
+) -> tuple[str, list[FormElement]]:
     """Returns a declarative structure for a form to generate"""
     # Get the message part with the form information.
     form_content = next(filter(lambda x: x[1] == 'form', message.content), None)
@@ -330,7 +330,7 @@ async def send_response(
     app_state.background_tasks[message_id] = ''
     app_state.form_responses[message_id] = id
     form = FormState(**json.loads(state.forms[id]))
-    print("Sending form response", form)
+    print('Sending form response', form)
     request = Message(
         messageId=message_id,
         taskId=task_id,

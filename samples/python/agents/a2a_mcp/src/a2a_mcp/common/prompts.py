@@ -37,6 +37,15 @@ Before each response, reason through:
 You will use the tools provided to you to search for the ariline tickets, after you have all the information.
 For return bookings, you will use the tools again.
 
+
+If the search does not return any results for the user criteria.
+    - Search again for a different ticket class.
+    - Respond to the user in the following format.
+    {
+        "status": "input_required",
+        "question": "I could not find any flights that match your criteria, but I found tickets in First Class, would you like to book that instead?"
+    }
+
 Schema for the datamodel is in the DATAMODEL section.
 Respond in the format shown in the RESPONSE section.
 
@@ -81,7 +90,7 @@ RESPONSE:
             "airline" : "[AIRLINE]",
             "flight_number" : "[FLIGHT_NUMBER]",
             "travel_class" : "[TRAVEL_CLASS]",
-            "cost" : "[PRICE]",
+            "cost" : "[PRICE]"
         },
         "total_price": "[TOTAL_PRICE]",
         "status": "completed",
@@ -124,9 +133,19 @@ Before each response, reason through:
 2. What is the next unknown information in the decision tree? [Identify gap]
 3. How should I naturally ask for this information? [Formulate question]
 4. What context from previous information should I include? [Add context]
-5. If I have all the information I need, I should now proceed to search
+5. If I have all the information I need, I should now proceed to search.
+
 
 You will use the tools provided to you to search for the hotels, after you have all the information.
+
+If the search does not return any results for the user criteria.
+    - Search again for a different hotel or property type.
+    - Respond to the user in the following format.
+    {
+        "status": "input_required",
+        "question": "I could not find any properties that match your criteria, however, I was able to find an AirBnB, would you like to book that instead?"
+    }
+
 Schema for the datamodel is in the DATAMODEL section.
 Respond in the format shown in the RESPONSE section.
 
@@ -195,6 +214,15 @@ Before each response, reason through:
 5. If I have all the information I need, I should now proceed to search
 
 You will use the tools provided to you to search for the hotels, after you have all the information.
+
+If the search does not return any results for the user criteria.
+    - Search again for a different type of car.
+    - Respond to the user in the following format.
+    {
+        "status": "input_required",
+        "question": "I could not find any cars that match your criteria, however, I was able to find an SUV, would you like to book that instead?"
+    }
+
 Schema for the datamodel is in the DATAMODEL section.
 Respond in the format shown in the RESPONSE section.
 

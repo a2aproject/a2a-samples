@@ -8,10 +8,15 @@ import {
   A2AExpressApp,
   AgentExecutor,
   RequestContext,
-  IExecutionEventBus,
+  ExecutionEventBus,
   DefaultRequestHandler,
-  schema,
-} from "../../server/index.js"; // Import server components
+  AgentCard,
+  Task,
+  TaskArtifactUpdateEvent,
+  TaskState,
+  TaskStatusUpdateEvent,
+  TextPart,
+} from "@a2a-js/sdk"; // Import server components
 import { ai } from "./genkit.js";
 import { CodeMessage } from "./code-format.js"; // CodeMessageSchema might not be needed here
 
@@ -24,9 +29,19 @@ if (!process.env.GEMINI_API_KEY) {
  * CoderAgentExecutor implements the agent's core logic for code generation.
  */
 class CoderAgentExecutor implements AgentExecutor {
+  private cancelledTasks = new Set<string>();
+
+  public cancelTask = async (
+        taskId: string,
+        eventBus: ExecutionEventBus,
+    ): Promise<void> => {
+        this.cancelledTasks.add(taskId);
+        // The execute loop is responsible for publishing the final state
+    };
+
   async execute(
     requestContext: RequestContext,
-    eventBus: IExecutionEventBus
+    eventBus: ExecutionEventBus
   ): Promise<void> {
     const userMessage = requestContext.userMessage;
     const existingTask = requestContext.task;
@@ -40,12 +55,12 @@ class CoderAgentExecutor implements AgentExecutor {
 
     // 1. Publish initial Task event if it's a new task
     if (!existingTask) {
-      const initialTask: schema.Task = {
+      const initialTask: Task = {
         kind: 'task',
         id: taskId,
         contextId: contextId,
         status: {
-          state: schema.TaskState.Submitted,
+          state: 'submitted',
           timestamp: new Date().toISOString(),
         },
         history: [userMessage],
@@ -56,12 +71,12 @@ class CoderAgentExecutor implements AgentExecutor {
     }
 
     // 2. Publish "working" status update
-    const workingStatusUpdate: schema.TaskStatusUpdateEvent = {
+    const workingStatusUpdate: TaskStatusUpdateEvent = {
       kind: 'status-update',
       taskId: taskId,
       contextId: contextId,
       status: {
-        state: schema.TaskState.Working,
+        state: 'working',
         message: {
           kind: 'message',
           role: 'agent',
@@ -86,9 +101,9 @@ class CoderAgentExecutor implements AgentExecutor {
       .map((m) => ({
         role: (m.role === 'agent' ? 'model' : 'user') as 'user' | 'model',
         content: m.parts
-          .filter((p): p is schema.TextPart => p.kind === 'text' && !!(p as schema.TextPart).text)
+          .filter((p): p is TextPart => p.kind === 'text' && !!(p as TextPart).text)
           .map((p) => ({
-            text: (p as schema.TextPart).text,
+            text: (p as TextPart).text,
           })),
       }))
       .filter((m) => m.content.length > 0);
@@ -97,12 +112,12 @@ class CoderAgentExecutor implements AgentExecutor {
       console.warn(
         `[CoderAgentExecutor] No valid text messages found in history for task ${taskId}.`
       );
-      const failureUpdate: schema.TaskStatusUpdateEvent = {
+      const failureUpdate: TaskStatusUpdateEvent = {
         kind: 'status-update',
         taskId: taskId,
         contextId: contextId,
         status: {
-          state: schema.TaskState.Failed,
+          state: 'failed',
           message: {
             kind: 'message',
             role: 'agent',
@@ -153,7 +168,7 @@ class CoderAgentExecutor implements AgentExecutor {
               console.log(
                 `[CoderAgentExecutor] Emitting completed file artifact (index ${prevFileIndex}): ${prevFilename}`
               );
-              const artifactUpdate: schema.TaskArtifactUpdateEvent = {
+              const artifactUpdate: TaskArtifactUpdateEvent = {
                 kind: 'artifact-update',
                 taskId: taskId,
                 contextId: contextId,
@@ -171,15 +186,15 @@ class CoderAgentExecutor implements AgentExecutor {
           }
 
           // Check if the request has been cancelled
-          if (requestContext.isCancelled()) {
+          if (this.cancelledTasks.has(taskId)) {
             console.log(`[CoderAgentExecutor] Request cancelled for task: ${taskId}`);
 
-            const cancelledUpdate: schema.TaskStatusUpdateEvent = {
+            const cancelledUpdate: TaskStatusUpdateEvent = {
               kind: 'status-update',
               taskId: taskId,
               contextId: contextId,
               status: {
-                state: schema.TaskState.Canceled,
+                state: 'canceled',
                 timestamp: new Date().toISOString(),
               },
               final: true,
@@ -197,7 +212,7 @@ class CoderAgentExecutor implements AgentExecutor {
         console.log(
           `[CoderAgentExecutor] Emitting final file artifact(index ${i}): ${filename} `
         );
-        const artifactUpdate: schema.TaskArtifactUpdateEvent = {
+        const artifactUpdate: TaskArtifactUpdateEvent = {
           kind: 'artifact-update',
           taskId: taskId,
           contextId: contextId,
@@ -216,12 +231,12 @@ class CoderAgentExecutor implements AgentExecutor {
       const generatedFiles = fullMessage?.files.map((f) => f.filename) ?? [];
 
       // 5. Publish final task status update
-      const finalUpdate: schema.TaskStatusUpdateEvent = {
+      const finalUpdate: TaskStatusUpdateEvent = {
         kind: 'status-update',
         taskId: taskId,
         contextId: contextId,
         status: {
-          state: schema.TaskState.Completed,
+          state: 'completed',
           message: {
             kind: 'message',
             role: 'agent',
@@ -245,7 +260,7 @@ class CoderAgentExecutor implements AgentExecutor {
       eventBus.publish(finalUpdate);
 
       console.log(
-        `[CoderAgentExecutor] Task ${taskId} finished with state: ${schema.TaskState.Completed} `
+        `[CoderAgentExecutor] Task ${taskId} finished with state: completed `
       );
 
     } catch (error: any) {
@@ -253,12 +268,12 @@ class CoderAgentExecutor implements AgentExecutor {
         `[CoderAgentExecutor] Error processing task ${taskId}: `,
         error
       );
-      const errorUpdate: schema.TaskStatusUpdateEvent = {
+      const errorUpdate: TaskStatusUpdateEvent = {
         kind: 'status-update',
         taskId: taskId,
         contextId: contextId,
         status: {
-          state: schema.TaskState.Failed,
+          state: 'failed',
           message: {
             kind: 'message',
             role: 'agent',
@@ -278,7 +293,7 @@ class CoderAgentExecutor implements AgentExecutor {
 
 // --- Server Setup ---
 
-const coderAgentCard: schema.AgentCard = {
+const coderAgentCard: AgentCard = {
   name: 'Coder Agent',
   description:
     'An agent that generates code based on natural language instructions and streams file outputs.',

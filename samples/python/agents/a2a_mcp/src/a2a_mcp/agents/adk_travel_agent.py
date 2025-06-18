@@ -5,7 +5,7 @@ import logging
 import re
 
 from collections.abc import AsyncIterable
-from typing import Any, Dict
+from typing import Any
 
 from a2a_mcp.common.agent_runner import AgentRunner
 from a2a_mcp.common.base_agent import BaseAgent
@@ -66,7 +66,7 @@ class TravelAgent(BaseAgent):
 
     async def stream(
         self, query, context_id, task_id
-    ) -> AsyncIterable[Dict[str, Any]]:
+    ) -> AsyncIterable[dict[str, Any]]:
         logger.info(
             f'Running {self.agent_name} stream for session {context_id} {task_id} - {query}'
         )
@@ -120,27 +120,25 @@ class TravelAgent(BaseAgent):
                         'require_user_input': True,
                         'content': data['question'],
                     }
-                else:
-                    return {
-                        'response_type': 'data',
-                        'is_task_complete': True,
-                        'require_user_input': False,
-                        'content': data,
-                    }
-            else:
-                return_type = 'data'
-                try:
-                    data = json.loads(data)
-                    return_type = 'data'
-                except Exception as json_e:
-                    logger.error(f'Json conversion error {json_e}')
-                    return_type = 'text'
                 return {
-                    'response_type': return_type,
+                    'response_type': 'data',
                     'is_task_complete': True,
                     'require_user_input': False,
                     'content': data,
                 }
+            return_type = 'data'
+            try:
+                data = json.loads(data)
+                return_type = 'data'
+            except Exception as json_e:
+                logger.error(f'Json conversion error {json_e}')
+                return_type = 'text'
+            return {
+                'response_type': return_type,
+                'is_task_complete': True,
+                'require_user_input': False,
+                'content': data,
+            }
         except Exception as e:
             logger.error(f'Error in get_agent_response: {e}')
             return {

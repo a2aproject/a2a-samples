@@ -29,21 +29,21 @@ def get_agent(agent_card: AgentCard):
     try:
         if agent_card.name == 'Orchestrator Agent':
             return OrchestratorAgent()
-        elif agent_card.name == 'Langraph Planner Agent':
+        if agent_card.name == 'Langraph Planner Agent':
             return LangraphPlannerAgent()
-        elif agent_card.name == 'Air Ticketing Agent':
+        if agent_card.name == 'Air Ticketing Agent':
             return TravelAgent(
                 agent_name='AirTicketingAgent',
                 description='Book air tickets given a criteria',
                 instructions=prompts.AIRFARE_COT_INSTRUCTIONS,
             )
-        elif agent_card.name == 'Hotel Booking Agent':
+        if agent_card.name == 'Hotel Booking Agent':
             return TravelAgent(
                 agent_name='HotelBookingAgent',
                 description='Book hotels given a criteria',
                 instructions=prompts.HOTELS_COT_INSTRUCTIONS,
             )
-        elif agent_card.name == 'Car Rental Agent':
+        if agent_card.name == 'Car Rental Agent':
             return TravelAgent(
                 agent_name='CarRentalBookingAgent',
                 description='Book rental cars given a criteria',

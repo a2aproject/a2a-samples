@@ -25,8 +25,6 @@ logger = logging.getLogger(__name__)
 class MissingAPIKeyError(Exception):
     """Exception for missing API key."""
 
-    pass
-
 
 @click.command()
 @click.option('--host', default='localhost')

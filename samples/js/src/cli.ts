@@ -2,7 +2,7 @@
 
 import readline from "node:readline";
 import crypto from "node:crypto";
-import { A2AClient } from "./client/client.js";
+
 import {
   // Specific Params/Payload types used by the CLI
   MessageSendParams, // Changed from TaskSendParams
@@ -17,7 +17,8 @@ import {
   // Type for the agent card
   AgentCard,
   Part, // Added for explicit Part typing
-} from "./schema.js";
+  A2AClient,
+} from "@a2a-js/sdk";
 
 // --- ANSI Colors ---
 const colors = {
@@ -141,7 +142,7 @@ function printMessageContent(message: Message) {
       const filePart = part as FilePart;
       console.log(
         `${partPrefix} ${colorize("blue", "📄 File:")} Name: ${filePart.file.name || "N/A"
-        }, Type: ${filePart.file.mimeType || "N/A"}, Source: ${filePart.file.bytes ? "Inline (bytes)" : filePart.file.uri
+        }, Type: ${filePart.file.mimeType || "N/A"}, Source: ${("bytes" in filePart.file) ? "Inline (bytes)" : filePart.file.uri
         }`
       );
     } else if (part.kind === "data") { // Check kind property
@@ -277,7 +278,7 @@ async function main() {
           printAgentEvent(typedEvent);
 
           // If the event is a TaskStatusUpdateEvent and it's final, reset currentTaskId
-          if (typedEvent.kind === "status-update" && (typedEvent as TaskStatusUpdateEvent).final && (typedEvent as TaskStatusUpdateEvent).status.state !== TaskState.InputRequired) {
+          if (typedEvent.kind === "status-update" && (typedEvent as TaskStatusUpdateEvent).final && (typedEvent as TaskStatusUpdateEvent).status.state !== "input-required") {
             console.log(colorize("yellow", `   Task ${typedEvent.taskId} is final. Clearing current task ID.`));
             currentTaskId = undefined;
             // Optionally, you might want to clear currentContextId as well if a task ending implies context ending.

@@ -36,7 +36,7 @@ class ExtractorAgentExecutor(AgentExecutor):
         task = context.current_task
         if not task:
             task = new_task(context.message)
-            event_queue.enqueue_event(task)
+            await event_queue.enqueue_event(task)
 
         async for item in self.agent.stream(query, task.contextId):
             is_task_complete = item["is_task_complete"]
@@ -65,7 +65,7 @@ class ExtractorAgentExecutor(AgentExecutor):
                 )
 
             if require_user_input:
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(
                             state=TaskState.input_required,
@@ -81,7 +81,7 @@ class ExtractorAgentExecutor(AgentExecutor):
                     )
                 )
             elif is_task_complete:
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=False,
                         contextId=task.contextId,
@@ -90,7 +90,7 @@ class ExtractorAgentExecutor(AgentExecutor):
                         artifact=artifact,
                     )
                 )
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(state=TaskState.completed),
                         final=True,
@@ -99,7 +99,7 @@ class ExtractorAgentExecutor(AgentExecutor):
                     )
                 )
             else:
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(
                             state=TaskState.working,

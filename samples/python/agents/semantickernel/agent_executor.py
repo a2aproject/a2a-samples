@@ -35,7 +35,7 @@ class SemanticKernelTravelAgentExecutor(AgentExecutor):
         task = context.current_task
         if not task:
             task = new_task(context.message)
-            event_queue.enqueue_event(task)
+            await event_queue.enqueue_event(task)
 
         async for partial in self.agent.stream(query, task.contextId):
             require_input = partial['require_user_input']
@@ -43,7 +43,7 @@ class SemanticKernelTravelAgentExecutor(AgentExecutor):
             text_content = partial['content']
 
             if require_input:
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(
                             state=TaskState.input_required,
@@ -59,7 +59,7 @@ class SemanticKernelTravelAgentExecutor(AgentExecutor):
                     )
                 )
             elif is_done:
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=False,
                         contextId=task.contextId,
@@ -72,7 +72,7 @@ class SemanticKernelTravelAgentExecutor(AgentExecutor):
                         ),
                     )
                 )
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(state=TaskState.completed),
                         final=True,
@@ -81,7 +81,7 @@ class SemanticKernelTravelAgentExecutor(AgentExecutor):
                     )
                 )
             else:
-                event_queue.enqueue_event(
+                await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(
                             state=TaskState.working,

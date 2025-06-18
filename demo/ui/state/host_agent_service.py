@@ -230,11 +230,10 @@ def convert_task_to_state(task: Task) -> StateTask:
             ),
             artifacts=output,
         )
-    else:
-        message = task.history[0]
-        last_message = task.history[-1]
-        if last_message != message:
-            output = [extract_content(last_message.parts)] + output
+    message = task.history[0]
+    last_message = task.history[-1]
+    if last_message != message:
+        output = [extract_content(last_message.parts)] + output
     return StateTask(
         task_id=task.id,
         context_id=task.contextId,

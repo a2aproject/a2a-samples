@@ -1,6 +1,5 @@
 import json
 
-
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
 from a2a.server.tasks import TaskUpdater
@@ -39,7 +38,7 @@ class ReimbursementAgentExecutor(AgentExecutor):
         # not have current task, create a new one and use it.
         if not task:
             task = new_task(context.message)
-            event_queue.enqueue_event(task)
+            await event_queue.enqueue_event(task)
         updater = TaskUpdater(event_queue, task.id, task.contextId)
         # invoke the underlying agent, using streaming results. The streams
         # now are update events.
@@ -47,7 +46,7 @@ class ReimbursementAgentExecutor(AgentExecutor):
             is_task_complete = item['is_task_complete']
             artifacts = None
             if not is_task_complete:
-                updater.update_status(
+                await updater.update_status(
                     TaskState.working,
                     new_agent_text_message(
                         item['updates'], task.contextId, task.id
@@ -62,7 +61,7 @@ class ReimbursementAgentExecutor(AgentExecutor):
                     and 'result' in item['content']['response']
                 ):
                     data = json.loads(item['content']['response']['result'])
-                    updater.update_status(
+                    await updater.update_status(
                         TaskState.input_required,
                         new_agent_parts_message(
                             [Part(root=DataPart(data=data))],
@@ -72,24 +71,22 @@ class ReimbursementAgentExecutor(AgentExecutor):
                         final=True,
                     )
                     continue
-                else:
-                    updater.update_status(
-                        TaskState.failed,
-                        new_agent_text_message(
-                            'Reaching an unexpected state',
-                            task.contextId,
-                            task.id,
-                        ),
-                        final=True,
-                    )
-                    break
-            else:
-                # Emit the appropriate events
-                updater.add_artifact(
-                    [Part(root=TextPart(text=item['content']))], name='form'
+                await updater.update_status(
+                    TaskState.failed,
+                    new_agent_text_message(
+                        'Reaching an unexpected state',
+                        task.contextId,
+                        task.id,
+                    ),
+                    final=True,
                 )
-                updater.complete()
                 break
+            # Emit the appropriate events
+            await updater.add_artifact(
+                [Part(root=TextPart(text=item['content']))], name='form'
+            )
+            await updater.complete()
+            break
 
     async def cancel(
         self, request: RequestContext, event_queue: EventQueue

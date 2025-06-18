@@ -1,10 +1,9 @@
+import asyncio
 import base64
 import datetime
 import json
 import os
 import uuid
-
-from typing import Optional, Tuple
 
 import httpx
 
@@ -239,20 +238,19 @@ class ADKHostManager(ApplicationManager):
             self.insert_message_history(current_task, task.status.message)
             self.update_task(current_task)
             return current_task
-        elif isinstance(task, TaskArtifactUpdateEvent):
+        if isinstance(task, TaskArtifactUpdateEvent):
             current_task = self.add_or_get_task(task)
             self.process_artifact_event(current_task, task)
             self.update_task(current_task)
             return current_task
         # Otherwise this is a Task, either new or updated
-        elif not any(filter(lambda x: x and x.id == task.id, self._tasks)):
+        if not any(filter(lambda x: x and x.id == task.id, self._tasks)):
             self.attach_message_to_task(task.status.message, task.id)
             self.add_task(task)
             return task
-        else:
-            self.attach_message_to_task(task.status.message, task.id)
-            self.update_task(task)
-            return task
+        self.attach_message_to_task(task.status.message, task.id)
+        self.update_task(task)
+        return task
 
     def emit_event(self, task: TaskCallbackArg, agent_card: AgentCard):
         content = None
@@ -399,8 +397,8 @@ class ADKHostManager(ApplicationManager):
         self._events[event.id] = event
 
     def get_conversation(
-        self, conversation_id: Optional[str]
-    ) -> Optional[Conversation]:
+        self, conversation_id: str | None
+    ) -> Conversation | None:
         if not conversation_id:
             return None
         return next(
@@ -618,6 +616,17 @@ class ADKHostManager(ApplicationManager):
                 Part(root=DataPart(data=part.function_response.model_dump()))
             )
         return parts
+
+    def process_message_threadsafe(
+        self, message: Message, loop: asyncio.AbstractEventLoop
+    ):
+        """Safely run process_message from a thread using the given event loop."""
+        future = asyncio.run_coroutine_threadsafe(
+            self.process_message(message), loop
+        )
+        return (
+            future  # You can call future.result() to get the result if needed
+        )
 
 
 def get_message_id(m: Message | None) -> str | None:

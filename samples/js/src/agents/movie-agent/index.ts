@@ -4,13 +4,18 @@ import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs
 import {
   InMemoryTaskStore,
   TaskStore,
-  schema,
   A2AExpressApp,
   AgentExecutor,
   RequestContext,
-  IExecutionEventBus,
-  DefaultRequestHandler
-} from "../../server/index.js";
+  ExecutionEventBus,
+  DefaultRequestHandler,
+  AgentCard,
+  Task,
+  TaskState,
+  TaskStatusUpdateEvent,
+  TextPart,
+  Message
+} from "@a2a-js/sdk";
 import { MessageData } from "genkit";
 import { ai } from "./genkit.js";
 import { searchMovies, searchPeople } from "./tools.js";
@@ -21,7 +26,7 @@ if (!process.env.GEMINI_API_KEY || !process.env.TMDB_API_KEY) {
 }
 
 // Simple store for contexts
-const contexts: Map<string, schema.Message[]> = new Map();
+const contexts: Map<string, Message[]> = new Map();
 
 // Load the Genkit prompt
 const movieAgentPrompt = ai.prompt('movie_agent');
@@ -30,9 +35,19 @@ const movieAgentPrompt = ai.prompt('movie_agent');
  * MovieAgentExecutor implements the agent's core logic.
  */
 class MovieAgentExecutor implements AgentExecutor {
+  private cancelledTasks = new Set<string>();
+
+  public cancelTask = async (
+        taskId: string,
+        eventBus: ExecutionEventBus,
+    ): Promise<void> => {
+        this.cancelledTasks.add(taskId);
+        // The execute loop is responsible for publishing the final state
+    };
+
   async execute(
     requestContext: RequestContext,
-    eventBus: IExecutionEventBus
+    eventBus: ExecutionEventBus
   ): Promise<void> {
     const userMessage = requestContext.userMessage;
     const existingTask = requestContext.task;
@@ -47,12 +62,12 @@ class MovieAgentExecutor implements AgentExecutor {
 
     // 1. Publish initial Task event if it's a new task
     if (!existingTask) {
-      const initialTask: schema.Task = {
+      const initialTask: Task = {
         kind: 'task',
         id: taskId,
         contextId: contextId,
         status: {
-          state: schema.TaskState.Submitted,
+          state: "submitted",
           timestamp: new Date().toISOString(),
         },
         history: [userMessage], // Start history with the current user message
@@ -62,12 +77,12 @@ class MovieAgentExecutor implements AgentExecutor {
     }
 
     // 2. Publish "working" status update
-    const workingStatusUpdate: schema.TaskStatusUpdateEvent = {
+    const workingStatusUpdate: TaskStatusUpdateEvent = {
       kind: 'status-update',
       taskId: taskId,
       contextId: contextId,
       status: {
-        state: schema.TaskState.Working,
+        state: "working",
         message: {
           kind: 'message',
           role: 'agent',
@@ -93,9 +108,9 @@ class MovieAgentExecutor implements AgentExecutor {
       .map((m) => ({
         role: (m.role === 'agent' ? 'model' : 'user') as 'user' | 'model',
         content: m.parts
-          .filter((p): p is schema.TextPart => p.kind === 'text' && !!(p as schema.TextPart).text)
+          .filter((p): p is TextPart => p.kind === 'text' && !!(p as TextPart).text)
           .map((p) => ({
-            text: (p as schema.TextPart).text,
+            text: (p as TextPart).text,
           })),
       }))
       .filter((m) => m.content.length > 0);
@@ -104,12 +119,12 @@ class MovieAgentExecutor implements AgentExecutor {
       console.warn(
         `[MovieAgentExecutor] No valid text messages found in history for task ${taskId}.`
       );
-      const failureUpdate: schema.TaskStatusUpdateEvent = {
+      const failureUpdate: TaskStatusUpdateEvent = {
         kind: 'status-update',
         taskId: taskId,
         contextId: contextId,
         status: {
-          state: schema.TaskState.Failed,
+          state: "failed",
           message: {
             kind: 'message',
             role: 'agent',
@@ -139,15 +154,15 @@ class MovieAgentExecutor implements AgentExecutor {
       );
 
       // Check if the request has been cancelled
-      if (requestContext.isCancelled()) {
+      if (this.cancelledTasks.has(taskId)) {
         console.log(`[MovieAgentExecutor] Request cancelled for task: ${taskId}`);
 
-        const cancelledUpdate: schema.TaskStatusUpdateEvent = {
+        const cancelledUpdate: TaskStatusUpdateEvent = {
           kind: 'status-update',
           taskId: taskId,
           contextId: contextId,
           status: {
-            state: schema.TaskState.Canceled,
+            state: "canceled",
             timestamp: new Date().toISOString(),
           },
           final: true, // Cancellation is a final state
@@ -162,21 +177,21 @@ class MovieAgentExecutor implements AgentExecutor {
       const finalStateLine = lines.at(-1)?.trim().toUpperCase();
       const agentReplyText = lines.slice(0, lines.length - 1).join('\n').trim();
 
-      let finalA2AState: schema.TaskState = schema.TaskState.Unknown;
+      let finalA2AState: TaskState = "unknown";
 
       if (finalStateLine === 'COMPLETED') {
-        finalA2AState = schema.TaskState.Completed;
+        finalA2AState = "completed";
       } else if (finalStateLine === 'AWAITING_USER_INPUT') {
-        finalA2AState = schema.TaskState.InputRequired;
+        finalA2AState = "input-required";
       } else {
         console.warn(
           `[MovieAgentExecutor] Unexpected final state line from prompt: ${finalStateLine}. Defaulting to 'completed'.`
         );
-        finalA2AState = schema.TaskState.Completed; // Default if LLM deviates
+        finalA2AState = "completed"; // Default if LLM deviates
       }
 
       // 5. Publish final task status update
-      const agentMessage: schema.Message = {
+      const agentMessage: Message = {
         kind: 'message',
         role: 'agent',
         messageId: uuidv4(),
@@ -187,7 +202,7 @@ class MovieAgentExecutor implements AgentExecutor {
       historyForGenkit.push(agentMessage);
       contexts.set(contextId, historyForGenkit)
 
-      const finalUpdate: schema.TaskStatusUpdateEvent = {
+      const finalUpdate: TaskStatusUpdateEvent = {
         kind: 'status-update',
         taskId: taskId,
         contextId: contextId,
@@ -209,12 +224,12 @@ class MovieAgentExecutor implements AgentExecutor {
         `[MovieAgentExecutor] Error processing task ${taskId}:`,
         error
       );
-      const errorUpdate: schema.TaskStatusUpdateEvent = {
+      const errorUpdate: TaskStatusUpdateEvent = {
         kind: 'status-update',
         taskId: taskId,
         contextId: contextId,
         status: {
-          state: schema.TaskState.Failed,
+          state: "failed",
           message: {
             kind: 'message',
             role: 'agent',
@@ -234,7 +249,7 @@ class MovieAgentExecutor implements AgentExecutor {
 
 // --- Server Setup ---
 
-const movieAgentCard: schema.AgentCard = {
+const movieAgentCard: AgentCard = {
   name: 'Movie Agent',
   description: 'An agent that can answer questions about movies and actors using TMDB.',
   // Adjust the base URL and port as needed. /a2a is the default base in A2AExpressApp

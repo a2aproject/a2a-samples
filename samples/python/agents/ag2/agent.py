@@ -28,10 +28,7 @@ class ResponseModel(BaseModel):
         """Format the response as a string."""
         if self.closed_captions is None:
             return self.text_reply
-        else:
-            return (
-                f'{self.text_reply}\n\nClosed Captions:\n{self.closed_captions}'
-            )
+        return f'{self.text_reply}\n\nClosed Captions:\n{self.closed_captions}'
 
 
 def get_api_key() -> str:
@@ -169,7 +166,7 @@ class YoutubeMCPAgent:
                         )
                         traceback.print_exc()
                         response = (
-                            f'Error processing request: {str(extraction_error)}'
+                            f'Error processing request: {extraction_error!s}'
                         )
 
                     # Final response
@@ -182,14 +179,14 @@ class YoutubeMCPAgent:
                 yield {
                     'is_task_complete': False,
                     'require_user_input': True,
-                    'content': f'Error processing request: {str(e)}',
+                    'content': f'Error processing request: {e!s}',
                 }
         except Exception as e:
             logger.error(f'Error in streaming agent: {traceback.format_exc()}')
             yield {
                 'is_task_complete': False,
                 'require_user_input': True,
-                'content': f'Error processing request: {str(e)}',
+                'content': f'Error processing request: {e!s}',
             }
 
     def invoke(self, query: str, sessionId: str) -> dict[str, Any]:

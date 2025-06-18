@@ -1,13 +1,12 @@
-from typing import Union
-from pydantic import BaseModel, Field, TypeAdapter
-from typing import Literal, Annotated, Tuple, Any
+from typing import Annotated, Any, Literal
 from uuid import uuid4
 
 from a2a.types import (
+    AgentCard,
     Message,
     Task,
-    AgentCard,
 )
+from pydantic import BaseModel, Field, TypeAdapter
 
 
 class JSONRPCMessage(BaseModel):

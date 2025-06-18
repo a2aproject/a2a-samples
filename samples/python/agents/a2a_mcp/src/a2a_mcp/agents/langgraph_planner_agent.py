@@ -2,7 +2,8 @@
 
 import logging
 
-from typing import Any, AsyncIterable, Dict, Literal
+from collections.abc import AsyncIterable
+from typing import Any, Literal
 
 from a2a_mcp.common import prompts
 from a2a_mcp.common.base_agent import BaseAgent
@@ -65,7 +66,7 @@ class LangraphPlannerAgent(BaseAgent):
 
     async def stream(
         self, query, sessionId, task_id
-    ) -> AsyncIterable[Dict[str, Any]]:
+    ) -> AsyncIterable[dict[str, Any]]:
         inputs = {'messages': [('user', query)]}
         config = {'configurable': {'thread_id': sessionId}}
 
@@ -100,14 +101,14 @@ class LangraphPlannerAgent(BaseAgent):
                     'require_user_input': True,
                     'content': structured_response.question,
                 }
-            elif structured_response.status == 'error':
+            if structured_response.status == 'error':
                 return {
                     'response_type': 'text',
                     'is_task_complete': False,
                     'require_user_input': True,
                     'content': structured_response.question,
                 }
-            elif structured_response.status == 'completed':
+            if structured_response.status == 'completed':
                 return {
                     'response_type': 'data',
                     'is_task_complete': True,

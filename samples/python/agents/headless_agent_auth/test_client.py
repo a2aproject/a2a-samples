@@ -1,35 +1,40 @@
-import asyncclick as click
 import asyncio
-import httpx
 import json
 import os
-from dotenv import load_dotenv
+
 from typing import Any
 from urllib.parse import urlparse
 from uuid import uuid4
-from auth0.authentication.get_token import GetToken
+
+import asyncclick as click
+import httpx
+
 from a2a.client import A2ACardResolver, A2AClient
 from a2a.types import (
     AgentCard,
-    SendMessageRequest,
+    GetTaskRequest,
     Message,
     MessageSendParams,
+    SendMessageRequest,
     SendStreamingMessageRequest,
+    Task,
+    TaskArtifactUpdateEvent,
+    TaskQueryParams,
+    TaskState,
     TaskStatusUpdateEvent,
     TextPart,
-    Task,
-    TaskState,
-    GetTaskRequest,
-    TaskQueryParams,
-    TaskArtifactUpdateEvent,
 )
+from auth0.authentication.get_token import GetToken
+from dotenv import load_dotenv
 
 
 load_dotenv()
 access_token = None
 
+
 class AgentAuth(httpx.Auth):
     """Custom httpx's authentication class to inject access token required by agent."""
+
     def __init__(self, agent_card: AgentCard):
         self.agent_card = agent_card
 
@@ -38,21 +43,26 @@ class AgentAuth(httpx.Auth):
         auth = self.agent_card.authentication
 
         # skip if not using oauth2 or credentials details are missing
-        if not (any(scheme.lower() == 'oauth2' for scheme in auth.schemes) and auth.credentials):
+        if not (
+            any(scheme.lower() == 'oauth2' for scheme in auth.schemes)
+            and auth.credentials
+        ):
             yield request
             return
-        
+
         if not access_token:
             token_url = json.loads(auth.credentials)['tokenUrl']
             print(f'\nFetching agent access token from {token_url}...')
             get_token = GetToken(
                 domain=urlparse(token_url).hostname,
                 client_id=os.getenv('A2A_CLIENT_AUTH0_CLIENT_ID'),
-                client_secret=os.getenv('A2A_CLIENT_AUTH0_CLIENT_SECRET')
+                client_secret=os.getenv('A2A_CLIENT_AUTH0_CLIENT_SECRET'),
             )
-            access_token = get_token.client_credentials(os.getenv('HR_AGENT_AUTH0_AUDIENCE'))['access_token']
+            access_token = get_token.client_credentials(
+                os.getenv('HR_AGENT_AUTH0_AUDIENCE')
+            )['access_token']
             print('Done.\n')
-        
+
         request.headers['Authorization'] = f'Bearer {access_token}'
         yield request
 
@@ -64,10 +74,12 @@ class AgentAuth(httpx.Auth):
 @click.option('--debug', default=False, is_flag=True)
 async def cli(agent: str, context_id: str | None, history: bool, debug: bool):
     async with httpx.AsyncClient() as httpx_client:
-        agent_card = await (A2ACardResolver(
-            httpx_client=httpx_client,
-            base_url=agent,
-        )).get_agent_card()
+        agent_card = await (
+            A2ACardResolver(
+                httpx_client=httpx_client,
+                base_url=agent,
+            )
+        ).get_agent_card()
 
         print('======= Agent Card ========')
         print(agent_card.model_dump_json(exclude_none=True, indent=2))
@@ -99,7 +111,10 @@ async def cli(agent: str, context_id: str | None, history: bool, debug: bool):
             if history and continue_loop:
                 print('========= History ======== ')
                 get_task_response = await client.get_task(
-                    GetTaskRequest(params=TaskQueryParams(**{'id': task_id, 'historyLength': 10}))
+                    GetTaskRequest(
+                        id=str(uuid4()),
+                        params=TaskQueryParams(id=task_id, historyLength=10),
+                    )
                 )
                 print(
                     get_task_response.root.model_dump_json(
@@ -120,7 +135,7 @@ def create_send_params(
         },
         'configuration': {
             'acceptedOutputModes': ['text'],
-        }
+        },
     }
 
     if task_id:
@@ -128,7 +143,7 @@ def create_send_params(
 
     if context_id:
         send_params['message']['contextId'] = context_id
-    
+
     return MessageSendParams(**send_params)
 
 
@@ -154,20 +169,24 @@ async def complete_task(
 
     task = None
     if streaming:
-        stream_response = client.send_message_streaming(SendStreamingMessageRequest(params=send_params))
+        stream_response = client.send_message_streaming(
+            SendStreamingMessageRequest(id=str(uuid4()), params=send_params)
+        )
         async for chunk in stream_response:
             result = chunk.root.result
             print(
                 f'stream event => {chunk.root.model_dump_json(exclude_none=True)}'
-                if debug else (
+                if debug
+                else (
                     next(
                         (
                             f'stream message => role: {result.role.value}, type: {part.root.type}, text: {part.root.text}'
                             for part in result.parts
                             if isinstance(part.root, TextPart)
                         ),
-                        ''
-                    ) if isinstance(result, Message)
+                        '',
+                    )
+                    if isinstance(result, Message)
                     else next(
                         (
                             f'stream message => role: {msg.role.value}, type: {part.root.type}, text: {part.root.text}'
@@ -175,32 +194,43 @@ async def complete_task(
                             for part in msg.parts
                             if isinstance(part.root, TextPart)
                         ),
-                        ''
-                    ) if isinstance(result, Task)
+                        '',
+                    )
+                    if isinstance(result, Task)
                     else next(
                         (
                             f'stream message => role: {result.status.message.role.value}, type: {part.root.type}, text: {part.root.text}'
-                            for part in (result.status.message.parts if result.status.message else [])
+                            for part in (
+                                result.status.message.parts
+                                if result.status.message
+                                else []
+                            )
                             if isinstance(part.root, TextPart)
                         ),
-                        ''
-                    ) if isinstance(result, TaskStatusUpdateEvent)
+                        '',
+                    )
+                    if isinstance(result, TaskStatusUpdateEvent)
                     else next(
                         (
                             f'stream artifact => type: {part.root.type}, text: {part.root.text}'
                             for part in result.artifact.parts
                             if isinstance(part.root, TextPart)
                         ),
-                        ''
-                    ) if isinstance(result, TaskArtifactUpdateEvent)
+                        '',
+                    )
+                    if isinstance(result, TaskArtifactUpdateEvent)
                     else ''
                 )
             )
-        
-        get_task_response = await client.get_task(GetTaskRequest(params=TaskQueryParams(**{'id': task_id})))
+
+        get_task_response = await client.get_task(
+            GetTaskRequest(id=str(uuid4()), params=TaskQueryParams(id=task_id))
+        )
         task = get_task_response.root.result
     else:
-        send_message_response = await client.send_message(SendMessageRequest(params=send_params))
+        send_message_response = await client.send_message(
+            SendMessageRequest(id=str(uuid4()), params=send_params)
+        )
         task = send_message_response.root.result
         print(f'\n{task.model_dump_json(exclude_none=True)}')
 
@@ -213,7 +243,7 @@ async def complete_task(
             context_id,
             debug,
         )
-    
+
     # task is complete
     return True
 

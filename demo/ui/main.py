@@ -4,9 +4,10 @@ run:
 """
 
 import os
-import httpx
+
 from contextlib import asynccontextmanager
 
+import httpx
 import mesop as me
 
 from components.api_key_dialog import api_key_dialog
@@ -142,16 +143,16 @@ class HTTPXClientWrapper:
     async_client: httpx.AsyncClient = None
 
     def start(self):
-        """ Instantiate the client. Call from the FastAPI startup hook."""
+        """Instantiate the client. Call from the FastAPI startup hook."""
         self.async_client = httpx.AsyncClient(timeout=30)
 
     async def stop(self):
-        """ Gracefully shutdown. Call from FastAPI shutdown hook."""
+        """Gracefully shutdown. Call from FastAPI shutdown hook."""
         await self.async_client.aclose()
         self.async_client = None
 
     def __call__(self):
-        """ Calling the instantiated HTTPXClientWrapper returns the wrapped singleton."""
+        """Calling the instantiated HTTPXClientWrapper returns the wrapped singleton."""
         # Ensure we don't use it if not started / running
         assert self.async_client is not None
         return self.async_client
@@ -178,6 +179,7 @@ async def lifespan(app: FastAPI):
     app.setup()
     yield
     await httpx_client_wrapper.stop()
+
 
 if __name__ == '__main__':
     import uvicorn

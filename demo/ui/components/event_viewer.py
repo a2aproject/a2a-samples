@@ -1,11 +1,9 @@
 import asyncio
-from typing import Tuple
 
 import mesop as me
 import pandas as pd
 
-from state.host_agent_service import GetEvents
-from state.host_agent_service import convert_event_to_state
+from state.host_agent_service import GetEvents, convert_event_to_state
 
 
 def flatten_content(content: list[tuple[str, str]]) -> str:

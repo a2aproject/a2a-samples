@@ -99,3 +99,31 @@ Click on the task list to see all the A2A task updates from the remote agents
    Answer it's questions in a normal... If you need help converting currency, try adding the LangGraph sample agent too.
 
    Review the events to see what happened.
+
+## Build Container Image
+
+Agent can also be built using a container file.
+
+1. Navigate to the `samples/python` directory:
+
+  ```bash
+  cd samples/python
+  ```
+
+2. Build the container file
+
+    ```bash
+    podman build -f demo/ui/Containerfile . -t a2a-ui
+    ```
+
+> [!Tip]  
+> Podman is a drop-in replacement for `docker` which can also be used in these commands.
+
+3. Run you container
+
+    ```bash
+    podman run -p 12000:12000 --network host a2a-ui
+    ```
+
+> [!Important]  
+> Using the `host` network not recommended in production.

@@ -72,11 +72,11 @@ class PushNotificationListener:
                 request
             ):
                 print('push notification verification failed')
-                return
+                return None
         except Exception as e:
             print(f'error verifying push notification: {e}')
             print(traceback.format_exc())
-            return
+            return None
 
         print(f'\npush notification received => \n{data}\n')
         return Response(status_code=200)

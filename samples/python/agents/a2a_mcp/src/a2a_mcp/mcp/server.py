@@ -209,8 +209,7 @@ def serve(host, port, transport):  # noqa: PLR0915
 
     @mcp.tool()
     def query_travel_data(query: str) -> dict:
-        """
-        "name": "query_travel_data",
+        """ "name": "query_travel_data",
         "description": "Retrieves the most up-to-date, ariline, hotel and car rental availability. Helps with the booking.
         This tool should be used when a user asks for the airline ticket booking, hotel or accommodation booking, or car rental reservations.",
         "parameters": {

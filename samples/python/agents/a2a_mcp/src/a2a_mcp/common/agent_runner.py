@@ -2,7 +2,7 @@
 
 import uuid
 
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 from google.adk.agents import Agent
 from google.adk.events import Event

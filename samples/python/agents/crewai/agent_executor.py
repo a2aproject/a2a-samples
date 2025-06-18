@@ -63,7 +63,7 @@ class ImageGenerationAgentExecutor(AgentExecutor):
                     ),
                 )
             ]
-        event_queue.enqueue_event(
+        await event_queue.enqueue_event(
             completed_task(
                 context.task_id,
                 context.context_id,

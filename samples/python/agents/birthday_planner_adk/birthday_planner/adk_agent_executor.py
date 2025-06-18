@@ -8,16 +8,6 @@ from uuid import uuid4
 
 import httpx
 
-from google.adk import Runner
-from google.adk.agents import LlmAgent, RunConfig
-from google.adk.artifacts import InMemoryArtifactService
-from google.adk.events import Event
-from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
-from google.adk.sessions import InMemorySessionService
-from google.adk.tools import BaseTool, ToolContext
-from google.genai import types
-from pydantic import ConfigDict
-
 from a2a.client import A2AClient
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events.event_queue import EventQueue
@@ -44,6 +34,15 @@ from a2a.types import (
 )
 from a2a.utils import get_text_parts
 from a2a.utils.errors import ServerError
+from google.adk import Runner
+from google.adk.agents import LlmAgent, RunConfig
+from google.adk.artifacts import InMemoryArtifactService
+from google.adk.events import Event
+from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
+from google.adk.sessions import InMemorySessionService
+from google.adk.tools import BaseTool, ToolContext
+from google.genai import types
+from pydantic import ConfigDict
 
 
 logger = logging.getLogger(__name__)
@@ -167,14 +166,14 @@ class ADKAgentExecutor(AgentExecutor):
             if event.is_final_response():
                 response = convert_genai_parts_to_a2a(event.content.parts)
                 logger.debug('Yielding final response: %s', response)
-                task_updater.add_artifact(response)
-                task_updater.complete()
+                await task_updater.add_artifact(response)
+                await task_updater.complete()
                 break
             if calls := event.get_function_calls():
                 for call in calls:
                     # Provide an update on what we're doing.
                     if call.name == 'message_calendar_agent':
-                        task_updater.update_status(
+                        await task_updater.update_status(
                             TaskState.working,
                             message=task_updater.new_agent_message(
                                 [
@@ -188,7 +187,7 @@ class ADKAgentExecutor(AgentExecutor):
                         )
             elif not event.get_function_calls():
                 logger.debug('Yielding update response')
-                task_updater.update_status(
+                await task_updater.update_status(
                     TaskState.working,
                     message=task_updater.new_agent_message(
                         convert_genai_parts_to_a2a(event.content.parts)
@@ -207,7 +206,10 @@ class ADKAgentExecutor(AgentExecutor):
             while not self._is_task_complete(dependent_task):
                 await asyncio.sleep(AUTH_TASK_POLLING_DELAY_SECONDS)
                 response = await a2a_client.get_task(
-                    GetTaskRequest(params=TaskQueryParams(id=dependent_task.id))
+                    GetTaskRequest(
+                        id=str(uuid4()),
+                        params=TaskQueryParams(id=dependent_task.id),
+                    )
                 )
                 if not isinstance(response.root, GetTaskSuccessResponse):
                     logger.debug('Getting dependent task failed: %s', response)
@@ -230,8 +232,8 @@ class ADKAgentExecutor(AgentExecutor):
         updater = TaskUpdater(event_queue, context.task_id, context.context_id)
         # Immediately notify that the task is submitted.
         if not context.current_task:
-            updater.submit()
-        updater.start_work()
+            await updater.submit()
+        await updater.start_work()
         await self._process_request(
             types.UserContent(
                 parts=convert_a2a_parts_to_genai(context.message.parts),
@@ -260,6 +262,7 @@ class ADKAgentExecutor(AgentExecutor):
         # - If the last response from the calendar agent (in this session) produced a non-terminal
         #   task state, the request references that task.
         request = SendMessageRequest(
+            id=str(uuid4()),
             params=MessageSendParams(
                 message=Message(
                     contextId=tool_context._invocation_context.session.id,
@@ -268,7 +271,7 @@ class ADKAgentExecutor(AgentExecutor):
                     role=Role.user,
                     parts=[Part(TextPart(text=message))],
                 )
-            )
+            ),
         )
         response = await self._send_agent_message(request)
         logger.debug('[A2A Client] Received response: %s', response)

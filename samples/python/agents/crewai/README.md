@@ -70,8 +70,9 @@ sequenceDiagram
 5. Run the A2A client:
 
    In a separate terminal:
+
    ```bash
-   # Connect to the agent (specify the agent URL with correct port)
+   # Connect to the agent (specify the agent URL with correct port and host)
    cd samples/python/hosts/cli   
    uv run . --agent http://localhost:10001
    
@@ -80,6 +81,37 @@ sequenceDiagram
    ```
 
    Or run the [demo app](/A2A/A2A/demo/README.md)
+
+## Build Container Image
+
+Agent can also be built using a container file.
+
+1. Navigate to the `samples/python` directory:
+
+   ```bash
+   cd samples/python
+   ```
+
+2. Build the container file
+
+    ```bash
+    podman build -f agents/crewai/Containerfile . -t crewai-a2a-server
+    ```
+
+> [!Tip]  
+> Podman is a drop-in replacement for `docker` which can also be used in these commands.
+
+3. Run you container
+
+    ```bash
+    podman run -p 10001:10001 -e GOOGLE_API_KEY=your_api_key_here crewai-a2a-server
+    ```
+
+4. Run A2A client (follow step 5 from the section above)
+
+> [!Important]
+> * **Access URL:** You must access the A2A client through the URL `0.0.0.0:10001`. Using `localhost` will not work.
+> * **Hostname Override:** If you're deploying to an environment where the hostname is defined differently outside the container, use the `HOST_OVERRIDE` environment variable to set the expected hostname on the Agent Card. This ensures proper communication with your client application.
 
 ## Features & Improvements
 

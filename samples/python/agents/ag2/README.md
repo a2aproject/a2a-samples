@@ -100,6 +100,37 @@ sequenceDiagram
    - Click the 'Home' tab (Conversations)
    - Create and start a conversation to test the interaction (+)
 
+## Build Container Image
+
+Agent can also be built using a container file.
+
+1. Navigate to the `samples/python` directory:
+
+  ```bash
+  cd samples/python
+  ```
+
+2. Build the container file
+
+    ```bash
+    podman build -f agents/ag2/Containerfile . -t ag2-a2a-server
+    ```
+
+> [!Tip]  
+> Podman is a drop-in replacement for `docker` which can also be used in these commands.
+
+3. Run you container
+
+    ```bash
+    podman run -p 10010:10010 -e OPENAI_API_KEY=your_api_key_here ag2-a2a-server
+    ```
+
+4. Run A2A client (follow step 5 from the section above)
+
+> [!Important]
+> * **Access URL:** You must access the A2A client through the URL `0.0.0.0:10010`. Using `localhost` will not work.
+> * **Hostname Override:** If you're deploying to an environment where the hostname is defined differently outside the container, use the `HOST_OVERRIDE` environment variable to set the expected hostname on the Agent Card. This ensures proper communication with your client application.
+
 ## Example Usage
 
 The MCP YouTube server enables the agent to download closed captions for YouTube videos (note: does not work for YouTube Shorts). Here's an example prompt you can try:

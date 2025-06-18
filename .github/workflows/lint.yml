@@ -1,0 +1,38 @@
+name: Lint Code Base
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint Code Base
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install nox
+
+      - name: Run linting with nox
+        run: |
+          nox -s format
+
+      - name: Check if files were modified
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Files were modified by formatting. Please run 'nox -s format' locally."
+            git diff
+            exit 1
+          fi

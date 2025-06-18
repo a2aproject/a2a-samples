@@ -106,7 +106,7 @@ class WorkflowNode:
                 },
             }
             request = SendStreamingMessageRequest(
-                params=MessageSendParams(**payload)
+                id=str(uuid4()), params=MessageSendParams(**payload)
             )
             response_stream = client.send_message_streaming(request)
             async for chunk in response_stream:

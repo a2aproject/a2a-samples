@@ -1,16 +1,19 @@
-from typing import Callable
+from collections.abc import Callable
+from uuid import uuid4
+
 import httpx
+
 from a2a.client import A2AClient
 from a2a.types import (
     AgentCard,
-    Task,
+    JSONRPCErrorResponse,
     Message,
     MessageSendParams,
-    TaskStatusUpdateEvent,
-    TaskArtifactUpdateEvent,
     SendMessageRequest,
     SendStreamingMessageRequest,
-    JSONRPCErrorResponse,
+    Task,
+    TaskArtifactUpdateEvent,
+    TaskStatusUpdateEvent,
 )
 
 
@@ -37,7 +40,7 @@ class RemoteAgentConnections:
         if self.card.capabilities.streaming:
             task = None
             async for response in self.agent_client.send_message_streaming(
-                SendStreamingMessageRequest(params=request)
+                SendStreamingMessageRequest(id=str(uuid4()), params=request)
             ):
                 if not response.root.result:
                     return response.root.error
@@ -52,15 +55,15 @@ class RemoteAgentConnections:
                 if hasattr(event, 'final') and event.final:
                     break
             return task
-        else:  # Non-streaming
-            response = await self.agent_client.send_message(
-                SendMessageRequest(params=request)
-            )
-            if isinstance(response.root, JSONRPCErrorResponse):
-                return response.root.error
-            if isinstance(response.root.result, Message):
-                return response.root.result
-
-            if task_callback:
-                task_callback(response.root.result, self.card)
+        # Non-streaming
+        response = await self.agent_client.send_message(
+            SendMessageRequest(id=str(uuid4()), params=request)
+        )
+        if isinstance(response.root, JSONRPCErrorResponse):
+            return response.root.error
+        if isinstance(response.root.result, Message):
             return response.root.result
+
+        if task_callback:
+            task_callback(response.root.result, self.card)
+        return response.root.result
