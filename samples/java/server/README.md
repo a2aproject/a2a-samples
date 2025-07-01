@@ -10,7 +10,7 @@ The A2A Server SDK is a comprehensive Java library that implements the A2A proto
 
 ### 🚀 **Complete A2A Protocol Implementation**
 - **JSON-RPC 2.0** support for all A2A operations
-- **Agent Card** publishing at `/.well-known/agent-card`
+- **Agent Card** publishing at `/.well-known/agent.json`
 - **Task Management** - send, query, cancel operations
 - **Streaming Support** - real-time task updates via Server-Sent Events
 - **Error Handling** - comprehensive error management with proper codes
@@ -40,7 +40,7 @@ The A2A Server SDK is a comprehensive Java library that implements the A2A proto
 
 ### Agent Card Endpoint
 ```http
-GET /.well-known/agent-card
+GET /.well-known/agent.json
 Accept: application/json
 ```
 
