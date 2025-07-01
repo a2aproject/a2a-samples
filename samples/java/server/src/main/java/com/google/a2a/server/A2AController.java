@@ -175,7 +175,7 @@ public class A2AController {
     /**
      * Get agent card information
      */
-    @GetMapping("/.well-known/agent-card")
+    @GetMapping("/.well-known/agent.json")
     public ResponseEntity<AgentCard> getAgentCard() {
         return ResponseEntity.ok(server.getAgentCard());
     }

@@ -181,7 +181,7 @@ public class A2AClient {
     public AgentCard getAgentCard() throws A2AClientException {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(baseUrl + "/.well-known/agent-card"))
+                .uri(URI.create(baseUrl + "/.well-known/agent.json"))
                 .header("Accept", "application/json")
                 .GET()
                 .build();
