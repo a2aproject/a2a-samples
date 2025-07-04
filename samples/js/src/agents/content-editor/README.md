@@ -1,38 +1,46 @@
-# JavaScript Samples
+# Content Editor Agent
 
-The provided samples are built using [Genkit](https://genkit.dev/) using the Gemini API.
+This sample agent can be used to proof-read and polish content. The provided sample is built using [Genkit](https://genkit.dev/) using the Gemini API.
 
-## Agents
+## Prerequisites
 
-- [Movie Agent](src/agents/movie-agent/README.md): Uses TMDB API to search for movie information and answer questions.
-- [Coder Agent](src/agents/coder/README.md): Generates full code files as artifacts.
-- [Content Editor Agent**](src/agents/content-editor/README.md)  
-    Sample agent to proof-read and polish content. To make use of this agent in a content creation multi-agent system, check out the [content_creation](../python/hosts/content_creation/README.md) sample.
+- Access to an LLM and API Key
 
-## Testing the Agents
+## Running the Sample
 
-First, follow the instructions in the agent's README file, then run `npx tsx ./cli.ts` to start up a command-line client to talk to the agents. Example:
+1. Navigate to the samples directory:
 
-1. Navigate to the samples/js directory:
     ```bash
     cd samples/js
     ```
-2. Run npm install:
+
+2. Create an environment file with your API key:
+
+   ```bash
+   echo "GOOGLE_API_KEY=your_api_key_here" > .env
+   ```
+
+3. Run npm install:
     ```bash
     npm install
     ```
-3. Run an agent:
-```bash
-export GEMINI_API_KEY=<your_api_key>
-npm run agents:coder
+   
+4. Run the Content Editor Agent
 
-# in a separate terminal
-npm run a2a:cli
-```
----
-**NOTE:** 
-This is sample code and not production-quality libraries.
----
+   **NOTE:**
+   By default, the agent will start on port 10003. To override this, use `export CONTENT_EDITOR_AGENT_PORT=YOUR_PORT`.
+
+   ```bash
+   npm run agents:content-editor
+   ```
+
+5. In a separate terminal, run the A2A client and use it to send a message to the agent:
+
+   ```
+   npm run a2a:cli
+   ```
+
+6. To make use of this agent in a content creation multi-agent system, check out the [content_creation](../../../../python/hosts/content_creation/README.md) sample.
 
 ## Disclaimer
 Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
