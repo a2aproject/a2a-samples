@@ -8,10 +8,10 @@ To interact with the servers, use an A2AClient in a host app (such as the CLI). 
 
 ## Agents Directory
 
-* [**Google ADK Facts**](/samples/python/agents/adk-facts/README.md)  
+* [**Google ADK Facts**](/samples/python/agents/adk_facts/README.md)  
 Sample agent to give fun facts using Grounding with Google Search and ADK
 
-* [**Google ADK Expense Reimbursement**](/samples/python/agents/adk-expense-reimbursement/README.md)  
+* [**Google ADK Expense Reimbursement**](/samples/python/agents/adk_expense_reimbursement/README.md)  
 Sample agent to (mock) fill out expense reports. Showcases multi-turn interactions and returning/replying to webforms through A2A.
 
 * [**AG2 MCP Agent with A2A Protocol**](/samples/python/agents/ag2/README.md)  
