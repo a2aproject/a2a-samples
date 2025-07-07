@@ -35,29 +35,24 @@ Let's take a closer look at the classes that make up the Weather app:
 
 
 #### A2A Java SDK
-The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A Java SDK](https://github.com/a2aproject/a2a-java). Notice that our Weather app's [`pom.xml`](weather_agent/pom.xml) has a dependency on the `a2a-java-sdk-core` and `a2a-java-sdk-server-quarkus` libraries:
+The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A Java SDK](https://github.com/a2aproject/a2a-java). Notice that our Weather app's [`pom.xml`](weather_agent/pom.xml) has a dependency on the `a2a-java-sdk-server-quarkus` library:
+
+----
+> *⚠️ The `io.github.a2asdk` `groupId` below is temporary and will likely change for future releases. Keep an eye on the `a2a-java` [README](https://github.com/a2aproject/a2a-java/blob/main/README.md) for up-to-date documentation.*
+----
 
 ```xml
 ...
-<properties>
-    <io.a2a.sdk.version>0.2.3.Beta</io.a2a.sdk.version>
-    ...
-</properties>    
-...
 <dependency>
-    <groupId>io.a2a.sdk</groupId>
-    <artifactId>a2a-java-sdk-core</artifactId>
-    <version>${io.a2a.sdk.version}</version>
-</dependency>
-<dependency>
-    <groupId>io.a2a.sdk</groupId>
+    <groupId>io.github.a2asdk</groupId>
     <artifactId>a2a-java-sdk-server-quarkus</artifactId>
+    <!-- Use a released version from https://github.com/a2aproject/a2a-java/tags -->
     <version>${io.a2a.sdk.version}</version>
 </dependency>
 ...
 ```
 
-Simply adding these dependencies to your Java application and providing `AgentCard` and `AgentExecutor` producers  makes it possible to easily run agentic Java applications as A2A servers using the A2A protocol. 
+Simply adding this dependency to your Java application and providing `AgentCard` and `AgentExecutor` producers  makes it possible to easily run agentic Java applications as A2A servers using the A2A protocol. 
 
 Note that we used the `a2a-java-sdk-server-quarkus` library in this example since our app is a Quarkus application. You can also use the `a2a-java-sdk-server-jakarta` library instead which is based on Jakarta REST.
 
@@ -134,24 +129,7 @@ cd ../airbnb_agent
 uv run .
 ```
 
-## 2. Build our A2A Java SDK
-
-> *⚠️ This is a temporary step until our A2A Java SDK is released.
-> The A2A Java SDK isn't available yet in Maven Central but will be soon. For now, be
-> sure to check out the latest tag (you can see the tags [here](https://github.com/a2aproject/a2a-java/tags)), build from the tag, and reference that version below. For example, if the latest tag is `0.2.3.Beta`, you can use
-`git checkout 0.2.3.Beta` as shown below.*
-
-Open a new terminal and build the A2A Java SDK:
-
-```bash
-git clone https://github.com/a2aproject/a2a-java
-cd a2a-java
-git fetch --tags
-git checkout 0.2.3.Beta
-mvn clean install
-```
-
-## 3. Run Weather Agent
+## 2. Run Weather Agent
 
 Open a new terminal and run the weather agent:
 
@@ -162,7 +140,7 @@ mvn quarkus:dev
 
 Note that Quarkus will automatically start up the weather Python MCP server that's needed by the Weather Agent since we've added the `quarkus.langchain4j.mcp.weather.transport-type` and the `quarkus.langchain4j.mcp.weather.command` properties in the [application.properties](weather_agent/src/main/resources/application.properties) file.
 
-## 4. Run Host Agent
+## 3. Run Host Agent
 Open a new terminal and run the host agent server:
 
 ```bash
