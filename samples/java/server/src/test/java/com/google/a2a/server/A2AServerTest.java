@@ -104,7 +104,7 @@ class A2AServerTest {
         JSONRPCRequest request = new JSONRPCRequest(
             "request-1",
             "2.0",
-            "tasks/send",
+            "message/send",
             params
         );
         
@@ -156,7 +156,7 @@ class A2AServerTest {
         JSONRPCRequest sendRequest = new JSONRPCRequest(
             "request-1",
             "2.0",
-            "tasks/send",
+            "message/send",
             sendParams
         );
         
@@ -216,7 +216,7 @@ class A2AServerTest {
         JSONRPCRequest sendRequest = new JSONRPCRequest(
             "request-1",
             "2.0",
-            "tasks/send",
+            "message/send",
             sendParams
         );
         

@@ -79,7 +79,7 @@ The project implements an intelligent translation agent supporting multi-languag
 Complete implementation of A2A protocol specifications:
 
 **Core Operations**:
-- `tasks/send`: Send task messages
+- `message/send`: Send task messages
 - `tasks/get`: Query task status
 - `tasks/cancel`: Cancel task execution
 
@@ -172,7 +172,7 @@ curl -X POST http://localhost:8080/a2a \
   -d '{
     "jsonrpc": "2.0",
     "id": "request-1",
-    "method": "tasks/send",
+    "method": "message/send",
     "params": {
       "id": "translation-task-1",
       "message": {
@@ -199,7 +199,7 @@ curl -X POST http://localhost:8080/a2a/stream \
   -d '{
     "jsonrpc": "2.0",
     "id": "stream-request-1",
-    "method": "tasks/send",
+    "method": "message/send",
     "params": {
       "id": "streaming-translation-task",
       "message": {
