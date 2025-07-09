@@ -17,15 +17,6 @@ graph LR
     B <--> C["Approval Agent<br/>(Remote A2A)<br/>(localhost:8001)"]
 ```
 
-```
-┌─────────────────┐    ┌────────────────────┐    ┌──────────────────┐
-│   Human Manager │───▶│   Root Agent       │───▶│   Approval Agent │
-│   (External)    │    │    (Local)         │    │  (Remote A2A)    │
-│                 │    │                    │    │ (localhost:8001) │
-│   Approval UI   │◀───│                    │◀───│                  │
-└─────────────────┘    └────────────────────┘    └──────────────────┘
-```
-
 ## Key Features
 
 ### 1. **Automated Decision Making**
