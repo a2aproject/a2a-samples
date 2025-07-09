@@ -14,17 +14,8 @@ The A2A Basic sample consists of:
 
 ```mermaid
 graph LR
-    subgraph "Local"
-        Root_Agent[Root Agent]
-        Roll_Agent[Roll Agent]
-    end
-
-    subgraph "localhost:8001"
-        Remote_Prime_Agent[Remote Prime Agent]
-    end
-
-    Root_Agent --> Roll_Agent
-    Remote_Prime_Agent --> Roll_Agent
+    A["Root Agent (Local)"] --> B["Roll Agent (Local)"]
+    B <--> C["Remote Prime Agent<br/>(localhost:8001)"]
 ```
 
 ## Key Features
@@ -56,17 +47,25 @@ graph LR
 
 ### Prerequisites
 
-1. **Start the Remote Prime Agent server**:
+1. Install the Requirements
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Start the Remote Prime Agent server**:
 
    ```bash
    # Start the remote a2a server that serves the check prime agent on port 8001
+   # Run from adk_basic_multi_agent directory
    adk api_server --a2a --port 8001 remote_a2a
    ```
 
-2. **Run the Main Agent**:
+3. **Run the Main Agent**:
 
    ```bash
    # In a separate terminal, run the adk web server
+   # Run from parent directory samples/python/agents/
    adk web
    ```
 
