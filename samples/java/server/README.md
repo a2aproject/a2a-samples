@@ -54,7 +54,7 @@ Content-Type: application/json
 {
   "jsonrpc": "2.0",
   "id": "request-1",
-  "method": "tasks/send",
+  "method": "message/send",
   "params": {
     "id": "task-1",
     "message": {

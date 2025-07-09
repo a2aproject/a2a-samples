@@ -32,6 +32,7 @@ from common.utils.push_notification_auth import PushNotificationReceiverAuth
 
 @click.command()
 @click.option('--agent', default='http://localhost:10000')
+@click.option('--bearer-token', help='Bearer token for authentication.', envvar='A2A_CLI_BEARER_TOKEN')
 @click.option('--session', default=0)
 @click.option('--history', default=False)
 @click.option('--use_push_notifications', default=False)
@@ -39,6 +40,7 @@ from common.utils.push_notification_auth import PushNotificationReceiverAuth
 @click.option('--header', multiple=True)
 async def cli(
     agent,
+    bearer_token,
     session,
     history,
     use_push_notifications: bool,
@@ -46,6 +48,8 @@ async def cli(
     header,
 ):
     headers = {h.split('=')[0]: h.split('=')[1] for h in header}
+    if bearer_token:
+        headers['Authorization'] = f'Bearer {bearer_token}'
     print(f'Will use headers: {headers}')
     async with httpx.AsyncClient(timeout=30, headers=headers) as httpx_client:
         card_resolver = A2ACardResolver(httpx_client, agent)

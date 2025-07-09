@@ -40,7 +40,7 @@ The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A
 ```xml
 ...
 <properties>
-    <io.a2a.sdk.version>0.2.3</io.a2a.sdk.version>
+    <io.a2a.sdk.version>0.2.3.Beta</io.a2a.sdk.version>
     ...
 </properties>    
 ...
@@ -138,8 +138,8 @@ uv run .
 
 > *⚠️ This is a temporary step until our A2A Java SDK is released.
 > The A2A Java SDK isn't available yet in Maven Central but will be soon. For now, be
-> sure to check out the latest tag (you can see the tags [here](https://github.com/a2aproject/a2a-java/tags)), build from the tag, and reference that version below. For example, if the latest tag is `0.2.3`, you can use
-`git checkout 0.2.3` as shown below.*
+> sure to check out the latest tag (you can see the tags [here](https://github.com/a2aproject/a2a-java/tags)), build from the tag, and reference that version below. For example, if the latest tag is `0.2.3.Beta`, you can use
+`git checkout 0.2.3.Beta` as shown below.*
 
 Open a new terminal and build the A2A Java SDK:
 
@@ -147,7 +147,7 @@ Open a new terminal and build the A2A Java SDK:
 git clone https://github.com/a2aproject/a2a-java
 cd a2a-java
 git fetch --tags
-git checkout 0.2.3
+git checkout 0.2.3.Beta
 mvn clean install
 ```
 

@@ -60,7 +60,7 @@ public class A2AClient {
         JSONRPCRequest request = new JSONRPCRequest(
             generateRequestId(),
             "2.0",
-            "tasks/send",
+            "message/send",
             params
         );
         
@@ -116,7 +116,7 @@ public class A2AClient {
                 JSONRPCRequest request = new JSONRPCRequest(
                     generateRequestId(),
                     "2.0",
-                    "tasks/send",
+                    "message/send",
                     params
                 );
                 
