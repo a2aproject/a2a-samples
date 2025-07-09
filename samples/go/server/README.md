@@ -6,7 +6,7 @@ This directory contains a Go server implementation for the Agent-to-Agent (A2A) 
 
 - JSON-RPC 2.0 compliant server
 - Supports core A2A methods:
-  - `tasks/send`: Send a new task
+  - `message/send`: Send a new task
   - `tasks/get`: Get task status
   - `tasks/cancel`: Cancel a task
 - Streaming task updates with Server-Sent Events (SSE)

@@ -65,7 +65,7 @@ func (s *A2AServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch req.Method {
-	case "tasks/send":
+	case "message/send":
 		var params models.TaskSendParams
 		paramsBytes, err := json.Marshal(req.Params)
 		if err != nil {
@@ -93,7 +93,7 @@ func (s *A2AServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// handleTaskSend handles the tasks/send method
+// handleTaskSend handles the message/send method
 func (s *A2AServer) handleTaskSend(w http.ResponseWriter, req *models.JSONRPCRequest, id string) {
 	var params models.TaskSendParams
 	paramsBytes, err := json.Marshal(req.Params)
