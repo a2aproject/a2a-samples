@@ -14,8 +14,8 @@ The A2A Basic sample consists of:
 
 ```mermaid
 graph LR
-    A["Root Agent (Local)"] --> B["Roll Agent (Local)"]
-    B <--> C["Remote Prime Agent<br/>(localhost:8001)"]
+    A["Root Agent </br> (Local)"] <--> B["Roll Agent </br> (Local)"]
+    B <-- C["Remote Prime Agent<br/>(localhost:8001)"]
 ```
 
 ## Key Features
