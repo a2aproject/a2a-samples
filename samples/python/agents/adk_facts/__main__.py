@@ -113,26 +113,28 @@ async def main(host, port):
         ],
     )
 
-    DB_INSTANCE = os.environ['DB_INSTANCE']
-    DB_NAME = os.environ['DB_NAME']
-    DB_USER = os.environ['DB_USER']
-    DB_PASS = os.environ['DB_PASS']
+    use_alloy_db_str = os.getenv('USE_ALLOY_DB', 'False')
+    if use_alloy_db_str.lower() == "true":
+        DB_INSTANCE = os.environ['DB_INSTANCE']
+        DB_NAME = os.environ['DB_NAME']
+        DB_USER = os.environ['DB_USER']
+        DB_PASS = os.environ['DB_PASS']
 
-    engine, connector = await create_sqlalchemy_engine(
-        DB_INSTANCE,
-        DB_USER,
-        DB_PASS,
-        DB_NAME,
-    )
-    alloydb_task_store = DatabaseTaskStore(engine)
-    # Or use in-memory task store for testing.
-    # task_store = InMemoryTaskStore()
+        engine, connector = await create_sqlalchemy_engine(
+            DB_INSTANCE,
+            DB_USER,
+            DB_PASS,
+            DB_NAME,
+        )
+        task_store = DatabaseTaskStore(engine)
+    else:
+        task_store = InMemoryTaskStore()
 
     request_handler = DefaultRequestHandler(
         agent_executor=ADKAgentExecutor(
             agent=facts_agent,
         ),
-        task_store=alloydb_task_store,
+        task_store=task_store,
     )
 
     a2a_app = A2AStarletteApplication(

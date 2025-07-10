@@ -39,13 +39,12 @@ gcloud iam service-accounts create a2a-service-account \
 ```
 
 ### Add IAM access
+Below roles allow cloud run service to access secrets and invoke `predict` API on Vertex AI models.
 ```sh
 gcloud projects add-iam-policy-binding "{your-project-id}" \
   --member="serviceAccount:a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
   --role="roles/aiplatform.user"
-  --role="roles/alloydb.client" \
-  --role="roles/serviceusage.serviceUsageConsumer"
 ```
 
 If using AlloyDb, then also add below IAM role bindings.
@@ -107,6 +106,7 @@ gcloud run deploy sample-a2a-agent \
 GOOGLE_CLOUD_PROJECT="{your-project-id}",\
 GOOGLE_CLOUD_LOCATION="us-central1",\
 APP_URL="https://sample-a2a-agent-1234.us-central1.run.app",\
+USE_ALLOY_DB="True",\
 DB_INSTANCE="projects/{your-project-id}/locations/us-central1/clusters/{my-cluster}/instances/primary-instance",\
 DB_NAME="postgres"
 ```
