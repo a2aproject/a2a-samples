@@ -1,11 +1,12 @@
 # ADK Agent
 
-This sample uses the Agent Development Kit (ADK) to create a simple fun facts generator which communicates using A2A.
+This sample uses the Agent Development Kit (ADK) to create a simple fun facts generator which communicates using A2A and can be deployed to Google Cloud Run.
 
 ## Prerequisites
 
 - Python 3.10 or higher
 - Access to an LLM and API Key
+- If deploying to Cloud Run, you'll need a Google Cloud Project
 
 ## Running the Sample
 
@@ -23,7 +24,7 @@ This sample uses the Agent Development Kit (ADK) to create a simple fun facts ge
 
 3. Create a `.env` file with your Gemini API Key:
 
-   ```env
+   ```sh
    echo "GOOGLE_API_KEY=your_api_key_here" > .env
    ```
 
