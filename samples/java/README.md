@@ -36,7 +36,7 @@ Spring Boot-based A2A server SDK, integrated with Spring AI framework:
 
 - **Key Features**:
   - Complete JSON-RPC 2.0 support
-  - Agent card publishing (`/.well-known/agent-card`)
+  - Agent card publishing (`/.well-known/agent.json`)
   - Task management (send, query, cancel)
   - Streaming response support (Server-Sent Events)
   - Spring AI integration supporting OpenAI and other models
@@ -79,7 +79,7 @@ The project implements an intelligent translation agent supporting multi-languag
 Complete implementation of A2A protocol specifications:
 
 **Core Operations**:
-- `tasks/send`: Send task messages
+- `message/send`: Send task messages
 - `tasks/get`: Query task status
 - `tasks/cancel`: Cancel task execution
 
@@ -94,7 +94,7 @@ Complete implementation of A2A protocol specifications:
 
 **Synchronous Communication**: 
 - HTTP POST `/a2a` - Standard JSON-RPC requests
-- HTTP GET `/.well-known/agent-card` - Agent information retrieval
+- HTTP GET `/.well-known/agent.json` - Agent information retrieval
 
 **Streaming Communication**:
 - HTTP POST `/a2a/stream` - Server-Sent Events
@@ -142,7 +142,7 @@ cd server
 ```
 
 The server will start at `http://localhost:8080`, providing the following endpoints:
-- `http://localhost:8080/.well-known/agent-card` - Agent information
+- `http://localhost:8080/.well-known/agent.json` - Agent information
 - `http://localhost:8080/a2a` - A2A protocol endpoint
 - `http://localhost:8080/a2a/stream` - Streaming endpoint
 
@@ -160,7 +160,7 @@ cd client
 ### Get Agent Information
 
 ```bash
-curl -X GET http://localhost:8080/.well-known/agent-card \
+curl -X GET http://localhost:8080/.well-known/agent.json \
   -H "Accept: application/json"
 ```
 
@@ -172,7 +172,7 @@ curl -X POST http://localhost:8080/a2a \
   -d '{
     "jsonrpc": "2.0",
     "id": "request-1",
-    "method": "tasks/send",
+    "method": "message/send",
     "params": {
       "id": "translation-task-1",
       "message": {
@@ -199,7 +199,7 @@ curl -X POST http://localhost:8080/a2a/stream \
   -d '{
     "jsonrpc": "2.0",
     "id": "stream-request-1",
-    "method": "tasks/send",
+    "method": "message/send",
     "params": {
       "id": "streaming-translation-task",
       "message": {
