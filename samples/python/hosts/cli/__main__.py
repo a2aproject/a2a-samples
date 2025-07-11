@@ -2,7 +2,6 @@ import asyncio
 import base64
 import os
 import urllib
-
 from uuid import uuid4
 
 import asyncclick as click
@@ -170,6 +169,7 @@ async def completeTask(
 
     taskResult = None
     message = None
+    task_completed = False
     if streaming:
         response_stream = client.send_message_streaming(
             SendStreamingMessageRequest(
@@ -179,7 +179,7 @@ async def completeTask(
         )
         async for result in response_stream:
             if isinstance(result.root, JSONRPCErrorResponse):
-                print('Error: ', result.root.error)
+                print(f'Error: {result.root.error}, contextId: {contextId}, taskId: {taskId}')
                 return False, contextId, taskId
             event = result.root.result
             contextId = event.contextId
@@ -189,18 +189,23 @@ async def completeTask(
                 event, TaskArtifactUpdateEvent
             ):
                 taskId = event.taskId
+                if isinstance(event, TaskStatusUpdateEvent) and event.status.state == 'completed':
+                    task_completed = True
             elif isinstance(event, Message):
                 message = event
             print(f'stream event => {event.model_dump_json(exclude_none=True)}')
         # Upon completion of the stream. Retrieve the full task if one was made.
-        if taskId:
-            taskResult = await client.get_task(
+        if taskId and not task_completed:
+            taskResultResponse = await client.get_task(
                 GetTaskRequest(
                     id=str(uuid4()),
                     params=TaskQueryParams(id=taskId),
                 )
             )
-            taskResult = taskResult.root.result
+            if isinstance(taskResultResponse.root, JSONRPCErrorResponse):
+                print(f'Error: {taskResultResponse.root.error}, contextId: {contextId}, taskId: {taskId}')
+                return False, contextId, taskId
+            taskResult = taskResultResponse.root.result
     else:
         try:
             # For non-streaming, assume the response is a task or message.
@@ -243,19 +248,15 @@ async def completeTask(
         ## if the result is that more input is required, loop again.
         state = TaskState(taskResult.status.state)
         if state.name == TaskState.input_required.name:
-            return (
-                await completeTask(
-                    client,
-                    streaming,
-                    use_push_notifications,
-                    notification_receiver_host,
-                    notification_receiver_port,
-                    taskId,
-                    contextId,
-                ),
-                contextId,
+            return await completeTask(
+                client,
+                streaming,
+                use_push_notifications,
+                notification_receiver_host,
+                notification_receiver_port,
                 taskId,
-            )
+                contextId,
+            ), contextId, taskId
         ## task is complete
         return True, contextId, taskId
     ## Failure case, shouldn't reach
