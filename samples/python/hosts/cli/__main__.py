@@ -189,7 +189,7 @@ async def completeTask(
                 event, TaskArtifactUpdateEvent
             ):
                 taskId = event.taskId
-                if isinstance(event, TaskStatusUpdateEvent) and event.status.state == 'completed':
+                if isinstance(event, TaskStatusUpdateEvent) and event.status.state == TaskState.COMPLETED:
                     task_completed = True
             elif isinstance(event, Message):
                 message = event
