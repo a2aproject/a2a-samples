@@ -195,7 +195,7 @@ async def completeTask(
                 message = event
             print(f'stream event => {event.model_dump_json(exclude_none=True)}')
         # Upon completion of the stream. Retrieve the full task if one was made.
-        if taskId and not taskResult and not task_completed:
+        if taskId and not task_completed:
             taskResultResponse = await client.get_task(
                 GetTaskRequest(
                     id=str(uuid4()),
