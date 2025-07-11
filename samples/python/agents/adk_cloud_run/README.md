@@ -77,12 +77,23 @@ gcloud secrets versions add alloy_db_pass --data-file="pass.txt"
 
 ## Deploy to Google Cloud Run
 
-The A2A cloud run service can be exposed publicly (link) or kept internal to just GCP clients.
-When deployed to cloud-run, it returns a run.app URL to query the running service. If length is short enough, it would be the deterministic URL of the form:
+The A2A cloud run service can be exposed publicly [link](https://cloud.google.com/run/docs/authenticating/public) or kept internal to just GCP clients.
+
+When deploying a service to cloud-run, it returns a run.app URL to query the running service. If length is short enough, it would be the deterministic URL of the form:
 
 https://[TAG---]SERVICE_NAME-PROJECT_NUMBER.REGION.run.app
 
 Eg: https://sample-a2a-agent-1234.us-central1.run.app
+
+### Service Authentication
+
+#### IAM based Authentication
+IAM can be used, if the clients are within GCP [link](https://cloud.google.com/run/docs/authenticating/service-to-service). Agentspace is one such example of an internal client. The clients can use service accounts and they need to be given IAM role: `roles/run.invoker` 
+
+#### Public Access
+The A2A server is responsible for handling agent level auth. They need to provide this auth info in their agent card using the securitySchemes and security params.
+
+Use the param `--allow-unauthenticated` while deploying to cloud run, to allow public access.
 
 ### With `InMemoryTaskStore`
 
@@ -90,7 +101,7 @@ Eg: https://sample-a2a-agent-1234.us-central1.run.app
 gcloud run deploy sample-a2a-agent \
     --port=8080 \
     --source=. \
-    --allow-unauthenticated \
+    --no-allow-unauthenticated \
     --region="us-central1" \
     --project="{your-project-id}" \
     --service-account a2a-service-account \
@@ -106,7 +117,7 @@ APP_URL="https://sample-a2a-agent-1234.us-central1.run.app",\
 gcloud run deploy sample-a2a-agent \
     --port=8080 \
     --source=. \
-    --allow-unauthenticated \
+    --no-allow-unauthenticated \
     --region="us-central1" \
     --project="{your-project-id}" \
     --update-secrets=DB_USER=alloy_db_user:latest,DB_PASS=alloy_db_pass:latest \
