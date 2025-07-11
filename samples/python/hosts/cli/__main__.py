@@ -256,7 +256,7 @@ async def completeTask(
                 notification_receiver_port,
                 taskId,
                 contextId,
-            )
+            ), contextId, taskId
         ## task is complete
         return True, contextId, taskId
     ## Failure case, shouldn't reach
