@@ -64,26 +64,33 @@ func (s *A2AServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	switch req.Method {
-	case "message/send":
+	parseTaskSendParams := func(req *models.JSONRPCRequest) (*models.TaskSendParams, error) {
 		var params models.TaskSendParams
 		paramsBytes, err := json.Marshal(req.Params)
+		if err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal(paramsBytes, &params); err != nil {
+			return nil, err
+		}
+		return &params, nil
+	}
+
+	switch req.Method {
+	case "message/send":
+		_, err := parseTaskSendParams(&req)
 		if err != nil {
 			s.sendError(w, req.ID.(string), models.ErrorCodeInvalidRequest, "Invalid parameters")
 			return
 		}
-		if err := json.Unmarshal(paramsBytes, &params); err != nil {
+		s.handleTaskSend(w, &req, req.ID.(string))
+	case "message/stream":
+		params, err := parseTaskSendParams(&req)
+		if err != nil {
 			s.sendError(w, req.ID.(string), models.ErrorCodeInvalidRequest, "Invalid parameters")
 			return
 		}
-
-		// Check if client wants streaming response
-		if r.Header.Get("Accept") == "text/event-stream" {
-			s.handleStreamingTask(w, r, params)
-			return
-		}
-
-		s.handleTaskSend(w, &req, req.ID.(string))
+		s.handleStreamingTask(w, r, *params)
 	case "tasks/get":
 		s.handleTaskGet(w, &req, req.ID.(string))
 	case "tasks/cancel":
