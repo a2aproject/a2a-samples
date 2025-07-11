@@ -24,7 +24,7 @@ This sample uses the Agent Development Kit (ADK) to create a simple fun facts ge
 
 3. Create a `.env` file with your Gemini API Key:
 
-   ```sh
+   ```bash
    echo "GOOGLE_API_KEY=your_api_key_here" > .env
    ```
 
