@@ -28,92 +28,16 @@ This sample uses the Agent Development Kit (ADK) to create a simple fun facts ge
     uv run .
     ```
 
-## Setup Config Google Cloud Run
-
-### Create Service Account
-Cloud run uses service accounts (SA) when running service instances (link). Create a service account specific for the deployed A2A service.
-```sh
-gcloud iam service-accounts create a2a-service-account \
-  --description="service account for a2a cloud run service" \
-  --display-name="A2A cloud run service account"
-```
-
-### Add IAM access
-Below roles allow cloud run service to access secrets and invoke `predict` API on Vertex AI models.
-```sh
-gcloud projects add-iam-policy-binding "{your-project-id}" \
-  --member="serviceAccount:a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
-  --role="roles/secretmanager.secretAccessor"
-  --role="roles/aiplatform.user"
-```
-
-If using AlloyDb, then also add below IAM role bindings.
-```sh
-gcloud projects add-iam-policy-binding "{your-project-id}" \
-  --member="serviceAccount:a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
-  --role="roles/alloydb.client" \
-  --role="roles/serviceusage.serviceUsageConsumer"
-```
-
-### Configure Secrets
-All sensitive credentials should be provided to the server using a secure mechanism. Cloud run allows secrets to be provided as environment variables or dynamic volume mounts.
-DB user & password secrets can be created in Secret Manager as below:
-
-```sh
-gcloud secrets create alloy_db_user --replication-policy="automatic"
-# Create a file user.txt with contents of secret value
-gcloud secrets versions add alloy_db_user --data-file="user.txt"
-
-gcloud secrets create alloy_db_pass --replication-policy="automatic"
-# Create a file pass.txt with contents of secret value
-gcloud secrets versions add alloy_db_pass --data-file="pass.txt"
-```
-
 ## Deploy to Google Cloud Run
-The A2A cloud run service can be exposed publicly (link) or kept internal to just GCP clients.
-When deployed to cloud-run, it returns a run.app URL to query the running service. If length is short enough, it would be the deterministic URL of the form:
 
-https://[TAG---]SERVICE_NAME-PROJECT_NUMBER.REGION.run.app
-
-Eg: https://sample-a2a-agent-1234.us-central1.run.app
-
-### With InMemoryTaskStore
 ```sh
 gcloud run deploy sample-a2a-agent \
     --port=8080 \
     --source=. \
     --allow-unauthenticated \
     --region="us-central1" \
-    --project="{your-project-id}" \
-    --service-account a2a-service-account \
-    --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=true,\
-GOOGLE_CLOUD_PROJECT="{your-project-id}",\
-GOOGLE_CLOUD_LOCATION="us-central1",\
-APP_URL="https://sample-a2a-agent-1234.us-central1.run.app",\
-```
-
-### With AlloyDb
-```sh
-gcloud run deploy sample-a2a-agent \
-    --port=8080 \
-    --source=. \
-    --allow-unauthenticated \
-    --region="us-central1" \
-    --project="{your-project-id}" \
-    --update-secrets=DB_USER=alloy_db_user:latest,DB_PASS=alloy_db_pass:latest \
-    --service-account a2a-service-account \
-    --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=true,\
-GOOGLE_CLOUD_PROJECT="{your-project-id}",\
-GOOGLE_CLOUD_LOCATION="us-central1",\
-APP_URL="https://sample-a2a-agent-1234.us-central1.run.app",\
-USE_ALLOY_DB="True",\
-DB_INSTANCE="projects/{your-project-id}/locations/us-central1/clusters/{my-cluster}/instances/primary-instance",\
-DB_NAME="postgres"
-```
-
-In case the run.app URL, returned by above deploy command, is different from the predefined deterministic URL, then you can update the APP_URL environment variable.
-```sh
-gcloud run services update --region="us-central1" sample-a2a-agent --update-env-vars APP_URL="{run.app-url}"
+    --project=$GOOGLE_CLOUD_PROJECT \
+    --set-env-vars=GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_REGION=$GOOGLE_CLOUD_REGION,GOOGLE_GENAI_USE_VERTEXAI=true
 ```
 
 ## Disclaimer
