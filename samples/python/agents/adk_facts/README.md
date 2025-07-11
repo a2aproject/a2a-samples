@@ -5,7 +5,6 @@ This sample uses the Agent Development Kit (ADK) to create a simple fun facts ge
 ## Prerequisites
 
 - Python 3.10 or higher
-- [UV](https://docs.astral.sh/uv/)
 - Access to an LLM and API Key
 
 ## Running the Sample
@@ -16,17 +15,55 @@ This sample uses the Agent Development Kit (ADK) to create a simple fun facts ge
     cd samples/python/agents/adk_facts
     ```
 
-2. Create an environment file with your API key:
+2. Install Requirements
 
-   ```bash
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3. Create a `.env` file with your Gemini API Key:
+
+   ```env
    echo "GOOGLE_API_KEY=your_api_key_here" > .env
    ```
 
-3. Run an agent:
+4. Run the remote A2A agent:
 
     ```bash
-    uv run .
+    adk api_server --a2a --port 8001 remote_a2a
     ```
+
+5. Run the main agent
+
+    ```bash
+    # In a separate terminal, run the adk web server
+    adk web samples/python/agents/
+    ```
+
+  In the Web UI, select the `adk_facts` agent.
+
+## Configure Google Cloud Run
+
+### Create Service Account
+
+Cloud Run uses service accounts (SA) when running service instances (link). Create a service account specific for the deployed A2A service.
+
+```sh
+gcloud iam service-accounts create a2a-service-account \
+  --description="service account for a2a cloud run service" \
+  --display-name="A2A cloud run service account"
+```
+
+### Add IAM access
+
+The below roles allow the Cloud Run service to access secrets and invoke `predict` API on Vertex AI models.
+
+```sh
+gcloud projects add-iam-policy-binding "{your-project-id}" \
+  --member="serviceAccount:a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
+  --role="roles/secretmanager.secretAccessor"
+  --role="roles/aiplatform.user"
+```
 
 ## Deploy to Google Cloud Run
 
