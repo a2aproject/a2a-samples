@@ -1,11 +1,8 @@
-from google.adk.agents import Agent
-from google.adk.tools import google_search
+from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 
 
-root_agent = Agent(
+root_agent = RemoteA2aAgent(
     name="facts_agent",
-    model="gemini-2.5-flash-lite-preview-06-17",
-    description=("Agent to give interesting facts."),
-    instruction=("You are a helpful agent who can provide interesting facts."),
-    tools=[google_search],
+    description="Agent to give interesting facts.",
+    agent_card=("http://localhost:8001/a2a/facts_agent/.well-known/agent.json"),
 )
