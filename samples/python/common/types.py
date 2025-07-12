@@ -173,7 +173,7 @@ class JSONRPCResponse(JSONRPCMessage):
 
 
 class SendTaskRequest(JSONRPCRequest):
-    method: Literal['tasks/send'] = 'tasks/send'
+    method: Literal['message/send'] = 'message/send'
     params: TaskSendParams
 
 
@@ -182,7 +182,7 @@ class SendTaskResponse(JSONRPCResponse):
 
 
 class SendTaskStreamingRequest(JSONRPCRequest):
-    method: Literal['tasks/sendSubscribe'] = 'tasks/sendSubscribe'
+    method: Literal['message/stream'] = 'message/stream'
     params: TaskSendParams
 
 

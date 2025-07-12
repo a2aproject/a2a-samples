@@ -209,7 +209,7 @@ class SemanticKernelTravelAgent:
         )
 
     async def invoke(self, user_input: str, session_id: str) -> dict[str, Any]:
-        """Handle synchronous tasks (like tasks/send).
+        """Handle synchronous tasks (like message/send).
 
         Args:
             user_input (str): User input message.
