@@ -15,7 +15,7 @@ This agent takes text requests from the client and, if any details are missing, 
 
 1. Navigate to the samples directory:
     ```bash
-    cd samples/python/agents/google_adk
+    cd samples/python/agents/adk_expense_reimbursement
     ```
 2. Create an environment file with your API key:
 
