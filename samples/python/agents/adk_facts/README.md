@@ -6,7 +6,6 @@ This sample uses the Agent Development Kit (ADK) to create a simple fun facts ge
 
 - Python 3.10 or higher
 - Access to an LLM and API Key
-- If deploying to Cloud Run, you'll need a Google Cloud Project
 
 ## Running the Sample
 
