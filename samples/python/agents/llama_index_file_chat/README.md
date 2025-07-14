@@ -133,7 +133,7 @@ Content-Type: application/json
 {
   "jsonrpc": "2.0",
   "id": 11,
-  "method": "tasks/send",
+  "method": "message/send",
   "params": {
     "id": "129",
     "sessionId": "8f01f3d172cd4396a0e535ae8aec6687",
@@ -201,7 +201,7 @@ Content-Type: application/json
 {
   "jsonrpc": "2.0",
   "id": 11,
-  "method": "tasks/send",
+  "method": "message/send",
   "params": {
     "id": "129",
     "sessionId": "8f01f3d172cd4396a0e535ae8aec6687",
@@ -267,7 +267,7 @@ Content-Type: application/json
 {
   "jsonrpc": "2.0",
   "id": 11,
-  "method": "tasks/send",
+  "method": "message/send",
   "params": {
     "id": "130",
     "sessionId": "8f01f3d172cd4396a0e535ae8aec6687",
@@ -325,7 +325,7 @@ Request:
 {
   "jsonrpc": "2.0",
   "id": 11,
-  "method": "tasks/send",
+  "method": "message/send",
   "params": {
     "id": "129",
     "sessionId": "8f01f3d172cd4396a0e535ae8aec6687",
