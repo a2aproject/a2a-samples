@@ -1,6 +1,6 @@
 # ADK Agent
 
-This sample uses the Agent Development Kit (ADK) to create a simple fun facts generator which communicates using A2A and can be deployed to Google Cloud Run.
+This sample uses the Agent Development Kit (ADK) to create a simple fun facts generator which communicates using A2A.
 
 ## Prerequisites
 
