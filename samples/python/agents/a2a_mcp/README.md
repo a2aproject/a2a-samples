@@ -164,8 +164,8 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    cd samples/python/agents/a2a_mcp
    uv venv # (if not already done)
    source .venv/bin/activate
-   # Runs on port 10000 by default, change as needed by setting the --host and --port parameters.
-   uv run a2a-mcp --run mcp-server --transport sse
+   # Runs on port 10100 by default, change as needed by setting the --host and --port parameters.
+   uv run  --env-file .env a2a-mcp --run mcp-server --transport sse
    ```
 
 2. Start the Orchestrator Agent:
@@ -177,7 +177,7 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/orchestrator_agent.json --port 10101
+   uv run --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/orchestrator_agent.json --port 10101
    ```
 
 3. Start the Planner Agent:
@@ -189,7 +189,7 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/planner_agent.json --port 10102
+   uv run  --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/planner_agent.json --port 10102
    ```
 
 4. Start the Airline Ticketing Agent:
@@ -201,7 +201,7 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/air_ticketing_agent.json --port 10103
+   uv run --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/air_ticketing_agent.json --port 10103
    ```
 
 5. Start the Hotel Reservations Agent:
@@ -213,7 +213,7 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/hotel_booking_agent.json --port 10104
+   uv run  --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/hotel_booking_agent.json --port 10104
    ```
 
 6. Start the Car Rental Reservations Agent:
@@ -225,10 +225,21 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv  # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/car_rental_agent.json --port 10105
+   uv run --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/car_rental_agent.json --port 10105
    ```
 
-7. Follow the steps in hosts/cli to start the cli app.
+7. Start the cli:
+
+   In a new terminal window
+
+   ```bash
+   cd samples/python/agents/a2a_mcp
+   uv venv  # (if not already done)
+   source .venv/bin/activate
+
+   uv run --env-file .env src/a2a_mcp/mcp/client.py --resource "resource://agent_cards/list" --find_agent "I would like to plan a trip to France."
+   ```
+
 
 ### File/Directory Descriptions
 
