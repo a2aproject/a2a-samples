@@ -2,6 +2,7 @@ from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events.event_queue import EventQueue
 from a2a.types import TaskArtifactUpdateEvent, TaskStatusUpdateEvent, TaskStatus, TaskState
 from a2a.utils import new_agent_text_message, new_task, new_text_artifact
+from a2a.utils.errors import ServerError
 from a2a.types import TaskState, TextPart, UnsupportedOperationError, Message
 
 from agent.agent import SearchAgent
@@ -76,5 +77,6 @@ class SearchAgentExecutor(AgentExecutor):
             raise
 
     async def cancel(self, context: RequestContext, event_queue: EventQueue):
-            raise ServerError(error=UnsupportedOperationError())        
+        """Cancels an ongoing operation."""
+        raise ServerError(error=UnsupportedOperationError())      
 
