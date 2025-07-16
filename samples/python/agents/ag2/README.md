@@ -171,7 +171,7 @@ Content-Type: application/json
 {
   "jsonrpc": "2.0",
   "id": 1,
-  "method": "tasks/sendSubscribe",
+  "method": "message/stream",
   "params": {
     "id": "mcp-task-01",
     "sessionId": "user-session-123",
@@ -198,10 +198,10 @@ If you want to test the API directly via curl:
 ```bash
 curl -X POST http://localhost:10003 \
 -H "Content-Type: application/json" \
--d '{"jsonrpc": "2.0", "id": 1, "method": "tasks/sendSubscribe", "params": {"id": "mcp-task-01", "sessionId": "user-session-123", "acceptedOutputModes": ["text"], "message": {"role": "user", "parts": [{"type": "text", "text": "Summarize this video: https://www.youtube.com/watch?v=kQmXtrmQ5Zg"}]}}}'
+-d '{"jsonrpc": "2.0", "id": 1, "method": "message/stream", "params": {"id": "mcp-task-01", "sessionId": "user-session-123", "acceptedOutputModes": ["text"], "message": {"role": "user", "parts": [{"type": "text", "text": "Summarize this video: https://www.youtube.com/watch?v=kQmXtrmQ5Zg"}]}}}'
 ```
 
-Note: This agent only supports the async streaming endpoint (`tasks/sendSubscribe`). The synchronous endpoint (`tasks/send`) is not implemented.
+Note: This agent only supports the async streaming endpoint (`message/stream`). The synchronous endpoint (`message/send`) is not implemented.
 
 ## Learn More
 
