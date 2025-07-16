@@ -192,5 +192,5 @@ class YoutubeMCPAgent:
     def invoke(self, query: str, sessionId: str) -> dict[str, Any]:
         """Synchronous invocation of the MCP agent."""
         raise NotImplementedError(
-            'Synchronous invocation is not supported by this agent. Use the streaming endpoint (tasks/sendSubscribe) instead.'
+            'Synchronous invocation is not supported by this agent. Use the streaming endpoint (message/stream) instead.'
         )
