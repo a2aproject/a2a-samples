@@ -50,7 +50,7 @@ def main(host: str, port: int):
         port (int): The port number to run the server on.
     """  # noqa: E501
     skill = AgentSkill(
-        id='answer_detial_about_A2A_repo',
+        id='answer_detail_about_A2A_repo',
         name='Answer any information about A2A repo',
         description='The agent will look up the information about A2A repo and answer the question.',  # noqa: E501
         tags=['A2A repo'],
