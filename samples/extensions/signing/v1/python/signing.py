@@ -22,7 +22,7 @@ from pydantic import BaseModel
 
 _URI = 'https://github.com/a2aproject/a2a-samples/samples/extensions/signing/v1'
 _FIELD = (
-    'github.com/a2project/a2a-samples/samples/extensions/signing/v1/signature'
+    'github.com/a2aproject/a2a-samples/samples/extensions/signing/v1/signature'
 )
 
 
@@ -74,7 +74,7 @@ class NopMessageSigner:
 class JwkMessageSigner:
     """A utility class for adding signatures to messages."""
 
-    def __init__(self, key, agent_url):
+    def __init__(self, key: jwk.JWK, agent_url: str):
         self._key = key
         self._agent_url = agent_url
 
@@ -151,7 +151,7 @@ class SigningEventQueue(EventQueue):
 class SigningAgentExecutor(_DelegateAgentExecutor):
     """An AgentExecutor wrapper that automatically signs messages/artifacts."""
 
-    def __init__(self, delegate, ext: 'SigningExtension'):
+    def __init__(self, delegate: AgentExecutor, ext: 'SigningExtension'):
         super().__init__(delegate)
         self._ext = ext
 
@@ -206,19 +206,23 @@ class SigningExtension:
             return JwkMessageSigner(self.signing_key, self.card_url)
         return NopMessageSigner()
 
-    async def get_agent_author(self, message: Message) -> RemoteAgent | None:
+    async def get_agent_author(
+        self, client: httpx.AsyncClient, message: Message
+    ) -> RemoteAgent | None:
         """Retrieve the verified author of a message, if the message is signed.
 
         Raises an error if a signature is present but verification fails.
         """
-        return await get_agent_author(message)
+        return await get_agent_author(client, message)
 
 
 class SignatureValidationError(Exception):
     """Raised when a message signature was present but could not be validated."""
 
 
-async def get_agent_author(message: Message | None) -> RemoteAgent | None:
+async def get_agent_author(
+    client: httpx.AsyncClient, message: Message | None
+) -> RemoteAgent | None:
     """Retrieve the details of the agent author, if present."""
     if not message:
         return None
@@ -227,8 +231,7 @@ async def get_agent_author(message: Message | None) -> RemoteAgent | None:
     signature = MessageSignature.model_validate(sig)
     parsed_jws = jws.JWS.from_jose_token(signature.jws)
     # Fetch the AgentCard for the asserted agent identity.
-    async with httpx.AsyncClient() as client:
-        response = await client.get(signature.agent_url)
+    response = await client.get(signature.agent_url)
     remote_agent_card = AgentCard.model_validate_json(
         response.raise_for_status().content
     )
@@ -277,7 +280,7 @@ def get_message_signing_payload(message: Message | Artifact) -> str:
 def get_signing_ext(card: AgentCard) -> AgentExtension | None:
     """Retrieves the signing extension from the AgentCard."""
     for ext in card.capabilities.extensions or []:
-        if ext.uri == _FIELD:
+        if ext.uri == _URI:
             return ext
 
     return None

@@ -26,7 +26,7 @@ The `AgentExtension.params` field has the following schema:
     "type": "object",
     "properties": {
         "jwk": {
-            "type": "string",
+            "type": "object",
             "description": "The public JSON Web Key (JWK) used for adding signatures to messages"
         }
     },
@@ -51,7 +51,7 @@ MUST use the following key for the signature object in metadata:
 
 The value for the signature MUST be an object with the following two fields:
 
-- `signature`: The value MUST be a JSON Web Signature (JWS) in compact serialization form with detached payload.
+- `jws`: The value MUST be a JSON Web Signature (JWS) in compact serialization form with detached payload.
 - `agent_url`: The value MUST be a URL that resolves to an AgentCard.
 
 The full JSON schema for the metadata field is:
@@ -59,7 +59,7 @@ The full JSON schema for the metadata field is:
 {
     "type": "object",
     "description": "A verifiable signature for a message or artifact",
-    "properties": [
+    "properties": {
         "agent_url": {
             "type": "string",
             "description": "The URL of the AgentCard for the agent that added the signature"
@@ -68,7 +68,7 @@ The full JSON schema for the metadata field is:
             "type": "string",
             "description": "A JWS in compact form with detached payload containing the signature for the message"
         }
-    ],
+    },
     "required": ["agent_url", "jws"]
 }
 ```
@@ -125,8 +125,7 @@ To verify the signature on a Message or Artifact:
 1. Serialize the Message or Artifact to JSON, omitting the [signature field](#message-and-artifact-signature-field).
 1. Canonicalize the JSON message according to JSON Canonicalization Scheme (JCS).
 1. URL-safe Base64-encode the resulting canonicalized JSON
-1. Construct the compact JWS value by inserting the base64-encoded payload into the payload position of the JWS `signature` field.
-1. Verify the JWS using the resolved JWK for the AgentCard.
+1. Verify the JWS from the `jws` field using the resolved JWK and the detached, base64-encoded payload.
 
 ## Extension Activation Requirements
 
