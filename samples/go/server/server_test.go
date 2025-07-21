@@ -355,7 +355,7 @@ func TestA2AServer_HandleStreamingTask(t *testing.T) {
 				ID: "1",
 			},
 		},
-		Method: "message/send",
+		Method: "message/stream",
 		Params: params,
 	})
 
@@ -478,7 +478,7 @@ func TestA2AServer_HandleStreamingTaskError(t *testing.T) {
 				ID: "1",
 			},
 		},
-		Method: "message/send",
+		Method: "message/stream",
 		Params: params,
 	})
 
@@ -595,7 +595,7 @@ func TestA2AServer_HandleStreamingTaskNoFlusher(t *testing.T) {
 				ID: "1",
 			},
 		},
-		Method: "message/send",
+		Method: "message/stream",
 		Params: params,
 	})
 
