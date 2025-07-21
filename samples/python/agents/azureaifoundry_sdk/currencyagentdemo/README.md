@@ -252,6 +252,6 @@ This demo is perfect for understanding:
 
 2. **🎯 Azure AI Foundry Agent Service** [https://learn.microsoft.com/en-us/azure/ai-services/agents/overview](https://learn.microsoft.com/en-us/azure/ai-services/agents/overview)
 
-3. **🤝 Google A2A** [https://a2aproject.github.io/A2A/](https://a2aproject.github.io/A2A/)
+3. **🤝 Google A2A** [https://a2a-protocol.org/](https://a2a-protocol.org/)
 
 4. **🐍 Google A2A Python SDK** [https://github.com/a2aproject/a2a-python](https://github.com/a2aproject/a2a-python)
