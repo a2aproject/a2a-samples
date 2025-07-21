@@ -1,6 +1,7 @@
 import asyncio
 import base64
 import json
+import os
 import uuid
 
 import httpx
@@ -18,6 +19,7 @@ from a2a.types import (
     TextPart,
 )
 from google.adk import Agent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.tools.tool_context import ToolContext
@@ -74,8 +76,9 @@ class HostAgent:
         self.agents = '\n'.join(agent_info)
 
     def create_agent(self) -> Agent:
+        LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-001')
         return Agent(
-            model='gemini-2.0-flash-001',
+            model=LiteLlm(model=LITELLM_MODEL),
             name='host_agent',
             instruction=self.root_instruction,
             before_model_callback=self.before_model_callback,
