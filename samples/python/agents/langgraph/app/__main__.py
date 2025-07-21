@@ -83,7 +83,7 @@ def main(host, port):
         request_handler = DefaultRequestHandler(
             agent_executor=CurrencyAgentExecutor(),
             task_store=InMemoryTaskStore(),
-            push_config_store=InMemoryPushNotificationConfigStore(),
+            push_config_store=push_config_store,
             push_sender= push_sender
         )
         server = A2AStarletteApplication(

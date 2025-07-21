@@ -117,7 +117,7 @@ async def main() -> None:
                 'parts': [
                     {'kind': 'text', 'text': 'how much is 10 USD in INR?'}
                 ],
-                'messageId': uuid4().hex,
+                'message_id': uuid4().hex,
             },
         }
         request = SendMessageRequest(
@@ -138,7 +138,7 @@ async def main() -> None:
                         'text': 'How much is the exchange rate for 1 USD?',
                     }
                 ],
-                'messageId': uuid4().hex,
+                'message_id': uuid4().hex,
             },
         }
         request = SendMessageRequest(
@@ -156,9 +156,9 @@ async def main() -> None:
             'message': {
                 'role': 'user',
                 'parts': [{'kind': 'text', 'text': 'CAD'}],
-                'messageId': uuid4().hex,
-                'taskId': task_id,
-                'contextId': context_id,
+                'message_id': uuid4().hex,
+                'task_id': task_id,
+                'context_id': context_id,
             },
         }
 
@@ -166,6 +166,7 @@ async def main() -> None:
             id=str(uuid4()),
             params=MessageSendParams(**second_send_message_payload_multiturn),
         )
+
         second_response = await client.send_message(second_request)
         print(second_response.model_dump(mode='json', exclude_none=True))
         # --8<-- [end:Multiturn]
