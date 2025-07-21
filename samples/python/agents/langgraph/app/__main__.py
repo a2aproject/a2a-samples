@@ -8,7 +8,11 @@ import uvicorn
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
-from a2a.server.tasks import InMemoryPushNotifier, InMemoryTaskStore
+from a2a.server.tasks import (
+    BasePushNotificationSender,
+    InMemoryPushNotificationConfigStore,
+    InMemoryTaskStore,
+)
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
@@ -51,7 +55,7 @@ def main(host, port):
                     'TOOL_LLM_NAME environment not variable not set.'
                 )
 
-        capabilities = AgentCapabilities(streaming=True, pushNotifications=True)
+        capabilities = AgentCapabilities(streaming=True, push_notifications=True)
         skill = AgentSkill(
             id='convert_currency',
             name='Currency Exchange Rates Tool',
@@ -64,18 +68,23 @@ def main(host, port):
             description='Helps with exchange rates for currencies',
             url=f'http://{host}:{port}/',
             version='1.0.0',
-            defaultInputModes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
-            defaultOutputModes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
+            default_input_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
+            default_output_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
             capabilities=capabilities,
             skills=[skill],
         )
 
+
         # --8<-- [start:DefaultRequestHandler]
         httpx_client = httpx.AsyncClient()
+        push_config_store = InMemoryPushNotificationConfigStore()
+        push_sender = BasePushNotificationSender(httpx_client=httpx_client,
+                        config_store=push_config_store)
         request_handler = DefaultRequestHandler(
             agent_executor=CurrencyAgentExecutor(),
             task_store=InMemoryTaskStore(),
-            push_notifier=InMemoryPushNotifier(httpx_client),
+            push_config_store=InMemoryPushNotificationConfigStore(),
+            push_sender= push_sender
         )
         server = A2AStarletteApplication(
             agent_card=agent_card, http_handler=request_handler
