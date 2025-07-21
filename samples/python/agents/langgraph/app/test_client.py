@@ -158,7 +158,7 @@ async def main() -> None:
                 'parts': [{'kind': 'text', 'text': 'CAD'}],
                 'message_id': uuid4().hex,
                 'task_id': task_id,
-                'context_id': context_id,
+                'context_id': context_id
             },
         }
 
