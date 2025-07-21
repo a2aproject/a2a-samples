@@ -12,8 +12,11 @@ An Agent that speaks A2A and can delegate tasks to remote agents. Built on the G
 *This lives in the [demo](/demo/README.md) directory*  
 A web app that visually shows A2A conversations with multiple agents (using the [Orchestrator Agent](/samples/python/hosts/multiagent)). Will render text, image, and webform artifacts. Has a separate tab to visualize task state and history as well as known agent cards. 
 
-* [Content Creation](/samples/python/hosts/content_creation)  
+* [Content Creation](content_creation)  
   This sample highlights how to use the Agent2Agent (A2A) protocol for multi-agent collaboration where multiple agents, each written in a different programming language, seamlessly work together to accomplish a goal. The sample also highlights the interoperability made possible by the A2A protocol, demonstrating how an agent can be easily swapped out for an equivalent agent written in a different programming language.
+
+* [Weather and Airbnb Planner](weather_and_airbnb_planner)
+  This sample highlights how to use the Agent2Agent (A2A) protocol for multi-agent orchestration where at least one of the agents is a Java agent.
 
 ## Disclaimer
 Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.

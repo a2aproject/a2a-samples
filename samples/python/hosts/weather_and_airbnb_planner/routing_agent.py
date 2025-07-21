@@ -134,7 +134,7 @@ class RoutingAgent:
 
     def create_agent(self) -> Agent:
         """Create an instance of the RoutingAgent."""
-        model_id = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.5-flash-preview-04-17')
+        model_id = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.5-flash')
         print(f'Using hardcoded model: {model_id}')
         return Agent(
             model=LiteLlm(model=model_id),
