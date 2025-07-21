@@ -12,6 +12,9 @@ Each agent can be run as its own A2A server with the instructions in its README.
 * [**Quarkus LangChain4j Content Editor Agent**](content_editor/README.md)  
   Sample agent to proof-read and polish content. To make use of this agent in a content creation multi-agent system, check out the [content_creation](../../python/hosts/content_creation/README.md) sample.
 
+* [**Weather Agent**](weather_mcp/README.md)  
+  Sample agent to provide weather information. To make use of this agent in a multi-language, multi-agent system, check out the [weather_and_airbnb_planner](../../python/hosts/weather_and_airbnb_planner/README.md) sample.
+
 ## Disclaimer
 
 Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
