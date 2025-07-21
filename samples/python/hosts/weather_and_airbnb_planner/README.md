@@ -5,7 +5,7 @@
 > *⚠️ Important: A2A is a work in progress (WIP) thus, in the near future there might be changes that are different from what demonstrated here.*
 ----
 
-This sample is based off the Python [airbnb_planner_multiagent](../../python/agents/airbnb_planner_multiagent) sample and highlights how to use Google's Agent to Agent (A2A) protocol for multi-agent orchestration where at least one of the agents is a Java agent. 
+This sample is based off the Python [airbnb_planner_multiagent](../../../python/agents/airbnb_planner_multiagent) sample and highlights how to use Google's Agent to Agent (A2A) protocol for multi-agent orchestration where at least one of the agents is a Java agent. 
 
 This sample makes use of the [Java SDK for A2A](https://github.com/a2aproject/a2a-java). The application features a host agent coordinating tasks between a Python remote agent and a Java remote agent that interact with various MCP servers to fulfill user requests.
 
@@ -25,17 +25,17 @@ that retrieves weather data from https://api.weather.gov.
 
 Let's take a closer look at the classes that make up the Weather app:
 
-- **[WeatherAgent](weather_agent/src/main/java/com/samples/a2a/WeatherAgent.java)**: This is a Quarkus LangChain4j [AiService](https://docs.quarkiverse.io/quarkus-langchain4j/dev/ai-services.html). It connects to a weather MCP server and exposes an AI method to handle weather-related requests.
+- **[WeatherAgent](../../../java/agents/weather_mcp/src/main/java/com/samples/a2a/WeatherAgent.java)**: This is a Quarkus LangChain4j [AiService](https://docs.quarkiverse.io/quarkus-langchain4j/dev/ai-services.html). It connects to a weather MCP server and exposes an AI method to handle weather-related requests.
 
 
-- **[WeatherAgentCardProducer](weather_agent/src/main/java/com/samples/a2a/WeatherAgentCardProducer.java)**: This class has a method that creates the A2A `AgentCard` that describes what our Weather Agent can do. This allows other agents or clients to find out about our Weather Agent's capabilities.
+- **[WeatherAgentCardProducer](../../../java/agents/weather_mcp/src/main/java/com/samples/a2a/WeatherAgentCardProducer.java)**: This class has a method that creates the A2A `AgentCard` that describes what our Weather Agent can do. This allows other agents or clients to find out about our Weather Agent's capabilities.
 
 
-- **[WeatherAgentExecutorProducer](weather_agent/src/main/java/com/samples/a2a/WeatherAgentExecutorProducer.java)**: This class has a method that creates the A2A `AgentExecutor` that will be used to send queries to the Weather Agent and to send responses and updates back to the A2A client. The agent executor is meant to be a bridge between the A2A protocol and the agent's logic.
+- **[WeatherAgentExecutorProducer](../../../java/agents/weather_mcp/src/main/java/com/samples/a2a/WeatherAgentExecutorProducer.java)**: This class has a method that creates the A2A `AgentExecutor` that will be used to send queries to the Weather Agent and to send responses and updates back to the A2A client. The agent executor is meant to be a bridge between the A2A protocol and the agent's logic.
 
 
 #### A2A Java SDK
-The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A Java SDK](https://github.com/a2aproject/a2a-java). Notice that our Weather app's [`pom.xml`](weather_agent/pom.xml) has a dependency on the `a2a-java-sdk-server-quarkus` library:
+The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A Java SDK](https://github.com/a2aproject/a2a-java). Notice that our Weather app's [`pom.xml`](weather_agent/pom.xml) has a dependency on the `a2a-java-reference-server` library:
 
 ----
 > *⚠️ The `io.github.a2asdk` `groupId` below is temporary and will likely change for future releases. Keep an eye on the `a2a-java` [README](https://github.com/a2aproject/a2a-java/blob/main/README.md) for up-to-date documentation.*
@@ -45,7 +45,7 @@ The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A
 ...
 <dependency>
     <groupId>io.github.a2asdk</groupId>
-    <artifactId>a2a-java-sdk-server-quarkus</artifactId>
+    <artifactId>a2a-java-reference-server</artifactId>
     <!-- Use a released version from https://github.com/a2aproject/a2a-java/tags -->
     <version>${io.a2a.sdk.version}</version>
 </dependency>
@@ -54,7 +54,7 @@ The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A
 
 Simply adding this dependency to your Java application and providing `AgentCard` and `AgentExecutor` producers  makes it possible to easily run agentic Java applications as A2A servers using the A2A protocol. 
 
-Note that we used the `a2a-java-sdk-server-quarkus` library in this example since our app is a Quarkus application. You can also use the `a2a-java-sdk-server-jakarta` library instead which is based on Jakarta REST.
+Note that we used the `a2a-java-reference-server` library in this example since our app is a Quarkus application. You can also use the `a2a-java-sdk-server-jakarta` library instead which is based on Jakarta REST.
 
 The A2A Java SDK can also be used to create A2A clients that can communicate with A2A servers.
 
@@ -81,72 +81,73 @@ Before running the application locally, ensure you have the following installed:
 
 
 - Create a .env file in the `airbnb_agent` directory as follows:
-```bash
-cd airbnb_agent
-cp .env.example .env
-```
+  ```bash
+  cd samples/python/agents/airbnb_planner_multiagent/airbnb_agent
+  cp .env.example .env
+  ```
 
-Then update the `.env` file to specify your Google AI Studio API Key:
+  Then update the `.env` file to specify your Google AI Studio API Key:
 
-```bash
-GOOGLE_API_KEY="your_api_key_here" 
-```
+  ```bash
+  GOOGLE_API_KEY="your_api_key_here"
+  GOOGLE_GENAI_MODEL="your_model_here"
+  ```
+  
+- Create a .env file in the `weather_mcp` directory as follows:
 
-- Create a .env file in the `weather_agent` directory as follows:
+  ```bash
+  cd samples/java/agents/weather_mcp
+  cp .env.example .env
+  ```
 
-```bash
-cd ../weather_agent
-cp .env.example .env
-```
+  Then update the `.env` file to specify your Google AI Studio API Key (note that no quotes are needed below):
 
-Then update the `.env` file to specify your Google AI Studio API Key (note that no quotes are needed below):
+  ```bash
+  QUARKUS_LANGCHAIN4J_AI_GEMINI_API_KEY=your_api_key_here
+  ```
 
-```bash
-QUARKUS_LANGCHAIN4J_AI_GEMINI_API_KEY=your_api_key_here
-```
+- Create a .env file in the `weather_and_airbnb_planner` directory as follows:
 
-- Create a .env file in the `host_agent` directory as follows:
+  ```bash
+  cd samples/python/hosts/weather_and_airbnb_planner
+  cp .env.example .env
+  ```
 
-```bash
-cd ../host_agent
-cp .env.example .env
-```
+  Then update the `.env` file to specify your Google AI Studio API Key:
 
-Then update the `.env` file to specify your Google AI Studio API Key:
-
-```bash
-GOOGLE_API_KEY="your_api_key_here" 
-AIR_AGENT_URL=http://localhost:10002
-WEA_AGENT_URL=http://localhost:10001
-```
+  ```bash
+  GOOGLE_API_KEY="your_api_key_here" 
+  AIR_AGENT_URL=http://localhost:10002
+  WEA_AGENT_URL=http://localhost:10001
+  ```
 
 ## 1. Run Airbnb Agent
 
 Run the airbnb agent server:
 
-```bash
-cd ../airbnb_agent
-uv run .
-```
+  ```bash
+  cd samples/python/agents/airbnb_planner_multiagent/airbnb_agent
+  uv run .
+  ```
 
 ## 2. Run Weather Agent
 
 Open a new terminal and run the weather agent:
 
-```bash
-cd a2a-samples/samples/multi_language/python_and_java_multiagent/weather_agent
-mvn quarkus:dev
-```
+  ```bash
+  cd samples/multi_language/python_and_java_multiagent/weather_agent
+  mvn quarkus:dev
+  ```
 
-Note that Quarkus will automatically start up the weather Python MCP server that's needed by the Weather Agent since we've added the `quarkus.langchain4j.mcp.weather.transport-type` and the `quarkus.langchain4j.mcp.weather.command` properties in the [application.properties](weather_agent/src/main/resources/application.properties) file.
+Note that Quarkus will automatically start up the weather Python MCP server that's needed by the Weather Agent since we've added the `quarkus.langchain4j.mcp.weather.transport-type` and the `quarkus.langchain4j.mcp.weather.command` properties in the [application.properties](../../../java/agents/weather_mcp/src/main/resources/application.properties) file.
 
 ## 3. Run Host Agent
 Open a new terminal and run the host agent server:
 
-```bash
-cd a2a-samples/samples/multi_language/python_and_java_multiagent/host_agent
-uv run .
-```
+  ```bash
+  cd samples/python/hosts/weather_and_airbnb_planner
+  uv run .
+  ```
 
 ## 5. Test using the UI
 
