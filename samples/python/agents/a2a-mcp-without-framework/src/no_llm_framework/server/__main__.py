@@ -1,5 +1,6 @@
 import click
 import uvicorn
+
 from a2a.server.agent_execution import AgentExecutor
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers.default_request_handler import (
@@ -48,18 +49,18 @@ def main(host: str, port: int):
     Args:
         host (str): The host address to run the server on.
         port (int): The port number to run the server on.
-    """  # noqa: E501
+    """
     skill = AgentSkill(
         id='answer_detail_about_A2A_repo',
         name='Answer any information about A2A repo',
-        description='The agent will look up the information about A2A repo and answer the question.',  # noqa: E501
+        description='The agent will look up the information about A2A repo and answer the question.',
         tags=['A2A repo'],
         examples=['What is A2A repo?', 'What is Google A2A repo?'],
     )
 
     agent_card = AgentCard(
         name='A2A Protocol Agent',
-        description='A2A Protocol knowledge agent who has information about A2A Protocol and can answer questions about it',  # noqa: E501
+        description='A2A Protocol knowledge agent who has information about A2A Protocol and can answer questions about it',
         url=f'http://{host}:{port}/',
         version='1.0.0',
         default_input_modes=['text'],

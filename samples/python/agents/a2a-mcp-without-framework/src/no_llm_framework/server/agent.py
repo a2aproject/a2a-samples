@@ -16,13 +16,13 @@ from no_llm_framework.server.mcp import call_mcp_tool, get_mcp_tool_prompt
 
 dir_path = Path(__file__).parent
 
-with Path(dir_path / "decide.jinja").open("r") as f:
+with Path(dir_path / 'decide.jinja').open('r') as f:
     decide_template = Template(f.read())
 
-with Path(dir_path / "tool.jinja").open("r") as f:
+with Path(dir_path / 'tool.jinja').open('r') as f:
     tool_template = Template(f.read())
 
-with Path(dir_path / "called_tools_history.jinja").open("r") as f:
+with Path(dir_path / 'called_tools_history.jinja').open('r') as f:
     called_tools_history_template = Template(f.read())
 
 
@@ -37,7 +37,7 @@ def stream_llm(prompt: str) -> Generator[str, None]:
     """
     client = genai.Client(vertexai=False, api_key=GOOGLE_API_KEY)
     for chunk in client.models.generate_content_stream(
-        model="gemini-2.5-flash-lite",
+        model='gemini-2.5-flash-lite',
         contents=prompt,
     ):
         yield chunk.text
@@ -48,7 +48,7 @@ class Agent:
 
     def __init__(
         self,
-        mode: Literal["complete", "stream"] = "stream",
+        mode: Literal['complete', 'stream'] = 'stream',
         token_stream_callback: Callable[[str], None] | None = None,
         mcp_url: str | None = None,
     ):
@@ -64,7 +64,7 @@ class Agent:
 
         Returns:
             Generator[str, None]: A generator yielding the LLM's response.
-        """  # noqa: E501
+        """
         return stream_llm(prompt)
 
     async def decide(
@@ -84,7 +84,7 @@ class Agent:
                 called_tools=called_tools
             )
         else:
-            called_tools_prompt = ""
+            called_tools_prompt = ''
 
         prompt = decide_template.render(
             question=question,
@@ -99,7 +99,7 @@ class Agent:
         Args:
             response (str): The response from the LLM.
         """
-        pattern = r"```json\n(.*?)\n```"
+        pattern = r'```json\n(.*?)\n```'
         match = re.search(pattern, response, re.DOTALL)
         if match:
             return json.loads(match.group(1))
@@ -113,7 +113,7 @@ class Agent:
         """
         return await asyncio.gather(
             *[
-                call_mcp_tool(self.mcp_url, tool["name"], tool["arguments"])
+                call_mcp_tool(self.mcp_url, tool['name'], tool['arguments'])
                 for tool in tools
             ]
         )
@@ -126,22 +126,22 @@ class Agent:
 
         Yields:
             dict: Streaming output, including intermediate steps and final result.
-        """  # noqa: E501
+        """
         called_tools = []
         for i in range(10):
             yield {
-                "is_task_complete": False,
-                "require_user_input": False,
-                "content": f"Step {i}",
+                'is_task_complete': False,
+                'require_user_input': False,
+                'content': f'Step {i}',
             }
 
-            response = ""
+            response = ''
             for chunk in await self.decide(question, called_tools):
                 response += chunk
                 yield {
-                    "is_task_complete": False,
-                    "require_user_input": False,
-                    "content": chunk,
+                    'is_task_complete': False,
+                    'require_user_input': False,
+                    'content': chunk,
                 }
             tools = self.extract_tools(response)
             if not tools:
@@ -150,10 +150,10 @@ class Agent:
 
             called_tools += [
                 {
-                    "tool": tool["name"],
-                    "arguments": tool["arguments"],
-                    "isError": result.isError,
-                    "result": result.content[0].text,
+                    'tool': tool['name'],
+                    'arguments': tool['arguments'],
+                    'isError': result.isError,
+                    'result': result.content[0].text,
                 }
                 for tool, result in zip(tools, results, strict=True)
             ]
@@ -161,27 +161,27 @@ class Agent:
                 called_tools=called_tools, question=question
             )
             yield {
-                "is_task_complete": False,
-                "require_user_input": False,
-                "content": called_tools_history,
+                'is_task_complete': False,
+                'require_user_input': False,
+                'content': called_tools_history,
             }
 
         yield {
-            "is_task_complete": True,
-            "require_user_input": False,
-            "content": "Task completed",
+            'is_task_complete': True,
+            'require_user_input': False,
+            'content': 'Task completed',
         }
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     agent = Agent(
-        token_stream_callback=lambda token: print(token, end="", flush=True),
-        mcp_url="https://gitmcp.io/google/A2A",
+        token_stream_callback=lambda token: print(token, end='', flush=True),
+        mcp_url='https://gitmcp.io/google/A2A',
     )
 
     async def main():
         """Main function."""
-        async for chunk in agent.stream("What is A2A Protocol?"):
+        async for chunk in agent.stream('What is A2A Protocol?'):
             print(chunk)
 
     asyncio.run(main())

@@ -29,13 +29,13 @@ from no_llm_framework.client.constant import GOOGLE_API_KEY
 
 dir_path = Path(__file__).parent
 
-with Path(dir_path / "decide.jinja").open("r") as f:
+with Path(dir_path / 'decide.jinja').open('r') as f:
     decide_template = Template(f.read())
 
-with Path(dir_path / "agents.jinja").open("r") as f:
+with Path(dir_path / 'agents.jinja').open('r') as f:
     agents_template = Template(f.read())
 
-with Path(dir_path / "agent_answer.jinja").open("r") as f:
+with Path(dir_path / 'agent_answer.jinja').open('r') as f:
     agent_answer_template = Template(f.read())
 
 
@@ -50,7 +50,7 @@ def stream_llm(prompt: str) -> Generator[str]:
     """
     client = genai.Client(vertexai=False, api_key=GOOGLE_API_KEY)
     for chunk in client.models.generate_content_stream(
-        model="gemini-2.5-flash-lite",
+        model='gemini-2.5-flash-lite',
         contents=prompt,
     ):
         yield chunk.text
@@ -61,7 +61,7 @@ class Agent:
 
     def __init__(
         self,
-        mode: Literal["complete", "stream"] = "stream",
+        mode: Literal['complete', 'stream'] = 'stream',
         token_stream_callback: Callable[[str], None] | None = None,
         agent_urls: list[str] | None = None,
         agent_prompt: str | None = None,
@@ -76,13 +76,16 @@ class Agent:
 
         Returns:
             tuple[dict[str, AgentCard], str]: A dictionary mapping agent names to AgentCard objects, and the rendered agent prompt string.
-        """  # noqa: E501
+        """
         async with httpx.AsyncClient() as httpx_client:
             card_resolvers = [
                 A2ACardResolver(httpx_client, url) for url in self.agent_urls
             ]
             agent_cards = await asyncio.gather(
-                *[card_resolver.get_agent_card() for card_resolver in card_resolvers]
+                *[
+                    card_resolver.get_agent_card()
+                    for card_resolver in card_resolvers
+                ]
             )
             agents_registry = {
                 agent_card.name: agent_card for agent_card in agent_cards
@@ -98,11 +101,11 @@ class Agent:
 
         Returns:
             str or Generator[str]: The LLM response as a string or generator, depending on mode.
-        """  # noqa: E501
-        if self.mode == "complete":
+        """
+        if self.mode == 'complete':
             return stream_llm(prompt)
 
-        result = ""
+        result = ''
         for chunk in stream_llm(prompt):
             result += chunk
         return result
@@ -122,13 +125,13 @@ class Agent:
 
         Returns:
             Generator[str, None]: The LLM's response as a generator of strings.
-        """  # noqa: E501
+        """
         if called_agents:
             call_agent_prompt = agent_answer_template.render(
                 called_agents=called_agents
             )
         else:
-            call_agent_prompt = ""
+            call_agent_prompt = ''
         prompt = decide_template.render(
             question=question,
             agent_prompt=agents_prompt,
@@ -142,13 +145,15 @@ class Agent:
         Args:
             response (str): The response from the LLM.
         """
-        pattern = r"```json\n(.*?)\n```"
+        pattern = r'```json\n(.*?)\n```'
         match = re.search(pattern, response, re.DOTALL)
         if match:
             return json.loads(match.group(1))
         return []
 
-    async def send_message_to_an_agent(self, agent_card: AgentCard, message: str):
+    async def send_message_to_an_agent(
+        self, agent_card: AgentCard, message: str
+    ):
         """Send a message to a specific agent and yield the streaming response.
 
         Args:
@@ -188,12 +193,14 @@ class Agent:
 
         Yields:
             str: Streaming output, including agent responses and intermediate steps.
-        """  # noqa: E501
+        """
         agent_answers: list[dict] = []
         for _ in range(3):
             agents_registry, agent_prompt = await self.get_agents()
-            response = ""
-            for chunk in await self.decide(question, agent_prompt, agent_answers):
+            response = ''
+            for chunk in await self.decide(
+                question, agent_prompt, agent_answers
+            ):
                 response += chunk
                 if self.token_stream_callback:
                     self.token_stream_callback(chunk)
@@ -202,33 +209,33 @@ class Agent:
             agents = self.extract_agents(response)
             if agents:
                 for agent in agents:
-                    agent_response = ""
-                    agent_card = agents_registry[agent["name"]]
+                    agent_response = ''
+                    agent_card = agents_registry[agent['name']]
                     yield f'<Agent name="{agent["name"]}">\n'
                     async for chunk in self.send_message_to_an_agent(
-                        agent_card, agent["prompt"]
+                        agent_card, agent['prompt']
                     ):
                         agent_response += chunk
                         if self.token_stream_callback:
                             self.token_stream_callback(chunk)
                         yield chunk
-                    yield "</Agent>\n"
+                    yield '</Agent>\n'
                     match = re.search(
-                        r"<Answer>(.*?)</Answer>", agent_response, re.DOTALL
+                        r'<Answer>(.*?)</Answer>', agent_response, re.DOTALL
                     )
                     answer = match.group(1).strip() if match else agent_response
                     agent_answers.append(
                         {
-                            "name": agent["name"],
-                            "prompt": agent["prompt"],
-                            "answer": answer,
+                            'name': agent['name'],
+                            'prompt': agent['prompt'],
+                            'answer': answer,
                         }
                     )
             else:
                 return
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import asyncio
 
     import colorama
@@ -236,17 +243,17 @@ if __name__ == "__main__":
     async def main():
         """Main function to run the A2A Repo Agent client."""
         agent = Agent(
-            mode="stream",
+            mode='stream',
             token_stream_callback=None,
-            agent_urls=["http://localhost:9999/"],
+            agent_urls=['http://localhost:9999/'],
         )
 
-        async for chunk in agent.stream("What is A2A protocol?"):
+        async for chunk in agent.stream('What is A2A protocol?'):
             if chunk.startswith('<Agent name="'):
-                print(colorama.Fore.CYAN + chunk, end="", flush=True)
-            elif chunk.startswith("</Agent>"):
-                print(colorama.Fore.RESET + chunk, end="", flush=True)
+                print(colorama.Fore.CYAN + chunk, end='', flush=True)
+            elif chunk.startswith('</Agent>'):
+                print(colorama.Fore.RESET + chunk, end='', flush=True)
             else:
-                print(chunk, end="", flush=True)
+                print(chunk, end='', flush=True)
 
     asyncio.run(main())
