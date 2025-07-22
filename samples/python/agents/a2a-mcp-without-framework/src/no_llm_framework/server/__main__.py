@@ -62,11 +62,11 @@ def main(host: str, port: int):
         description='A2A Protocol knowledge agent who has information about A2A Protocol and can answer questions about it',  # noqa: E501
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=AgentCapabilities(
-            inputModes=['text'],
-            outputModes=['text'],
+            input_modes=['text'],
+            output_modes=['text'],
             streaming=True,
         ),
         skills=[skill],

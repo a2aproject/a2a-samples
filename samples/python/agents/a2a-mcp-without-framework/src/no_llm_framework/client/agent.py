@@ -167,8 +167,8 @@ class Agent:
                 message=Message(
                     role=Role.user,
                     parts=[Part(TextPart(text=message))],
-                    messageId=uuid4().hex,
-                    taskId=uuid4().hex,
+                    message_id=uuid4().hex,
+                    task_id=uuid4().hex,
                 )
             )
 
