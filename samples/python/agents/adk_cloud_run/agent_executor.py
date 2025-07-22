@@ -18,8 +18,8 @@ class ADKAgentExecutor(AgentExecutor):
     def __init__(
         self,
         agent,
-        status_message="Processing request...",
-        artifact_name="response",
+        status_message='Processing request...',
+        artifact_name='response',
     ):
         """Initialize a generic ADK agent executor.
 
@@ -46,7 +46,7 @@ class ADKAgentExecutor(AgentExecutor):
     ) -> None:
         """Cancel the execution of a specific task."""
         raise NotImplementedError(
-            "Cancellation is not implemented for ADKAgentExecutor."
+            'Cancellation is not implemented for ADKAgentExecutor.'
         )
 
     async def execute(
@@ -55,23 +55,25 @@ class ADKAgentExecutor(AgentExecutor):
         event_queue: EventQueue,
     ) -> None:
         if not context.message:
-            raise Exception("Message should be present in request context")
+            raise Exception('Message should be present in request context')
 
         query = context.get_user_input()
         task = context.current_task or new_task(context.message)
         await event_queue.enqueue_event(task)
 
-        updater = TaskUpdater(event_queue, task.id, task.contextId)
+        updater = TaskUpdater(event_queue, task.id, task.context_id)
         if context.call_context:
             user_id = context.call_context.user.user_name
         else:
-            user_id = "a2a_user"
+            user_id = 'a2a_user'
 
         try:
             # Update status with custom message
             await updater.update_status(
                 TaskState.working,
-                new_agent_text_message(self.status_message, task.contextId, task.id),
+                new_agent_text_message(
+                    self.status_message, task.context_id, task.id
+                ),
             )
 
             # Process with ADK agent
@@ -79,22 +81,26 @@ class ADKAgentExecutor(AgentExecutor):
                 app_name=self.agent.name,
                 user_id=user_id,
                 state={},
-                session_id=task.contextId,
+                session_id=task.context_id,
             )
 
             content = types.Content(
-                role="user", parts=[types.Part.from_text(text=query)]
+                role='user', parts=[types.Part.from_text(text=query)]
             )
 
-            response_text = ""
+            response_text = ''
             async for event in self.runner.run_async(
                 user_id=user_id, session_id=session.id, new_message=content
             ):
-                if event.is_final_response() and event.content and event.content.parts:
+                if (
+                    event.is_final_response()
+                    and event.content
+                    and event.content.parts
+                ):
                     for part in event.content.parts:
-                        if hasattr(part, "text") and part.text:
-                            response_text += part.text + "\n"
-                        elif hasattr(part, "function_call"):
+                        if hasattr(part, 'text') and part.text:
+                            response_text += part.text + '\n'
+                        elif hasattr(part, 'function_call'):
                             # Log or handle function calls if needed
                             pass  # Function calls are handled internally by ADK
 
@@ -109,6 +115,8 @@ class ADKAgentExecutor(AgentExecutor):
         except Exception as e:
             await updater.update_status(
                 TaskState.failed,
-                new_agent_text_message(f"Error: {e!s}", task.contextId, task.id),
+                new_agent_text_message(
+                    f'Error: {e!s}', task.context_id, task.id
+                ),
                 final=True,
             )
