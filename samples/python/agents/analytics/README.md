@@ -20,7 +20,7 @@ This agent turns simple user prompts (e.g. `"Generate a chart of revenue: Jan,$1
 Example result:
 
 > 🧾 Prompt: `Generate a chart of revenue: Jan,$1000 Feb,$2000 Mar,$1500`  
-> 📊 Output: PNG image of a chart 
+> 📊 Output: PNG image of a chart
 
 ---
 
