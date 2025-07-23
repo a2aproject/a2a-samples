@@ -81,6 +81,7 @@ sequenceDiagram
 5. In a new terminal, start an A2AClient interface to interact with the remote (ag2) agent using one of these methods:
 
    a) Run the CLI client (from the samples/python directory):
+   
    ```bash
    cd samples/python
    uv run hosts/cli --agent http://localhost:10003

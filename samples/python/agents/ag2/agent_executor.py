@@ -33,7 +33,7 @@ class AG2AgentExecutor(AgentExecutor):
             task = new_task(context.message)
             await event_queue.enqueue_event(task)
 
-        async for item in self.agent.stream(query, task.contextId):
+        async for item in self.agent.stream(query, task.context_id):
             is_task_complete = item['is_task_complete']
             require_user_input = item['require_user_input']
             content = item['content']
@@ -49,13 +49,13 @@ class AG2AgentExecutor(AgentExecutor):
                             state=TaskState.working,
                             message=new_agent_text_message(
                                 content,
-                                task.contextId,
+                                task.context_id,
                                 task.id,
                             ),
                         ),
                         final=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
             elif require_user_input:
@@ -65,22 +65,22 @@ class AG2AgentExecutor(AgentExecutor):
                             state=TaskState.input_required,
                             message=new_agent_text_message(
                                 content,
-                                task.contextId,
+                                task.context_id,
                                 task.id,
                             ),
                         ),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
             else:
                 await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
-                        lastChunk=True,
+                        context_id=task.context_id,
+                        task_id=task.id,
+                        last_chunk=True,
                         artifact=new_text_artifact(
                             name='current_result',
                             description='Result of request to agent.',
@@ -92,8 +92,8 @@ class AG2AgentExecutor(AgentExecutor):
                     TaskStatusUpdateEvent(
                         status=TaskStatus(state=TaskState.completed),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
 
