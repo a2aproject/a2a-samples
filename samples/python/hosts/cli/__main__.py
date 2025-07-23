@@ -27,7 +27,6 @@ from a2a.types import (
     TaskStatusUpdateEvent,
     TextPart,
 )
-from push_notification_auth import PushNotificationReceiverAuth
 
 
 @click.command()
@@ -73,15 +72,9 @@ async def cli(
                 PushNotificationListener,
             )
 
-            notification_receiver_auth = PushNotificationReceiverAuth()
-            await notification_receiver_auth.load_jwks(
-                f'{agent}/.well-known/jwks.json'
-            )
-
             push_notification_listener = PushNotificationListener(
                 host=notification_receiver_host,
                 port=notification_receiver_port,
-                notification_receiver_auth=notification_receiver_auth,
             )
             push_notification_listener.start()
 
