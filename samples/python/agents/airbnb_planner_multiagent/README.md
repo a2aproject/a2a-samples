@@ -35,12 +35,12 @@ Before running the application locally, ensure you have the following installed:
     GOOGLE_API_KEY="your_api_key_here" 
     ```
 
-- create .env file in `host_agent/adk_agent` folder with the following content:
+- Create `.env` file in `host_agent/adk_agent` folder with the following content:
 
     ```bash
     GOOGLE_GENAI_USE_VERTEXAI=TRUE
     GOOGLE_CLOUD_PROJECT="your project"
-    GOOGLE_CLOUD_LOCATION=us-central1
+    GOOGLE_CLOUD_LOCATION=global
     AIR_AGENT_URL=http://localhost:10002
     WEA_AGENT_URL=http://localhost:10001
     ```

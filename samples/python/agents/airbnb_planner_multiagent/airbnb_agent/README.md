@@ -2,7 +2,7 @@
 
 ## Getting started
 
-1. Create a .env file using the `example.env` file as a template.
+1. Create a `.env` file using the `example.env` file as a template.
 
 2. Start the server
 
