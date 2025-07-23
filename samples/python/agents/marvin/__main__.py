@@ -84,8 +84,8 @@ def get_agent_card(host: str, port: int):
         description="Extracts structured contact information from text using Marvin's extraction capabilities",
         url=f"http://{host}:{port}/",
         version="1.0.0",
-        defaultInputModes=ExtractorAgent.SUPPORTED_CONTENT_TYPES,
-        defaultOutputModes=ExtractorAgent.SUPPORTED_CONTENT_TYPES,
+        default_input_modes=ExtractorAgent.SUPPORTED_CONTENT_TYPES,
+        default_output_modes=ExtractorAgent.SUPPORTED_CONTENT_TYPES,
         capabilities=capabilities,
         skills=[skill],
     )
