@@ -232,9 +232,8 @@ async def get_agent_author(
     parsed_jws = jws.JWS.from_jose_token(signature.jws)
     # Fetch the AgentCard for the asserted agent identity.
     response = await client.get(signature.agent_url)
-    remote_agent_card = AgentCard.model_validate_json(
-        response.raise_for_status().content
-    )
+    response.raise_for_status()
+    remote_agent_card = AgentCard.model_validate_json(response.content)
     if not (ext := get_signing_ext(remote_agent_card)):
         raise SignatureValidationError(
             'remote agent card has no signing extension'
@@ -258,7 +257,10 @@ def sign_message(
     """Sign the given message using the supplied key, asserting the given Agent ID."""
     signing_payload = get_message_signing_payload(message)
     sig_jws = jws.JWS(signing_payload)
-    sig_jws.add_signature(signing_key, alg='ES256')
+    sig_jws.add_signature(
+        signing_key,
+        protected={'alg': 'ES256'},
+    )
     sig_jws.detach_payload()
     serialized_jws = sig_jws.serialize(compact=True)
     message_sig = MessageSignature(agent_url=agent_id, jws=serialized_jws)
