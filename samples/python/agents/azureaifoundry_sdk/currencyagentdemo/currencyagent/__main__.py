@@ -94,8 +94,8 @@ def get_agent_card(host: str, port: int):
         ),
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=capabilities,
         skills=[skill_trip_planning],
     )

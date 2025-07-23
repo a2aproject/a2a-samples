@@ -19,16 +19,16 @@ from a2a.types import (
     SendMessageSuccessResponse,
     Task,
 )
+from dotenv import load_dotenv
+from google.adk import Agent
+from google.adk.agents.callback_context import CallbackContext
+from google.adk.agents.readonly_context import ReadonlyContext
+from google.adk.models.lite_llm import LiteLlm
+from google.adk.tools.tool_context import ToolContext
 from remote_agent_connection import (
     RemoteAgentConnections,
     TaskUpdateCallback,
 )
-from dotenv import load_dotenv
-from google.adk import Agent
-from google.adk.models.lite_llm import LiteLlm
-from google.adk.agents.callback_context import CallbackContext
-from google.adk.agents.readonly_context import ReadonlyContext
-from google.adk.tools.tool_context import ToolContext
 
 
 load_dotenv()
@@ -134,7 +134,7 @@ class RoutingAgent:
 
     def create_agent(self) -> Agent:
         """Create an instance of the RoutingAgent."""
-        model_id = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.5-flash-preview-04-17')
+        model_id = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.5-flash')
         print(f'Using hardcoded model: {model_id}')
         return Agent(
             model=LiteLlm(model=model_id),

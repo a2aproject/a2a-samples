@@ -36,15 +36,15 @@ class SemanticKernelMCPAgentExecutor(AgentExecutor):
         if not self._initialized:
             await self.agent.initialize()
             self._initialized = True
-            logger.info("MCP Agent initialized successfully")
-        
+            logger.info('MCP Agent initialized successfully')
+
         query = context.get_user_input()
         task = context.current_task
         if not task:
             task = new_task(context.message)
             await event_queue.enqueue_event(task)
 
-        async for partial in self.agent.stream(query, task.contextId):
+        async for partial in self.agent.stream(query, task.context_id):
             require_input = partial['require_user_input']
             is_done = partial['is_task_complete']
             text_content = partial['content']
@@ -56,22 +56,22 @@ class SemanticKernelMCPAgentExecutor(AgentExecutor):
                             state=TaskState.input_required,
                             message=new_agent_text_message(
                                 text_content,
-                                task.contextId,
+                                task.context_id,
                                 task.id,
                             ),
                         ),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
             elif is_done:
                 await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
-                        lastChunk=True,
+                        context_id=task.context_id,
+                        task_id=task.id,
+                        last_chunk=True,
                         artifact=new_text_artifact(
                             name='current_result',
                             description='Result of request to agent.',
@@ -83,8 +83,8 @@ class SemanticKernelMCPAgentExecutor(AgentExecutor):
                     TaskStatusUpdateEvent(
                         status=TaskStatus(state=TaskState.completed),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
             else:
@@ -94,13 +94,13 @@ class SemanticKernelMCPAgentExecutor(AgentExecutor):
                             state=TaskState.working,
                             message=new_agent_text_message(
                                 text_content,
-                                task.contextId,
+                                task.context_id,
                                 task.id,
                             ),
                         ),
                         final=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
 
