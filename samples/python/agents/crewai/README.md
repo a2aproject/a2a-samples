@@ -52,7 +52,7 @@ sequenceDiagram
 3. Set up the Python environment:
 
    ```bash
-   uv python pin 3.12
+   uv python pin 3.13
    uv venv
    source .venv/bin/activate
    ```
@@ -73,7 +73,7 @@ sequenceDiagram
 
    ```bash
    # Connect to the agent (specify the agent URL with correct port and host)
-   cd samples/python/hosts/cli   
+   cd samples/python/hosts/cli
    uv run . --agent http://localhost:10001
    
    # If you changed the port when starting the agent, use that port instead
