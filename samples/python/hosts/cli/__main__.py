@@ -2,6 +2,7 @@ import asyncio
 import base64
 import os
 import urllib
+
 from uuid import uuid4
 
 import asyncclick as click
@@ -26,12 +27,16 @@ from a2a.types import (
     TaskStatusUpdateEvent,
     TextPart,
 )
-from common.utils.push_notification_auth import PushNotificationReceiverAuth
+from push_notification_auth import PushNotificationReceiverAuth
 
 
 @click.command()
 @click.option('--agent', default='http://localhost:10000')
-@click.option('--bearer-token', help='Bearer token for authentication.', envvar='A2A_CLI_BEARER_TOKEN')
+@click.option(
+    '--bearer-token',
+    help='Bearer token for authentication.',
+    envvar='A2A_CLI_BEARER_TOKEN',
+)
 @click.option('--session', default=0)
 @click.option('--history', default=False)
 @click.option('--use_push_notifications', default=False)
@@ -179,7 +184,9 @@ async def completeTask(
         )
         async for result in response_stream:
             if isinstance(result.root, JSONRPCErrorResponse):
-                print(f'Error: {result.root.error}, contextId: {contextId}, taskId: {taskId}')
+                print(
+                    f'Error: {result.root.error}, contextId: {contextId}, taskId: {taskId}'
+                )
                 return False, contextId, taskId
             event = result.root.result
             contextId = event.contextId
@@ -189,7 +196,10 @@ async def completeTask(
                 event, TaskArtifactUpdateEvent
             ):
                 taskId = event.taskId
-                if isinstance(event, TaskStatusUpdateEvent) and event.status.state == 'completed':
+                if (
+                    isinstance(event, TaskStatusUpdateEvent)
+                    and event.status.state == 'completed'
+                ):
                     task_completed = True
             elif isinstance(event, Message):
                 message = event
@@ -203,7 +213,9 @@ async def completeTask(
                 )
             )
             if isinstance(taskResultResponse.root, JSONRPCErrorResponse):
-                print(f'Error: {taskResultResponse.root.error}, contextId: {contextId}, taskId: {taskId}')
+                print(
+                    f'Error: {taskResultResponse.root.error}, contextId: {contextId}, taskId: {taskId}'
+                )
                 return False, contextId, taskId
             taskResult = taskResultResponse.root.result
     else:
@@ -248,15 +260,19 @@ async def completeTask(
         ## if the result is that more input is required, loop again.
         state = TaskState(taskResult.status.state)
         if state.name == TaskState.input_required.name:
-            return await completeTask(
-                client,
-                streaming,
-                use_push_notifications,
-                notification_receiver_host,
-                notification_receiver_port,
-                taskId,
+            return (
+                await completeTask(
+                    client,
+                    streaming,
+                    use_push_notifications,
+                    notification_receiver_host,
+                    notification_receiver_port,
+                    taskId,
+                    contextId,
+                ),
                 contextId,
-            ), contextId, taskId
+                taskId,
+            )
         ## task is complete
         return True, contextId, taskId
     ## Failure case, shouldn't reach
