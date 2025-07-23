@@ -22,6 +22,7 @@
   - [Example Flow: Travel Agent](#example-flow-travel-agent)
   - [Steps to execute the example](#steps-to-execute-the-example)
     - [File/Directory Descriptions](#filedirectory-descriptions)
+  - [Disclaimer](#disclaimer)
 
 ## Objective
 
@@ -157,6 +158,12 @@ flowchart LR
 
 This sample is built using 3 ADK agents to execute the tasks and a LangGraph agent that works as a planner.
 All the 3 ADK agents use the same python code but are instantiated with different agent cards.
+
+You can execute the following command to run all of the steps in one terminal:
+
+```sh
+bash samples/python/agents/a2a_mcp/run.sh
+```
 
 1. Start the MCP Server:
 

@@ -169,23 +169,23 @@ Current agent: {current_agent['active_agent']}
         client = self.remote_agent_connections[agent_name]
         if not client:
             raise ValueError(f'Client not available for {agent_name}')
-        taskId = state.get('task_id', None)
-        contextId = state.get('context_id', None)
-        messageId = state.get('message_id', None)
+        task_id = state.get('task_id', None)
+        context_id = state.get('context_id', None)
+        message_id = state.get('message_id', None)
         task: Task
-        if not messageId:
-            messageId = str(uuid.uuid4())
+        if not message_id:
+            message_id = str(uuid.uuid4())
         request: MessageSendParams = MessageSendParams(
             id=str(uuid.uuid4()),
             message=Message(
                 role='user',
                 parts=[TextPart(text=message)],
-                messageId=messageId,
-                contextId=contextId,
-                taskId=taskId,
+                message_id=message_id,
+                context_id=context_id,
+                task_id=task_id,
             ),
             configuration=MessageSendConfiguration(
-                acceptedOutputModes=['text', 'text/plain', 'image/png'],
+                accepted_output_modes=['text', 'text/plain', 'image/png'],
             ),
         )
         response = await client.send_message(request, self.task_callback)
@@ -199,8 +199,8 @@ Current agent: {current_agent['active_agent']}
             TaskState.failed,
             TaskState.unknown,
         ]
-        if task.contextId:
-            state['context_id'] = task.contextId
+        if task.context_id:
+            state['context_id'] = task.context_id
         state['task_id'] = task.id
         if task.status.state == TaskState.input_required:
             # Force user input back
@@ -245,7 +245,7 @@ async def convert_part(part: Part, tool_context: ToolContext):
         file_bytes = base64.b64decode(part.root.file.bytes)
         file_part = types.Part(
             inline_data=types.Blob(
-                mime_type=part.root.file.mimeType, data=file_bytes
+                mime_type=part.root.file.mime_type, data=file_bytes
             )
         )
         await tool_context.save_artifact(file_id, file_part)

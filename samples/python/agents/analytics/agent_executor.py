@@ -47,7 +47,7 @@ class ChartGenerationAgentExecutor(AgentExecutor):
                     root=FilePart(
                         file=FileWithBytes(
                             bytes=data.bytes,
-                            mimeType=data.mime_type,
+                            mime_type=data.mime_type,
                             name=data.name,
                         )
                     )

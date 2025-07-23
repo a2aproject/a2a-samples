@@ -4,7 +4,7 @@ import threading
 from collections.abc import AsyncIterable
 from typing import Annotated, Any, ClassVar
 
-from common.types import TextPart
+from a2a.types import TextPart
 from pydantic import BaseModel, Field
 
 import marvin
@@ -18,7 +18,7 @@ ClarifyingQuestion = Annotated[
 
 
 def _to_text_part(text: str) -> TextPart:
-    return TextPart(type="text", text=text)
+    return TextPart(text=text)
 
 
 class ExtractionOutcome[T](BaseModel):

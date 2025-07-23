@@ -1,4 +1,5 @@
 import os
+
 from google.adk.agents import LlmAgent
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.mcp_tool.mcp_toolset import (
@@ -9,7 +10,7 @@ from google.adk.tools.mcp_tool.mcp_toolset import (
 
 def create_weather_agent() -> LlmAgent:
     """Constructs the ADK agent."""
-    LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini-2.5-flash-preview-04-17')
+    LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini-2.5-flash')
     return LlmAgent(
         model=LiteLlm(model=LITELLM_MODEL),
         name='weather_agent',
