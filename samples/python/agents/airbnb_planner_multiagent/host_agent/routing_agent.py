@@ -25,7 +25,6 @@ from agents.airbnb_planner_multiagent.host_agent.remote_agent_connection import 
 )
 from dotenv import load_dotenv
 from google.adk import Agent
-from google.adk.models.lite_llm import LiteLlm
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.tools.tool_context import ToolContext
@@ -134,10 +133,8 @@ class RoutingAgent:
 
     def create_agent(self) -> Agent:
         """Create an instance of the RoutingAgent."""
-        model_id = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.5-flash-preview-04-17')
-        print(f'Using hardcoded model: {model_id}')
         return Agent(
-            model=LiteLlm(model=model_id),
+            model='gemini-2.5-flash-lite',
             name='Routing_agent',
             instruction=self.root_instruction,
             before_model_callback=self.before_model_callback,

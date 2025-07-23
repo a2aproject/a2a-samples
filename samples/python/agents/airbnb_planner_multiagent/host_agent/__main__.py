@@ -1,18 +1,3 @@
-"""Copyright 2025 Google LLC
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    https://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-"""
-
 import asyncio
 import traceback  # Import the traceback module
 
@@ -115,7 +100,7 @@ async def main():
         theme=gr.themes.Ocean(), title='A2A Host Agent with Logo'
     ) as demo:
         gr.Image(
-            'static/a2a.png',
+            'https://a2a-protocol.org/latest/assets/a2a-logo-black.svg',
             width=100,
             height=100,
             scale=0,
@@ -126,7 +111,7 @@ async def main():
         )
         gr.ChatInterface(
             get_response_from_agent,
-            title='A2A Host Agent',  # Title can be handled by Markdown above
+            title='A2A Host Agent',
             description='This assistant can help you to check weather and find airbnb accommodation',
         )
 
