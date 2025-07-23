@@ -5,18 +5,16 @@ description = "Sample Google ADK-based Expense Reimbursement agent hosted as an 
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "a2a-samples",
+    "a2a-sdk>=0.2.16",
     "click>=8.1.8",
     "google-adk>=1.0.0",
     "google-genai>=1.9.0",
     "python-dotenv>=1.1.0",
+    "litellm",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
-
-[tool.uv.sources]
-a2a-samples = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

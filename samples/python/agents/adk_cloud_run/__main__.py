@@ -3,7 +3,6 @@ import functools
 import logging
 import os
 
-import asyncpg
 import click
 import sqlalchemy
 import sqlalchemy.ext.asyncio
@@ -39,7 +38,7 @@ async def create_sqlalchemy_engine(
     user: str,
     password: str,
     db: str,
-    refresh_strategy: str = "background",
+    refresh_strategy: str = 'background',
 ) -> tuple[sqlalchemy.ext.asyncio.engine.AsyncEngine, AsyncConnector]:
     """Creates a connection pool for an AlloyDB instance and returns the pool
     and the connector. Callers are responsible for closing the pool and the
@@ -65,16 +64,16 @@ async def create_sqlalchemy_engine(
 
     # create SQLAlchemy connection pool
     engine = sqlalchemy.ext.asyncio.create_async_engine(
-        "postgresql+asyncpg://",
+        'postgresql+asyncpg://',
         async_creator=lambda: connector.connect(
             inst_uri,
-            "asyncpg",
+            'asyncpg',
             user=user,
             password=password,
             db=db,
-            ip_type="PUBLIC",
+            ip_type='PUBLIC',
         ),
-        execution_options={"isolation_level": "AUTOCOMMIT"},
+        execution_options={'isolation_level': 'AUTOCOMMIT'},
     )
     return engine, connector
 
@@ -88,37 +87,37 @@ def make_sync(func):
 
 
 @click.command()
-@click.option("--host", default="localhost")
-@click.option("--port", default=10002)
+@click.option('--host', default='localhost')
+@click.option('--port', default=10002)
 @make_sync
 async def main(host, port):
     agent_card = AgentCard(
         name=calendar_agent.name,
         description=calendar_agent.description,
-        version="1.0.0",
-        url=os.environ["APP_URL"],
-        defaultInputModes=["text", "text/plain"],
-        defaultOutputModes=["text", "text/plain"],
+        version='1.0.0',
+        url=os.environ['APP_URL'],
+        default_input_modes=['text', 'text/plain'],
+        default_output_modes=['text', 'text/plain'],
         capabilities=AgentCapabilities(streaming=True),
         skills=[
             AgentSkill(
-                id="add_calendar_event",
-                name="Add Calendar Event",
-                description="Creates a new calendar event.",
-                tags=["calendar", "event", "create"],
+                id='add_calendar_event',
+                name='Add Calendar Event',
+                description='Creates a new calendar event.',
+                tags=['calendar', 'event', 'create'],
                 examples=[
-                    "Add a calendar event for my meeting tomorrow at 10 AM.",
+                    'Add a calendar event for my meeting tomorrow at 10 AM.',
                 ],
             )
         ],
     )
 
-    use_alloy_db_str = os.getenv("USE_ALLOY_DB", "False")
-    if use_alloy_db_str.lower() == "true":
-        DB_INSTANCE = os.environ["DB_INSTANCE"]
-        DB_NAME = os.environ["DB_NAME"]
-        DB_USER = os.environ["DB_USER"]
-        DB_PASS = os.environ["DB_PASS"]
+    use_alloy_db_str = os.getenv('USE_ALLOY_DB', 'False')
+    if use_alloy_db_str.lower() == 'true':
+        DB_INSTANCE = os.environ['DB_INSTANCE']
+        DB_NAME = os.environ['DB_NAME']
+        DB_USER = os.environ['DB_USER']
+        DB_PASS = os.environ['DB_PASS']
 
         engine, connector = await create_sqlalchemy_engine(
             DB_INSTANCE,
@@ -146,10 +145,10 @@ async def main(host, port):
         middleware=[],
     )
 
-    config = uvicorn.Config(app, host=host, port=port, log_level="info")
+    config = uvicorn.Config(app, host=host, port=port, log_level='info')
     server = uvicorn.Server(config)
     await server.serve()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

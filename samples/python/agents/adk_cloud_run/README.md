@@ -88,9 +88,11 @@ Eg: https://sample-a2a-agent-1234.us-central1.run.app
 ### Service Authentication
 
 #### IAM based Authentication
-IAM can be used, if the clients are within GCP [link](https://cloud.google.com/run/docs/authenticating/service-to-service). Agentspace is one such example of an internal client. The clients can use service accounts and they need to be given IAM role: `roles/run.invoker` 
+
+IAM can be used, if the clients are within GCP [link](https://cloud.google.com/run/docs/authenticating/service-to-service). Agentspace is one such example of an internal client. The clients can use service accounts and they need to be given IAM role: `roles/run.invoker`
 
 #### Public Access
+
 The A2A server is responsible for handling agent level auth. They need to provide this auth info in their agent card using the securitySchemes and security params.
 
 Use the param `--allow-unauthenticated` while deploying to cloud run, to allow public access.
