@@ -109,12 +109,12 @@ class AgentTaskManager(InMemoryTaskManager):
         """Validates the incoming request."""
         task_send_params: TaskSendParams = request.params
         if not utils.are_modalities_compatible(
-            task_send_params.acceptedOutputModes,
+            task_send_params.accepted_output_modes,
             CurrencyAgent.SUPPORTED_CONTENT_TYPES,
         ):
             logger.warning(
                 'Unsupported output mode. Received %s, Support %s',
-                task_send_params.acceptedOutputModes,
+                task_send_params.accepted_output_modes,
                 CurrencyAgent.SUPPORTED_CONTENT_TYPES,
             )
             return utils.new_incompatible_types_error(request.id)
@@ -215,7 +215,7 @@ class AgentTaskManager(InMemoryTaskManager):
         """Processes the agent's response and updates the task store."""
         task_send_params: TaskSendParams = request.params
         task_id = task_send_params.id
-        history_length = task_send_params.historyLength
+        history_length = task_send_params.history_length
 
         parts = [{'type': 'text', 'text': agent_response['content']}]
         artifact = None

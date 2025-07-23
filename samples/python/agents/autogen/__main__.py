@@ -1,17 +1,21 @@
-import os
 import logging
+import os
+
 import click
 import uvicorn
-from dotenv import load_dotenv
+
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agents.autogen.agent_executor import CurrencyAgentExecutor
+from dotenv import load_dotenv
+
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 @click.command()
 @click.option('--host', default='localhost')
@@ -29,16 +33,16 @@ def main(host, port):
         description='Helps with exchange values between various currencies',
         tags=['currency conversion', 'currency exchange'],
         examples=['What is exchange rate between USD and GBP?'],
-        inputModes=['text/plain'],
-        outputModes=['text/plain'],
+        input_modes=['text/plain'],
+        output_modes=['text/plain'],
     )
     agent_card = AgentCard(
         name='AutoGen Currency Agent',
         description='Helps with exchange rates for currencies using A2A SDK',
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=['text/plain'],
-        defaultOutputModes=['text/plain'],
+        default_input_modes=['text/plain'],
+        default_output_modes=['text/plain'],
         capabilities=capabilities,
         skills=[skill],
     )
