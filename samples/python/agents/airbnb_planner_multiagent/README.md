@@ -35,7 +35,7 @@ Before running the application locally, ensure you have the following installed:
     GOOGLE_API_KEY="your_api_key_here" 
     ```
 
-- Create `.env` file in `host_agent/adk_agent` folder with the following content:
+- Create `.env` file in `host_agent/` folder with the following content:
 
     ```bash
     GOOGLE_GENAI_USE_VERTEXAI=TRUE
