@@ -49,8 +49,8 @@ def main(host, port):
             description='Generate charts from structured CSV-like data input.',
             url=f'http://{host}:{port}/',
             version='1.0.0',
-            defaultInputModes=ChartGenerationAgent.SUPPORTED_CONTENT_TYPES,
-            defaultOutputModes=ChartGenerationAgent.SUPPORTED_CONTENT_TYPES,
+            default_input_modes=ChartGenerationAgent.SUPPORTED_CONTENT_TYPES,
+            default_output_modes=ChartGenerationAgent.SUPPORTED_CONTENT_TYPES,
             capabilities=capabilities,
             skills=[skill],
         )
