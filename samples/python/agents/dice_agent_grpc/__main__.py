@@ -55,8 +55,8 @@ async def main(host: str, port: int):
         description='An agent that can roll arbitrary dice and answer if numbers are prime',
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=skills,
     )

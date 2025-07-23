@@ -53,7 +53,7 @@ async def main() -> None:
             message=Message(
                 role=Role.user,
                 parts=[Part(root=TextPart(text='roll a 5 sided dice'))],
-                messageId=str(uuid4()),
+                message_id=str(uuid4()),
             )
         )
 

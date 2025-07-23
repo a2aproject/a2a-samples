@@ -60,7 +60,7 @@ public class A2AClient {
         JSONRPCRequest request = new JSONRPCRequest(
             generateRequestId(),
             "2.0",
-            "tasks/send",
+            "message/send",
             params
         );
         
@@ -116,7 +116,7 @@ public class A2AClient {
                 JSONRPCRequest request = new JSONRPCRequest(
                     generateRequestId(),
                     "2.0",
-                    "tasks/send",
+                    "message/send",
                     params
                 );
                 
@@ -181,7 +181,7 @@ public class A2AClient {
     public AgentCard getAgentCard() throws A2AClientException {
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(baseUrl + "/.well-known/agent-card"))
+                .uri(URI.create(baseUrl + "/.well-known/agent.json"))
                 .header("Accept", "application/json")
                 .GET()
                 .build();

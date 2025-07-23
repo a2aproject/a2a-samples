@@ -2,7 +2,7 @@
 
 This example shows how to create an A2A Server that uses an ADK-based Agent that uses Google-authenticated tools.
 
-This agent also provides an example of how to use server authentication. If an incoming request contains a JWT, the agent will associate the Calendar API authorization with the `sub` of the token and use it for future requests. This way, if the same user interacts with the agent across multiple sessions, authorization can be resued.
+This agent also provides an example of how to use server authentication. If an incoming request contains a JWT, the agent will associate the Calendar API authorization with the `sub` of the token and use it for future requests. This way, if the same user interacts with the agent across multiple sessions, authorization can be reused.
 
 ## Prerequisites
 

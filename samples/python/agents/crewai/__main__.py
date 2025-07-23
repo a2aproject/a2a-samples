@@ -72,8 +72,8 @@ def main(host, port):
             ),
             url=agent_host_url,
             version='1.0.0',
-            defaultInputModes=ImageGenerationAgent.SUPPORTED_CONTENT_TYPES,
-            defaultOutputModes=ImageGenerationAgent.SUPPORTED_CONTENT_TYPES,
+            default_input_modes=ImageGenerationAgent.SUPPORTED_CONTENT_TYPES,
+            default_output_modes=ImageGenerationAgent.SUPPORTED_CONTENT_TYPES,
             capabilities=capabilities,
             skills=[skill],
         )

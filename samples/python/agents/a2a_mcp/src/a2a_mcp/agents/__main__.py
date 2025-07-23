@@ -12,12 +12,16 @@ import uvicorn
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
-from a2a.server.tasks import InMemoryPushNotifier, InMemoryTaskStore
+from a2a.server.tasks import (
+    BasePushNotificationSender,
+    InMemoryPushNotificationConfigStore,
+    InMemoryTaskStore,
+)
 from a2a.types import AgentCard
 from a2a_mcp.common import prompts
 from a2a_mcp.common.agent_executor import GenericAgentExecutor
 from adk_travel_agent import TravelAgent
-from langgraph_planner_agent import LangraphPlannerAgent
+from langgraph_planner_agent import LangGraphPlannerAgent
 from orchestrator_agent import OrchestratorAgent
 
 
@@ -30,7 +34,7 @@ def get_agent(agent_card: AgentCard):
         if agent_card.name == 'Orchestrator Agent':
             return OrchestratorAgent()
         if agent_card.name == 'Langraph Planner Agent':
-            return LangraphPlannerAgent()
+            return LangGraphPlannerAgent()
         if agent_card.name == 'Air Ticketing Agent':
             return TravelAgent(
                 agent_name='AirTicketingAgent',
@@ -68,10 +72,16 @@ def main(host, port, agent_card):
         agent_card = AgentCard(**data)
 
         client = httpx.AsyncClient()
+        push_notification_config_store = InMemoryPushNotificationConfigStore()
+        push_notification_sender = BasePushNotificationSender(
+            client, config_store=push_notification_config_store
+        )
+
         request_handler = DefaultRequestHandler(
             agent_executor=GenericAgentExecutor(agent=get_agent(agent_card)),
             task_store=InMemoryTaskStore(),
-            push_notifier=InMemoryPushNotifier(client),
+            push_config_store=push_notification_config_store,
+            push_sender=push_notification_sender,
         )
 
         server = A2AStarletteApplication(

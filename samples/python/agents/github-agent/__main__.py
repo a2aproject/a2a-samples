@@ -51,8 +51,8 @@ def main(host: str, port: int):
         description='An agent that can query GitHub repositories and recent project updates',
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=[skill],
     )

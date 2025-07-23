@@ -168,7 +168,7 @@ Agent can also be built using a container file.
 
 ## Example Endpoints
 
-You can POST A2A requests to http://localhost:10020 with JSON-RPC specifying tasks/send or tasks/sendSubscribe. Here is a synchronous snippet:
+You can POST A2A requests to http://localhost:10020 with JSON-RPC specifying message/send or message/stream. Here is a synchronous snippet:
 
 ### Request:
 
@@ -179,7 +179,7 @@ Content-Type: application/json
 {
   "jsonrpc": "2.0",
   "id": 33,
-  "method": "tasks/send",
+  "method": "message/send",
   "params": {
     "id": "3",
     "sessionId": "1aab49f1e85c499da48c2124f4ceee4d",

@@ -7,10 +7,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 
+import io.a2a.server.PublicAgentCard;
 import io.a2a.spec.AgentCapabilities;
 import io.a2a.spec.AgentCard;
 import io.a2a.spec.AgentSkill;
-import io.a2a.spec.PublicAgentCard;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 

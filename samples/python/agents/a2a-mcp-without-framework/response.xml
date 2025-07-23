@@ -77,7 +77,7 @@ Key features of the A2A protocol highlighted by the specification and samples in
 
 *   **`JSONRPCMessage`:** Base for requests/responses. Contains `jsonrpc: "2.0"` and optional `id`.
 *   **`JSONRPCRequest`:** Represents a request.
-    *   `method`: String identifying the operation (e.g., "tasks/send").
+    *   `method`: String identifying the operation (e.g., "message/send").
     *   `params`: Object or Array containing parameters for the method.
     *   `id`: Unique identifier (string/number) for request/response correlation. Omitted/null for notifications.
 *   **`JSONRPCResponse`:** Represents a response.
@@ -104,7 +104,7 @@ Key features of the A2A protocol highlighted by the specification and samples in
     *   `defaultOutputModes`: (string[]) Default supported output types.
     *   `skills`: (`AgentSkill[]`) List of specific capabilities.
 *   **`AgentCapabilities`:**
-    *   `streaming`: (boolean) Supports `tasks/sendSubscribe`.
+    *   `streaming`: (boolean) Supports `message/stream`.
     *   `pushNotifications`: (boolean) Supports `tasks/pushNotification/set|get`.
     *   `stateTransitionHistory`: (boolean) Supports providing detailed history.
 *   **`AgentSkill`:**
@@ -170,11 +170,11 @@ Key features of the A2A protocol highlighted by the specification and samples in
 
 ### 2.3. A2A RPC Methods
 
-*   **`tasks/send`:** (Request/Response)
+*   **`message/send`:** (Request/Response)
     *   Sends a message to initiate or continue a task.
     *   `params`: `TaskSendParams` (includes `id`, `sessionId`, `message`, optionally `pushNotification`, `historyLength`, `metadata`).
     *   `result`: `Task` (final state after synchronous processing).
-*   **`tasks/sendSubscribe`:** (Request/Stream)
+*   **`message/stream`:** (Request/Stream)
     *   Sends a message and subscribes to real-time updates via SSE.
     *   `params`: `TaskSendParams`.
     *   `result` (stream events): `TaskStatusUpdateEvent` or `TaskArtifactUpdateEvent`. Final event has `final: true`.
@@ -199,7 +199,7 @@ Key features of the A2A protocol highlighted by the specification and samples in
     *   `params`: `TaskQueryParams`.
     *   `result` (stream events): `TaskStatusUpdateEvent` or `TaskArtifactUpdateEvent`.
 
-### 2.4. Streaming Update Events (Result of `tasks/sendSubscribe` or `tasks/resubscribe`)
+### 2.4. Streaming Update Events (Result of `message/stream` or `tasks/resubscribe`)
 
 *   **`TaskStatusUpdateEvent`:** Signals a change in task status.
     *   `id`: (string) Task ID.
@@ -233,7 +233,7 @@ Key features of the A2A protocol highlighted by the specification and samples in
 *   **Agent Discovery:** Clients find agents and their capabilities by fetching the `AgentCard` JSON, typically from `/.well-known/agent.json`.
 *   **Task Lifecycle:** Tasks progress through states defined in `TaskState` (submitted -> working -> [input-required] -> completed/canceled/failed).
 *   **Communication:** Uses `Message` objects containing `Part`s (text, file, data). Task outputs are represented as `Artifact`s, also containing `Part`s.
-*   **Streaming:** Long-running tasks can provide real-time updates using SSE via `tasks/sendSubscribe`. Updates are sent as `TaskStatusUpdateEvent` and `TaskArtifactUpdateEvent`.
+*   **Streaming:** Long-running tasks can provide real-time updates using SSE via `message/stream`. Updates are sent as `TaskStatusUpdateEvent` and `TaskArtifactUpdateEvent`.
 *   **Push Notifications:** Agents can proactively notify clients about task updates using webhook URLs provided via `tasks/pushNotification/set`. Authentication mechanisms (e.g., Bearer tokens via JWT signed with keys from agent's JWKS endpoint) are supported.
 *   **Authentication:** Defined in `AgentCard` and `PushNotificationConfig`. Can involve various schemes (e.g., API keys, OAuth, JWT). Samples use JWT for push notifications.
 *   **Forms:** Structured data can be requested and submitted using `DataPart` within Messages/Artifacts (demonstrated in ADK sample).
@@ -258,7 +258,7 @@ Key features of the A2A protocol highlighted by the specification and samples in
 *   **Location:** `samples/python/agents/` & `samples/python/hosts/`
 *   **Setup:** Uses `uv` and `pyproject.toml`. Requires Python >= 3.12/3.13. API keys via `.env`.
 *   **Agents:**
-    *   **LangGraph (`agents/langgraph`)**: Currency conversion agent. Demonstrates tool use, multi-turn (`input-required`), and **streaming** (`tasks/sendSubscribe`).
+    *   **LangGraph (`agents/langgraph`)**: Currency conversion agent. Demonstrates tool use, multi-turn (`input-required`), and **streaming** (`message/stream`).
     *   **CrewAI (`agents/crewai`)**: Image generation agent. Demonstrates multi-turn and handling **file artifacts** (images).
     *   **Google ADK (`agents/google_adk`)**: Expense reimbursement agent. Demonstrates multi-turn and handling **forms** using `DataPart`.
 *   **Hosts:**

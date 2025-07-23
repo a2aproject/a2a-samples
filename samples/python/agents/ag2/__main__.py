@@ -56,8 +56,8 @@ def get_agent_card(host: str, port: int):
         description='AI agent that can extract closed captions and transcripts from YouTube videos. This agent provides raw transcription data that can be used for further processing.',
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=YoutubeMCPAgent.SUPPORTED_CONTENT_TYPES,
-        defaultOutputModes=YoutubeMCPAgent.SUPPORTED_CONTENT_TYPES,
+        default_input_modes=YoutubeMCPAgent.SUPPORTED_CONTENT_TYPES,
+        default_output_modes=YoutubeMCPAgent.SUPPORTED_CONTENT_TYPES,
         capabilities=capabilities,
         skills=[skill],
     )

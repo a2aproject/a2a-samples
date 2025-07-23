@@ -476,7 +476,7 @@ data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"co
 
 ## Learn More
 
-- [A2A Protocol Documentation](https://a2aproject.github.io/A2A/)
+- [A2A Protocol Documentation](https://a2a-protocol.org/)
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [Frankfurter API](https://www.frankfurter.app/docs/)
 - [Google Gemini API](https://ai.google.dev/gemini-api)

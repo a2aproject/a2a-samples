@@ -54,8 +54,8 @@ def get_agent_card(host: str, port: int):
         description="An agent that allows you to interact with your data through natural language queries using MindsDB's capabilities. Query and analyze your databases conversationally.",
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=MindsDBAgent.SUPPORTED_CONTENT_TYPES,
-        defaultOutputModes=MindsDBAgent.SUPPORTED_CONTENT_TYPES,
+        default_input_modes=MindsDBAgent.SUPPORTED_CONTENT_TYPES,
+        default_output_modes=MindsDBAgent.SUPPORTED_CONTENT_TYPES,
         capabilities=capabilities,
         skills=[skill],
     )

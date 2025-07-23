@@ -3,6 +3,14 @@ import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs
 
 import { MessageData } from "genkit";
 import {
+  AgentCard,
+  Task,
+  TaskArtifactUpdateEvent,
+  TaskState,
+  TaskStatusUpdateEvent,
+  TextPart,
+} from "@a2a-js/sdk";
+import {
   InMemoryTaskStore,
   TaskStore,
   A2AExpressApp,
@@ -10,13 +18,7 @@ import {
   RequestContext,
   ExecutionEventBus,
   DefaultRequestHandler,
-  AgentCard,
-  Task,
-  TaskArtifactUpdateEvent,
-  TaskState,
-  TaskStatusUpdateEvent,
-  TextPart,
-} from "@a2a-js/sdk"; // Import server components
+} from "@a2a-js/sdk/server"; // Import server components
 import { ai } from "./genkit.js";
 import { CodeMessage } from "./code-format.js"; // CodeMessageSchema might not be needed here
 

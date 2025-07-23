@@ -113,7 +113,7 @@ async def cli(agent: str, context_id: str | None, history: bool, debug: bool):
                 get_task_response = await client.get_task(
                     GetTaskRequest(
                         id=str(uuid4()),
-                        params=TaskQueryParams(id=task_id, historyLength=10),
+                        params=TaskQueryParams(id=task_id, history_length=10),
                     )
                 )
                 print(

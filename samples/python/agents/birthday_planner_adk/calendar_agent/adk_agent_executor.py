@@ -248,7 +248,7 @@ class ADKAgentExecutor(AgentExecutor):
     async def _upsert_session(self, context: RequestContext) -> Session:
         user_id = 'anonymous'
         if context.call_context and context.call_context.user.is_authenticated:
-            user_id = context.call_context.user.username
+            user_id = context.call_context.user.user_name
 
         session = await self.runner.session_service.get_session(
             app_name=self.runner.app_name,
@@ -301,7 +301,7 @@ class ADKAgentExecutor(AgentExecutor):
         )
         stored_credential = session.state.get(credential_key)
         if stored_credential:
-            self._credentials[context.call_context.user.username] = (
+            self._credentials[context.call_context.user.user_name] = (
                 StoredCredential(
                     key=credential_key, credential=stored_credential
                 )

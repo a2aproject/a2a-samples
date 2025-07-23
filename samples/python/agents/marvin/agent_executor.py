@@ -38,7 +38,7 @@ class ExtractorAgentExecutor(AgentExecutor):
             task = new_task(context.message)
             await event_queue.enqueue_event(task)
 
-        async for item in self.agent.stream(query, task.contextId):
+        async for item in self.agent.stream(query, task.context_id):
             is_task_complete = item["is_task_complete"]
             require_user_input = item["require_user_input"]
             content = item["content"]
@@ -47,7 +47,7 @@ class ExtractorAgentExecutor(AgentExecutor):
                 f"Stream item received: complete={is_task_complete}, require_input={require_user_input}, content_len={len(content)}"
             )
 
-            agent_outcome = await self.agent.invoke(query, task.contextId)
+            agent_outcome = await self.agent.invoke(query, task.context_id)
             is_task_complete = agent_outcome["is_task_complete"]
             require_user_input = not is_task_complete
             content = agent_outcome.get("text_parts", [])
@@ -71,22 +71,22 @@ class ExtractorAgentExecutor(AgentExecutor):
                             state=TaskState.input_required,
                             message=new_agent_text_message(
                                 content,
-                                task.contextId,
+                                task.context_id,
                                 task.id,
                             ),
                         ),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
             elif is_task_complete:
                 await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
-                        lastChunk=True,
+                        context_id=task.context_id,
+                        task_id=task.id,
+                        last_chunk=True,
                         artifact=artifact,
                     )
                 )
@@ -94,8 +94,8 @@ class ExtractorAgentExecutor(AgentExecutor):
                     TaskStatusUpdateEvent(
                         status=TaskStatus(state=TaskState.completed),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
             else:
@@ -105,13 +105,13 @@ class ExtractorAgentExecutor(AgentExecutor):
                             state=TaskState.working,
                             message=new_agent_text_message(
                                 "Analyzing your text...",
-                                task.contextId,
+                                task.context_id,
                                 task.id,
                             ),
                         ),
                         final=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
 

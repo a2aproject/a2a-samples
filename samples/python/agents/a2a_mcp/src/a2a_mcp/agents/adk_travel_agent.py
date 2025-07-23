@@ -11,6 +11,7 @@ from a2a_mcp.common.agent_runner import AgentRunner
 from a2a_mcp.common.base_agent import BaseAgent
 from a2a_mcp.common.utils import get_mcp_server_config, init_api_key
 from google.adk.agents import Agent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import SseServerParams
 from google.genai import types as genai_types
@@ -49,10 +50,11 @@ class TravelAgent(BaseAgent):
         generate_content_config = genai_types.GenerateContentConfig(
             temperature=0.0
         )
+        LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash')
         self.agent = Agent(
             name=self.agent_name,
             instruction=self.instructions,
-            model='gemini-2.0-flash',
+            model=LiteLlm(model=LITELLM_MODEL),
             disallow_transfer_to_parent=True,
             disallow_transfer_to_peers=True,
             generate_content_config=generate_content_config,

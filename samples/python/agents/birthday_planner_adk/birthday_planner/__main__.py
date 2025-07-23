@@ -59,8 +59,8 @@ def main(host: str, port: int, calendar_agent: str):
         description='I can help you plan fun birthday parties.',
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=[skill],
     )

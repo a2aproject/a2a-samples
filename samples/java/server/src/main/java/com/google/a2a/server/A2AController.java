@@ -65,7 +65,7 @@ public class A2AController {
         }
 
         JSONRPCResponse response = switch (request.method()) {
-            case "tasks/send" -> server.handleTaskSend(request);
+            case "message/send" -> server.handleTaskSend(request);
             case "tasks/get" -> server.handleTaskGet(request);
             case "tasks/cancel" -> server.handleTaskCancel(request);
             default -> {
@@ -101,7 +101,7 @@ public class A2AController {
         // Process task asynchronously
         CompletableFuture.runAsync(() -> {
             try {
-                if (!"tasks/send".equals(request.method())) {
+                if (!"message/send".equals(request.method())) {
                     sendErrorEvent(emitter, request.id(), ErrorCode.METHOD_NOT_FOUND, "Method not found");
                     return;
                 }
@@ -175,7 +175,7 @@ public class A2AController {
     /**
      * Get agent card information
      */
-    @GetMapping("/.well-known/agent-card")
+    @GetMapping("/.well-known/agent.json")
     public ResponseEntity<AgentCard> getAgentCard() {
         return ResponseEntity.ok(server.getAgentCard());
     }

@@ -23,8 +23,8 @@ if __name__ == '__main__':
         description='travel planner',
         url='http://localhost:10001/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=[skill],
     )

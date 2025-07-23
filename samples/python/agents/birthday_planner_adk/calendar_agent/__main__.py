@@ -99,9 +99,9 @@ def main(host: str, port: int):
         type='oauth2',
         description='OAuth2 for Google Calendar API',
         flows=OAuthFlows(
-            authorizationCode=AuthorizationCodeOAuthFlow(
-                authorizationUrl='https://accounts.google.com/o/oauth2/auth',
-                tokenUrl='https://oauth2.googleapis.com/token',
+            authorization_code=AuthorizationCodeOAuthFlow(
+                authorization_url='https://accounts.google.com/o/oauth2/auth',
+                token_url='https://oauth2.googleapis.com/token',
                 scopes={
                     'https://www.googleapis.com/auth/calendar': 'Access Google Calendar'
                 },
@@ -109,17 +109,17 @@ def main(host: str, port: int):
         ),
     )
 
-    # Update the AgentCard to include the 'securitySchemes' and 'security' fields.
+    # Update the AgentCard to include the 'security_schemes' and 'security' fields.
     agent_card = AgentCard(
         name='Calendar Agent',
         description="An agent that can manage a user's calendar",
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=[skill],
-        securitySchemes={OAUTH_SCHEME_NAME: SecurityScheme(root=oauth_scheme)},
+        security_schemes={OAUTH_SCHEME_NAME: SecurityScheme(root=oauth_scheme)},
         # Declare that this scheme is required to use the agent's skills
         security=[
             {OAUTH_SCHEME_NAME: ['https://www.googleapis.com/auth/calendar']}

@@ -1,4 +1,5 @@
 import logging
+import os
 
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
@@ -8,6 +9,7 @@ from a2a.utils import new_agent_text_message
 from a2a.utils.errors import ServerError
 from google.adk import Runner
 from google.adk.agents import LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
 from google.adk.sessions import InMemorySessionService
@@ -26,8 +28,9 @@ class QnAAgentExecutor(AgentExecutor):
         self.runner = None
 
     def _init_agent(self):
+        LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-exp')
         self.agent = LlmAgent(
-            model='gemini-2.0-flash-exp',
+            model=LiteLlm(model=LITELLM_MODEL),
             name='question_answer_agent',
             description='A helpful assistant agent that can answer questions.',
             instruction="""Respond to the query using google search""",

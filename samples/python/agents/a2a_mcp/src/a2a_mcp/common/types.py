@@ -48,7 +48,7 @@ class TripInfo(BaseModel):
     travel_class: str | None = Field(
         description='Travel class, first, business or economy'
     )
-    accomodation_type: str | None = Field(
+    accommodation_type: str | None = Field(
         description='Luxury Hotel, Budget Hotel, AirBnB, etc'
     )
     room_type: str | None = Field(description='Suite, Single, Double etc.')

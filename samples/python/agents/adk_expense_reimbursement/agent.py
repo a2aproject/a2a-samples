@@ -1,10 +1,12 @@
 import json
+import os
 import random
 
 from collections.abc import AsyncIterable
 from typing import Any
 
 from google.adk.agents.llm_agent import LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
 from google.adk.runners import Runner
@@ -131,8 +133,9 @@ class ReimbursementAgent:
 
     def _build_agent(self) -> LlmAgent:
         """Builds the LLM agent for the reimbursement agent."""
+        LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-001')
         return LlmAgent(
-            model='gemini-2.0-flash-001',
+            model=LiteLlm(model=LITELLM_MODEL),
             name='reimbursement_agent',
             description=(
                 'This agent handles the reimbursement process for the employees'

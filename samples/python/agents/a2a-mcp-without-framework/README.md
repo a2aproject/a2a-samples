@@ -16,23 +16,27 @@ This repository demonstrates how to set up and use the [a2a-python SDK](https://
 ## Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone <this-repo-url>
    cd <repo-directory>
    ```
 
 2. **Install dependencies:**
+
    ```bash
    uv pip install -e .
    ```
 
 3. **Set environment variables:**
+
    ```bash
    export GEMINI_API_KEY=your-gemini-api-key
    ```
 
    Or create a `.env` file with:
-   ```
+
+   ```sh
    GEMINI_API_KEY=your-gemini-api-key
    ```
 
@@ -43,7 +47,8 @@ This repository demonstrates how to set up and use the [a2a-python SDK](https://
 ```bash
 uv run --env-file .env python -m src.no_llm_framework.server.__main__
 ```
-- The server will start on port 9999.
+
+- The server will start on port `9999`.
 
 ### 2. Run the Client
 
@@ -57,7 +62,7 @@ uv run --env-file .env python -m src.no_llm_framework.client --question "What is
 
 ### 3. View the Response
 
-- The response from the client will be saved to [response.xml](./response.xml).
+- The response from the client will be saved to [`response.xml`](./response.xml).
 
 ## File Structure
 
@@ -72,6 +77,7 @@ uv run --env-file .env python -m src.no_llm_framework.client --question "What is
 - **Port conflicts:** Make sure port 9999 is free.
 
 ## Disclaimer
+
 Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
 
 All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.

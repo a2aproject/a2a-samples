@@ -1,9 +1,11 @@
+import os
 import random
 
 from collections.abc import AsyncIterable
 
 from google.adk import Runner
 from google.adk.agents import LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
 from google.adk.sessions import InMemorySessionService
@@ -51,8 +53,9 @@ def check_prime(nums: list[int]) -> str:
 
 
 def create_agent() -> LlmAgent:
+    LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-001')
     return LlmAgent(
-        model='gemini-2.0-flash-001',
+        model=LiteLlm(model=LITELLM_MODEL),
         name='dice_roll_agent',
         instruction="""
 You roll dice and answer questions about the outcome of the dice rolls.
