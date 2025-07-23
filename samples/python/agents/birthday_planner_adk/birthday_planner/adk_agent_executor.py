@@ -268,9 +268,9 @@ class ADKAgentExecutor(AgentExecutor):
             id=str(uuid4()),
             params=MessageSendParams(
                 message=Message(
-                    contextId=tool_context._invocation_context.session.id,
-                    taskId=tool_context.state.get('task_id'),
-                    messageId=str(uuid4()),
+                    context_id=tool_context._invocation_context.session.id,
+                    task_id=tool_context.state.get('task_id'),
+                    message_id=str(uuid4()),
                     role=Role.user,
                     parts=[Part(TextPart(text=message))],
                 )
