@@ -1,13 +1,14 @@
 import asyncio
 import json
 import re
+
 from collections.abc import Callable, Generator
 from pathlib import Path
 from typing import Literal
 from uuid import uuid4
 
-from google import genai
 import httpx
+
 from a2a.client import A2ACardResolver, A2AClient
 from a2a.types import (
     AgentCard,
@@ -20,6 +21,7 @@ from a2a.types import (
     TaskStatusUpdateEvent,
     TextPart,
 )
+from google import genai
 from jinja2 import Template
 
 from no_llm_framework.client.constant import GOOGLE_API_KEY
@@ -46,9 +48,9 @@ def stream_llm(prompt: str) -> Generator[str]:
     Returns:
         Generator[str, None, None]: A generator of the LLM response.
     """
-    client = genai.Client(api_key=GOOGLE_API_KEY)
+    client = genai.Client(vertexai=False, api_key=GOOGLE_API_KEY)
     for chunk in client.models.generate_content_stream(
-        model='gemini-1.5-flash',
+        model='gemini-2.5-flash-lite',
         contents=prompt,
     ):
         yield chunk.text
@@ -74,7 +76,7 @@ class Agent:
 
         Returns:
             tuple[dict[str, AgentCard], str]: A dictionary mapping agent names to AgentCard objects, and the rendered agent prompt string.
-        """  # noqa: E501
+        """
         async with httpx.AsyncClient() as httpx_client:
             card_resolvers = [
                 A2ACardResolver(httpx_client, url) for url in self.agent_urls
@@ -99,7 +101,7 @@ class Agent:
 
         Returns:
             str or Generator[str]: The LLM response as a string or generator, depending on mode.
-        """  # noqa: E501
+        """
         if self.mode == 'complete':
             return stream_llm(prompt)
 
@@ -123,7 +125,7 @@ class Agent:
 
         Returns:
             Generator[str, None]: The LLM's response as a generator of strings.
-        """  # noqa: E501
+        """
         if called_agents:
             call_agent_prompt = agent_answer_template.render(
                 called_agents=called_agents
@@ -167,8 +169,8 @@ class Agent:
                 message=Message(
                     role=Role.user,
                     parts=[Part(TextPart(text=message))],
-                    messageId=uuid4().hex,
-                    taskId=uuid4().hex,
+                    message_id=uuid4().hex,
+                    task_id=uuid4().hex,
                 )
             )
 
@@ -191,7 +193,7 @@ class Agent:
 
         Yields:
             str: Streaming output, including agent responses and intermediate steps.
-        """  # noqa: E501
+        """
         agent_answers: list[dict] = []
         for _ in range(3):
             agents_registry, agent_prompt = await self.get_agents()
@@ -235,6 +237,7 @@ class Agent:
 
 if __name__ == '__main__':
     import asyncio
+
     import colorama
 
     async def main():

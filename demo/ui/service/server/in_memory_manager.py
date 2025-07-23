@@ -54,8 +54,7 @@ class InMemoryFakeAgentManager(ApplicationManager):
         return c
 
     def sanitize_message(self, message: Message) -> Message:
-        if message.contextId:
-            conversation = self.get_conversation(message.contextId)
+        conversation = self.get_conversation(message.contextId)
         if not conversation:
             return message
         # Check if the last event in the conversation was tied to a task.

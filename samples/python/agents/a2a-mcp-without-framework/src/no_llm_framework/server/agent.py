@@ -1,6 +1,7 @@
 import asyncio
 import json
 import re
+
 from collections.abc import AsyncGenerator, Callable, Generator
 from pathlib import Path
 from typing import Literal
@@ -11,6 +12,7 @@ from mcp.types import CallToolResult
 
 from no_llm_framework.server.constant import GOOGLE_API_KEY
 from no_llm_framework.server.mcp import call_mcp_tool, get_mcp_tool_prompt
+
 
 dir_path = Path(__file__).parent
 
@@ -33,9 +35,9 @@ def stream_llm(prompt: str) -> Generator[str, None]:
     Returns:
         Generator[str, None, None]: A generator of the LLM response.
     """
-    client = genai.Client(api_key=GOOGLE_API_KEY)
+    client = genai.Client(vertexai=False, api_key=GOOGLE_API_KEY)
     for chunk in client.models.generate_content_stream(
-        model='gemini-1.5-flash',
+        model='gemini-2.5-flash-lite',
         contents=prompt,
     ):
         yield chunk.text
@@ -62,7 +64,7 @@ class Agent:
 
         Returns:
             Generator[str, None]: A generator yielding the LLM's response.
-        """  # noqa: E501
+        """
         return stream_llm(prompt)
 
     async def decide(
@@ -124,7 +126,7 @@ class Agent:
 
         Yields:
             dict: Streaming output, including intermediate steps and final result.
-        """  # noqa: E501
+        """
         called_tools = []
         for i in range(10):
             yield {

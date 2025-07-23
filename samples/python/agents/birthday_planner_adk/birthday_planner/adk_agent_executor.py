@@ -3,6 +3,7 @@ import asyncio
 import logging
 
 from collections.abc import AsyncGenerator, AsyncIterable
+import os
 from typing import Any
 from uuid import uuid4
 
@@ -36,6 +37,7 @@ from a2a.utils import get_text_parts
 from a2a.utils.errors import ServerError
 from google.adk import Runner
 from google.adk.agents import LlmAgent, RunConfig
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.events import Event
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
@@ -64,8 +66,9 @@ class ADKAgentExecutor(AgentExecutor):
     """An AgentExecutor that runs an ADK-based Agent."""
 
     def __init__(self, calendar_agent_url):
+        LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-001')
         self._agent = LlmAgent(
-            model='gemini-2.0-flash-001',
+            model=LiteLlm(model=LITELLM_MODEL),
             name='birthday_planner_agent',
             description='An agent that helps manage birthday parties.',
             after_tool_callback=self._handle_auth_required_task,

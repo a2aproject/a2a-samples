@@ -12,14 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from google.adk import Agent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools import google_search
 
 
+LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash')
 root_agent = Agent(
-    name="facts_agent",
-    model="gemini-2.0-flash",
-    description=("Agent to give interesting facts."),
-    instruction=("You are a helpful agent who can provide interesting facts."),
+    name='facts_agent',
+    model=LiteLlm(model=LITELLM_MODEL),
+    description=('Agent to give interesting facts.'),
+    instruction=('You are a helpful agent who can provide interesting facts.'),
     tools=[google_search],
 )
