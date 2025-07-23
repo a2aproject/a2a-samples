@@ -55,7 +55,7 @@ class ADKAgentExecutor(AgentExecutor):
         event_queue: EventQueue,
     ) -> None:
         if not context.message:
-            raise Exception('Message should be present in request context')
+            raise ValueError('Message should be present in request context')
 
         query = context.get_user_input()
         task = context.current_task or new_task(context.message)
