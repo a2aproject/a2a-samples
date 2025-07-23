@@ -38,7 +38,7 @@ def get_api_key() -> str:
 
 
 class YoutubeMCPAgent:
-    """Agent to access a Youtube MCP Server to download closed captions"""
+    """Agent to access a Youtube MCP Server to download closed captions."""
 
     SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
 
@@ -106,7 +106,7 @@ class YoutubeMCPAgent:
             }
 
     async def stream(
-        self, query: str, sessionId: str
+        self, query: str, session_id: str
     ) -> AsyncIterable[dict[str, Any]]:
         """Stream updates from the MCP agent."""
         if not self.initialized:
@@ -189,7 +189,7 @@ class YoutubeMCPAgent:
                 'content': f'Error processing request: {e!s}',
             }
 
-    def invoke(self, query: str, sessionId: str) -> dict[str, Any]:
+    def invoke(self, query: str, session_id: str) -> dict[str, Any]:
         """Synchronous invocation of the MCP agent."""
         raise NotImplementedError(
             'Synchronous invocation is not supported by this agent. Use the streaming endpoint (message/stream) instead.'
