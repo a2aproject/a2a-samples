@@ -115,7 +115,7 @@ async def main():
         theme=gr.themes.Ocean(), title='A2A Host Agent with Logo'
     ) as demo:
         gr.Image(
-            'static/a2a.png',
+            'https://a2a-protocol.org/latest/assets/a2a-banner.png',
             width=100,
             height=100,
             scale=0,
@@ -126,7 +126,7 @@ async def main():
         )
         gr.ChatInterface(
             get_response_from_agent,
-            title='A2A Host Agent',  # Title can be handled by Markdown above
+            title='A2A Host Agent',
             description='This assistant can help you to check weather and find airbnb accommodation',
         )
 
