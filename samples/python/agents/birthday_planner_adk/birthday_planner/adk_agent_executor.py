@@ -1,9 +1,9 @@
 # mypy: ignore-errors
 import asyncio
 import logging
+import os
 
 from collections.abc import AsyncGenerator, AsyncIterable
-import os
 from typing import Any
 from uuid import uuid4
 
@@ -37,10 +37,10 @@ from a2a.utils import get_text_parts
 from a2a.utils.errors import ServerError
 from google.adk import Runner
 from google.adk.agents import LlmAgent, RunConfig
-from google.adk.models.lite_llm import LiteLlm
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.events import Event
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.sessions import InMemorySessionService
 from google.adk.tools import BaseTool, ToolContext
 from google.genai import types
@@ -66,7 +66,9 @@ class ADKAgentExecutor(AgentExecutor):
     """An AgentExecutor that runs an ADK-based Agent."""
 
     def __init__(self, calendar_agent_url):
-        LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-001')
+        LITELLM_MODEL = os.getenv(
+            'LITELLM_MODEL', 'gemini/gemini-2.0-flash-001'
+        )
         self._agent = LlmAgent(
             model=LiteLlm(model=LITELLM_MODEL),
             name='birthday_planner_agent',
@@ -268,9 +270,9 @@ class ADKAgentExecutor(AgentExecutor):
             id=str(uuid4()),
             params=MessageSendParams(
                 message=Message(
-                    contextId=tool_context._invocation_context.session.id,
-                    taskId=tool_context.state.get('task_id'),
-                    messageId=str(uuid4()),
+                    context_id=tool_context._invocation_context.session.id,
+                    task_id=tool_context.state.get('task_id'),
+                    message_id=str(uuid4()),
                     role=Role.user,
                     parts=[Part(TextPart(text=message))],
                 )
