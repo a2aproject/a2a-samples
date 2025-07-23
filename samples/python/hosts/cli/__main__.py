@@ -93,7 +93,7 @@ async def cli(
 
         while continue_loop:
             print('=========  starting a new task ======== ')
-            continue_loop, _, taskId = await completeTask(
+            continue_loop, _, task_id = await completeTask(
                 client,
                 streaming,
                 use_push_notifications,
@@ -106,7 +106,7 @@ async def cli(
             if history and continue_loop:
                 print('========= history ======== ')
                 task_response = await client.get_task(
-                    {'id': taskId, 'historyLength': 10}
+                    {'id': task_id, 'historyLength': 10}
                 )
                 print(
                     task_response.model_dump_json(
@@ -121,8 +121,8 @@ async def completeTask(
     use_push_notifications: bool,
     notification_receiver_host: str,
     notification_receiver_port: int,
-    taskId,
-    contextId,
+    task_id,
+    context_id,
 ):
     prompt = click.prompt(
         '\nWhat do you want to send to the agent? (:q or quit to exit)'
@@ -133,9 +133,9 @@ async def completeTask(
     message = Message(
         role='user',
         parts=[TextPart(text=prompt)],
-        messageId=str(uuid4()),
-        taskId=taskId,
-        contextId=contextId,
+        message_id=str(uuid4()),
+        task_id=task_id,
+        context_id=context_id,
     )
 
     file_path = click.prompt(
@@ -160,7 +160,7 @@ async def completeTask(
         id=str(uuid4()),
         message=message,
         configuration=MessageSendConfiguration(
-            acceptedOutputModes=['text'],
+            accepted_output_modes=['text'],
         ),
     )
 
@@ -185,17 +185,17 @@ async def completeTask(
         async for result in response_stream:
             if isinstance(result.root, JSONRPCErrorResponse):
                 print(
-                    f'Error: {result.root.error}, contextId: {contextId}, taskId: {taskId}'
+                    f'Error: {result.root.error}, context_id: {context_id}, task_id: {task_id}'
                 )
-                return False, contextId, taskId
+                return False, context_id, task_id
             event = result.root.result
-            contextId = event.contextId
+            context_id = event.context_id
             if isinstance(event, Task):
-                taskId = event.id
+                task_id = event.id
             elif isinstance(event, TaskStatusUpdateEvent) or isinstance(
                 event, TaskArtifactUpdateEvent
             ):
-                taskId = event.taskId
+                task_id = event.task_id
                 if (
                     isinstance(event, TaskStatusUpdateEvent)
                     and event.status.state == 'completed'
@@ -205,18 +205,18 @@ async def completeTask(
                 message = event
             print(f'stream event => {event.model_dump_json(exclude_none=True)}')
         # Upon completion of the stream. Retrieve the full task if one was made.
-        if taskId and not task_completed:
+        if task_id and not task_completed:
             taskResultResponse = await client.get_task(
                 GetTaskRequest(
                     id=str(uuid4()),
-                    params=TaskQueryParams(id=taskId),
+                    params=TaskQueryParams(id=task_id),
                 )
             )
             if isinstance(taskResultResponse.root, JSONRPCErrorResponse):
                 print(
-                    f'Error: {taskResultResponse.root.error}, contextId: {contextId}, taskId: {taskId}'
+                    f'Error: {taskResultResponse.root.error}, context_id: {context_id}, task_id: {task_id}'
                 )
-                return False, contextId, taskId
+                return False, context_id, task_id
             taskResult = taskResultResponse.root.result
     else:
         try:
@@ -230,18 +230,18 @@ async def completeTask(
             event = event.root.result
         except Exception as e:
             print('Failed to complete the call', e)
-        if not contextId:
-            contextId = event.contextId
+        if not context_id:
+            context_id = event.context_id
         if isinstance(event, Task):
-            if not taskId:
-                taskId = event.id
+            if not task_id:
+                task_id = event.id
             taskResult = event
         elif isinstance(event, Message):
             message = event
 
     if message:
         print(f'\n{message.model_dump_json(exclude_none=True)}')
-        return True, contextId, taskId
+        return True, context_id, task_id
     if taskResult:
         # Don't print the contents of a file.
         task_content = taskResult.model_dump_json(
@@ -267,16 +267,16 @@ async def completeTask(
                     use_push_notifications,
                     notification_receiver_host,
                     notification_receiver_port,
-                    taskId,
-                    contextId,
+                    task_id,
+                    context_id,
                 ),
-                contextId,
-                taskId,
+                context_id,
+                task_id,
             )
         ## task is complete
-        return True, contextId, taskId
+        return True, context_id, task_id
     ## Failure case, shouldn't reach
-    return True, contextId, taskId
+    return True, context_id, task_id
 
 
 if __name__ == '__main__':
