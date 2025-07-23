@@ -54,8 +54,8 @@ if __name__ == '__main__':
             'name': 'Hello World Agent - Extended Edition',  # Different name for clarity
             'description': 'The full-featured hello world agent for authenticated users.',
             'version': '1.0.1',  # Could even be a different version
-            # Capabilities and other fields like url, defaultInputModes, defaultOutputModes,
-            # supportsAuthenticatedExtendedCard are inherited from public_agent_card unless specified here.
+            # Capabilities and other fields like url, default_input_modes, default_output_modes,
+            # supports_authenticated_extended_card are inherited from public_agent_card unless specified here.
             'skills': [
                 skill,
                 extended_skill,

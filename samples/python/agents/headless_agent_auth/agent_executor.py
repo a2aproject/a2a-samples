@@ -29,15 +29,15 @@ class HRAgentExecutor(AgentExecutor):
             task = new_task(context.message)
             await event_queue.enqueue_event(task)
         # invoke the underlying agent, using streaming results
-        async for event in self.agent.stream(query, task.contextId):
+        async for event in self.agent.stream(query, task.context_id):
             task_state = TaskState(event['task_state'])
             if event['is_task_complete']:
                 await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
-                        lastChunk=True,
+                        context_id=task.context_id,
+                        task_id=task.id,
+                        last_chunk=True,
                         artifact=new_text_artifact(
                             name='current_result',
                             description='Result of request to agent.',
@@ -49,8 +49,8 @@ class HRAgentExecutor(AgentExecutor):
                     TaskStatusUpdateEvent(
                         status=TaskStatus(state=task_state),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
             else:
@@ -60,7 +60,7 @@ class HRAgentExecutor(AgentExecutor):
                             state=task_state,
                             message=new_agent_text_message(
                                 event['content'],
-                                task.contextId,
+                                task.context_id,
                                 task.id,
                             ),
                         ),
@@ -70,8 +70,8 @@ class HRAgentExecutor(AgentExecutor):
                             TaskState.failed,
                             TaskState.unknown,
                         },
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
 

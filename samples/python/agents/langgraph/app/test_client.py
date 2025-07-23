@@ -92,7 +92,7 @@ async def main() -> None:
                     )
             elif (
                 _public_card
-            ):  # supportsAuthenticatedExtendedCard is False or None
+            ):  # supports_authenticated_extended_card is False or None
                 logger.info(
                     '\nPublic card does not indicate support for an extended card. Using public card.'
                 )
@@ -158,7 +158,7 @@ async def main() -> None:
                 'parts': [{'kind': 'text', 'text': 'CAD'}],
                 'message_id': uuid4().hex,
                 'task_id': task_id,
-                'context_id': context_id
+                'context_id': context_id,
             },
         }
 

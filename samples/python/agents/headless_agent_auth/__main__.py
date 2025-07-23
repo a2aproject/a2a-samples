@@ -54,8 +54,8 @@ async def start_agent(host: str, port):
         description='This agent handles external verification requests about Staff0 employees made by third parties.',
         url=f'http://{host}:{port}/',
         version='0.1.0',
-        defaultInputModes=HRAgent.SUPPORTED_CONTENT_TYPES,
-        defaultOutputModes=HRAgent.SUPPORTED_CONTENT_TYPES,
+        default_input_modes=HRAgent.SUPPORTED_CONTENT_TYPES,
+        default_output_modes=HRAgent.SUPPORTED_CONTENT_TYPES,
         capabilities=AgentCapabilities(streaming=True),
         skills=[
             AgentSkill(
@@ -79,7 +79,7 @@ async def start_agent(host: str, port):
                 }
             ),
         ),
-        # securitySchemes={
+        # security_schemes={
         #     'oauth2_m2m_client': OAuth2SecurityScheme(
         #         description='',
         #         flows=OAuthFlows(

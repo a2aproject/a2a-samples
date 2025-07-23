@@ -24,14 +24,14 @@ name = "a2a-data-agent"
 version = "0.1.0"
 source = { editable = "agents/mindsdb" }
 dependencies = [
-    { name = "a2a-samples" },
+    { name = "a2a-sdk" },
     { name = "aiohttp" },
     { name = "python-dotenv" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "a2a-samples", editable = "." },
+    { name = "a2a-sdk", specifier = ">=0.2.16" },
     { name = "aiohttp" },
     { name = "python-dotenv" },
 ]
@@ -97,7 +97,6 @@ name = "a2a-sample-client-multiagent"
 version = "0.1.0"
 source = { editable = "hosts/multiagent" }
 dependencies = [
-    { name = "a2a-samples" },
     { name = "a2a-sdk" },
     { name = "google-adk" },
     { name = "google-genai" },
@@ -105,9 +104,8 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "a2a-samples", editable = "." },
-    { name = "a2a-sdk", specifier = ">=0.2.6" },
-    { name = "google-adk", specifier = ">=1.0.0" },
+    { name = "a2a-sdk", specifier = ">=0.2.16" },
+    { name = "google-adk", specifier = ">=1.7.0" },
     { name = "google-genai", specifier = ">=1.9.0" },
 ]
 
@@ -163,7 +161,7 @@ name = "a2a-samples-file-chat"
 version = "0.1.0"
 source = { virtual = "agents/llama_index_file_chat" }
 dependencies = [
-    { name = "a2a-samples" },
+    { name = "a2a-sdk" },
     { name = "llama-cloud-services" },
     { name = "llama-index-core" },
     { name = "llama-index-llms-google-genai" },
@@ -171,7 +169,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "a2a-samples", editable = "." },
+    { name = "a2a-sdk", specifier = ">=0.2.16" },
     { name = "llama-cloud-services", specifier = ">=0.6.12" },
     { name = "llama-index-core", specifier = ">=0.12.30" },
     { name = "llama-index-llms-google-genai", specifier = ">=0.1.7" },
@@ -250,13 +248,13 @@ name = "a2a-semantic-kernel"
 version = "0.1.0"
 source = { editable = "agents/semantickernel" }
 dependencies = [
-    { name = "a2a-samples" },
+    { name = "a2a-sdk" },
     { name = "semantic-kernel" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "a2a-samples", editable = "." },
+    { name = "a2a-sdk", specifier = ">=0.2.16" },
     { name = "semantic-kernel", specifier = ">=1.30.0" },
 ]
 
@@ -265,7 +263,6 @@ name = "adk-a2a-grpc-example"
 version = "0.1.0"
 source = { editable = "agents/dice_agent_grpc" }
 dependencies = [
-    { name = "a2a-samples" },
     { name = "a2a-sdk" },
     { name = "asyncclick" },
     { name = "dotenv" },
@@ -281,8 +278,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "a2a-samples", editable = "." },
-    { name = "a2a-sdk", specifier = ">=0.2.6" },
+    { name = "a2a-sdk", specifier = ">=0.2.16" },
     { name = "asyncclick", specifier = ">=8.1.8" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "google-adk", specifier = ">=1.0.0" },
@@ -5329,7 +5325,7 @@ name = "veo-video-sample-agent"
 version = "0.1.0"
 source = { editable = "agents/veo_video_gen" }
 dependencies = [
-    { name = "a2a-samples" },
+    { name = "a2a-sdk" },
     { name = "click" },
     { name = "google-adk" },
     { name = "google-genai" },
@@ -5338,7 +5334,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "a2a-samples", editable = "." },
+    { name = "a2a-sdk", specifier = ">=0.2.16" },
     { name = "click", specifier = ">=8.1.8" },
     { name = "google-adk", specifier = ">=1.0.0" },
     { name = "google-genai", specifier = ">=1.9.0" },

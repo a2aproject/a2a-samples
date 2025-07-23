@@ -47,13 +47,13 @@ class VideoGenerationAgentExecutor(AgentExecutor):
             task = new_task(context.message)
             await event_queue.enqueue_event(task)
 
-        updater = TaskUpdater(event_queue, task.id, task.contextId)
+        updater = TaskUpdater(event_queue, task.id, task.context_id)
 
         logger.info(
             f"Executing VideoGenerationAgent for task {task.id} with query: '{query}'"
         )
 
-        async for item in self.agent.stream(query, task.contextId):
+        async for item in self.agent.stream(query, task.context_id):
             progress_percent = item.get('progress_percent')
             progress_float = (
                 float(progress_percent / 100.0)
@@ -71,7 +71,7 @@ class VideoGenerationAgentExecutor(AgentExecutor):
                 )
 
                 agent_update_message = new_agent_text_message(
-                    updates_text, task.contextId, task.id
+                    updates_text, task.context_id, task.id
                 )
 
                 logger.debug(
@@ -101,7 +101,7 @@ class VideoGenerationAgentExecutor(AgentExecutor):
                 'final_message_text', item.get('content', 'Task finished.')
             )
             final_message_obj = new_agent_text_message(
-                final_message_text, task.contextId, task.id
+                final_message_text, task.context_id, task.id
             )
 
             if 'file_part_data' in item:

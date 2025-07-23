@@ -30,8 +30,8 @@ class TravelPlannerAgentExecutor(AgentExecutor):
 
         async for event in self.agent.stream(query):
             message = TaskArtifactUpdateEvent(
-                contextId=context.context_id, # type: ignore
-                taskId=context.task_id, # type: ignore
+                context_id=context.context_id,  # type: ignore
+                task_id=context.task_id,  # type: ignore
                 artifact=new_text_artifact(
                     name='current_result',
                     text=event['content'],
@@ -42,10 +42,10 @@ class TravelPlannerAgentExecutor(AgentExecutor):
                 break
 
         status = TaskStatusUpdateEvent(
-            contextId=context.context_id, # type: ignore
-            taskId=context.task_id, # type: ignore
+            context_id=context.context_id,  # type: ignore
+            task_id=context.task_id,  # type: ignore
             status=TaskStatus(state=TaskState.completed),
-            final=True
+            final=True,
         )
         await event_queue.enqueue_event(status)
 
