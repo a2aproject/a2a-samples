@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -30,24 +32,44 @@ jobs:
         run: |
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
+      - name: Get Changed Python Files in ${{ matrix.project_dir }}
+        id: get-changed-files
+        run: |
+          CHANGED_FILES=$(git diff --name-only --diff-filter=d \
+            ${{ github.event.pull_request.base.sha }} \
+            ${{ github.event.pull_request.head.sha }} \
+            -- ${{ matrix.project_dir }} \
+            | sed "s#^${{ matrix.project_dir }}##g" \
+            | paste -sd " " -)
+
+          echo "Detected changed files in ${{ matrix.project_dir }}:"
+          echo "$CHANGED_FILES"
+
+          echo "filtered_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+
       - name: Install dependencies
         run: uv sync --dev
         working-directory: ${{ matrix.project_dir }}
 
       - name: Run Ruff Linter
-        run: uv run ruff check .
+        if: steps.get-changed-files.outputs.filtered_files != ''
+        run: uv run ruff check ${{ steps.get-changed-files.outputs.filtered_files }}
         working-directory: ${{ matrix.project_dir }}
 
       - name: Run Ruff Format Check
-        run: uv run ruff format --check .
+        if: steps.get-changed-files.outputs.filtered_files != ''
+        run: uv run ruff format --check ${{ steps.get-changed-files.outputs.filtered_files }}
         working-directory: ${{ matrix.project_dir }}
 
       - name: Run MyPy Type Checker
-        run: uv run mypy .
+        if: steps.get-changed-files.outputs.filtered_files != ''
+        run: uv run mypy ${{ steps.get-changed-files.outputs.filtered_files }}
         working-directory: ${{ matrix.project_dir }}
 
       - name: Run Pyright (Pylance equivalent)
+        if: steps.get-changed-files.outputs.filtered_files != ''
         uses: jakebailey/pyright-action@v2
         with:
           pylance-version: latest-release
           working-directory: ${{ matrix.project_dir }}
+          files: ${{ steps.get-changed-files.outputs.filtered_files }}
