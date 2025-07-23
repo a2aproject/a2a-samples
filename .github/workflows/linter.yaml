@@ -1,0 +1,53 @@
+---
+name: Lint Code Base
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  lint:
+    name: Lint Code Base (${{ matrix.project_dir }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project_dir:
+          - samples/python/
+          - demo/ui/
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Add uv to PATH
+        run: |
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: uv sync --dev
+        working-directory: ${{ matrix.project_dir }}
+
+      - name: Run Ruff Linter
+        run: uv run ruff check .
+        working-directory: ${{ matrix.project_dir }}
+
+      - name: Run Ruff Format Check
+        run: uv run ruff format --check .
+        working-directory: ${{ matrix.project_dir }}
+
+      - name: Run MyPy Type Checker
+        run: uv run mypy .
+        working-directory: ${{ matrix.project_dir }}
+
+      - name: Run Pyright (Pylance equivalent)
+        uses: jakebailey/pyright-action@v2
+        with:
+          pylance-version: latest-release
+          working-directory: ${{ matrix.project_dir }}
