@@ -1,20 +1,16 @@
 import logging
 import os
+import time
 
 import click
-
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
-from a2a.types import (
-    AgentCapabilities,
-    AgentCard,
-    AgentSkill,
-)
+from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent import ReimbursementAgent
 from agent_executor import ReimbursementAgentExecutor
 from dotenv import load_dotenv
-
+from helloworld_ext import HelloWorldExtension
 
 load_dotenv()
 
@@ -38,7 +34,13 @@ def main(host, port):
                     'GEMINI_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
                 )
 
-        capabilities = AgentCapabilities(streaming=True)
+        hello_ext = HelloWorldExtension(time.time)
+        capabilities = AgentCapabilities(
+            streaming=True,
+            extensions=[
+                hello_ext.agent_extension(),
+            ],
+        )
         skill = AgentSkill(
             id='process_reimbursement',
             name='Process Reimbursement Tool',
@@ -58,8 +60,11 @@ def main(host, port):
             capabilities=capabilities,
             skills=[skill],
         )
+        agent_executor = ReimbursementAgentExecutor()
+        # Use the decorator version of the extension for highest ease of use.
+        agent_executor = hello_ext.wrap_executor(agent_executor)
         request_handler = DefaultRequestHandler(
-            agent_executor=ReimbursementAgentExecutor(),
+            agent_executor=agent_executor,
             task_store=InMemoryTaskStore(),
         )
         server = A2AStarletteApplication(

@@ -1,15 +1,14 @@
 import json
 import os
 import random
-from typing import Optional
 
 from collections.abc import AsyncIterable
-from typing import Any
+from typing import Any, Optional
 
 from google.adk.agents.llm_agent import LlmAgent
-from google.adk.models.lite_llm import LiteLlm
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.tools.tool_context import ToolContext
@@ -21,9 +20,9 @@ request_ids = set()
 
 
 def create_request_form(
-    date: Optional[str] = None,
-    amount: Optional[str] = None,
-    purpose: Optional[str] = None,
+    date: Optional[str] = None,  # noqa: UP045
+    amount: Optional[str] = None,  # noqa: UP045
+    purpose: Optional[str] = None,  # noqa: UP045
 ) -> dict[str, Any]:
     """Create a request form for the employee to fill out.
 
@@ -50,7 +49,7 @@ def create_request_form(
 def return_form(
     form_request: dict[str, Any],
     tool_context: ToolContext,
-    instructions: Optional[str] = None,
+    instructions: Optional[str] = None,  # noqa: UP045
 ) -> dict[str, Any]:
     """Returns a structured json object indicating a form to complete.
 
@@ -134,7 +133,9 @@ class ReimbursementAgent:
 
     def _build_agent(self) -> LlmAgent:
         """Builds the LLM agent for the reimbursement agent."""
-        LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-001')
+        LITELLM_MODEL = os.getenv(
+            'LITELLM_MODEL', 'gemini/gemini-2.0-flash-001'
+        )
         return LlmAgent(
             model=LiteLlm(model=LITELLM_MODEL),
             name='reimbursement_agent',
