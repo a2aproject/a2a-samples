@@ -1,0 +1,33 @@
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"     # Jaeger Frontend
+      - "14268:14268"     # Jaeger HTTP Collector
+      - "6831:6831/udp"   # Jaeger UDP Collector
+      - "4317:4317"       # Jaeger OLTP, grpc.
+      - "4318:4318"       # Jaeger OLTP, http.
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true # OLTP Enabled
+    networks:
+      - a2a_tracing
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000" # Grafana Ports
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin # Admin Password
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - jaeger
+    networks:
+      - a2a_tracing
+
+volumes:
+  grafana-storage:
+
+networks:
+  a2a_tracing:
+    driver: bridge
