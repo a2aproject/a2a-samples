@@ -1,0 +1,33 @@
+[project]
+name = "adk-a2a-grpc-example"
+version = "0.1.0"
+description = "Dice role grpc agent example"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "a2a-samples",
+    "asyncclick>=8.1.8",
+    "dotenv>=0.9.9",
+    "httpx>=0.28.1",
+    "google-genai>=1.9.0",
+    "google-adk>=1.0.0",
+    "pydantic>=2.11.4",
+    "python-dotenv>=1.1.0",
+    "grpcio>=1.60",
+    "grpcio-tools>=1.60",
+    "grpcio_reflection>=1.7.0",
+    "a2a-sdk>=0.2.6",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.uv.sources]
+a2a-samples = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
