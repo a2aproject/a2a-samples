@@ -18,8 +18,6 @@ All functionality is implemented using only the Python standard
 library, in accordance with the project constraints.
 """
 import random
-import uuid
-import time
 from typing import Dict, Any
 
 # Shared helpers

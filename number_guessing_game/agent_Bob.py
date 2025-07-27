@@ -15,14 +15,13 @@ Responsibilities:
    is sorted by ascending guess value to illustrate multi-turn flows.
 """
 import time
-from typing import Dict, Any
+from typing import Dict
 import json
 
 from utils import (
     ToyA2AAgent,
     build_complete_agent_card,
     safe_extract_plain_text as extract_reply,
-    get_first_text_part,
 )
 from config import AGENT_ALICE_PORT, AGENT_BOB_PORT, AGENT_CAROL_PORT
 
@@ -62,7 +61,7 @@ def _is_sorted(hist: list[Dict[str, str]]) -> bool:
 
     try:
         guesses = [int(entry["guess"]) for entry in hist]
-    except Exception:
+    except (ValueError, TypeError, KeyError):
         return False
     return guesses == sorted(guesses)
 

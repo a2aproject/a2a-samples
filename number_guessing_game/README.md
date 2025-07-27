@@ -12,7 +12,7 @@ The code purposefully avoids external dependencies – it is built only on the P
 ## Directory layout
 
 ```
-A2A_test_implementation/
+number_guessing_game/
 ├── agent_Alice.py    # Runs Alice
 ├── agent_Bob.py      # Runs Bob
 ├── agent_Carol.py    # Runs Carol

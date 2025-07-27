@@ -8,5 +8,5 @@ propagated automatically.
 
 # Default listening ports
 AGENT_ALICE_PORT = 8001
-AGENT_BOB_PORT = 8002 
-AGENT_CAROL_PORT = 8003 
+AGENT_BOB_PORT = 8002
+AGENT_CAROL_PORT = 8003

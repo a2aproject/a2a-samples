@@ -7,8 +7,7 @@ entries randomly shuffled, depending on the request.  This functionality
 is intentionally simple to keep the focus on A2A message flow.
 """
 import json
-import uuid
-import time
+import random
 from typing import Dict, Any, List
 
 # Shared helpers
@@ -74,16 +73,22 @@ def _build_visualisation(history: List[Dict[str, str]]) -> str:
 
 
 def _process_payload(raw_text: str) -> str:
-    """Given the raw text from Bob, return Carol's response text."""
+    """Return Carol's response text based on *raw_text* from Bob.
 
-    import random
+    The payload can be either:
+    1. A JSON object ``{"action":"shuffle", "history": [...]}`` requesting a
+       shuffle of *history*.
+    2. A JSON list ``[ ... ]`` requesting a visualisation of the guess history.
 
-    # Attempt to parse the text as JSON – may be a list or an instruction dict
+    Any other input produces an empty visualisation.
+    """
+
     success, parsed = try_parse_json(raw_text)
     if not success:
-        parsed = None
+        # Not JSON – return an empty visualisation to signal invalid input.
+        return _build_visualisation([])
 
-    # 1. Shuffle request
+    # Shuffle request
     if isinstance(parsed, dict) and parsed.get("action") == "shuffle":
         history_list = parsed.get("history", [])
         if not isinstance(history_list, list):
@@ -92,16 +97,12 @@ def _process_payload(raw_text: str) -> str:
         print("[AgentCarol] Shuffled history and returned JSON list")
         return json.dumps(history_list)
 
-    # 2. Visualisation request (history list)
+    # Visualisation request
     if isinstance(parsed, list):
-        history = parsed
-    else:
-        # Fallback: maybe the raw text *is* the JSON list
-        success, history = try_parse_json(raw_text)
-        if not success or not isinstance(history, list):
-            history = []
+        return _build_visualisation(parsed)
 
-    return _build_visualisation(history)  # type: ignore[arg-type]
+    # Fallback for unsupported JSON payloads
+    return _build_visualisation([])
 
 
 def carol_handler(params: Dict[str, Any], tasks: Dict[str, Any]) -> Dict[str, Any]:
