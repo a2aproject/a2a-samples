@@ -38,7 +38,7 @@ This sample agent connects to a weather MCP server to handle weather-related req
 
 4. In a separate terminal, run the A2A client and use it to send a message to the agent:
 
-    ```
+    ```bash
     # Connect to the agent (specify the agent URL with correct port)
     cd samples/python/hosts/cli
     uv run . --agent http://localhost:10001
@@ -50,8 +50,19 @@ This sample agent connects to a weather MCP server to handle weather-related req
 5. To make use of this agent in a multi-language, multi-agent system, check out the [weather_and_airbnb_planner](../../../python/hosts/weather_and_airbnb_planner/README.md) sample.
 
 ## Disclaimer
-Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+Important: The sample code provided is for demonstration purposes and illustrates the
+mechanics of the Agent-to-Agent (A2A) protocol. When building production applications,
+it is critical to treat any agent operating outside of your direct control as a
+potentially untrusted entity.
 
-All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+All data received from an external agent—including but not limited to its AgentCard,
+messages, artifacts, and task statuses—should be handled as untrusted input. For
+example, a malicious agent could provide an AgentCard containing crafted data in its
+fields (e.g., description, name, skills.description). If this data is used without
+sanitization to construct prompts for a Large Language Model (LLM), it could expose
+your application to prompt injection attacks.  Failure to properly validate and
+sanitize this data before use can introduce security vulnerabilities into your
+application.
 
-Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
+Developers are responsible for implementing appropriate security measures, such as
+input validation and secure handling of credentials to protect their systems and users.

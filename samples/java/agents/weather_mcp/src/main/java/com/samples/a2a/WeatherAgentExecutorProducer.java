@@ -17,28 +17,61 @@ import io.a2a.spec.TaskNotCancelableError;
 import io.a2a.spec.TaskState;
 import io.a2a.spec.TextPart;
 
+/**
+ * Producer for weather agent executor.
+ * This class is final and not designed for extension.
+ */
 @ApplicationScoped
-public class WeatherAgentExecutorProducer {
+public final class WeatherAgentExecutorProducer {
 
+    /**
+     * The weather agent instance.
+     */
     @Inject
-    WeatherAgent weatherAgent;
+    private WeatherAgent weatherAgent;
 
-    @Produces
-    public AgentExecutor agentExecutor() {
-        return new WeatherAgentExecutor(weatherAgent);
+    /**
+     * Gets the weather agent.
+     *
+     * @return the weather agent
+     */
+    public WeatherAgent getWeatherAgent() {
+        return weatherAgent;
     }
 
+    /**
+     * Produces the agent executor for the weather agent.
+     *
+     * @return the configured agent executor
+     */
+    @Produces
+    public AgentExecutor agentExecutor() {
+        return new WeatherAgentExecutor(getWeatherAgent());
+    }
+
+    /**
+     * Weather agent executor implementation.
+     */
     private static class WeatherAgentExecutor implements AgentExecutor {
 
-        private final WeatherAgent weatherAgent;
+        /**
+         * The weather agent instance.
+         */
+        private final WeatherAgent agent;
 
-        public WeatherAgentExecutor(WeatherAgent weatherAgent) {
-            this.weatherAgent = weatherAgent;
+        /**
+         * Constructor for WeatherAgentExecutor.
+         *
+         * @param weatherAgentInstance the weather agent instance
+         */
+        WeatherAgentExecutor(final WeatherAgent weatherAgentInstance) {
+            this.agent = weatherAgentInstance;
         }
 
         @Override
-        public void execute(RequestContext context, EventQueue eventQueue) throws JSONRPCError {
-            TaskUpdater updater = new TaskUpdater(context, eventQueue);
+        public void execute(final RequestContext context,
+                            final EventQueue eventQueue) throws JSONRPCError {
+            final TaskUpdater updater = new TaskUpdater(context, eventQueue);
 
             // mark the task as submitted and start working on it
             if (context.getTask() == null) {
@@ -47,24 +80,25 @@ public class WeatherAgentExecutorProducer {
             updater.startWork();
 
             // extract the text from the message
-            String userMessage = extractTextFromMessage(context.getMessage());
+            final String userMessage = extractTextFromMessage(
+                    context.getMessage());
 
             // call the weather agent with the user's message
-            String response = weatherAgent.chat(userMessage);
+            final String response = agent.chat(userMessage);
 
             // create the response part
-            TextPart responsePart = new TextPart(response, null);
-            List<Part<?>> parts = List.of(responsePart);
+            final TextPart responsePart = new TextPart(response, null);
+            final List<Part<?>> parts = List.of(responsePart);
 
             // add the response as an artifact and complete the task
             updater.addArtifact(parts, null, null, null);
             updater.complete();
         }
 
-        private String extractTextFromMessage(Message message) {
-            StringBuilder textBuilder = new StringBuilder();
+        private String extractTextFromMessage(final Message message) {
+            final StringBuilder textBuilder = new StringBuilder();
             if (message.getParts() != null) {
-                for (Part part : message.getParts()) {
+                for (final Part part : message.getParts()) {
                     if (part instanceof TextPart textPart) {
                         textBuilder.append(textPart.getText());
                     }
@@ -74,8 +108,9 @@ public class WeatherAgentExecutorProducer {
         }
 
         @Override
-        public void cancel(RequestContext context, EventQueue eventQueue) throws JSONRPCError {
-            Task task = context.getTask();
+        public void cancel(final RequestContext context,
+                           final EventQueue eventQueue) throws JSONRPCError {
+            final Task task = context.getTask();
 
             if (task.getStatus().state() == TaskState.CANCELED) {
                 // task already cancelled
@@ -88,7 +123,7 @@ public class WeatherAgentExecutorProducer {
             }
 
             // cancel the task
-            TaskUpdater updater = new TaskUpdater(context, eventQueue);
+            final TaskUpdater updater = new TaskUpdater(context, eventQueue);
             updater.cancel();
         }
     }

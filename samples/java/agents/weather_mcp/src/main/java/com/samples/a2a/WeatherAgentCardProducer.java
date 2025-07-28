@@ -14,20 +14,41 @@ import io.a2a.spec.AgentSkill;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+/**
+ * Producer for weather agent card configuration.
+ * This class is final and not designed for extension.
+ */
 @ApplicationScoped
-public class WeatherAgentCardProducer {
+public final class WeatherAgentCardProducer {
 
+    /**
+     * The HTTP port for the agent service.
+     */
     @Inject
     @ConfigProperty(name = "quarkus.http.port")
-    int httpPort;
+    private int httpPort;
 
+    /**
+     * Gets the HTTP port.
+     *
+     * @return the HTTP port
+     */
+    public int getHttpPort() {
+        return httpPort;
+    }
+
+    /**
+     * Produces the agent card for the weather agent.
+     *
+     * @return the configured agent card
+     */
     @Produces
     @PublicAgentCard
     public AgentCard agentCard() {
         return new AgentCard.Builder()
                 .name("Weather Agent")
                 .description("Helps with weather")
-                .url("http://localhost:" + httpPort)
+                .url("http://localhost:" + getHttpPort())
                 .version("1.0.0")
                 .capabilities(new AgentCapabilities.Builder()
                         .streaming(true)
@@ -47,4 +68,3 @@ public class WeatherAgentCardProducer {
                 .build();
     }
 }
-

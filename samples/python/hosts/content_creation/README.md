@@ -1,9 +1,7 @@
 # Multi-Language Agent Collaboration and Interoperability
-----
-> *⚠️ DISCLAIMER: THIS DEMO IS INTENDED FOR DEMONSTRATION PURPOSES ONLY. IT IS NOT INTENDED FOR USE IN A PRODUCTION ENVIRONMENT.*  
 
+> *⚠️ DISCLAIMER: THIS DEMO IS INTENDED FOR DEMONSTRATION PURPOSES ONLY. IT IS NOT INTENDED FOR USE IN A PRODUCTION ENVIRONMENT.*
 > *⚠️ Important: A2A is a work in progress (WIP) thus, in the near future there might be changes that are different from what demonstrated here.*
-----
 
 This sample highlights how to use the Agent2Agent (A2A) protocol for multi-agent collaboration where multiple
 agents, each written in a different programming language, seamlessly work together to accomplish a goal.
@@ -15,7 +13,7 @@ can be easily swapped out for an equivalent agent written in a different program
 
 The application features a content creation pipeline with a host agent that routes requests to the appropriate specialized agent:
 
-* **Host Agent** *(Python, Google ADK, A2A Python SDK)*: Acts as the central orchestrator for content creation, dynamically determining which agent to send a request to based on the task at hand. 
+* **Host Agent** *(Python, Google ADK, A2A Python SDK)*: Acts as the central orchestrator for content creation, dynamically determining which agent to send a request to based on the task at hand.
 * **Content Planner Agent** *(Python, Google ADK, A2A Python SDK)*: Receives a high-level description of the content that's needed and creates a detailed content outline.
 * **Content Writer Agent** *(Java, Quarkus LangChain4j, A2A Java SDK)*: Generates an engaging piece of content using a content outline.
 * **Content Editor Agent** *(TypeScript, Genkit, A2A JS SDK)*: Proof-reads and polishes content.
@@ -70,7 +68,7 @@ uv run .
 
 ## 5. Test using the UI
 
-From your browser, navigate to http://0.0.0.0:8083.
+From your browser, navigate to <http://0.0.0.0:8083>.
 
 Here are example questions:
 
@@ -82,7 +80,7 @@ Here are example questions:
 ### Stop the Host Agent and the Content Editor Agent
 We're going to swap out the Content Editor Agent written in TypeScript for an equivalent Content Editor Agent written in Java. This demonstrates how the A2A protocol enables language-agnostic interoperability.
 
-### Start the Java Content Editor Agent 
+### Start the Java Content Editor Agent
 
 ```bash
 cd samples/java/agents/content_editor
@@ -100,7 +98,7 @@ uv run .
 ### Test using the UI
 Test using the UI
 
-From your browser, navigate to http://0.0.0.0:8083.
+From your browser, navigate to <http://0.0.0.0:8083>.
 
 Here are example questions:
 
@@ -108,14 +106,24 @@ Here are example questions:
 - Create a short, upbeat series of X posts about getting started with Java
 
 ## References
-- https://github.com/google/a2a-python
-- https://github.com/google/a2a-java
-- https://github.com/google/a2a-js
-
+- [A2A Python SDK](https://github.com/google/a2a-python)
+- [A2A Java SDK](https://github.com/google/a2a-java)
+- [A2A JavaScript SDK](https://github.com/google/a2a-js)
 
 ## Disclaimer
-Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+Important: The sample code provided is for demonstration purposes and illustrates the
+mechanics of the Agent-to-Agent (A2A) protocol. When building production applications,
+it is critical to treat any agent operating outside of your direct control as a
+potentially untrusted entity.
 
-All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+All data received from an external agent—including but not limited to its AgentCard,
+messages, artifacts, and task statuses—should be handled as untrusted input. For
+example, a malicious agent could provide an AgentCard containing crafted data in its
+fields (e.g., description, name, skills.description). If this data is used without
+sanitization to construct prompts for a Large Language Model (LLM), it could expose
+your application to prompt injection attacks.  Failure to properly validate and
+sanitize this data before use can introduce security vulnerabilities into your
+application.
 
-Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
+Developers are responsible for implementing appropriate security measures, such as
+input validation and secure handling of credentials to protect their systems and users.
