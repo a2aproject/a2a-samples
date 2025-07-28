@@ -18,28 +18,62 @@ import io.a2a.spec.TaskNotCancelableError;
 import io.a2a.spec.TaskState;
 import io.a2a.spec.TextPart;
 
+/**
+ * Producer for content editor agent executor.
+ * This class is final and not designed for extension.
+ */
 @ApplicationScoped
-public class ContentEditorAgentExecutorProducer {
+public final class ContentEditorAgentExecutorProducer {
 
+    /**
+     * The content editor agent instance.
+     */
     @Inject
-    ContentEditorAgent contentEditorAgent;
+    private ContentEditorAgent contentEditorAgent;
 
-    @Produces
-    public AgentExecutor agentExecutor() {
-        return new ContentEditorAgentExecutor(contentEditorAgent);
+    /**
+     * Gets the content editor agent.
+     *
+     * @return the content editor agent
+     */
+    public ContentEditorAgent getContentEditorAgent() {
+        return contentEditorAgent;
     }
 
+    /**
+     * Produces the agent executor for the content editor agent.
+     *
+     * @return the configured agent executor
+     */
+    @Produces
+    public AgentExecutor agentExecutor() {
+        return new ContentEditorAgentExecutor(getContentEditorAgent());
+    }
+
+    /**
+     * Content editor agent executor implementation.
+     */
     private static class ContentEditorAgentExecutor implements AgentExecutor {
 
-        private final ContentEditorAgent contentEditorAgent;
+        /**
+         * The content editor agent instance.
+         */
+        private final ContentEditorAgent agent;
 
-        public ContentEditorAgentExecutor(ContentEditorAgent contentEditorAgent) {
-            this.contentEditorAgent = contentEditorAgent;
+        /**
+         * Constructor for ContentEditorAgentExecutor.
+         *
+         * @param contentEditorAgentInstance the content editor agent instance
+         */
+        ContentEditorAgentExecutor(
+                final ContentEditorAgent contentEditorAgentInstance) {
+            this.agent = contentEditorAgentInstance;
         }
 
         @Override
-        public void execute(RequestContext context, EventQueue eventQueue) throws JSONRPCError {
-            TaskUpdater updater = new TaskUpdater(context, eventQueue);
+        public void execute(final RequestContext context,
+                            final EventQueue eventQueue) throws JSONRPCError {
+            final TaskUpdater updater = new TaskUpdater(context, eventQueue);
 
             // mark the task as submitted and start working on it
             if (context.getTask() == null) {
@@ -48,24 +82,25 @@ public class ContentEditorAgentExecutorProducer {
             updater.startWork();
 
             // extract the text from the message
-            String assignment = extractTextFromMessage(context.getMessage());
+            final String assignment = extractTextFromMessage(
+                    context.getMessage());
 
-            // call the content editor agent
-            String response = contentEditorAgent.editContent(assignment);
+            // call the content editor agent with the message
+            final String response = agent.editContent(assignment);
 
             // create the response part
-            TextPart responsePart = new TextPart(response, null);
-            List<Part<?>> parts = List.of(responsePart);
+            final TextPart responsePart = new TextPart(response, null);
+            final List<Part<?>> parts = List.of(responsePart);
 
             // add the response as an artifact and complete the task
             updater.addArtifact(parts, null, null, null);
             updater.complete();
         }
 
-        private String extractTextFromMessage(Message message) {
-            StringBuilder textBuilder = new StringBuilder();
+        private String extractTextFromMessage(final Message message) {
+            final StringBuilder textBuilder = new StringBuilder();
             if (message.getParts() != null) {
-                for (Part part : message.getParts()) {
+                for (final Part part : message.getParts()) {
                     if (part instanceof TextPart textPart) {
                         textBuilder.append(textPart.getText());
                     }
@@ -75,8 +110,9 @@ public class ContentEditorAgentExecutorProducer {
         }
 
         @Override
-        public void cancel(RequestContext context, EventQueue eventQueue) throws JSONRPCError {
-            Task task = context.getTask();
+        public void cancel(final RequestContext context,
+                           final EventQueue eventQueue) throws JSONRPCError {
+            final Task task = context.getTask();
 
             if (task.getStatus().state() == TaskState.CANCELED) {
                 // task already cancelled
@@ -89,7 +125,7 @@ public class ContentEditorAgentExecutorProducer {
             }
 
             // cancel the task
-            TaskUpdater updater = new TaskUpdater(context, eventQueue);
+            final TaskUpdater updater = new TaskUpdater(context, eventQueue);
             updater.cancel();
         }
     }

@@ -1,11 +1,9 @@
 # Using A2A for multi-agent orchestration with Python and Java agents
-----
-> *⚠️ DISCLAIMER: THIS DEMO IS INTENDED FOR DEMONSTRATION PURPOSES ONLY. IT IS NOT INTENDED FOR USE IN A PRODUCTION ENVIRONMENT.*  
 
+> *⚠️ DISCLAIMER: THIS DEMO IS INTENDED FOR DEMONSTRATION PURPOSES ONLY. IT IS NOT INTENDED FOR USE IN A PRODUCTION ENVIRONMENT.*
 > *⚠️ Important: A2A is a work in progress (WIP) thus, in the near future there might be changes that are different from what demonstrated here.*
-----
 
-This sample is based off the Python [airbnb_planner_multiagent](../../../python/agents/airbnb_planner_multiagent) sample and highlights how to use Google's Agent to Agent (A2A) protocol for multi-agent orchestration where at least one of the agents is a Java agent. 
+This sample is based off the Python [airbnb_planner_multiagent](../../../python/agents/airbnb_planner_multiagent) sample and highlights how to use Google's Agent to Agent (A2A) protocol for multi-agent orchestration where at least one of the agents is a Java agent.
 
 This sample makes use of the [Java SDK for A2A](https://github.com/a2aproject/a2a-java). The application features a host agent coordinating tasks between a Python remote agent and a Java remote agent that interact with various MCP servers to fulfill user requests.
 
@@ -21,7 +19,7 @@ The Weather agent is implemented in **Java** while the Airbnb agent is implement
 
 The Weather app is a Quarkus application that depends on our A2A Java SDK to communicate with a Python A2A client
 using the A2A protocol. It provides weather information based on user queries by leveraging a Python MCP server
-that retrieves weather data from https://api.weather.gov.
+that retrieves weather data from [https://api.weather.gov](https://api.weather.gov).
 
 Let's take a closer look at the classes that make up the Weather app:
 
@@ -52,13 +50,13 @@ The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A
 ...
 ```
 
-Simply adding this dependency to your Java application and providing `AgentCard` and `AgentExecutor` producers  makes it possible to easily run agentic Java applications as A2A servers using the A2A protocol. 
+Simply adding this dependency to your Java application and providing `AgentCard` and `AgentExecutor` producers makes it possible to easily run agentic Java applications as A2A servers using the A2A protocol.
 
 Note that we used the `a2a-java-reference-server` library in this example since our app is a Quarkus application. You can also use the `a2a-java-sdk-server-jakarta` library instead which is based on Jakarta REST.
 
 The A2A Java SDK can also be used to create A2A clients that can communicate with A2A servers.
 
-For more details about the A2A Java SDK, take a look [here](https://github.com/a2aproject/a2a-java).
+For more details about the A2A Java SDK, take a look [at the documentation](https://github.com/a2aproject/a2a-java).
 
 ### Python Agent
 
@@ -76,8 +74,8 @@ Before running the application locally, ensure you have the following installed:
 
 1. **Node.js:** Required to run the Airbnb MCP server (if testing its functionality locally).
 2. **uv:** The Python package management tool used in this project. Follow the installation guide: [https://docs.astral.sh/uv/getting-started/installation/](https://docs.astral.sh/uv/getting-started/installation/)
-3. **python 3.13** Python 3.13 is required to run a2a-sdk 
-4. **Set up .env** 
+3. **python 3.13** Python 3.13 is required to run a2a-sdk
+4. **Set up .env**
 
 
 - Create a .env file in the `airbnb_agent` directory as follows:
@@ -92,7 +90,7 @@ Before running the application locally, ensure you have the following installed:
   GOOGLE_API_KEY="your_api_key_here"
   GOOGLE_GENAI_MODEL="your_model_here"
   ```
-  
+
 - Create a .env file in the `weather_mcp` directory as follows:
 
   ```bash
@@ -116,7 +114,7 @@ Before running the application locally, ensure you have the following installed:
   Then update the `.env` file to specify your Google AI Studio API Key:
 
   ```bash
-  GOOGLE_API_KEY="your_api_key_here" 
+  GOOGLE_API_KEY="your_api_key_here"
   AIR_AGENT_URL=http://localhost:10002
   WEA_AGENT_URL=http://localhost:10001
   ```
@@ -151,24 +149,34 @@ Open a new terminal and run the host agent server:
 
 ## 5. Test using the UI
 
-From your browser, navigate to http://0.0.0.0:8083.
+From your browser, navigate to <http://0.0.0.0:8083>.
 
 Here are example questions:
 
-- "Tell me about weather in LA, CA"  
+- "Tell me about weather in LA, CA"
 
 - "Please find a room in LA, CA, June 20-25, 2025, two adults"
 
 ## References
-- https://github.com/a2aproject/a2a-samples/blob/main/samples/python/agents/airbnb_planner_multiagent
-- https://github.com/google/a2a-python
-- https://codelabs.developers.google.com/intro-a2a-purchasing-concierge#1
-- https://google.github.io/adk-docs/
-
+- [Airbnb Planner Multiagent](https://github.com/a2aproject/a2a-samples/blob/main/samples/python/agents/airbnb_planner_multiagent)
+- [A2A Python SDK](https://github.com/google/a2a-python)
+- [A2A Purchasing Concierge Codelab](https://codelabs.developers.google.com/intro-a2a-purchasing-concierge#1)
+- [ADK Documentation](https://google.github.io/adk-docs/)
 
 ## Disclaimer
-Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+Important: The sample code provided is for demonstration purposes and illustrates the
+mechanics of the Agent-to-Agent (A2A) protocol. When building production applications,
+it is critical to treat any agent operating outside of your direct control as a
+potentially untrusted entity.
 
-All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+All data received from an external agent—including but not limited to its AgentCard,
+messages, artifacts, and task statuses—should be handled as untrusted input. For
+example, a malicious agent could provide an AgentCard containing crafted data in its
+fields (e.g., description, name, skills.description). If this data is used without
+sanitization to construct prompts for a Large Language Model (LLM), it could expose
+your application to prompt injection attacks.  Failure to properly validate and
+sanitize this data before use can introduce security vulnerabilities into your
+application.
 
-Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
+Developers are responsible for implementing appropriate security measures, such as
+input validation and secure handling of credentials to protect their systems and users.

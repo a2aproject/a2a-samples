@@ -19,13 +19,13 @@ Demonstrates an MCP-enabled agent built with [AG2](https://github.com/ag2ai/ag2)
 Sample agent build with [Azure AI Foundry Agent Service](https://learn.microsoft.com/en-us/azure/ai-services/agents/overview)
 
 * [**LangGraph**](/samples/python/agents/langgraph/README.md)  
-Sample agent which can convert currency using tools. Showcases multi-turn interactions, tool usage, and streaming updates. 
+Sample agent which can convert currency using tools. Showcases multi-turn interactions, tool usage, and streaming updates.
 
 * [**CrewAI**](/samples/python/agents/crewai/README.md)  
 Sample agent which can generate images. Showcases use of CrewAI and sending images through A2A.
 
 * [**LlamaIndex**](/samples/python/agents/llama_index_file_chat/README.md)  
-Sample agent which can parse a file and then chat with the user using the parsed content as context. Showcases multi-turn interactions, file upload and parsing, and streaming updates. 
+Sample agent which can parse a file and then chat with the user using the parsed content as context. Showcases multi-turn interactions, file upload and parsing, and streaming updates.
 
 * [**Marvin Contact Extractor Agent**](/samples/python/agents/marvin/README.md)  
 Demonstrates an agent using the [Marvin](https://github.com/prefecthq/marvin) framework to extract structured contact information from text, integrated with the Agent2Agent (A2A) protocol.
@@ -37,10 +37,10 @@ Sample agent which can answer questions from any database, datawarehouse, app. -
 Demonstrates how to implement a travel agent built on [Semantic Kernel](https://github.com/microsoft/semantic-kernel/) and exposed through the A2A protocol.
 
 * [**travel planner Agent**](/samples/python/agents/travel_planner_agent/README.md)  
- A travel assistant demo implemented based on Google's official [a2a-python](https://github.com/google/a2a-python) SDK, And Implemented through the A2A protocol.
+A travel assistant demo implemented based on Google's official [a2a-python](https://github.com/google/a2a-python) SDK, And Implemented through the A2A protocol.
 
 * [**Content Planner Agent**](/samples/python/agents/content_planner/README.md)  
-  Sample agent that creates a detailed content outline given a high-level description of the content that's needed by using Google Search and the Google ADK.
+Sample agent that creates a detailed content outline given a high-level description of the content that's needed by using Google Search and the Google ADK.
 
 ## Other ADK Samples
 
@@ -57,8 +57,19 @@ This sample demonstrates the Agent-to-Agent (A2A) architecture with Human-in-the
 
 ## Disclaimer
 
-Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+Important: The sample code provided is for demonstration purposes and illustrates the
+mechanics of the Agent-to-Agent (A2A) protocol. When building production applications,
+it is critical to treat any agent operating outside of your direct control as a
+potentially untrusted entity.
 
-All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+All data received from an external agent—including but not limited to its AgentCard,
+messages, artifacts, and task statuses—should be handled as untrusted input. For
+example, a malicious agent could provide an AgentCard containing crafted data in its
+fields (e.g., description, name, skills.description). If this data is used without
+sanitization to construct prompts for a Large Language Model (LLM), it could expose
+your application to prompt injection attacks.  Failure to properly validate and
+sanitize this data before use can introduce security vulnerabilities into your
+application.
 
-Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
+Developers are responsible for implementing appropriate security measures, such as
+input validation and secure handling of credentials to protect their systems and users.
