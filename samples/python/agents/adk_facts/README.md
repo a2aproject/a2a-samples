@@ -49,7 +49,7 @@ gcloud run deploy sample-a2a-agent \
     --port=8080 \
     --source=. \
     --allow-unauthenticated \
-    --region="europe-west2" \
+    --region="us-central1" \
     --project=$GOOGLE_CLOUD_PROJECT \
     --set-env-vars=GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,GOOGLE_CLOUD_REGION=$GOOGLE_CLOUD_REGION,GOOGLE_GENAI_USE_VERTEXAI=true
 ```
