@@ -1,3 +1,5 @@
+import os
+
 from google.adk import Agent
 from google.adk.a2a.utils.agent_to_a2a import to_a2a
 from google.adk.tools import google_search
@@ -11,4 +13,4 @@ root_agent = Agent(
     tools=[google_search],
 )
 
-a2a_app = to_a2a(root_agent, port=8001)
+a2a_app = to_a2a(root_agent, port=int(os.getenv('PORT', '8001')))
