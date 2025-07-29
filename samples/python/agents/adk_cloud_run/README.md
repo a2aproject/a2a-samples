@@ -150,7 +150,8 @@ You can test your live agent with the A2A CLI, available at `a2a-samples/samples
 The following command allows you to authenticate and interact with your A2A enabled agent in Cloud Run.
 
 ```shell
-uv run python __main__.py --agent {your-cloud-run-service-url} --bearer-token "$(gcloud auth print-identity-token)"
+cd /path/to/cli
+uv run . --agent {your-cloud-run-service-url} --bearer-token "$(gcloud auth print-identity-token)
 ```
 
 ## Disclaimer
