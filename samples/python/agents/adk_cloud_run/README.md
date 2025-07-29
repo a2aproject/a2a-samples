@@ -4,8 +4,8 @@ This sample uses the Agent Development Kit (ADK) to create a simple calendar upd
 
 ## Prerequisites
 
-- Python 3.10 or higher  
-- [UV](https://docs.astral.sh/uv/)  
+- Python 3.10 or higher
+- [UV](https://docs.astral.sh/uv/)
 - Access to an LLM and API Key
 
 ## Running the Sample
@@ -79,7 +79,7 @@ gcloud secrets versions add alloy_db_pass --data-file="pass.txt"
 
 The A2A cloud run service can be exposed publicly [link](https://cloud.google.com/run/docs/authenticating/public) or kept internal to just GCP clients.
 
-When deploying a service to cloud-run, it returns a `run.app` URL to query the running service.
+When deploying a service to Cloud Run, it returns a `run.app` URL to query the running service.
 
 ### Service Authentication
 
