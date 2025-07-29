@@ -14,7 +14,7 @@ This sample uses the Agent Development Kit (ADK) to create a simple calendar upd
 
 ```shell
 cd samples/python/agents/adk_cloud_run
-```
+````
 
 2. Create an environment file with your API key:
 
@@ -32,7 +32,7 @@ uv run .
 
 ### Create Service Account
 
-Cloud run uses service accounts (SA) when running service instances (link). Create a service account specific for the deployed A2A service.
+Cloud Run uses [service accounts (SA)](https://cloud.google.com/run/docs/configuring/service-accounts) when running service instances. Create a service account specific for the deployed A2A service.
 
 ```shell
 gcloud iam service-accounts create a2a-service-account \
@@ -77,7 +77,7 @@ gcloud secrets versions add alloy_db_pass --data-file="pass.txt"
 
 ## Deploy to Google Cloud Run
 
-The A2A cloud run service can be exposed publicly [link](https://cloud.google.com/run/docs/authenticating/public) or kept internal to just GCP clients.
+The A2A cloud run service can be [exposed publicly](https://cloud.google.com/run/docs/authenticating/public) or kept internal to just GCP clients.
 
 When deploying a service to Cloud Run, it returns a `run.app` URL to query the running service.
 
@@ -85,7 +85,7 @@ When deploying a service to Cloud Run, it returns a `run.app` URL to query the r
 
 #### IAM based Authentication
 
-IAM can be used, if the clients are within GCP [link](https://cloud.google.com/run/docs/authenticating/service-to-service). Agentspace is one such example of an internal client. The clients can use service accounts and they need to be given IAM role: `roles/run.invoker`
+IAM can be used for [service-to-service authentication](https://cloud.google.com/run/docs/authenticating/service-to-service) if the clients are within GCP. Agentspace is one such example of an internal client. The clients can use service accounts and they need to be given IAM role: `roles/run.invoker`
 
 #### Public Access
 
@@ -160,4 +160,4 @@ Important: The sample code provided is for demonstration purposes and illustrate
 
 All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks. Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
 
-Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.  
+Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
