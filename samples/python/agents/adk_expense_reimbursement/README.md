@@ -21,7 +21,7 @@ This agent takes text requests from the client and, if any details are missing, 
 2. Create an environment file with your API key:
 
    ```bash
-   echo "GOOGLE_API_KEY=your_api_key_here" > .env
+   echo "GEMINI_API_KEY=your_api_key_here" > .env
    ```
 
 3. Run an agent:
