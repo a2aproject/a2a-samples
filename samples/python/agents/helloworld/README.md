@@ -2,15 +2,42 @@
 
 Hello World example agent that only returns Message events
 
-## Getting started
+## Running the Agent
 
-1. Start the server
+This agent can be run with several command-line flags to demonstrate different agent card features.
+
+#### 1. Start the server
+
+To start the server with a basic, static card (the default behavior), run:
 
    ```bash
-   uv run .
+   uv run __main__.py
    ```
 
-2. Run the test client
+#### 2. Run with different card configurations
+
+You can control the agent card's features using the following flags:
+
+*   `--dynamic-public-card`: Enables a dynamic public-facing card. The card's description will include a timestamp to show it's generated on each request.
+*   `--enable-extended-card`: Enables support for an extended card for authenticated users. This adds the `super_hello_world` skill.
+*   `--dynamic-extended-card`: Makes the extended card dynamic. This requires `--enable-extended-card` to be set.
+
+**Examples:**
+
+*   Run with a dynamic public card:
+    ```bash
+    uv run __main__.py --dynamic-public-card
+    ```
+*   Run with a static extended card:
+    ```bash
+    uv run __main__.py --enable-extended-card
+    ```
+*   Run with both a dynamic public card and a dynamic extended card:
+    ```bash
+    uv run __main__.py --dynamic-public-card --enable-extended-card --dynamic-extended-card
+    ```
+
+## Testing the Agent
 
    ```bash
    uv run test_client.py
