@@ -349,7 +349,7 @@ class VideoGenerationAgent:
                         'is_task_complete': True,
                         'file_part_data': {
                             'uri': signed_gcs_url,
-                            'mimeType': mime_type,
+                            'mime_type': mime_type,
                         },
                         'artifact_name': video_filename_for_artifact,
                         'artifact_description': artifact_description,

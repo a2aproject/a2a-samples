@@ -133,10 +133,8 @@ class RoutingAgent:
 
     def create_agent(self) -> Agent:
         """Create an instance of the RoutingAgent."""
-        model_id = 'gemini-2.5-flash-preview-04-17'
-        print(f'Using hardcoded model: {model_id}')
         return Agent(
-            model=model_id,
+            model='gemini-2.5-flash-lite',
             name='Routing_agent',
             instruction=self.root_instruction,
             before_model_callback=self.before_model_callback,

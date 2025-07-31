@@ -1,6 +1,8 @@
 import datetime
+import os
 
-from google.adk.agents import LlmAgent  # type: ignore[import-untyped]
+from google.adk.agents import LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.google_api_tool import (
     CalendarToolset,  # type: ignore[import-untyped]
 )
@@ -8,9 +10,10 @@ from google.adk.tools.google_api_tool import (
 
 def create_agent(client_id, client_secret) -> LlmAgent:
     """Constructs the ADK agent."""
+    LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-001')
     toolset = CalendarToolset(client_id=client_id, client_secret=client_secret)
     return LlmAgent(
-        model='gemini-2.0-flash-001',
+        model=LiteLlm(model=LITELLM_MODEL),
         name='calendar_agent',
         description="An agent that can help manage a user's calendar",
         instruction=f"""

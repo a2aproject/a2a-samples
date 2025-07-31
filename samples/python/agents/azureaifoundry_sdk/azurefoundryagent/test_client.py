@@ -119,7 +119,7 @@ async def main() -> None:
                 '\n📋 Using PUBLIC agent card for client initialization (default).'
             )
 
-            if _public_card.supportsAuthenticatedExtendedCard:
+            if _public_card.supports_authenticated_extended_card:
                 try:
                     logger.info(
                         f'\n🔒 Public card supports authenticated extended card. Attempting to fetch from: {base_url}{EXTENDED_AGENT_CARD_PATH}'
@@ -152,7 +152,7 @@ async def main() -> None:
                     )
             elif (
                 _public_card
-            ):  # supportsAuthenticatedExtendedCard is False or None
+            ):  # supports_authenticated_extended_card is False or None
                 logger.info(
                     '\n📖 Public card does not indicate support for an extended card. Using public card.'
                 )

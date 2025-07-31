@@ -39,11 +39,11 @@ if __name__ == '__main__':
         description='Just a hello world agent',
         url='http://localhost:9999/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=[skill],  # Only the basic skill for the public card
-        supportsAuthenticatedExtendedCard=True,
+        supports_authenticated_extended_card=True,
     )
     # --8<-- [end:AgentCard]
 
@@ -54,8 +54,8 @@ if __name__ == '__main__':
             'name': 'Hello World Agent - Extended Edition',  # Different name for clarity
             'description': 'The full-featured hello world agent for authenticated users.',
             'version': '1.0.1',  # Could even be a different version
-            # Capabilities and other fields like url, defaultInputModes, defaultOutputModes,
-            # supportsAuthenticatedExtendedCard are inherited from public_agent_card unless specified here.
+            # Capabilities and other fields like url, default_input_modes, default_output_modes,
+            # supports_authenticated_extended_card are inherited from public_agent_card unless specified here.
             'skills': [
                 skill,
                 extended_skill,

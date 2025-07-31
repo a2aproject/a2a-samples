@@ -14,13 +14,13 @@ from typing import Any
 from uuid import uuid4
 
 from PIL import Image
-from common.utils.in_memory_cache import InMemoryCache
 from crewai import LLM, Agent, Crew, Task
 from crewai.process import Process
 from crewai.tools import tool
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from in_memory_cache import InMemoryCache
 from pydantic import BaseModel
 
 

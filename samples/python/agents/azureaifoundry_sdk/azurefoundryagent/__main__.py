@@ -83,8 +83,8 @@ def main(host: str, port: int):
         'I can help you check availability, manage events, and optimize your schedule.',
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=skills,
     )

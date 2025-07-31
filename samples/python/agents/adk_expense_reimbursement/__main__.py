@@ -33,9 +33,9 @@ def main(host, port):
     try:
         # Check for API key only if Vertex AI is not configured
         if not os.getenv('GOOGLE_GENAI_USE_VERTEXAI') == 'TRUE':
-            if not os.getenv('GOOGLE_API_KEY'):
+            if not os.getenv('GEMINI_API_KEY'):
                 raise MissingAPIKeyError(
-                    'GOOGLE_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
+                    'GEMINI_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
                 )
 
         capabilities = AgentCapabilities(streaming=True)
@@ -53,8 +53,8 @@ def main(host, port):
             description='This agent handles the reimbursement process for the employees given the amount and purpose of the reimbursement.',
             url=f'http://{host}:{port}/',
             version='1.0.0',
-            defaultInputModes=ReimbursementAgent.SUPPORTED_CONTENT_TYPES,
-            defaultOutputModes=ReimbursementAgent.SUPPORTED_CONTENT_TYPES,
+            default_input_modes=ReimbursementAgent.SUPPORTED_CONTENT_TYPES,
+            default_output_modes=ReimbursementAgent.SUPPORTED_CONTENT_TYPES,
             capabilities=capabilities,
             skills=[skill],
         )
