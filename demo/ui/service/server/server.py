@@ -112,8 +112,8 @@ class ConversationServer:
         t.start()
         return SendMessageResponse(
             result=MessageInfo(
-                message_id=message.messageId,
-                context_id=message.contextId if message.contextId else '',
+                message_id=message.message_id,
+                context_id=message.context_id if message.context_id else '',
             )
         )
 
@@ -151,7 +151,7 @@ class ConversationServer:
                     Part(
                         root=FilePart(
                             file=FileWithUri(
-                                mimeType=part.file.mimeType,
+                                mime_type=part.file.mime_type,
                                 uri=f'/message/file/{cache_id}',
                             )
                         )
@@ -190,12 +190,12 @@ class ConversationServer:
         if file_id not in self._file_cache:
             raise Exception('file not found')
         part = self._file_cache[file_id]
-        if 'image' in part.file.mimeType:
+        if 'image' in part.file.mime_type:
             return Response(
                 content=base64.b64decode(part.file.bytes),
-                media_type=part.file.mimeType,
+                media_type=part.file.mime_type,
             )
-        return Response(content=part.file.bytes, media_type=part.file.mimeType)
+        return Response(content=part.file.bytes, media_type=part.file.mime_type)
 
     async def _update_api_key(self, request: Request):
         """Update the API key"""

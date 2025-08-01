@@ -127,27 +127,27 @@ class ADKHostManager(ApplicationManager):
                 self._task_map = {}
 
     def sanitize_message(self, message: Message) -> Message:
-        if message.contextId:
-            conversation = self.get_conversation(message.contextId)
+        if message.context_id:
+            conversation = self.get_conversation(message.context_id)
             if not conversation:
                 return message
             # Check if the last event in the conversation was tied to a task.
             if conversation.messages:
-                task_id = conversation.messages[-1].taskId
+                task_id = conversation.messages[-1].task_id
                 if task_id and task_still_open(
                     next(
                         filter(lambda x: x and x.id == task_id, self._tasks),
                         None,
                     )
                 ):
-                    message.taskId = task_id
+                    message.task_id = task_id
         return message
 
     async def process_message(self, message: Message):
-        message_id = message.messageId
+        message_id = message.message_id
         if message_id:
             self._pending_message_ids.append(message_id)
-        context_id = message.contextId
+        context_id = message.context_id
         conversation = self.get_conversation(context_id)
         self._messages.append(message)
         if conversation:
@@ -165,12 +165,12 @@ class ADKHostManager(ApplicationManager):
         session = await self._session_service.get_session(
             app_name='A2A', user_id='test_user', session_id=context_id
         )
-        task_id = message.taskId
+        task_id = message.task_id
         # Update state must happen in an event
         state_update = {
             'task_id': task_id,
             'context_id': context_id,
-            'message_id': message.messageId,
+            'message_id': message.message_id,
         }
         # Need to upsert session state now, only way is to append an event.
         await self._session_service.append_event(
@@ -254,7 +254,7 @@ class ADKHostManager(ApplicationManager):
 
     def emit_event(self, task: TaskCallbackArg, agent_card: AgentCard):
         content = None
-        context_id = task.contextId
+        context_id = task.context_id
         if isinstance(task, TaskStatusUpdateEvent):
             if task.status.message:
                 content = task.status.message
@@ -262,17 +262,17 @@ class ADKHostManager(ApplicationManager):
                 content = Message(
                     parts=[Part(root=TextPart(text=str(task.status.state)))],
                     role=Role.agent,
-                    messageId=str(uuid.uuid4()),
-                    contextId=context_id,
-                    taskId=task.taskId,
+                    message_id=str(uuid.uuid4()),
+                    context_id=context_id,
+                    task_id=task.task_id,
                 )
         elif isinstance(task, TaskArtifactUpdateEvent):
             content = Message(
                 parts=task.artifact.parts,
                 role=Role.agent,
-                messageId=str(uuid.uuid4()),
-                contextId=context_id,
-                taskId=task.taskId,
+                message_id=str(uuid.uuid4()),
+                context_id=context_id,
+                task_id=task.task_id,
             )
         elif task.status and task.status.message:
             content = task.status.message
@@ -283,17 +283,17 @@ class ADKHostManager(ApplicationManager):
             content = Message(
                 parts=parts,
                 role=Role.agent,
-                messageId=str(uuid.uuid4()),
-                taskId=task.id,
-                contextId=context_id,
+                message_id=str(uuid.uuid4()),
+                task_id=task.id,
+                context_id=context_id,
             )
         else:
             content = Message(
                 parts=[Part(root=TextPart(text=str(task.status.state)))],
                 role=Role.agent,
-                messageId=str(uuid.uuid4()),
-                taskId=task.id,
-                contextId=context_id,
+                message_id=str(uuid.uuid4()),
+                task_id=task.id,
+                context_id=context_id,
             )
         if content:
             self.add_event(
@@ -307,20 +307,20 @@ class ADKHostManager(ApplicationManager):
 
     def attach_message_to_task(self, message: Message | None, task_id: str):
         if message:
-            self._task_map[message.messageId] = task_id
+            self._task_map[message.message_id] = task_id
 
     def insert_message_history(self, task: Task, message: Message | None):
         if not message:
             return
         if task.history is None:
             task.history = []
-        message_id = message.messageId
+        message_id = message.message_id
         if not message_id:
             return
         if task.history and (
             task.status.message
-            and task.status.message.messageId
-            not in [x.messageId for x in task.history]
+            and task.status.message.message_id
+            not in [x.message_id for x in task.history]
         ):
             task.history.append(task.status.message)
         elif not task.history and task.status.message:
@@ -328,31 +328,31 @@ class ADKHostManager(ApplicationManager):
         else:
             print(
                 'Message id already in history',
-                task.status.message.messageId if task.status.message else '',
+                task.status.message.message_id if task.status.message else '',
                 task.history,
             )
 
     def add_or_get_task(self, event: TaskCallbackArg):
         task_id = None
         if isinstance(event, Message):
-            task_id = event.taskId
+            task_id = event.task_id
         elif isinstance(event, Task):
             task_id = event.id
         else:
-            task_id = event.taskId
+            task_id = event.task_id
         if not task_id:
             task_id = str(uuid.uuid4())
         current_task = next(
             filter(lambda x: x.id == task_id, self._tasks), None
         )
         if not current_task:
-            context_id = event.contextId
+            context_id = event.context_id
             current_task = Task(
                 id=task_id,
                 # initialize with submitted
                 status=TaskStatus(state=TaskState.submitted),
                 artifacts=[],
-                contextId=context_id,
+                context_id=context_id,
             )
             self.add_task(current_task)
             return current_task
@@ -366,32 +366,32 @@ class ADKHostManager(ApplicationManager):
         if not task_update_event.append:
             # received the first chunk or entire payload for an artifact
             if (
-                task_update_event.lastChunk is None
-                or task_update_event.lastChunk
+                task_update_event.last_chunk is None
+                or task_update_event.last_chunk
             ):
-                # lastChunk bit is missing or is set to true, so this is the entire payload
+                # last_chunk bit is missing or is set to true, so this is the entire payload
                 # add this to artifacts
                 if not current_task.artifacts:
                     current_task.artifacts = []
                 current_task.artifacts.append(artifact)
             else:
                 # this is a chunk of an artifact, stash it in temp store for assembling
-                if artifact.artifactId not in self._artifact_chunks:
-                    self._artifact_chunks[artifact.artifactId] = []
-                self._artifact_chunks[artifact.artifactId].append(artifact)
+                if artifact.artifact_id not in self._artifact_chunks:
+                    self._artifact_chunks[artifact.artifact_id] = []
+                self._artifact_chunks[artifact.artifact_id].append(artifact)
         else:
             # we received an append chunk, add to the existing temp artifact
-            current_temp_artifact = self._artifact_chunks[artifact.artifactId][
+            current_temp_artifact = self._artifact_chunks[artifact.artifact_id][
                 -1
             ]
             # TODO handle if current_temp_artifact is missing
             current_temp_artifact.parts.extend(artifact.parts)
-            if task_update_event.lastChunk:
+            if task_update_event.last_chunk:
                 if current_task.artifacts:
                     current_task.artifacts.append(current_temp_artifact)
                 else:
                     current_task.artifacts = [current_temp_artifact]
-                del self._artifact_chunks[artifact.artifactId][-1]
+                del self._artifact_chunks[artifact.artifact_id][-1]
 
     def add_event(self, event: Event):
         self._events[event.id] = event
@@ -475,14 +475,14 @@ class ADKHostManager(ApplicationManager):
                     parts.append(
                         types.Part.from_uri(
                             file_uri=part.file.uri,
-                            mime_type=part.file.mimeType,
+                            mime_type=part.file.mime_type,
                         )
                     )
                 else:
                     parts.append(
                         types.Part.from_bytes(
                             data=part.file.bytes.encode('utf-8'),
-                            mime_type=part.file.mimeType,
+                            mime_type=part.file.mime_type,
                         )
                     )
         return types.Content(parts=parts, role=message.role)
@@ -498,9 +498,9 @@ class ADKHostManager(ApplicationManager):
             return Message(
                 parts=[],
                 role=content.role if content.role == Role.user else Role.agent,
-                contextId=context_id,
-                taskId=task_id,
-                messageId=str(uuid.uuid4()),
+                context_id=context_id,
+                task_id=task_id,
+                message_id=str(uuid.uuid4()),
             )
         for part in content.parts:
             if part.text:
@@ -516,7 +516,7 @@ class ADKHostManager(ApplicationManager):
                         root=FilePart(
                             file=FileWithBytes(
                                 bytes=part.inline_data.decode('utf-8'),
-                                mimeType=part.file_data.mime_type,
+                                mime_type=part.file_data.mime_type,
                             ),
                         )
                     )
@@ -527,7 +527,7 @@ class ADKHostManager(ApplicationManager):
                         root=FilePart(
                             file=FileWithUri(
                                 uri=part.file_data.file_uri,
-                                mimeType=part.file_data.mime_type,
+                                mime_type=part.file_data.mime_type,
                             )
                         )
                     )
@@ -559,9 +559,9 @@ class ADKHostManager(ApplicationManager):
         return Message(
             role=content.role if content.role == Role.user else Role.agent,
             parts=parts,
-            contextId=context_id,
-            taskId=task_id,
-            messageId=str(uuid.uuid4()),
+            context_id=context_id,
+            task_id=task_id,
+            message_id=str(uuid.uuid4()),
         )
 
     async def _handle_function_response(
@@ -594,7 +594,7 @@ class ADKHostManager(ApplicationManager):
                                 root=FilePart(
                                     file=FileWithBytes(
                                         bytes=base64_data,
-                                        mimeType=file_data.mime_type,
+                                        mime_type=file_data.mime_type,
                                         name='artifact_file',
                                     )
                                 )
@@ -606,9 +606,9 @@ class ADKHostManager(ApplicationManager):
                     content = Message(
                         parts=[Part(root=TextPart(text='Unknown content'))],
                         role=Role.agent,
-                        messageId=str(uuid.uuid4()),
-                        taskId=task_id,
-                        contextId=context_id,
+                        message_id=str(uuid.uuid4()),
+                        task_id=task_id,
+                        context_id=context_id,
                     )
         except Exception as e:
             print("Couldn't convert to messages:", e)
