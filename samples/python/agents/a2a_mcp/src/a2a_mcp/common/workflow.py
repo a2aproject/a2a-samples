@@ -166,10 +166,10 @@ class WorkflowGraph:
             node = self.nodes[node_id]
             node.state = Status.RUNNING
             query = self.graph.nodes[node_id].get('query')
-            task_id = self.graph.nodes[node_id].get('task_id')
-            context_id = self.graph.nodes[node_id].get('context_id')
+            task_id = self.graph.nodes[node_id].get('taskId')
+            context_id = self.graph.nodes[node_id].get('contextId')
             async for chunk in node.run_node(query, task_id, context_id):
-                # When the workflow node is paused, do not yeild any chunks
+                # When the workflow node is paused, do not yield any chunks
                 # but, let the loop complete.
                 if node.state != Status.PAUSED:
                     if isinstance(
@@ -178,7 +178,7 @@ class WorkflowGraph:
                         isinstance(chunk.root.result, TaskStatusUpdateEvent)
                     ):
                         task_status_event = chunk.root.result
-                        context_id = task_status_event.contextId
+                        context_id = task_status_event.context_id
                         if (
                             task_status_event.status.state
                             == TaskState.input_required

@@ -116,17 +116,11 @@ class VideoGenerationAgentExecutor(AgentExecutor):
                     ):  # basic check for valid extension
                         artifact_name = f'{artifact_name}.{extension}'
 
-                artifact_description = item.get(
-                    'artifact_description', 'Generated video file.'
-                )
-
                 file_with_uri = FileWithUri(
-                    uri=file_data['uri'], mimeType=file_data['mimeType']
+                    uri=file_data['uri'], mime_type=file_data['mimeType'], name=artifact_name
                 )
                 video_file_part = FilePart(
                     file=file_with_uri,
-                    name=artifact_name,
-                    description=artifact_description,
                 )
 
                 logger.info(
