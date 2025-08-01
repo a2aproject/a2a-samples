@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 class VideoGenerationAgentExecutor(AgentExecutor):
     """Video Generation AgentExecutor."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.agent = VideoGenerationAgent()
 
     @override

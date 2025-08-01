@@ -36,7 +36,7 @@ async def main() -> None:
             proto_card = await stub.GetAgentCard(a2a_pb2.GetAgentCardRequest())
             logger.info('Successfully fetched agent card:')
             logger.info(proto_card)
-            final_agent_card_to_user = proto_utils.FromProto.agent_card(
+            final_agent_card_to_use = proto_utils.FromProto.agent_card(
                 proto_card
             )
         except Exception as e:
