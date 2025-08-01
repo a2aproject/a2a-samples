@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # A script to find and replace camelCase fields with their snake_case equivalents
-# For updating to A2A SDK v0.2.16 and later.
+# For updating to A2A SDK v0.3.0 and later.
 
 # --- Configuration ---
 # List of all camelCase fields to be replaced.
