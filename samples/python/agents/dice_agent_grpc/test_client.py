@@ -18,9 +18,6 @@ from a2a.utils import proto_utils
 
 
 async def main() -> None:
-    PUBLIC_AGENT_CARD_PATH = '/.well-known/agent.json'
-    EXTENDED_AGENT_CARD_PATH = '/agent/authenticatedExtendedCard'
-
     # Configure logging to show INFO level messages
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)  # Get a logger instance
