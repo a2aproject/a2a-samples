@@ -117,7 +117,9 @@ class VideoGenerationAgentExecutor(AgentExecutor):
                         artifact_name = f'{artifact_name}.{extension}'
 
                 file_with_uri = FileWithUri(
-                    uri=file_data['uri'], mime_type=file_data['mimeType'], name=artifact_name
+                    uri=file_data['uri'],
+                    mime_type=file_data['mimeType'],
+                    name=artifact_name,
                 )
                 video_file_part = FilePart(
                     file=file_with_uri,

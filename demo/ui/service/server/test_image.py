@@ -19,7 +19,7 @@ test_image = Message(
                 file=FileWithUri(
                     name='6a6bab940d1340ab9ca8d1e6d9bd2b23',
                     mime_type='image/png',
-                    uri='https://a2a-protocol.org/latest/assets/a2a-banner.png'
+                    uri='https://a2a-protocol.org/latest/assets/a2a-banner.png',
                 ),
                 metadata=None,
             )

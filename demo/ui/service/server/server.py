@@ -100,7 +100,7 @@ class ConversationServer:
         if isinstance(self.manager, ADKHostManager):
             t = threading.Thread(
                 target=lambda: cast(
-                    ADKHostManager, self.manager
+                    'ADKHostManager', self.manager
                 ).process_message_threadsafe(message, loop)
             )
         else:
