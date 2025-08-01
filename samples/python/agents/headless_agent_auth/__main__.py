@@ -83,8 +83,8 @@ async def start_agent(host: str, port):
         #     'oauth2_m2m_client': OAuth2SecurityScheme(
         #         description='',
         #         flows=OAuthFlows(
-        #             authorizationCode=ClientCredentialsOAuthFlow(
-        #                 tokenUrl=f'https://{os.getenv("HR_AUTH0_DOMAIN")}/oauth/token',
+        #             authorization_code=ClientCredentialsOAuthFlow(
+        #                 token_url=f'https://{os.getenv("HR_AUTH0_DOMAIN")}/oauth/token',
         #                 scopes={
         #                     'read:employee_status': 'Allows confirming whether a person is an active employee of the company.',
         #                 },

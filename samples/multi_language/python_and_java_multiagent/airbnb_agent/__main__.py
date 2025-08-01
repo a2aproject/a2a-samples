@@ -115,7 +115,7 @@ def main(
     host: str = DEFAULT_HOST,
     port: int = DEFAULT_PORT,
     log_level: str = DEFAULT_LOG_LEVEL,
-):
+) -> None:
     """Command Line Interface to start the Airbnb Agent server."""
     # Verify an API key is set.
     # Not required if using Vertex AI APIs.
@@ -127,7 +127,7 @@ def main(
             'GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
         )
 
-    async def run_server_async():
+    async def run_server_async() -> None:
         async with app_lifespan(app_context):
             if not app_context.get('mcp_tools'):
                 print(
@@ -194,7 +194,7 @@ def main(
 
 def get_agent_card(host: str, port: int):
     """Returns the Agent Card for the Currency Agent."""
-    capabilities = AgentCapabilities(streaming=True, pushNotifications=True)
+    capabilities = AgentCapabilities(streaming=True, push_notifications=True)
     skill = AgentSkill(
         id='airbnb_search',
         name='Search airbnb accommodation',
@@ -209,8 +209,8 @@ def get_agent_card(host: str, port: int):
         description='Helps with searching accommodation',
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
-        defaultOutputModes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
+        default_input_modes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
+        default_output_modes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
         capabilities=capabilities,
         skills=[skill],
     )
@@ -236,7 +236,7 @@ def get_agent_card(host: str, port: int):
     default=DEFAULT_LOG_LEVEL,
     help='Uvicorn log level.',
 )
-def cli(host: str, port: int, log_level: str):
+def cli(host: str, port: int, log_level: str) -> None:
     main(host, port, log_level)
 
 

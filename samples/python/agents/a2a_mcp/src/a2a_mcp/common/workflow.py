@@ -122,7 +122,7 @@ class WorkflowNode:
 class WorkflowGraph:
     """Represents a graph of workflow nodes."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.graph = nx.DiGraph()
         self.nodes = {}
         self.latest_node = None
@@ -143,7 +143,7 @@ class WorkflowGraph:
         self.graph.add_edge(from_node_id, to_node_id)
 
     async def run_workflow(
-        self, start_node_id: str = None
+        self, start_node_id: str | None = None
     ) -> AsyncIterable[dict[str, any]]:
         logger.info('Executing workflow graph')
         if not start_node_id or start_node_id not in self.nodes:
@@ -169,7 +169,7 @@ class WorkflowGraph:
             task_id = self.graph.nodes[node_id].get('task_id')
             context_id = self.graph.nodes[node_id].get('context_id')
             async for chunk in node.run_node(query, task_id, context_id):
-                # When the workflow node is paused, do not yeild any chunks
+                # When the workflow node is paused, do not yield any chunks
                 # but, let the loop complete.
                 if node.state != Status.PAUSED:
                     if isinstance(
@@ -178,7 +178,7 @@ class WorkflowGraph:
                         isinstance(chunk.root.result, TaskStatusUpdateEvent)
                     ):
                         task_status_event = chunk.root.result
-                        context_id = task_status_event.contextId
+                        context_id = task_status_event.context_id
                         if (
                             task_status_event.status.state
                             == TaskState.input_required
@@ -195,10 +195,10 @@ class WorkflowGraph:
         if self.state == Status.RUNNING:
             self.state = Status.COMPLETED
 
-    def set_node_attribute(self, node_id, attribute, value):
+    def set_node_attribute(self, node_id, attribute, value) -> None:
         nx.set_node_attributes(self.graph, {node_id: value}, attribute)
 
-    def set_node_attributes(self, node_id, attr_val):
+    def set_node_attributes(self, node_id, attr_val) -> None:
         nx.set_node_attributes(self.graph, {node_id: attr_val})
 
     def is_empty(self) -> bool:

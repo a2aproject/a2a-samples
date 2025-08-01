@@ -26,8 +26,10 @@ def agents_list(
         df_data['Organization'].append(
             agent_info.provider.organization if agent_info.provider else ''
         )
-        df_data['Input Modes'].append(', '.join(agent_info.defaultInputModes))
-        df_data['Output Modes'].append(', '.join(agent_info.defaultOutputModes))
+        df_data['Input Modes'].append(', '.join(agent_info.default_input_modes))
+        df_data['Output Modes'].append(
+            ', '.join(agent_info.default_output_modes)
+        )
         df_data['Streaming'].append(agent_info.capabilities.streaming)
     df = pd.DataFrame(
         pd.DataFrame(df_data),

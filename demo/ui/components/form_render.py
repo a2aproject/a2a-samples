@@ -314,9 +314,9 @@ async def cancel_form(e: me.ClickEvent):
     app_state.background_tasks[message_id] = ''
     app_state.completed_forms[form_message_id] = None
     request = Message(
-        messageId=message_id,
-        taskId=task_id,
-        contextId=app_state.current_conversation_id,
+        message_id=message_id,
+        task_id=task_id,
+        context_id=app_state.current_conversation_id,
         role=Role.user,
         parts=[Part(root=TextPart(text='rejected form entry'))],
     )
@@ -332,9 +332,9 @@ async def send_response(
     form = FormState(**json.loads(state.forms[id]))
     print('Sending form response', form)
     request = Message(
-        messageId=message_id,
-        taskId=task_id,
-        contextId=app_state.current_conversation_id,
+        message_id=message_id,
+        task_id=task_id,
+        context_id=app_state.current_conversation_id,
         role=Role.user,
         parts=[Part(root=DataPart(data=form.data))],
     )
