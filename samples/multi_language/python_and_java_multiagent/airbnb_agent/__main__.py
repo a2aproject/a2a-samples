@@ -194,7 +194,7 @@ def main(
 
 def get_agent_card(host: str, port: int):
     """Returns the Agent Card for the Currency Agent."""
-    capabilities = AgentCapabilities(streaming=True, pushNotifications=True)
+    capabilities = AgentCapabilities(streaming=True, push_notifications=True)
     skill = AgentSkill(
         id='airbnb_search',
         name='Search airbnb accommodation',
@@ -209,8 +209,8 @@ def get_agent_card(host: str, port: int):
         description='Helps with searching accommodation',
         url=f'http://{host}:{port}/',
         version='1.0.0',
-        defaultInputModes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
-        defaultOutputModes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
+        default_input_modes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
+        default_output_modes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
         capabilities=capabilities,
         skills=[skill],
     )
