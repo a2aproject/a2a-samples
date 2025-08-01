@@ -166,8 +166,8 @@ class WorkflowGraph:
             node = self.nodes[node_id]
             node.state = Status.RUNNING
             query = self.graph.nodes[node_id].get('query')
-            task_id = self.graph.nodes[node_id].get('taskId')
-            context_id = self.graph.nodes[node_id].get('contextId')
+            task_id = self.graph.nodes[node_id].get('task_id')
+            context_id = self.graph.nodes[node_id].get('context_id')
             async for chunk in node.run_node(query, task_id, context_id):
                 # When the workflow node is paused, do not yield any chunks
                 # but, let the loop complete.
