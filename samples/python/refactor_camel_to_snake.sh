@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # A script to find and replace camelCase fields with their snake_case equivalents
-# For updating to A2A SDK v0.2.16 and later.
+# For updating to A2A SDK v0.3.0 and later.
 
 # --- Configuration ---
 # List of all camelCase fields to be replaced.
@@ -107,12 +107,21 @@ if [[ ! -d "$DIRECTORY" ]]; then
     exit 1
 fi
 
+echo "Searching for python files containing 'a2a' in '$DIRECTORY'..."
+mapfile -t files_to_process < <(find "$DIRECTORY" -type f -name "*.py" -print0 | xargs -0 grep -l 'a2a' 2>/dev/null)
+
+if [ ${#files_to_process[@]} -eq 0 ]; then
+    echo "No python files containing 'a2a' found. Nothing to do."
+    exit 0
+fi
+
+echo "Found ${#files_to_process[@]} files to potentially edit."
+
 if [[ "$DRY_RUN" -eq 1 ]]; then
     echo "--- Starting DRY RUN. No files will be modified. ---"
 else
     echo "--- Starting refactoring. Files will be modified in-place. ---"
 fi
-echo "Targeting directory: $DIRECTORY"
 echo "----------------------------------------------------"
 
 # Loop through each field and perform the replacement
@@ -127,9 +136,8 @@ for camel_field in "${CAMEL_CASE_FIELDS[@]}"; do
     echo "Processing: $camel_field -> $snake_field"
 
     if [[ "$DRY_RUN" -eq 1 ]]; then
-        # In dry run mode, just find files that contain the term.
-        # Use grep with word boundaries. The -l flag lists filenames only.
-        files_found=$(find "$DIRECTORY" -type f -name "*.py" -print0 | xargs -0 grep -l "\b$camel_field\b" 2>/dev/null)
+        files_found=$(grep -l "\b$camel_field\b" "${files_to_process[@]}" 2>/dev/null)
+
         if [[ -n "$files_found" ]]; then
             echo "  [WOULD CHANGE] in files:"
             # Indent the list of files for readability
@@ -138,10 +146,8 @@ for camel_field in "${CAMEL_CASE_FIELDS[@]}"; do
             echo "  [NO CHANGE] No occurrences found."
         fi
     else
-        # In live mode, use perl to perform in-place replacement.
-        # -print0 and xargs -0 handle filenames with spaces correctly.
         # The \b ensures we match whole words only.
-        find "$DIRECTORY" -type f -name "*.py" -print0 | xargs -0 perl -pi -e "s/\b$camel_field\b/$snake_field/g" 2>/dev/null
+        perl -pi -e "s/\b$camel_field\b/$snake_field/g" "${files_to_process[@]}" 2>/dev/null
     fi
     echo
 done
