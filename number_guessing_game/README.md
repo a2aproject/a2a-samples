@@ -1,75 +1,88 @@
-# A2A Toy Demo – Number-Guessing Game
+# A2A Number-Guessing Demo (Python)
 
-This repository contains a little game built on the [A2A](https://github.com/google/a2a) protocol. It is using three small local Python "agents" that cooperate to run a _guess-the-number_ game:
+This repository showcases three lightweight **A2A** agents that cooperate to play a classic _guess-the-number_ game.  It is designed as an approachable example of how to wire Python code to the official A2A SDK while still keeping the game logic entirely self-contained.
 
-* **AgentAlice** – picks a secret number and grades guesses
-* **AgentBob**   – CLI front-end; relays user guesses and shows progress
-* **AgentCarol** – formats the history and (optionally) shuffles it on request
-
-The code purposefully avoids external dependencies – it is built only on the Python stdlib. For simplicity, it doesn't use LLMs.
-
----
-## Directory layout
-
-```text
-number_guessing_game/
-├── agent_Alice.py    # Runs Alice
-├── agent_Bob.py      # Runs Bob
-├── agent_Carol.py    # Runs Carol
-├── utils/            # Helper package (transport, agent façade, etc.)
-├── config.py         # Central port configuration
-└── README.md         # ← you are here
-```
+| Agent | Role |
+|-------|------|
+| **AgentAlice** | Picks a secret integer (1-100) and grades incoming guesses. |
+| **AgentBob**   | CLI front-end – relays player guesses, shows Alice’s hints, negotiates with Carol. |
+| **AgentCarol** | Generates a text visualisation of the guess history and, on request, shuffles it until Bob is happy. |
 
 ---
 ## Requirements
 
-* Python 3.9+ (only stdlib modules are used)
+* Python **3.9+**
+* `pip`
 
-> No third-party packages are needed – a `requirements.txt` is therefore unnecessary.
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+The runtime dependencies are minimal – essentially the official `a2a-sdk` package and `uvicorn` for the HTTP server.
 
 ---
 ## Running the demo
 
-1. **Clone** the repository and `cd` into it.
-2. **Open three terminals** (or tabs) and run each agent:
-
+1. Clone the repository and `cd` into it.
+2. Open **three terminals** (or panes). In each one, activate the virtual environment first:
+   
    ```bash
-   # Terminal 1
-   python agent_Alice.py
-
-   # Terminal 2
-   python agent_Carol.py
-
-   # Terminal 3 – will prompt you to play
-   python agent_Bob.py
+   source .venv/bin/activate   # (Windows: .venv\\Scripts\\activate)
    ```
+   
+   Then start the agents:
 
-3. **Play the game** – Bob will ask you for numbers until Alice replies `correct!`.
+```bash
+# Terminal 1 – Alice (evaluator)
+python agent_Alice.py
 
-During play Bob repeatedly pings Carol to ensure her visualisation is sorted; this exercises multi-turn inter-agent communication.
+# Terminal 2 – Carol (visualiser / shuffler)
+python agent_Carol.py
+
+# Terminal 3 – Bob (CLI front-end)
+python agent_Bob.py
+```
+
+3. Play!  Bob will prompt you for numbers until Alice replies with `correct! attempts: N`.
+
+During play Bob will repeatedly ask Carol to reshuffle the history until it is sorted – this exercises multi-turn, task-referencing messages between agents.
+
+---
+## Directory layout (abridged)
+
+```text
+number_guessing_game/
+├── agent_Alice.py                  # Evaluator agent
+├── agent_Bob.py                    # CLI front-end agent
+├── agent_Carol.py                  # Visualiser / shuffler agent
+├── utils/
+│   ├── game_logic.py               # Pure game mechanics (transport-agnostic)
+│   ├── helpers.py                  # Tiny generic helpers (JSON parsing, etc.)
+│   ├── protocol_wrappers.py        # Convenience wrappers around A2A SDK
+│   ├── server.py                   # Helper to spin up Starlette + SDK handler
+│   └── __init__.py                 # Re-exports
+├── config.py                       # Centralised port configuration
+├── requirements.txt                # Runtime deps
+└── README.md                       # ← you are here
+```
 
 
 ---
-## A2A compliance status
+## A2A feature coverage (SDK 0.3.x)
 
-The demo purposefully targets the **minimum viable** subset of A2A v0.2.6 so it remains easy to study. The table below summarises what is covered and what is left for you to implement if you need a production-ready agent.
+Most heavy lifting (validation, error mapping, Task aggregation, etc.) is handled by the SDK.  The demo therefore focuses on **agent logic** – not protocol plumbing.
 
-| Area | Implemented | Notes |
-|------|-------------|-------|
-| AgentCard (`/.well-known/agent.json`) | ✅ | All required fields filled; optional provider/security omitted |
-| `message/send` | ✅ | Full validation of required message fields; returns a completed Task |
-| `tasks/get` | ✅ | Simple in-memory task registry |
-| Error codes (-32700, -32601, -32602, -32004, -32005) | ✅ | Mapped exactly as in spec |
-| Streaming (`message/stream`, `tasks/*subscribe`) | ❌ | Handler returns **-32004** `Unsupported operation` |
-| Task cancellation (`tasks/cancel`) | ❌ | Could be added by storing a cancellable flag in `_tasks` |
-| Push notifications (`tasks/pushNotificationConfig/*`) | ❌ | Capabilities flag `pushNotifications:false`; no webhook logic yet |
-| TLS & authentication | ❌ | Demo binds to plain HTTP on localhost; `securitySchemes` absent |
-| State transition history | ❌ | `stateTransitionHistory:false` – `_tasks` only keep final status |
-| Additional transports (gRPC) | ❌ | Only JSON-RPC transport is exposed |
-
+| Area | Status |
+|------|--------|
+| `message/send` | Implemented via SDK helper. |
+| Task aggregation | Handled by `ClientTaskManager`. |
+| Streaming & subscriptions | **Not implemented** – SDK returns `Unsupported operation`. |
+| Push notification config | Not implemented (capability flag is `false`). |
+| Transports | JSON-RPC via Starlette/Uvicorn (gRPC left as exercise). |
+| TLS & auth | Plain HTTP on `localhost` only. |
 
 ---
 ## License
 
-This demo is released into the public domain.
+Released into the public domain.  

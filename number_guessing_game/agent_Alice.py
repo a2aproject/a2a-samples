@@ -11,25 +11,26 @@ operation.  For each guess it responds with one of the following hints:
   number of attempts taken so far.
 
 The module exposes a single public callable, :pyfunc:`alice_handler`,
-which is wired into :class:`utils.ToyA2AAgent` and runs inside an HTTP
+which is executed via the A2A SDK server stack using
+:pyfunc:`utils.server.run_agent_blocking` and runs inside an HTTP
 server started in the ``__main__`` block.
 
-All functionality is implemented using only the Python standard
-library, in accordance with the project constraints.
+The agent is implemented with the official A2A Python SDK and a small helper
+layer – the code focuses on game logic rather than protocol plumbing.
 """
-import random
-from typing import Dict, Any
 
-# Shared helpers
-from utils import (
-    ToyA2AAgent,
-    build_complete_agent_card,
-    create_text_task,
-    get_first_text_part,
-    parse_int_in_range,
-    run_agent_forever,
-)
-from config import AGENT_ALICE_PORT, AGENT_BOB_PORT
+import uuid
+
+from a2a.server.agent_execution.agent_executor import AgentExecutor
+from a2a.server.agent_execution.context import RequestContext
+from a2a.server.events.event_queue import EventQueue
+from a2a.server.tasks.task_updater import TaskUpdater
+from a2a.types import AgentCard, Part, TextPart
+from a2a.utils.message import get_message_text
+
+from config import AGENT_ALICE_PORT
+from utils.game_logic import process_guess
+from utils.server import run_agent_blocking
 
 # ------------------ Agent card ------------------
 
@@ -45,74 +46,68 @@ alice_skills = [
     }
 ]
 
-alice_card = build_complete_agent_card(
-    "AgentAlice",
-    AGENT_ALICE_PORT,
-    description="Hosts the number-guessing game by picking a secret number and grading guesses.",
-    skills=alice_skills,
-)
+alice_card_dict = {
+    "name": "AgentAlice",
+    "description": "Hosts the number-guessing game by picking a secret number and grading guesses.",
+    "url": f"http://localhost:{AGENT_ALICE_PORT}/a2a/v1",
+    "preferredTransport": "JSONRPC",
+    "protocolVersion": "0.3.0",
+    "version": "1.0.0",
+    "capabilities": {
+        "streaming": False,
+        "pushNotifications": False,
+        "stateTransitionHistory": False,
+    },
+    "defaultInputModes": ["text/plain"],
+    "defaultOutputModes": ["text/plain"],
+    "skills": alice_skills,
+}
+alice_card = AgentCard.model_validate(alice_card_dict)
 
-# ------------------ Gameplay helpers ------------------
-
-# Random target number between 1 and 100
-_target_number = random.randint(1, 100)
-_attempts: int = 0
-print("[AgentAlice] Secret number selected. Waiting for guesses…")
+# ------------------ Internal helpers ------------------
 
 
-def alice_handler(params: Dict[str, Any], tasks: Dict[str, Any]) -> Dict[str, Any]:
-    """Process a single user guess and create an A2A **Task** response.
+class NumberGuessExecutor(AgentExecutor):
+    """AgentExecutor implementing the number‐guessing logic directly."""
 
-    Args:
-        params: The ``params`` object of the incoming JSON-RPC call.  Only
-            the ``message`` sub-object is inspected.
-        tasks: Shared in-memory task registry managed by
-            :class:`utils.ToyA2AAgent`.  The newly created response task is
-            stored here so that the caller can subsequently retrieve it
-            via ``tasks/get`` if desired.
 
-    Returns:
-        A completed Task dictionary containing a single text part with
-        Alice's feedback message (one of *Go higher*, *Go lower*, or
-        *correct!*).
+    async def execute(
+        self, context: RequestContext, event_queue: EventQueue
+    ) -> None:
+        """Handle a newly received message from a peer agent."""
 
-    Side Effects:
-        * Increments the module-level ``_attempts`` counter.
-        * Writes diagnostic information to ``stdout`` using ``print``.
-    """
-    global _attempts, _target_number
-    message = params.get("message", {})
-    response_text = "Invalid input."
+        raw_text = get_message_text(context.message) if context.message else ""
+        response_text = process_guess(raw_text)
 
-    context_id = message.get("contextId")
-    guess_str = get_first_text_part(message)
+        updater = TaskUpdater(
+            event_queue,
+            task_id=context.task_id or str(uuid.uuid4()),
+            context_id=context.context_id or str(uuid.uuid4()),
+        )
+        # Tell the client that the task has started, then publish the answer and
+        # finally mark it completed so Bob sees a full Task object with the
+        # artifact attached.
+        await updater.submit()
+        await updater.add_artifact([Part(root=TextPart(text=response_text))])
+        await updater.complete()
 
-    if guess_str is not None:
-        guess_val = parse_int_in_range(guess_str, 1, 100)
-        if guess_val is None:
-            response_text = "Please send a number between 1 and 100."
-            print(f"[AgentAlice] Received invalid input '{guess_str}'.")
-        else:
-            _attempts += 1
-            if guess_val < _target_number:
-                response_text = "Go higher"
-            elif guess_val > _target_number:
-                response_text = "Go lower"
-            else:
-                response_text = f"correct! attempts: {_attempts}"
-
-            print(f"[AgentAlice] Guess {guess_val} -> {response_text}")
-
-    return create_text_task(response_text, tasks, context_id=context_id)
+    async def cancel(
+        self, context: RequestContext, event_queue: EventQueue
+    ) -> None:
+        """Reject the referenced task if one is supplied."""
+        if context.task_id:
+            updater = TaskUpdater(
+                event_queue,
+                task_id=context.task_id,
+                context_id=context.context_id or str(uuid.uuid4()),
+            )
+            await updater.reject()
 
 
 if __name__ == "__main__":
-    agent = ToyA2AAgent(
-        "AgentAlice",
-        AGENT_ALICE_PORT,
-        AGENT_BOB_PORT,
-        message_handler=alice_handler,
+    run_agent_blocking(
+        name="AgentAlice",
+        port=AGENT_ALICE_PORT,
         agent_card=alice_card,
+        executor=NumberGuessExecutor(),
     )
-
-    run_agent_forever(agent)
