@@ -1,6 +1,13 @@
 # A2A Number-Guessing Demo (Python)
 
-This repository showcases three lightweight **A2A** agents that cooperate to play a classic _guess-the-number_ game.  It is designed as an approachable example of how to wire Python code to the official A2A SDK while still keeping the game logic entirely self-contained.
+This repository showcases three lightweight A2A agents that cooperate to play a classic _guess-the-number_ game.  
+
+To make it an acessible practical introduction into A2A and the python SDK, we keep this app intentionally minimalistic:
+- no LLMs, API keys etc
+- no need for remote servers (all 3 agents run locally)
+- easy to install and try
+- minimal external dependencies
+- the minimal set of features to demonstrate some core concepts of A2A.
 
 | Agent | Role |
 |-------|------|
@@ -19,7 +26,7 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The runtime dependencies are minimal – essentially the official `a2a-sdk` package and `uvicorn` for the HTTP server.
+The runtime dependencies are minimal: the official `a2a-sdk` package and `uvicorn` for the HTTP server.
 
 ---
 ## Running the demo
