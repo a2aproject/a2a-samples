@@ -26,11 +26,11 @@ The runtime dependencies are minimal – essentially the official `a2a-sdk` pack
 
 1. Clone the repository and `cd` into it.
 2. Open **three terminals** (or panes). In each one, activate the virtual environment first:
-   
+
    ```bash
    source .venv/bin/activate   # (Windows: .venv\\Scripts\\activate)
    ```
-   
+
    Then start the agents:
 
 ```bash
@@ -67,7 +67,6 @@ number_guessing_game/
 └── README.md                       # ← you are here
 ```
 
-
 ---
 ## A2A feature coverage (SDK 0.3.x)
 
@@ -85,4 +84,4 @@ Most heavy lifting (validation, error mapping, Task aggregation, etc.) is handle
 ---
 ## License
 
-Released into the public domain.  
+Released into the public domain.
