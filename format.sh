@@ -109,7 +109,7 @@ if [ -n "$CHANGED_NB_FILES" ]; then
 	echo "Running nbqa autoflake..."
 	run_formatter "$CHANGED_NB_FILES" nbqa autoflake -i -r --remove-all-unused-imports
 	echo "Running nbqa ruff --fix-only..."
-	run_formatter "$CHANGED_NB_FILES" nbqa "ruff check --fix-only"
+	run_formatter "$CHANGED_NB_FILES" nbqa "ruff check --fix-only $RUFF_UNSAFE_FIXES_FLAG"
 	echo "Running nbqa ruff format..."
 	run_formatter "$CHANGED_NB_FILES" nbqa "ruff format"
 	echo "Running tensorflow_docs nbfmt..."
