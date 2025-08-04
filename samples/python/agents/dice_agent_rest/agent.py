@@ -1,14 +1,12 @@
 import random
-import json
-from typing import AsyncIterable
+
+from collections.abc import AsyncIterable
 
 from google.adk import Runner
-from google.adk.agents import LlmAgent, RunConfig
+from google.adk.agents import LlmAgent
 from google.adk.artifacts import InMemoryArtifactService
-from google.adk.events import Event
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
 from google.adk.sessions import InMemorySessionService
-from google.adk.tools import BaseTool, ToolContext
 from google.genai import types
 
 
@@ -46,9 +44,9 @@ def check_prime(nums: list[int]) -> str:
         if is_prime:
             primes.add(number)
     return (
-        "No prime numbers found."
+        'No prime numbers found.'
         if not primes
-        else f"{', '.join(str(num) for num in primes)} are prime numbers."
+        else f'{", ".join(str(num) for num in primes)} are prime numbers.'
     )
 
 
@@ -74,12 +72,13 @@ When you are asked to roll a die and check prime numbers, you should always make
 You should always perform the previous 3 steps when asking for a roll and checking prime numbers.
 You should not rely on the previous history on prime results.
     """,
-    description="Rolls an N-sided dice and answers questions about the outcome of the dice rolls. Can also answer questions about prime numbers.",
-    tools=[
-        roll_dice,
-        check_prime,
-    ],
-        )
+        description='Rolls an N-sided dice and answers questions about the outcome of the dice rolls. Can also answer questions about prime numbers.',
+        tools=[
+            roll_dice,
+            check_prime,
+        ],
+    )
+
 
 class DiceAgent:
     """An agent that handles reimbursement requests."""
@@ -97,7 +96,9 @@ class DiceAgent:
             memory_service=InMemoryMemoryService(),
         )
 
-    async def stream(self, query, session_id) -> AsyncIterable[tuple[bool, str]]:
+    async def stream(
+        self, query, session_id
+    ) -> AsyncIterable[tuple[bool, str]]:
         session = await self._runner.session_service.get_session(
             app_name=self._agent.name,
             user_id=self._user_id,
@@ -117,8 +118,9 @@ class DiceAgent:
             user_id=self._user_id, session_id=session.id, new_message=content
         ):
             if event.is_final_response():
-                yield (True, '\n'.join(
-                    [p.text for p in event.content.parts if p.text]
-                ))
+                yield (
+                    True,
+                    '\n'.join([p.text for p in event.content.parts if p.text]),
+                )
             else:
                 yield (False, 'working...')

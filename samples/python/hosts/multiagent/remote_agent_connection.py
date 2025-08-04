@@ -1,23 +1,14 @@
-from collections.abc import Callable
-from uuid import uuid4
 import traceback
 
 from a2a.client import (
     Client,
     ClientFactory,
-    Consumer,
 )
 from a2a.types import (
     AgentCard,
-    JSONRPCErrorResponse,
     Message,
-    MessageSendParams,
-    SendMessageRequest,
-    SendStreamingMessageRequest,
     Task,
-    TaskArtifactUpdateEvent,
     TaskState,
-    TaskStatusUpdateEvent,
 )
 
 
@@ -32,10 +23,7 @@ class RemoteAgentConnections:
     def get_agent(self) -> AgentCard:
         return self.card
 
-    async def send_message(
-        self,
-        message: Message
-    ) -> Task | Message | None:
+    async def send_message(self, message: Message) -> Task | Message | None:
         lastTask: Task | None = None
         try:
             async for event in self.agent_client.send_message(message):
@@ -45,7 +33,7 @@ class RemoteAgentConnections:
                     return event[0]
                 lastTask = event[0]
         except Exception as e:
-            print("Exception found in send_message")
+            print('Exception found in send_message')
             traceback.print_exc()
             raise e
         return lastTask

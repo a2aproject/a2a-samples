@@ -12,7 +12,7 @@ from a2a.types import (
     AgentCapabilities,
     AgentCard,
     AgentSkill,
-    TransportProtocol
+    TransportProtocol,
 )
 from agent_executor import DiceAgentExecutor  # type: ignore[import-untyped]
 from dotenv import load_dotenv
@@ -64,7 +64,7 @@ async def main(host: str, port: int):
         default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=skills,
-        preferredTransport=TransportProtocol.grpc,
+        preferred_transport=TransportProtocol.grpc,
     )
 
     agent_executor = DiceAgentExecutor()

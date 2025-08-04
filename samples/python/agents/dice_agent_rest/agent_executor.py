@@ -1,12 +1,7 @@
-import json
-
-from typing import Any, AsyncIterable
-
 from a2a.server.agent_execution import AgentExecutor, RequestContext
-from a2a.server.events import Event, EventQueue
+from a2a.server.events import EventQueue
 from a2a.server.tasks import TaskUpdater
 from a2a.types import (
-    DataPart,
     Part,
     Task,
     TaskState,
@@ -14,13 +9,11 @@ from a2a.types import (
     UnsupportedOperationError,
 )
 from a2a.utils import (
-    new_agent_parts_message,
     new_agent_text_message,
     new_task,
 )
 from a2a.utils.errors import ServerError
 from agent import DiceAgent
-from typing_extensions import override
 
 
 class DiceAgentExecutor(AgentExecutor):
@@ -45,20 +38,20 @@ class DiceAgentExecutor(AgentExecutor):
         updater = TaskUpdater(event_queue, task.id, task.context_id)
         # invoke the underlying agent, using streaming results. The streams
         # now are update events.
-        async for (finished, text) in self.agent.stream(query, task.context_id):
+        async for finished, text in self.agent.stream(query, task.context_id):
             if not finished:
                 await updater.update_status(
                     TaskState.working,
                     new_agent_text_message(text, task.context_id, task.id),
                 )
                 continue
-            else:
-                # Emit the appropriate events
-                await updater.add_artifact(
-                    [Part(root=TextPart(text=text))], name='response',
-                )
-                await updater.complete()
-                break
+            # Emit the appropriate events
+            await updater.add_artifact(
+                [Part(root=TextPart(text=text))],
+                name='response',
+            )
+            await updater.complete()
+            break
 
     async def cancel(
         self, request: RequestContext, event_queue: EventQueue
