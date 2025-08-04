@@ -12,8 +12,8 @@ from state.state import AppState
 from utils.agent_card import get_agent_card
 
 
-def agent_list_page(app_state: AppState):
-    """Agents List Page"""
+def agent_list_page(app_state: AppState) -> None:
+    """Agents List Page."""
     state = me.state(AgentState)
     with page_scaffold():  # pylint: disable=not-context-manager
         with page_frame():
@@ -65,12 +65,12 @@ def agent_list_page(app_state: AppState):
                     me.button('Cancel', on_click=cancel_agent_dialog)
 
 
-def set_agent_address(e: me.InputBlurEvent):
+def set_agent_address(e: me.InputBlurEvent) -> None:
     state = me.state(AgentState)
     state.agent_address = e.value
 
 
-async def load_agent_info(e: me.ClickEvent):
+async def load_agent_info(e: me.ClickEvent) -> None:
     state = me.state(AgentState)
     try:
         state.error = None
@@ -94,12 +94,12 @@ async def load_agent_info(e: me.ClickEvent):
         state.error = f'Cannot connect to agent as {state.agent_address}'
 
 
-def cancel_agent_dialog(e: me.ClickEvent):
+def cancel_agent_dialog(e: me.ClickEvent) -> None:
     state = me.state(AgentState)
     state.agent_dialog_open = False
 
 
-async def save_agent(e: me.ClickEvent):
+async def save_agent(e: me.ClickEvent) -> None:
     state = me.state(AgentState)
     await AddRemoteAgent(state.agent_address)
     state.agent_address = ''

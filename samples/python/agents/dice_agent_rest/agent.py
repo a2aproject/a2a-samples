@@ -85,7 +85,7 @@ class DiceAgent:
 
     SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._agent = create_agent()
         self._user_id = 'remote_agent'
         self._runner = Runner(

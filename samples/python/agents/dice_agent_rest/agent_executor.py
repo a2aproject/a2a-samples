@@ -19,7 +19,7 @@ from agent import DiceAgent
 class DiceAgentExecutor(AgentExecutor):
     """Reimbursement AgentExecutor Example."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.agent = DiceAgent()
 
     async def execute(

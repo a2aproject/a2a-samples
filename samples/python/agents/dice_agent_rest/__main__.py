@@ -25,7 +25,7 @@ logging.basicConfig()
 @click.command()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=10101)
-def main(host: str, port: int):
+def main(host: str, port: int) -> None:
     # Verify an API key is set.
     # Not required if using Vertex AI APIs.
     if os.getenv('GOOGLE_GENAI_USE_VERTEXAI') != 'TRUE' and not os.getenv(
