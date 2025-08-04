@@ -1,12 +1,11 @@
-import asyncio
 import logging
 import os
 
-import asyncclick as click
-import grpc
+import click
+import uvicorn
 
-from a2a.grpc import a2a_pb2, a2a_pb2_grpc
-from a2a.server.request_handlers import DefaultRequestHandler, GrpcHandler
+from a2a.server.apps import A2ARESTFastAPIApplication
+from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
@@ -16,7 +15,6 @@ from a2a.types import (
 )
 from agent_executor import DiceAgentExecutor  # type: ignore[import-untyped]
 from dotenv import load_dotenv
-from grpc_reflection.v1alpha import reflection
 
 
 load_dotenv()
@@ -26,8 +24,8 @@ logging.basicConfig()
 
 @click.command()
 @click.option('--host', 'host', default='localhost')
-@click.option('--port', 'port', default=11001)
-async def main(host: str, port: int) -> None:
+@click.option('--port', 'port', default=10101)
+def main(host: str, port: int) -> None:
     # Verify an API key is set.
     # Not required if using Vertex AI APIs.
     if os.getenv('GOOGLE_GENAI_USE_VERTEXAI') != 'TRUE' and not os.getenv(
@@ -58,13 +56,13 @@ async def main(host: str, port: int) -> None:
     agent_card = AgentCard(
         name='Dice Agent',
         description='An agent that can roll arbitrary dice and answer if numbers are prime',
-        url=f'[::]:{port}/',
+        url=f'http://{host}:{port}/',
         version='1.0.0',
         default_input_modes=['text'],
         default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=skills,
-        preferred_transport=TransportProtocol.grpc,
+        preferred_transport=TransportProtocol.http_json,
     )
 
     agent_executor = DiceAgentExecutor()
@@ -72,21 +70,12 @@ async def main(host: str, port: int) -> None:
         agent_executor=agent_executor, task_store=InMemoryTaskStore()
     )
 
-    server = grpc.aio.server()
-    a2a_pb2_grpc.add_A2AServiceServicer_to_server(
-        GrpcHandler(agent_card, request_handler),
-        server,
+    server = A2ARESTFastAPIApplication(
+        agent_card=agent_card, http_handler=request_handler
     )
-    SERVICE_NAMES = (
-        a2a_pb2.DESCRIPTOR.services_by_name['A2AService'].full_name,
-        reflection.SERVICE_NAME,
-    )
-    reflection.enable_server_reflection(SERVICE_NAMES, server)
-    server.add_insecure_port(f'[::]:{port}')
-    print(f'Starting server on port [::]:{port}')
-    await server.start()
-    await server.wait_for_termination()
+
+    uvicorn.run(server.build(), host=host, port=port)
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    main()
