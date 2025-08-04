@@ -42,14 +42,14 @@ class DiceAgentExecutor(AgentExecutor):
         if not task:
             task = new_task(context.message)
             await event_queue.enqueue_event(task)
-        updater = TaskUpdater(event_queue, task.id, task.contextId)
+        updater = TaskUpdater(event_queue, task.id, task.context_id)
         # invoke the underlying agent, using streaming results. The streams
         # now are update events.
-        async for (finished, text) in self.agent.stream(query, task.contextId):
+        async for (finished, text) in self.agent.stream(query, task.context_id):
             if not finished:
                 await updater.update_status(
                     TaskState.working,
-                    new_agent_text_message(text, task.contextId, task.id),
+                    new_agent_text_message(text, task.context_id, task.id),
                 )
                 continue
             else:

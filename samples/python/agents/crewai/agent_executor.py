@@ -59,7 +59,7 @@ class ImageGenerationAgentExecutor(AgentExecutor):
             parts = [
                 Part(
                     root=TextPart(
-                        data.error if data else 'failed to generate image'
+                        text=data.error if data else 'failed to generate image'
                     ),
                 )
             ]

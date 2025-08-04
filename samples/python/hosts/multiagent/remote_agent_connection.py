@@ -1,9 +1,12 @@
 from collections.abc import Callable
 from uuid import uuid4
+import traceback
 
-import httpx
-
-from a2a.client import A2AClient
+from a2a.client import (
+    Client,
+    ClientFactory,
+    Consumer,
+)
 from a2a.types import (
     AgentCard,
     JSONRPCErrorResponse,
@@ -13,20 +16,17 @@ from a2a.types import (
     SendStreamingMessageRequest,
     Task,
     TaskArtifactUpdateEvent,
+    TaskState,
     TaskStatusUpdateEvent,
 )
-
-
-TaskCallbackArg = Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent
-TaskUpdateCallback = Callable[[TaskCallbackArg, AgentCard], Task]
 
 
 class RemoteAgentConnections:
     """A class to hold the connections to the remote agents."""
 
-    def __init__(self, client: httpx.AsyncClient, agent_card: AgentCard):
-        self.agent_client = A2AClient(client, agent_card)
-        self.card = agent_card
+    def __init__(self, client_factory: ClientFactory, agent_card: AgentCard):
+        self.agent_client: Client = client_factory.create(agent_card)
+        self.card: AgentCard = agent_card
         self.pending_tasks = set()
 
     def get_agent(self) -> AgentCard:
@@ -34,36 +34,27 @@ class RemoteAgentConnections:
 
     async def send_message(
         self,
-        request: MessageSendParams,
-        task_callback: TaskUpdateCallback | None,
+        message: Message
     ) -> Task | Message | None:
-        if self.card.capabilities.streaming:
-            task = None
-            async for response in self.agent_client.send_message_streaming(
-                SendStreamingMessageRequest(id=str(uuid4()), params=request)
-            ):
-                if not response.root.result:
-                    return response.root.error
-                # In the case a message is returned, that is the end of the interaction.
-                event = response.root.result
+        lastTask: Task | None = None
+        try:
+            async for event in self.agent_client.send_message(message):
                 if isinstance(event, Message):
                     return event
+                if self.is_terminal_or_interrupted(event[0]):
+                    return event[0]
+                lastTask = event[0]
+        except Exception as e:
+            print("Exception found in send_message")
+            traceback.print_exc()
+            raise e
+        return lastTask
 
-                # Otherwise we are in the Task + TaskUpdate cycle.
-                if task_callback and event:
-                    task = task_callback(event, self.card)
-                if hasattr(event, 'final') and event.final:
-                    break
-            return task
-        # Non-streaming
-        response = await self.agent_client.send_message(
-            SendMessageRequest(id=str(uuid4()), params=request)
-        )
-        if isinstance(response.root, JSONRPCErrorResponse):
-            return response.root.error
-        if isinstance(response.root.result, Message):
-            return response.root.result
-
-        if task_callback:
-            task_callback(response.root.result, self.card)
-        return response.root.result
+    def is_terminal_or_interrupted(self, task: Task) -> bool:
+        return task.status.state in [
+            TaskState.completed,
+            TaskState.canceled,
+            TaskState.failed,
+            TaskState.input_required,
+            TaskState.unknown,
+        ]

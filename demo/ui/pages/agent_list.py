@@ -70,11 +70,11 @@ def set_agent_address(e: me.InputBlurEvent):
     state.agent_address = e.value
 
 
-def load_agent_info(e: me.ClickEvent):
+async def load_agent_info(e: me.ClickEvent):
     state = me.state(AgentState)
     try:
         state.error = None
-        agent_card_response = get_agent_card(state.agent_address)
+        agent_card_response = await get_agent_card(state.agent_address)
         state.agent_name = agent_card_response.name
         state.agent_description = agent_card_response.description
         state.agent_framework_type = (
@@ -82,11 +82,11 @@ def load_agent_info(e: me.ClickEvent):
             if agent_card_response.provider
             else ''
         )
-        state.input_modes = agent_card_response.defaultInputModes
-        state.output_modes = agent_card_response.defaultOutputModes
+        state.input_modes = agent_card_response.default_input_modes
+        state.output_modes = agent_card_response.default_output_modes
         state.stream_supported = agent_card_response.capabilities.streaming
         state.push_notifications_supported = (
-            agent_card_response.capabilities.pushNotifications
+            agent_card_response.capabilities.push_notifications
         )
     except Exception as e:
         print(e)
