@@ -11,15 +11,15 @@ from __future__ import annotations
 
 import json
 import random
-from typing import Dict, List
 
 from utils.helpers import parse_int_in_range, try_parse_json
 
+
 __all__ = [
-    "process_guess",
-    "build_visualisation",
-    "process_history_payload",
-    "is_sorted_history",
+    'build_visualisation',
+    'is_sorted_history',
+    'process_guess',
+    'process_history_payload',
 ]
 
 # ---------------------------------------------------------------------------
@@ -34,6 +34,7 @@ _secret_logged: bool = False
 # ---------------------------------------------------------------------------
 # Number-guessing helpers
 # ---------------------------------------------------------------------------
+
 
 def process_guess(raw_text: str) -> str:
     """Evaluate a single guess and return Agent Alice's feedback.
@@ -50,28 +51,27 @@ def process_guess(raw_text: str) -> str:
               number of attempts so far.
             * An error prompt when the input is invalid.
     """
-
     global _attempts, _target_number, _secret_logged
 
     if not _secret_logged:
-        print("[GameLogic] Secret number selected. Waiting for guesses…")
+        print('[GameLogic] Secret number selected. Waiting for guesses…')
         _secret_logged = True
 
     guess = parse_int_in_range(raw_text, 1, 100)
     if guess is None:
         print(f"[GameLogic] Received invalid input '{raw_text}'.")
-        return "Please send a number between 1 and 100."
+        return 'Please send a number between 1 and 100.'
 
     _attempts += 1
 
     if guess < _target_number:
-        hint = "Go higher"
+        hint = 'Go higher'
     elif guess > _target_number:
-        hint = "Go lower"
+        hint = 'Go lower'
     else:
-        hint = f"correct! attempts: {_attempts}"
+        hint = f'correct! attempts: {_attempts}'
 
-    print(f"[GameLogic] Guess {guess} -> {hint}")
+    print(f'[GameLogic] Guess {guess} -> {hint}')
     return hint
 
 
@@ -79,7 +79,8 @@ def process_guess(raw_text: str) -> str:
 # History helpers (Carol and Bob)
 # ---------------------------------------------------------------------------
 
-def build_visualisation(history: List[Dict[str, str]]) -> str:
+
+def build_visualisation(history: list[dict[str, str]]) -> str:
     """Create a human-readable rendering of a guess/response history list.
 
     Args:
@@ -89,20 +90,19 @@ def build_visualisation(history: List[Dict[str, str]]) -> str:
     Returns:
         str: Multi-line string ready to be printed to the console.
     """
-
     if not history:
-        return "No guesses yet."
+        return 'No guesses yet.'
 
-    lines = ["Guesses so far:"]
+    lines = ['Guesses so far:']
     for idx, entry in enumerate(history, 1):
-        guess = entry.get("guess", "?")
-        response = entry.get("response", "?")
-        lines.append(f" {idx:>2}. {guess:>3} -> {response}")
-    print("[GameLogic] Created a visualisation for Bob")
-    return "\n".join(lines)
+        guess = entry.get('guess', '?')
+        response = entry.get('response', '?')
+        lines.append(f' {idx:>2}. {guess:>3} -> {response}')
+    print('[GameLogic] Created a visualisation for Bob')
+    return '\n'.join(lines)
 
 
-def is_sorted_history(history: List[Dict[str, str]]) -> bool:
+def is_sorted_history(history: list[dict[str, str]]) -> bool:
     """Return ``True`` when *history* is sorted in ascending order by the guess.
 
     The helper gracefully handles histories that contain plain numbers or
@@ -120,7 +120,7 @@ def is_sorted_history(history: List[Dict[str, str]]) -> bool:
     # or bare numeric values when other agents reply with a simplified list.
     try:
         if history and isinstance(history[0], dict):
-            guesses = [int(entry["guess"]) for entry in history]
+            guesses = [int(entry['guess']) for entry in history]
         else:
             # Assume iterable of plain numbers / numeric strings
             guesses = [int(entry) for entry in history]
@@ -148,19 +148,18 @@ def process_history_payload(raw_text: str) -> str:
     Returns:
         str: Either a JSON-encoded list or a plain-text visualisation.
     """
-
     success, parsed = try_parse_json(raw_text)
     if not success:
         # Not JSON – return an empty visualisation to signal invalid input.
         return build_visualisation([])
 
     # Shuffle request
-    if isinstance(parsed, dict) and parsed.get("action") == "shuffle":
-        history_list = parsed.get("history", [])
+    if isinstance(parsed, dict) and parsed.get('action') == 'shuffle':
+        history_list = parsed.get('history', [])
         if not isinstance(history_list, list):
             history_list = []
         random.shuffle(history_list)
-        print("[GameLogic] Shuffled history and returned JSON list")
+        print('[GameLogic] Shuffled history and returned JSON list')
         return json.dumps(history_list)
 
     # Visualisation request

@@ -27,40 +27,40 @@ from a2a.server.events.event_queue import EventQueue
 from a2a.server.tasks.task_updater import TaskUpdater
 from a2a.types import AgentCard, Part, TextPart
 from a2a.utils.message import get_message_text
-
 from config import AGENT_ALICE_PORT
 from utils.game_logic import process_guess
 from utils.server import run_agent_blocking
+
 
 # ------------------ Agent card ------------------
 
 alice_skills = [
     {
-        "id": "number_guess_evaluator",
-        "name": "Number Guess Evaluator",
-        "description": "Evaluates numeric guesses (1-100) against a secret number and replies with guidance (higher/lower/correct).",
-        "tags": ["game", "demo"],
-        "inputModes": ["text/plain"],
-        "outputModes": ["text/plain"],
-        "examples": ["50"],
+        'id': 'number_guess_evaluator',
+        'name': 'Number Guess Evaluator',
+        'description': 'Evaluates numeric guesses (1-100) against a secret number and replies with guidance (higher/lower/correct).',
+        'tags': ['game', 'demo'],
+        'inputModes': ['text/plain'],
+        'outputModes': ['text/plain'],
+        'examples': ['50'],
     }
 ]
 
 alice_card_dict = {
-    "name": "AgentAlice",
-    "description": "Hosts the number-guessing game by picking a secret number and grading guesses.",
-    "url": f"http://localhost:{AGENT_ALICE_PORT}/a2a/v1",
-    "preferredTransport": "JSONRPC",
-    "protocolVersion": "0.3.0",
-    "version": "1.0.0",
-    "capabilities": {
-        "streaming": False,
-        "pushNotifications": False,
-        "stateTransitionHistory": False,
+    'name': 'AgentAlice',
+    'description': 'Hosts the number-guessing game by picking a secret number and grading guesses.',
+    'url': f'http://localhost:{AGENT_ALICE_PORT}/a2a/v1',
+    'preferredTransport': 'JSONRPC',
+    'protocolVersion': '0.3.0',
+    'version': '1.0.0',
+    'capabilities': {
+        'streaming': False,
+        'pushNotifications': False,
+        'stateTransitionHistory': False,
     },
-    "defaultInputModes": ["text/plain"],
-    "defaultOutputModes": ["text/plain"],
-    "skills": alice_skills,
+    'defaultInputModes': ['text/plain'],
+    'defaultOutputModes': ['text/plain'],
+    'skills': alice_skills,
 }
 alice_card = AgentCard.model_validate(alice_card_dict)
 
@@ -70,13 +70,11 @@ alice_card = AgentCard.model_validate(alice_card_dict)
 class NumberGuessExecutor(AgentExecutor):
     """AgentExecutor implementing the number‐guessing logic directly."""
 
-
     async def execute(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
         """Handle a newly received message from a peer agent."""
-
-        raw_text = get_message_text(context.message) if context.message else ""
+        raw_text = get_message_text(context.message) if context.message else ''
         response_text = process_guess(raw_text)
 
         updater = TaskUpdater(
@@ -104,9 +102,9 @@ class NumberGuessExecutor(AgentExecutor):
             await updater.reject()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     run_agent_blocking(
-        name="AgentAlice",
+        name='AgentAlice',
         port=AGENT_ALICE_PORT,
         agent_card=alice_card,
         executor=NumberGuessExecutor(),

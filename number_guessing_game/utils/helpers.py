@@ -3,14 +3,18 @@ Generic helper functions still shared by the demo agents.
 
 Utility functions shared by the demo agents.
 """
+
 from __future__ import annotations
 
 import json
-from typing import Any, Tuple
+
+from typing import Any
+
 
 # ---------------------------------------------------------------------------
 # Small reusable utilities
 # ---------------------------------------------------------------------------
+
 
 def parse_int_in_range(text: str, low: int, high: int) -> int | None:
     """Return an integer parsed from *text* that lies within the inclusive range.
@@ -25,7 +29,6 @@ def parse_int_in_range(text: str, low: int, high: int) -> int | None:
         otherwise ``None`` when the input is not an integer or outside the
         bounds.
     """
-
     try:
         value = int(text)
     except (ValueError, TypeError):
@@ -33,7 +36,7 @@ def parse_int_in_range(text: str, low: int, high: int) -> int | None:
     return value if low <= value <= high else None
 
 
-def try_parse_json(text: str) -> Tuple[bool, Any]:
+def try_parse_json(text: str) -> tuple[bool, Any]:
     """Attempt to parse *text* as JSON.
 
     Args:
@@ -44,7 +47,6 @@ def try_parse_json(text: str) -> Tuple[bool, Any]:
         indicating whether parsing succeeded, and the second element is the
         parsed Python object when successful or ``None`` otherwise.
     """
-
     try:
         return True, json.loads(text)
     except json.JSONDecodeError:

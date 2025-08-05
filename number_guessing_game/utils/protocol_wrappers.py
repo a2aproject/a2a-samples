@@ -13,12 +13,13 @@ from a2a.client.client_task_manager import ClientTaskManager
 from a2a.types import Message, Role, Task, TaskIdParams, TextPart
 from a2a.utils.message import get_message_text
 
+
 __all__ = [
-    "send_text",
-    "send_text_async",
-    "send_followup",
-    "extract_text",
-    "cancel_task",
+    'cancel_task',
+    'extract_text',
+    'send_followup',
+    'send_text',
+    'send_text_async',
 ]
 
 
@@ -51,12 +52,11 @@ async def send_text_async(
         Union[Task, Message]: The final object produced by the agent—normally a
         ``Task`` but may be a plain ``Message`` for very small interactions.
     """
-
     client = _client_factory.create(
-        minimal_agent_card(f"http://localhost:{port}/a2a/v1")
+        minimal_agent_card(f'http://localhost:{port}/a2a/v1')
     )
     msg = Message(
-        kind="message",
+        kind='message',
         role=Role.user,
         message_id=uuid.uuid4().hex,
         context_id=context_id,
@@ -82,7 +82,7 @@ async def send_text_async(
         return task
     if last_message is not None:
         return last_message
-    raise RuntimeError("No response from agent")
+    raise RuntimeError('No response from agent')
 
 
 def send_text(
@@ -152,7 +152,7 @@ def send_followup(
     text
         The plain-text content of the follow-up message.
 
-    Returns
+    Returns:
     -------
     Task | Message
         The resulting SDK object returned by the agent (normally a Task).
@@ -171,10 +171,9 @@ def send_followup(
 # ---------------------------------------------------------------------------
 
 
-
 async def _cancel_task_async(port: int, task_id: str) -> None:
     client = _client_factory.create(
-        minimal_agent_card(f"http://localhost:{port}/a2a/v1")
+        minimal_agent_card(f'http://localhost:{port}/a2a/v1')
     )
     await client.cancel_task(TaskIdParams(id=task_id))
 
@@ -206,7 +205,6 @@ def cancel_task(port: int, task_id: str) -> None:
 
 def extract_text(obj: Task | Message):
     """Return plain text from a Task or Message, using SDK helpers when possible."""
-
     if isinstance(obj, Message):
         return get_message_text(obj)
 
@@ -215,6 +213,6 @@ def extract_text(obj: Task | Message):
         for artifact in reversed(obj.artifacts):
             if artifact.parts:
                 for part in reversed(artifact.parts):
-                    if hasattr(part, "root") and hasattr(part.root, "text"):
+                    if hasattr(part, 'root') and hasattr(part.root, 'text'):
                         return part.root.text  # type: ignore[attr-defined]
-    return ""
+    return ''

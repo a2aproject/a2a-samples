@@ -2,7 +2,8 @@
 
 This repository showcases three lightweight A2A agents that cooperate to play a classic _guess-the-number_ game.  
 
-To make it an acessible practical introduction into A2A and the python SDK, we keep this app intentionally minimalistic:
+To make it an accessible practical introduction into A2A and the Python SDK, we keep this app intentionally minimalistic:
+
 - no LLMs, API keys etc
 - no need for remote servers (all 3 agents run locally)
 - easy to install and try
@@ -15,20 +16,18 @@ To make it an acessible practical introduction into A2A and the python SDK, we k
 | **AgentBob**   | CLI front-end – relays player guesses, shows Alice’s hints, negotiates with Carol. |
 | **AgentCarol** | Generates a text visualisation of the guess history and, on request, shuffles it until Bob is happy. |
 
----
 ## Requirements
 
-* Python **3.9+**
-* `pip`
+- Python **3.10+**
+- `pip`
 
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-```
+   ```bash
+   python -m venv .venv && source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
 
 The runtime dependencies are minimal: the official `a2a-sdk` package and `uvicorn` for the HTTP server.
 
----
 ## Running the demo
 
 1. Clone the repository and `cd` into it.
@@ -40,22 +39,21 @@ The runtime dependencies are minimal: the official `a2a-sdk` package and `uvicor
 
    Then start the agents:
 
-```bash
-# Terminal 1 – Alice (evaluator)
-python agent_Alice.py
+   ```bash
+   # Terminal 1 – Alice (evaluator)
+   python agent_Alice.py
 
-# Terminal 2 – Carol (visualiser / shuffler)
-python agent_Carol.py
+   # Terminal 2 – Carol (visualiser / shuffler)
+   python agent_Carol.py
 
-# Terminal 3 – Bob (CLI front-end)
-python agent_Bob.py
-```
+   # Terminal 3 – Bob (CLI front-end)
+   python agent_Bob.py
+   ```
 
 3. Play!  Bob will prompt you for numbers until Alice replies with `correct! attempts: N`.
 
 During play Bob will repeatedly ask Carol to reshuffle the history until it is sorted – this exercises multi-turn, task-referencing messages between agents.
 
----
 ## Directory layout (abridged)
 
 ```text
@@ -74,7 +72,6 @@ number_guessing_game/
 └── README.md                       # ← you are here
 ```
 
----
 ## A2A feature coverage (SDK 0.3.x)
 
 Most heavy lifting (validation, error mapping, Task aggregation, etc.) is handled by the SDK.  The demo therefore focuses on **agent logic** – not protocol plumbing.
@@ -88,7 +85,6 @@ Most heavy lifting (validation, error mapping, Task aggregation, etc.) is handle
 | Transports | JSON-RPC via Starlette/Uvicorn (gRPC left as exercise). |
 | TLS & auth | Plain HTTP on `localhost` only. |
 
----
 ## License
 
 Released into the public domain.

@@ -3,9 +3,10 @@
 Shared helper re-exports for the number-guessing demo.
 """
 
-from .helpers import parse_int_in_range, try_parse_json
+from utils.helpers import parse_int_in_range, try_parse_json
+
 
 __all__ = [
-    "parse_int_in_range",
-    "try_parse_json",
+    'parse_int_in_range',
+    'try_parse_json',
 ]
