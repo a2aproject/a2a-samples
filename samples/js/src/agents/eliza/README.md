@@ -4,9 +4,7 @@ This agent provides a demonstration of the historical [Eliza chatbot](https://en
 
 Eliza was one of the first chatbots (1966!) to attempt the Turing test and designed to explore communication between humans and machines. To run:
 
-    ```bash
     npm run agents:eliza
-    ```
 
 The agent server will start on `http://localhost:41241` and provides agent.json cards at three endpoints which are listed by the server.
 
@@ -17,15 +15,11 @@ The Eliza agent provides a well-known endpoint that does not require authenticat
 
 1. Make sure Eliza is running:
 
-    ```bash
     npm run agents:eliza
-    ```
 
 2. In a separate terminal window, use the standard command line interface to connect:
 
-    ```bash
     npm run a2a:cli http://localhost:41241
-    ```
 
 
 ## Chat with Eliza WITH Universal Authentication
@@ -36,21 +30,15 @@ The Eliza agent provides the /agents/eliza endpoint that requires authentication
 
 1. Make sure you have created a demo agentic profile
 
-    ```bash
     npm run agents:eliza:create-profile
-    ```
 
 2. Make sure Eliza is running:
 
-    ```bash
     npm run agents:eliza
-    ```
 
 3. In a separate terminal window, use the special authenticating command line interface to connect:
 
-    ```bash
     npm run agents:eliza:authcli http://localhost:41241/agents/eliza #connect
-    ```
 
     Type in a message to the Eliza agent to cause an A2A RPC call to the server which triggers the authentication.
 
