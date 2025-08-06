@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs
 import { ElizaBot } from "@agentic-profile/eliza";
 import { ClientAgentSession } from '@agentic-profile/auth';
 
@@ -60,7 +59,7 @@ export class ElizaAgentExecutor implements AgentExecutor {
             const agentMessage: Message = {
                 kind: 'message',
                 role: 'agent',
-                messageId: uuidv4(),
+                messageId: crypto.randomUUID(),
                 parts: [{ kind: 'text', text: agentReplyText }], // Ensure some text
                 taskId: undefined, // Don't pass taskId to client, otherwise it will be passed back to the server in the next request
                 contextId: contextId,
@@ -71,11 +70,12 @@ export class ElizaAgentExecutor implements AgentExecutor {
                 `[ElizaAgentExecutor] Context ${contextId} finished`
             );
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(
             `[ElizaAgentExecutor] Error processing task ${taskId}:`,
             error
             );
+            const errorMessage = error instanceof Error ? error.message : String(error);
             const errorUpdate: TaskStatusUpdateEvent = {
                 kind: 'status-update',
                 taskId: taskId,
@@ -85,8 +85,8 @@ export class ElizaAgentExecutor implements AgentExecutor {
                     message: {
                         kind: 'message',
                         role: 'agent',
-                        messageId: uuidv4(),
-                        parts: [{ kind: 'text', text: `Agent error: ${error.message}` }],
+                        messageId: crypto.randomUUID(),
+                        parts: [{ kind: 'text', text: `Agent error: ${errorMessage}` }],
                         taskId: taskId,
                         contextId: contextId,
                     },
@@ -100,6 +100,6 @@ export class ElizaAgentExecutor implements AgentExecutor {
 }
 
 function getSessionId( requestContext: RequestContext ): string {
-    const session = (requestContext as any)?.session as ClientAgentSession;
+    const session = (requestContext as { session?: ClientAgentSession })?.session;
     return session?.agentDid ?? "";
 }

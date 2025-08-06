@@ -19,7 +19,7 @@ The Eliza agent provides a well-known endpoint that does not require authenticat
 
 2. In a separate terminal window, use the standard command line interface to connect:
 
-    npm run a2a:cli http://localhost:41241
+    npm run a2a:cli <http://localhost:41241>
 
 
 ## Chat with Eliza WITH Universal Authentication
