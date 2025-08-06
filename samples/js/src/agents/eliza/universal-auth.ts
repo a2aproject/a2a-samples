@@ -27,7 +27,7 @@ export async function createAuthHandler( iamProfile: string = "my-a2a-client", u
 
     const authHandler = {
         headers: () => headers,
-        shouldRetryWithHeaders: async (req:RequestInit, fetchResponse:Response) => {
+        shouldRetryWithHeaders: async (req:RequestInit, fetchResponse:any) => {
             // can/should I handle this?
             if( fetchResponse.status !== 401 )
                 return undefined;
@@ -121,7 +121,7 @@ async function fileExists(path: string): Promise<boolean> {
     try {
         await access(path);
         return true;
-    } catch (error) {
+    } catch {
         return false;
     }
 }

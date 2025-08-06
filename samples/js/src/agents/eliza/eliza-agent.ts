@@ -12,6 +12,17 @@ import {
 import { SessionContextStore } from "./store.js";
 
 /**
+ * Generate a UUID v4 compatible with Node.js versions >=16.0.0
+ */
+function generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+/**
  * ElizaAgentExecutor implements the Eliza DOCTOR agent.
  */
 export class ElizaAgentExecutor implements AgentExecutor {
@@ -22,7 +33,9 @@ export class ElizaAgentExecutor implements AgentExecutor {
     }
 
     public cancelTask = async (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _taskId: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _eventBus: ExecutionEventBus,
     ): Promise<void> => {
         console.log( `[ElizaAgentExecutor] Does not support Cancelling tasks` );
@@ -59,7 +72,7 @@ export class ElizaAgentExecutor implements AgentExecutor {
             const agentMessage: Message = {
                 kind: 'message',
                 role: 'agent',
-                messageId: crypto.randomUUID(),
+                messageId: generateUUID(),
                 parts: [{ kind: 'text', text: agentReplyText }], // Ensure some text
                 taskId: undefined, // Don't pass taskId to client, otherwise it will be passed back to the server in the next request
                 contextId: contextId,
@@ -85,7 +98,7 @@ export class ElizaAgentExecutor implements AgentExecutor {
                     message: {
                         kind: 'message',
                         role: 'agent',
-                        messageId: crypto.randomUUID(),
+                        messageId: generateUUID(),
                         parts: [{ kind: 'text', text: `Agent error: ${errorMessage}` }],
                         taskId: taskId,
                         contextId: contextId,

@@ -187,7 +187,7 @@ async function fetchAndDisplayAgentCard() {
     // Update prompt prefix to use the fetched name
     // The prompt is set dynamically before each rl.prompt() call in the main loop
     // to reflect the current agentName if it changes (though unlikely after initial fetch).
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log(
       colorize("yellow", `⚠️ Error fetching or parsing agent card`)
     );
@@ -330,23 +330,24 @@ async function main() {
         }
       }
       console.log(colorize("dim", `--- End of response stream for this input ---`));
-    } catch (error: any) {
+    } catch (error: unknown) {
       const timestamp = new Date().toLocaleTimeString();
       const prefix = colorize("red", `\n${agentName} [${timestamp}] ERROR:`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
       console.error(
         prefix,
         `Error communicating with agent:`,
-        error.message || error
+        errorMessage
       );
-      if (error.code) {
-        console.error(colorize("gray", `   Code: ${error.code}`));
+      if (error && typeof error === 'object' && 'code' in error) {
+        console.error(colorize("gray", `   Code: ${(error as { code: unknown }).code}`));
       }
-      if (error.data) {
+      if (error && typeof error === 'object' && 'data' in error) {
         console.error(
-          colorize("gray", `   Data: ${JSON.stringify(error.data)}`)
+          colorize("gray", `   Data: ${JSON.stringify((error as { data: unknown }).data)}`)
         );
       }
-      if (!(error.code || error.data) && error.stack) {
+      if (!(error && typeof error === 'object' && ('code' in error || 'data' in error)) && error instanceof Error && error.stack) {
         console.error(colorize("gray", error.stack.split('\n').slice(1, 3).join('\n')));
       }
     } finally {
