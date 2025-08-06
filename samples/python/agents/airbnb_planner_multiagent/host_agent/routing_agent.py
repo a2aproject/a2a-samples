@@ -1,3 +1,6 @@
+
+
+
 # ruff: noqa: E501
 # pylint: disable=logging-fstring-interpolation
 import asyncio
@@ -229,12 +232,25 @@ class RoutingAgent:
 
         if not client:
             raise ValueError(f'Client not available for {agent_name}')
-        task_id = state['task_id'] if 'task_id' in state else str(uuid.uuid4())
 
-        if 'context_id' in state:
-            context_id = state['context_id']
-        else:
+        # Initialize the main task dictionary if it doesn't exist
+        if 'agent_tasks' not in state:
+            state['agent_tasks'] = {}
+        
+        # Get the specific task info for this agent, or an empty dict
+        agent_task_info = state['agent_tasks'].get(agent_name, {})
+
+        task_id = agent_task_info.get('task_id')
+        task_status = agent_task_info.get('status')
+
+        # If a task exists and is marked as complete, we should start a new task
+        # by resetting the task_id.
+        if task_id and task_status == TaskState.completed:
+            task_id = None
+            # Also reset context_id to ensure a fresh context for the new task.
             context_id = str(uuid.uuid4())
+        else:
+            context_id = agent_task_info.get('context_id') or str(uuid.uuid4())
 
         message_id = ''
         metadata = {}
@@ -280,7 +296,16 @@ class RoutingAgent:
             print('received non-task response. Aborting get task ')
             return None
 
-        return send_response.root.result
+        task_result = send_response.root.result
+        
+        # Save the task and context IDs for this specific agent
+        state['agent_tasks'][agent_name] = {
+            'task_id': task_result.id,
+            'context_id': task_result.context_id,
+            'status': task_result.status.state,
+        }
+        
+        return task_result
 
 
 def _get_initialized_routing_agent_sync() -> Agent:
