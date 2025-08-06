@@ -27,7 +27,7 @@ export async function createAuthHandler( iamProfile: string = "my-a2a-client", u
 
     const authHandler = {
         headers: () => headers,
-        shouldRetryWithHeaders: async (req:RequestInit, fetchResponse:any) => {
+        shouldRetryWithHeaders: async (req:RequestInit, fetchResponse: { status: number; headers: { get: (name: string) => string | null }; url: string }) => {
             // can/should I handle this?
             if( fetchResponse.status !== 401 )
                 return undefined;
