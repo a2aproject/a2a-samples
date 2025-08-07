@@ -4,11 +4,12 @@ This sample demonstrates an adversarial multi-agent simulation using the A2A (Ag
 
 The attacker can communicate with the defender agent via A2A and has the freedom to either continue a multiturn conversation or reset and create new conversations. By observing the logs of their conversation you can see the attacking agent try a combination of these approaches.
 
-The example utilizes the [any-agent](https://github.com/mozilla-ai/any-agent) library, which has built-in support for serving an agent over A2A. Documentation for serving options can be found [here](https://mozilla-ai.github.io/any-agent/serving/. Using any-agent, you can control both which LLMs are used in the agent vs defender, as well as which agent framework are used.
+The example utilizes the [any-agent](https://github.com/mozilla-ai/any-agent) library, which has built-in support for serving an agent over A2A. Documentation for serving options can be found [here](https://mozilla-ai.github.io/any-agent/serving/). Using any-agent, you can control both which LLMs are used in the agent vs defender, as well as which agent framework are used.
 
 ## Usage
 
 ### Prerequisites
+
 - Python 3.12+
 - Gemini API Key set via env var `GEMINI_API_KEY`
 
@@ -21,6 +22,7 @@ cd samples/python/agents/any_agent_adversarial_multiagent/
 # Run the simulation
 uv run .
 ```
+
 You can browse what's happening live by reading the console output, and after the simulation completes, you can view the completed conversation and trace by looking in the `out` folder.
 
 ## Simulation Overview
