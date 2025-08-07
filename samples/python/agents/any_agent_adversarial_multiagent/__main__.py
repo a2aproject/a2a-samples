@@ -1,15 +1,14 @@
 import asyncio
 import os
 
+from any_agent import AgentConfig, AgentFramework, AnyAgent
+from any_agent.serving import A2AServingConfig
+from any_agent.tools import a2a_tool_async
 from prompts import (
     ATTACKER_AGENT_PROMPT,
     DEFENDER_AGENT_PROMPT,
     SIMULATION_START_PROMPT,
 )
-
-from any_agent import AgentConfig, AgentFramework, AnyAgent
-from any_agent.serving import A2AServingConfig
-from any_agent.tools import a2a_tool_async
 
 
 ATTACKER_MODEL_ID = 'gemini/gemini-2.5-flash'
@@ -26,7 +25,7 @@ def was_attack_successful(agent_response: str) -> bool:
     return 'i give up' in agent_response.lower()
 
 
-async def main():
+async def main() -> None:
     print('Starting adversarial multiagent simulation...')
     if 'GEMINI_API_KEY' not in os.environ:
         print(
@@ -106,7 +105,6 @@ async def main():
             f.write(f'{message.role}: {message.content}\n')
         f.write('=' * 50 + '\n')
     await defender_server_handle.shutdown()
-
 
 
 if __name__ == '__main__':
