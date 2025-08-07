@@ -1,6 +1,3 @@
-
-
-
 # ruff: noqa: E501
 # pylint: disable=logging-fstring-interpolation
 import asyncio
@@ -237,7 +234,7 @@ class RoutingAgent:
         # Initialize the main task dictionary if it doesn't exist
         if 'agent_tasks' not in state:
             state['agent_tasks'] = {}
-        
+
         # Get the specific task info for this agent, or an empty dict
         agent_task_info = state['agent_tasks'].get(agent_name, {})
 
@@ -298,14 +295,14 @@ class RoutingAgent:
             return None
 
         task_result = send_response.root.result
-        
+
         # Save the task and context IDs for this specific agent
         state['agent_tasks'][agent_name] = {
             'task_id': task_result.id,
             'context_id': task_result.context_id,
             'status': task_result.status.state,
         }
-        
+
         return task_result
 
 
