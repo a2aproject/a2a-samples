@@ -5,7 +5,7 @@ import httpx
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
-from a2a.server.tasks import InMemoryTaskStore, InMemoryPushNotifier
+from a2a.server.tasks import InMemoryPushNotifier, InMemoryTaskStore
 from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent_executor import SemanticKernelMCPAgentExecutor
 from dotenv import load_dotenv
@@ -39,7 +39,6 @@ def main(host, port):
 
 def get_agent_card(host: str, port: int):
     """Returns the Agent Card for the Semantic Kernel MCP Agent."""
-
     # Build the agent card
     capabilities = AgentCapabilities(streaming=True)
     skill_mcp_tools = AgentSkill(
@@ -49,7 +48,7 @@ def get_agent_card(host: str, port: int):
             'Provides comprehensive development and task assistance through Model Context Protocol (MCP) tools, '
             'including git clone, and open it with  VSCode or VSCode Insiders'
         ),
-        tags=['development', 'tools', 'git', 'vscode','vscode-insiders'],
+        tags=['development', 'tools', 'git', 'vscode', 'vscode-insiders'],
         examples=[
             'Clone  https://github.com/kinfey/mcpdemo1',
             'Open /path in VSCode',
@@ -63,10 +62,10 @@ def get_agent_card(host: str, port: int):
             'This agent provides comprehensive development and task assistance '
             'through git and VSCode tools'
         ),
-        url=f'http://localhost:10002/',
+        url='http://localhost:10002/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=capabilities,
         skills=[skill_mcp_tools],
     )

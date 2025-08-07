@@ -1,4 +1,4 @@
-"""Convience methods to start servers."""
+"""Convenience methods to start servers."""
 
 import click
 

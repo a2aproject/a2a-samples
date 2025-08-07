@@ -173,18 +173,18 @@ class LlamaIndexAgentExecutor(AgentExecutor):
         context: RequestContext,
         supportedTypes: list[str],
     ) -> bool:
-        acceptedOutputModes = (
-            context.configuration.acceptedOutputModes
+        accepted_output_modes = (
+            context.configuration.accepted_output_modes
             if context.configuration
             else []
         )
         if not are_modalities_compatible(
-            acceptedOutputModes,
+            accepted_output_modes,
             supportedTypes,
         ):
             logger.warning(
                 'Unsupported output mode. Received %s, Support %s',
-                acceptedOutputModes,
+                accepted_output_modes,
                 supportedTypes,
             )
             return True
@@ -194,12 +194,12 @@ class LlamaIndexAgentExecutor(AgentExecutor):
         self,
         context: RequestContext,
     ) -> bool:
-        pushNotificationConfig = (
-            context.configuration.pushNotificationConfig
+        push_notification_config = (
+            context.configuration.push_notification_config
             if context.configuration
             else None
         )
-        if pushNotificationConfig and not pushNotificationConfig.url:
+        if push_notification_config and not push_notification_config.url:
             logger.warning('Push notification URL is missing')
             return True
 

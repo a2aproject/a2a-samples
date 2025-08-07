@@ -16,8 +16,8 @@ func TestSendTask(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if req.Method != "tasks/send" {
-			t.Errorf("expected method tasks/send, got %s", req.Method)
+		if req.Method != "message/send" {
+			t.Errorf("expected method message/send, got %s", req.Method)
 		}
 
 		task := &models.Task{
@@ -231,8 +231,8 @@ func TestSendTaskStreaming(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if req.Method != "tasks/send" {
-			t.Errorf("expected method tasks/send, got %s", req.Method)
+		if req.Method != "message/send" {
+			t.Errorf("expected method message/send, got %s", req.Method)
 		}
 
 		// Set response headers for streaming

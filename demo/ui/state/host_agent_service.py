@@ -190,9 +190,9 @@ def convert_message_to_state(message: Message) -> StateMessage:
         return StateMessage()
 
     return StateMessage(
-        message_id=message.messageId,
-        context_id=message.contextId if message.contextId else '',
-        task_id=message.taskId if message.taskId else '',
+        message_id=message.message_id,
+        context_id=message.context_id if message.context_id else '',
+        task_id=message.task_id if message.task_id else '',
         role=message.role.name,
         content=extract_content(message.parts),
     )
@@ -219,11 +219,11 @@ def convert_task_to_state(task: Task) -> StateTask:
     if not task.history:
         return StateTask(
             task_id=task.id,
-            context_id=task.contextId,
+            context_id=task.context_id,
             state=TaskState.failed.name,
             message=StateMessage(
                 message_id=str(uuid.uuid4()),
-                context_id=task.contextId,
+                context_id=task.context_id,
                 task_id=task.id,
                 role=Role.agent.name,
                 content=[('No history', 'text')],
@@ -236,7 +236,7 @@ def convert_task_to_state(task: Task) -> StateTask:
         output = [extract_content(last_message.parts)] + output
     return StateTask(
         task_id=task.id,
-        context_id=task.contextId,
+        context_id=task.context_id,
         state=str(task.status.state),
         message=convert_message_to_state(message),
         artifacts=output,
@@ -265,9 +265,9 @@ def extract_content(
             parts.append((p.text, 'text/plain'))
         elif p.kind == 'file':
             if isinstance(p.file, FileWithBytes):
-                parts.append((p.file.bytes, p.file.mimeType or ''))
+                parts.append((p.file.bytes, p.file.mime_type or ''))
             else:
-                parts.append((p.file.uri, p.file.mimeType or ''))
+                parts.append((p.file.uri, p.file.mime_type or ''))
         elif p.kind == 'data':
             try:
                 jsonData = json.dumps(p.data)
@@ -282,17 +282,17 @@ def extract_content(
 
 
 def extract_message_id(message: Message) -> str:
-    return message.messageId
+    return message.message_id
 
 
 def extract_message_conversation(message: Message) -> str:
-    return message.contextId if message.contextId else ''
+    return message.context_id if message.context_id else ''
 
 
 def extract_conversation_id(task: Task) -> str:
-    if task.contextId:
-        return task.contextId
+    if task.context_id:
+        return task.context_id
     # Tries to find the first conversation id for the message in the task.
     if task.status.message:
-        return task.status.message.contextId or ''
+        return task.status.message.context_id or ''
     return ''

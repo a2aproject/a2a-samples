@@ -17,8 +17,8 @@ import {
   // Type for the agent card
   AgentCard,
   Part, // Added for explicit Part typing
-  A2AClient,
 } from "@a2a-js/sdk";
+import { A2AClient } from "@a2a-js/sdk/client";
 
 // --- ANSI Colors ---
 const colors = {

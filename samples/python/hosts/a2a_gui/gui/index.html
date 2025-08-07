@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>A2A GUI</title>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div id="container">
+            <div id="chat-window">
+                <div id="config-container">
+                    <div id="config-header">
+                        <span class="chevron">▼</span>
+                        <span>Configuration</span>
+                    </div>
+                    <div id="config-body">
+                        <div class="config-input-container">
+                            <input
+                                type="text"
+                                id="a2a-endpoint"
+                                placeholder="Enter A2A Endpoint URL" />
+                        </div>
+                        <div class="config-controls-container">
+                            <button id="initialize-button">Initialize</button>
+                            <div class="auth-toggle">
+                                <input
+                                    type="checkbox"
+                                    id="auth-checkbox"
+                                    checked />
+                                <label for="auth-checkbox"
+                                    >Enable Authentication</label
+                                >
+                            </div>
+                        </div>
+                        <div id="agent-card-container"></div>
+                    </div>
+                </div>
+                <div id="chat-messages"></div>
+                <div id="message-input-container">
+                    <input
+                        type="text"
+                        id="message-input"
+                        placeholder="Type your message..." />
+                    <button id="send-button">Send</button>
+                </div>
+                <div id="info-panels">
+                    <div id="stats-container">
+                        <button id="stats-toggle">Stats</button>
+                        <div id="stats-panel"></div>
+                    </div>
+                    <div id="debug-container">
+                        <button id="debug-toggle">Debug</button>
+                        <div id="debug-panel"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="app.js"></script>
+    </body>
+</html>

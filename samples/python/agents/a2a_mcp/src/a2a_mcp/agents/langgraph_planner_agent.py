@@ -32,7 +32,7 @@ class ResponseFormat(BaseModel):
     )
 
 
-class LangraphPlannerAgent(BaseAgent):
+class LangGraphPlannerAgent(BaseAgent):
     """Planner Agent backed by LangGraph."""
 
     def __init__(self):
