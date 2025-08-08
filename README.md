@@ -1,5 +1,7 @@
 # Agent2Agent (A2A) Samples
 
+[![Open in Firebase Studio](https://firebase.google.com/static/docs/images/firebase-studio-button.svg)](https://studio.firebase.google.com/new?template=https://github.com/a2aproject/a2a-samples/tree/main/.firebase-studio)
+
 <div style="text-align: right;">
   <details>
     <summary>🌐 Language</summary>
