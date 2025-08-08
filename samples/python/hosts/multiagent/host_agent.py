@@ -52,7 +52,7 @@ class HostAgent:
         )
 
         config = ClientConfig(
-            httpx_client=httpx.AsyncClient(),
+            httpx_client=self.httpx_client,
             supported_transports=[
                 TransportProtocol.jsonrpc,
                 TransportProtocol.http_json,
@@ -194,7 +194,7 @@ Current agent: {current_agent['active_agent']}
         )
         response = await client.send_message(request_message)
         if isinstance(response, Message):
-            return await convert_parts(task.parts, tool_context)
+            return await convert_parts(response.parts, tool_context)
         task: Task = response
         # Assume completion unless a state returns that isn't complete
         state['session_active'] = task.status.state not in [
