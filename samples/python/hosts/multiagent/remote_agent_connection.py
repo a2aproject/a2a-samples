@@ -1,8 +1,6 @@
 import traceback
 from collections.abc import Callable
 
-from collections.abc import Callable
-
 from a2a.client import (
     Client,
     ClientFactory,
