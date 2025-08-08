@@ -23,7 +23,7 @@ load_dotenv()
 def main(host, port):
     """Starts the Semantic Kernel Agent server using A2A."""
     httpx_client = httpx.AsyncClient()
-    push_config_store= InMemoryPushNotificationConfigStore()
+    push_config_store = InMemoryPushNotificationConfigStore()
     request_handler = DefaultRequestHandler(
         agent_executor=SemanticKernelTravelAgentExecutor(),
         task_store=InMemoryTaskStore(),
