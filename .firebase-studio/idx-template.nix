@@ -1,18 +1,16 @@
 { pkgs, ... }: {
+  # Add rsync to the bootstrap environment.
+  packages = [
+    pkgs.rsync
+  ];
+
   # The bootstrap script runs in a temporary directory containing the
   # contents of your template folder.
   bootstrap = ''
-    # The full repository is checked out one level above the template directory.
-    # Copy the entire repository into the new workspace directory ($out).
-    # Enable dotglob to include hidden files in globbing
-    shopt -s dotglob
-    # Copy all files and directories from the repository root to the workspace
-    for item in ${./.}/../*; do
-      # Exclude .git and the template directory itself
-      if [[ "$(basename "$item")" != ".git" && "$(basename "$item")" != ".firebase-studio" ]]; then
-        cp -a "$item" "$out/"
-      fi
-    done
+    # Use rsync to copy the entire repository into the new workspace directory ($out).
+    # rsync is more robust for this task. It excludes the .git and template
+    # directories to avoid including unnecessary files in the workspace.
+    rsync -a --exclude ".git" --exclude ".firebase-studio" ${./.}/../ "$out/"
 
     # Create the .idx directory for workspace configuration.
     mkdir -p "$out/.idx"
