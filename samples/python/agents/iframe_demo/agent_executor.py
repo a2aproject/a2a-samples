@@ -84,4 +84,4 @@ class IframeDemoAgentExecutor(AgentExecutor):
                     # Skip non-text data parts
                     pass
                     
-        return ' '.join(text_parts) if text_parts else "Hello"
+        return ' '.join(text_parts)

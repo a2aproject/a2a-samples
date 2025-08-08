@@ -30,17 +30,13 @@ class IframeDemoAgent:
 
     def handle_chart_request(self) -> List[Part]:
         """Create a sample chart iframe."""
-        # Example chart URLs (these are demo URLs, in practice you'd use real chart services)
-        chart_urls = [
-            "https://public.tableau.com/shared/QJRYQ4P32?:showVizHome=no&:embed=true",
-            "https://plotly.com/~PlotBot/5.embed",
-            "https://codepen.io/team/amcharts/embed/GRZeNVe?default-tab=result&theme-id=light"
-        ]
+        # Example chart URL for demo purposes
+        chart_url = "https://public.tableau.com/shared/QJRYQ4P32?:showVizHome=no&:embed=true"
         
         parts = [
             Part(root=TextPart(text="Here's a sample chart showing sales data:")),
             self.create_iframe_part(
-                src=chart_urls[0],
+                src=chart_url,
                 height="500px",
                 title="Sales Dashboard Chart",
                 sandbox="allow-scripts allow-same-origin"
