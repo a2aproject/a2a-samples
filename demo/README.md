@@ -4,7 +4,7 @@ This demo application showcases agents talking to other agents over A2A.
 
 ![image](./a2a_demo_arch.png)
 
-- The frontend is a [mesop](https://github.com/mesop-dev/mesop) web application that renders conversations as content between the end user and the "Host Agent". This app can render text content, thought bubbles, web forms (requests for input from agents), images, and **embedded UI components (iframes)** for displaying charts, dashboards, and other web content
+- The frontend is a [mesop](https://github.com/mesop-dev/mesop) web application that renders conversations as content between the end user and the "Host Agent". This app can render text content, thought bubbles, web forms (requests for input from agents), images, and **embedded UI components (iframes)** for displaying charts, dashboards, and other web content. More content types coming soon
 
 - The [Host Agent](/samples/python/hosts/multiagent/host_agent.py) is a Google ADK agent which orchestrates user requests to Remote Agents.
 
