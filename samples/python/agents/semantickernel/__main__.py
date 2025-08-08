@@ -2,10 +2,10 @@ import logging
 
 import click
 import httpx
-
+import uvicorn
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
-from a2a.server.tasks import InMemoryPushNotifier, InMemoryTaskStore
+from a2a.server.tasks import InMemoryTaskStore, InMemoryPushNotificationConfigStore, BasePushNotificationSender
 from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent_executor import SemanticKernelTravelAgentExecutor
 from dotenv import load_dotenv
@@ -23,16 +23,17 @@ load_dotenv()
 def main(host, port):
     """Starts the Semantic Kernel Agent server using A2A."""
     httpx_client = httpx.AsyncClient()
+    push_config_store= InMemoryPushNotificationConfigStore()
     request_handler = DefaultRequestHandler(
         agent_executor=SemanticKernelTravelAgentExecutor(),
         task_store=InMemoryTaskStore(),
-        push_notifier=InMemoryPushNotifier(httpx_client),
+        push_config_store=push_config_store,
+        push_sender=BasePushNotificationSender(httpx_client, push_config_store),
     )
 
     server = A2AStarletteApplication(
         agent_card=get_agent_card(host, port), http_handler=request_handler
     )
-    import uvicorn
 
     uvicorn.run(server.build(), host=host, port=port)
 
