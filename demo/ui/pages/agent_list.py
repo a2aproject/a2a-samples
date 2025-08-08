@@ -74,7 +74,7 @@ async def load_agent_info(e: me.ClickEvent) -> None:
     state = me.state(AgentState)
     try:
         state.error = None
-        agent_card_response = await get_agent_card(state.agent_address)
+        agent_card_response = get_agent_card(state.agent_address)
         state.agent_name = agent_card_response.name
         state.agent_description = agent_card_response.description
         state.agent_framework_type = (

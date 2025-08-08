@@ -1,5 +1,7 @@
 import traceback
 
+from collections.abc import Callable
+
 from a2a.client import (
     Client,
     ClientFactory,
@@ -8,8 +10,14 @@ from a2a.types import (
     AgentCard,
     Message,
     Task,
+    TaskArtifactUpdateEvent,
     TaskState,
+    TaskStatusUpdateEvent,
 )
+
+
+TaskCallbackArg = Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent
+TaskUpdateCallback = Callable[[TaskCallbackArg, AgentCard], Task]
 
 
 class RemoteAgentConnections:
