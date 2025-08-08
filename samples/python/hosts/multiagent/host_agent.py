@@ -6,17 +6,17 @@ import uuid
 
 import httpx
 
-from a2a.client import A2ACardResolver
+from a2a.client import A2ACardResolver, ClientConfig, ClientFactory
 from a2a.types import (
     AgentCard,
     DataPart,
     Message,
-    MessageSendConfiguration,
-    MessageSendParams,
     Part,
+    Role,
     Task,
     TaskState,
     TextPart,
+    TransportProtocol,
 )
 from google.adk import Agent
 from google.adk.agents.callback_context import CallbackContext
@@ -51,6 +51,15 @@ class HostAgent:
             self.init_remote_agent_addresses(remote_agent_addresses)
         )
 
+        config = ClientConfig(
+            httpx_client=self.httpx_client,
+            supported_transports=[
+                TransportProtocol.jsonrpc,
+                TransportProtocol.http_json,
+            ],
+        )
+        self.client_factory = ClientFactory(config)
+
     async def init_remote_agent_addresses(
         self, remote_agent_addresses: list[str]
     ):
@@ -67,7 +76,7 @@ class HostAgent:
         self.register_agent_card(card)
 
     def register_agent_card(self, card: AgentCard):
-        remote_connection = RemoteAgentConnections(self.httpx_client, card)
+        remote_connection = RemoteAgentConnections(self.client_factory, card)
         self.remote_agent_connections[card.name] = remote_connection
         self.cards[card.name] = card
         agent_info = []
@@ -175,22 +184,17 @@ Current agent: {current_agent['active_agent']}
         task: Task
         if not message_id:
             message_id = str(uuid.uuid4())
-        request: MessageSendParams = MessageSendParams(
-            id=str(uuid.uuid4()),
-            message=Message(
-                role='user',
-                parts=[TextPart(text=message)],
-                message_id=message_id,
-                context_id=context_id,
-                task_id=task_id,
-            ),
-            configuration=MessageSendConfiguration(
-                accepted_output_modes=['text', 'text/plain', 'image/png'],
-            ),
+
+        request_message = Message(
+            role=Role.user,
+            parts=[Part(root=TextPart(text=message))],
+            message_id=message_id,
+            context_id=context_id,
+            task_id=task_id,
         )
-        response = await client.send_message(request, self.task_callback)
+        response = await client.send_message(request_message)
         if isinstance(response, Message):
-            return await convert_parts(task.parts, tool_context)
+            return await convert_parts(response.parts, tool_context)
         task: Task = response
         # Assume completion unless a state returns that isn't complete
         state['session_active'] = task.status.state not in [
