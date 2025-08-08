@@ -22,7 +22,7 @@ from service.types import Conversation, Event
 
 
 class InMemoryFakeAgentManager(ApplicationManager):
-    """An implementation of memory based management with fake agent actions
+    """An implementation of memory based management with fake agent actions.
 
     This implements the interface of the ApplicationManager to plug into
     the AgentServer. This acts as the service contract that the Mesop app
@@ -37,7 +37,7 @@ class InMemoryFakeAgentManager(ApplicationManager):
     _next_message_idx: int
     _agents: list[AgentCard]
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._conversations = []
         self._messages = []
         self._tasks = []
@@ -72,7 +72,7 @@ class InMemoryFakeAgentManager(ApplicationManager):
 
         return message
 
-    async def process_message(self, message: Message):
+    async def process_message(self, message: Message) -> None:
         self._messages.append(message)
         message_id = message.message_id
         context_id = message.context_id or ''
@@ -133,16 +133,16 @@ class InMemoryFakeAgentManager(ApplicationManager):
                 task.history.append(response)
             self.update_task(task)
 
-    def add_task(self, task: Task):
+    def add_task(self, task: Task) -> None:
         self._tasks.append(task)
 
-    def update_task(self, task: Task):
+    def update_task(self, task: Task) -> None:
         for i, t in enumerate(self._tasks):
             if t.id == task.id:
                 self._tasks[i] = task
                 return
 
-    def add_event(self, event: Event):
+    def add_event(self, event: Event) -> None:
         self._events.append(event)
 
     def next_message(self) -> Message:
@@ -193,7 +193,7 @@ class InMemoryFakeAgentManager(ApplicationManager):
             return rval
         return [(x, '') for x in self._pending_message_ids]
 
-    def register_agent(self, url):
+    def register_agent(self, url) -> None:
         agent_data = get_agent_card(url)
         if not agent_data.url:
             agent_data.url = url

@@ -12,7 +12,7 @@ ContentPart = str | dict[str, Any]
 
 @dataclass
 class StateConversation:
-    """StateConversation provides mesop state compliant view of a conversation"""
+    """StateConversation provides mesop state compliant view of a conversation."""
 
     conversation_id: str = ''
     conversation_name: str = ''
@@ -22,7 +22,7 @@ class StateConversation:
 
 @dataclass
 class StateMessage:
-    """StateMessage provides mesop state compliant view of a message"""
+    """StateMessage provides mesop state compliant view of a message."""
 
     message_id: str = ''
     task_id: str = ''
@@ -36,7 +36,7 @@ class StateMessage:
 
 @dataclass
 class StateTask:
-    """StateTask provides mesop state compliant view of task"""
+    """StateTask provides mesop state compliant view of task."""
 
     task_id: str = ''
     context_id: str | None = None
@@ -49,7 +49,7 @@ class StateTask:
 
 @dataclass
 class SessionTask:
-    """SessionTask organizes tasks based on conversation"""
+    """SessionTask organizes tasks based on conversation."""
 
     context_id: str = ''
     task: StateTask = dataclasses.field(default_factory=StateTask)
@@ -57,7 +57,7 @@ class SessionTask:
 
 @dataclass
 class StateEvent:
-    """StateEvent provides mesop state compliant view of event"""
+    """StateEvent provides mesop state compliant view of event."""
 
     context_id: str = ''
     actor: str = ''
@@ -71,7 +71,7 @@ class StateEvent:
 
 @me.stateclass
 class AppState:
-    """Mesop Application State"""
+    """Mesop Application State."""
 
     sidenav_open: bool = False
     theme_mode: Literal['system', 'light', 'dark'] = 'system'
@@ -98,7 +98,7 @@ class AppState:
 
 @me.stateclass
 class SettingsState:
-    """Settings State"""
+    """Settings State."""
 
     output_mime_types: list[str] = dataclasses.field(
         default_factory=lambda: [

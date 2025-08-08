@@ -1,11 +1,11 @@
 import mesop as me
 
-from .poller import polling_buttons
+from components.poller import polling_buttons
 
 
 @me.content_component
-def header(title: str, icon: str):
-    """Header component"""
+def header(title: str, icon: str) -> None:
+    """Header component."""
     with me.box(
         style=me.Style(
             display='flex',

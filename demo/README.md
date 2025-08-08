@@ -1,4 +1,4 @@
-## Demo Web App
+# Demo Web App
 
 This demo application showcases agents talking to other agents over A2A.
 
@@ -88,7 +88,7 @@ Click on the task list to see all the A2A task updates from the remote agents
 
    Back in the demo UI you can go to the _Remote Agents_ tab and add this agent's address:
 
-   ```
+   ```text
    localhost:10002
    ```
 
@@ -110,7 +110,7 @@ Click on the task list to see all the A2A task updates from the remote agents
 
    Then ask questions like:
    - "Show me a chart"
-   - "Show me a dashboard" 
+   - "Show me a dashboard"
    - "Show me a form"
 
    Review the events to see what happened.

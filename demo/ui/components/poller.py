@@ -5,8 +5,8 @@ from state.state import AppState
 
 
 @me.content_component
-def polling_buttons():
-    """Polling buttons component"""
+def polling_buttons() -> None:
+    """Polling buttons component."""
     state = me.state(AppState)
     with me.box(
         style=me.Style(
@@ -38,13 +38,13 @@ def polling_buttons():
     me.slot()
 
 
-def on_change(e: me.ButtonToggleChangeEvent):
+def on_change(e: me.ButtonToggleChangeEvent) -> None:
     state = me.state(AppState)
     state.polling_interval = int(e.value)
 
 
 async def force_refresh(e: me.ClickEvent):
-    """Refresh app state event handler"""
+    """Refresh app state event handler."""
     yield
     app_state = me.state(AppState)
     await UpdateAppState(app_state, app_state.current_conversation_id)

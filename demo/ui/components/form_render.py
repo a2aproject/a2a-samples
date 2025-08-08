@@ -17,7 +17,7 @@ BOX_PADDING = 20
 
 @dataclasses.dataclass
 class FormElement:
-    """FormElement is a declarative structure for the form rendering"""
+    """FormElement is a declarative structure for the form rendering."""
 
     name: str = ''
     label: str = ''
@@ -61,25 +61,23 @@ class FormState:
 
 @me.stateclass
 class State:
-    """This contains the data in the form"""
+    """This contains the data in the form."""
 
     # forms: dict[str, FormState]
     forms: dict[str, str]
 
 
 def is_form(message: StateMessage) -> bool:
-    """Returns whether the message indicates a form should be rendered"""
-    if any([x[1] == 'form' for x in message.content]):
-        return True
-    return False
+    """Returns whether the message indicates a form should be rendered."""
+    return bool(any(x[1] == 'form' for x in message.content))
 
 
 def form_sent(message: StateMessage, app_state: AppState) -> bool:
     return message.message_id in app_state.form_responses
 
 
-def render_form(message: StateMessage, app_state: AppState):
-    """Renders the form or the data entered in a submitted form"""
+def render_form(message: StateMessage, app_state: AppState) -> None:
+    """Renders the form or the data entered in a submitted form."""
     # Check if the form was completed, if so, render the content as a card
     if message.message_id in app_state.completed_forms:
         render_form_card(message, app_state.completed_forms[message.message_id])
@@ -109,8 +107,8 @@ def render_form(message: StateMessage, app_state: AppState):
     )
 
 
-def render_form_card(message: StateMessage, data: dict[str, Any] | None):
-    """Renders the result of a previous form as a card"""
+def render_form_card(message: StateMessage, data: dict[str, Any] | None) -> None:
+    """Renders the result of a previous form as a card."""
     with me.box(
         style=me.Style(
             padding=me.Padding.all(BOX_PADDING),
@@ -143,7 +141,7 @@ def render_form_card(message: StateMessage, data: dict[str, Any] | None):
 def generate_form_elements(
     message: StateMessage,
 ) -> tuple[str, list[FormElement]]:
-    """Returns a declarative structure for a form to generate"""
+    """Returns a declarative structure for a form to generate."""
     # Get the message part with the form information.
     form_content = next(filter(lambda x: x[1] == 'form', message.content), None)
     if not form_content:
@@ -175,10 +173,10 @@ def make_form_elements(form_info: dict[str, Any]) -> list[FormElement]:
         elements.append(
             FormElement(
                 name=key,
-                label=info['title'] if 'title' in info else key,
-                value=info['value'] if 'value' in info else '',
-                required=info['required'] if 'required' in info else False,
-                formType=info['format'] if 'format' in info else 'text',
+                label=info.get('title', key),
+                value=info.get('value', ''),
+                required=info.get('required', False),
+                formType=info.get('format', 'text'),
                 # TODO more details for input like validation rules
                 formDetails={},
             )
@@ -194,7 +192,7 @@ def instructions_for_form(form_info: dict[str, Any]) -> str:
 
 def render_structure(
     id: str, task_id: str, elements: list[FormElement], instructions: str
-):
+) -> None:
     with me.box(
         style=me.Style(
             padding=me.Padding.all(BOX_PADDING),
@@ -237,8 +235,8 @@ def input_field(
     id: str,
     element: FormElement,
     width: str | int = '100%',
-):
-    """Renders an individual form input field"""
+) -> None:
+    """Renders an individual form input field."""
     state = me.state(State)
     form = FormState(**json.loads(state.forms[id]))
     key = (
@@ -272,8 +270,8 @@ def input_field(
 
 
 @me.content_component
-def form_group(flex_direction: Literal['row', 'column'] = 'row'):
-    """Groups input fields together visually"""
+def form_group(flex_direction: Literal['row', 'column'] = 'row') -> None:
+    """Groups input fields together visually."""
     with me.box(
         style=me.Style(
             display='flex',
@@ -285,7 +283,7 @@ def form_group(flex_direction: Literal['row', 'column'] = 'row'):
         me.slot()
 
 
-def on_change(e: me.RadioChangeEvent):
+def on_change(e: me.RadioChangeEvent) -> None:
     state = me.state(State)
     key_parts = e.key.split('_')
     id = key_parts[0]
@@ -295,7 +293,7 @@ def on_change(e: me.RadioChangeEvent):
     state.forms[id] = form_state_to_string(form)
 
 
-def on_blur(e: me.InputBlurEvent):
+def on_blur(e: me.InputBlurEvent) -> None:
     state = me.state(State)
     key_parts = e.key.split('_')
     id = key_parts[0]
@@ -305,7 +303,7 @@ def on_blur(e: me.InputBlurEvent):
     state.forms[id] = form_state_to_string(form)
 
 
-async def cancel_form(e: me.ClickEvent):
+async def cancel_form(e: me.ClickEvent) -> None:
     message_id = str(uuid.uuid4())
     app_state = me.state(AppState)
     key_parts = e.key.split('_')
@@ -320,12 +318,12 @@ async def cancel_form(e: me.ClickEvent):
         role=Role.user,
         parts=[Part(root=TextPart(text='rejected form entry'))],
     )
-    response = await SendMessage(request)
+    await SendMessage(request)
 
 
 async def send_response(
     id: str, task_id: str, state: State, app_state: AppState
-):
+) -> None:
     message_id = str(uuid.uuid4())
     app_state.background_tasks[message_id] = ''
     app_state.form_responses[message_id] = id
@@ -341,7 +339,7 @@ async def send_response(
     await SendMessage(request)
 
 
-async def submit_form(e: me.ClickEvent):
+async def submit_form(e: me.ClickEvent) -> None:
     try:
         state = me.state(State)
         key_parts = e.key.split('_')

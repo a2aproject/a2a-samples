@@ -10,25 +10,25 @@ from state.host_agent_service import (
 )
 from state.state import AppState, StateMessage
 
-from .chat_bubble import chat_bubble
-from .form_render import form_sent, is_form, render_form
+from components.chat_bubble import chat_bubble
+from components.form_render import form_sent, is_form, render_form
 
 
 @me.stateclass
 class PageState:
-    """Local Page State"""
+    """Local Page State."""
 
     conversation_id: str = ''
     message_content: str = ''
 
 
-def on_blur(e: me.InputBlurEvent):
-    """Input handler"""
+def on_blur(e: me.InputBlurEvent) -> None:
+    """Input handler."""
     state = me.state(PageState)
     state.message_content = e.value
 
 
-async def send_message(message: str, message_id: str = ''):
+async def send_message(message: str, message_id: str = '') -> None:
     state = me.state(PageState)
     app_state = me.state(AppState)
     c = next(
@@ -65,7 +65,7 @@ async def send_message(message: str, message_id: str = ''):
 
 
 async def send_message_enter(e: me.InputEnterEvent):  # pylint: disable=unused-argument
-    """Send message handler"""
+    """Send message handler."""
     yield
     state = me.state(PageState)
     state.message_content = e.value
@@ -78,7 +78,7 @@ async def send_message_enter(e: me.InputEnterEvent):  # pylint: disable=unused-a
 
 
 async def send_message_button(e: me.ClickEvent):  # pylint: disable=unused-argument
-    """Send message button handler"""
+    """Send message button handler."""
     yield
     state = me.state(PageState)
     app_state = me.state(AppState)
@@ -89,8 +89,8 @@ async def send_message_button(e: me.ClickEvent):  # pylint: disable=unused-argum
 
 
 @me.component
-def conversation():
-    """Conversation component"""
+def conversation() -> None:
+    """Conversation component."""
     page_state = me.state(PageState)
     app_state = me.state(AppState)
     if 'conversation_id' in me.query_params:

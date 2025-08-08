@@ -35,7 +35,7 @@ Try these messages in the demo UI:
 - **"Show me a chart"** - Displays a sample visualization
 - **"Show me a dashboard"** - Shows an interactive dashboard
 - **"Show me a form"** - Embeds a web form
-- **"Embed https://example.com"** - Embeds any web URL
+- **"Embed <https://example.com>"** - Embeds any web URL
 
 ## Implementation Details
 
@@ -72,7 +72,7 @@ The demo UI detects iframe content by:
 
 ## Architecture
 
-```
+```text
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   User Request  │    │  Iframe Demo     │    │   Demo UI       │
 │   "Show chart"  │───▶│     Agent        │───▶│   Renders       │

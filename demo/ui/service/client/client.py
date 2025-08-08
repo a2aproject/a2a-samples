@@ -30,7 +30,7 @@ from service.types import (
 
 
 class ConversationClient:
-    def __init__(self, base_url):
+    def __init__(self, base_url) -> None:
         self.base_url = base_url.rstrip('/')
 
     async def send_message(

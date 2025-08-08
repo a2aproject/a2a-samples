@@ -8,19 +8,19 @@ from state.host_agent_service import UpdateApiKey
 from state.state import AppState, SettingsState
 
 
-def on_selection_change_output_types(e: me.SelectSelectionChangeEvent):
+def on_selection_change_output_types(e: me.SelectSelectionChangeEvent) -> None:
     s = me.state(SettingsState)
     s.output_mime_types = e.values
 
 
-def on_api_key_change(e: me.InputBlurEvent):
+def on_api_key_change(e: me.InputBlurEvent) -> None:
     s = me.state(AppState)
     s.api_key = e.value
 
 
 @me.stateclass
 class UpdateStatus:
-    """Status for API key update"""
+    """Status for API key update."""
 
     show_success: bool = False
 
@@ -44,7 +44,7 @@ async def update_api_key(e: me.ClickEvent):
     yield  # Allow UI to update after operation completes
 
 
-def settings_page_content():
+def settings_page_content() -> None:
     """Settings Page Content."""
     settings_state = me.state(SettingsState)
     app_state = me.state(AppState)

@@ -5,17 +5,17 @@ import mesop as me
 from state.host_agent_service import UpdateApiKey
 from state.state import AppState
 
-from .dialog import dialog, dialog_actions
+from components.dialog import dialog, dialog_actions
 
 
-def on_api_key_change(e: me.InputBlurEvent):
-    """Save API key to app state when input changes"""
+def on_api_key_change(e: me.InputBlurEvent) -> None:
+    """Save API key to app state when input changes."""
     state = me.state(AppState)
     state.api_key = e.value
 
 
 async def save_api_key(e: me.ClickEvent):
-    """Save API key and close dialog"""
+    """Save API key and close dialog."""
     yield  # Yield to allow UI update
 
     state = me.state(AppState)
@@ -36,8 +36,8 @@ async def save_api_key(e: me.ClickEvent):
 
 
 @me.component
-def api_key_dialog():
-    """Dialog for API key input"""
+def api_key_dialog() -> None:
+    """Dialog for API key input."""
     state = me.state(AppState)
 
     with dialog(state.api_key_dialog_open):

@@ -1,6 +1,6 @@
 """A UI solution and host service to interact with the agent framework.
 run:
-  uv main.py
+  uv main.py.
 """
 
 import os
@@ -38,8 +38,8 @@ from state.state import AppState
 load_dotenv()
 
 
-def on_load(e: me.LoadEvent):  # pylint: disable=unused-argument
-    """On load event"""
+def on_load(e: me.LoadEvent) -> None:  # pylint: disable=unused-argument
+    """On load event."""
     state = me.state(AppState)
     me.set_theme_mode(state.theme_mode)
     if 'conversation_id' in me.query_params:
@@ -77,8 +77,8 @@ security_policy = me.SecurityPolicy(
     on_load=on_load,
     security_policy=security_policy,
 )
-def home_page():
-    """Main Page"""
+def home_page() -> None:
+    """Main Page."""
     state = me.state(AppState)
     # Show API key dialog if needed
     api_key_dialog()
@@ -92,8 +92,8 @@ def home_page():
     on_load=on_load,
     security_policy=security_policy,
 )
-def another_page():
-    """Another Page"""
+def another_page() -> None:
+    """Another Page."""
     api_key_dialog()
     agent_list_page(me.state(AppState))
 
@@ -104,7 +104,7 @@ def another_page():
     on_load=on_load,
     security_policy=security_policy,
 )
-def chat_page():
+def chat_page() -> None:
     """Conversation Page."""
     api_key_dialog()
     conversation_page(me.state(AppState))
@@ -116,7 +116,7 @@ def chat_page():
     on_load=on_load,
     security_policy=security_policy,
 )
-def event_page():
+def event_page() -> None:
     """Event List Page."""
     api_key_dialog()
     event_list_page(me.state(AppState))
@@ -128,7 +128,7 @@ def event_page():
     on_load=on_load,
     security_policy=security_policy,
 )
-def settings_page():
+def settings_page() -> None:
     """Settings Page."""
     api_key_dialog()
     settings_page_content()
@@ -140,7 +140,7 @@ def settings_page():
     on_load=on_load,
     security_policy=security_policy,
 )
-def task_page():
+def task_page() -> None:
     """Task List Page."""
     api_key_dialog()
     task_list_page(me.state(AppState))
@@ -151,11 +151,11 @@ class HTTPXClientWrapper:
 
     async_client: httpx.AsyncClient = None
 
-    def start(self):
+    def start(self) -> None:
         """Instantiate the client. Call from the FastAPI startup hook."""
         self.async_client = httpx.AsyncClient(timeout=30)
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Gracefully shutdown. Call from FastAPI shutdown hook."""
         await self.async_client.aclose()
         self.async_client = None
@@ -175,7 +175,7 @@ agent_server = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     httpx_client_wrapper.start()
-    agent_server = ConversationServer(app, httpx_client_wrapper())
+    ConversationServer(app, httpx_client_wrapper())
     app.openapi_schema = None
     app.mount(
         '/',

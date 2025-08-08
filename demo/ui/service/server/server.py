@@ -4,13 +4,15 @@ import os
 import threading
 import uuid
 
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import httpx
 
 from a2a.types import FilePart, FileWithUri, Message, Part
 from fastapi import FastAPI, Request, Response
 
+from service.server.adk_host_manager import ADKHostManager, get_message_id
+from service.server.in_memory_manager import InMemoryFakeAgentManager
 from service.types import (
     CreateConversationResponse,
     GetEventResponse,
@@ -24,13 +26,13 @@ from service.types import (
     SendMessageResponse,
 )
 
-from .adk_host_manager import ADKHostManager, get_message_id
-from .application_manager import ApplicationManager
-from .in_memory_manager import InMemoryFakeAgentManager
+
+if TYPE_CHECKING:
+    from service.server.application_manager import ApplicationManager
 
 
 class ConversationServer:
-    """ConversationServer is the backend to serve the agent interactions in the UI
+    """ConversationServer is the backend to serve the agent interactions in the UI.
 
     This defines the interface that is used by the Mesop system to interact with
     agents and provide details about the executions.
@@ -84,7 +86,7 @@ class ConversationServer:
         )
 
     # Update API key in manager
-    def update_api_key(self, api_key: str):
+    def update_api_key(self, api_key: str) -> None:
         if isinstance(self.manager, ADKHostManager):
             self.manager.update_api_key(api_key)
 
@@ -198,7 +200,7 @@ class ConversationServer:
         return Response(content=part.file.bytes, media_type=part.file.mime_type)
 
     async def _update_api_key(self, request: Request):
-        """Update the API key"""
+        """Update the API key."""
         try:
             data = await request.json()
             api_key = data.get('api_key', '')

@@ -4,7 +4,6 @@ Test client for the iframe demo agent to verify iframe functionality works.
 
 import asyncio
 import json
-from typing import Any, Dict
 
 import httpx
 from a2a.types import (

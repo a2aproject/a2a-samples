@@ -4,8 +4,8 @@ from components.task_card import task_card
 from state.state import AppState
 
 
-def task_list_page(app_state: AppState):
-    """Task List Page"""
+def task_list_page(app_state: AppState) -> None:
+    """Task List Page."""
     with page_scaffold():  # pylint: disable=not-context-manager
         with page_frame():
             with header('Task List', 'task'):

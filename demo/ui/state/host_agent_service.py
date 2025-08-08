@@ -23,7 +23,7 @@ from service.types import (
     SendMessageRequest,
 )
 
-from .state import (
+from state.state import (
     AppState,
     SessionTask,
     StateConversation,
@@ -80,7 +80,7 @@ async def ListRemoteAgents():
         print('Failed to read agents', e)
 
 
-async def AddRemoteAgent(path: str):
+async def AddRemoteAgent(path: str) -> None:
     client = ConversationClient(server_url)
     try:
         await client.register_agent(RegisterAgentRequest(params=path))
@@ -132,7 +132,7 @@ async def ListMessages(conversation_id: str) -> list[Message]:
     return []
 
 
-async def UpdateAppState(state: AppState, conversation_id: str):
+async def UpdateAppState(state: AppState, conversation_id: str) -> None:
     """Update the app state."""
     try:
         if conversation_id:
@@ -165,8 +165,8 @@ async def UpdateAppState(state: AppState, conversation_id: str):
         traceback.print_exc(file=sys.stdout)
 
 
-async def UpdateApiKey(api_key: str):
-    """Update the API key"""
+async def UpdateApiKey(api_key: str) -> bool | None:
+    """Update the API key."""
     import httpx
 
     try:
@@ -233,7 +233,7 @@ def convert_task_to_state(task: Task) -> StateTask:
     message = task.history[0]
     last_message = task.history[-1]
     if last_message != message:
-        output = [extract_content(last_message.parts)] + output
+        output = [extract_content(last_message.parts), *output]
     return StateTask(
         task_id=task.id,
         context_id=task.context_id,
@@ -276,17 +276,17 @@ def extract_content(
                     and p.media_type == 'application/iframe'
                 ):
                     # Handle iframe data part
-                    jsonData = json.dumps(p.data)
-                    parts.append((jsonData, 'application/iframe'))
+                    json_data = json.dumps(p.data)
+                    parts.append((json_data, 'application/iframe'))
                 elif 'src' in p.data and isinstance(p.data.get('src'), str):
                     # Detect iframe by presence of 'src' field
-                    jsonData = json.dumps(p.data)
-                    parts.append((jsonData, 'iframe'))
+                    json_data = json.dumps(p.data)
+                    parts.append((json_data, 'iframe'))
                 elif 'type' in p.data and p.data['type'] == 'form':
                     parts.append((p.data, 'form'))
                 else:
-                    jsonData = json.dumps(p.data)
-                    parts.append((jsonData, 'application/json'))
+                    json_data = json.dumps(p.data)
+                    parts.append((json_data, 'application/json'))
             except Exception as e:
                 print('Failed to dump data', e)
                 parts.append(('<data>', 'text/plain'))

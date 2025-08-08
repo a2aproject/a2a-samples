@@ -18,8 +18,8 @@ def flatten_content(content: list[tuple[str, str]]) -> str:
 
 
 @me.component
-def event_list():
-    """Events list component"""
+def event_list() -> None:
+    """Events list component."""
     df_data = {
         'Conversation ID': [],
         'Actor': [],

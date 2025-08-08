@@ -1,9 +1,8 @@
 """Iframe Demo Agent implementation."""
 
-import json
-from typing import Any, List
+from typing import List
 
-from a2a.types import DataPart, Message, Part, Role, TextPart
+from a2a.types import DataPart, Part, TextPart
 
 
 class IframeDemoAgent:

@@ -13,10 +13,10 @@ def message_string(content: ContentPart) -> str:
 
 
 @me.component
-def task_card(tasks: list[SessionTask]):
-    """Task card component"""
+def task_card(tasks: list[SessionTask]) -> None:
+    """Task card component."""
     columns = ['Conversation ID', 'Task ID', 'Description', 'Status', 'Output']
-    df_data: dict[str, list[str]] = dict([(c, []) for c in columns])
+    df_data: dict[str, list[str]] = {c: [] for c in columns}
     for task in tasks:
         df_data['Conversation ID'].append(task.context_id)
         df_data['Task ID'].append(task.task.task_id or '')
@@ -35,7 +35,7 @@ def task_card(tasks: list[SessionTask]):
         me.table(
             df,
             header=me.TableHeader(sticky=True),
-            columns=dict([(c, me.TableColumn(sticky=True)) for c in columns]),
+            columns={c: me.TableColumn(sticky=True) for c in columns},
         )
 
 

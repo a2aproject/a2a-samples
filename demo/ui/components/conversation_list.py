@@ -6,8 +6,8 @@ from state.state import AppState, StateConversation
 
 
 @me.component
-def conversation_list(conversations: list[StateConversation]):
-    """Conversation list component"""
+def conversation_list(conversations: list[StateConversation]) -> None:
+    """Conversation list component."""
     df_data: dict[str, list[str | int]] = {
         'ID': [],
         'Name': [],
@@ -56,7 +56,7 @@ def conversation_list(conversations: list[StateConversation]):
 
 
 async def add_conversation(e: me.ClickEvent):  # pylint: disable=unused-argument
-    """Add conversation button handler"""
+    """Add conversation button handler."""
     response = await CreateConversation()
     me.state(AppState).messages = []
     me.navigate(

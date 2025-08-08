@@ -8,7 +8,7 @@ from state.agent_state import AgentState
 @me.component
 def agents_list(
     agents: list[AgentCard],
-):
+) -> None:
     """Agents list component."""
     df_data: dict[str, list[str | bool | None]] = {
         'Address': [],
@@ -74,7 +74,7 @@ def agents_list(
             me.icon(icon='upload')
 
 
-def add_agent(e: me.ClickEvent):  # pylint: disable=unused-argument
+def add_agent(e: me.ClickEvent) -> None:  # pylint: disable=unused-argument
     """Import agent button handler."""
     state = me.state(AgentState)
     state.agent_dialog_open = True

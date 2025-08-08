@@ -11,12 +11,12 @@ from styles.styles import (
     SIDENAV_MIN_WIDTH,
 )
 
-from .async_poller import AsyncAction, async_poller
-from .side_nav import sidenav
+from components.async_poller import AsyncAction, async_poller
+from components.side_nav import sidenav
 
 
 async def refresh_app_state(e: mel.WebEvent):  # pylint: disable=unused-argument
-    """Refresh app state event handler"""
+    """Refresh app state event handler."""
     yield
     app_state = me.state(AppState)
     await UpdateAppState(app_state, app_state.current_conversation_id)
@@ -24,8 +24,8 @@ async def refresh_app_state(e: mel.WebEvent):  # pylint: disable=unused-argument
 
 
 @me.content_component
-def page_scaffold():
-    """Page scaffold component"""
+def page_scaffold() -> None:
+    """Page scaffold component."""
     app_state = me.state(AppState)
     action = (
         AsyncAction(
@@ -49,21 +49,20 @@ def page_scaffold():
                 else SIDENAV_MIN_WIDTH,
             ),
         ),
+    ), me.box(
+        style=me.Style(
+            background=me.theme_var('background'),
+            height='100%',
+            overflow_y='scroll',
+            margin=me.Margin(bottom=20),
+        )
     ):
-        with me.box(
-            style=me.Style(
-                background=me.theme_var('background'),
-                height='100%',
-                overflow_y='scroll',
-                margin=me.Margin(bottom=20),
-            )
-        ):
-            me.slot()
+        me.slot()
 
 
 @me.content_component
-def page_frame():
-    """Page Frame"""
+def page_frame() -> None:
+    """Page Frame."""
     with me.box(style=MAIN_COLUMN_STYLE):
         with me.box(style=PAGE_BACKGROUND_STYLE):
             with me.box(style=PAGE_BACKGROUND_PADDING_STYLE):

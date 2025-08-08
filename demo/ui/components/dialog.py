@@ -2,7 +2,7 @@ import mesop as me
 
 
 @me.content_component
-def dialog(is_open: bool):
+def dialog(is_open: bool) -> None:
     with me.box(
         style=me.Style(
             background='rgba(0,0,0,0.4)',
@@ -39,7 +39,7 @@ def dialog(is_open: bool):
 
 
 @me.content_component
-def dialog_actions():
+def dialog_actions() -> None:
     with me.box(
         style=me.Style(
             display='flex', justify_content='end', margin=me.Margin(top=20)

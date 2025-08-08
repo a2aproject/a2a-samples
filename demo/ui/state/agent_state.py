@@ -3,7 +3,7 @@ import mesop as me
 
 @me.stateclass
 class AgentState:
-    """Agents List State"""
+    """Agents List State."""
 
     agent_dialog_open: bool = False
     agent_address: str = ''

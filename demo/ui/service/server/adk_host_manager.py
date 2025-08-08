@@ -42,7 +42,7 @@ from service.types import Conversation, Event
 
 
 class ADKHostManager(ApplicationManager):
-    """An implementation of memory based management with fake agent actions
+    """An implementation of memory based management with fake agent actions.
 
     This implements the interface of the ApplicationManager to plug into
     the AgentServer. This acts as the service contract that the Mesop app
@@ -93,7 +93,7 @@ class ADKHostManager(ApplicationManager):
             str, str
         ] = {}  # dict[str, str]: previous message to next message
 
-    def _initialize_host(self):
+    def _initialize_host(self) -> None:
         agent = self._host_agent.create_agent()
         self._host_runner = Runner(
             app_name=self.app_name,
@@ -112,8 +112,8 @@ class ADKHostManager(ApplicationManager):
         self._conversations.append(c)
         return c
 
-    def update_api_key(self, api_key: str):
-        """Update the API key and reinitialize the host if needed"""
+    def update_api_key(self, api_key: str) -> None:
+        """Update the API key and reinitialize the host if needed."""
         if api_key and api_key != self.api_key:
             self.api_key = api_key
 
@@ -143,7 +143,7 @@ class ADKHostManager(ApplicationManager):
                     message.task_id = task_id
         return message
 
-    async def process_message(self, message: Message):
+    async def process_message(self, message: Message) -> None:
         message_id = message.message_id
         if message_id:
             self._pending_message_ids.append(message_id)
@@ -220,10 +220,10 @@ class ADKHostManager(ApplicationManager):
             conversation.messages.append(response)
         self._pending_message_ids.remove(message_id)
 
-    def add_task(self, task: Task):
+    def add_task(self, task: Task) -> None:
         self._tasks.append(task)
 
-    def update_task(self, task: Task):
+    def update_task(self, task: Task) -> None:
         for i, t in enumerate(self._tasks):
             if t.id == task.id:
                 self._tasks[i] = task
@@ -252,7 +252,7 @@ class ADKHostManager(ApplicationManager):
         self.update_task(task)
         return task
 
-    def emit_event(self, task: TaskCallbackArg, agent_card: AgentCard):
+    def emit_event(self, task: TaskCallbackArg, agent_card: AgentCard) -> None:
         content = None
         context_id = task.context_id
         if isinstance(task, TaskStatusUpdateEvent):
@@ -305,11 +305,11 @@ class ADKHostManager(ApplicationManager):
                 )
             )
 
-    def attach_message_to_task(self, message: Message | None, task_id: str):
+    def attach_message_to_task(self, message: Message | None, task_id: str) -> None:
         if message:
             self._task_map[message.message_id] = task_id
 
-    def insert_message_history(self, task: Task, message: Message | None):
+    def insert_message_history(self, task: Task, message: Message | None) -> None:
         if not message:
             return
         if task.history is None:
@@ -361,7 +361,7 @@ class ADKHostManager(ApplicationManager):
 
     def process_artifact_event(
         self, current_task: Task, task_update_event: TaskArtifactUpdateEvent
-    ):
+    ) -> None:
         artifact = task_update_event.artifact
         if not task_update_event.append:
             # received the first chunk or entire payload for an artifact
@@ -393,7 +393,7 @@ class ADKHostManager(ApplicationManager):
                     current_task.artifacts = [current_temp_artifact]
                 del self._artifact_chunks[artifact.artifact_id][-1]
 
-    def add_event(self, event: Event):
+    def add_event(self, event: Event) -> None:
         self._events[event.id] = event
 
     def get_conversation(
@@ -436,7 +436,7 @@ class ADKHostManager(ApplicationManager):
                 rval.append((message_id, ''))
         return rval
 
-    def register_agent(self, url):
+    def register_agent(self, url) -> None:
         agent_data = get_agent_card(url)
         if not agent_data.url:
             agent_data.url = url
@@ -603,7 +603,7 @@ class ADKHostManager(ApplicationManager):
                     else:
                         parts.append(Part(root=DataPart(data=p.data)))
                 else:
-                    content = Message(
+                    Message(
                         parts=[Part(root=TextPart(text='Unknown content'))],
                         role=Role.agent,
                         message_id=str(uuid.uuid4()),
@@ -621,11 +621,8 @@ class ADKHostManager(ApplicationManager):
         self, message: Message, loop: asyncio.AbstractEventLoop
     ):
         """Safely run process_message from a thread using the given event loop."""
-        future = asyncio.run_coroutine_threadsafe(
+        return asyncio.run_coroutine_threadsafe(
             self.process_message(message), loop
-        )
-        return (
-            future  # You can call future.result() to get the result if needed
         )
 
 
