@@ -4,7 +4,7 @@ This demo application showcases agents talking to other agents over A2A.
 
 ![image](./a2a_demo_arch.png)
 
-- The frontend is a [mesop](https://github.com/mesop-dev/mesop) web application that renders conversations as content between the end user and the "Host Agent". This app can render text content, thought bubbles, web forms (requests for input from agents), and images. More content types coming soon
+- The frontend is a [mesop](https://github.com/mesop-dev/mesop) web application that renders conversations as content between the end user and the "Host Agent". This app can render text content, thought bubbles, web forms (requests for input from agents), images, and **embedded UI components (iframes)** for displaying charts, dashboards, and other web content
 
 - The [Host Agent](/samples/python/hosts/multiagent/host_agent.py) is a Google ADK agent which orchestrates user requests to Remote Agents.
 
@@ -97,6 +97,21 @@ Click on the task list to see all the A2A task updates from the remote agents
    You can ask it to _"reimburse lunch for 20 EUR but needs to be converted to USD ahead of time."_
 
    Answer it's questions in a normal... If you need help converting currency, try adding the LangGraph sample agent too.
+
+5. **Try the Iframe Demo Agent** (demonstrates embedded UI components):
+
+   ```bash
+   cd ../../samples/python/agents/iframe_demo/
+   cp ../../../../demo/ui/.env ./
+   uv run .
+   ```
+
+   Add this agent's address in the Remote Agents tab: `localhost:10002`
+
+   Then ask questions like:
+   - "Show me a chart"
+   - "Show me a dashboard" 
+   - "Show me a form"
 
    Review the events to see what happened.
 

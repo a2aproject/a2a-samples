@@ -58,10 +58,19 @@ def on_load(e: me.LoadEvent):  # pylint: disable=unused-argument
         state.api_key_dialog_open = True
 
 
-# Policy to allow the lit custom element to load
+# Policy to allow the lit custom element to load and iframe embedded content
 security_policy = me.SecurityPolicy(
     allowed_script_srcs=[
         'https://cdn.jsdelivr.net',
+        # Allow common iframe sources for embedded content
+        'https://public.tableau.com',
+        'https://plotly.com',
+        'https://codepen.io', 
+        'https://forms.gle',
+        'https://docs.google.com',
+        'https://observablehq.com',
+        'https://embed.figma.com',
+        'https://github.com',
     ]
 )
 

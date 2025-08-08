@@ -270,10 +270,19 @@ def extract_content(
                 parts.append((p.file.uri, p.file.mime_type or ''))
         elif p.kind == 'data':
             try:
-                jsonData = json.dumps(p.data)
-                if 'type' in p.data and p.data['type'] == 'form':
+                # Check for iframe embedded UI components
+                if hasattr(p, 'media_type') and p.media_type == 'application/iframe':
+                    # Handle iframe data part
+                    jsonData = json.dumps(p.data)
+                    parts.append((jsonData, 'application/iframe'))
+                elif 'src' in p.data and isinstance(p.data.get('src'), str):
+                    # Detect iframe by presence of 'src' field
+                    jsonData = json.dumps(p.data)
+                    parts.append((jsonData, 'iframe'))
+                elif 'type' in p.data and p.data['type'] == 'form':
                     parts.append((p.data, 'form'))
                 else:
+                    jsonData = json.dumps(p.data)
                     parts.append((jsonData, 'application/json'))
             except Exception as e:
                 print('Failed to dump data', e)

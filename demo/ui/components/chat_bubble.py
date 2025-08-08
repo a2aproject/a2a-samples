@@ -1,3 +1,4 @@
+import json
 import mesop as me
 
 from state.state import AppState, StateMessage
@@ -56,6 +57,8 @@ def chat_box(
                         object_fit='contain',
                     ),
                 )
+            elif media_type == 'application/iframe' or media_type == 'iframe':
+                render_iframe_component(content, role)
             else:
                 me.markdown(
                     content,
@@ -116,3 +119,73 @@ def chat_box(
                         ),
                     )
                     me.progress_bar(color='accent')
+
+
+def render_iframe_component(content: str, role: str):
+    """Renders an iframe embedded UI component"""
+    try:
+        # Parse iframe configuration from content
+        iframe_data = json.loads(content) if isinstance(content, str) else content
+    except (json.JSONDecodeError, TypeError):
+        # Fallback to treating content as a simple URL
+        iframe_data = {'src': content}
+
+    # Default iframe configuration
+    src = iframe_data.get('src', '')
+    width = iframe_data.get('width', '100%')
+    height = iframe_data.get('height', '400px')
+    title = iframe_data.get('title', 'Embedded Content')
+    
+    # Security attributes
+    sandbox = iframe_data.get('sandbox', 'allow-scripts allow-same-origin allow-forms')
+    allow = iframe_data.get('allow', 'accelerometer; autoplay; camera; encrypted-media; gyroscope; picture-in-picture')
+
+    if not src:
+        me.text('Error: No source URL provided for iframe', style=me.Style(color='red'))
+        return
+
+    # Create iframe container with styling
+    with me.box(
+        style=me.Style(
+            font_family='Google Sans',
+            box_shadow=(
+                '0 1px 2px 0 rgba(60, 64, 67, 0.3), '
+                '0 1px 3px 1px rgba(60, 64, 67, 0.15)'
+            ),
+            padding=me.Padding(top=10, left=15, right=15, bottom=10),
+            margin=me.Margin(top=5, left=0, right=0, bottom=5),
+            background=(
+                me.theme_var('primary-container')
+                if role == 'user'
+                else me.theme_var('secondary-container')
+            ),
+            border_radius=15,
+        )
+    ):
+        # Add a header if title is provided
+        if title and title != 'Embedded Content':
+            me.text(
+                title,
+                style=me.Style(
+                    font_weight='500',
+                    margin=me.Margin(bottom=10),
+                    font_size='16px',
+                ),
+            )
+        
+        # Render the iframe using Mesop's HTML component
+        iframe_html = f'''
+        <iframe
+            src="{src}"
+            width="{width}"
+            height="{height}"
+            title="{title}"
+            sandbox="{sandbox}"
+            allow="{allow}"
+            style="border: 1px solid #ddd; border-radius: 8px; max-width: 100%;"
+            loading="lazy">
+            <p>Your browser does not support iframes. <a href="{src}" target="_blank">View content here</a></p>
+        </iframe>
+        '''
+        
+        me.html(iframe_html)
