@@ -1,4 +1,5 @@
 import json
+
 import mesop as me
 
 from state.state import AppState, StateMessage
@@ -125,7 +126,9 @@ def render_iframe_component(content: str, role: str):
     """Renders an iframe embedded UI component"""
     try:
         # Parse iframe configuration from content
-        iframe_data = json.loads(content) if isinstance(content, str) else content
+        iframe_data = (
+            json.loads(content) if isinstance(content, str) else content
+        )
     except (json.JSONDecodeError, TypeError):
         # Fallback to treating content as a simple URL
         iframe_data = {'src': content}
@@ -135,13 +138,21 @@ def render_iframe_component(content: str, role: str):
     width = iframe_data.get('width', '100%')
     height = iframe_data.get('height', '400px')
     title = iframe_data.get('title', 'Embedded Content')
-    
+
     # Security attributes
-    sandbox = iframe_data.get('sandbox', 'allow-scripts allow-same-origin allow-forms')
-    allow = iframe_data.get('allow', 'accelerometer; autoplay; camera; encrypted-media; gyroscope; picture-in-picture')
+    sandbox = iframe_data.get(
+        'sandbox', 'allow-scripts allow-same-origin allow-forms'
+    )
+    allow = iframe_data.get(
+        'allow',
+        'accelerometer; autoplay; camera; encrypted-media; gyroscope; picture-in-picture',
+    )
 
     if not src:
-        me.text('Error: No source URL provided for iframe', style=me.Style(color='red'))
+        me.text(
+            'Error: No source URL provided for iframe',
+            style=me.Style(color='red'),
+        )
         return
 
     # Create iframe container with styling
@@ -172,7 +183,7 @@ def render_iframe_component(content: str, role: str):
                     font_size='16px',
                 ),
             )
-        
+
         # Render the iframe using Mesop's HTML component
         iframe_html = f'''
         <iframe
@@ -187,5 +198,5 @@ def render_iframe_component(content: str, role: str):
             <p>Your browser does not support iframes. <a href="{src}" target="_blank">View content here</a></p>
         </iframe>
         '''
-        
+
         me.html(iframe_html)

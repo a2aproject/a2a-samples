@@ -271,7 +271,10 @@ def extract_content(
         elif p.kind == 'data':
             try:
                 # Check for iframe embedded UI components
-                if hasattr(p, 'media_type') and p.media_type == 'application/iframe':
+                if (
+                    hasattr(p, 'media_type')
+                    and p.media_type == 'application/iframe'
+                ):
                     # Handle iframe data part
                     jsonData = json.dumps(p.data)
                     parts.append((jsonData, 'application/iframe'))
