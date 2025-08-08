@@ -508,7 +508,7 @@ class ADKHostManager(ApplicationManager):
                 try:
                     data = json.loads(part.text)
                     parts.append(Part(root=DataPart(data=data)))
-                except:
+                except (json.JSONDecodeError, ValueError):
                     parts.append(Part(root=TextPart(text=part.text)))
             elif part.inline_data:
                 parts.append(

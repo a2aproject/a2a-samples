@@ -17,6 +17,7 @@ from a2a.types import (
 from utils.agent_card import get_agent_card
 
 from service.server import test_image
+from service.server.adk_host_manager import task_still_open
 from service.server.application_manager import ApplicationManager
 from service.types import Conversation, Event
 
