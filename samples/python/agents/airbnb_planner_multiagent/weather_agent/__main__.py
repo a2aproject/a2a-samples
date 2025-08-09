@@ -12,24 +12,25 @@ from a2a.types import (
     AgentCard,
     AgentSkill,
 )
-from agents.airbnb_planner_multiagent.weather_agent.weather_agent import (
-    create_weather_agent,
-)
-from agents.airbnb_planner_multiagent.weather_agent.weather_executor import (
-    WeatherExecutor,
-)
 from dotenv import load_dotenv
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
+from weather_executor import (
+    WeatherExecutor,
+)
+
+from weather_agent import (
+    create_weather_agent,
+)
 
 
 load_dotenv()
 
 logging.basicConfig()
 
-DEFAULT_HOST = 'localhost'
+DEFAULT_HOST = '0.0.0.0'
 DEFAULT_PORT = 10001
 
 
@@ -52,10 +53,12 @@ def main(host: str = DEFAULT_HOST, port: int = DEFAULT_PORT):
         examples=['weather in LA, CA'],
     )
 
+    app_url = os.environ.get('APP_URL', f'http://{host}:{port}')
+
     agent_card = AgentCard(
         name='Weather Agent',
         description='Helps with weather',
-        url=f'http://{host}:{port}/',
+        url=app_url,
         version='1.0.0',
         default_input_modes=['text'],
         default_output_modes=['text'],

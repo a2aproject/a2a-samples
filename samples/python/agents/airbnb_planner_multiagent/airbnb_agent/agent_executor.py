@@ -1,4 +1,3 @@
-# ruff: noqa: E501
 # pylint: disable=logging-fstring-interpolation
 import logging
 
@@ -13,7 +12,7 @@ from a2a.types import (
     TaskStatusUpdateEvent,
 )
 from a2a.utils import new_agent_text_message, new_task, new_text_artifact
-from agents.airbnb_planner_multiagent.airbnb_agent.airbnb_agent import (
+from airbnb_agent import (
     AirbnbAgent,
 )
 

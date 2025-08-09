@@ -1,4 +1,3 @@
-# ruff: noqa: E501
 # pylint: disable=logging-fstring-interpolation
 import asyncio
 import json
@@ -19,15 +18,15 @@ from a2a.types import (
     SendMessageSuccessResponse,
     Task,
 )
-from agents.airbnb_planner_multiagent.host_agent.remote_agent_connection import (
-    RemoteAgentConnections,
-    TaskUpdateCallback,
-)
 from dotenv import load_dotenv
 from google.adk import Agent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.tools.tool_context import ToolContext
+from remote_agent_connection import (
+    RemoteAgentConnections,
+    TaskUpdateCallback,
+)
 
 
 load_dotenv()
