@@ -23,8 +23,8 @@ class ConsoleReader:
                     continue
 
                 return prompt
-        except (EOFError, KeyboardInterrupt) as e:
-            print(e)
+        except (EOFError, KeyboardInterrupt):
+            print()
             exit()
 
     def write(self, role: str, data: str) -> None:
