@@ -1,13 +1,13 @@
-# BeeAI Framework chat Agent
+# BeeAI Framework A2A Chat Agent
 
-This sample uses the [BeeAI Framework](https://docs.beeai.dev/introduction/welcome) to create a simple chat agent which communicates using A2A.
+This sample demonstrates how to create a chat agent using the [BeeAI Framework](https://docs.beeai.dev/introduction/welcome) with Agent2Agent (A2A) communication protocol. This agent has access to web search and weather tools.
 
 ## Prerequisites
 
 - Python 3.10 or higher
-- [Ollama](https://ollama.com/) installed and running or access to an LLM and API Key
+- [Ollama](https://ollama.com/) installed and running
 
-## Running the Sample
+## Run the Sample
 
 1. Navigate to the samples directory:
 
@@ -36,8 +36,6 @@ This sample uses the [BeeAI Framework](https://docs.beeai.dev/introduction/welco
     ```
 
 5. Run the [BeeAI Chat client](../../hosts/beeai-chat/README.md)
-
-
 
 ## Run using Docker
 
