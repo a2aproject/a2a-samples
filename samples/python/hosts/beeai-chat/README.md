@@ -1,13 +1,13 @@
-# BeeAI Framework chat Client
+# BeeAI Framework A2A Chat Client
 
-This sample uses the [BeeAI Framework](https://docs.beeai.dev/introduction/welcome) to create a simple chat client which communicates using A2A.
+This sample demonstrates how to create a chat client using the [BeeAI Framework](https://docs.beeai.dev/introduction/welcome) that communicates with A2A agents. This provides a simple terminal-based interface to interact with your AI agents.
 
 ## Prerequisites
 
 - Python 3.10 or higher
 - [BeeAI Chat agent](../../agents/beeai-chat/README.md) running
 
-## Running the Sample
+## Run the Sample
 
 1. Navigate to the samples directory:
 
@@ -28,7 +28,6 @@ This sample uses the [BeeAI Framework](https://docs.beeai.dev/introduction/welco
     ```bash
     python __main__.py
     ```
-
 
 ## Run using Docker
 
