@@ -1,4 +1,4 @@
-# BeeAI Framework chat Agent
+# BeeAI Framework chat Client
 
 This sample uses the [BeeAI Framework](https://docs.beeai.dev/introduction/welcome) to create a simple chat client which communicates using A2A.
 
@@ -12,7 +12,7 @@ This sample uses the [BeeAI Framework](https://docs.beeai.dev/introduction/welco
 1. Navigate to the samples directory:
 
     ```bash
-    cd samples/python/hosts/beeai/chat
+    cd samples/python/hosts/beeai-chat
     ```
 
 2. Create venv and install Requirements
@@ -23,7 +23,7 @@ This sample uses the [BeeAI Framework](https://docs.beeai.dev/introduction/welco
     pip install .
     ```
 
-3. Run the A2A agent:
+3. Run the chat client:
 
     ```bash
     python __main__.py
@@ -34,5 +34,5 @@ This sample uses the [BeeAI Framework](https://docs.beeai.dev/introduction/welco
 
 ```sh
 docker build -t beeai_chat_client .
-docker run -it --network host beeai_agent    
+docker run -it --network host beeai_chat_client
 ```

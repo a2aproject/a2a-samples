@@ -29,9 +29,4 @@ class ConsoleReader:
 
     def write(self, role: str, data: str) -> None:
         print(role, data)
-
-    def prompt(self) -> str | None:
-        for prompt in self:
-            return prompt
-        exit()
-
+        

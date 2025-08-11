@@ -1,4 +1,5 @@
 import asyncio
+import os
 import sys
 import traceback
 
@@ -11,12 +12,12 @@ from console_reader import ConsoleReader
 async def main() -> None:
     reader = ConsoleReader()
 
-    agent = A2AAgent(url="http://127.0.0.1:9999", memory=UnconstrainedMemory())
+    agent = A2AAgent(url=os.environ.get("BEEAI_AGENT_URL", "http://127.0.0.1:9999"), memory=UnconstrainedMemory())
     for prompt in reader:
         # Run the agent and observe events
         response = await agent.run(prompt).on(
             "update",
-            lambda data, event: (reader.write("Agent 🤖 (debug) : ", data)),
+            lambda data, _: (reader.write("Agent 🤖 (debug) : ", data)),
         )
 
         reader.write("Agent 🤖 : ", response.result.text)

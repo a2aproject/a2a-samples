@@ -43,5 +43,5 @@ This sample uses the [BeeAI Framework](https://docs.beeai.dev/introduction/welco
 
 ```sh
 docker build -t beeai_chat_agent .
-docker run -p 9999:9999 -e OLLAMA_API_BASE="http://host.docker.internal:11434" beeai_chat_agent    
+docker run -p 9999:9999 -e OLLAMA_API_BASE="http://host.docker.internal:11434" beeai_chat_agent
 ```
