@@ -11,7 +11,7 @@ from fastmcp.utilities.logging import get_logger
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.sse import sse_client
 from mcp.client.stdio import stdio_client
-from mcp.types import CallToolRequest, ReadResourceResult
+from mcp.types import CallToolResult, ReadResourceResult
 
 
 logger = get_logger(__name__)
@@ -79,7 +79,7 @@ async def init_session(host, port, transport):
         )
 
 
-async def find_agent(session: ClientSession, query) -> CallToolRequest:
+async def find_agent(session: ClientSession, query) -> CallToolResult:
     """Calls the 'find_agent' tool on the connected MCP server.
 
     Args:
@@ -112,7 +112,7 @@ async def find_resource(session: ClientSession, resource) -> ReadResourceResult:
     return await session.read_resource(resource)
 
 
-async def search_flights(session: ClientSession) -> CallToolRequest:
+async def search_flights(session: ClientSession) -> CallToolResult:
     """Calls the 'search_flights' tool on the connected MCP server.
 
     Args:
@@ -122,6 +122,7 @@ async def search_flights(session: ClientSession) -> CallToolRequest:
     Returns:
         The result of the tool call.
     """
+    # TODO: Implementation pending
     logger.info("Calling 'search_flights' tool'")
     return await session.call_tool(
         name='search_flights',
@@ -134,7 +135,7 @@ async def search_flights(session: ClientSession) -> CallToolRequest:
     )
 
 
-async def search_hotels(session: ClientSession) -> CallToolRequest:
+async def search_hotels(session: ClientSession) -> CallToolResult:
     """Calls the 'search_hotels' tool on the connected MCP server.
 
     Args:
@@ -144,6 +145,7 @@ async def search_hotels(session: ClientSession) -> CallToolRequest:
     Returns:
         The result of the tool call.
     """
+    # TODO: Implementation pending
     logger.info("Calling 'search_hotels' tool'")
     return await session.call_tool(
         name='search_hotels',
@@ -155,19 +157,19 @@ async def search_hotels(session: ClientSession) -> CallToolRequest:
     )
 
 
-async def query_db(session: ClientSession) -> CallToolRequest:
+async def query_db(session: ClientSession) -> CallToolResult:
     """Calls the 'query' tool on the connected MCP server.
 
     Args:
         session: The active ClientSession.
-        query: The natural language query to send to the 'search_hotels' tool.
+        query: The natural language query to send to the 'query_db' tool.
 
     Returns:
         The result of the tool call.
     """
-    logger.info("Calling 'search_hotels' tool'")
+    logger.info("Calling 'query_db' tool'")
     return await session.call_tool(
-        name='query_db',
+        name='query_travel_data',
         arguments={
             'query': "SELECT id, name, city, hotel_type, room_type, price_per_night FROM hotels WHERE city='London'",
         },
@@ -186,6 +188,8 @@ async def main(host, port, transport, query, resource, tool):
         transport: Connection transport ('sse' or 'stdio').
         query: Optional query string for the 'find_agent' tool.
         resource: Optional resource URI to read.
+        tool: Optional tool name to execute. Valid options are:
+            'search_flights', 'search_hotels', or 'query_db'.
     """
     logger.info('Starting Client to connect to MCP')
     async with init_session(host, port, transport) as session:
@@ -220,6 +224,8 @@ async def main(host, port, transport, query, resource, tool):
 @click.option('--transport', default='stdio', help='MCP Transport')
 @click.option('--find_agent', help='Query to find an agent')
 @click.option('--resource', help='URI of the resource to locate')
+@click.option('--tool_name', type=click.Choice(['search_flights', 'search_hotels', 'query_db']),
+              help='Tool to execute: search_flights, search_hotels, or query_db')
 def cli(host, port, transport, find_agent, resource, tool_name):
     """A command-line client to interact with the Agent Cards MCP server."""
     asyncio.run(main(host, port, transport, find_agent, resource, tool_name))

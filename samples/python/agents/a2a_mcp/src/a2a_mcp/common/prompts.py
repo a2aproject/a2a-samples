@@ -168,7 +168,7 @@ RESPONSE:
     {
         "name": "[HOTEL_NAME]",
         "city": "[CITY]",
-        "hotel_type": "[ACCOMODATION_TYPE]",
+        "hotel_type": "[ACCOMMODATION_TYPE]",
         "room_type": "[ROOM_TYPE]",
         "price_per_night": "[PRICE_PER_NIGHT]",
         "check_in_time": "3:00 pm",
@@ -344,7 +344,7 @@ Your output should follow this example format. DO NOT add any thing else apart f
         'start_date': '2025-05-12',
         'end_date': '2025-05-20',
         'travel_class': 'economy',
-        'accomodation_type': 'Hotel',
+        'accommodation_type': 'Hotel',
         'room_type': 'Suite',
         'checkin_date': '2025-05-12',
         'checkout_date': '2025-05-20',
@@ -531,7 +531,7 @@ Handle edge cases: If context is malformed or question is unclear, set can_answe
 
 Example Process:
 
-Context: {'total_budget': '9000', 'origin': 'San Francisco', 'destination': 'London', 'type': 'business', 'start_date': '2025-06-12', 'end_date': '2025-06-18', 'travel_class': 'business', 'accomodation_type': 'Hotel', 'room_type': 'Suite', 'is_car_rental_required': 'Yes', 'type_of_car': 'Sedan', 'no_of_travellers': '1', 'checkin_date': '2025-06-12', 'checkout_date': '2025-06-18', 'car_rental_start_date': '2025-06-12', 'car_rental_end_date': '2025-06-18'}
+Context: {'total_budget': '9000', 'origin': 'San Francisco', 'destination': 'London', 'type': 'business', 'start_date': '2025-06-12', 'end_date': '2025-06-18', 'travel_class': 'business', 'accommodation_type': 'Hotel', 'room_type': 'Suite', 'is_car_rental_required': 'Yes', 'type_of_car': 'Sedan', 'no_of_travellers': '1', 'checkin_date': '2025-06-12', 'checkout_date': '2025-06-18', 'car_rental_start_date': '2025-06-12', 'car_rental_end_date': '2025-06-18'}
 
 History: {"contextId":"b5a4f803-80f3-4524-b93d-b009219796ac","history":[{"contextId":"b5a4f803-80f3-4524-b93d-b009219796ac","kind":"message","messageId":"f4ced6dd-a7fd-4a4e-8f4a-30a37e62e81b","parts":[{"kind":"text","text":"Plan my trip to London"}],"role":"user","taskId":"a53e8d32-8119-4864-aba7-4ea1db39437d"}]}}
 

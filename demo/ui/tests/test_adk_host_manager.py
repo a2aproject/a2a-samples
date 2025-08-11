@@ -1,6 +1,6 @@
 import unittest
 
-from common.types import DataPart, FilePart, TextPart
+from a2a.types import DataPart, FilePart, TextPart
 from google.genai import types
 from service.server.adk_host_manager import ADKHostManager
 
@@ -55,7 +55,7 @@ class ADKHostManagerTest(unittest.TestCase):
         self.assertIsInstance(message.parts[0], FilePart)
         self.assertEqual(message.parts[0].kind, 'file')
         self.assertEqual(message.parts[0].file.uri, 'gs://test-bucket/test.txt')
-        self.assertEqual(message.parts[0].file.mimeType, 'text/plain')
+        self.assertEqual(message.parts[0].file.mime_type, 'text/plain')
         self.assertEqual(message.role, 'user')
         self.assertEqual(
             message.metadata['conversation_id'], self.conversation_id

@@ -61,9 +61,9 @@ class OAuth2Middleware(BaseHTTPMiddleware):
         #     #
         #     # Note: This is written purely to support the sample and is for demonstration purposes only.
         #     for name, scopes in sec_req.items():
-        #         # sec_scheme = self.agent_card.securitySchemes[name]
+        #         # sec_scheme = self.agent_card.security_schemes[name]
 
-        #         # if not isinstance(sec_scheme, OAuth2SecurityScheme) or sec_scheme.flows.authorizationCode is None:
+        #         # if not isinstance(sec_scheme, OAuth2SecurityScheme) or sec_scheme.flows.authorization_code is None:
         #         #     raise NotImplementedError('Only OAuth2SecurityScheme -> ClientCredentialsOAuthFlow is supported.')
 
         #         self.a2a_auth = { 'required_scopes': scopes }

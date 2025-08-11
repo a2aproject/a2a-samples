@@ -3,6 +3,7 @@ import os
 import sys
 
 from collections.abc import AsyncGenerator
+from typing import Any
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
@@ -22,19 +23,19 @@ class TravelPlannerAgent:
             api_key = os.getenv(config['api_key'])
 
             self.model = ChatOpenAI(
-                model=config['model_name'],
-                base_url=config['base_url'],
-                api_key=api_key,
+                model=config['model_name'] or 'gpt-4o',
+                base_url=config['base_url'] or None,
+                api_key=api_key, # type: ignore
                 temperature=0.7,  # Control the generation randomness (0-2, higher values indicate greater randomness)
             )
         except FileNotFoundError:
             print('Error: The configuration file config.json cannot be found.')
-            exit()
+            sys.exit()
         except KeyError as e:
             print(f'The configuration file is missing required fields: {e}')
-            exit()
+            sys.exit()
 
-    async def stream(self, query: str) -> AsyncGenerator[str, None]:
+    async def stream(self, query: str) -> AsyncGenerator[dict[str, Any], None]:
         """Stream the response of the large model back to the client."""
         try:
             # Initialize the conversation history (system messages can be added)
@@ -69,7 +70,7 @@ class TravelPlannerAgent:
             messages.append(HumanMessage(content=query))
 
             # Invoke the model in streaming mode to generate a response.
-            for chunk in self.model.stream(messages):
+            async for chunk in self.model.astream(messages):
                 # Return the text content block.
                 if hasattr(chunk, 'content') and chunk.content:
                     yield {'content': chunk.content, 'done': False}

@@ -8,7 +8,12 @@ import grpc
 from a2a.grpc import a2a_pb2, a2a_pb2_grpc
 from a2a.server.request_handlers import DefaultRequestHandler, GrpcHandler
 from a2a.server.tasks import InMemoryTaskStore
-from a2a.types import AgentCapabilities, AgentCard, AgentSkill
+from a2a.types import (
+    AgentCapabilities,
+    AgentCard,
+    AgentSkill,
+    TransportProtocol,
+)
 from agent_executor import DiceAgentExecutor  # type: ignore[import-untyped]
 from dotenv import load_dotenv
 from grpc_reflection.v1alpha import reflection
@@ -22,7 +27,7 @@ logging.basicConfig()
 @click.command()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=11001)
-async def main(host: str, port: int):
+async def main(host: str, port: int) -> None:
     # Verify an API key is set.
     # Not required if using Vertex AI APIs.
     if os.getenv('GOOGLE_GENAI_USE_VERTEXAI') != 'TRUE' and not os.getenv(
@@ -53,12 +58,13 @@ async def main(host: str, port: int):
     agent_card = AgentCard(
         name='Dice Agent',
         description='An agent that can roll arbitrary dice and answer if numbers are prime',
-        url=f'http://{host}:{port}/',
+        url=f'[::]:{port}/',
         version='1.0.0',
-        defaultInputModes=['text'],
-        defaultOutputModes=['text'],
+        default_input_modes=['text'],
+        default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=True),
         skills=skills,
+        preferred_transport=TransportProtocol.grpc,
     )
 
     agent_executor = DiceAgentExecutor()

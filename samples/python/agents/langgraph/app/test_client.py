@@ -12,10 +12,10 @@ from a2a.types import (
     SendMessageRequest,
     SendStreamingMessageRequest,
 )
-
-
-PUBLIC_AGENT_CARD_PATH = '/.well-known/agent.json'
-EXTENDED_AGENT_CARD_PATH = '/agent/authenticatedExtendedCard'
+from a2a.utils.constants import (
+    AGENT_CARD_WELL_KNOWN_PATH,
+    EXTENDED_AGENT_CARD_PATH,
+)
 
 
 async def main() -> None:
@@ -41,7 +41,7 @@ async def main() -> None:
 
         try:
             logger.info(
-                f'Attempting to fetch public agent card from: {base_url}{PUBLIC_AGENT_CARD_PATH}'
+                f'Attempting to fetch public agent card from: {base_url}{AGENT_CARD_WELL_KNOWN_PATH}'
             )
             _public_card = (
                 await resolver.get_agent_card()
@@ -55,7 +55,7 @@ async def main() -> None:
                 '\nUsing PUBLIC agent card for client initialization (default).'
             )
 
-            if _public_card.supportsAuthenticatedExtendedCard:
+            if _public_card.supports_authenticated_extended_card:
                 try:
                     logger.info(
                         '\nPublic card supports authenticated extended card. '
@@ -92,7 +92,7 @@ async def main() -> None:
                     )
             elif (
                 _public_card
-            ):  # supportsAuthenticatedExtendedCard is False or None
+            ):  # supports_authenticated_extended_card is False or None
                 logger.info(
                     '\nPublic card does not indicate support for an extended card. Using public card.'
                 )
@@ -117,7 +117,7 @@ async def main() -> None:
                 'parts': [
                     {'kind': 'text', 'text': 'how much is 10 USD in INR?'}
                 ],
-                'messageId': uuid4().hex,
+                'message_id': uuid4().hex,
             },
         }
         request = SendMessageRequest(
@@ -138,7 +138,7 @@ async def main() -> None:
                         'text': 'How much is the exchange rate for 1 USD?',
                     }
                 ],
-                'messageId': uuid4().hex,
+                'message_id': uuid4().hex,
             },
         }
         request = SendMessageRequest(
@@ -150,15 +150,15 @@ async def main() -> None:
         print(response.model_dump(mode='json', exclude_none=True))
 
         task_id = response.root.result.id
-        contextId = response.root.result.contextId
+        context_id = response.root.result.context_id
 
         second_send_message_payload_multiturn: dict[str, Any] = {
             'message': {
                 'role': 'user',
                 'parts': [{'kind': 'text', 'text': 'CAD'}],
-                'messageId': uuid4().hex,
-                'taskId': task_id,
-                'contextId': contextId,
+                'message_id': uuid4().hex,
+                'task_id': task_id,
+                'context_id': context_id,
             },
         }
 
@@ -166,6 +166,7 @@ async def main() -> None:
             id=str(uuid4()),
             params=MessageSendParams(**second_send_message_payload_multiturn),
         )
+
         second_response = await client.send_message(second_request)
         print(second_response.model_dump(mode='json', exclude_none=True))
         # --8<-- [end:Multiturn]

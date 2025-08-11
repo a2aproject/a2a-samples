@@ -68,7 +68,10 @@ class CurrencyAgent:
         'If the user asks about anything other than currency conversion or exchange rates, '
         'politely state that you cannot help with that topic and can only assist with currency-related queries. '
         'Do not attempt to answer unrelated questions or use tools for other purposes.'
-        'Set response status to input_required if the user needs to provide more information.'
+    )
+
+    FORMAT_INSTRUCTION = (
+        'Set response status to input_required if the user needs to provide more information to complete the request.'
         'Set response status to error if there is an error while processing the request.'
         'Set response status to completed if the request is complete.'
     )
@@ -91,13 +94,8 @@ class CurrencyAgent:
             tools=self.tools,
             checkpointer=memory,
             prompt=self.SYSTEM_INSTRUCTION,
-            response_format=ResponseFormat,
+            response_format=(self.FORMAT_INSTRUCTION, ResponseFormat),
         )
-
-    def invoke(self, query, context_id) -> str:
-        config = {'configurable': {'thread_id': context_id}}
-        self.graph.invoke({'messages': [('user', query)]}, config)
-        return self.get_agent_response(config)
 
     async def stream(self, query, context_id) -> AsyncIterable[dict[str, Any]]:
         inputs = {'messages': [('user', query)]}

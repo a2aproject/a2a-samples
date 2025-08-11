@@ -1,4 +1,4 @@
-## CrewAI Agent with A2A Protocol
+# CrewAI Agent with A2A Protocol
 
 This sample demonstrates a simple image generation agent built with [CrewAI](https://www.crewai.com/open-source) and exposed through the A2A protocol.
 
@@ -52,7 +52,7 @@ sequenceDiagram
 3. Set up the Python environment:
 
    ```bash
-   uv python pin 3.12
+   uv python pin 3.13
    uv venv
    source .venv/bin/activate
    ```
@@ -73,14 +73,12 @@ sequenceDiagram
 
    ```bash
    # Connect to the agent (specify the agent URL with correct port and host)
-   cd samples/python/hosts/cli   
+   cd samples/python/hosts/cli
    uv run . --agent http://localhost:10001
    
    # If you changed the port when starting the agent, use that port instead
    # uv run . --agent http://localhost:YOUR_PORT
    ```
-
-   Or run the [demo app](/A2A/A2A/demo/README.md)
 
 ## Build Container Image
 
@@ -98,10 +96,10 @@ Agent can also be built using a container file.
     podman build -f agents/crewai/Containerfile . -t crewai-a2a-server
     ```
 
-> [!Tip]  
-> Podman is a drop-in replacement for `docker` which can also be used in these commands.
+   > [!Tip]  
+   > Podman is a drop-in replacement for `docker` which can also be used in these commands.
 
-3. Run you container
+3. Run your container
 
     ```bash
     podman run -p 10001:10001 -e GOOGLE_API_KEY=your_api_key_here crewai-a2a-server
@@ -110,8 +108,9 @@ Agent can also be built using a container file.
 4. Run A2A client (follow step 5 from the section above)
 
 > [!Important]
-> * **Access URL:** You must access the A2A client through the URL `0.0.0.0:10001`. Using `localhost` will not work.
-> * **Hostname Override:** If you're deploying to an environment where the hostname is defined differently outside the container, use the `HOST_OVERRIDE` environment variable to set the expected hostname on the Agent Card. This ensures proper communication with your client application.
+>
+> - **Access URL:** You must access the A2A client through the URL `0.0.0.0:10001`. Using `localhost` will not work.
+> - **Hostname Override:** If you're deploying to an environment where the hostname is defined differently outside the container, use the `HOST_OVERRIDE` environment variable to set the expected hostname on the Agent Card. This ensures proper communication with your client application.
 
 ## Features & Improvements
 
@@ -130,6 +129,6 @@ Agent can also be built using a container file.
 
 ## Learn More
 
-- [A2A Protocol Documentation](https://google.github.io/A2A/#/documentation)
+- [A2A Protocol Documentation](https://a2a-protocol.org)
 - [CrewAI Documentation](https://docs.crewai.com/introduction)
 - [Google Gemini API](https://ai.google.dev/gemini-api)

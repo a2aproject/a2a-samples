@@ -33,7 +33,7 @@ func (c *Client) SendTask(params models.TaskSendParams) (*models.JSONRPCResponse
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 		},
-		Method: "tasks/send",
+		Method: "message/send",
 		Params: params,
 	}
 
@@ -99,7 +99,7 @@ func (c *Client) SendTaskStreaming(params models.TaskSendParams, eventChan chan<
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 		},
-		Method: "tasks/send",
+		Method: "message/stream",
 		Params: params,
 	}
 

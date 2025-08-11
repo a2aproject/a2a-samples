@@ -20,7 +20,7 @@ from agent import ImageGenerationAgent
 class ImageGenerationAgentExecutor(AgentExecutor):
     """Reimbursement AgentExecutor Example."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.agent = ImageGenerationAgent()
 
     async def execute(
@@ -50,7 +50,7 @@ class ImageGenerationAgentExecutor(AgentExecutor):
                 FilePart(
                     file=FileWithBytes(
                         bytes=data.bytes,
-                        mimeType=data.mime_type,
+                        mime_type=data.mime_type,
                         name=data.id,
                     )
                 )
@@ -59,7 +59,7 @@ class ImageGenerationAgentExecutor(AgentExecutor):
             parts = [
                 Part(
                     root=TextPart(
-                        data.error if data else 'failed to generate image'
+                        text=data.error if data else 'failed to generate image'
                     ),
                 )
             ]

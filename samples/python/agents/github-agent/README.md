@@ -42,7 +42,7 @@ All functions include error handling and support optional parameters for filteri
 
 ```bash
 # Clone the repository
-git clone https://github.com/google-a2a/a2a-samples.git
+git clone https://github.com/a2aproject/a2a-samples.git
 cd a2a-samples/samples/python/agents/github-agent
 
 # Create virtual environment
@@ -92,7 +92,7 @@ You can test the GitHub agent using the A2A Movie Agent client:
 
 ```bash
 # Clone the A2A samples if you haven't already
-git clone https://github.com/google-a2a/a2a-samples.git
+git clone https://github.com/a2aproject/a2a-samples.git
 
 cd a2a-samples/samples/python/hosts/cli/
 # run cli
@@ -144,4 +144,12 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🔗 Related Projects
 
-- [A2A SDK](https://github.com/google-a2a/a2a-python) - The underlying A2A protocol implementation
+- [A2A SDK](https://github.com/a2aproject/a2a-python) - The underlying A2A protocol implementation
+
+
+## Disclaimer
+Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+
+All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+
+Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.

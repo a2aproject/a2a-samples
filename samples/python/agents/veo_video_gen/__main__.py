@@ -96,8 +96,8 @@ def main(host: str, port: int):
             description="This agent uses Google's VEO model to generate videos from text prompts and provides a GCS link to the output.",
             url=f'http://{host}:{port}/',  # A2A endpoint URL
             version='1.0.0',
-            defaultInputModes=VideoGenerationAgent.SUPPORTED_INPUT_CONTENT_TYPES,
-            defaultOutputModes=VideoGenerationAgent.SUPPORTED_OUTPUT_CONTENT_TYPES,
+            default_input_modes=VideoGenerationAgent.SUPPORTED_INPUT_CONTENT_TYPES,
+            default_output_modes=VideoGenerationAgent.SUPPORTED_OUTPUT_CONTENT_TYPES,
             capabilities=capabilities,
             skills=[skill],
         )

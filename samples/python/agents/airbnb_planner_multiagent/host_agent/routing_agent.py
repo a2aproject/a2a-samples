@@ -1,4 +1,3 @@
-# ruff: noqa: E501
 # pylint: disable=logging-fstring-interpolation
 import asyncio
 import json
@@ -19,15 +18,15 @@ from a2a.types import (
     SendMessageSuccessResponse,
     Task,
 )
-from agents.airbnb_planner_multiagent.host_agent.remote_agent_connection import (
-    RemoteAgentConnections,
-    TaskUpdateCallback,
-)
 from dotenv import load_dotenv
 from google.adk import Agent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.tools.tool_context import ToolContext
+from remote_agent_connection import (
+    RemoteAgentConnections,
+    TaskUpdateCallback,
+)
 
 
 load_dotenv()
@@ -133,10 +132,8 @@ class RoutingAgent:
 
     def create_agent(self) -> Agent:
         """Create an instance of the RoutingAgent."""
-        model_id = 'gemini-2.5-flash-preview-04-17'
-        print(f'Using hardcoded model: {model_id}')
         return Agent(
-            model=model_id,
+            model='gemini-2.5-flash-lite',
             name='Routing_agent',
             instruction=self.root_instruction,
             before_model_callback=self.before_model_callback,

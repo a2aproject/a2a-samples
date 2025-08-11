@@ -38,6 +38,7 @@ async def interact_with_server(client: A2AClient) -> None:
 
         try:
             streaming_request = SendStreamingMessageRequest(
+                id=uuid4().hex,
                 params=MessageSendParams(**send_message_payload)
             )
             stream_response = client.send_message_streaming(streaming_request)

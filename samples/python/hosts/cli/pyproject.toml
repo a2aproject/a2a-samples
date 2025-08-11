@@ -3,20 +3,23 @@ name = "a2a-sample-client-cli"
 version = "0.1.0"
 description = "A CLI application that demonstrates the capabilities of an A2AClient."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
-    "a2a-samples",
+    "a2a-sdk>=0.3.0",
     "asyncclick>=8.1.8",
-    "python-dotenv",
     "sse-starlette>=2.2.1",
     "starlette>=0.46.1",
+    "httpx>=0.28.1",
+    "httpx-sse>=0.4.0",
+    "jwcrypto>=1.5.6",
+    "pydantic>=2.10.6",
+    "pyjwt>=2.10.1",
+    "typing-extensions>=4.12.2",
+    "uvicorn>=0.34.0",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
-
-[tool.uv.sources]
-a2a-samples = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

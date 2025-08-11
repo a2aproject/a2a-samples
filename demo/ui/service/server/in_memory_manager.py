@@ -54,30 +54,29 @@ class InMemoryFakeAgentManager(ApplicationManager):
         return c
 
     def sanitize_message(self, message: Message) -> Message:
-        if message.contextId:
-            conversation = self.get_conversation(message.contextId)
+        conversation = self.get_conversation(message.context_id)
         if not conversation:
             return message
         # Check if the last event in the conversation was tied to a task.
         if conversation.messages:
-            if conversation.messages[-1].taskId and task_still_open(
+            if conversation.messages[-1].task_id and task_still_open(
                 next(
                     filter(
-                        lambda x: x.id == conversation.messages[-1].taskId,
+                        lambda x: x.id == conversation.messages[-1].task_id,
                         self._tasks,
                     ),
                     None,
                 )
             ):
-                message.taskId = conversation.messages[-1].taskId
+                message.task_id = conversation.messages[-1].task_id
 
         return message
 
     async def process_message(self, message: Message):
         self._messages.append(message)
-        message_id = message.messageId
-        context_id = message.contextId or ''
-        task_id = message.taskId or ''
+        message_id = message.message_id
+        context_id = message.context_id or ''
+        task_id = message.task_id or ''
         if message_id:
             self._pending_message_ids.append(message_id)
         conversation = self.get_conversation(context_id)
@@ -96,7 +95,7 @@ class InMemoryFakeAgentManager(ApplicationManager):
         # incoming message (with ids attached).
         task = Task(
             id=task_id,
-            contextId=context_id,
+            context_id=context_id,
             status=TaskStatus(
                 state=TaskState.submitted,
                 message=message,
@@ -125,7 +124,7 @@ class InMemoryFakeAgentManager(ApplicationManager):
                 Artifact(
                     name='response',
                     parts=response.parts,
-                    artifactId=str(uuid.uuid4()),
+                    artifact_id=str(uuid.uuid4()),
                 )
             ]
             if not task.history:
@@ -225,8 +224,8 @@ _message_queue: list[Message] = [
     Message(
         role=Role.agent,
         parts=[Part(root=TextPart(text='Hello'))],
-        contextId=_contextId,
-        messageId=str(uuid.uuid4()),
+        context_id=_contextId,
+        message_id=str(uuid.uuid4()),
     ),
     Message(
         role=Role.agent,
@@ -260,20 +259,20 @@ _message_queue: list[Message] = [
                 )
             ),
         ],
-        contextId=_contextId,
-        messageId=str(uuid.uuid4()),
+        context_id=_contextId,
+        message_id=str(uuid.uuid4()),
     ),
     Message(
         role=Role.agent,
         parts=[Part(root=TextPart(text='I like cats'))],
-        contextId=_contextId,
-        messageId=str(uuid.uuid4()),
+        context_id=_contextId,
+        message_id=str(uuid.uuid4()),
     ),
     test_image.make_test_image(_contextId),
     Message(
         role=Role.agent,
         parts=[Part(root=TextPart(text='And I like dogs'))],
-        contextId=_contextId,
-        messageId=str(uuid.uuid4()),
+        context_id=_contextId,
+        message_id=str(uuid.uuid4()),
     ),
 ]

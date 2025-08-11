@@ -1,25 +1,27 @@
 import asyncio
 import base64
 import json
+import os
 import uuid
 
 import httpx
 
-from a2a.client import A2ACardResolver
+from a2a.client import A2ACardResolver, ClientConfig, ClientFactory
 from a2a.types import (
     AgentCard,
     DataPart,
     Message,
-    MessageSendConfiguration,
-    MessageSendParams,
     Part,
+    Role,
     Task,
     TaskState,
     TextPart,
+    TransportProtocol,
 )
 from google.adk import Agent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.agents.readonly_context import ReadonlyContext
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.tool_context import ToolContext
 from google.genai import types
 
@@ -49,6 +51,15 @@ class HostAgent:
             self.init_remote_agent_addresses(remote_agent_addresses)
         )
 
+        config = ClientConfig(
+            httpx_client=self.httpx_client,
+            supported_transports=[
+                TransportProtocol.jsonrpc,
+                TransportProtocol.http_json,
+            ],
+        )
+        self.client_factory = ClientFactory(config)
+
     async def init_remote_agent_addresses(
         self, remote_agent_addresses: list[str]
     ):
@@ -65,7 +76,7 @@ class HostAgent:
         self.register_agent_card(card)
 
     def register_agent_card(self, card: AgentCard):
-        remote_connection = RemoteAgentConnections(self.httpx_client, card)
+        remote_connection = RemoteAgentConnections(self.client_factory, card)
         self.remote_agent_connections[card.name] = remote_connection
         self.cards[card.name] = card
         agent_info = []
@@ -74,8 +85,11 @@ class HostAgent:
         self.agents = '\n'.join(agent_info)
 
     def create_agent(self) -> Agent:
+        LITELLM_MODEL = os.getenv(
+            'LITELLM_MODEL', 'gemini/gemini-2.0-flash-001'
+        )
         return Agent(
-            model='gemini-2.0-flash-001',
+            model=LiteLlm(model=LITELLM_MODEL),
             name='host_agent',
             instruction=self.root_instruction,
             before_model_callback=self.before_model_callback,
@@ -164,28 +178,23 @@ Current agent: {current_agent['active_agent']}
         client = self.remote_agent_connections[agent_name]
         if not client:
             raise ValueError(f'Client not available for {agent_name}')
-        taskId = state.get('task_id', None)
-        contextId = state.get('context_id', None)
-        messageId = state.get('message_id', None)
+        task_id = state.get('task_id', None)
+        context_id = state.get('context_id', None)
+        message_id = state.get('message_id', None)
         task: Task
-        if not messageId:
-            messageId = str(uuid.uuid4())
-        request: MessageSendParams = MessageSendParams(
-            id=str(uuid.uuid4()),
-            message=Message(
-                role='user',
-                parts=[TextPart(text=message)],
-                messageId=messageId,
-                contextId=contextId,
-                taskId=taskId,
-            ),
-            configuration=MessageSendConfiguration(
-                acceptedOutputModes=['text', 'text/plain', 'image/png'],
-            ),
+        if not message_id:
+            message_id = str(uuid.uuid4())
+
+        request_message = Message(
+            role=Role.user,
+            parts=[Part(root=TextPart(text=message))],
+            message_id=message_id,
+            context_id=context_id,
+            task_id=task_id,
         )
-        response = await client.send_message(request, self.task_callback)
+        response = await client.send_message(request_message)
         if isinstance(response, Message):
-            return await convert_parts(task.parts, tool_context)
+            return await convert_parts(response.parts, tool_context)
         task: Task = response
         # Assume completion unless a state returns that isn't complete
         state['session_active'] = task.status.state not in [
@@ -194,8 +203,8 @@ Current agent: {current_agent['active_agent']}
             TaskState.failed,
             TaskState.unknown,
         ]
-        if task.contextId:
-            state['context_id'] = task.contextId
+        if task.context_id:
+            state['context_id'] = task.context_id
         state['task_id'] = task.id
         if task.status.state == TaskState.input_required:
             # Force user input back
@@ -240,7 +249,7 @@ async def convert_part(part: Part, tool_context: ToolContext):
         file_bytes = base64.b64decode(part.root.file.bytes)
         file_part = types.Part(
             inline_data=types.Blob(
-                mime_type=part.root.file.mimeType, data=file_bytes
+                mime_type=part.root.file.mime_type, data=file_bytes
             )
         )
         await tool_context.save_artifact(file_id, file_part)

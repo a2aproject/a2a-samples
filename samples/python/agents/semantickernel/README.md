@@ -168,7 +168,7 @@ Agent can also be built using a container file.
 
 ## Example Endpoints
 
-You can POST A2A requests to http://localhost:10020 with JSON-RPC specifying tasks/send or tasks/sendSubscribe. Here is a synchronous snippet:
+You can POST A2A requests to http://localhost:10020 with JSON-RPC specifying message/send or message/stream. Here is a synchronous snippet:
 
 ### Request:
 
@@ -179,7 +179,7 @@ Content-Type: application/json
 {
   "jsonrpc": "2.0",
   "id": 33,
-  "method": "tasks/send",
+  "method": "message/send",
   "params": {
     "id": "3",
     "sessionId": "1aab49f1e85c499da48c2124f4ceee4d",
@@ -225,3 +225,11 @@ Content-Type: application/json
 And so on for multi-turn, streaming, etc.
 
 For more details, see [A2A Protocol Documentation](https://google.github.io/A2A/#/documentation) and [Semantic Kernel Docs](https://learn.microsoft.com/en-us/semantic-kernel/get-started/quick-start-guide?pivots=programming-language-python).
+
+
+## Disclaimer
+Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+
+All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+
+Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.

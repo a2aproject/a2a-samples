@@ -1,7 +1,6 @@
-## A2A Multi-Agent Host
+# A2A Multi-Agent Host
 
 Google ADK-based host agent that can communicate with other agents over the A2A protocol.
-
 
 ## Prerequisites
 

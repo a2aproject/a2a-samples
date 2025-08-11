@@ -1,3 +1,5 @@
+from typing import override
+
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
 from a2a.types import (
@@ -7,8 +9,6 @@ from a2a.types import (
     TaskStatusUpdateEvent,
 )
 from a2a.utils import new_agent_text_message, new_task, new_text_artifact
-from typing import override
-
 from src.no_llm_framework.server.agent import Agent
 
 
@@ -43,9 +43,9 @@ class HelloWorldAgentExecutor(AgentExecutor):
                 await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
-                        lastChunk=True,
+                        context_id=task.context_id,
+                        task_id=task.id,
+                        last_chunk=True,
                         artifact=new_text_artifact(
                             name='current_result',
                             description='Result of request to agent.',
@@ -57,8 +57,8 @@ class HelloWorldAgentExecutor(AgentExecutor):
                     TaskStatusUpdateEvent(
                         status=TaskStatus(state=TaskState.completed),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
             elif event['require_user_input']:
@@ -68,13 +68,13 @@ class HelloWorldAgentExecutor(AgentExecutor):
                             state=TaskState.input_required,
                             message=new_agent_text_message(
                                 event['content'],
-                                task.contextId,
+                                task.context_id,
                                 task.id,
                             ),
                         ),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
             else:
@@ -85,13 +85,13 @@ class HelloWorldAgentExecutor(AgentExecutor):
                             state=TaskState.working,
                             message=new_agent_text_message(
                                 event['content'],
-                                task.contextId,
+                                task.context_id,
                                 task.id,
                             ),
                         ),
                         final=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        context_id=task.context_id,
+                        task_id=task.id,
                     )
                 )
 

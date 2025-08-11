@@ -1,6 +1,6 @@
 # A2A Samples for Azure AI Foundry Agent SDK
 
-This directory contains two comprehensive examples demonstrating how to integrate **Azure AI Foundry Agent Service** with Google's **Agent-to-Agent (A2A) Protocol**. These samples showcase different approaches to building intelligent agents using Azure's AI services.
+This directory contains three comprehensive examples demonstrating how to integrate **Azure AI Foundry Agent Service** with Google's **Agent-to-Agent (A2A) Protocol**. These samples showcase different approaches to building intelligent agents using Azure's AI services, from simple calendar management to sophisticated multi-agent orchestration systems.
 
 ## 🔋 Core Technologies
 
@@ -65,6 +65,39 @@ A **comprehensive currency exchange system** combining Azure AI Foundry, MCP ser
 - A2A SDK for Python
 - Frankfurter API for exchange rates
 
+### 3. Multi-Agent System (`./multi_agent`)
+
+A **sophisticated multi-agent architecture** that demonstrates intelligent task routing and delegation to specialized remote agents using Azure AI Foundry, A2A protocol, and Semantic Kernel.
+
+#### Architecture Components:
+1. **🎯 Host Agent**: Central routing system powered by Azure AI Foundry
+2. **🤖 Remote Agents**: Specialized task executors (Playwright, Tool agents)
+3. **🔌 MCP Server**: Azure Functions-based service providing extensible functionality
+4. **🧠 Semantic Kernel**: Advanced agent framework for intelligent routing
+
+#### Key Features:
+- **🎯 Intelligent Routing**: Azure AI Foundry-powered central agent for task delegation
+- **🤝 Multi-Agent Coordination**: Agent-to-agent communication using A2A protocol
+- **🧠 Semantic Kernel Integration**: Advanced semantic understanding and routing
+- **🌐 Web Interface**: Modern Gradio-based chat interface with real-time streaming
+- **🔧 Playwright Integration**: Web automation and browser-based task execution
+- **☁️ MCP Azure Functions**: Serverless tool integration with Model Context Protocol
+- **📡 Multiple Communication Protocols**: STDIO, SSE, and A2A protocol support
+
+#### Available Agent Types:
+- **Playwright Agent**: Web automation and browser tasks
+- **Tool Agent**: General-purpose tool execution
+
+
+#### Technologies:
+- Azure AI Foundry Agent Service
+- Semantic Kernel
+- A2A SDK for Python
+- Model Context Protocol (MCP)
+- Azure Functions
+- Playwright for web automation
+- Gradio for web interface
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -99,4 +132,4 @@ AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME=Your Azure AI Foundry Deployment Model Name
 - Create agents that interact with real-time APIs
 - Understand complex multi-service architecture
 
-Both examples provide complete implementations with detailed documentation and are ready for extension and customization.
+

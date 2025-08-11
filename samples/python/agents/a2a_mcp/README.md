@@ -22,6 +22,7 @@
   - [Example Flow: Travel Agent](#example-flow-travel-agent)
   - [Steps to execute the example](#steps-to-execute-the-example)
     - [File/Directory Descriptions](#filedirectory-descriptions)
+  - [Disclaimer](#disclaimer)
 
 ## Objective
 
@@ -158,14 +159,20 @@ flowchart LR
 This sample is built using 3 ADK agents to execute the tasks and a LangGraph agent that works as a planner.
 All the 3 ADK agents use the same python code but are instantiated with different agent cards.
 
+You can execute the following command to run all of the steps in one terminal:
+
+```sh
+bash samples/python/agents/a2a_mcp/run.sh
+```
+
 1. Start the MCP Server:
 
    ```sh
    cd samples/python/agents/a2a_mcp
    uv venv # (if not already done)
    source .venv/bin/activate
-   # Runs on port 10000 by default, change as needed by setting the --host and --port parameters.
-   uv run a2a-mcp --run mcp-server --transport sse
+   # Runs on port 10100 by default, change as needed by setting the --host and --port parameters.
+   uv run  --env-file .env a2a-mcp --run mcp-server --transport sse
    ```
 
 2. Start the Orchestrator Agent:
@@ -177,7 +184,7 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/orchestrator_agent.json --port 10101
+   uv run --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/orchestrator_agent.json --port 10101
    ```
 
 3. Start the Planner Agent:
@@ -189,7 +196,7 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/planner_agent.json --port 10102
+   uv run  --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/planner_agent.json --port 10102
    ```
 
 4. Start the Airline Ticketing Agent:
@@ -201,7 +208,7 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/air_ticketing_agent.json --port 10103
+   uv run --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/air_ticketing_agent.json --port 10103
    ```
 
 5. Start the Hotel Reservations Agent:
@@ -213,7 +220,7 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/hotel_booking_agent.json --port 10104
+   uv run  --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/hotel_booking_agent.json --port 10104
    ```
 
 6. Start the Car Rental Reservations Agent:
@@ -225,10 +232,21 @@ All the 3 ADK agents use the same python code but are instantiated with differen
    uv venv  # (if not already done)
    source .venv/bin/activate
    # Note: Change the host and port as needed.
-   uv run src/a2a_mcp/agents/ --agent-card agent_cards/car_rental_agent.json --port 10105
+   uv run --env-file .env src/a2a_mcp/agents/ --agent-card agent_cards/car_rental_agent.json --port 10105
    ```
 
-7. Follow the steps in hosts/cli to start the cli app.
+7. Start the cli:
+
+   In a new terminal window
+
+   ```bash
+   cd samples/python/agents/a2a_mcp
+   uv venv  # (if not already done)
+   source .venv/bin/activate
+
+   uv run --env-file .env src/a2a_mcp/mcp/client.py --resource "resource://agent_cards/list" --find_agent "I would like to plan a trip to France."
+   ```
+
 
 ### File/Directory Descriptions
 
@@ -256,3 +274,10 @@ All the 3 ADK agents use the same python code but are instantiated with differen
     - `server.py`: The implementation of the MCP server itself. This server hosts the agent cards as resources.
 
 - **`travel_agency.db`**: A light weight SQLLite DB that hosts the demo data.
+
+## Disclaimer
+Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+
+All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+
+Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.

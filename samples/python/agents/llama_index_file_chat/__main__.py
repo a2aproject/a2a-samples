@@ -42,7 +42,9 @@ def main(host, port):
                 'LLAMA_CLOUD_API_KEY environment variable not set.'
             )
 
-        capabilities = AgentCapabilities(streaming=True, pushNotifications=True)
+        capabilities = AgentCapabilities(
+            streaming=True, push_notifications=True
+        )
 
         skill = AgentSkill(
             id='parse_and_chat',
@@ -57,8 +59,8 @@ def main(host, port):
             description='Parses a file and then chats with a user using the parsed content as context.',
             url=f'http://{host}:{port}/',
             version='1.0.0',
-            defaultInputModes=LlamaIndexAgentExecutor.SUPPORTED_INPUT_TYPES,
-            defaultOutputModes=LlamaIndexAgentExecutor.SUPPORTED_OUTPUT_TYPES,
+            default_input_modes=LlamaIndexAgentExecutor.SUPPORTED_INPUT_TYPES,
+            default_output_modes=LlamaIndexAgentExecutor.SUPPORTED_OUTPUT_TYPES,
             capabilities=capabilities,
             skills=[skill],
         )

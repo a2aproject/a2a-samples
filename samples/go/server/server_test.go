@@ -85,7 +85,7 @@ func TestA2AServer_HandleTaskSend(t *testing.T) {
 				ID: "1",
 			},
 		},
-		Method: "tasks/send",
+		Method: "message/send",
 		Params: params,
 	})
 
@@ -151,7 +151,7 @@ func TestA2AServer_HandleTaskGet(t *testing.T) {
 				ID: "1",
 			},
 		},
-		Method: "tasks/send",
+		Method: "message/send",
 		Params: params,
 	})
 
@@ -237,7 +237,7 @@ func TestA2AServer_HandleTaskCancel(t *testing.T) {
 				ID: "1",
 			},
 		},
-		Method: "tasks/send",
+		Method: "message/send",
 		Params: params,
 	})
 
@@ -355,7 +355,7 @@ func TestA2AServer_HandleStreamingTask(t *testing.T) {
 				ID: "1",
 			},
 		},
-		Method: "tasks/send",
+		Method: "message/stream",
 		Params: params,
 	})
 
@@ -478,7 +478,7 @@ func TestA2AServer_HandleStreamingTaskError(t *testing.T) {
 				ID: "1",
 			},
 		},
-		Method: "tasks/send",
+		Method: "message/stream",
 		Params: params,
 	})
 
@@ -595,7 +595,7 @@ func TestA2AServer_HandleStreamingTaskNoFlusher(t *testing.T) {
 				ID: "1",
 			},
 		},
-		Method: "tasks/send",
+		Method: "message/stream",
 		Params: params,
 	})
 

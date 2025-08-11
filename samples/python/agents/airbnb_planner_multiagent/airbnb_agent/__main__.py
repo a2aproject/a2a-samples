@@ -1,4 +1,3 @@
-# ruff: noqa: E501
 # pylint: disable=logging-fstring-interpolation
 
 import asyncio
@@ -19,10 +18,10 @@ from a2a.types import (
     AgentCard,
     AgentSkill,
 )
-from agents.airbnb_planner_multiagent.airbnb_agent.agent_executor import (
+from agent_executor import (
     AirbnbAgentExecutor,
 )
-from agents.airbnb_planner_multiagent.airbnb_agent.airbnb_agent import (
+from airbnb_agent import (
     AirbnbAgent,
 )
 from dotenv import load_dotenv
@@ -42,7 +41,7 @@ SERVER_CONFIGS = {
 app_context: dict[str, Any] = {}
 
 
-DEFAULT_HOST = 'localhost'
+DEFAULT_HOST = '0.0.0.0'
 DEFAULT_PORT = 10002
 DEFAULT_LOG_LEVEL = 'info'
 
@@ -194,7 +193,7 @@ def main(
 
 def get_agent_card(host: str, port: int):
     """Returns the Agent Card for the Currency Agent."""
-    capabilities = AgentCapabilities(streaming=True, pushNotifications=True)
+    capabilities = AgentCapabilities(streaming=True, push_notifications=True)
     skill = AgentSkill(
         id='airbnb_search',
         name='Search airbnb accommodation',
@@ -204,13 +203,15 @@ def get_agent_card(host: str, port: int):
             'Please find a room in LA, CA, April 15, 2025, checkout date is april 18, 2 adults'
         ],
     )
+    app_url = os.environ.get('APP_URL', f'http://{host}:{port}')
+
     return AgentCard(
         name='Airbnb Agent',
         description='Helps with searching accommodation',
-        url=f'http://{host}:{port}/',
+        url=app_url,
         version='1.0.0',
-        defaultInputModes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
-        defaultOutputModes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
+        default_input_modes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
+        default_output_modes=AirbnbAgent.SUPPORTED_CONTENT_TYPES,
         capabilities=capabilities,
         skills=[skill],
     )

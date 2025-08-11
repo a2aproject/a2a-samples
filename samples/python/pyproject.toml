@@ -5,11 +5,11 @@ description = "Agent2Agent samples"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "a2a-sdk>=0.2.6",
+    "a2a-sdk>=0.3.0",
     "httpx>=0.28.1",
     "httpx-sse>=0.4.0",
     "jwcrypto>=1.5.6",
-    "pydantic>=2.10.6",
+    "pydantic>=2.11.0",
     "pyjwt>=2.10.1",
     "sse-starlette>=2.2.1",
     "starlette>=0.46.1",
@@ -24,10 +24,9 @@ packages = ["common", "hosts"]
 [tool.uv.workspace]
 members = [
     "agents/crewai",
-    "agents/google_adk",
+    "agents/adk_expense_reimbursement",
     "agents/marvin",
     "hosts/cli",
-    "hosts/cli_auth",
     "hosts/extended_agent_card_cli",
     "hosts/multiagent",
     "agents/airbnb_planner_multiagent",
@@ -37,12 +36,15 @@ members = [
     "agents/extended_agent_card_adk",
     "agents/veo_video_gen",
     "agents/dice_agent_grpc",
+    "agents/dice_agent_rest",
     "agents/ag2",
 ]
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [tool.uv.sources]
 veo-video-sample-agent = { workspace = true }
-a2a-sample-client-cli = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

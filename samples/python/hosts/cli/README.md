@@ -1,68 +1,35 @@
-## Command-Line Interface (CLI) Host
-The CLI is a host application that demonstrates the capabilities of the A2A Python Client SDK. It allows you to interact with any A2A-compliant agent directly from your terminal.
+# A2A CLI
 
-## Key Features:
+The CLI is a small host application that demonstrates the capabilities of an `A2AClient`. It supports reading a server's `AgentCard` and text-based collaboration with a remote agent. All content received from the A2A server is printed to the console.
 
-Reads an agent's AgentCard to understand its capabilities.
-
-Supports text-based, interactive conversations with a remote agent.
-
-Automatically uses streaming for real-time updates if the agent supports it.
-
-Handles authenticated agents using bearer tokens.
-
-Pretty-prints server responses for improved readability.
-
-Allows attaching local files to messages.
+The client will use streaming if the server supports it.
 
 ## Prerequisites
-Python 3.12 or higher
 
-UV (recommended) or pip
-
-A running A2A-compliant agent server
-
+- Python 3.12 or higher
+- UV
+- A running A2A server
 
 ## Running the CLI
 
 1. Navigate to the CLI sample directory:
+
     ```bash
     cd samples/python/hosts/cli
     ```
+
 2. Run the example client
-    ```
+
+    ```sh
     uv run . --agent [url-of-your-a2a-server]
     ```
 
-   for example `--agent http://localhost:10000`. More command line options are documented in the source code. 
+   for example `--agent https://sample-a2a-agent-908687846511.us-central1.run.app`. More command line options are documented in the source code.
 
+## Disclaimer
 
-For example:
+Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
 
-uv run . --agent http://localhost:10000
+All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
 
-Note: You can run the calendar_agent sample and use it's URL to test OAuth functionality.
-
-## Authentication
-The CLI supports interacting with agents that require authentication via bearer tokens (as is common with OAuth2 or OpenID Connect).
-
-### Using Google Cloud Authentication
-If your agent uses Google's Identity-Aware Proxy (IAP) or another service that accepts Google-issued ID tokens, you can use the --gcloud-auth flag. This will automatically use the gcloud CLI to fetch a token and send it with every request.
-
-Example:
-
-# Ensure you are logged in with gcloud first: gcloud auth login
-uv run . --agent <your-agent-url> --gcloud-auth
-
-Command-line Options
---agent <URL>: (Required) The base URL of the A2A agent you want to interact with.
-
---session <ID>: A numeric ID used to maintain a persistent client-side session for credential management. If you run the CLI with the same session ID, it will reuse the same authentication credentials. If not provided, a new random session is created each time.
-
---gcloud-auth: A flag to enable automatic authentication using an identity token from the gcloud CLI.
-
---history: A flag to display the full task history after a task completes.
-
---use_push_notifications: A flag to enable testing with push notifications. Requires a running push notification receiver.
-
---push_notification_receiver <URL>: The URL of the push notification receiver service. Defaults to http://localhost:5000.
+Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
