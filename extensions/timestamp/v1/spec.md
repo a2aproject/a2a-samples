@@ -7,7 +7,7 @@ objects.
 
 ## Extension URI
 
-The URI of this extension is `https://github.com/a2aproject/a2a-samples/samples/extensions/helloworld/v1`.
+The URI of this extension is `https://github.com/a2aproject/a2a-samples/samples/extensions/timestamp/v1`.
 
 This is the only URI accepted for this extension.
 
@@ -23,7 +23,7 @@ for a timestamp is nanoseconds.
 ## Message/Artifact Metadata Field
 
 Timestamps MUST be stored in the metadata for a Message or Artifact, under a
-field with the key `github.com/a2aproject/a2a-samples/samples/extensions/helloworld/v1/timestamp`.
+field with the key `github.com/a2aproject/a2a-samples/samples/extensions/timestamp/v1/timestamp`.
 
 The value MUST be a string adhering to the [Timestamp format](#timestamp-format).
 

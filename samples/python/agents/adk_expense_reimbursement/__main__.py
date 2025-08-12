@@ -1,8 +1,8 @@
 import logging
 import os
-import time
 
 import click
+
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
@@ -10,7 +10,8 @@ from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent import ReimbursementAgent
 from agent_executor import ReimbursementAgentExecutor
 from dotenv import load_dotenv
-from helloworld_ext import HelloWorldExtension
+from timestamp_ext import TimestampExtension
+
 
 load_dotenv()
 
@@ -34,7 +35,7 @@ def main(host, port):
                     'GEMINI_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
                 )
 
-        hello_ext = HelloWorldExtension(time.time)
+        hello_ext = TimestampExtension()
         capabilities = AgentCapabilities(
             streaming=True,
             extensions=[

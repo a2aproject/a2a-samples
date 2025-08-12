@@ -1,8 +1,17 @@
 import datetime
-from collections.abc import Callable, Iterable
+import time
+
+from collections.abc import AsyncIterator, Callable, Iterable
 from typing import Any
 
-from a2a.client import ClientCallInterceptor
+from a2a.client import (
+    Client,
+    ClientCallInterceptor,
+    ClientEvent,
+    ClientFactory,
+    Consumer,
+)
+from a2a.client.client_factory import TransportProducer
 from a2a.client.middleware import ClientCallContext
 from a2a.extensions.common import HTTP_EXTENSION_HEADER, find_extension_by_uri
 from a2a.server.agent_execution import AgentExecutor, RequestContext
@@ -20,16 +29,26 @@ from a2a.types import (
     TaskStatusUpdateEvent,
 )
 
-_CORE_PATH = 'github.com/a2aproject/a2a-samples/extensions/helloworld/v1'
+
+_CORE_PATH = 'github.com/a2aproject/a2a-samples/extensions/timestamp/v1'
 URI = f'https://{_CORE_PATH}'
 TIMESTAMP_FIELD = f'{_CORE_PATH}/timestamp'
 
 
-class HelloWorldExtension:
-    """An implementation of the Helloworld extension."""
+class TimestampExtension:
+    """An implementation of the Timestamp extension.
 
-    def __init__(self, now_fn: Callable[[], float]):
-        self._now_fn = now_fn
+    This extension implementation illustrates several ways for an extension to
+    provide functionality to agent developers. In general, the support methods
+    range from totally hands off, where all responsibility for using the
+    extension correctly is left to the developer, to totally hands-on, where
+    the developer sets up strategic decorators for core classes which then
+    manage implementing the extension logic. Each of the methods have comments
+    indicating the level of support they provide.
+    """
+
+    def __init__(self, now_fn: Callable[[], float] | None = None):
+        self._now_fn = now_fn or time.time
 
     # Option 1 for adding to a card: let the developer do it themselves.
     def agent_extension(self) -> AgentExtension:
@@ -54,6 +73,11 @@ class HelloWorldExtension:
         return False
 
     def activate(self, context: RequestContext) -> bool:
+        """Possibly activate this extension, depending on the request context.
+
+        The extension is considered active if the caller indicated it in an
+        X-A2A-Extensions header.
+        """
         if URI in context.requested_extensions:
             context.add_activated_extension(URI)
             return True
@@ -75,6 +99,7 @@ class HelloWorldExtension:
     def add_if_activated(
         self, o: Message | Artifact, context: RequestContext
     ) -> None:
+        """Add a timestamp to a message or artifact if the extension is active."""
         if self.activate(context):
             self.add_timestamp(o)
 
@@ -83,15 +108,28 @@ class HelloWorldExtension:
         self,
         event: Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent,
     ) -> None:
+        """Add a timestamp to a server-side event."""
         for o in self._get_messages_in_event(event):
             self.add_timestamp(o)
 
     # Option 4: helper class
     def get_timestamper(self, context: RequestContext) -> 'MessageTimestamper':
+        """Returns a helper class for adding timestamps to messages/artifacts.
+
+        This detects whether the extension should be activated based on the
+        current RequestContext. If not, timestamps are not added.
+        """
         active = self.activate(context)
         return MessageTimestamper(active, self)
 
+    def get_timestamp(self, o: Message | Artifact) -> datetime.datetime | None:
+        """Get a timestamp from a message or artifact."""
+        if o.metadata and (ts := o.metdata.get(TIMESTAMP_FIELD)):
+            return datetime.datetime.fromisoformat(ts)
+        return None
+
     def has_timestamp(self, o: Message | Artifact) -> bool:
+        """Returns whether a message or artifact has a timestamp."""
         if o.metadata:
             return TIMESTAMP_FIELD in o.metadata
         return False
@@ -106,7 +144,7 @@ class HelloWorldExtension:
         self, http_kwargs: dict[str, Any]
     ) -> dict[str, Any]:
         """Update an http_kwargs to request activation of this extension."""
-        if not (headers := http_kwargs['headers']):
+        if not (headers := http_kwargs.get('headers')):
             headers = http_kwargs['headers'] = {}
         header_val = URI
         if headers.get(HTTP_EXTENSION_HEADER):
@@ -115,6 +153,7 @@ class HelloWorldExtension:
         return http_kwargs
 
     # Option 2 for clients: timestamp your JSON RPC payloads.
+    # Option 1 is to self-serve add the timestamp to your message.
     def timestamp_request_message(
         self, request: SendMessageRequest | SendStreamingMessageRequest
     ) -> None:
@@ -125,6 +164,11 @@ class HelloWorldExtension:
     def client_interceptor(self) -> ClientCallInterceptor:
         """Get a client interceptor that activates this extension."""
         return _TimestampingClientInterceptor(self)
+
+    # Option 4 for clients: an extension-aware client factory.
+    def wrap_client_factory(self, factory: ClientFactory) -> ClientFactory:
+        """Returns a ClientFactory that handles this extension."""
+        return _TimestampClientFactory(factory, self)
 
     def _get_messages_in_event(
         self,
@@ -152,17 +196,22 @@ class HelloWorldExtension:
 
 
 class MessageTimestamper:
-    def __init__(self, active: bool, ext: HelloWorldExtension):
+    """Helper to add compliant timestamps to messages and artifacts.
+
+    Timestamps are only added if the extension is activated."""
+
+    def __init__(self, active: bool, ext: TimestampExtension):
         self._active = active
         self._ext = ext
 
     def timestamp(self, o: Message | Artifact) -> None:
+        """Add a timestamp to a message or artifact, if active."""
         if self._active:
             self._ext.add_timestamp(o)
 
 
 class _TimestampingAgentExecutor(AgentExecutor):
-    def __init__(self, delegate: AgentExecutor, ext: HelloWorldExtension):
+    def __init__(self, delegate: AgentExecutor, ext: TimestampExtension):
         self._delegate = delegate
         self._ext = ext
 
@@ -191,7 +240,7 @@ class _TimestampingAgentExecutor(AgentExecutor):
 class _TimestampingEventQueue(EventQueue):
     """An EventQueue decorator that adds timestamps to all events."""
 
-    def __init__(self, delegate: EventQueue, ext: HelloWorldExtension):
+    def __init__(self, delegate: EventQueue, ext: TimestampExtension):
         self._delegate = delegate
         self._ext = ext
 
@@ -226,10 +275,55 @@ class _TimestampingEventQueue(EventQueue):
 _MESSAGING_METHODS = {'message/send', 'message/stream'}
 
 
+class _TimestampClientFactory(ClientFactory):
+    """A ClientFactory decorator to aid in adding timestamps.
+
+    This factory determines if agents support the timestamp extension, and, if
+    so, ensures that outgoing messages have timestamps.
+    """
+
+    def __init__(self, delegate: ClientFactory, ext: TimestampExtension):
+        self._delegate = delegate
+        self._ext = ext
+
+    def register(self, label: str, generator: TransportProducer) -> None:
+        self._delegate.register(label, generator)
+
+    def create(
+        self,
+        card: AgentCard,
+        consumers: list[Consumer] | None = None,
+        interceptors: list[ClientCallInterceptor] | None = None,
+    ) -> Client:
+        interceptors = interceptors or []
+        interceptors.append(self._ext.client_interceptor())
+        return self._delegate.create(card, consumers, interceptors)
+
+
+class _TimestampingClient(Client):
+    def __init__(self, delegate: Client, ext: TimestampExtension):
+        self._delegate = delegate
+        self._ext = ext
+
+    def __getattr__(self, name: str) -> Any:
+        # Delegate everything by default to the Client
+        return getattr(self._delegate, name)
+
+    async def send_message(
+        self,
+        request: Message,
+        *,
+        context: ClientCallContext | None = None,
+    ) -> AsyncIterator[ClientEvent | Message]:
+        self._ext.add_timestamp(request)
+        async for e in self._delegate.send_message(request, context=context):
+            yield e
+
+
 class _TimestampingClientInterceptor(ClientCallInterceptor):
     """A client interceptor that adds timestamps to outgoing messages."""
 
-    def __init__(self, ext: HelloWorldExtension):
+    def __init__(self, ext: TimestampExtension):
         self._ext = ext
 
     async def intercept(
@@ -261,6 +355,6 @@ class _TimestampingClientInterceptor(ClientCallInterceptor):
 __all__ = [
     'TIMESTAMP_FIELD',
     'URI',
-    'HelloWorldExtension',
     'MessageTimestamper',
+    'TimestampExtension',
 ]
