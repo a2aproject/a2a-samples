@@ -124,7 +124,7 @@ class TimestampExtension:
 
     def get_timestamp(self, o: Message | Artifact) -> datetime.datetime | None:
         """Get a timestamp from a message or artifact."""
-        if o.metadata and (ts := o.metdata.get(TIMESTAMP_FIELD)):
+        if o.metadata and (ts := o.metadata.get(TIMESTAMP_FIELD)):
             return datetime.datetime.fromisoformat(ts)
         return None
 

@@ -31,10 +31,8 @@ from google.adk.events.event_actions import EventActions as ADKEventActions
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
 from google.adk.sessions.in_memory_session_service import InMemorySessionService
 from google.genai import types
-from hosts.multiagent.host_agent import HostAgent
-from hosts.multiagent.remote_agent_connection import (
-    TaskCallbackArg,
-)
+from host_agent import HostAgent
+from remote_agent_connection import TaskCallbackArg
 from utils.agent_card import get_agent_card
 
 from service.server.application_manager import ApplicationManager
