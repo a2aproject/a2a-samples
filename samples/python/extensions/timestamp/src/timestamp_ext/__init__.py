@@ -165,7 +165,12 @@ class TimestampExtension:
         """Get a client interceptor that activates this extension."""
         return _TimestampingClientInterceptor(self)
 
-    # Option 4 for clients: an extension-aware client factory.
+    # Option 4 for clients: wrap the client itself.
+    def wrap_client(self, client: Client) -> Client:
+        """Returns a Client that ensures all outgoing messages have timestamps."""
+        return _TimestampingClient(client, self)
+
+    # Option 5 for clients: an extension-aware client factory.
     def wrap_client_factory(self, factory: ClientFactory) -> ClientFactory:
         """Returns a ClientFactory that handles this extension."""
         return _TimestampClientFactory(factory, self)
@@ -301,6 +306,8 @@ class _TimestampClientFactory(ClientFactory):
 
 
 class _TimestampingClient(Client):
+    """A Client decorator that adds timestamps to outgoing messages."""
+
     def __init__(self, delegate: Client, ext: TimestampExtension):
         self._delegate = delegate
         self._ext = ext
