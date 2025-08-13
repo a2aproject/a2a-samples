@@ -166,7 +166,7 @@ agent_server = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     httpx_client_wrapper.start()
-    agent_server = ConversationServer(app, httpx_client_wrapper())
+    ConversationServer(app, httpx_client_wrapper())
     app.openapi_schema = None
     app.mount(
         '/',
