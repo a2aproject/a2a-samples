@@ -3,7 +3,6 @@ from a2a.server.events import EventQueue
 from a2a.server.tasks import TaskUpdater
 from a2a.types import (
     Part,
-    Task,
     TaskState,
     TextPart,
     UnsupportedOperationError,
@@ -33,8 +32,8 @@ class DiceAgentExecutor(AgentExecutor):
         # This agent always produces Task objects. If this request does
         # not have current task, create a new one and use it.
         if not task:
-            task = new_task(context.message)
-            event_queue.enqueue_event(task)
+            task = new_task(context.message) # type: ignore
+            await event_queue.enqueue_event(task)
         updater = TaskUpdater(event_queue, task.id, task.context_id)
         # invoke the underlying agent, using streaming results. The streams
         # now are update events.
@@ -55,5 +54,5 @@ class DiceAgentExecutor(AgentExecutor):
 
     async def cancel(
         self, request: RequestContext, event_queue: EventQueue
-    ) -> Task | None:
+    ) -> None:
         raise ServerError(error=UnsupportedOperationError())
