@@ -20,12 +20,16 @@ from a2a.types import (
     AgentCard,
     AgentExtension,
     Artifact,
+    GetTaskPushNotificationConfigParams,
     Message,
     Role,
     SendMessageRequest,
     SendStreamingMessageRequest,
     Task,
     TaskArtifactUpdateEvent,
+    TaskIdParams,
+    TaskPushNotificationConfig,
+    TaskQueryParams,
     TaskStatusUpdateEvent,
 )
 
@@ -312,10 +316,6 @@ class _TimestampingClient(Client):
         self._delegate = delegate
         self._ext = ext
 
-    def __getattr__(self, name: str) -> Any:
-        # Delegate everything by default to the Client
-        return getattr(self._delegate, name)
-
     async def send_message(
         self,
         request: Message,
@@ -325,6 +325,46 @@ class _TimestampingClient(Client):
         self._ext.add_timestamp(request)
         async for e in self._delegate.send_message(request, context=context):
             yield e
+
+    async def get_task(
+        self,
+        request: TaskQueryParams,
+        *,
+        context: ClientCallContext | None = None,
+    ) -> Task:
+        return await self._delegate.get_task(request, context=context)
+
+    async def cancel_task(
+        self, request: TaskIdParams, *, context: ClientCallContext | None = None
+    ) -> Task:
+        return await self._delegate.cancel_task(request, context=context)
+
+    async def set_task_callback(
+        self,
+        request: TaskPushNotificationConfig,
+        *,
+        context: ClientCallContext | None = None,
+    ) -> TaskPushNotificationConfig:
+        return await self._delegate.set_task_callback(request, context=context)
+
+    async def get_task_callback(
+        self,
+        request: GetTaskPushNotificationConfigParams,
+        *,
+        context: ClientCallContext | None = None,
+    ) -> TaskPushNotificationConfig:
+        return await self._delegate.get_task_callback(request, context=context)
+
+    async def resubscribe(
+        self, request: TaskIdParams, *, context: ClientCallContext | None = None
+    ) -> AsyncIterator[ClientEvent]:
+        async for e in self._delegate.resubscribe(request, context=context):
+            yield e
+
+    async def get_card(
+        self, *, context: ClientCallContext | None = None
+    ) -> AgentCard:
+        return await self._delegate.get_card(context=context)
 
 
 class _TimestampingClientInterceptor(ClientCallInterceptor):
