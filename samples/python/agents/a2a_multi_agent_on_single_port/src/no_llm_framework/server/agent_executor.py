@@ -16,12 +16,12 @@ class CoreAgentExecutor(AgentExecutor):
 
     def __init__(self, agent_index: int = None):
         
-        mcp_url = {"1": "https://gitmcp.io/google/A2A", "2": "https://gitmcp.io/google/A2A"}
+        mcp_url_dict = {"1": "https://gitmcp.io/google/A2A", "2": "https://gitmcp.io/google/A2A"}
         
         self.agent = Agent(
             mode='stream',
             token_stream_callback=print,
-            mcp_url=[mcp_url[str(agent_index)]],
+            mcp_url=[mcp_url_dict[str(agent_index)]],
         )
 
     @override
