@@ -7,7 +7,7 @@ from a2a.types import (
     TaskStatusUpdateEvent,
 )
 from a2a.utils import new_agent_text_message, new_task, new_text_artifact
-from typing import Optional, override
+from typing import override
 
 from src.no_llm_framework.server.agent import Agent
 
