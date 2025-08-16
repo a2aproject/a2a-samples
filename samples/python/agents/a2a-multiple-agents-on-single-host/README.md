@@ -20,37 +20,37 @@ Three agents running on the same host:
 
 ## 🚀 Running Agents Locally
 
-1. Navigate to the sample code directory 
+1. Navigate to the sample code directory
     ```bash
     cd samples/python/agents/a2a-multiple-agents-on-single-host
     ```
 
-2.  Install dependencies (using uv)
+2. Install dependencies (using uv)
     ```bash
     uv venv
     source .venv/bin/activate
     uv sync
     ```
 
-3.  Set environment variables
+3. Set environment variables
     *   Copy `.env-sample` to `.env`
         ```bash
         cp .env-sample .env
         ```
     *   Update values as needed
 
-4.  Start the agents
+4. Start the agents
     ```bash
     uv run main.py
     ```
 
 ---
 
-### Testing using CLI :
+### Testing using CLI
 
 ```shell
 cd samples/python/hosts/cli
 uv run . --agent http://localhost:8000/a2a/conversation/
 ```
-   
+
 ---
