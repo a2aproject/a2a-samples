@@ -33,11 +33,11 @@ Three agents running on the same host:
     ```
 
 3. Set environment variables
- *   Copy `.env-sample` to `.env`
-        ```bash
-        cp .env-sample .env
-        ```
- *   Update values as needed
+    ```bash
+    cp .env-sample .env
+    ```
+
+    Update values as needed.
 
 4. Start the agents
     ```bash
