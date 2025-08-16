@@ -30,7 +30,7 @@ logger.info(f"AGENT BASE URL {AGENT_BASE_URL} and MODEL NAME {MODEL_NAME} are se
 app: FastAPI = FastAPI(title="Run multiple agents on single host using A2A protocol.",
                        description="Run multiple agents on single host using A2A protocol.",
                        version="1.0.0",
-                       root_path=f"/a2a")
+                       root_path="/a2a")
 
 
 @app.get("/health")
