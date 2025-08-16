@@ -1,5 +1,4 @@
 from a2a.types import AgentCard, AgentCapabilities, TransportProtocol, AgentSkill
-from google.adk import Agent
 from google.adk.agents import LlmAgent
 from google.adk.tools import google_search
 
@@ -62,16 +61,18 @@ You are a Conversation Agent Enhanced with Web Search Capabilities.
 - End with an offer to assist further
 """
 
-conversational_agent: LlmAgent = Agent(
-    model="gemini-2.5-flash",
-    name="conversational_agent",
-    description="An AI assistant that enhances conversations with live web search when needed.",
-    instruction=CONVERSATION_AGENT_INSTRUCTIONS,
-    tools=[google_search],
-)
+
+def get_conversational_agent(model: str) -> LlmAgent:
+    return LlmAgent(
+        model=model,
+        name="conversational_agent",
+        description="An AI assistant that enhances conversations with live web search when needed.",
+        instruction=CONVERSATION_AGENT_INSTRUCTIONS,
+        tools=[google_search],
+    )
 
 
-def get_conversational_agent_card(agent_url: str):
+def get_conversational_agent_card(agent_url: str) -> AgentCard:
     return AgentCard(
         name="Conversational Agent",
         description="Smart Conversational Agent Enhanced with Web Search Capabilities",

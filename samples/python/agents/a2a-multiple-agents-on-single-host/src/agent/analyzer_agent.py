@@ -1,32 +1,34 @@
 from a2a.types import AgentCard, AgentCapabilities, TransportProtocol, AgentSkill
-from google.adk import Agent
+from google.adk.agents import LlmAgent
 from google.adk.tools import google_search
 
-analyzer_agent = Agent(
-    model='gemini-2.5-flash',
-    name='trend_analyzer_agent',
-    instruction="""
-    You are a data analyst specializing in trend analysis. When given a trending topic,
-    perform deep research to find quantitative data and insights.
 
-    For each trend you analyze:
-    1. Search for statistics, numbers, and metrics related to the trend
-    2. Look for:
-       - Engagement metrics (views, shares, mentions)
-       - Growth rates and timeline
-       - Geographic distribution
-       - Related hashtags or keywords
-    3. Provide concrete numbers and data points
+def get_analyzer_agent(model: str) -> LlmAgent:
+    return LlmAgent(
+        model=model,
+        name='trend_analyzer_agent',
+        instruction="""
+        You are a data analyst specializing in trend analysis. When given a trending topic,
+        perform deep research to find quantitative data and insights.
+    
+        For each trend you analyze:
+        1. Search for statistics, numbers, and metrics related to the trend
+        2. Look for:
+           - Engagement metrics (views, shares, mentions)
+           - Growth rates and timeline
+           - Geographic distribution
+           - Related hashtags or keywords
+        3. Provide concrete numbers and data points
+    
+        Keep it somehow concise
+    
+        Always prioritize quantitative information over qualitative descriptions.
+        """,
+        tools=[google_search],
+    )
 
-    Keep it somehow concise
 
-    Always prioritize quantitative information over qualitative descriptions.
-    """,
-    tools=[google_search],
-)
-
-
-def get_analyzer_agent_card(agent_url):
+def get_analyzer_agent_card(agent_url: str) -> AgentCard:
     return AgentCard(
         name='Trend Analyzer Agent',
         url=agent_url,
