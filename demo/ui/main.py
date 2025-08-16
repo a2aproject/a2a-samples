@@ -4,10 +4,6 @@ run:
 """
 
 import os
-import sys
-
-# Add the project root to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'samples', 'python')))
 
 from contextlib import asynccontextmanager
 
@@ -170,7 +166,7 @@ agent_server = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     httpx_client_wrapper.start()
-    agent_server = ConversationServer(app, httpx_client_wrapper())
+    ConversationServer(app, httpx_client_wrapper())
     app.openapi_schema = None
     app.mount(
         '/',

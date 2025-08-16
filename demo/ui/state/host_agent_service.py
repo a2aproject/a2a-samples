@@ -118,6 +118,7 @@ async def GetTasks():
         return response.result
     except Exception as e:
         print('Failed to list tasks ', e)
+        return []
 
 
 async def ListMessages(conversation_id: str) -> list[Message]:

@@ -34,6 +34,7 @@ def agent_list_page(app_state: AppState) -> None:
                     )
                     input_modes_string = ', '.join(state.input_modes)
                     output_modes_string = ', '.join(state.output_modes)
+                    extensions_string = ', '.join(state.extensions)
 
                     if state.error != '':
                         me.text(state.error, style=me.Style(color='red'))
@@ -49,6 +50,8 @@ def agent_list_page(app_state: AppState) -> None:
                         me.text(f'Input Modes: {input_modes_string}')
                     if state.output_modes:
                         me.text(f'Output Modes: {output_modes_string}')
+                    if state.extensions:
+                        me.text(f'Extensions: {extensions_string}')
 
                     if state.agent_name:
                         me.text(
@@ -84,6 +87,10 @@ async def load_agent_info(e: me.ClickEvent) -> None:
         )
         state.input_modes = agent_card_response.default_input_modes
         state.output_modes = agent_card_response.default_output_modes
+        if agent_card_response.capabilities.extensions:
+            state.extensions = [
+                ext.uri for ext in agent_card_response.capabilities.extensions
+            ]
         state.stream_supported = agent_card_response.capabilities.streaming
         state.push_notifications_supported = (
             agent_card_response.capabilities.push_notifications
