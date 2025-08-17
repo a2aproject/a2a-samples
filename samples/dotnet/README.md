@@ -3,12 +3,13 @@
 This .NET 8 project demonstrates how to build an intelligent GitHub agent that combines three powerful AI technologies:
 
 1. **[Microsoft Semantic Kernel](https://github.com/microsoft/semantic-kernel)** - AI orchestration framework for LLM integration
-2. **[Model Context Protocol (MCP)](https://github.com/modelcontextprotocol/servers)** - Standardized protocol for AI tool integration  
+2. **[Model Context Protocol (MCP)](https://github.com/modelcontextprotocol/servers)** - Standardized protocol for AI tool integration
 3. **[Google Agent-to-Agent (A2A)](https://github.com/google/A2A)** - Protocol for agent communication and task management
 
 ## What This Project Does
 
 This sample creates a GitHub agent server that can:
+
 - Answer questions about GitHub repositories using natural language
 - Analyze code, issues, pull requests, and repository statistics
 - Communicate with other agents via the A2A protocol
@@ -19,14 +20,18 @@ This sample creates a GitHub agent server that can:
 The solution consists of three main projects:
 
 ### 🏗️ **Server** (`src/Server/`)
+
 ASP.NET Core web API server that hosts the GitHub agent:
+
 - **`GitHubAgentController`** - REST API endpoints for testing and direct queries
 - **`HealthController`** - Health checks and system status
 - **`GitHubA2AAgent`** - Main service that implements A2A protocol integration
 - **A2A Endpoint** - `/github-agent` for standard agent-to-agent communication
 
 ### 🤖 **GitHub Agent** (`src/Agents/Github/`)
+
 Core agent implementation using Semantic Kernel:
+
 - **`KernelBuilder`** - Configures Semantic Kernel with OpenAI and MCP tools
 - **`AgentFactory`** - Creates ChatCompletionAgent instances
 - **`AgentService`** - Processes queries through the agent
@@ -34,7 +39,9 @@ Core agent implementation using Semantic Kernel:
 - **`ToolService`** - Retrieves GitHub tools from MCP server
 
 ### 🖥️ **CLI Client** (`src/Client.Cli/`)
+
 Command-line interface for interacting with the agent:
+
 - **A2A Mode** - Full agent-to-agent communication with file attachments
 - **API Mode** - Direct REST API calls for testing
 - **Interactive Mode** - Real-time session with command switching
@@ -43,6 +50,7 @@ Command-line interface for interacting with the agent:
 ## How It Works
 
 ### 🔄 **Integration Flow**
+
 1. **MCP Server Connection** - Connects to `@modelcontextprotocol/server-github` via stdio transport
 2. **Tool Discovery** - Retrieves GitHub-specific tools (repository search, file reading, issue tracking, etc.)
 3. **Kernel Setup** - Builds Semantic Kernel with OpenAI LLM and GitHub tools as plugins
@@ -52,6 +60,7 @@ Command-line interface for interacting with the agent:
 ### 🛠️ **Key Technologies**
 
 **Semantic Kernel Integration:**
+
 ```csharp
 // Builds kernel with OpenAI and MCP tools
 Kernel kernel = builder.Build();
@@ -59,17 +68,19 @@ kernel.Plugins.AddFromFunctions("GitHub", tools.Select(t => t.AsKernelFunction()
 ```
 
 **MCP GitHub Server Connection:**
+
 ```csharp
 // Connects to GitHub MCP server
 new StdioClientTransport(new StdioClientTransportOptions
 {
-    Name = "MCPServer", 
+    Name = "MCPServer",
     Command = "npx",
     Arguments = ["-y", "@modelcontextprotocol/server-github"]
 });
 ```
 
 **A2A Agent Registration:**
+
 ```csharp
 // Exposes agent via A2A protocol
 app.MapA2A(taskManager, "/github-agent");
@@ -87,12 +98,14 @@ taskManager.OnMessageReceived = ProcessMessageAsync;
 ### Setup & Configuration
 
 1. **Environment Variables:**
+
    ```bash
    export OPENAI_API_KEY="your-openai-api-key"
    export OPENAI_MODEL_NAME="gpt-4o-mini"  # Optional, defaults to gpt-4o-mini
    ```
 
 2. **Build the Solution:**
+
    ```bash
    dotnet build
    ```
@@ -100,16 +113,20 @@ taskManager.OnMessageReceived = ProcessMessageAsync;
 ### Running the Application
 
 #### 🏃 **Start the Server:**
+
 ```bash
 cd src/Server
 dotnet run
 ```
+
 The server will start on:
+
 - HTTP: `http://localhost:5000`
 - HTTPS: `https://localhost:5001`
 - Swagger UI: `https://localhost:5001/swagger`
 
 #### 🖥️ **Use the CLI Client:**
+
 ```bash
 cd src/Client.Cli
 
@@ -130,7 +147,7 @@ dotnet run -- status --agent-url https://localhost:5001
 
 Once running, you can ask the GitHub agent questions like:
 
-```
+```txt
 🤖 github-agent> What repositories does microsoft have?
 🤖 github-agent> Show me the latest commits in microsoft/semantic-kernel
 🤖 github-agent> What are the open issues in facebook/react?
@@ -140,14 +157,16 @@ Once running, you can ask the GitHub agent questions like:
 ## API Endpoints
 
 ### REST API (for testing)
+
 - `GET /api/githubagent/status` - Agent status and capabilities
-- `POST /api/githubagent/query` - Direct query processing  
+- `POST /api/githubagent/query` - Direct query processing
 - `GET /api/githubagent/tools` - Available GitHub tools
 - `POST /api/githubagent/reinitialize` - Reinitialize agent
 - `GET /health` - Basic health check
 - `GET /health/detailed` - Detailed health with dependencies
 
 ### A2A Protocol
+
 - `POST /github-agent` - Standard A2A message endpoint
 - Supports both text messages and file attachments
 - Returns responses in A2A Message format
@@ -155,25 +174,29 @@ Once running, you can ask the GitHub agent questions like:
 ## Technical Implementation
 
 ### MCP Tool Integration
+
 The agent dynamically loads GitHub tools from the MCP server:
+
 ```csharp
 // Tools are automatically converted to Semantic Kernel functions
-kernel.Plugins.AddFromFunctions("GitHub", 
+kernel.Plugins.AddFromFunctions("GitHub",
     tools.Select(tool => tool.AsKernelFunction()));
 ```
 
 ### A2A Message Processing
+
 Messages are processed through the Semantic Kernel agent:
+
 ```csharp
 ChatMessageContent response = await agentService.ProcessQuery(query, cancellationToken);
-return new Message { 
-    Parts = [new TextPart { Text = response.Content }] 
+return new Message {
+    Parts = [new TextPart { Text = response.Content }]
 };
 ```
 
 ## Project Structure
 
-```
+```text
 dotnet.sln                          # Solution file
 ├── src/
 │   ├── Server/                     # ASP.NET Core API server
@@ -198,14 +221,37 @@ dotnet.sln                          # Solution file
 ## Dependencies
 
 ### NuGet Packages
+
 - **A2A** (0.1.0-preview.2) - Google's Agent-to-Agent protocol
 - **Microsoft.SemanticKernel** (1.48.0) - AI orchestration framework
 - **ModelContextProtocol** (0.1.0-preview.12) - MCP client library
 - **System.CommandLine** (2.0.0-beta4) - CLI framework
 
 ### External Services
+
 - **OpenAI API** - LLM provider (GPT-4o-mini by default)
 - **MCP GitHub Server** - `@modelcontextprotocol/server-github` via npm
+
+## Markdown Linting Standards
+
+This README follows markdownlint standards to ensure consistent formatting and readability. Key rules applied include:
+
+### MD030 - List Marker Spacing
+
+- **Rule**: Exactly 1 space after list markers (`-`, `*`, `+`, `1.`)
+- **Rationale**: Consistent spacing improves readability and ensures proper markdown parsing
+- **Configuration**: `ul_single: 1, ol_single: 1, ul_multi: 1, ol_multi: 1`
+
+### Other Applied Standards
+
+- **MD001**: Header levels increment by one
+- **MD022**: Headers surrounded by blank lines
+- **MD031**: Fenced code blocks surrounded by blank lines
+- **MD032**: Lists surrounded by blank lines
+- **MD040**: Fenced code blocks have language specified
+- **MD047**: Files end with single newline
+
+For complete markdownlint rule reference, see: [Markdownlint Rules Documentation](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)
 
 ## Resources
 
@@ -213,3 +259,4 @@ dotnet.sln                          # Solution file
 - [Model Context Protocol](https://github.com/modelcontextprotocol/servers)
 - [Google A2A Protocol](https://github.com/google/A2A)
 - [MCP GitHub Server](https://github.com/modelcontextprotocol/servers/tree/main/src/github)
+- [Markdownlint Rules](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)
