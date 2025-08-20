@@ -31,10 +31,8 @@ from google.adk.events.event_actions import EventActions as ADKEventActions
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
 from google.adk.sessions.in_memory_session_service import InMemorySessionService
 from google.genai import types
-from hosts.multiagent.host_agent import HostAgent
-from hosts.multiagent.remote_agent_connection import (
-    TaskCallbackArg,
-)
+from host_agent import HostAgent
+from remote_agent_connection import TaskCallbackArg
 from utils.agent_card import get_agent_card
 
 from service.server.application_manager import ApplicationManager
@@ -508,7 +506,7 @@ class ADKHostManager(ApplicationManager):
                 try:
                     data = json.loads(part.text)
                     parts.append(Part(root=DataPart(data=data)))
-                except:
+                except:  # noqa: E722
                     parts.append(Part(root=TextPart(text=part.text)))
             elif part.inline_data:
                 parts.append(
@@ -603,13 +601,7 @@ class ADKHostManager(ApplicationManager):
                     else:
                         parts.append(Part(root=DataPart(data=p.data)))
                 else:
-                    content = Message(
-                        parts=[Part(root=TextPart(text='Unknown content'))],
-                        role=Role.agent,
-                        message_id=str(uuid.uuid4()),
-                        task_id=task_id,
-                        context_id=context_id,
-                    )
+                    parts.append(Part(root=TextPart(text='Unknown content')))
         except Exception as e:
             print("Couldn't convert to messages:", e)
             parts.append(
