@@ -7,7 +7,7 @@ objects.
 
 ## Extension URI
 
-The URI of this extension is `https://github.com/a2aproject/a2a-samples/samples/extensions/traceability/v1`.
+The URI of this extension is `https://github.com/a2aproject/a2a-samples/extensions/traceability/v1`.
 
 This is the only URI accepted for this extension.
 
@@ -18,7 +18,7 @@ This is the only URI accepted for this extension.
 ## Message/Artifact Metadata Field
 
 Traceability information MUST be stored in the metadata for a Message or Artifact, under a
-field with the key `github.com/a2aproject/a2a-samples/samples/extensions/timestamp/v1/timestamp`, 
+field with the key `github.com/a2aproject/a2a-samples/extensions/traceability/v1/traceability`, 
 or an addtional artifact in the returned completed response.
 
 ```proto
@@ -41,7 +41,7 @@ enum CallTypeEnum {
 
 message StepAction {
  oneof action {
-   ToolInvocaction tool_invocation = 1;
+   ToolInvocation tool_invocation = 1;
    AgentInvocation agent_invocation = 2;
  }
 }
