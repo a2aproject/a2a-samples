@@ -61,7 +61,7 @@ public final class ContentWriterAgentCardProducer {
                                 + "Java. Base your writing on the given "
                                 + "outline."))
                         .build()))
-                .protocolVersion("0.2.5")
+                .protocolVersion("0.3.0")
                 .build();
     }
 }

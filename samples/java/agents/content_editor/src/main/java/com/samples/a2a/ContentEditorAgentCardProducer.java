@@ -67,7 +67,7 @@ public final class ContentEditorAgentCardProducer {
                                 "Edit the following article, make sure it has "
                                         + "a professional tone"))
                         .build()))
-                .protocolVersion("0.2.5")
+                .protocolVersion("0.3.0")
                 .build();
     }
 }

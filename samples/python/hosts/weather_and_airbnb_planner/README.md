@@ -43,7 +43,7 @@ The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A
 ...
 <dependency>
     <groupId>io.github.a2asdk</groupId>
-    <artifactId>a2a-java-reference-server</artifactId>
+    <artifactId>a2a-java-sdk-reference-jsonrpc</artifactId>
     <!-- Use a released version from https://github.com/a2aproject/a2a-java/tags -->
     <version>${io.a2a.sdk.version}</version>
 </dependency>
@@ -52,7 +52,10 @@ The `AgentCard` and `AgentExecutor` classes mentioned above are part of the [A2A
 
 Simply adding this dependency to your Java application and providing `AgentCard` and `AgentExecutor` producers makes it possible to easily run agentic Java applications as A2A servers using the A2A protocol.
 
-Note that we used the `a2a-java-reference-server` library in this example since our app is a Quarkus application. You can also use the `a2a-java-sdk-server-jakarta` library instead which is based on Jakarta REST.
+Note that we used the `a2a-java-sdk-reference-jsonrpc` library in this example since our app is a Quarkus
+application and we'd like to use the JSON-RPC transport. For more details about the server transports that are
+supported when using the A2A Java SDK, take a look at the [documentation](https://github.com/a2aproject/a2a-java?tab=readme-ov-file#server-transports). Alternatively, if you're not using Quarkus, you can use the [A2A Java SDK
+for Jakarta Servers](https://github.com/wildfly-extras/a2a-java-sdk-server-jakarta) instead.
 
 The A2A Java SDK can also be used to create A2A clients that can communicate with A2A servers.
 
