@@ -18,7 +18,7 @@ This is the only URI accepted for this extension.
 ## Message/Artifact Metadata Field
 
 Traceability information MUST be stored in the metadata for a Message or Artifact, under a
-field with the key `github.com/a2aproject/a2a-samples/extensions/traceability/v1/traceability`, 
+field with the key `github.com/a2aproject/a2a-samples/extensions/traceability/v1/traceability`,
 or an addtional artifact in the returned completed response.
 
 ```proto
