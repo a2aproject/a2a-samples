@@ -5,10 +5,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
-from a2a.types import (
-    AgentCard,
-    AgentExtension,
-)
+from a2a.types import AgentExtension
 
 
 _CORE_PATH = 'github.com/a2aproject/a2a-samples/extensions/traceability/v1'
