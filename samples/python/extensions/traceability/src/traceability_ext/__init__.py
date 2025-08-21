@@ -5,6 +5,11 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
+from a2a.types import (
+    AgentCard,
+    AgentExtension,
+)
+
 
 _CORE_PATH = 'github.com/a2aproject/a2a-samples/extensions/traceability/v1'
 TRACEABILITY_EXTENSION_URI = f'https://{_CORE_PATH}'
@@ -238,7 +243,7 @@ class TraceStep:
         self,
         exc_type: type[BaseException] | None,
         exc_val: BaseException | None,
-        traceback: types.TracebackType | None,
+        exc_traceback: types.TracebackType | None,
     ) -> bool:
         """Context manager exit point that finalizes the trace step.
 
@@ -253,10 +258,25 @@ class TraceStep:
         error_msg = None
         if exc_type:
             error_msg = ''.join(
-                traceback.format_exception(exc_type, exc_val, traceback)
+                exc_traceback.format_exception(exc_type, exc_val, exc_traceback)
             )
         self.step.end_step(error=error_msg)
         if self.response_trace:
             self.response_trace.add_step(self.step)
         # Do not suppress exceptions
         return False
+
+
+class TraceabilityExtension:
+    """An implementation of the Traceability extension.
+
+    This extension implementation illustrates a simple way for an extension to
+    provide functionality to agent developers.
+    """
+
+    def agent_extension(self) -> AgentExtension:
+        """Get the AgentExtension representing this extension."""
+        return AgentExtension(
+            uri=TRACEABILITY_EXTENSION_URI,
+            description='Adds traceability information to artifacts.',
+        )

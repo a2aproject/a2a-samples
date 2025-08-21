@@ -1,7 +1,6 @@
 import json
 import logging
 
-from collections.abc import AsyncIterator
 from typing import TYPE_CHECKING
 
 from a2a.server.agent_execution import AgentExecutor
@@ -65,12 +64,11 @@ class HostAgentExecutor(AgentExecutor):
         self._active_sessions.add(session_id)
 
         try:
-            event_iterator: AsyncIterator[Event] = self.runner.run_async(
+            async for event in self.runner.run_async(
                 user_id=DEFAULT_USER_ID,
                 session_id=session_id,
                 new_message=new_message,
-            )
-            async for event in event_iterator:
+            ):
                 logger.debug(
                     '### Event received: %s',
                     event.model_dump_json(exclude_none=True, indent=2),

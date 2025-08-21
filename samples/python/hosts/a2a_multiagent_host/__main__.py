@@ -23,6 +23,7 @@ from host_agent_executor import (
 from routing_agent import (
     root_agent,
 )
+from traceability_ext import TraceabilityExtension
 
 
 load_dotenv()
@@ -54,6 +55,14 @@ def main(host: str = DEFAULT_HOST, port: int = DEFAULT_PORT):
 
     app_url = os.environ.get('APP_URL', f'http://{host}:{port}')
 
+    traceability_ext = TraceabilityExtension()
+    capabilities = AgentCapabilities(
+        streaming=True,
+        extensions=[
+            traceability_ext.agent_extension(),
+        ],
+    )
+
     agent_card = AgentCard(
         name='Host A2A Agent',
         description='A2A server that helps with weather and airbnb',
@@ -61,7 +70,7 @@ def main(host: str = DEFAULT_HOST, port: int = DEFAULT_PORT):
         version='1.0.0',
         default_input_modes=['text'],
         default_output_modes=['text'],
-        capabilities=AgentCapabilities(streaming=True),
+        capabilities=capabilities,
         skills=[skill],
     )
 

@@ -14,7 +14,7 @@ The application utilizes a multi-agent architecture where a host A2A server dele
 
 ![architecture](assets/A2A_multi_agents.jpg)
 
-### App UI
+### screenshot for CLI tool run with traceability information returned
 
 ![screenshot](assets/cli_trace_screenshot.png)
 
