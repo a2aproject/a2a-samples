@@ -30,9 +30,9 @@ def main(host, port):
     try:
         # Check for API key only if Vertex AI is not configured
         if not os.getenv('GOOGLE_GENAI_USE_VERTEXAI') == 'TRUE':
-            if not os.getenv('GOOGLE_API_KEY'):
+            if not os.getenv('GEMINI_API_KEY'):
                 raise MissingAPIKeyError(
-                    'GOOGLE_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
+                    'GEMINI_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
                 )
 
         hello_ext = TimestampExtension()
