@@ -190,6 +190,10 @@ if __name__ == '__main__':
     host = os.environ.get('A2A_UI_HOST', '0.0.0.0')
     port = int(os.environ.get('A2A_UI_PORT', '12000'))
 
+    # For development purposes, we can set the host to localhost
+    if host == '0.0.0.0':
+        host = 'localhost'
+
     # Set the client to talk to the server
     host_agent_service.server_url = f'http://{host}:{port}'
 
