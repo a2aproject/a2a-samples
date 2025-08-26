@@ -190,12 +190,12 @@ if __name__ == '__main__':
     host = os.environ.get('A2A_UI_HOST', '0.0.0.0')
     port = int(os.environ.get('A2A_UI_PORT', '12000'))
 
-    # For development purposes, we can set the host to localhost
-    if host == '0.0.0.0':
-        host = 'localhost'
+    # For client connections, resolve '0.0.0.0' to 'localhost'.
+    # The server will still bind to the original host address.
+    connect_host = 'localhost' if host == '0.0.0.0' else host
 
     # Set the client to talk to the server
-    host_agent_service.server_url = f'http://{host}:{port}'
+    host_agent_service.server_url = f'http://{connect_host}:{port}'
 
     uvicorn.run(
         app,
