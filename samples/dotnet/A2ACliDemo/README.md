@@ -97,28 +97,6 @@ Dangerous commands are blocked for security:
 3. **Audit logging**: Monitor command execution in production
 4. **Regular updates**: Keep the whitelist updated as needed
 
-## Learning Concepts
-
-### 1. Process Management
-- How to spawn and control system processes
-- Capturing stdout and stderr streams
-- Handling process timeouts and cancellation
-
-### 2. Cross-Platform Development
-- Runtime OS detection
-- Platform-specific command execution
-- Handling path separators and command syntax
-
-### 3. Security in Agent Design
-- Input validation and sanitization
-- Whitelist vs blacklist approaches
-- Principle of least privilege
-
-### 4. Structured Communication
-- Converting unstructured CLI output to structured responses
-- Error handling and status reporting
-- User-friendly result formatting
-
 ## Project Structure
 
 ```

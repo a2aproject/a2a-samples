@@ -89,11 +89,4 @@ BasicA2ADemo/
     └── Program.cs              # Client implementation
 ```
 
-## Learning Path
-
-1. **Start with EchoServer** - Understand basic agent setup
-2. **Examine CalculatorServer** - See how to implement agent-specific logic
-3. **Run SimpleClient** - Learn how clients discover and communicate with agents
-4. **Experiment** - Try modifying the agents or adding new functionality
-
 This demo provides a foundation for understanding how to build agent-to-agent communication systems with the A2A .NET SDK.
