@@ -6,6 +6,21 @@ using System.Runtime.InteropServices;
 namespace CLIServer;
 
 /// <summary>
+/// Represents the result of a command execution with all relevant details.
+/// </summary>
+/// <param name="Command">The full command that was executed</param>
+/// <param name="ExitCode">The exit code returned by the process</param>
+/// <param name="Output">The standard output lines from the command</param>
+/// <param name="Errors">The standard error lines from the command</param>
+/// <param name="Success">Whether the command executed successfully (exit code 0)</param>
+internal record CommandExecutionResult(
+    string Command,
+    int ExitCode,
+    IReadOnlyList<string> Output,
+    IReadOnlyList<string> Errors,
+    bool Success);
+
+/// <summary>
 /// A CLI agent that can execute command-line tools and return results.
 /// This demonstrates how to bridge AI agents with system-level operations.
 /// </summary>
@@ -140,15 +155,13 @@ public class CLIAgent
 
         // Process has completed normally
 
-        // Format the result
-        var result = new
-        {
-            Command = $"{command} {arguments}",
-            ExitCode = process.ExitCode,
-            Output = output,
-            Errors = errors,
-            Success = process.ExitCode == 0
-        };
+        var result = new CommandExecutionResult(
+            Command: $"{command} {arguments}",
+            ExitCode: process.ExitCode,
+            Output: output.AsReadOnly(),
+            Errors: errors.AsReadOnly(),
+            Success: process.ExitCode == 0
+        );
 
         return FormatCommandResult(result);
     }
@@ -181,7 +194,7 @@ public class CLIAgent
     /// <summary>
     /// Formats the command execution result in a user-friendly way.
     /// </summary>
-    private static string FormatCommandResult(dynamic result)
+    private static string FormatCommandResult(CommandExecutionResult result)
     {
         var output = new List<string>();
 
