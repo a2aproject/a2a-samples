@@ -20,6 +20,11 @@ public class CLIAgent
         "git", "dotnet", "node", "npm", "python"
     };
 
+    /// <summary>
+    /// Gets the list of allowed commands that this agent can execute.
+    /// </summary>
+    public IReadOnlyCollection<string> GetAllowedCommands() => AllowedCommands;
+
     public void Attach(ITaskManager taskManager)
     {
         taskManager.OnMessageReceived = ProcessMessageAsync;

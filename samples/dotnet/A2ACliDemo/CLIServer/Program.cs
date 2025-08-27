@@ -26,7 +26,7 @@ app.MapGet("/health", () => Results.Ok(new
     Status = "Healthy",
     Agent = "CLI Agent",
     Timestamp = DateTimeOffset.UtcNow,
-    AllowedCommands = new[] { "dir", "ls", "pwd", "whoami", "date", "git", "dotnet" }
+    AllowedCommands = cliAgent.GetAllowedCommands()
 }));
 
 // Add a welcome message
@@ -40,7 +40,7 @@ app.MapGet("/", () => Results.Ok(new
 
 Console.WriteLine("🖥️ CLI Agent starting...");
 Console.WriteLine("📍 Available at: http://localhost:5003");
-Console.WriteLine("🔧 Allowed commands: dir, ls, pwd, whoami, date, git, dotnet, etc.");
+Console.WriteLine($"🔧 Allowed commands: {string.Join(", ", cliAgent.GetAllowedCommands())}");
 Console.WriteLine("⚠️  Security: Only whitelisted commands are allowed");
 
 app.Run("http://localhost:5003");
