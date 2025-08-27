@@ -33,7 +33,7 @@ public class CLIAgent
     {
         if (cancellationToken.IsCancellationRequested)
         {
-            return Task.FromCanceled<Message>(cancellationToken).Result;
+            throw new OperationCanceledException(cancellationToken);
         }
 
         var userText = GetTextFromMessage(messageSendParams.Message);
