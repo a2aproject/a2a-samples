@@ -122,51 +122,6 @@ Output: Professional translation to target language
                                     └─────────────────┘
 ```
 
-## 🔧 Customization
-
-### Adding New AI Functions
-1. **Define the function** in `AIAgent.cs`
-2. **Register it** in the `Attach()` method
-3. **Add request/response models**
-4. **Update the client** with new options
-
-### Example: Adding Text Classification
-```csharp
-[Description("Classifies text into categories")]
-public async Task<Message> ClassifyTextAsync(MessageSendParams parameters)
-{
-    var request = JsonSerializer.Deserialize<ClassifyRequest>(parameters.Data);
-    
-    var prompt = $"Classify this text into categories: {request.Text}";
-    var result = await _kernel.InvokePromptAsync(prompt);
-    
-    return Message.Success(new ClassifyResponse(result.GetValue<string>()));
-}
-```
-
-## 📊 Advanced Features
-
-### Streaming Responses
-- Real-time AI output for long responses
-- Enhanced user experience
-- Progressive result display
-
-### Context Management
-- Multi-turn conversations
-- Context-aware responses
-- Conversation history
-
-### Plugin Integration
-- Semantic Kernel plugins
-- External API integration
-- Custom function calling
-
-### Debug Mode
-Add this to see detailed AI interactions:
-```csharp
-builder.Logging.SetMinimumLevel(LogLevel.Debug);
-```
-
 ## 🎓 Learning Resources
 
 - **[Semantic Kernel Documentation](https://learn.microsoft.com/en-us/semantic-kernel/)**
