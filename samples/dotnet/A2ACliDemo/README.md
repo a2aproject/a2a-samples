@@ -99,7 +99,7 @@ Dangerous commands are blocked for security:
 
 ## Project Structure
 
-```
+```text
 CLIAgent/
 ├── README.md                    # This file
 ├── CLIServer/

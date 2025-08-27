@@ -73,7 +73,7 @@ The client will automatically discover and communicate with both agents, demonst
 
 ## Project Structure
 
-```
+```text
 BasicA2ADemo/
 ├── README.md                    # This file
 ├── EchoServer/
