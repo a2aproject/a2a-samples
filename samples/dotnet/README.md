@@ -53,5 +53,3 @@ Each demo includes:
 1. **Start with BasicA2ADemo** - Learn fundamental A2A patterns
 2. **Explore CLIAgent** - See system integration in action
 3. **Build your own** - Use these as templates for custom agents
-
-Each demo builds upon concepts from the previous ones, providing a clear progression from basic agent communication to advanced system integration.
