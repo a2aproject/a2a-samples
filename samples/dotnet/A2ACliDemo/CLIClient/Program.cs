@@ -76,26 +76,25 @@ internal static class Program
                 continue;
 
             // Handle special commands
-            if (input.ToLower() == "exit" || input.ToLower() == "quit")
+            switch (input.ToLower())
             {
-                Console.WriteLine("👋 Goodbye!");
-                break;
-            }
+                case "exit" or "quit":
+                    Console.WriteLine("👋 Goodbye!");
+                    return;
 
-            if (input.ToLower() == "help")
-            {
-                ShowHelp();
-                continue;
-            }
+                case "help":
+                    ShowHelp();
+                    continue;
 
-            if (input.ToLower() == "examples")
-            {
-                await RunExamples(agentClient);
-                continue;
-            }
+                case "examples":
+                    await RunExamples(agentClient);
+                    continue;
 
-            // Send command to agent
-            await ExecuteCommand(agentClient, input);
+                default:
+                    // Send command to agent
+                    await ExecuteCommand(agentClient, input);
+                    break;
+            }
         }
     }
 
