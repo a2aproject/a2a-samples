@@ -10,7 +10,19 @@ This is a simple demonstration of the A2A (Agent-to-Agent) .NET SDK that shows t
 
 ## Getting Started
 
-### 1. Start the Agent Servers
+### Option 1: Quick Start (Windows)
+
+Use the provided batch script to run everything automatically:
+
+```bash
+run-demo.bat
+```
+
+This will start both agent servers and the client in separate windows.
+
+### Option 2: Manual Setup
+
+#### 1. Start the Agent Servers
 
 In separate terminals, start each server:
 
@@ -24,7 +36,7 @@ cd CalculatorServer
 dotnet run
 ```
 
-### 2. Run the Client
+#### 2. Run the Client
 
 In another terminal:
 
