@@ -52,10 +52,3 @@ Each demo includes:
 2. **Follow the README** in that demo's folder
 3. **Run the batch script** for instant setup, or
 4. **Manual setup** with `dotnet run` commands
-
-## Learning Path
-
-1. **Start with BasicA2ADemo** - Learn fundamental A2A patterns
-2. **Explore CLIAgent** - See system integration in action
-3. **Try A2ASemanticKernelDemo** - Experience AI-powered agents
-4. **Build your own** - Use these as templates for custom agents
