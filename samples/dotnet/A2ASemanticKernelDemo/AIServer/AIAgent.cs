@@ -118,7 +118,7 @@ public class AIAgent
                 {
                     Role = MessageRole.Agent,
                     MessageId = Guid.NewGuid().ToString(),
-                    ContextId = "",
+                    ContextId = contextId,
                     Parts = [new TextPart { Text = "Error: No text provided for summarization" }]
                 };
                 return errorMessage;
