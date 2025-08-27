@@ -12,10 +12,6 @@ A foundational example demonstrating core A2A concepts with simple agents.
 - **CalculatorServer**: Simple math operations agent  
 - **SimpleClient**: Interactive client for both agents
 
-**Key concepts:** Agent discovery, message-based communication, task handling
-
-[→ View BasicA2ADemo](./BasicA2ADemo/)
-
 ### 🖥️ CLIAgent (A2ACliDemo)
 Shows how to build agents that can execute system commands safely.
 
@@ -23,9 +19,18 @@ Shows how to build agents that can execute system commands safely.
 - **CLIServer**: Agent that executes whitelisted CLI commands
 - **CLIClient**: Interactive command-line interface
 
-**Key concepts:** System integration, security constraints, cross-platform execution
+### 🤖 AI-Powered Agent (A2ASemanticKernelDemo)
+Demonstrates intelligent agents using Microsoft Semantic Kernel for AI capabilities.
 
-[→ View CLIAgent](./CLIAgent/)
+**What's included:**
+- **AIServer**: Intelligent agent with text processing capabilities
+- **AIClient**: Interactive client for AI features
+
+**AI Capabilities:**
+- 📝 Text summarization
+- 😊 Sentiment analysis
+- 💡 Idea generation  
+- 🌍 Text translation
 
 ## Getting Started
 
@@ -52,4 +57,5 @@ Each demo includes:
 
 1. **Start with BasicA2ADemo** - Learn fundamental A2A patterns
 2. **Explore CLIAgent** - See system integration in action
-3. **Build your own** - Use these as templates for custom agents
+3. **Try A2ASemanticKernelDemo** - Experience AI-powered agents
+4. **Build your own** - Use these as templates for custom agents
