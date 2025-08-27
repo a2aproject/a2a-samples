@@ -45,27 +45,27 @@ public class AIAgent
             // In production, you'd want more sophisticated parsing
             var lowerText = userText.ToLower();
 
-            if (lowerText.StartsWith("summarize:") || lowerText.Contains("summarize"))
+            if (lowerText.StartsWith("summarize:"))
             {
                 var text = userText.Substring(userText.IndexOf(':') + 1).Trim();
                 return await SummarizeTextAsync(text);
             }
-            else if (lowerText.StartsWith("sentiment:") || lowerText.Contains("sentiment"))
+            else if (lowerText.StartsWith("sentiment:"))
             {
                 var text = userText.Substring(userText.IndexOf(':') + 1).Trim();
                 return await AnalyzeSentimentAsync(text);
             }
-            else if (lowerText.StartsWith("ideas:") || lowerText.Contains("ideas"))
+            else if (lowerText.StartsWith("ideas:"))
             {
                 var topic = userText.Substring(userText.IndexOf(':') + 1).Trim();
                 return await GenerateIdeasAsync(topic);
             }
-            else if (lowerText.StartsWith("translate:") || lowerText.Contains("translate"))
+            else if (lowerText.StartsWith("translate:"))
             {
                 var text = userText.Substring(userText.IndexOf(':') + 1).Trim();
                 return await TranslateTextAsync(text, "Spanish"); // Default target language
             }
-            else if (lowerText.Contains("help") || lowerText.Contains("capabilities"))
+            else if (lowerText.Contains("help"))
             {
                 return await GetCapabilitiesAsync();
             }
