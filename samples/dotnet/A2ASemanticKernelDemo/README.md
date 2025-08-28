@@ -77,25 +77,25 @@ OPENAI_API_KEY=your-key
 ## 🎬 Demo Scenarios
 
 ### 1. Document Summarization
-```
+```text
 Input: Long research paper or article
 Output: Concise 2-3 sentence summary with key insights
 ```
 
 ### 2. Customer Feedback Analysis
-```
+```text
 Input: Customer reviews or feedback
 Output: Sentiment classification with confidence scores
 ```
 
 ### 3. Creative Brainstorming
-```
+```text
 Input: Business challenge or topic
 Output: Multiple creative solutions and approaches
 ```
 
 ### 4. Multilingual Content
-```
+```text
 Input: Text in any language
 Output: Professional translation to target language
 ```
