@@ -13,12 +13,12 @@ import {
 import {
   InMemoryTaskStore,
   TaskStore,
-  A2AExpressApp,
   AgentExecutor,
   RequestContext,
   ExecutionEventBus,
   DefaultRequestHandler,
 } from "@a2a-js/sdk/server"; // Import server components
+import { A2AExpressApp } from "@a2a-js/sdk/server/express";
 import { ai } from "./genkit.js";
 import { CodeMessage } from "./code-format.js"; // CodeMessageSchema might not be needed here
 
@@ -354,7 +354,7 @@ async function main() {
   const PORT = process.env.CODER_AGENT_PORT || 41242; // Different port for coder agent
   expressApp.listen(PORT, () => {
     console.log(`[CoderAgent] Server using new framework started on http://localhost:${PORT}`);
-    console.log(`[CoderAgent] Agent Card: http://localhost:${PORT}/.well-known/agent.json`);
+    console.log(`[CoderAgent] Agent Card: http://localhost:${PORT}/.well-known/agent-card.json`);
     console.log('[CoderAgent] Press Ctrl+C to stop the server');
   });
 }
