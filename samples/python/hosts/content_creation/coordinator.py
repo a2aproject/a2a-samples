@@ -266,12 +266,6 @@ class CoordinatorAgent:
             },
         }
 
-        if task_id and agent_name != 'Content Editor Agent (JS)':
-            # Passing the task ID to the A2A JS agent currently results in a task not found error.
-            # Temporarily working around this by excluding the task ID from the payload for this
-            # agent until this is fixed in the A2A JS SDK.
-            payload['message']['taskId'] = task_id
-
         if context_id:
             payload['message']['contextId'] = context_id
 
