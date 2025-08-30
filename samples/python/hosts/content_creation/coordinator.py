@@ -240,7 +240,6 @@ class CoordinatorAgent:
 
         if not client:
             raise ValueError(f'Client not available for {agent_name}')
-        task_id = state['task_id'] if 'task_id' in state else str(uuid.uuid4())
 
         if 'context_id' in state:
             context_id = state['context_id']
