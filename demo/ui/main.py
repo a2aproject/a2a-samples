@@ -4,10 +4,6 @@ run:
 """
 
 import os
-import sys
-
-# Add the project root to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'samples', 'python')))
 
 from contextlib import asynccontextmanager
 
@@ -170,7 +166,7 @@ agent_server = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     httpx_client_wrapper.start()
-    agent_server = ConversationServer(app, httpx_client_wrapper())
+    ConversationServer(app, httpx_client_wrapper())
     app.openapi_schema = None
     app.mount(
         '/',
@@ -194,8 +190,12 @@ if __name__ == '__main__':
     host = os.environ.get('A2A_UI_HOST', '0.0.0.0')
     port = int(os.environ.get('A2A_UI_PORT', '12000'))
 
+    # For client connections, resolve '0.0.0.0' to 'localhost'.
+    # The server will still bind to the original host address.
+    connect_host = 'localhost' if host == '0.0.0.0' else host
+
     # Set the client to talk to the server
-    host_agent_service.server_url = f'http://{host}:{port}'
+    host_agent_service.server_url = f'http://{connect_host}:{port}'
 
     uvicorn.run(
         app,

@@ -9,6 +9,7 @@ import asyncclick as click
 import httpx
 
 from a2a.client import A2ACardResolver, A2AClient
+from a2a.extensions.common import HTTP_EXTENSION_HEADER
 from a2a.types import (
     FilePart,
     FileWithBytes,
@@ -30,7 +31,7 @@ from a2a.types import (
 
 
 @click.command()
-@click.option('--agent', default='http://localhost:10000')
+@click.option('--agent', default='http://localhost:8083')
 @click.option(
     '--bearer-token',
     help='Bearer token for authentication.',
@@ -41,6 +42,11 @@ from a2a.types import (
 @click.option('--use_push_notifications', default=False)
 @click.option('--push_notification_receiver', default='http://localhost:5000')
 @click.option('--header', multiple=True)
+@click.option(
+    '--enabled_extensions',
+    default='',
+    help='Comma-separated list of extension URIs to enable (sets X-A2A-Extensions header).',
+)
 async def cli(
     agent,
     bearer_token,
@@ -49,10 +55,25 @@ async def cli(
     use_push_notifications: bool,
     push_notification_receiver: str,
     header,
+    enabled_extensions,
 ):
     headers = {h.split('=')[0]: h.split('=')[1] for h in header}
     if bearer_token:
         headers['Authorization'] = f'Bearer {bearer_token}'
+
+    # --- Add enabled_extensions support ---
+    # If the user provided a comma-separated list of extensions,
+    # we set the X-A2A-Extensions header.
+    # This allows the server to know which extensions are activated.
+    # Note: We assume the extensions are supported by the server.
+    # This headers will be used by the server to activate the extensions.
+    # If the server does not support the extensions, it will ignore them.
+    if enabled_extensions:
+        ext_list = [
+            ext.strip() for ext in enabled_extensions.split(',') if ext.strip()
+        ]
+        if ext_list:
+            headers[HTTP_EXTENSION_HEADER] = ', '.join(ext_list)
     print(f'Will use headers: {headers}')
     async with httpx.AsyncClient(timeout=30, headers=headers) as httpx_client:
         card_resolver = A2ACardResolver(httpx_client, agent)
