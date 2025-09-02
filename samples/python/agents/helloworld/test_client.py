@@ -121,7 +121,8 @@ async def main() -> None:
         )
 
         response = await client.send_message(request)
-        print(f"Send Message : {response.model_dump(mode='json', exclude_none=True)}")
+        #print(response.model_dump(mode='json', exclude_none=True)) ### Using logger wth additional text to understand the flow.
+        logger.info(f"Send Message : {response.model_dump(mode='json', exclude_none=True)}")
         # --8<-- [end:send_message]
 
         # --8<-- [start:send_message_streaming]
@@ -133,7 +134,8 @@ async def main() -> None:
         stream_response = client.send_message_streaming(streaming_request)
 
         async for chunk in stream_response:
-            print(f"Streaming Request : {chunk.model_dump(mode='json', exclude_none=True)}")
+            # print(chunk.model_dump(mode='json', exclude_none=True)) ### Using logger wth additional text to understand the flow.
+            logger.info(f"Streaming Request : {chunk.model_dump(mode='json', exclude_none=True)}")
         # --8<-- [end:send_message_streaming]
 
 
