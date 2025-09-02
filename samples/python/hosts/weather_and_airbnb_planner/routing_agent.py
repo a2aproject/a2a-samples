@@ -62,9 +62,6 @@ def create_send_message_payload(
         },
     }
 
-    if task_id:
-        payload['message']['taskId'] = task_id
-
     if context_id:
         payload['message']['contextId'] = context_id
     return payload
@@ -232,7 +229,6 @@ class RoutingAgent:
 
         if not client:
             raise ValueError(f'Client not available for {agent_name}')
-        task_id = state['task_id'] if 'task_id' in state else str(uuid.uuid4())
 
         if 'context_id' in state:
             context_id = state['context_id']
@@ -257,9 +253,6 @@ class RoutingAgent:
                 'messageId': message_id,
             },
         }
-
-        if task_id:
-            payload['message']['taskId'] = task_id
 
         if context_id:
             payload['message']['contextId'] = context_id
