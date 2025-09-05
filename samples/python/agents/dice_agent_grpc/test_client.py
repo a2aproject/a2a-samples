@@ -46,15 +46,18 @@ async def main(agent_card_url: str, grpc_endpoint: str | None) -> None:
         # specifies if authenticated card should be fetched.
         # If an authenticated agent card is provided, client should use it for interacting with the gRPC service
         try:
-            logger.info(
-                'Attempting to fetch authenticated agent card from grpc endpoint'
-            )
-            proto_card = await stub.GetAgentCard(a2a_pb2.GetAgentCardRequest())
-            logger.info('Successfully fetched agent card:')
-            logger.info(proto_card)
-            final_agent_card_to_use = proto_utils.FromProto.agent_card(
-                proto_card
-            )
+            if agent_card.supports_authenticated_extended_card:
+                logger.info(
+                    'Attempting to fetch authenticated agent card from grpc endpoint'
+                )
+                proto_card = await stub.GetAgentCard(a2a_pb2.GetAgentCardRequest())
+                logger.info('Successfully fetched agent card:')
+                logger.info(proto_card)
+                final_agent_card_to_use = proto_utils.FromProto.agent_card(
+                    proto_card
+                )
+            else:
+                final_agent_card_to_use = agent_card
         except Exception:
             logging.exception('Failed to get authenticated agent card. Exiting.')
             return
