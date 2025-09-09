@@ -26,28 +26,41 @@ import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * A2A REST controller for handling JSON-RPC requests
+ * A2A REST controller for handling JSON-RPC requests.
  */
 @RestController
 public class A2AController {
 
+    /** The A2A server instance. */
     private final A2AServer server;
+    /** JSON object mapper. */
     private final ObjectMapper objectMapper;
 
-    public A2AController(A2AServer server, ObjectMapper objectMapper) {
-        this.server = server;
-        this.objectMapper = objectMapper;
+    /**
+     * Constructor for A2AController.
+     *
+     * @param serverInstance the A2A server instance
+     * @param mapper the object mapper for JSON processing
+     */
+    public A2AController(final A2AServer serverInstance,
+                          final ObjectMapper mapper) {
+        this.server = serverInstance;
+        this.objectMapper = mapper;
     }
 
     /**
-     * Handle JSON-RPC requests
+     * Handle JSON-RPC requests.
+     *
+     * @param request the JSON-RPC request to handle
+     * @return response entity containing the JSON-RPC response
      */
     @PostMapping(
             path = "/a2a",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<JSONRPCResponse> handleJsonRpcRequest(@RequestBody JSONRPCRequest request) {
+    public ResponseEntity<JSONRPCResponse> handleJsonRpcRequest(
+            @RequestBody final JSONRPCRequest request) {
 
         if (!"2.0".equals(request.jsonrpc())) {
             JSONRPCError error = new JSONRPCError(
@@ -87,14 +100,18 @@ public class A2AController {
     }
 
     /**
-     * Handle streaming task requests (Server-Sent Events)
+     * Handle streaming task requests (Server-Sent Events).
+     *
+     * @param request the JSON-RPC request for streaming
+     * @return SSE emitter for streaming responses
      */
     @PostMapping(
             value = "/a2a/stream",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.TEXT_EVENT_STREAM_VALUE
     )
-    public SseEmitter handleStreamingTask(@RequestBody JSONRPCRequest request) {
+    public SseEmitter handleStreamingTask(
+            @RequestBody final JSONRPCRequest request) {
 
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
 
@@ -102,7 +119,8 @@ public class A2AController {
         CompletableFuture.runAsync(() -> {
             try {
                 if (!"message/send".equals(request.method())) {
-                    sendErrorEvent(emitter, request.id(), ErrorCode.METHOD_NOT_FOUND, "Method not found");
+                    sendErrorEvent(emitter, request.id(),
+                            ErrorCode.METHOD_NOT_FOUND, "Method not found");
                     return;
                 }
 
@@ -123,7 +141,8 @@ public class A2AController {
                         null    // metadata
                 );
 
-                SendTaskStreamingResponse initialResponse = new SendTaskStreamingResponse(
+                SendTaskStreamingResponse initialResponse =
+                        new SendTaskStreamingResponse(
                         request.id(),
                         "2.0",
                         initialEvent,
@@ -132,13 +151,16 @@ public class A2AController {
 
                 emitter.send(SseEmitter.event()
                         .name("task-update")
-                        .data(objectMapper.writeValueAsString(initialResponse)));
+                        .data(objectMapper.writeValueAsString(
+                                initialResponse)));
 
                 // Process task
                 JSONRPCResponse taskResponse = server.handleTaskSend(request);
 
                 if (taskResponse.error() != null) {
-                    sendErrorEvent(emitter, request.id(), ErrorCode.INTERNAL_ERROR, taskResponse.error().message());
+                    sendErrorEvent(emitter, request.id(),
+                            ErrorCode.INTERNAL_ERROR,
+                            taskResponse.error().message());
                     return;
                 }
 
@@ -151,7 +173,8 @@ public class A2AController {
                         null    // metadata
                 );
 
-                SendTaskStreamingResponse finalResponse = new SendTaskStreamingResponse(
+                SendTaskStreamingResponse finalResponse =
+                        new SendTaskStreamingResponse(
                         request.id(),
                         "2.0",
                         finalEvent,
@@ -160,12 +183,14 @@ public class A2AController {
 
                 emitter.send(SseEmitter.event()
                         .name("task-update")
-                        .data(objectMapper.writeValueAsString(finalResponse)));
+                        .data(objectMapper.writeValueAsString(
+                                finalResponse)));
 
                 emitter.complete();
 
             } catch (Exception e) {
-                sendErrorEvent(emitter, request.id(), ErrorCode.INTERNAL_ERROR, e.getMessage());
+                sendErrorEvent(emitter, request.id(),
+                        ErrorCode.INTERNAL_ERROR, e.getMessage());
             }
         });
 
@@ -173,7 +198,9 @@ public class A2AController {
     }
 
     /**
-     * Get agent card information
+     * Get agent card information.
+     *
+     * @return response entity containing the agent card
      */
     @GetMapping("/.well-known/agent.json")
     public ResponseEntity<AgentCard> getAgentCard() {
@@ -181,19 +208,33 @@ public class A2AController {
     }
 
     /**
-     * Parse TaskSendParams
+     * Parse TaskSendParams.
+     *
+     * @param params the parameters object to parse
+     * @return parsed TaskSendParams
+     * @throws Exception if parsing fails
      */
-    private TaskSendParams parseTaskSendParams(Object params) throws Exception {
+    private TaskSendParams parseTaskSendParams(final Object params)
+            throws Exception {
         return objectMapper.convertValue(params, TaskSendParams.class);
     }
 
     /**
-     * Send error event
+     * Send error event.
+     *
+     * @param emitter the SSE emitter
+     * @param requestId the request ID
+     * @param code the error code
+     * @param message the error message
      */
-    private void sendErrorEvent(SseEmitter emitter, Object requestId, ErrorCode code, String message) {
+    private void sendErrorEvent(final SseEmitter emitter,
+                                final Object requestId,
+                                final ErrorCode code,
+                                final String message) {
         try {
             A2AError error = new A2AError(code, message, null);
-            SendTaskStreamingResponse errorResponse = new SendTaskStreamingResponse(
+            SendTaskStreamingResponse errorResponse =
+                    new SendTaskStreamingResponse(
                     requestId,
                     "2.0",
                     null,
