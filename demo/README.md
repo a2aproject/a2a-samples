@@ -12,7 +12,7 @@ The demonstration is built around a powerful, modular architecture where a centr
 
 You begin by building agents using the [Agent Development Kit](https://google.github.io/adk-docs/) (ADK). ADK is an open-source toolkit developed by Google that simplifies agent construction. While any agent development framework such as [LangGraph](https://www.langchain.com/langgraph) or [CrewAI](https://www.crewai.com/) can be used, this tutorial focuses on ADK to build the core agents.
 
-- **Frontend**: The frontend is a [mesop](https://github.com/mesop-dev/mesop) web application that renders conversations as content between the end user and the "Host Agent". This app can render text content, thought bubbles, web forms (requests for input from agents), and images. More content types will be updated soon.
+- **Frontend**: The frontend is a [mesop](https://github.com/mesop-dev/mesop) web application that renders conversations as content between the end user and the "Host Agent". This app can render text content, thought bubbles, web forms (requests for input from agents), and images. More content types will be added soon.
 
 - **Host Agent (Client)**: The [Host Agent](/samples/python/hosts/multiagent/host_agent.py) is a Google ADK agent which orchestrates user requests to Remote Agents.
 
