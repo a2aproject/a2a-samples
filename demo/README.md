@@ -148,7 +148,7 @@ class ReimbursementAgentExecutor(AgentExecutor):
 ```
 #### Agent Interaction Flow
 - Start the host and client:
-    - Clone this [GitHub repo](https://github.com/a2aproject/a2a-samples/tree/50b7363f11477f400520affef4ac748e5117fee2).
+    - Clone this [GitHub repo](https://github.com/a2aproject/a2a-samples).
 
 ## Features
 
