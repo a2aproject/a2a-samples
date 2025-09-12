@@ -46,6 +46,7 @@ skill = AgentSkill(
             capabilities=capabilities,
             skills=[skill],
         )
+```
 #### 2. Agent Executor (Execution Logic)
 The Agent Executor is the bridge between the A2A protocol and the agent's core business logic (ReimbursementAgent). It implements the A2A execution interface, handles the request/task lifecycle, and manages the streaming of status updates and final artifacts back to the client.
 
