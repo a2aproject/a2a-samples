@@ -18,7 +18,7 @@ You begin by building agents using the [Agent Development Kit](https://google.gi
 
 - **Remote Agent**: Each [Remote Agent](/samples/python/hosts/multiagent/remote_agent_connection.py) is an A2AClient running inside a Google ADK agent. Each remote agent will retrieve the A2AServer's [AgentCard](https://google.github.io/A2A/#documentation?id=agent-card) and then proxy all requests using A2A.
 
-### [How to build it piece by piece] Converting an Agent to A2A
+### How to build it piece by piece: Converting an Agent to A2A
 
 Both the remote agent (e.g., the Reimbursement Agent) and the Host Agent leverage A2A to collaborate effectively. To convert an agent's core logic into a compliant A2A agent, you define three main components: the **Agent Skill**, the **Agent Card**, and the **Agent Executor**.
 
