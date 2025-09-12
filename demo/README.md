@@ -1,4 +1,4 @@
-## Demo Web App
+# Demo Web App
 
 This demo application showcases agents talking to other agents over the Agent-to-Agent (A2A) protocol. It highlights how specialized, independent agents can be integrated and orchestrated to solve complex user requests.
 
@@ -148,7 +148,7 @@ class ReimbursementAgentExecutor(AgentExecutor):
 ```
 #### Agent Interaction Flow
 - Start the host and client:
-    - Clone this [GitHub repo](https://github.com/a2aproject/a2a-samples).
+  - Clone this [GitHub repo](https://github.com/a2aproject/a2a-samples).
 
 ## Features
 
@@ -224,7 +224,7 @@ We have already built it for you - just download and run it. For convenience, th
 
    Back in the demo UI you can go to the _Remote Agents_ tab and add this agent's address:
 
-   ```
+   ```bash
    localhost:10002
    ```
 
