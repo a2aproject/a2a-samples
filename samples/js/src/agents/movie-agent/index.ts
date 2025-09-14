@@ -12,12 +12,12 @@ import {
 import {
   InMemoryTaskStore,
   TaskStore,
-  A2AExpressApp,
   AgentExecutor,
   RequestContext,
   ExecutionEventBus,
   DefaultRequestHandler,
 } from "@a2a-js/sdk/server";
+import { A2AExpressApp } from "@a2a-js/sdk/server/express";
 import { MessageData } from "genkit";
 import { ai } from "./genkit.js";
 import { searchMovies, searchPeople } from "./tools.js";
@@ -314,7 +314,7 @@ async function main() {
   const PORT = process.env.PORT || 41241;
   expressApp.listen(PORT, () => {
     console.log(`[MovieAgent] Server using new framework started on http://localhost:${PORT}`);
-    console.log(`[MovieAgent] Agent Card: http://localhost:${PORT}/.well-known/agent.json`);
+    console.log(`[MovieAgent] Agent Card: http://localhost:${PORT}/.well-known/agent-card.json`);
     console.log('[MovieAgent] Press Ctrl+C to stop the server');
   });
 }

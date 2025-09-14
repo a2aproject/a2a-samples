@@ -11,12 +11,12 @@ import {
 import {
   InMemoryTaskStore,
   TaskStore,
-  A2AExpressApp,
   AgentExecutor,
   RequestContext,
   ExecutionEventBus,
   DefaultRequestHandler,
 } from "@a2a-js/sdk/server"; // Import server components
+import { A2AExpressApp } from "@a2a-js/sdk/server/express";
 import { MessageData } from "genkit";
 import { ai } from "./genkit.js";
 
@@ -276,7 +276,7 @@ async function main() {
       `[ContentEditorAgent] Server using new framework started on http://localhost:${PORT}`,
     );
     console.log(
-      `[ContentEditorAgent] Agent Card: http://localhost:${PORT}/.well-known/agent.json`,
+      `[ContentEditorAgent] Agent Card: http://localhost:${PORT}/.well-known/agent-card.json`,
     );
     console.log("[ContentEditorAgent] Press Ctrl+C to stop the server");
   });

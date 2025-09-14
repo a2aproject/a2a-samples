@@ -17,6 +17,7 @@ def agents_list(
         'Organization': [],
         'Input Modes': [],
         'Output Modes': [],
+        'Extensions': [],
         'Streaming': [],
     }
     for agent_info in agents:
@@ -31,6 +32,11 @@ def agents_list(
             ', '.join(agent_info.default_output_modes)
         )
         df_data['Streaming'].append(agent_info.capabilities.streaming)
+        df_data['Extensions'].append(
+            ', '.join([ext.uri for ext in agent_info.capabilities.extensions])
+            if agent_info.capabilities.extensions
+            else ''
+        )
     df = pd.DataFrame(
         pd.DataFrame(df_data),
         columns=[
@@ -40,6 +46,7 @@ def agents_list(
             'Organization',
             'Input Modes',
             'Output Modes',
+            'Extensions',
             'Streaming',
         ],
     )
