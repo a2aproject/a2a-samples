@@ -1,0 +1,98 @@
+import os
+
+from collections.abc import AsyncIterable
+from typing import Any
+
+from google.adk.agents.llm_agent import LlmAgent
+from google.adk.artifacts import InMemoryArtifactService
+from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
+from google.adk.models.lite_llm import LiteLlm
+from google.adk.runners import Runner
+from google.adk.sessions import InMemorySessionService
+from google.genai import types
+
+
+# Note: All tool functions (create_request_form, return_form, reimburse)
+# and the request_ids cache have been removed as they are not needed.
+
+
+class RestaurantAgent:
+    """An agent that finds restaurants based on user criteria."""
+
+    SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
+
+    def __init__(self):
+        self._agent = self._build_agent()
+        self._user_id = 'remote_agent'
+        self._runner = Runner(
+            app_name=self._agent.name,
+            agent=self._agent,
+            artifact_service=InMemoryArtifactService(),
+            session_service=InMemorySessionService(),
+            memory_service=InMemoryMemoryService(),
+        )
+
+    def get_processing_message(self) -> str:
+        return 'Finding restaurants that match your criteria...'
+
+    def _build_agent(self) -> LlmAgent:
+        """Builds the LLM agent for the restaurant agent."""
+        LITELLM_MODEL = os.getenv(
+            'LITELLM_MODEL', 'gemini/gemini-2.0-flash-001'
+        )
+        return LlmAgent(
+            model=LiteLlm(model=LITELLM_MODEL),
+            name='restaurant_agent',
+            description=(
+                'This agent finds restaurants based on user criteria like cuisine,'
+                ' location, or rating.'
+            ),
+            instruction="""
+    You are a helpful restaurant finding assistant.
+    When a user provides you with criteria (like "top 10 chinese restaurants in the US",
+    "best pizza places near downtown", or "cheap eats in Paris"),
+    you must find and return a list of restaurants that match.
+    Present the answer clearly to the user.
+    """,
+            tools=[],  # All tools removed
+        )
+
+    async def stream(self, query, session_id) -> AsyncIterable[dict[str, Any]]:
+        session = await self._runner.session_service.get_session(
+            app_name=self._agent.name,
+            user_id=self._user_id,
+            session_id=session_id,
+        )
+        content = types.Content(
+            role='user', parts=[types.Part.from_text(text=query)]
+        )
+        if session is None:
+            session = await self._runner.session_service.create_session(
+                app_name=self._agent.name,
+                user_id=self._user_id,
+                state={},
+                session_id=session_id,
+            )
+        async for event in self._runner.run_async(
+            user_id=self._user_id, session_id=session.id, new_message=content
+        ):
+            if event.is_final_response():
+                response = ''
+                if (
+                    event.content
+                    and event.content.parts
+                    and event.content.parts[0].text
+                ):
+                    response = '\n'.join(
+                        [p.text for p in event.content.parts if p.text]
+                    )
+                # Removed the elif block that processed function_response dictionaries
+                yield {
+                    'is_task_complete': True,
+                    'content': response,
+                }
+            else:
+                yield {
+                    'is_task_complete': False,
+                    'updates': self.get_processing_message(),
+                }
