@@ -208,13 +208,11 @@ class _GulfUIExecutor(AgentExecutor):
                 )
             print('--------------------------')
 
-            # *** KEY FIX ***
             # The function returns an async_generator. We must await the first item from it.
             response_generator = self._ext._llm.generate_content_async(
                 contents_list
             )
             response = await response_generator.__anext__()
-            # *** END FIX ***
 
             full_response_text = response.text
 

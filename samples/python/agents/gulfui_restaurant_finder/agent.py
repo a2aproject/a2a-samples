@@ -12,10 +12,6 @@ from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
 
-# Note: All tool functions (create_request_form, return_form, reimburse)
-# and the request_ids cache have been removed as they are not needed.
-
-
 class RestaurantAgent:
     """An agent that finds restaurants based on user criteria."""
 
@@ -54,7 +50,7 @@ class RestaurantAgent:
     you must find and return a list of restaurants that match.
     Present the answer clearly to the user.
     """,
-            tools=[],  # All tools removed
+            tools=[],  
         )
 
     async def stream(self, query, session_id) -> AsyncIterable[dict[str, Any]]:
@@ -86,7 +82,7 @@ class RestaurantAgent:
                     response = '\n'.join(
                         [p.text for p in event.content.parts if p.text]
                     )
-                # Removed the elif block that processed function_response dictionaries
+                
                 yield {
                     'is_task_complete': True,
                     'content': response,

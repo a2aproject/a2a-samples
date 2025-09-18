@@ -31,146 +31,381 @@ from agent import RestaurantAgent
 
 
 # --- Define new GULF UI constants ---
-_CORE_PATH = 'github.com/a2aproject/a2a-samples/extensions/gulfui/v1'
+_CORE_PATH = 'github.com/a2aproject/a2a-samples/extensions/gulfui/v7'
 URI = f'https://{_CORE_PATH}'
 GULFUI_MIME_TYPE = 'application/json+gulfui'
 
-# --- GULF UI SCHEMA ---
-# The full schema definition
-GULFUI_SCHEMA = """
+# --- GULF UI 7.0 SCHEMAS ---
+# These schemas are based on the GULF 7.0 specification.
+
+SCHEMA_BEGIN_RENDERING = """
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://example.com/ui-layout.schema.json",
-    "title": "UI Layout",
-    "description": "A schema for defining a UI layout composed of a hierarchy of components, a global style, and a shared data model.",
-    "type": "object",
-    "properties": {
-        "root": { "$ref": "#/$defs/componentInstanceRef" },
-        "components": { "type": "array", "items": { "$ref": "#/$defs/component" } },
-        "globals": { "$ref": "#/$defs/style" },
-        "dataModel": { "$ref": "#/$defs/dataModel" }
+  "title": "BeginRendering Message",
+  "description": "Signals that the UI can now be rendered and provides initial root component and styling information.",
+  "type": "object",
+  "properties": {
+    "root": {
+      "type": "string",
+      "description": "The ID of the root component from which rendering should begin. This property is REQUIRED."
     },
-    "required": ["root", "components"],
-    "$defs": {
-        "componentInstanceRef": { "type": "string" },
-        "componentInstanceListRef": {
-            "oneOf": [
-                { "type": "array", "items": { "$ref": "#/$defs/componentInstanceRef" } },
-                {
-                    "type": "object",
-                    "properties": {
-                        "template": { "$ref": "#/$defs/componentInstanceRef" },
-                        "dataBinding": { "$ref": "#/$defs/dataBinding" }
-                    },
-                    "required": ["template", "dataBinding"]
-                }
-            ]
-        },
-        "style": { "type": "object", "properties": { "primary_color": { "type": "string" }, "agent_logo": { "type": "string", "format": "uri" } } },
-        "dataBinding": {
-            "oneOf": [ { "type": "string" }, { "type": "number" }, { "type": "boolean" }, { "type": "object" }, { "type": "array" } ]
-        },
-        "action": {
-            "type": "object",
-            "properties": {
-                "action": { "type": "string" },
-                "staticContext": { "type": "object" },
-                "dynamicContext": { "additionalProperties": { "$ref": "#/$defs/dataBinding" } }
-            },
-            "required": ["action"]
-        },
-        "dataModel": { "type": "object" },
-        "componentType": { "enum": ["Text", "List", "Card", "Image", "AudioPlayer", "TextField", "MutuallyExclusiveMultipleChoice", "MultipleChoice", "Button", "Slider", "Tabs", "Divider", "Carousel"] },
-        "component": {
-            "type": "object",
-            "properties": { "id": { "type": "string" }, "type": { "$ref": "#/$defs/componentType" } },
-            "required": ["id", "type"],
-            "oneOf": [
-                { "properties": { "type": { "const": "Text" }, "text": { "type": "string" } }, "required": ["text"] },
-                { "properties": { "type": { "const": "List" }, "direction": { "enum": ["vertical", "horizontal"] }, "children": { "$ref": "#/$defs/componentInstanceListRef" }, "distribution": { "enum": ["start", "center", "end"] }, "alignment": { "enum": ["start", "center", "end"] } }, "required": ["children"] },
-                { "properties": { "type": { "const": "Card" }, "child": { "$ref": "#/$defs/componentInstanceRef" } }, "required": ["child"] },
-                { "properties": { "type": { "const": "Image" }, "url": { "type": "string", "format": "uri" }, "fit": { "type": "string" }, "max_width": { "type": "number" }, "max_height": { "type": "number" } }, "required": ["url"] },
-                { "properties": { "type": { "const": "AudioPlayer" }, "url": { "type": "string", "format": "uri" }, "description": { "type": "string" } }, "required": ["url"] },
-                { "properties": { "type": { "const": "TextField" }, "description": { "type": "string" }, "inputType": { "enum": ["shortText", "number", "date", "longText"] }, "valueBinding": { "$ref": "#/$defs/dataBinding" } } },
-                { "properties": { "type": { "const": "MutuallyExclusiveMultipleChoice" }, "options": { "type": "array", "items": { "type": "string" } }, "valueBinding": { "$ref": "#/$defs/dataBinding" } }, "required": ["options"] },
-                { "properties": { "type": { "const": "MultipleChoice" }, "options": { "type": "array", "items": { "type": "string" } }, "valueBinding": { "$ref": "#/$defs/dataBinding" } }, "required": ["options"] },
-                { "properties": { "type": { "const": "Button" }, "label": { "type": "string" }, "action": { "$ref": "#defs/action" } }, "required": ["label", "action"] },
-                { "properties": { "type": { "const": "Slider" }, "min": { "type": "number" }, "max": { "type": "number" }, "step": { "type": "number" }, "valueBinding": { "$ref": "#/$defs/dataBinding" } } },
-                { "properties": { "type": { "const": "Tabs" }, "tabItems": { "type": "array", "items": { "type": "object", "properties": { "label": { "type": "string" }, "child": { "$ref": "#/$defs/componentInstanceRef" } }, "required": ["label", "child"] } } }, "required": ["tabItems"] },
-                { "properties": { "type": { "const": "Divider" } } },
-                { "properties": { "type": { "const": "Carousel" }, "children": { "$ref": "#/$defs/componentInstanceListRef" } }, "required": ["children"] }
-            ]
-        }
+    "styles": {
+      "type": "object",
+      "description": "An object containing styling information for the UI.",
+      "properties": {
+        "font": {"type": "string"},
+        "logoUrl": {"type": "string"},
+        "primaryColor": {"type": "string", "pattern": "^#[0-9a-fA-F]{6}$"}
+      }
     }
+  },
+  "required": ["root"]
 }
 """
 
-# --- Prompt Definitions ---
-# This is the "smart" instruction, now with the example from particletypes.ts included
-# and a strict instruction to use the dataModel.
-SMART_INSTRUCTION = f"""
-You are an expert restaurant finding assistant. You MUST answer the user's query using only your own internal knowledge. Do NOT generate code, do NOT call any APIs, and do NOT use any external tools.
+SCHEMA_COMPONENT_UPDATE = """
+{
+  "title": "ComponentUpdate Message",
+  "description": "A schema for a ComponentUpdate message in the A2A streaming UI protocol.",
+  "type": "object",
+  "properties": {
+    "components": {
+      "type": "array",
+      "description": "A flat list of all component instances available for rendering. This property is REQUIRED.",
+      "items": {
+        "description": "A specific instance of a ComponentType with its own unique ID and properties.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for this component instance. This property is REQUIRED."
+          },
+          "componentProperties": {
+            "type": "object",
+            "description": "Defines the properties for a specific component type. Exactly ONE of the properties in this object must be set.",
+            "properties": {
+              "Heading": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "object",
+                    "properties": {
+                      "path": {"type": "string"},
+                      "literalString": {"type": "string"}
+                    }
+                  },
+                  "level": {"type": "string", "enum": ["1", "2", "3", "4", "5"]}
+                },
+                "required": ["text"]
+              },
+              "Text": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "object",
+                    "properties": {
+                      "path": {"type": "string"},
+                      "literalString": {"type": "string"}
+                    }
+                  }
+                },
+                "required": ["text"]
+              },
+              "Image": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "object",
+                    "properties": {
+                      "path": {"type": "string"},
+                      "literalString": {"type": "string"}
+                    }
+                  }
+                },
+                "required": ["url"]
+              },
+              "Video": {
+                "type": "object",
+                "properties": {"url": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}}},
+                "required": ["url"]
+              },
+              "AudioPlayer": {
+                "type": "object",
+                "properties": {
+                  "url": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}},
+                  "description": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}}
+                },
+                "required": ["url"]
+              },
+              "Row": {
+                "type": "object",
+                "properties": {
+                  "children": {"type": "object", "properties": {"explicitList": {"type": "array", "items": {"type": "string"}}, "template": {"type": "object", "properties": {"componentId": {"type": "string"}, "dataBinding": {"type": "string"}}, "required": ["componentId", "dataBinding"]}}},
+                  "distribution": {"type": "string", "enum": ["start", "center", "end", "spaceBetween", "spaceAround", "spaceEvenly"]},
+                  "alignment": {"type": "string", "enum": ["start", "center", "end", "stretch"]}
+                },
+                "required": ["children"]
+              },
+              "Column": {
+                "type": "object",
+                "properties": {
+                  "children": {"type": "object", "properties": {"explicitList": {"type": "array", "items": {"type": "string"}}, "template": {"type": "object", "properties": {"componentId": {"type": "string"}, "dataBinding": {"type": "string"}}, "required": ["componentId", "dataBinding"]}}},
+                  "distribution": {"type": "string", "enum": ["start", "center", "end", "spaceBetween", "spaceAround", "spaceEvenly"]},
+                  "alignment": {"type": "string", "enum": ["start", "center", "end", "stretch"]}
+                },
+                "required": ["children"]
+              },
+              "List": {
+                "type": "object",
+                "properties": {
+                  "children": {"type": "object", "properties": {"explicitList": {"type": "array", "items": {"type": "string"}}, "template": {"type": "object", "properties": {"componentId": {"type": "string"}, "dataBinding": {"type": "string"}}, "required": ["componentId", "dataBinding"]}}},
+                  "direction": {"type": "string", "enum": ["vertical", "horizontal"], "default": "vertical"},
+                  "alignment": {"type": "string", "enum": ["start", "center", "end", "stretch"]}
+                },
+                "required": ["children"]
+              },
+              "Card": {
+                "type": "object",
+                "properties": {"child": {"type": "string"}},
+                "required": ["child"]
+              },
+              "Tabs": {
+                "type": "object",
+                "properties": {
+                  "tabItems": {"type": "array", "items": {"type": "object", "properties": {"title": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}}, "child": {"type": "string"}}, "required": ["title", "child"]}}
+                },
+                "required": ["tabItems"]
+              },
+              "Divider": {
+                "type": "object",
+                "properties": {
+                  "axis": {"type": "string", "enum": ["horizontal", "vertical"], "default": "horizontal"},
+                  "color": {"type": "string"},
+                  "thickness": {"type": "number", "default": 1}
+                }
+              },
+              "Modal": {
+                "type": "object",
+                "properties": {"entryPointChild": {"type": "string"}, "contentChild": {"type": "string"}},
+                "required": ["entryPointChild", "contentChild"]
+              },
+              "Button": {
+                "type": "object",
+                "properties": {
+                  "label": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}},
+                  "action": {
+                    "type": "object",
+                    "properties": {
+                      "action": {"type": "string"},
+                      "context": {"type": "array", "items": {"type": "object", "properties": {"key": {"type": "string"}, "value": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}, "literalNumber": {"type": "number"}, "literalBoolean": {"type": "boolean"}}}}, "required": ["key", "value"]}}
+                    },
+                    "required": ["action"]
+                  }
+                },
+                "required": ["label", "action"]
+              },
+              "CheckBox": {
+                "type": "object",
+                "properties": {
+                  "label": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}},
+                  "value": {"type": "object", "properties": {"path": {"type": "string"}, "literalBoolean": {"type": "boolean"}}}
+                },
+                "required": ["label", "value"]
+              },
+              "TextField": {
+                "type": "object",
+                "properties": {
+                  "text": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}},
+                  "label": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}},
+                  "type": {"type": "string", "enum": ["shortText", "number", "date", "longText"]},
+                  "validationRegexp": {"type": "string"}
+                },
+                "required": ["label"]
+              },
+              "DateTimeInput": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}},
+                  "enableDate": {"type": "boolean", "default": true},
+                  "enableTime": {"type": "boolean", "default": false},
+                  "outputFormat": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "MultipleChoice": {
+                "type": "object",
+                "properties": {
+                  "selections": {"type": "object", "properties": {"path": {"type": "string"}, "literalArray": {"type": "array", "items": {"type": "string"}}}},
+                  "options": {"type": "array", "items": {"type": "object", "properties": {"label": {"type": "object", "properties": {"path": {"type": "string"}, "literalString": {"type": "string"}}}, "value": {"type": "string"}}, "required": ["label", "value"]}},
+                  "maxAllowedSelections": {"type": "integer", "default": 1}
+                },
+                "required": ["selections"]
+              },
+              "Slider": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "object", "properties": {"path": {"type": "string"}, "literalNumber": {"type": "number"}}},
+                  "minValue": {"type": "number", "default": 0},
+                  "maxValue": {"type": "number", "default": 100}
+                },
+                "required": ["value"]
+              }
+            }
+          }
+        },
+        "required": ["id", "componentProperties"]
+      }
+    }
+  },
+  "required": ["components"]
+}
+"""
 
-You must respond in two parts, separated by a unique delimiter: `---GULFUI_JSON---`.
+SCHEMA_DATA_MODEL_UPDATE = """
+{
+  "title": "Data model update",
+  "description": "Sets or replaces the data model at a specified path with new content.",
+  "type": "object",
+  "properties": {
+    "path": {
+      "type": "string",
+      "description": "An optional path to a location within the data model. If omitted, the entire data model will be replaced."
+    },
+    "contents": {
+      "description": "The JSON content to be placed at the specified path. This property is REQUIRED."
+    }
+  },
+  "required": [
+    "contents"
+  ]
+}
+"""
 
-PART 1: First, provide a human-readable, conversational text answer to the user's query.
+# --- Generic Prompt Suffix ---
+# This constant contains ONLY the generic instructions for formatting the output
+# according to the GULF 7.0 protocol.
+GENERIC_UI_INSTRUCTION_SUFFIX = f"""
+---
+Your response MUST be in two parts, separated by a unique delimiter: `---GULFUI_JSON---`.
 
-PART 2: Second, after the `---GULFUI_JSON---` delimiter, you must provide a SINGLE, raw JSON object that represents the UI for your answer, strictly conforming to the schema below.
+PART 1: First, provide your complete human-readable, conversational text answer as normal.
+
+PART 2: Second, after the `---GULFUI_JSON---` delimiter, you must provide a SINGLE, raw JSON **OBJECT**.
+This root OBJECT must contain a single key named "gulfMessages".
+The value of "gulfMessages" must be a JSON **ARRAY** containing the messages needed to render the UI for your answer, in the following order:
+1.  A `BeginRendering` message.
+2.  A `ComponentUpdate` message (containing ALL components needed).
+3.  A `DataModelUpdate` message (populating the data model with the data from your answer).
 
 ---
-MANDATORY JSON STRUCTURE:
-If your answer contains a list of items (like restaurants), you MUST put the data array inside the "dataModel" object and use a SINGLE template component with a "dataBinding" to render that list, as shown in the example. Do NOT hard-code a separate component for each item in the list.
+MANDATORY JSON STRUCTURE (GULF 7.0):
+You MUST follow the new component structure which uses a "componentProperties" object to wrap the properties for each component type (e.g., "componentProperties": {{"Text": {{"text": ...}}}}).
+If your answer contains a list of items (like restaurants), you MUST place this list inside the `contents` field of the `DataModelUpdate` message (with path "/") and use a templated `List` to render them.
 
----BEGIN EXAMPLE (from particletypes.ts)---
+---BEGIN EXAMPLE (GULF 7.0 structure wrapped in the required object)---
 {{
-    "root": "results-list",
-    "dataModel": {{
-        "restaurants": [
-            {{ "name": "The Gourmet Kitchen", "rating": "4.5/5", "imageUrl": "https://placehold.co/img1" }},
-            {{ "name": "Pasta Palace", "rating": "4.2/5", "imageUrl": "https://placehold.co/img2" }}
-        ]
+  "gulfMessages": [
+    {{
+      "root": "root-column"
     }},
-    "components": [
+    {{
+      "components": [
         {{
-            "id": "results-list",
-            "type": "List",
-            "direction": "vertical",
-            "children": {{
-                "template": "restaurant-item-card",
-                "dataBinding": "/restaurants"
+          "id": "root-column",
+          "componentProperties": {{
+            "Column": {{
+              "children": {{
+                "explicitList": ["title-heading", "item-list"]
+              }}
             }}
+          }}
         }},
         {{
-            "id": "restaurant-item-card",
-            "type": "Card",
-            "child": "restaurant-item-details"
+          "id": "title-heading",
+          "componentProperties": {{
+            "Heading": {{
+              "level": "1",
+              "text": {{ "literalString": "Example List Title" }}
+            }}
+          }}
         }},
         {{
-            "id": "restaurant-item-details",
-            "type": "List",
-            "direction": "vertical",
-            "children": ["restaurant-item-name", "restaurant-item-rating"]
+          "id": "item-list",
+          "componentProperties": {{
+            "List": {{
+              "direction": "vertical",
+              "children": {{
+                "template": {{
+                  "componentId": "item-card-template",
+                  "dataBinding": "/items"
+                }}
+              }}
+            }}
+          }}
         }},
         {{
-            "id": "restaurant-item-name",
-            "type": "Text",
-            "text": {{ "dataBinding": "name" }}
+          "id": "item-card-template",
+          "componentProperties": {{
+            "Card": {{
+              "child": "card-details"
+            }}
+          }}
         }},
         {{
-            "id": "restaurant-item-rating",
-            "type": "Text",
-            "text": {{ "dataBinding": "rating" }}
+          "id": "card-details",
+          "componentProperties": {{
+            "Column": {{
+              "children": {{
+                "explicitList": ["template-name", "template-detail"]
+              }}
+            }}
+          }}
+        }},
+        {{
+          "id": "template-name",
+          "componentProperties": {{
+            "Text": {{
+              "text": {{ "path": "name" }}
+            }}
+          }}
+        }},
+        {{
+          "id": "template-detail",
+          "componentProperties": {{
+            "Text": {{
+              "text": {{ "path": "detail" }}
+            }}
+          }}
         }}
-    ]
+      ]
+    }},
+    {{
+      "path": "/",
+      "contents": {{
+        "items": [
+          {{ "name": "Example Item 1", "detail": "Detail for item 1" }},
+          {{ "name": "Example Item 2", "detail": "Detail for item 2" }}
+        ]
+      }}
+    }}
+  ]
 }}
 ---END EXAMPLE---
 
-If the query is a simple text answer, just return a single "Text" component.
+If the query is a simple text answer, just create a "Text" component using the same 3-message array structure inside the "gulfMessages" key.
 
-Here is the full schema to conform to:
-<SCHEMA>
-{GULFUI_SCHEMA}
-</SCHEMA>
+Here are the full schemas your JSON messages MUST conform to:
+
+<SCHEMA_BEGIN_RENDERING>
+{SCHEMA_BEGIN_RENDERING}
+</SCHEMA_BEGIN_RENDERING>
+
+<SCHEMA_COMPONENT_UPDATE>
+{SCHEMA_COMPONENT_UPDATE}
+</SCHEMA_COMPONENT_UPDATE>
+
+<SCHEMA_DATA_MODEL_UPDATE>
+{SCHEMA_DATA_MODEL_UPDATE}
+</SCHEMA_DATA_MODEL_UPDATE>
 """
 
 # Store the original simple instruction from the agent.
@@ -207,8 +442,8 @@ class GulfUIExtension:
 class _GulfUIExecutor(AgentExecutor):
     """
     Executor wrapper that intercepts the execute() call.
-    It hijacks the agent's prompt, lets the ADK Runner work,
-    and then parses the output.
+    It dynamically combines the agent's prompt with the UI instructions,
+    lets the ADK Runner work, and then parses the output.
     """
 
     def __init__(self, delegate: AgentExecutor, ext: GulfUIExtension):
@@ -224,24 +459,29 @@ class _GulfUIExecutor(AgentExecutor):
 
         try:
             if is_ui_active:
-                # === HIJACK PROMPT ===
-                print(
-                    '\n--- GULF UI EXTENSION ACTIVATED: HIJACKING PROMPT (with full schema + example) ---'
+                # Dynamically combine the agent's specific instruction with our generic UI format instruction.
+                original_instruction = self._adk_agent.instruction
+                smart_instruction = (
+                    f'{original_instruction}\n{GENERIC_UI_INSTRUCTION_SUFFIX}'
                 )
-                self._adk_agent.instruction = SMART_INSTRUCTION
 
-                # We must wrap the queue to intercept and parse the response
+                print(
+                    '\n--- GULF UI EXTENSION ACTIVATED: HIJACKING PROMPT (GENERIC GULF 7.0) ---'
+                )
+                self._adk_agent.instruction = smart_instruction
+
+                # Wrap the queue to intercept and parse the delimited response
                 wrapped_queue = _GulfUIEventQueue(event_queue, self._ext)
                 await self._delegate.execute(context, wrapped_queue)
 
             else:
-                # === UI NOT ACTIVE ===
+                # Run the agent normally if the extension is not active
                 print('\n--- GULF UI EXTENSION *NOT* ACTIVE ---')
                 print('--- Running simple text-only delegate agent ---\n')
                 await self._delegate.execute(context, event_queue)
 
         finally:
-            # CRITICAL: Always reset the agent's instruction to its original state
+            # Always reset the agent's instruction to its original state
             if is_ui_active:
                 print(
                     '--- GULF UI EXTENSION: Restoring original agent prompt ---'
@@ -302,15 +542,17 @@ class _GulfUIEventQueue(EventQueue):
                     )
 
                     print(
-                        'Successfully split response into TEXT and JSON parts.'
+                        'Successfully split response into TEXT and JSON OBJECT parts.'
                     )
 
                     # Modify the original text part to contain ONLY the text
                     text_part.text = text_part_content
 
                     try:
-                        json_data = json.loads(json_text)
-                        # Add the new DataPart to the message's parts list
+                        json_data = json.loads(
+                            json_text
+                        )  # This should be a dict (object)
+
                         event.status.message.parts.append(
                             Part(
                                 root=DataPart(
@@ -320,7 +562,6 @@ class _GulfUIEventQueue(EventQueue):
                         )
                     except json.JSONDecodeError as e:
                         print(f'!!! FAILED TO PARSE JSON. Error: {e}')
-                        # If parsing fails, just send the modified text part.
                         text_part.text = (
                             f'{text_part_content}\n(Failed to generate UI view)'
                         )

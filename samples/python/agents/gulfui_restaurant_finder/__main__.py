@@ -10,7 +10,7 @@ from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent import RestaurantAgent
 from agent_executor import RestaurantAgentExecutor
 from dotenv import load_dotenv
-from gulfui_ext import GulfUIExtension  # <-- This imports File 1
+from gulfui_ext import GulfUIExtension  
 
 
 load_dotenv()
@@ -39,7 +39,7 @@ def main(host, port):
         capabilities = AgentCapabilities(
             streaming=True,
             extensions=[
-                hello_ext.agent_extension(),  # This advertises the Gulf UI capability
+                hello_ext.agent_extension(),
             ],
         )
         skill = AgentSkill(
@@ -63,7 +63,6 @@ def main(host, port):
             RestaurantAgentExecutor()
         )  # The simple, text-only executor
 
-        # This wraps the simple executor in our smart UI wrapper
         agent_executor = hello_ext.wrap_executor(agent_executor)
 
         request_handler = DefaultRequestHandler(

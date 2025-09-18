@@ -11,14 +11,14 @@ from a2a.utils import (
     new_task,
 )
 from a2a.utils.errors import ServerError
-from agent import RestaurantAgent  # Updated import
+from agent import RestaurantAgent  
 
 
 class RestaurantAgentExecutor(AgentExecutor):
     """Restaurant AgentExecutor Example."""
 
     def __init__(self):
-        self.agent = RestaurantAgent()  # Use new Agent
+        self.agent = RestaurantAgent() 
 
     async def execute(
         self,
@@ -48,9 +48,8 @@ class RestaurantAgentExecutor(AgentExecutor):
                 continue
 
             # Task is complete, and item['content'] now only contains the final text response.
-            # All form-handling logic, dict checking, and artifact logic has been removed.
             await updater.update_status(
-                TaskState.completed,  # <-- This line is the fix
+                TaskState.completed, 
                 new_agent_text_message(
                     item['content'], task.context_id, task.id
                 ),
