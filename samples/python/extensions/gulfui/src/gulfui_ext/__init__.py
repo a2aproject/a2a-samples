@@ -26,9 +26,6 @@ from a2a.utils import (
     new_task,
 )
 
-# Import the specific agent type so our wrapper can interact with it
-from agent import RestaurantAgent
-
 
 # --- Define new GULF UI constants ---
 _CORE_PATH = 'github.com/a2aproject/a2a-samples/extensions/gulfui/v7'
@@ -355,8 +352,16 @@ If your answer contains a list of items (like restaurants), you MUST place this 
           "componentProperties": {{
             "Column": {{
               "children": {{
-                "explicitList": ["template-name", "template-detail"]
+                "explicitList": ["template-image", "template-name", "template-detail"]
               }}
+            }}
+          }}
+        }},
+        {{
+          "id": "template-image",
+          "componentProperties": {{
+            "Image": {{
+              "url": {{ "path": "imageUrl" }}
             }}
           }}
         }},
@@ -382,8 +387,8 @@ If your answer contains a list of items (like restaurants), you MUST place this 
       "path": "/",
       "contents": {{
         "items": [
-          {{ "name": "Example Item 1", "detail": "Detail for item 1" }},
-          {{ "name": "Example Item 2", "detail": "Detail for item 2" }}
+          {{ "name": "Example Item 1", "detail": "Detail for item 1", "imageUrl": "http://localhost:10002/static/springrolls.jpeg" }},
+          {{ "name": "Example Item 2", "detail": "Detail for item 2", "imageUrl": "http://localhost:10002/static/mapotofu.jpeg" }}
         ]
       }}
     }}
@@ -407,9 +412,6 @@ Here are the full schemas your JSON messages MUST conform to:
 {SCHEMA_DATA_MODEL_UPDATE}
 </SCHEMA_DATA_MODEL_UPDATE>
 """
-
-# Store the original simple instruction from the agent.
-ORIGINAL_AGENT_INSTRUCTION = RestaurantAgent()._agent.instruction
 
 
 class GulfUIExtension:
@@ -451,6 +453,8 @@ class _GulfUIExecutor(AgentExecutor):
         self._ext = ext
         # Get the actual ADK LlmAgent object from inside the delegate's agent
         self._adk_agent = self._delegate.agent._agent
+        # Store the original instruction when we are created
+        self._original_instruction = self._adk_agent.instruction
 
     async def execute(
         self, context: RequestContext, event_queue: EventQueue
@@ -459,11 +463,8 @@ class _GulfUIExecutor(AgentExecutor):
 
         try:
             if is_ui_active:
-                # Dynamically combine the agent's specific instruction with our generic UI format instruction.
-                original_instruction = self._adk_agent.instruction
-                smart_instruction = (
-                    f'{original_instruction}\n{GENERIC_UI_INSTRUCTION_SUFFIX}'
-                )
+                # Combine the stored original instruction with our UI suffix
+                smart_instruction = f'{self._original_instruction}\n{GENERIC_UI_INSTRUCTION_SUFFIX}'
 
                 print(
                     '\n--- GULF UI EXTENSION ACTIVATED: HIJACKING PROMPT (GENERIC GULF 7.0) ---'
@@ -486,7 +487,8 @@ class _GulfUIExecutor(AgentExecutor):
                 print(
                     '--- GULF UI EXTENSION: Restoring original agent prompt ---'
                 )
-                self._adk_agent.instruction = ORIGINAL_AGENT_INSTRUCTION
+                # --- THIS IS THE CORRECTED LINE ---
+                self._adk_agent.instruction = self._original_instruction
 
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue

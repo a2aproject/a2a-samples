@@ -11,14 +11,16 @@ from a2a.utils import (
     new_task,
 )
 from a2a.utils.errors import ServerError
-from agent import RestaurantAgent  
+from agent import RestaurantAgent
 
 
 class RestaurantAgentExecutor(AgentExecutor):
     """Restaurant AgentExecutor Example."""
 
-    def __init__(self):
-        self.agent = RestaurantAgent() 
+    def __init__(self, base_url: str): 
+        self.agent = RestaurantAgent(
+            base_url=base_url
+        )  
 
     async def execute(
         self,
@@ -49,7 +51,7 @@ class RestaurantAgentExecutor(AgentExecutor):
 
             # Task is complete, and item['content'] now only contains the final text response.
             await updater.update_status(
-                TaskState.completed, 
+                TaskState.completed,
                 new_agent_text_message(
                     item['content'], task.context_id, task.id
                 ),

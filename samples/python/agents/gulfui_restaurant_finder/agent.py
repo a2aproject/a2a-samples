@@ -17,8 +17,9 @@ class RestaurantAgent:
 
     SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
 
-    def __init__(self):
-        self._agent = self._build_agent()
+    def __init__(self, base_url: str):
+        # Pass base_url to the _build_agent method
+        self._agent = self._build_agent(base_url=base_url)
         self._user_id = 'remote_agent'
         self._runner = Runner(
             app_name=self._agent.name,
@@ -31,7 +32,7 @@ class RestaurantAgent:
     def get_processing_message(self) -> str:
         return 'Finding restaurants that match your criteria...'
 
-    def _build_agent(self) -> LlmAgent:
+    def _build_agent(self, base_url: str) -> LlmAgent:
         """Builds the LLM agent for the restaurant agent."""
         LITELLM_MODEL = os.getenv(
             'LITELLM_MODEL', 'gemini/gemini-2.0-flash-001'
@@ -43,14 +44,33 @@ class RestaurantAgent:
                 'This agent finds restaurants based on user criteria like cuisine,'
                 ' location, or rating.'
             ),
-            instruction="""
+            instruction=f"""
     You are a helpful restaurant finding assistant.
     When a user provides you with criteria (like "top 10 chinese restaurants in the US",
     "best pizza places near downtown", or "cheap eats in Paris"),
     you must find and return a list of restaurants that match.
-    Present the answer clearly to the user.
+
+    For each restaurant in the list, you MUST select a relevant placeholder image
+    from the following available list. You must return the path formatted as a
+    full, absolute URL by prepending the base URL: {base_url}
+
+    Example Format: {base_url}/static/FILENAME
+
+    Available image paths:
+    - /static/beefbroccoli.jpeg
+    - /static/sweetsourpork.jpeg
+    - /static/springrolls.jpeg
+    - /static/mapotofu.jpeg
+    - /static/kungpao.jpeg
+    - /static/shrimpchowmein.jpeg
+    - /static/vegfriedrice.jpeg
+
+    You must include this absolute URL in a field named `imageUrl`.
+    If no image seems relevant, you can pick one at random from the list.
+
+    Present the answer clearly to the user, following the UI format instructions.
     """,
-            tools=[],  
+            tools=[],
         )
 
     async def stream(self, query, session_id) -> AsyncIterable[dict[str, Any]]:
@@ -82,7 +102,7 @@ class RestaurantAgent:
                     response = '\n'.join(
                         [p.text for p in event.content.parts if p.text]
                     )
-                
+
                 yield {
                     'is_task_complete': True,
                     'content': response,

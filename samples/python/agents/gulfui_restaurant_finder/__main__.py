@@ -10,7 +10,9 @@ from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from agent import RestaurantAgent
 from agent_executor import RestaurantAgentExecutor
 from dotenv import load_dotenv
-from gulfui_ext import GulfUIExtension  
+from gulfui_ext import GulfUIExtension
+from starlette.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
 
 
 load_dotenv()
@@ -35,7 +37,7 @@ def main(host, port):
                     'GEMINI_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
                 )
 
-        hello_ext = GulfUIExtension()  # <-- Instantiate our extension
+        hello_ext = GulfUIExtension()
         capabilities = AgentCapabilities(
             streaming=True,
             extensions=[
@@ -49,24 +51,26 @@ def main(host, port):
             tags=['restaurant', 'finder'],
             examples=['Find me the top 10 chinese restaurants in the US'],
         )
+
+        base_url = f'http://{host}:{port}'
+
         agent_card = AgentCard(
             name='Restaurant Agent',
             description='This agent helps find restaurants based on user criteria.',
-            url=f'http://{host}:{port}/',
+            url=base_url,  # <-- Use base_url here
             version='1.0.0',
             default_input_modes=RestaurantAgent.SUPPORTED_CONTENT_TYPES,
             default_output_modes=RestaurantAgent.SUPPORTED_CONTENT_TYPES,
             capabilities=capabilities,
             skills=[skill],
         )
-        agent_executor = (
-            RestaurantAgentExecutor()
-        )  # The simple, text-only executor
+
+        agent_executor = RestaurantAgentExecutor(base_url=base_url)
 
         agent_executor = hello_ext.wrap_executor(agent_executor)
 
         request_handler = DefaultRequestHandler(
-            agent_executor=agent_executor,  # Pass the wrapped executor to the handler
+            agent_executor=agent_executor,
             task_store=InMemoryTaskStore(),
         )
         server = A2AStarletteApplication(
@@ -74,7 +78,19 @@ def main(host, port):
         )
         import uvicorn
 
-        uvicorn.run(server.build(), host=host, port=port)
+        app = server.build()
+
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=['http://localhost:5173'],
+            allow_credentials=True,
+            allow_methods=['*'],
+            allow_headers=['*'],
+        )
+
+        app.mount('/static', StaticFiles(directory='images'), name='static')
+
+        uvicorn.run(app, host=host, port=port)
     except MissingAPIKeyError as e:
         logger.error(f'Error: {e}')
         exit(1)
