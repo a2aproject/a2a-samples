@@ -33,8 +33,6 @@ URI = f'https://{_CORE_PATH}'
 GULFUI_MIME_TYPE = 'application/json+gulfui'
 
 # --- GULF UI 7.0 SCHEMAS ---
-# These schemas are based on the GULF 7.0 specification.
-
 SCHEMA_BEGIN_RENDERING = """
 {
   "title": "BeginRendering Message",
@@ -277,9 +275,7 @@ SCHEMA_DATA_MODEL_UPDATE = """
 }
 """
 
-# --- Generic Prompt Suffix ---
-# This constant contains ONLY the generic instructions for formatting the output
-# according to the GULF 7.0 protocol.
+# --- SIMPLIFIED: Generic Prompt Suffix ---
 GENERIC_UI_INSTRUCTION_SUFFIX = f"""
 ---
 Your response MUST be in two parts, separated by a unique delimiter: `---GULFUI_JSON---`.
@@ -288,115 +284,12 @@ PART 1: First, provide your complete human-readable, conversational text answer 
 
 PART 2: Second, after the `---GULFUI_JSON---` delimiter, you must provide a SINGLE, raw JSON **OBJECT**.
 This root OBJECT must contain a single key named "gulfMessages".
-The value of "gulfMessages" must be a JSON **ARRAY** containing the messages needed to render the UI for your answer, in the following order:
-1.  A `BeginRendering` message.
-2.  A `ComponentUpdate` message (containing ALL components needed).
-3.  A `DataModelUpdate` message (populating the data model with the data from your answer).
+The value of "gulfMessages" must be a JSON **ARRAY** containing the messages needed to render the UI for your answer (BeginRendering, ComponentUpdate, DataModelUpdate).
 
 ---
 MANDATORY JSON STRUCTURE (GULF 7.0):
 You MUST follow the new component structure which uses a "componentProperties" object to wrap the properties for each component type (e.g., "componentProperties": {{"Text": {{"text": ...}}}}).
-If your answer contains a list of items (like restaurants), you MUST place this list inside the `contents` field of the `DataModelUpdate` message (with path "/") and use a templated `List` to render them.
-
----BEGIN EXAMPLE (GULF 7.0 structure wrapped in the required object)---
-{{
-  "gulfMessages": [
-    {{
-      "root": "root-column"
-    }},
-    {{
-      "components": [
-        {{
-          "id": "root-column",
-          "componentProperties": {{
-            "Column": {{
-              "children": {{
-                "explicitList": ["title-heading", "item-list"]
-              }}
-            }}
-          }}
-        }},
-        {{
-          "id": "title-heading",
-          "componentProperties": {{
-            "Heading": {{
-              "level": "1",
-              "text": {{ "literalString": "Example List Title" }}
-            }}
-          }}
-        }},
-        {{
-          "id": "item-list",
-          "componentProperties": {{
-            "List": {{
-              "direction": "vertical",
-              "children": {{
-                "template": {{
-                  "componentId": "item-card-template",
-                  "dataBinding": "/items"
-                }}
-              }}
-            }}
-          }}
-        }},
-        {{
-          "id": "item-card-template",
-          "componentProperties": {{
-            "Card": {{
-              "child": "card-details"
-            }}
-          }}
-        }},
-        {{
-          "id": "card-details",
-          "componentProperties": {{
-            "Column": {{
-              "children": {{
-                "explicitList": ["template-image", "template-name", "template-detail"]
-              }}
-            }}
-          }}
-        }},
-        {{
-          "id": "template-image",
-          "componentProperties": {{
-            "Image": {{
-              "url": {{ "path": "imageUrl" }}
-            }}
-          }}
-        }},
-        {{
-          "id": "template-name",
-          "componentProperties": {{
-            "Text": {{
-              "text": {{ "path": "name" }}
-            }}
-          }}
-        }},
-        {{
-          "id": "template-detail",
-          "componentProperties": {{
-            "Text": {{
-              "text": {{ "path": "detail" }}
-            }}
-          }}
-        }}
-      ]
-    }},
-    {{
-      "path": "/",
-      "contents": {{
-        "items": [
-          {{ "name": "Example Item 1", "detail": "Detail for item 1", "imageUrl": "http://localhost:10002/static/springrolls.jpeg" }},
-          {{ "name": "Example Item 2", "detail": "Detail for item 2", "imageUrl": "http://localhost:10002/static/mapotofu.jpeg" }}
-        ]
-      }}
-    }}
-  ]
-}}
----END EXAMPLE---
-
-If the query is a simple text answer, just create a "Text" component using the same 3-message array structure inside the "gulfMessages" key.
+You MUST generate the correct JSON for the task (list or form) as specified in your main agent instructions.
 
 Here are the full schemas your JSON messages MUST conform to:
 
@@ -456,6 +349,12 @@ class _GulfUIExecutor(AgentExecutor):
         # Store the original instruction when we are created
         self._original_instruction = self._adk_agent.instruction
 
+        self._agent_specific_gulf_ui_instruction = None
+        if hasattr(self._delegate.agent, 'gulf_ui_instruction'):
+            self._agent_specific_gulf_ui_instruction = (
+                self._delegate.agent.gulf_ui_instruction
+            )
+
     async def execute(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
@@ -463,13 +362,18 @@ class _GulfUIExecutor(AgentExecutor):
 
         try:
             if is_ui_active:
-                # Combine the stored original instruction with our UI suffix
-                smart_instruction = f'{self._original_instruction}\n{GENERIC_UI_INSTRUCTION_SUFFIX}'
+                base_prompt = self._original_instruction
+
+                if self._agent_specific_gulf_ui_instruction:
+                    base_prompt = self._agent_specific_gulf_ui_instruction
+
+                # This is the variable you asked to rename
+                ui_prompt = f'{base_prompt}\n{GENERIC_UI_INSTRUCTION_SUFFIX}'
 
                 print(
                     '\n--- GULF UI EXTENSION ACTIVATED: HIJACKING PROMPT (GENERIC GULF 7.0) ---'
                 )
-                self._adk_agent.instruction = smart_instruction
+                self._adk_agent.instruction = ui_prompt
 
                 # Wrap the queue to intercept and parse the delimited response
                 wrapped_queue = _GulfUIEventQueue(event_queue, self._ext)
@@ -483,11 +387,11 @@ class _GulfUIExecutor(AgentExecutor):
 
         finally:
             # Always reset the agent's instruction to its original state
-            if is_ui_active:
+            if self._adk_agent.instruction != self._original_instruction:
                 print(
                     '--- GULF UI EXTENSION: Restoring original agent prompt ---'
                 )
-                # --- THIS IS THE CORRECTED LINE ---
+                # --- Use the stored instruction to reset ---
                 self._adk_agent.instruction = self._original_instruction
 
     async def cancel(
@@ -565,7 +469,7 @@ class _GulfUIEventQueue(EventQueue):
                     except json.JSONDecodeError as e:
                         print(f'!!! FAILED TO PARSE JSON. Error: {e}')
                         text_part.text = (
-                            f'{text_part_content}\n(Failed to generate UI view)'
+                            f'{text_part.text}\n(Failed to generate UI view)'
                         )
                 else:
                     print(
