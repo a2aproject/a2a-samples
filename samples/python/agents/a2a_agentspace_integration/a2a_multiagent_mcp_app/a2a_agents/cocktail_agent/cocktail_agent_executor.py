@@ -248,7 +248,6 @@ class CocktailAgentExecutor(AgentExecutor):
         """
         if self.agent is None:
             # --- Environment setup ---
-            mcp_url = os.getenv("MCP_SERVER_URL")
 
             # Create the actual agent
             self.agent = LlmAgent(
