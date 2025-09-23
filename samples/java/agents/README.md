@@ -15,6 +15,10 @@ Each agent can be run as its own A2A server with the instructions in its README.
 * [**Weather Agent**](weather_mcp/README.md)  
   Sample agent to provide weather information. To make use of this agent in a multi-language, multi-agent system, check out the [weather_and_airbnb_planner](../../python/hosts/weather_and_airbnb_planner/README.md) sample.
 
+* [**Dice Agent (Multi-Transport)**](dice_agent_multi_transport/README.md)  
+  Sample agent that can roll dice of different sizes and check if numbers are prime. This agent demonstrates
+  multi-transport capabilities.
+
 ## Disclaimer
 
 Important: The sample code provided is for demonstration purposes and illustrates the
