@@ -3,7 +3,7 @@ import json
 import logging
 import os
 import time
-from typing import Dict, List, NoReturn, Optional
+from typing import Any, Dict, NoReturn
 
 import google.auth.transport.requests
 import google.oauth2.id_token
@@ -28,7 +28,6 @@ from google.adk.tools.mcp_tool.mcp_toolset import (
     MCPToolset,
     StreamableHTTPConnectionParams,
 )
-from google.auth import exceptions as google_auth_exceptions
 from google.genai import types
 
 
@@ -52,14 +51,15 @@ def decode_jwt_no_verify(token: str) -> dict:
     except Exception as e:
         raise ValueError(f"Failed to decode JWT payload: {e}") from e
 
-toolset_cache = {}
+
+toolset_cache: Dict[str, Any] = {}
 
 # Set logging
 logging.getLogger().setLevel(logging.INFO)
 load_dotenv()
 
 
-def get_auth_token(callback_context: CallbackContext) -> Optional[types.Content]:
+def get_auth_token(callback_context: CallbackContext) -> types.Content | None:
     # We have only one tool set otherwise you can iterate.
     mcp_toolset = callback_context._invocation_context.agent.tools[0]
     if mcp_toolset._tool_set_name not in toolset_cache:
@@ -73,68 +73,67 @@ def get_auth_token(callback_context: CallbackContext) -> Optional[types.Content]
         id_token = get_id_token(
             os.environ.get("MCP_SERVER_URL", "http://localhost:8080")
         )
-        mcp_toolset._connection_params.headers["X-Serverless-Authorization"] = (
-            f"Bearer {id_token}"
-        )
+        mcp_toolset._connection_params.headers[
+            "X-Serverless-Authorization"
+        ] = f"Bearer {id_token}"
         logging.debug(f"id_token => {id_token}")
         try:
             # Prefer PyJWT decode if available
             if hasattr(jwt, "decode"):
-                decoded_payload = jwt.decode(id_token, options={"verify_signature": False})
+                decoded_payload = jwt.decode(
+                    id_token, options={"verify_signature": False}
+                )
             else:
                 decoded_payload = decode_jwt_no_verify(id_token)
         except Exception:
             # Fallback to local decoder
             decoded_payload = decode_jwt_no_verify(id_token)
-        logging.debug("Decoded Token:", decoded_payload)
-        toolset_cache[mcp_toolset._tool_set_name][
-            "prev_used_token"
-        ] = f"Bearer {id_token}"
-        toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"] = (
-            decoded_payload["exp"]
-        )
+        logging.debug("Decoded Token: %s", decoded_payload)
+        toolset_cache[mcp_toolset._tool_set_name]["prev_used_token"] = f"Bearer {id_token}"
+        toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"] = decoded_payload[
+            "exp"
+        ]
     else:
         # header is present but the token might be expired or about to expire within the next 15 minutes.
-        time_after_threshold_minutes = (
-            int(time.time())
-            + int(os.environ.get("TOKEN_REFRESH_THRESHOLD_MINS", "15")) * 60
-        )
+        time_after_threshold_minutes = int(time.time()) + int(
+            os.environ.get("TOKEN_REFRESH_THRESHOLD_MINS", "15")
+        ) * 60
         logging.debug(
-            f"Token expires at {toolset_cache[mcp_toolset._tool_set_name]['token_expiration_time']}, Time after 15 minutes = {time_after_threshold_minutes}"
+            f'Token expires at {toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"]}, Time after 15 minutes = {time_after_threshold_minutes}'
         )
         # instead of decoding the token everytime - we are using the stored value to optimize
         if (
             time_after_threshold_minutes
             >= toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"]
         ):
-            logging.info(f"Getting a new token and updating the cache")
+            logging.info("Getting a new token and updating the cache")
             id_token = get_id_token(
                 os.environ.get("MCP_SERVER_URL", "http://localhost:8080")
             )
             mcp_toolset._connection_params.headers = {}
-            mcp_toolset._connection_params.headers["X-Serverless-Authorization"] = (
-                f"Bearer {id_token}"
-            )
+            mcp_toolset._connection_params.headers[
+                "X-Serverless-Authorization"
+            ] = f"Bearer {id_token}"
             try:
                 if hasattr(jwt, "decode"):
-                    decoded_payload = jwt.decode(id_token, options={"verify_signature": False})
+                    decoded_payload = jwt.decode(
+                        id_token, options={"verify_signature": False}
+                    )
                 else:
                     decoded_payload = decode_jwt_no_verify(id_token)
             except Exception:
                 decoded_payload = decode_jwt_no_verify(id_token)
-            logging.debug("Decoded Token:", decoded_payload)
-            toolset_cache[mcp_toolset._tool_set_name][
-                "prev_used_token"
-            ] = f"Bearer {id_token}"
-            toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"] = (
-                decoded_payload["exp"]
-            )
+            logging.debug("Decoded Token: %s", decoded_payload)
+            toolset_cache[mcp_toolset._tool_set_name]["prev_used_token"] = f"Bearer {id_token}"
+            toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"] = decoded_payload[
+                "exp"
+            ]
         else:
             logging.error("Using a valid old token")
             mcp_toolset._connection_params.headers = {}
-            mcp_toolset._connection_params.headers["X-Serverless-Authorization"] = (
-                toolset_cache[mcp_toolset._tool_set_name]["prev_used_token"]
-            )
+            mcp_toolset._connection_params.headers[
+                "X-Serverless-Authorization"
+            ] = toolset_cache[mcp_toolset._tool_set_name]["prev_used_token"]
 
     return None
 
@@ -146,8 +145,7 @@ def get_id_token(audience):
 
 
 class MCPToolsetWithToolAccess(MCPToolset):
-    """
-    A subclass of MCPToolset that overrides the get_tools method
+    """A subclass of MCPToolset that overrides the get_tools method
     to inject additional information.
     """
 
@@ -159,9 +157,8 @@ class MCPToolsetWithToolAccess(MCPToolset):
     @retry_on_closed_resource
     async def get_tools(
         self,
-        readonly_context: Optional[ReadonlyContext] = None,
-    ) -> List[BaseTool]:
-
+        readonly_context: ReadonlyContext | None = None,
+    ) -> list[BaseTool]:
         tools = None
 
         if "tools" not in toolset_cache[self._tool_set_name]:
@@ -198,12 +195,11 @@ class WeatherAgentExecutor(AgentExecutor):
 
     def __init__(self) -> None:
         """Initialize with lazy loading pattern."""
-        self.agent = None
-        self.runner = None
+        self.agent: LlmAgent | None = None
+        self.runner: Runner | None = None
 
     def _init_agent(self) -> None:
-        """
-        Lazy initialization of agent resources.
+        """Lazy initialization of agent resources.
         This now constructs the agent and its serializable auth.
         """
         if self.agent is None:
@@ -254,8 +250,10 @@ class WeatherAgentExecutor(AgentExecutor):
         2. A streaming request is made (message/stream)
         """
         # Initialize agent on first call
-        if self.agent is None:
+        if self.agent is None or self.runner is None:
             self._init_agent()
+            assert self.agent is not None
+            assert self.runner is not None
 
         # Extract the user's question from the protocol message
         query = context.get_user_input()
@@ -307,19 +305,22 @@ class WeatherAgentExecutor(AgentExecutor):
                     await updater.complete()
                     break
 
-
         except Exception as e:
             # Errors should never pass silently (Zen of Python)
             # Always inform the client when something goes wrong
             logging.error(f"Error during execution: {e!s}", exc_info=True)
             await updater.update_status(
-                TaskState.failed, message=new_agent_text_message(f"Error: {e!s}")
+                TaskState.failed,
+                message=new_agent_text_message(f"Error: {e!s}"),
             )
             # Re-raise for proper error handling up the stack
             raise
 
     async def _get_or_create_session(self, context_id: str):
         """Get existing session or create new one."""
+        if self.runner is None:
+            self._init_agent()
+            assert self.runner is not None
         session = await self.runner.session_service.get_session(
             app_name=self.runner.app_name,
             user_id="user",

@@ -5,10 +5,7 @@ from collections.abc import AsyncIterator
 
 import gradio as gr
 from dotenv import load_dotenv
-from google.adk.events import Event
-from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
-from google.genai import types
 from vertexai import agent_engines
 
 load_dotenv()
@@ -20,12 +17,10 @@ SESSION_SERVICE = InMemorySessionService()
 
 PROJECT_ID = os.getenv("PROJECT_ID")
 AGENT_ENGINE_ID = os.getenv("AGENT_ENGINE_ID")
-LOCATION = os.getenv('GOOGLE_CLOUD_LOCATION', 'us-central1')
+LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
 PROJECT_NUMBER = os.getenv("PROJECT_NUMBER")
 
-resource_name = (
-    f"projects/{PROJECT_NUMBER}/locations/us-central1/reasoningEngines/{AGENT_ENGINE_ID}"
-)
+resource_name = f"projects/{PROJECT_NUMBER}/locations/us-central1/reasoningEngines/{AGENT_ENGINE_ID}"
 
 remote_agent = agent_engines.get(resource_name)
 
@@ -36,7 +31,6 @@ async def get_response_from_agent(
 ) -> AsyncIterator[gr.ChatMessage]:
     """Get response from host agent."""
     try:
-
         remote_session = await remote_agent.async_create_session(user_id="user1")
         async for event in remote_agent.async_stream_query(
             user_id="user1",

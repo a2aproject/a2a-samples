@@ -34,7 +34,7 @@ In Cloud Shell, execute the following command:
 
 
 ```bash
-export $(sed -e '/^ *#/d' -e '/^$/d' -e 's/ *= */=/' -e "s/'//g" -e 's/"//g' .env | xargs)
+export $(sed -e '/^ *#/d' -e '/^$/d' -e 's/ *= */=/' -e 's/\'//g -e 's/"//g' .env | xargs)
 
 gcloud run deploy $SERVICE_NAME \
   --source . \

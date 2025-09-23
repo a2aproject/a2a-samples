@@ -15,11 +15,11 @@
 FROM python:3.13-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN apt-get update && apt-get install -y \
-    curl \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl=8.15.0-1 \
     && rm -rf /var/lib/apt/lists/*
 
-ADD . /app
+COPY . /app
 WORKDIR /app
 
 RUN uv sync --frozen

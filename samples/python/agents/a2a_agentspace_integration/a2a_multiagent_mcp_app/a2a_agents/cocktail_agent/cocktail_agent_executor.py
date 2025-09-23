@@ -3,7 +3,7 @@ import json
 import logging
 import os
 import time
-from typing import Dict, List, NoReturn, Optional
+from typing import Any, NoReturn
 
 import jwt
 from a2a.server.agent_execution import AgentExecutor, RequestContext
@@ -35,7 +35,7 @@ from google.oauth2 import id_token as google_id_token
 logging.getLogger().setLevel(logging.INFO)
 load_dotenv()
 
-toolset_cache = {}
+toolset_cache: dict[str, Any] = {}
 
 
 def decode_jwt_no_verify(token: str) -> dict:
@@ -59,7 +59,7 @@ def decode_jwt_no_verify(token: str) -> dict:
         raise ValueError(f"Failed to decode JWT payload: {e}") from e
 
 
-def get_auth_token(callback_context: CallbackContext) -> Optional[types.Content]:
+def get_auth_token(callback_context: CallbackContext) -> types.Content | None:
     # We have only one tool set otherwise you can iterate.
     mcp_toolset = callback_context._invocation_context.agent.tools[0]
     if mcp_toolset._tool_set_name not in toolset_cache:
@@ -68,15 +68,14 @@ def get_auth_token(callback_context: CallbackContext) -> Optional[types.Content]
     # The following means the token was never added to the toolset
     # The headers reset every time so cannot check for headers.
     if "token_expiration_time" not in toolset_cache[mcp_toolset._tool_set_name]:
-        logging.info(
-            "Getting a token and adding to X-Serverless-Authorization header")
+        logging.info("Getting a token and adding to X-Serverless-Authorization header")
         mcp_toolset._connection_params.headers = {}
         id_token = get_id_token(
             os.environ.get("MCP_SERVER_URL", "http://localhost:8080")
         )
-        mcp_toolset._connection_params.headers["X-Serverless-Authorization"] = (
-            f"Bearer {id_token}"
-        )
+        mcp_toolset._connection_params.headers[
+            "X-Serverless-Authorization"
+        ] = f"Bearer {id_token}"
         logging.debug(f"id_token => {id_token}")
         try:
             # Prefer PyJWT decode if available
@@ -89,35 +88,32 @@ def get_auth_token(callback_context: CallbackContext) -> Optional[types.Content]
         except Exception:
             # Fallback to local decoder
             decoded_payload = decode_jwt_no_verify(id_token)
-        logging.debug("Decoded Token:", decoded_payload)
-        toolset_cache[mcp_toolset._tool_set_name][
-            "prev_used_token"
-        ] = f"Bearer {id_token}"
-        toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"] = (
-            decoded_payload["exp"]
-        )
+        logging.debug("Decoded Token: %s", decoded_payload)
+        toolset_cache[mcp_toolset._tool_set_name]["prev_used_token"] = f"Bearer {id_token}"
+        toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"] = decoded_payload[
+            "exp"
+        ]
     else:
         # header is present but the token might be expired or about to expire within the next 15 minutes.
-        time_after_threshold_minutes = (
-            int(time.time())
-            + int(os.environ.get("TOKEN_REFRESH_THRESHOLD_MINS", "15")) * 60
-        )
+        time_after_threshold_minutes = int(time.time()) + int(
+            os.environ.get("TOKEN_REFRESH_THRESHOLD_MINS", "15")
+        ) * 60
         logging.debug(
-            f"Token expires at {toolset_cache[mcp_toolset._tool_set_name]['token_expiration_time']}, Time after 15 minutes = {time_after_threshold_minutes}"
+            f'Token expires at {toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"]}, Time after 15 minutes = {time_after_threshold_minutes}'
         )
         # instead of decoding the token everytime - we are using the stored value to optimize
         if (
             time_after_threshold_minutes
             >= toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"]
         ):
-            logging.info(f"Getting a new token and updating the cache")
+            logging.info("Getting a new token and updating the cache")
             id_token = get_id_token(
                 os.environ.get("MCP_SERVER_URL", "http://localhost:8080")
             )
             mcp_toolset._connection_params.headers = {}
-            mcp_toolset._connection_params.headers["X-Serverless-Authorization"] = (
-                f"Bearer {id_token}"
-            )
+            mcp_toolset._connection_params.headers[
+                "X-Serverless-Authorization"
+            ] = f"Bearer {id_token}"
             try:
                 if hasattr(jwt, "decode"):
                     decoded_payload = jwt.decode(
@@ -127,19 +123,17 @@ def get_auth_token(callback_context: CallbackContext) -> Optional[types.Content]
                     decoded_payload = decode_jwt_no_verify(id_token)
             except Exception:
                 decoded_payload = decode_jwt_no_verify(id_token)
-            logging.debug("Decoded Token:", decoded_payload)
-            toolset_cache[mcp_toolset._tool_set_name][
-                "prev_used_token"
-            ] = f"Bearer {id_token}"
-            toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"] = (
-                decoded_payload["exp"]
-            )
+            logging.debug("Decoded Token: %s", decoded_payload)
+            toolset_cache[mcp_toolset._tool_set_name]["prev_used_token"] = f"Bearer {id_token}"
+            toolset_cache[mcp_toolset._tool_set_name]["token_expiration_time"] = decoded_payload[
+                "exp"
+            ]
         else:
             logging.error("Using a valid old token")
             mcp_toolset._connection_params.headers = {}
-            mcp_toolset._connection_params.headers["X-Serverless-Authorization"] = (
-                toolset_cache[mcp_toolset._tool_set_name]["prev_used_token"]
-            )
+            mcp_toolset._connection_params.headers[
+                "X-Serverless-Authorization"
+            ] = toolset_cache[mcp_toolset._tool_set_name]["prev_used_token"]
 
     return None
 
@@ -151,8 +145,7 @@ def get_id_token(audience):
 
 
 class MCPToolsetWithToolAccess(MCPToolset):
-    """
-    A subclass of MCPToolset that overrides the get_tools method
+    """A subclass of MCPToolset that overrides the get_tools method
     to inject additional information.
     """
 
@@ -164,9 +157,8 @@ class MCPToolsetWithToolAccess(MCPToolset):
     @retry_on_closed_resource
     async def get_tools(
         self,
-        readonly_context: Optional[ReadonlyContext] = None,
-    ) -> List[BaseTool]:
-
+        readonly_context: ReadonlyContext | None = None,
+    ) -> list[BaseTool]:
         tools = None
 
         if "tools" not in toolset_cache[self._tool_set_name]:
@@ -185,16 +177,14 @@ class MCPToolsetWithToolAccess(MCPToolset):
             )
             tools = original_tools
         else:
-            logging.error(
-                f"Found tools for the toolset {self._tool_set_name} in cache")
+            logging.error(f"Found tools for the toolset {self._tool_set_name} in cache")
             tools = toolset_cache[self._tool_set_name]["tools"]
 
         return tools
 
 
-def get_gcp_auth_headers(audience: str) -> Dict[str, str]:
-    """
-    Fetches a Google Cloud OIDC token for a target audience using ADC.
+def get_gcp_auth_headers(audience: str) -> dict[str, str]:
+    """Fetches a Google Cloud OIDC token for a target audience using ADC.
 
     This simplified function relies entirely on Application Default Credentials (ADC)
     and the google-auth library. The library automatically handles checking for
@@ -249,22 +239,16 @@ class CocktailAgentExecutor(AgentExecutor):
 
     def __init__(self) -> None:
         """Initialize with lazy loading pattern."""
-        self.agent = None
-        self.runner = None
+        self.agent: LlmAgent | None = None
+        self.runner: Runner | None = None
 
     def _init_agent(self) -> None:
-        """
-        Lazy initialization of agent resources.
+        """Lazy initialization of agent resources.
         This now constructs the agent and its serializable auth.
         """
         if self.agent is None:
             # --- Environment setup ---
             mcp_url = os.getenv("MCP_SERVER_URL")
-
-            cocktail_server_params = StreamableHTTPConnectionParams(
-                url=mcp_url,
-                timeout=60,
-            )
 
             # Create the actual agent
             self.agent = LlmAgent(
@@ -312,8 +296,10 @@ drink recipes, ingredients,and mixology.You must rely exclusively on these tools
         2. A streaming request is made (message/stream)
         """
         # Initialize agent on first call
-        if self.agent is None:
+        if self.agent is None or self.runner is None:
             self._init_agent()
+            assert self.agent is not None
+            assert self.runner is not None
 
         # Extract the user's question from the protocol message
         query = context.get_user_input()
@@ -337,8 +323,7 @@ drink recipes, ingredients,and mixology.You must rely exclusively on these tools
             logging.info(f"Using session: {session.id}")
 
             # Prepare the user message in ADK format
-            content = types.Content(role=Role.user, parts=[
-                                    types.Part(text=query)])
+            content = types.Content(role=Role.user, parts=[types.Part(text=query)])
 
             # Run the agent asynchronously
             # This may involve multiple LLM calls and tool uses
@@ -371,14 +356,17 @@ drink recipes, ingredients,and mixology.You must rely exclusively on these tools
             # Always inform the client when something goes wrong
             logging.error(f"Error during execution: {e!s}", exc_info=True)
             await updater.update_status(
-                TaskState.failed, message=new_agent_text_message(
-                    f"Error: {e!s}")
+                TaskState.failed,
+                message=new_agent_text_message(f"Error: {e!s}"),
             )
             # Re-raise for proper error handling up the stack
             raise
 
     async def _get_or_create_session(self, context_id: str):
         """Get existing session or create new one."""
+        if self.runner is None:
+            self._init_agent()
+            assert self.runner is not None
         session = await self.runner.session_service.get_session(
             app_name=self.runner.app_name,
             user_id="user",
@@ -386,8 +374,7 @@ drink recipes, ingredients,and mixology.You must rely exclusively on these tools
         )
 
         if not session:
-            logging.info(
-                f"No session found for {context_id}, creating new one.")
+            logging.info(f"No session found for {context_id}, creating new one.")
             session = await self.runner.session_service.create_session(
                 app_name=self.runner.app_name,
                 user_id="user",

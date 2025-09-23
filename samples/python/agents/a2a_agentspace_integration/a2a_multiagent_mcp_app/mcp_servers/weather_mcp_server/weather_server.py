@@ -1,12 +1,11 @@
+import asyncio
 import json
-from typing import Any, Dict, Optional
+from typing import Any
 
+import httpx
+from fastmcp import FastMCP
 from geopy.exc import GeocoderServiceError, GeocoderTimedOut
 from geopy.geocoders import Nominatim
-import httpx
-from fastmcp import FastMCP 
-import asyncio
-import os
 
 # Initialize FastMCP server
 mcp = FastMCP("weather MCP server")
@@ -27,34 +26,22 @@ http_client = httpx.AsyncClient(
 )
 
 # --- Geocoding Setup ---
-# Initialize the geocoder (Nominatim requires a unique user_agent)
 geolocator = Nominatim(user_agent=USER_AGENT)
 
 
-async def get_weather_response(endpoint: str) -> Optional[Dict[str, Any]]:
-    """
-    Make a request to the NWS API using the shared client with error handling.
-    Returns None if an error occurs.
-    """
+# --- Helper Functions ---
+async def get_weather_response(endpoint: str) -> Any:
+    """Generic helper to fetch and parse JSON from a weather.gov endpoint."""
     try:
         response = await http_client.get(endpoint)
-        response.raise_for_status()  # Raises HTTPStatusError for 4xx/5xx responses
+        response.raise_for_status()
         return response.json()
-    except httpx.HTTPStatusError:
-        # Specific HTTP errors (like 404 Not Found, 500 Server Error)
-        return None
-    except httpx.TimeoutException:
-        # Request timed out
-        return None
-    except httpx.RequestError:
-        # Other request errors (connection, DNS, etc.)
-        return None
-    except json.JSONDecodeError:
-        # Response was not valid JSON
+    except (httpx.RequestError, httpx.HTTPStatusError, json.JSONDecodeError) as e:
+        print(f"Weather API request failed for endpoint '{endpoint}': {e}")
         return None
 
 
-def format_alert(feature: Dict[str, Any]) -> str:
+def format_alert(feature: dict[str, Any]) -> str:
     """Format an alert feature into a readable string."""
     props = feature.get("properties", {})  # Safer access
     # Use .get() with default values for robustness
@@ -66,29 +53,28 @@ def format_alert(feature: Dict[str, Any]) -> str:
             Urgency: {props.get('urgency', 'N/A')}
             Effective: {props.get('effective', 'N/A')}
             Expires: {props.get('expires', 'N/A')}
-            Description: {props.get('description', 'No description provided.').strip()}
-            Instructions: {props.get('instruction', 'No instructions provided.').strip()}
+            Headline: {props.get('headline', 'N/A')}
+            Description: {props.get('description', 'N/A')}
+            Instruction: {props.get('instruction', 'N/A')}
             """
 
 
-def format_forecast_period(period: Dict[str, Any]) -> str:
-    """Formats a single forecast period into a readable string."""
-    return f"""
-           {period.get('name', 'Unknown Period')}:
-             Temperature: {period.get('temperature', 'N/A')}°{period.get('temperatureUnit', 'F')}
-             Wind: {period.get('windSpeed', 'N/A')} {period.get('windDirection', 'N/A')}
-             Short Forecast: {period.get('shortForecast', 'N/A')}
-             Detailed Forecast: {period.get('detailedForecast', 'No detailed forecast            provided.').strip()}
-           """
+def format_forecast_period(period: dict[str, Any]) -> str:
+    """Format a forecast period into a readable string."""
+    return (
+        f'{period.get("name", "N/A")}: {period.get("temperature")}°{period.get("temperatureUnit")}\n'
+        f'Wind: {period.get("windSpeed")} {period.get("windDirection")}\n'
+        f'Forecast: {period.get("shortForecast")}\n'
+        f'{period.get("detailedForecast")}'
+    )
 
 
 # --- MCP Tools ---
 
 
 @mcp.tool()
-async def get_alerts(state: str) -> str:
-    """
-    Get active weather alerts for a specific US state.
+async def get_active_alerts_by_state(state: str) -> str:
+    """Gets active weather alerts for a specific US state.
 
     Args:
         state: The two-letter US state code (e.g., CA, NY, TX). Case-insensitive.
@@ -139,8 +125,6 @@ async def _internal_get_forecast(latitude: float, longitude: float) -> str:
         response = await http_client.get(forecast_url)
         response.raise_for_status()
         forecast_data = response.json()
-    except httpx.HTTPStatusError:
-        pass  # Error handled by returning None below
     except httpx.RequestError:
         pass  # Error handled by returning None below
     except json.JSONDecodeError:
@@ -162,22 +146,13 @@ async def _internal_get_forecast(latitude: float, longitude: float) -> str:
 # --- MODIFIED: get_forecast Tool (now a wrapper) ---
 @mcp.tool()
 async def get_forecast(latitude: float, longitude: float) -> str:
-    """
-    Get the weather forecast for a specific location using latitude and longitude.
-
-    Args:
-        latitude: The latitude of the location (e.g., 34.05).
-        longitude: The longitude of the location (e.g., -118.25).
-    """
-    # Call the internal helper function
+    """Gets the weather forecast for a given latitude and longitude."""
     return await _internal_get_forecast(latitude, longitude)
 
 
-# --- MODIFIED: get_forecast_by_city Tool (with both fixes) ---
 @mcp.tool()
 async def get_forecast_by_city(city: str, state: str) -> str:
-    """
-    Get the weather forecast for a specific US city and state by first finding its coordinates.
+    """Gets the weather forecast for a given city and state.
 
     Args:
         city: The name of the city (e.g., "Los Angeles", "New York").
@@ -203,32 +178,26 @@ async def get_forecast_by_city(city: str, state: str) -> str:
     try:
         # Run the synchronous (blocking) geocode call in a separate thread
         location = await asyncio.to_thread(
-            geolocator.geocode, query, timeout=GEOCODE_TIMEOUT
+            geolocator.geocode, query, exactly_one=True, timeout=GEOCODE_TIMEOUT
         )
+    except (GeocoderTimedOut, GeocoderServiceError) as e:
+        return f"Geocoding service error for '{query}': {e}"
 
-    except GeocoderTimedOut:
-        return f"Could not get coordinates for '{city_name}, {state_code}': The location service timed out."
-    except GeocoderServiceError:
-        return f"Could not get coordinates for '{city_name}, {state_code}': The location service returned an error."
-
-    # --- Handle Geocoding Result ---
     if location is None:
-        return f"Could not find coordinates for '{city_name}, {state_code}'. Please check the spelling or try a nearby city."
+        return f"Could not find location for '{query}'. Please be more specific."
 
-    latitude = location.latitude
-    longitude = location.longitude
-
-    # --- Reuse logic by calling the INTERNAL helper (the real coroutine) ---
-    return await _internal_get_forecast(latitude, longitude)
+    # --- Forecast Fetching ---
+    return await _internal_get_forecast(location.latitude, location.longitude)
 
 
-# --- Server Execution & Shutdown ---
-async def shutdown_event() -> None:
+# --- Add shutdown event to close client ---
+@mcp.on_event("shutdown")
+async def shutdown_event():
     """Gracefully close the httpx client."""
     await http_client.aclose()
     # print("HTTP client closed.") # Optional print statement if desired
 
 
 if __name__ == "__main__":
-    #mcp.run(transport="sse")
+    # mcp.run(transport="sse")
     asyncio.run(mcp.run_async(transport="streamable-http", host="0.0.0.0", port=8080))

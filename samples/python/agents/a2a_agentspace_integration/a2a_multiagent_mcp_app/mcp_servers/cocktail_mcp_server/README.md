@@ -2,7 +2,7 @@
 
 This guide walks you through deploying the Cocktail MCP server to Google Cloud Run.
 
-### 1. Configure Environment Variables
+## 1. Configure Environment Variables
 
 Open your Cloud Shell or a local terminal with the gcloud CLI configured and set the following environment variables. 
 
@@ -22,7 +22,7 @@ export PROJECT_ID='your-gcp-project-id'
 export PROJECT_NUMBER='your-gcp-project-number'
 ```
 
-### 2. Deploy to Cloud Run
+## 2. Deploy to Cloud Run
 
 Execute the following command to deploy the service:
 
@@ -35,7 +35,7 @@ gcloud run deploy $SERVICE_NAME \
   --no-allow-unauthenticated
 ```
 
-### 3. Grant IAM Permissions
+## 3. Grant IAM Permissions
 
 For the Agent Engine to invoke the Cloud Run service, you need to grant the `run.invoker` role to the default compute service account.
 
@@ -46,7 +46,7 @@ gcloud run services add-iam-policy-binding $SERVICE_NAME \
     --region="$LOCATION"
 ```
 
-### 4. Access the Service (Optional)
+## 4. Access the Service (Optional)
 
 Once deployed, you can proxy the service to your local machine for testing:
 
@@ -54,7 +54,7 @@ Once deployed, you can proxy the service to your local machine for testing:
 gcloud run services proxy $SERVICE_NAME --region=$LOCATION
 ```
 
-### 5. Grant Cloudtop Access (Optional)
+## 5. Grant Cloudtop Access (Optional)
 
 If you need to grant access to a Cloudtop user, run the following command:
 
