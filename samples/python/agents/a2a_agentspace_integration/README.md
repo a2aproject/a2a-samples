@@ -4,7 +4,8 @@
 >
 > **⚠️ Important**: A2A is a work in progress (WIP) thus, in the near future there might be changes that are different from what demonstrated here.
 
-This document describes a multi-agent set up using [Agent2Agent (A2A)](https://a2a-protocol.org/latest/), [Agent Development Kit (ADK)](https://google.github.io/adk-docs/), [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview), MCP servers, and the ADK extension for A2A. It provides an overview of how the A2A protocol works between agents, and how the extension is activated on the server and included in the response.
+This document describes a multi-agent set up using [Agent2Agent (A2A)](https://a2a-protocol.org/latest/), the [Agent Development Kit (ADK)](https://google.github.io/adk-docs/), and [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview).
+It provides an overview of how the A2A protocol works between agents, MCP servers, and the ADK extension for A2A, and how the extension is activated on the server and included in the response.
 
 ## Overview
 
@@ -116,7 +117,10 @@ Navigate to either `a2a_multiagent_mcp_app/frontend_option` and follow the `READ
 
 **Important**: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
 
-All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks. Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input.
+For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description).
+If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.
+Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
 
 Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
 
