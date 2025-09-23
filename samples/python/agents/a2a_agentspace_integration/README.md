@@ -36,14 +36,14 @@ The application employs three distinct agents:
 
 The agents interact with the following MCP servers:
 
-1.  **Cocktail MCP Server** (Local Code)
+1. **Cocktail MCP Server** (Local Code)
     - Provides 5 tools:
         - `search cocktail by name`
         - `list all cocktail by first letter`
         - `search ingredient by name`
         - `list random cocktails`
         - `lookup full cocktail details by id`
-2.  **Weather MCP Server** (Local Code)
+2. **Weather MCP Server** (Local Code)
     - Provides 3 tools:
         - `get weather forecast by city name`
         - `get weather forecast by coordinates`
@@ -64,9 +64,9 @@ Here are some example questions you can ask the chatbot:
 
 Before running the application locally, ensure you have the following installed:
 
-1.  [Python 3.12+](https://www.python.org/downloads/)
-2.  gcloud SDK: [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install)
-3.  **(Optional) uv:** The Python package management tool used in this project. Follow the installation guide: [https://docs.astral.sh/uv/getting-started/installation/](https://docs.astral.sh/uv/getting-started/installation/)
+1. [Python 3.12+](https://www.python.org/downloads/)
+2. gcloud SDK: [https://cloud.google.com/sdk/docs/install](https://cloud.google.com/sdk/docs/install)
+3. **(Optional) uv:** The Python package management tool used in this project. Follow the installation guide: [https://docs.astral.sh/uv/getting-started/installation/](https://docs.astral.sh/uv/getting-started/installation/)
 
 ### 1. Project Structure
 

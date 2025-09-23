@@ -200,6 +200,7 @@ class WeatherAgentExecutor(AgentExecutor):
 
     def _init_agent(self) -> None:
         """Lazy initialization of agent resources.
+
         This now constructs the agent and its serializable auth.
         """
         if self.agent is None:

@@ -1,14 +1,17 @@
 import asyncio
+
 from typing import Any
 
 import httpx
+
 from fastmcp import FastMCP
 
+
 # Initialize FastMCP server
-mcp = FastMCP("cocktail MCP server")
+mcp = FastMCP('cocktail MCP server')
 
 # Constants
-API_BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1/"
+API_BASE_URL = 'https://www.thecocktaildb.com/api/json/v1/1/'
 
 http_client = httpx.AsyncClient(base_url=API_BASE_URL, timeout=30.0)
 
@@ -26,7 +29,7 @@ async def make_cocktaildb_request(
         data = response.json()
 
         # The API returns null string instead of null JSON for no results
-        if isinstance(data, str) and data.lower() == "null":
+        if isinstance(data, str) and data.lower() == 'null':
             return None
 
         # Handle cases where the primary key (drinks/ingredients) might be null
