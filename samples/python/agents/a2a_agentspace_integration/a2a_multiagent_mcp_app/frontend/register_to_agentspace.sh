@@ -16,10 +16,8 @@ export AS_APP="PLACEHOLDER - REPLACE WITH YOUR AGENT SPACE APPLICATION ID" # Str
 export AS_LOCATION="PLACEHOLDER - REPLACE WITH YOUR AGENT SPACE APPLICATION LOCATION" # String - e.g. global, eu, us
 
 export AGENT_DISPLAY_NAME="a2a-agent" # String - this will appear as the name of the agent into your AgentSpace
-AGENT_DESCRIPTION=$(cat <<EOF
- You're an export of weather and cocktail, answer questions regarding weather and cocktail. You can answer questions like: 1) What is the weather in SF, CA today? 2) What is a good cocktail recipe with gin and lemon? 3) What is the weather like in New York? 4) How to make a Mojito cocktail? 5) What is the weather forecast for this weekend in Los Angeles, CA? 6) Suggest a cocktail recipe for a party? 7) What is the temperature in Tokyo right now? 8) How to make a Margarita cocktail? 9) What is the humidity level in Miami? 10) Recommend a cocktail recipe with vodka and cranberry juice
-EOF
-)
+# CORRECTED: The description is now a single-line string to ensure valid JSON.
+AGENT_DESCRIPTION="You're an export of weather and cocktail, answer questions regarding weather and cocktail. You can answer questions like: 1) What is the weather in SF, CA today? 2) What is a good cocktail recipe with gin and lemon? 3) What is the weather like in New York? 4) How to make a Mojito cocktail? 5) What is the weather forecast for this weekend in Los Angeles, CA? 6) Suggest a cocktail recipe for a party? 7) What is the temperature in Tokyo right now? 8) How to make a Margarita cocktail? 9) What is the humidity level in Miami? 10) Recommend a cocktail recipe with vodka and cranberry juice"
 export AGENT_DESCRIPTION
 
 DISCOVERY_ENGINE_PROD_API_ENDPOINT="https://discoveryengine.googleapis.com"
