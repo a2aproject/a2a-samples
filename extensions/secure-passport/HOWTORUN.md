@@ -17,17 +17,17 @@ You need the following installed on your system:
 
 ## 2. Setup and Installation
 
-1.  **From the repository root, navigate** to the sample project directory:
+1. **From the repository root, navigate** to the sample project directory:
     ```bash
     cd extensions/secure-passport/v1/samples/python
     ```
 
-2.  **Install Dependencies** using Poetry. This command reads `pyproject.toml`, creates a virtual environment, and installs `pydantic` and `pytest`.
+2. **Install Dependencies** using Poetry. This command reads `pyproject.toml`, creates a virtual environment, and installs `pydantic` and `pytest`.
     ```bash
     poetry install
     ```
 
-3.  **Activate** the virtual environment:
+3. **Activate** the virtual environment:
     ```bash
     poetry shell
     ```

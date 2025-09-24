@@ -1,12 +1,10 @@
 import pytest
-from pydantic import ValidationError
 from secure_passport_ext import (
     CallerContext, 
     MockA2AMessage, 
     add_secure_passport, 
     get_secure_passport, 
     SECURE_PASSPORT_URI,
-    SecurePassportExtension
 )
 
 # ======================================================================
