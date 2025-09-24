@@ -44,7 +44,7 @@ def demonstrate_use_case(title: str, agent_id: str, state: dict, signature: str 
     retrieved = get_secure_passport(message)
     
     if retrieved:
-        print(f"  Source: {retrieved.agentId}")
+        print(f"  Source: {retrieved.agent_id}")
         print(f"  Verified: {retrieved.is_verified}")
         print(f"  Context: {retrieved.state}")
     else:
