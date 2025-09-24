@@ -18,7 +18,7 @@ The callee agent uses the `supportedStateKeys` array to explicitly declare which
 
 ```json
 {
-  "uri": "[https://a2aprotocol.ai/ext/secure-passport/v1]",
+  "uri": "https://a2aprotocol.ai/ext/secure-passport/v1",
   "params": {
     "receivesCallerContext": true,
     "supportedStateKeys": ["user_preferred_currency", "loyalty_tier"]
