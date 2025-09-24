@@ -19,7 +19,7 @@ def valid_passport_data():
     Returns a dictionary for creating a valid CallerContext. 
     Uses snake_case keys to align with the CallerContext model attributes.
     """
-    # FIX APPLIED HERE: Using snake_case keys
+    # Using snake_case keys
     return {
         "agent_id": "a2a://orchestrator.com",
         "session_id": "session-123",
