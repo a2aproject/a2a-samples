@@ -17,7 +17,7 @@ You need the following installed on your system:
 
 ## 2. Setup and Installation
 
-1.  **Navigate** to the sample project directory:
+1.  **From the repository root, navigate** to the sample project directory:
     ```bash
     cd extensions/secure-passport/v1/samples/python
     ```
