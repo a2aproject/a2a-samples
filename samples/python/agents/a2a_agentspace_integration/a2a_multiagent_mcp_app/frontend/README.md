@@ -4,7 +4,7 @@
 
 ## **0. Ceate the .env file**
  Create the .env using the .env.example file
- 
+
 ## **1. Run it locally**
 
 ```bash
@@ -73,7 +73,7 @@ You can then open the Cloud Run service in a browser to access the app.
 
 The optional step is to make your deployed agent available in AgentSpace.
 
-Get the Reasoning Engine ID: The REASONING_ENGINE_ID is the ID of your Agent Engine instance. 
+Get the Reasoning Engine ID: The REASONING_ENGINE_ID is the ID of your Agent Engine instance.
 
 Update and run the expose script:
 

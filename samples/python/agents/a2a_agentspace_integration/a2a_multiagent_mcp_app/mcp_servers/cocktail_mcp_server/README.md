@@ -4,7 +4,7 @@ This guide walks you through deploying the Cocktail MCP server to Google Cloud R
 
 ## 1. Configure Environment Variables
 
-Open your Cloud Shell or a local terminal with the gcloud CLI configured and set the following environment variables. 
+Open your Cloud Shell or a local terminal with the gcloud CLI configured and set the following environment variables.
 
 **Note**: These values must match the ones in your `.env` file.
 
