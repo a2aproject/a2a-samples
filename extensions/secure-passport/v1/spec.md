@@ -70,7 +70,7 @@ This example shows the request body for an A2A `tasks/send` RPC call.
         {"kind": "text", "content": "Book a flight for me."}
       ],
       "metadata": {
-        "[https://a2aprotocol.ai/ext/secure-passport/v1](https://a2aprotocol.ai/ext/secure-passport/v1)": {
+        "https://a2aprotocol.ai/ext/secure-passport/v1": {
           "agentId": "a2a://orchestrator-agent.com",
           "sessionId": "travel-session-xyz",
           "signature": "MOCK-SIG-123456...",
