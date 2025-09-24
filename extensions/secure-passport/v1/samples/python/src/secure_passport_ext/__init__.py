@@ -53,7 +53,8 @@ def get_secure_passport(message: MockA2AMessage) -> Optional[CallerContext]:
         # validate uses aliases implicitly for input conversion
         return CallerContext.model_validate(deepcopy(passport_data))
     except ValidationError as e:
-        print(f"ERROR: Received malformed Secure Passport data. Ignoring payload: {e}")
+        import logging
+        logging.warning(f"ERROR: Received malformed Secure Passport data. Ignoring payload: {e}")
         return None
 
 # ======================================================================
