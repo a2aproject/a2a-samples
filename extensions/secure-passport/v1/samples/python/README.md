@@ -127,7 +127,7 @@ To run the sample and execute the comprehensive unit tests, follow these steps.
     ```bash
     poetry install
     
-    # Activate the virtual environment (replace path with your actual venv path)
+    # Activate the virtual environment
     poetry shell
     ```
 
