@@ -33,8 +33,8 @@ def demonstrate_use_case(title: str, agent_id: str, state: dict, signature: str 
     print(f"\n--- Demonstrating: {title} ---")
     
     passport = CallerContext(
-        agentId=agent_id,
-        sessionId=session_id,
+        agent_id=agent_id,
+        session_id=session_id,
         signature=signature,
         state=state
     )
