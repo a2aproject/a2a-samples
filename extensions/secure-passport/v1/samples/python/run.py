@@ -38,7 +38,7 @@ def create_and_run_passport_test(agent_id: str, session_id: str | None, state: d
     print(f"\n--- Use Case: {use_case_title} (via Middleware) ---")
 
     # 1. Orchestrator (Client) creates the Passport
-    # FIX APPLIED HERE: Using snake_case (agent_id, session_id) for instantiation
+    # Using snake_case (agent_id, session_id) for instantiation
     client_passport = CallerContext(
         agent_id=agent_id,
         session_id=session_id,
