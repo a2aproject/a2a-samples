@@ -39,15 +39,15 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
             - {base_url}/static/shrimpchowmein.jpeg
             - {base_url}/static/vegfriedrice.jpeg
 
-    2.  **If the user query is to book a restaurant (e.g., "USER_WANTS_TO_BOOK: Lilia"):**
+    2.  **If the user query is to book a restaurant (e.g., "USER_WANTS_TO_BOOK: Lilia, Address: 567 Union Ave, Brooklyn, NY 11222, ImageURL: /static/mapotofu.jpeg"):**
         -   Your conversational text should be simple (e.g., "Please provide details for your booking at Lilia.")
         -   Your JSON part MUST follow the "BOOKING FORM EXAMPLE" below.
-        -   You MUST update the `title` and `restaurantName` in the `DataModelUpdate` `contents` to match the restaurant from the query.
+        -   You MUST update the `title`, `restaurantName`, `address`, and `imageUrl` in the `DataModelUpdate` `contents` to match the restaurant from the query.
 
-    3.  **If the user query is a booking submission (e.g., "User submitted a booking for [RestaurantName] for [PartySize] people at [Time]"):**
-        -   Respond with a confirmation message that INCLUDES the restaurant name, party size, and time (e.g., "Your table for [PartySize] at [RestaurantName] is confirmed for [Time]!").
+    3.  **If the user query is a booking submission (e.g., "User submitted a booking for [RestaurantName] for [PartySize] people at [Time] with dietary requirements: [Requirements]. The image URL is [ImageUrl]"):**
+        -   Respond with a confirmation message that INCLUDES all booking details.
         -   Your JSON part MUST follow the "CONFIRMATION EXAMPLE" below.
-        -   You MUST populate the `contents` in the `DataModelUpdate` with the `restaurantName`, `partySize`, and `reservationTime` from the query.
+        -   You MUST populate the `contents` in the `DataModelUpdate` with the `title`, combined `bookingDetails`, `dietaryRequirements`, and `imageUrl` from the query.
 
     4.  **If the query is a simple text answer (e.g., "Hello"):**
         -   Respond with a simple greeting (e.g., "How can I help you find a restaurant?")
@@ -60,22 +60,25 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
         {{
           "components": [
             {{ "id": "root-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["title-heading", "item-list"] }} }} }} }},
-            {{ "id": "title-heading", "componentProperties": {{ "Heading": {{ "level": "1", "text": {{ "literalString": "Example List Title" }} }} }} }},
+            {{ "id": "title-heading", "componentProperties": {{ "Heading": {{ "level": "1", "text": {{ "literalString": "Top Restaurants" }} }} }} }},
             {{ "id": "item-list", "componentProperties": {{ "List": {{ "direction": "vertical", "children": {{ "template": {{ "componentId": "item-card-template", "dataBinding": "/items" }} }} }} }} }},
-            {{ "id": "item-card-template", "componentProperties": {{ "Card": {{ "child": "card-details" }} }} }},
-            {{ "id": "card-details", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["template-image", "template-name", "template-detail", "template-book-button"] }} }} }} }},
-            {{ "id": "template-image", "componentProperties": {{ "Image": {{ "url": {{ "path": "imageUrl" }} }} }} }},
-            {{ "id": "template-name", "componentProperties": {{ "Text": {{ "text": {{ "path": "name" }} }} }} }},
+            {{ "id": "item-card-template", "componentProperties": {{ "Card": {{ "child": "card-layout" }} }} }},
+            {{ "id": "card-layout", "componentProperties": {{ "Row": {{ "children": {{ "explicitList": ["template-image", "card-details"] }} }} }} }},
+            {{ "id": "template-image", "componentProperties": {{ "Image": {{ "url": {{ "path": "imageUrl" }}, "width": "100px" }} }} }},
+            {{ "id": "card-details", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["template-name", "template-rating", "template-detail", "template-link", "template-book-button"] }} }} }} }},
+            {{ "id": "template-name", "componentProperties": {{ "Heading": {{ "level": "3", "text": {{ "path": "name" }} }} }} }},
+            {{ "id": "template-rating", "componentProperties": {{ "Text": {{ "text": {{ "path": "rating" }} }} }} }},
             {{ "id": "template-detail", "componentProperties": {{ "Text": {{ "text": {{ "path": "detail" }} }} }} }},
-            {{ "id": "template-book-button", "componentProperties": {{ "Button": {{ "label": {{ "literalString": "Book Now" }}, "action": {{ "action": "book_restaurant", "context": [ {{ "key": "restaurantName", "value": {{ "path": "name" }} }} ] }} }} }} }}
+            {{ "id": "template-link", "componentProperties": {{ "Text": {{ "text": {{ "path": "infoLink" }} }} }} }},
+            {{ "id": "template-book-button", "componentProperties": {{ "Button": {{ "label": {{ "literalString": "Book Now" }}, "action": {{ "action": "book_restaurant", "context": [ {{ "key": "restaurantName", "value": {{ "path": "name" }} }}, {{ "key": "imageUrl", "value": {{ "path": "imageUrl" }} }}, {{ "key": "address", "value": {{ "path": "address" }} }} ] }} }} }} }}
           ]
         }},
         {{
           "path": "/",
           "contents": {{
             "items": [
-              {{ "name": "Example Item 1", "detail": "Detail for item 1", "imageUrl": "{base_url}/static/springrolls.jpeg" }},
-              {{ "name": "Example Item 2", "detail": "Detail for item 2", "imageUrl": "{base_url}/static/mapotofu.jpeg" }}
+              {{ "name": "Carbone", "detail": "Upscale Italian-American.", "imageUrl": "{base_url}/static/springrolls.jpeg", "rating": "★★★★☆", "infoLink": "[More Info](https://carbonenewyork.com/)", "address": "181 Thompson St, New York, NY 10012" }},
+              {{ "name": "Lilia", "detail": "Popular pasta spot.", "imageUrl": "{base_url}/static/mapotofu.jpeg", "rating": "★★★★★", "infoLink": "[More Info](https://www.lilianewyork.com/)", "address": "567 Union Ave, Brooklyn, NY 11222" }}
             ]
           }}
         }}
@@ -89,20 +92,26 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
         {{ "root": "booking-form-column" }},
         {{
           "components": [
-            {{ "id": "booking-form-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["booking-title", "party-size-field", "datetime-field", "submit-button"] }} }} }} }},
+            {{ "id": "booking-form-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["booking-title", "restaurant-image", "restaurant-address", "party-size-field", "datetime-field", "dietary-field", "submit-button"] }} }} }} }},
             {{ "id": "booking-title", "componentProperties": {{ "Heading": {{ "level": "2", "text": {{ "path": "title" }} }} }} }},
+            {{ "id": "restaurant-image", "componentProperties": {{ "Image": {{ "url": {{ "path": "imageUrl" }} }} }} }},
+            {{ "id": "restaurant-address", "componentProperties": {{ "Text": {{ "text": {{ "path": "address" }} }} }} }},
             {{ "id": "party-size-field", "componentProperties": {{ "TextField": {{ "label": {{ "literalString": "Party Size" }}, "text": {{ "path": "partySize" }}, "type": "number" }} }} }},
-            {{ "id": "datetime-field", "componentProperties": {{ "DateTimeInput": {{ "value": {{ "path": "reservationTime" }}, "enableDate": true, "enableTime": true }} }} }},
-            {{ "id": "submit-button", "componentProperties": {{ "Button": {{ "label": {{ "literalString": "Submit Reservation" }}, "action": {{ "action": "submit_booking", "context": [ {{ "key": "restaurantName", "value": {{ "path": "restaurantName" }} }}, {{ "key": "partySize", "value": {{ "path": "partySize" }} }}, {{ "key": "reservationTime", "value": {{ "path": "reservationTime" }} }} ] }} }} }} }}
+            {{ "id": "datetime-field", "componentProperties": {{ "DateTimeInput": {{ "label": {{ "literalString": "Date & Time" }}, "value": {{ "path": "reservationTime" }}, "enableDate": true, "enableTime": true }} }} }},
+            {{ "id": "dietary-field", "componentProperties": {{ "TextField": {{ "label": {{ "literalString": "Dietary Requirements" }}, "text": {{ "path": "dietary" }} }} }} }},
+            {{ "id": "submit-button", "componentProperties": {{ "Button": {{ "label": {{ "literalString": "Submit Reservation" }}, "action": {{ "action": "submit_booking", "context": [ {{ "key": "restaurantName", "value": {{ "path": "restaurantName" }} }}, {{ "key": "partySize", "value": {{ "path": "partySize" }} }}, {{ "key": "reservationTime", "value": {{ "path": "reservationTime" }} }}, {{ "key": "dietary", "value": {{ "path": "dietary" }} }}, {{ "key": "imageUrl", "value": {{ "path": "imageUrl" }} }} ] }} }} }} }}
           ]
         }},
         {{
           "path": "/",
           "contents": {{
             "title": "Book a Table at [RestaurantName]",
+            "address": "[Restaurant Address]",
             "restaurantName": "[RestaurantName]",
             "partySize": "2",
-            "reservationTime": ""
+            "reservationTime": "",
+            "dietary": "",
+            "imageUrl": ""
           }}
         }}
       ]
@@ -112,23 +121,28 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
     ---BEGIN CONFIRMATION EXAMPLE (for booking submission)---
     {{
       "gulfMessages": [
-        {{ "root": "confirmation-column" }},
+        {{ "root": "confirmation-card" }},
         {{
           "components": [
-            {{ "id": "confirmation-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["confirm-title", "confirm-restaurant", "confirm-party", "confirm-time", "confirm-text"] }} }} }} }},
-            {{ "id": "confirm-title", "componentProperties": {{ "Heading": {{ "level": "2", "text": {{ "literalString": "Booking Confirmed!" }} }} }} }},
-            {{ "id": "confirm-restaurant", "componentProperties": {{ "Text": {{ "text": {{ "path": "restaurantName" }} }} }} }},
-            {{ "id": "confirm-party", "componentProperties": {{ "Text": {{ "text": {{ "path": "partySize" }} }} }} }},
-            {{ "id": "confirm-time", "componentProperties": {{ "Text": {{ "text": {{ "path": "reservationTime" }} }} }} }},
-            {{ "id": "confirm-text", "componentProperties": {{ "Text": {{ "text": {{ "literalString": "We look forward to seeing you!" }} }} }} }}
+            {{ "id": "confirmation-card", "componentProperties": {{ "Card": {{ "child": "confirmation-column" }} }} }},
+            {{ "id": "confirmation-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["confirm-title", "confirm-image", "divider1", "confirm-details", "divider2", "confirm-dietary", "divider3", "confirm-text"] }} }} }} }},
+            {{ "id": "confirm-title", "componentProperties": {{ "Heading": {{ "level": "2", "text": {{ "path": "title" }} }} }} }},
+            {{ "id": "confirm-image", "componentProperties": {{ "Image": {{ "url": {{ "path": "imageUrl" }} }} }} }},
+            {{ "id": "confirm-details", "componentProperties": {{ "Text": {{ "text": {{ "path": "bookingDetails" }} }} }} }},
+            {{ "id": "confirm-dietary", "componentProperties": {{ "Text": {{ "text": {{ "path": "dietaryRequirements" }} }} }} }},
+            {{ "id": "confirm-text", "componentProperties": {{ "Heading": {{ "level": "5", "text": {{ "literalString": "We look forward to seeing you!" }} }} }} }},
+            {{ "id": "divider1", "componentProperties": {{ "Divider": {{}} }} }},
+            {{ "id": "divider2", "componentProperties": {{ "Divider": {{}} }} }},
+            {{ "id": "divider3", "componentProperties": {{ "Divider": {{}} }} }}
           ]
         }},
         {{
           "path": "/",
           "contents": {{
-            "restaurantName": "[RestaurantName]",
-            "partySize": "[PartySize] people",
-            "reservationTime": "at [Time]"
+            "title": "Booking at [RestaurantName]",
+            "bookingDetails": "[PartySize] people at [Time]",
+            "dietaryRequirements": "Dietary Requirements: [Requirements]",
+            "imageUrl": "[ImageUrl]"
           }}
         }}
       ]
