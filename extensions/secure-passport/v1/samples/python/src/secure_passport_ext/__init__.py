@@ -1,6 +1,7 @@
 from typing import Optional, Dict, Any, List, Callable
 from pydantic import BaseModel, Field, ValidationError, ConfigDict
 from copy import deepcopy
+import logging
 
 # --- Import official A2A types ---
 # Assuming the official A2A message type is available here:
@@ -40,15 +41,14 @@ class CallerContext(BaseModel):
         return self.signature is not None
 
 # --- Helper Functions (Core Protocol Interaction) ---
-
     
-def add_secure_passport(message: A2AMessage, context: CallerContext) -> None: # MODIFIED: Use A2AMessage
+def add_secure_passport(message: A2AMessage, context: CallerContext) -> None:
     """Adds the Secure Passport (CallerContext) to the message's metadata."""
     
     # by_alias=True ensures the output JSON uses the correct camelCase names
     message.metadata[SECURE_PASSPORT_URI] = context.model_dump(by_alias=True, exclude_none=True)
 
-def get_secure_passport(message: A2AMessage) -> Optional[CallerContext]: # MODIFIED: Use A2AMessage
+def get_secure_passport(message: A2AMessage) -> Optional[CallerContext]:
     """Retrieves and validates the Secure Passport from the message metadata."""
     passport_data = message.metadata.get(SECURE_PASSPORT_URI)
     if not passport_data:
@@ -58,7 +58,7 @@ def get_secure_passport(message: A2AMessage) -> Optional[CallerContext]: # MODIF
         # validate uses aliases implicitly for input conversion
         return CallerContext.model_validate(deepcopy(passport_data))
     except ValidationError as e:
-        import logging
+        # logging is already used here
         logging.warning(f"ERROR: Received malformed Secure Passport data. Ignoring payload: {e}")
         return None
 
@@ -79,7 +79,7 @@ class SecurePassportExtension:
         """
         declaration = {
             "uri": SECURE_PASSPORT_URI,
-            "params": {} # MODIFIED: Removed "receivesCallerContext": True
+            "params": {}
         }
         
         if supported_state_keys:
@@ -88,18 +88,18 @@ class SecurePassportExtension:
         return declaration
 
     @staticmethod
-    def client_middleware(next_handler: Callable[[A2AMessage], Any], message: A2AMessage, context: CallerContext): # MODIFIED: Use A2AMessage
+    def client_middleware(next_handler: Callable[[A2AMessage], Any], message: A2AMessage, context: CallerContext):
         """
         [Conceptual Middleware Layer: Client/Calling Agent]
         
         Type Hint: next_handler takes one A2AMessage and returns Any.
         """
-        print(f"[Middleware: Client] Attaching Secure Passport for {context.agent_id}")
+        logging.info(f"[Middleware: Client] Attaching Secure Passport for {context.agent_id}")
         add_secure_passport(message, context)
         return next_handler(message) # Passes the augmented message to the transport layer
 
     @staticmethod
-    def server_middleware(next_handler: Callable[[A2AMessage, Optional[CallerContext]], Any], message: A2AMessage): # MODIFIED: Use A2AMessage
+    def server_middleware(next_handler: Callable[[A2AMessage, Optional[CallerContext]], Any], message: A2AMessage):
         """
         [Conceptual Middleware Layer: Server/Receiving Agent]
         
@@ -108,12 +108,9 @@ class SecurePassportExtension:
         passport = get_secure_passport(message)
         
         if passport:
-            print(f"[Middleware: Server] Extracted Secure Passport. Verified: {passport.is_verified}")
+            logging.info(f"[Middleware: Server] Extracted Secure Passport. Verified: {passport.is_verified}")
         else:
-            print("[Middleware: Server] No Secure Passport found or validation failed.")
+            logging.debug("[Middleware: Server] No Secure Passport found or validation failed.")
             
         # next_handler is the agent's core task logic. We pass the message and the extracted passport.
         return next_handler(message, passport)
-
-
-
