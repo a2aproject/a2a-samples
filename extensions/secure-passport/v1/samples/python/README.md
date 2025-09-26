@@ -49,7 +49,7 @@ def demonstrate_use_case(title: str, agent_id: str, state: dict, signature: str 
         print(f"  Context: {retrieved.state}")
     else:
         print("  [ERROR] Passport retrieval failed.")
-
+```
 # ----------------------------------------------------------------------
 # 1. Efficient Currency Conversion (Low Context, High Trust)
 # ----------------------------------------------------------------------
@@ -112,6 +112,7 @@ simple_declaration = SecurePassportExtension.get_agent_card_declaration()
 travel_keys = ["destination", "loyalty_tier", "dates"]
 complex_declaration = SecurePassportExtension.get_agent_card_declaration(travel_keys)
 # Output will include: 'supportedStateKeys': ['destination', 'loyalty_tier', 'dates']
+```
 
 ## 3. How to Run the Sample 🚀
 
@@ -139,6 +140,7 @@ Confirm all 11 core logic and validation tests pass:
 
 ```bash
 pytest tests/
+```
 
 #### 2. Run Middleware Demo Script
 
@@ -146,3 +148,4 @@ Execute `run.py` to see the full client/server middleware pipeline in action for
 
 ```bash
 python run.py
+```
