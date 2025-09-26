@@ -97,7 +97,7 @@ demonstrate_use_case(
     signature="sig-finance-4"
 )
 
-### B. Convenience Method: AgentCard Declaration
+## B. Convenience Method: AgentCard Declaration
 
 The `SecurePassportExtension` class provides a static method to easily generate the necessary JSON structure for including this extension in an agent's `AgentCard`. This ensures the structure is always compliant.
 
