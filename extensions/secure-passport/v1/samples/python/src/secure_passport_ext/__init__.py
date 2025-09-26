@@ -4,7 +4,7 @@ from copy import deepcopy
 
 # --- Extension Definition ---
 
-SECURE_PASSPORT_URI = "https://a2aprotocol.ai/ext/secure-passport/v1"
+SECURE_PASSPORT_URI = "https://a2a-protocol.org/ext/secure-passport/v1"
 
 class CallerContext(BaseModel):
     """
