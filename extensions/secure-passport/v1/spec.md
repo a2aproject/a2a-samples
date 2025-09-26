@@ -24,6 +24,7 @@ The callee agent uses the `supportedStateKeys` array to explicitly declare which
     "supportedStateKeys": ["user_preferred_currency", "loyalty_tier"]
   }
 }
+```
 
 ## 2. Data Structure: CallerContext Payload
 
@@ -48,6 +49,7 @@ The `callerContext` object is the Secure Passport payload. It is **optional** an
     "loyalty_tier": "Gold"
   }
 }
+```
 
 ## 3. Message Augmentation and Example Usage
 
@@ -83,5 +85,5 @@ This example shows the request body for an A2A `tasks/send` RPC call.
     }
   }
 }
-
+```
 
