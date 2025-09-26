@@ -10,7 +10,7 @@ This extension enables an Agent2Agent (A2A) client to securely and optionally sh
 
 ## 1. Agent Declaration and Negotiation
 
-An A2A Agent that is capable of **receiving** and utilizing the Secure Passport context **MUST** declare its support in its `AgentCard` under the `AgentCapabilities` object.
+An A2A Agent that is capable of **receiving** and utilizing the Secure Passport context **MUST** declare its support in its `AgentCard` under the **`extensions`** part of the `AgentCapabilities` object.
 
 ### Example AgentCard Declaration
 
