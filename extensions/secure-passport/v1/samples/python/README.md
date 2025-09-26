@@ -24,7 +24,7 @@ The following code demonstrates how to create the specific `CallerContext` paylo
 ```python
 from secure_passport_ext import (
     CallerContext, 
-    MockA2AMessage, 
+    A2AMessage, 
     add_secure_passport, 
     get_secure_passport
 )
@@ -49,10 +49,9 @@ def demonstrate_use_case(title: str, agent_id: str, state: dict, signature: str 
         print(f"  Context: {retrieved.state}")
     else:
         print("  [ERROR] Passport retrieval failed.")
-```
-# ----------------------------------------------------------------------
+
 # 1. Efficient Currency Conversion (Low Context, High Trust)
-# ----------------------------------------------------------------------
+
 demonstrate_use_case(
     title="1. Currency Conversion (GBP)",
     agent_id="a2a://travel-orchestrator.com",
@@ -60,9 +59,8 @@ demonstrate_use_case(
     signature="sig-currency-1"
 )
 
-# ----------------------------------------------------------------------
 # 2. Personalized Travel Booking (High Context, Session Data)
-# ----------------------------------------------------------------------
+
 demonstrate_use_case(
     title="2. Personalized Travel (Platinum Tier)",
     agent_id="a2a://travel-portal.com",
@@ -74,9 +72,8 @@ demonstrate_use_case(
     signature="sig-travel-2"
 )
 
-# ----------------------------------------------------------------------
 # 3. Proactive Retail Assistance (Unsigned, Quick Context)
-# ----------------------------------------------------------------------
+
 demonstrate_use_case(
     title="3. Retail Assistance (Unverified)",
     agent_id="a2a://ecommerce-front.com",
@@ -84,9 +81,8 @@ demonstrate_use_case(
     signature=None
 )
 
-# ----------------------------------------------------------------------
 # 4. Marketing Agent seek insights (High Trust, Secured Scope)
-# ----------------------------------------------------------------------
+
 demonstrate_use_case(
     title="4. Secured DB Access (Finance)",
     agent_id="a2a://marketing-agent.com",
@@ -96,8 +92,9 @@ demonstrate_use_case(
     },
     signature="sig-finance-4"
 )
+```
 
-## B. Convenience Method: AgentCard Declaration
+### B. Convenience Method: AgentCard Declaration
 
 The `SecurePassportExtension` class provides a static method to easily generate the necessary JSON structure for including this extension in an agent's `AgentCard`. This ensures the structure is always compliant.
 
