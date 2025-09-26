@@ -1,7 +1,7 @@
 import pytest
 from secure_passport_ext import (
     CallerContext, 
-    MockA2AMessage, 
+    A2AMessage,         
     add_secure_passport, 
     get_secure_passport, 
     SECURE_PASSPORT_URI,
@@ -17,7 +17,6 @@ def valid_passport_data():
     Returns a dictionary for creating a valid CallerContext. 
     Uses snake_case keys to align with the CallerContext model attributes.
     """
-    # Using snake_case keys
     return {
         "agent_id": "a2a://orchestrator.com",
         "session_id": "session-123",
@@ -32,32 +31,27 @@ def valid_passport_data():
 def test_add_and_get_passport_success(valid_passport_data):
     """Tests successful serialization and deserialization in a round trip."""
     passport = CallerContext(**valid_passport_data)
-    message = MockA2AMessage()
+    message = A2AMessage() 
     
     add_secure_passport(message, passport)
     retrieved = get_secure_passport(message)
     
     assert retrieved is not None
-    assert retrieved.agent_id == "a2a://orchestrator.com" # Access updated
+    assert retrieved.agent_id == "a2a://orchestrator.com"
     assert retrieved.state == {"currency": "USD", "tier": "silver"}
 
 def test_get_passport_when_missing():
     """Tests retrieving a passport from a message that doesn't have one."""
-    message = MockA2AMessage()
+    message = A2AMessage() 
     retrieved = get_secure_passport(message)
     assert retrieved is None
-
-# NOTE: The following two validation tests rely on the Pydantic model's 
-# exception handling on INITIATION, which can take either the snake_case 
-# attribute name or the camelCase alias (due to populate_by_name=True). 
-# However, to explicitly test invalid input dictionaries, we must adapt.
 
 def test_passport_validation_failure_missing_required_field(valid_passport_data):
     """Tests validation fails when a required field (agent_id) is missing."""
     invalid_data = valid_passport_data.copy()
-    del invalid_data['agent_id'] # Removed snake_case key
+    del invalid_data['agent_id']
     
-    message = MockA2AMessage()
+    message = A2AMessage() 
     message.metadata[SECURE_PASSPORT_URI] = invalid_data
     
     retrieved = get_secure_passport(message)
@@ -68,7 +62,7 @@ def test_passport_validation_failure_extra_field(valid_passport_data):
     invalid_data = valid_passport_data.copy()
     invalid_data['extra_field'] = 'unsupported'
     
-    message = MockA2AMessage()
+    message = A2AMessage() 
     message.metadata[SECURE_PASSPORT_URI] = invalid_data
     
     retrieved = get_secure_passport(message)
@@ -89,7 +83,7 @@ def test_passport_is_unverified_without_signature(valid_passport_data):
 def test_retrieved_passport_is_immutable_from_message_data(valid_passport_data):
     """Tests that modifying the retrieved copy's state does not change the original message metadata (due to deepcopy)."""
     passport = CallerContext(**valid_passport_data)
-    message = MockA2AMessage()
+    message = A2AMessage() 
     add_secure_passport(message, passport)
 
     retrieved = get_secure_passport(message)
@@ -113,12 +107,12 @@ def test_use_case_1_currency_conversion():
     }
     
     passport = CallerContext(
-        agent_id="a2a://travel-orchestrator.com", # Updated to snake_case
+        agent_id="a2a://travel-orchestrator.com",
         state=state_data,
         signature="sig-currency-1"
     )
     
-    message = MockA2AMessage()
+    message = A2AMessage() 
     add_secure_passport(message, passport)
     retrieved = get_secure_passport(message)
     
@@ -134,17 +128,17 @@ def test_use_case_2_personalized_travel_booking():
     }
     
     passport = CallerContext(
-        agent_id="a2a://travel-portal.com", # Updated to snake_case
-        session_id="travel-booking-session-999", # Updated to snake_case
+        agent_id="a2a://travel-portal.com",
+        session_id="travel-booking-session-999",
         state=state_data,
         signature="sig-travel-2"
     )
     
-    message = MockA2AMessage()
+    message = A2AMessage() 
     add_secure_passport(message, passport)
     retrieved = get_secure_passport(message)
     
-    assert retrieved.session_id == "travel-booking-session-999" # Updated access
+    assert retrieved.session_id == "travel-booking-session-999"
     assert retrieved.state.get("loyalty_tier") == "Platinum"
     assert retrieved.is_verified is True
 
@@ -157,17 +151,17 @@ def test_use_case_3_proactive_retail_assistance():
     }
     
     passport = CallerContext(
-        agent_id="a2a://ecommerce-front.com", # Updated to snake_case
+        agent_id="a2a://ecommerce-front.com",
         state=state_data,
     )
     
-    message = MockA2AMessage()
+    message = A2AMessage() 
     add_secure_passport(message, passport)
     retrieved = get_secure_passport(message)
     
     assert retrieved.state.get("product_sku") == "Nikon-Z-50mm-f1.8"
     assert retrieved.is_verified is False
-    assert retrieved.session_id is None # Updated access
+    assert retrieved.session_id is None
 
 def test_use_case_4_secured_db_insights():
     """Verifies the structure for passing required request arguments for a secured DB/ERP agent."""
@@ -178,16 +172,15 @@ def test_use_case_4_secured_db_insights():
     }
     
     passport = CallerContext(
-        agent_id="a2a://marketing-agent.com", # Updated to snake_case
+        agent_id="a2a://marketing-agent.com",
         state=state_data,
         signature="sig-finance-4" 
     )
     
-    message = MockA2AMessage()
+    message = A2AMessage() 
     add_secure_passport(message, passport)
     retrieved = get_secure_passport(message)
     
     assert retrieved.state.get("query_type") == "quarterly_revenue"
     assert "read:finance_db" in retrieved.state.get("access_scope")
     assert retrieved.is_verified is True
-

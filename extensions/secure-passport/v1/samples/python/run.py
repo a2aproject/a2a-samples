@@ -2,18 +2,18 @@
 
 from secure_passport_ext import (
     CallerContext, 
-    MockA2AMessage, 
+    A2AMessage,             # CORRECTED: Importing the standardized A2AMessage type
     SecurePassportExtension # Import the extension utility class
 )
 
 # --- Define Mock Handlers for the Pipeline ---
 
-def mock_transport_send(message: MockA2AMessage):
+def mock_transport_send(message: A2AMessage): # CORRECTED: Signature uses A2AMessage
     """Mocks the final step of the client sending the message over the wire."""
     print("  [Transport] Message sent over the wire.")
     return message # Returns the message the server would receive
 
-def mock_agent_core_handler(message: MockA2AMessage, passport: CallerContext | None):
+def mock_agent_core_handler(message: A2AMessage, passport: CallerContext | None): # CORRECTED: Signature uses A2AMessage
     """
     Mocks the agent's core logic, which receives context from the Server Middleware.
     """
@@ -38,7 +38,6 @@ def create_and_run_passport_test(agent_id: str, session_id: str | None, state: d
     print(f"\n--- Use Case: {use_case_title} (via Middleware) ---")
 
     # 1. Orchestrator (Client) creates the Passport
-    # Using snake_case (agent_id, session_id) for instantiation
     client_passport = CallerContext(
         agent_id=agent_id,
         session_id=session_id,
@@ -47,13 +46,11 @@ def create_and_run_passport_test(agent_id: str, session_id: str | None, state: d
     )
 
     # Mock A2A Message Container
-    client_message = MockA2AMessage()
+    client_message = A2AMessage() # CORRECTED: Instantiating A2AMessage
 
     # --- CLIENT-SIDE PIPELINE ---
     print("  [PIPELINE] Client Side: Middleware -> Transport")
     
-    # Client Middleware is executed, wrapping the Transport Send operation.
-    # NOTE: Middleware access to client_passport.agent_id is correct
     message_over_wire = SecurePassportExtension.client_middleware(
         next_handler=mock_transport_send,
         message=client_message,
@@ -76,7 +73,6 @@ def run_all_samples():
     print("=========================================================")
 
     # --- Use Case 1: Efficient Currency Conversion (High Trust Example) ---
-    # FIX APPLIED HERE: Passing snake_case keywords
     create_and_run_passport_test(
         agent_id="a2a://travel-orchestrator.com",
         session_id=None,
@@ -86,7 +82,6 @@ def run_all_samples():
     )
 
     # --- Use Case 2: Personalized Travel Booking (High Context Example) ---
-    # FIX APPLIED HERE: Passing snake_case keywords
     create_and_run_passport_test(
         agent_id="a2a://travel-portal.com",
         session_id="travel-booking-session-999",
@@ -99,7 +94,6 @@ def run_all_samples():
     )
 
     # --- Use Case 3: Proactive Retail Assistance (Unsigned/Low Trust Example) ---
-    # FIX APPLIED HERE: Passing snake_case keywords
     create_and_run_passport_test(
         agent_id="a2a://ecommerce-front.com",
         session_id="cart-session-404",
@@ -112,7 +106,6 @@ def run_all_samples():
     )
     
     # --- Use Case 4: Marketing Agent seek insights (Secured Scope Example) ---
-    # FIX APPLIED HERE: Passing snake_case keywords
     create_and_run_passport_test(
         agent_id="a2a://marketing-agent.com",
         session_id=None,
@@ -127,5 +120,6 @@ def run_all_samples():
 
 if __name__ == "__main__":
     run_all_samples()
+
 
     

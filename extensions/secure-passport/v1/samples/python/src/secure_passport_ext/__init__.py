@@ -2,6 +2,15 @@ from typing import Optional, Dict, Any, List, Callable
 from pydantic import BaseModel, Field, ValidationError, ConfigDict
 from copy import deepcopy
 
+# --- Import official A2A types ---
+# Assuming the official A2A message type is available here:
+try:
+    from a2a.types import A2AMessage
+except ImportError:
+    # Fallback/Placeholder if official package is not fully installed locally
+    class A2AMessage(BaseModel):
+        metadata: Dict[str, Any] = Field(default_factory=dict)
+        
 # --- Extension Definition ---
 
 SECURE_PASSPORT_URI = "https://a2a-protocol.org/ext/secure-passport/v1"
@@ -32,18 +41,14 @@ class CallerContext(BaseModel):
 
 # --- Helper Functions (Core Protocol Interaction) ---
 
-# Mock class representing a core A2A message for demonstration
-class MockA2AMessage(BaseModel):
-    """A minimal representation of a core A2A Message structure."""
-    metadata: Dict[str, Any] = Field(default_factory=dict)
     
-def add_secure_passport(message: MockA2AMessage, context: CallerContext) -> None:
+def add_secure_passport(message: A2AMessage, context: CallerContext) -> None: # MODIFIED: Use A2AMessage
     """Adds the Secure Passport (CallerContext) to the message's metadata."""
     
     # by_alias=True ensures the output JSON uses the correct camelCase names
     message.metadata[SECURE_PASSPORT_URI] = context.model_dump(by_alias=True, exclude_none=True)
 
-def get_secure_passport(message: MockA2AMessage) -> Optional[CallerContext]:
+def get_secure_passport(message: A2AMessage) -> Optional[CallerContext]: # MODIFIED: Use A2AMessage
     """Retrieves and validates the Secure Passport from the message metadata."""
     passport_data = message.metadata.get(SECURE_PASSPORT_URI)
     if not passport_data:
@@ -74,32 +79,31 @@ class SecurePassportExtension:
         """
         declaration = {
             "uri": SECURE_PASSPORT_URI,
-            "params": {
-                "receivesCallerContext": True
-            }
+            "params": {} # MODIFIED: Removed "receivesCallerContext": True
         }
+        
         if supported_state_keys:
             declaration["params"]["supportedStateKeys"] = supported_state_keys
-        
+            
         return declaration
 
     @staticmethod
-    def client_middleware(next_handler: Callable[[MockA2AMessage], Any], message: MockA2AMessage, context: CallerContext):
+    def client_middleware(next_handler: Callable[[A2AMessage], Any], message: A2AMessage, context: CallerContext): # MODIFIED: Use A2AMessage
         """
         [Conceptual Middleware Layer: Client/Calling Agent]
         
-        Type Hint: next_handler takes one MockA2AMessage and returns Any.
+        Type Hint: next_handler takes one A2AMessage and returns Any.
         """
         print(f"[Middleware: Client] Attaching Secure Passport for {context.agent_id}")
         add_secure_passport(message, context)
         return next_handler(message) # Passes the augmented message to the transport layer
 
     @staticmethod
-    def server_middleware(next_handler: Callable[[MockA2AMessage, Optional[CallerContext]], Any], message: MockA2AMessage):
+    def server_middleware(next_handler: Callable[[A2AMessage, Optional[CallerContext]], Any], message: A2AMessage): # MODIFIED: Use A2AMessage
         """
         [Conceptual Middleware Layer: Server/Receiving Agent]
         
-        Type Hint: next_handler takes MockA2AMessage and Optional[CallerContext] and returns Any.
+        Type Hint: next_handler takes A2AMessage and Optional[CallerContext] and returns Any.
         """
         passport = get_secure_passport(message)
         
@@ -110,8 +114,6 @@ class SecurePassportExtension:
             
         # next_handler is the agent's core task logic. We pass the message and the extracted passport.
         return next_handler(message, passport)
-
-
 
 
 
