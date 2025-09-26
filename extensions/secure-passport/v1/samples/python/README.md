@@ -120,11 +120,11 @@ To run the sample and execute the comprehensive unit tests, follow these steps.
 
 ### A. Setup and Installation
 
-1.  **Navigate** to the Python sample directory:
+1. **Navigate** to the Python sample directory:
     ```bash
     cd extensions/secure-passport/v1/samples/python
     ```
-2.  **Install Dependencies** (using Poetry):
+2. **Install Dependencies** (using Poetry):
     ```bash
     poetry install
     
