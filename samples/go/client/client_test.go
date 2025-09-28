@@ -35,7 +35,9 @@ func TestSendTask(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(resp)
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			t.Fatal(err)
+		}
 	}))
 	defer server.Close()
 
@@ -97,7 +99,9 @@ func TestGetTask(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(resp)
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			t.Fatal(err)
+		}
 	}))
 	defer server.Close()
 
@@ -153,7 +157,9 @@ func TestCancelTask(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(resp)
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			t.Fatal(err)
+		}
 	}))
 	defer server.Close()
 
@@ -182,7 +188,7 @@ func TestCancelTask(t *testing.T) {
 }
 
 func TestErrorResponse(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		resp := models.JSONRPCResponse{
 			JSONRPCMessage: models.JSONRPCMessage{
 				JSONRPC: "2.0",
