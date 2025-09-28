@@ -231,8 +231,8 @@ func TestSendTaskStreaming(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if req.Method != "message/stream" {
-			t.Errorf("expected method message/stream, got %s", req.Method)
+		if expectedMethod := "message/stream"; req.Method != expectedMethod {
+			t.Errorf("expected method %s, got %s", expectedMethod, req.Method)
 		}
 
 		// Set response headers for streaming
