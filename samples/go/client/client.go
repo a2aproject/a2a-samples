@@ -191,7 +191,7 @@ func (c *Client) doRequest(req interface{}, resp *models.JSONRPCResponse) error 
 
 	// Copy the basic fields
 	resp.JSONRPC = rawResp.JSONRPC
-	resp.JSONRPCMessageIdentifier.ID = rawResp.ID
+	resp.ID = rawResp.ID
 	resp.Error = rawResp.Error
 
 	// If there's a result, try to decode it as a Task
