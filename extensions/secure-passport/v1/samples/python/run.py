@@ -30,7 +30,7 @@ def mock_agent_core_handler(message: A2AMessage, passport: CallerContext | None)
         print("  [Agent Core] Executing task with no external context.")
 
 
-def create_and_run_passport_test(agent_id: str, session_id: str | None, state: dict, signature: str | None, use_case_title: str):
+def create_and_run_passport_test(client_id: str, session_id: str | None, state: dict, signature: str | None, use_case_title: str):
     """
     Demonstrates a full communication cycle using the conceptual middleware.
     """
@@ -39,14 +39,14 @@ def create_and_run_passport_test(agent_id: str, session_id: str | None, state: d
 
     # 1. Orchestrator (Client) creates the Passport
     client_passport = CallerContext(
-        agent_id=agent_id,
+        client_id=client_id,
         session_id=session_id,
         signature=signature,
         state=state
     )
 
     # Mock A2A Message Container
-    client_message = A2AMessage() # CORRECTED: Instantiating A2AMessage
+    client_message = A2AMessage() 
 
     # --- CLIENT-SIDE PIPELINE ---
     print("  [PIPELINE] Client Side: Middleware -> Transport")
@@ -74,7 +74,7 @@ def run_all_samples():
 
     # --- Use Case 1: Efficient Currency Conversion (High Trust Example) ---
     create_and_run_passport_test(
-        agent_id="a2a://travel-orchestrator.com",
+        client_id="a2a://travel-orchestrator.com",
         session_id=None,
         state={"user_preferred_currency": "GBP", "loyalty_tier": "Silver"},
         signature="sig-currency-1",
@@ -83,7 +83,7 @@ def run_all_samples():
 
     # --- Use Case 2: Personalized Travel Booking (High Context Example) ---
     create_and_run_passport_test(
-        agent_id="a2a://travel-portal.com",
+        client_id="a2a://travel-portal.com",
         session_id="travel-booking-session-999",
         state={
             "destination": "Bali, Indonesia",
@@ -95,7 +95,7 @@ def run_all_samples():
 
     # --- Use Case 3: Proactive Retail Assistance (Unsigned/Low Trust Example) ---
     create_and_run_passport_test(
-        agent_id="a2a://ecommerce-front.com",
+        client_id="a2a://ecommerce-front.com",
         session_id="cart-session-404",
         state={
             "product_sku": "Nikon-Z-50mm-f1.8",
@@ -107,7 +107,7 @@ def run_all_samples():
     
     # --- Use Case 4: Marketing Agent seek insights (Secured Scope Example) ---
     create_and_run_passport_test(
-        agent_id="a2a://marketing-agent.com",
+        client_id="a2a://marketing-agent.com",
         session_id=None,
         state={
             "query_type": "quarterly_revenue",

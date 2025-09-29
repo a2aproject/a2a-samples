@@ -9,7 +9,7 @@ The core of this extension is the **`CallerContext`** data model, which is attac
 ### Extension URI
 
 The unique identifier for this extension is:
-`https://a2aprotocol.ai/ext/secure-passport/v1`
+`https://github.com/a2aproject/a2a-samples/tree/main/samples/python/extensions/secure-passport`
 
 ---
 
@@ -29,22 +29,22 @@ from secure_passport_ext import (
     get_secure_passport
 )
 
-def demonstrate_use_case(title: str, agent_id: str, state: dict, signature: str | None = None, session_id: str | None = None):
+def demonstrate_use_case(title: str, client_id: str, state: dict, signature: str | None = None, session_id: str | None = None):
     print(f"\n--- Demonstrating: {title} ---")
     
     passport = CallerContext(
-        agent_id=agent_id,
+        client_id=client_id,
         session_id=session_id,
         signature=signature,
         state=state
     )
 
-    message = MockA2AMessage()
+    message = A2AMessage()
     add_secure_passport(message, passport)
     retrieved = get_secure_passport(message)
     
     if retrieved:
-        print(f"  Source: {retrieved.agent_id}")
+        print(f"  Source: {retrieved.client_id}")
         print(f"  Verified: {retrieved.is_verified}")
         print(f"  Context: {retrieved.state}")
     else:
@@ -54,7 +54,7 @@ def demonstrate_use_case(title: str, agent_id: str, state: dict, signature: str 
 
 demonstrate_use_case(
     title="1. Currency Conversion (GBP)",
-    agent_id="a2a://travel-orchestrator.com",
+    client_id="a2a://travel-orchestrator.com",
     state={"user_preferred_currency": "GBP", "user_id": "U001"},
     signature="sig-currency-1"
 )
@@ -63,7 +63,7 @@ demonstrate_use_case(
 
 demonstrate_use_case(
     title="2. Personalized Travel (Platinum Tier)",
-    agent_id="a2a://travel-portal.com",
+    client_id="a2a://travel-portal.com",
     session_id="travel-session-999",
     state={
         "destination": "Bali, Indonesia",
@@ -76,7 +76,7 @@ demonstrate_use_case(
 
 demonstrate_use_case(
     title="3. Retail Assistance (Unverified)",
-    agent_id="a2a://ecommerce-front.com",
+    client_id="a2a://ecommerce-front.com",
     state={"product_sku": "Nikon-Z-50mm-f1.8", "user_intent": "seeking_reviews"},
     signature=None
 )
@@ -85,7 +85,7 @@ demonstrate_use_case(
 
 demonstrate_use_case(
     title="4. Secured DB Access (Finance)",
-    agent_id="a2a://marketing-agent.com",
+    client_id="a2a://marketing-agent.com",
     state={
         "query_type": "quarterly_revenue",
         "access_scope": ["read:finance_db", "user:Gulli"]

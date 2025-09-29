@@ -15,10 +15,10 @@ from secure_passport_ext import (
 def valid_passport_data():
     """
     Returns a dictionary for creating a valid CallerContext. 
-    Uses snake_case keys to align with the CallerContext model attributes.
+    Keys are snake_case to align with the final CallerContext model attributes.
     """
     return {
-        "agent_id": "a2a://orchestrator.com",
+        "client_id": "a2a://orchestrator.com", # CORRECTED: Changed agent_id to client_id
         "session_id": "session-123",
         "state": {"currency": "USD", "tier": "silver"},
         "signature": "mock-signature-xyz"
@@ -37,7 +37,7 @@ def test_add_and_get_passport_success(valid_passport_data):
     retrieved = get_secure_passport(message)
     
     assert retrieved is not None
-    assert retrieved.agent_id == "a2a://orchestrator.com"
+    assert retrieved.client_id == "a2a://orchestrator.com" # CORRECTED: Access via client_id
     assert retrieved.state == {"currency": "USD", "tier": "silver"}
 
 def test_get_passport_when_missing():
@@ -47,9 +47,9 @@ def test_get_passport_when_missing():
     assert retrieved is None
 
 def test_passport_validation_failure_missing_required_field(valid_passport_data):
-    """Tests validation fails when a required field (agent_id) is missing."""
+    """Tests validation fails when a required field (client_id) is missing."""
     invalid_data = valid_passport_data.copy()
-    del invalid_data['agent_id']
+    del invalid_data['client_id'] # CORRECTED: Deleting client_id key
     
     message = A2AMessage() 
     message.metadata[SECURE_PASSPORT_URI] = invalid_data
@@ -107,7 +107,7 @@ def test_use_case_1_currency_conversion():
     }
     
     passport = CallerContext(
-        agent_id="a2a://travel-orchestrator.com",
+        client_id="a2a://travel-orchestrator.com", # CORRECTED: Using client_id keyword
         state=state_data,
         signature="sig-currency-1"
     )
@@ -128,8 +128,8 @@ def test_use_case_2_personalized_travel_booking():
     }
     
     passport = CallerContext(
-        agent_id="a2a://travel-portal.com",
-        session_id="travel-booking-session-999",
+        client_id="a2a://travel-portal.com", # CORRECTED: Using client_id keyword
+        session_id="travel-booking-session-999", 
         state=state_data,
         signature="sig-travel-2"
     )
@@ -151,7 +151,7 @@ def test_use_case_3_proactive_retail_assistance():
     }
     
     passport = CallerContext(
-        agent_id="a2a://ecommerce-front.com",
+        client_id="a2a://ecommerce-front.com", # CORRECTED: Using client_id keyword
         state=state_data,
     )
     
@@ -172,7 +172,7 @@ def test_use_case_4_secured_db_insights():
     }
     
     passport = CallerContext(
-        agent_id="a2a://marketing-agent.com",
+        client_id="a2a://marketing-agent.com", # CORRECTED: Using client_id keyword
         state=state_data,
         signature="sig-finance-4" 
     )
