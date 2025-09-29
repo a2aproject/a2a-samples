@@ -107,5 +107,5 @@ The most robust integration for the Secure Passport involves a **middleware laye
 
 ### Security and Callee Behavior
 
-1.  **Verification:** A callee agent **SHOULD** verify the provided **`signature`** before relying on the `state` content for high-privilege actions.
-2.  **Sensitive Data:** Agents **MUST NOT** include sensitive or mutable data in the `state` object unless robust, end-to-end cryptographic verification is implemented and required by the callee.
+1. **Verification:** A callee agent **SHOULD** verify the provided **`signature`** before relying on the `state` content for high-privilege actions.
+2. **Sensitive Data:** Agents **MUST NOT** include sensitive or mutable data in the `state` object unless robust, end-to-end cryptographic verification is implemented and required by the callee.
