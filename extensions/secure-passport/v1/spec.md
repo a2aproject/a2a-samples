@@ -20,7 +20,6 @@ The callee agent uses the `supportedStateKeys` array to explicitly declare which
 {
   "uri": "https://github.com/a2aproject/a2a-samples/tree/main/samples/python/extensions/secure-passport",
   "params": {
-    "receivesCallerContext": true,
     "supportedStateKeys": ["user_preferred_currency", "loyalty_tier"]
   }
 }
