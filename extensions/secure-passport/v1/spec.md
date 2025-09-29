@@ -8,7 +8,30 @@
 
 This extension enables an Agent2Agent (A2A) client to securely and optionally share a structured, verifiable contextual state—the **Secure Passport**—with the callee agent. This context is intended to transform anonymous A2A calls into trusted, context-aware partnerships.
 
-## 1. Agent Declaration and Negotiation
+## 1. Structure and Flow Overview
+
+The Secure Passport is the core payload (`CallerContext`), which enables a simple, two-part request flow designed for efficiency and trust.
+
+### A. Primary Payload Fields and Significance
+
+The `CallerContext` object is placed in the message metadata and must contain the following fields:
+
+| Field | Significance |
+| :--- | :--- |
+| **`clientId`** | **Identity:** Uniquely identifies the client/agent originating the context. |
+| **`state`** | **Context:** Contains the custom, structured data needed to fulfill the request without further questions. |
+| **`signature`** | **Trust:** A digital signature over the `state`, allowing the receiver to cryptographically verify data integrity and origin. |
+
+### B. Expected Request Flow
+
+The extension defines two points of interaction (which should typically be handled by SDK middleware):
+
+1. **Client-Side (Attaching):** The client generates the `CallerContext` (including the signature, if required for high-trust) and inserts the entire payload into he A2A message's metadata map.
+2. **Server-Side (Extracting):** The callee agent extracts the `CallerContext` from the metadata, validates the signature, and uses the `state` object to execute the task.
+
+***
+
+## 2. Agent Declaration and Negotiation
 
 An A2A Agent that is capable of **receiving** and utilizing the Secure Passport context **MUST** declare its support in its `AgentCard` under the **`extensions`** part of the `AgentCapabilities` object.
 
@@ -25,7 +48,7 @@ The callee agent uses the `supportedStateKeys` array to explicitly declare which
 }
 ```
 
-## 2. Data Structure: CallerContext Payload
+## 3. Data Structure: CallerContext Payload
 
 The `callerContext` object is the Secure Passport payload. It is **optional** and is included in the `metadata` map of a core A2A message structure.
 
@@ -50,7 +73,7 @@ The `callerContext` object is the Secure Passport payload. It is **optional** an
 }
 ```
 
-## 3. Message Augmentation and Example Usage
+## 4. Message Augmentation and Example Usage
 
 The `CallerContext` payload is embedded directly into the `metadata` map of the A2A `Message` object. The key used **MUST** be the extension's URI: `https://github.com/a2aproject/a2a-samples/tree/main/samples/python/extensions/secure-passport`.
 
@@ -86,7 +109,7 @@ This example shows the request body for an A2A `tasks/send` RPC call.
 }
 ```
 
-## 4. Implementation Notes and Best Practices
+## 5. Implementation Notes and Best Practices
 
 This section addresses the use of SDK helpers and conceptual implementation patterns.
 
