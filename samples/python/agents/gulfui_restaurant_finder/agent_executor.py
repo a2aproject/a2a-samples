@@ -7,6 +7,7 @@ from a2a.types import (
     DataPart,
     Task,
     TaskState,
+    TextPart,
     UnsupportedOperationError,
 )
 from a2a.utils import (
@@ -53,29 +54,31 @@ class RestaurantAgentExecutor(AgentExecutor):
                     logger.info(
                         f'  Part {i}: Unknown part type ({type(part.root)})'
                     )
+
             # --- Main Logic Loop ---
-            # Look for a part that looks like a GULF UI ClientEvent.
+            # ==== MODIFICATION START ====
+            # Look for a spec-compliant ClientEvent payload.
             for part in context.message.parts:
-                # TEMP FIX: Instead of relying on a broken mime_type, we inspect the data directly.
-                # If it's a DataPart with a dictionary inside that contains 'actionName',
-                # we can be confident it's our UI event.
                 if (
                     isinstance(part.root, DataPart)
                     and isinstance(part.root.data, dict)
                     and 'actionName' in part.root.data
                 ):
-                    logger.info(
-                        'Found GULF UI ClientEvent payload by inspecting data.'
-                    )
+                    logger.info('Found GULF UI ClientEvent payload.')
                     ui_event_part = part.root
                     break
+            # ==== MODIFICATION END ====
 
-        if ui_event_part:
+        if ui_event_part:  # This will now be a DataPart object
+            # ==== MODIFICATION START ====
+            # Parse the spec-compliant ClientEvent object
             event_data = ui_event_part.data
             logger.info(f'Received GULF ClientEvent: {event_data}')
             action = event_data.get('actionName')
             ctx = event_data.get('resolvedContext', {})
+            # ==== MODIFICATION END ====
 
+            # Format a new, descriptive query for the LLM
             if action == 'book_restaurant':
                 restaurant_name = ctx.get(
                     'restaurantName', 'Unknown Restaurant'
@@ -85,6 +88,7 @@ class RestaurantAgentExecutor(AgentExecutor):
                 query = f'USER_WANTS_TO_BOOK: {restaurant_name}, Address: {address}, ImageURL: {image_url}'
 
             elif action == 'submit_booking':
+                # Extract all details from the context
                 restaurant_name = ctx.get(
                     'restaurantName', 'Unknown Restaurant'
                 )
@@ -92,20 +96,18 @@ class RestaurantAgentExecutor(AgentExecutor):
                 reservation_time = ctx.get('reservationTime', 'Unknown Time')
                 dietary_reqs = ctx.get('dietary', 'None')
                 image_url = ctx.get('imageUrl', '')
+
+                # Create a specific query the LLM can parse
                 query = f'User submitted a booking for {restaurant_name} for {party_size} people at {reservation_time} with dietary requirements: {dietary_reqs}. The image URL is {image_url}'
 
             else:
                 query = f'User submitted an event: {action} with data: {ctx}'
         else:
+            # Fall back to old behavior if no UI event is found
             logger.info(
                 'No GULF UI event part found. Falling back to text input.'
             )
             query = context.get_user_input()
-
-        if not query:
-            logger.warning(
-                'Query for LLM is empty. Agent may fall back to a default response.'
-            )
 
         logger.info(f"--- AGENT_EXECUTOR: Final query for LLM: '{query}' ---")
 
