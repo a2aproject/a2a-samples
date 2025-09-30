@@ -1,0 +1,25 @@
+# pyproject.toml
+
+[tool.poetry]
+name = "secure-passport-ext"
+version = "1.0.0"
+description = "A2A Protocol Extension Sample: Secure Passport for Contextual State Sharing"
+authors = ["Google Octo <google-octo@google.com>"]
+license = "Apache-2.0"
+
+# --- FIX: 'packages' is a key directly under [tool.poetry] ---
+packages = [
+    { include = "secure_passport_ext", from = "src" }
+]
+# -----------------------------------------------------------
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "^2.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
