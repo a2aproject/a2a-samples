@@ -342,11 +342,9 @@ class _GulfUIExecutor(AgentExecutor):
     """
 
     def __init__(self, delegate: AgentExecutor, ext: GulfUIExtension):
-        self._delegate = delegate  # The original RestaurantAgentExecutor
+        self._delegate = delegate
         self._ext = ext
-        # Get the actual ADK LlmAgent object from inside the delegate's agent
         self._adk_agent = self._delegate.agent._agent
-        # Store the original instruction when we are created
         self._original_instruction = self._adk_agent.instruction
 
         self._agent_specific_gulf_ui_instruction = None
@@ -360,39 +358,34 @@ class _GulfUIExecutor(AgentExecutor):
     ) -> None:
         is_ui_active = self._ext.activate(context)
 
+        # Store the instruction that was present when this method was called.
+        original_instruction = self._adk_agent.instruction
+
         try:
             if is_ui_active:
+                # Use the original instruction stored during initialization as the base.
                 base_prompt = self._original_instruction
 
                 if self._agent_specific_gulf_ui_instruction:
                     base_prompt = self._agent_specific_gulf_ui_instruction
 
-                # This is the variable you asked to rename
                 ui_prompt = f'{base_prompt}\n{GENERIC_UI_INSTRUCTION_SUFFIX}'
 
-                print(
-                    '\n--- GULF UI EXTENSION ACTIVATED: HIJACKING PROMPT (GENERIC GULF 7.0) ---'
-                )
+                print('\n--- GULF UI EXTENSION ACTIVATED: HIJACKING PROMPT ---')
                 self._adk_agent.instruction = ui_prompt
 
-                # Wrap the queue to intercept and parse the delimited response
                 wrapped_queue = _GulfUIEventQueue(event_queue, self._ext)
                 await self._delegate.execute(context, wrapped_queue)
 
             else:
-                # Run the agent normally if the extension is not active
                 print('\n--- GULF UI EXTENSION *NOT* ACTIVE ---')
-                print('--- Running simple text-only delegate agent ---\n')
                 await self._delegate.execute(context, event_queue)
 
         finally:
-            # Always reset the agent's instruction to its original state
-            if self._adk_agent.instruction != self._original_instruction:
-                print(
-                    '--- GULF UI EXTENSION: Restoring original agent prompt ---'
-                )
-                # --- Use the stored instruction to reset ---
-                self._adk_agent.instruction = self._original_instruction
+            # Always restore the instruction to its state before this method ran.
+            if self._adk_agent.instruction != original_instruction:
+                print('--- GULF UI EXTENSION: Restoring agent prompt ---')
+                self._adk_agent.instruction = original_instruction
 
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue
@@ -414,7 +407,6 @@ class _GulfUIEventQueue(EventQueue):
         self,
         event: Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent,
     ) -> None:
-        # We only care about the final, completed status update
         if (
             isinstance(event, TaskStatusUpdateEvent)
             and event.status.state == TaskState.completed
@@ -422,18 +414,19 @@ class _GulfUIEventQueue(EventQueue):
             and event.status.message.parts
         ):
             text_part = next(
-                (p.root for p in event.status.message.parts if p.root.text),
+                (
+                    p.root
+                    for p in event.status.message.parts
+                    if isinstance(p.root, TextPart) and p.root.text
+                ),
                 None,
             )
 
             if text_part:
-                # The ADK Runner has run and given us the raw text, delimiter, and JSON
-                # all in one text part. Now we split it.
                 print(
                     f'RECEIVED RAW LLM RESPONSE FROM RUNNER:\n{text_part.text}\n--------------------------'
                 )
                 full_response_text = text_part.text
-                json_data = None
 
                 parts = re.split(
                     r'\n---\s*GULFUI_JSON\s*---\n',
@@ -451,35 +444,47 @@ class _GulfUIEventQueue(EventQueue):
                         'Successfully split response into TEXT and JSON OBJECT parts.'
                     )
 
-                    # Modify the original text part to contain ONLY the text
                     text_part.text = text_part_content
 
                     try:
-                        json_data = json.loads(
-                            json_text
-                        )  # This should be a dict (object)
+                        json_data = json.loads(json_text)
 
-                        event.status.message.parts.append(
-                            Part(
-                                root=DataPart(
-                                    data=json_data, mime_type=GULFUI_MIME_TYPE
+                        if 'gulfMessages' in json_data and isinstance(
+                            json_data['gulfMessages'], list
+                        ):
+                            gulf_messages = json_data['gulfMessages']
+                            for message in gulf_messages:
+                                event.status.message.parts.append(
+                                    Part(
+                                        root=DataPart(
+                                            data=message,
+                                            mime_type=GULFUI_MIME_TYPE,
+                                        )
+                                    )
+                                )
+                        else:
+                            print(
+                                "!!! LLM response JSON did not contain a 'gulfMessages' list."
+                            )
+                            event.status.message.parts.append(
+                                Part(
+                                    root=DataPart(
+                                        data=json_data,
+                                        mime_type=GULFUI_MIME_TYPE,
+                                    )
                                 )
                             )
-                        )
+
                     except json.JSONDecodeError as e:
                         print(f'!!! FAILED TO PARSE JSON. Error: {e}')
-                        text_part.text = (
-                            f'{text_part.text}\n(Failed to generate UI view)'
-                        )
+
                 else:
                     print(
                         '!!! LLM response did not contain UI delimiter. Sending text only.'
                     )
 
-        # Pass the (now modified) event to the real queue.
         return await self._delegate.enqueue_event(event)
 
-    # --- Delegate Methods ---
     async def dequeue_event(
         self, no_wait: bool = False
     ) -> Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent:

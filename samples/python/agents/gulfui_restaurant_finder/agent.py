@@ -29,7 +29,7 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
     1.  **If the user query is for a list of restaurants (e.g., "top 10 chinese restaurants"):**
         -   Your conversational text should be simple (e.g., "Here are some restaurants...").
         -   Your JSON part MUST follow the "LIST EXAMPLE" below.
-        -   You MUST place the list of restaurants inside the `contents.items` field.
+        -   You MUST place the list of restaurants inside the `dataModelUpdate.contents.items` field.
         -   You MUST use an `imageUrl` from this list:
             - {base_url}/static/beefbroccoli.jpeg
             - {base_url}/static/sweetsourpork.jpeg
@@ -42,22 +42,23 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
     2.  **If the user query is to book a restaurant (e.g., "USER_WANTS_TO_BOOK: Lilia, Address: 567 Union Ave, Brooklyn, NY 11222, ImageURL: /static/mapotofu.jpeg"):**
         -   Your conversational text should be simple (e.g., "Please provide details for your booking at Lilia.")
         -   Your JSON part MUST follow the "BOOKING FORM EXAMPLE" below.
-        -   You MUST update the `title`, `restaurantName`, `address`, and `imageUrl` in the `DataModelUpdate` `contents` to match the restaurant from the query.
+        -   You MUST update the `title`, `restaurantName`, `address`, and `imageUrl` in the `dataModelUpdate.contents` to match the restaurant from the query.
 
     3.  **If the user query is a booking submission (e.g., "User submitted a booking for [RestaurantName] for [PartySize] people at [Time] with dietary requirements: [Requirements]. The image URL is [ImageUrl]"):**
         -   Respond with a confirmation message that INCLUDES all booking details.
         -   Your JSON part MUST follow the "CONFIRMATION EXAMPLE" below.
-        -   You MUST populate the `contents` in the `DataModelUpdate` with the `title`, combined `bookingDetails`, `dietaryRequirements`, and `imageUrl` from the query.
+        -   You MUST populate the `dataModelUpdate.contents` with the `title`, combined `bookingDetails`, `dietaryRequirements`, and `imageUrl` from the query.
 
     4.  **If the query is a simple text answer (e.g., "Hello"):**
         -   Respond with a simple greeting (e.g., "How can I help you find a restaurant?")
-        -   Your JSON part MUST be a simple "Text" component.
+        -   Your JSON part MUST be a simple "Text" component which includes the same information in text only format.
 
     ---BEGIN LIST EXAMPLE (for restaurant lists)---
     {{
       "gulfMessages": [
-        {{ "root": "root-column" }},
-        {{
+        {{ "streamHeader": {{"version": "1.0.0"}} }},
+        {{ "beginRendering": {{ "root": "root-column" }} }},
+        {{ "componentUpdate": {{
           "components": [
             {{ "id": "root-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["title-heading", "item-list"] }} }} }} }},
             {{ "id": "title-heading", "componentProperties": {{ "Heading": {{ "level": "1", "text": {{ "literalString": "Top Restaurants" }} }} }} }},
@@ -72,8 +73,8 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
             {{ "id": "template-link", "componentProperties": {{ "Text": {{ "text": {{ "path": "infoLink" }} }} }} }},
             {{ "id": "template-book-button", "componentProperties": {{ "Button": {{ "label": {{ "literalString": "Book Now" }}, "action": {{ "action": "book_restaurant", "context": [ {{ "key": "restaurantName", "value": {{ "path": "name" }} }}, {{ "key": "imageUrl", "value": {{ "path": "imageUrl" }} }}, {{ "key": "address", "value": {{ "path": "address" }} }} ] }} }} }} }}
           ]
-        }},
-        {{
+        }} }},
+        {{ "dataModelUpdate": {{
           "path": "/",
           "contents": {{
             "items": [
@@ -81,7 +82,7 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
               {{ "name": "Lilia", "detail": "Popular pasta spot.", "imageUrl": "{base_url}/static/mapotofu.jpeg", "rating": "★★★★★", "infoLink": "[More Info](https://www.lilianewyork.com/)", "address": "567 Union Ave, Brooklyn, NY 11222" }}
             ]
           }}
-        }}
+        }} }}
       ]
     }}
     ---END LIST EXAMPLE---
@@ -89,8 +90,9 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
     ---BEGIN BOOKING FORM EXAMPLE (for booking)---
     {{
       "gulfMessages": [
-        {{ "root": "booking-form-column" }},
-        {{
+        {{ "streamHeader": {{"version": "1.0.0"}} }},
+        {{ "beginRendering": {{ "root": "booking-form-column" }} }},
+        {{ "componentUpdate": {{
           "components": [
             {{ "id": "booking-form-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["booking-title", "restaurant-image", "restaurant-address", "party-size-field", "datetime-field", "dietary-field", "submit-button"] }} }} }} }},
             {{ "id": "booking-title", "componentProperties": {{ "Heading": {{ "level": "2", "text": {{ "path": "title" }} }} }} }},
@@ -101,8 +103,8 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
             {{ "id": "dietary-field", "componentProperties": {{ "TextField": {{ "label": {{ "literalString": "Dietary Requirements" }}, "text": {{ "path": "dietary" }} }} }} }},
             {{ "id": "submit-button", "componentProperties": {{ "Button": {{ "label": {{ "literalString": "Submit Reservation" }}, "action": {{ "action": "submit_booking", "context": [ {{ "key": "restaurantName", "value": {{ "path": "restaurantName" }} }}, {{ "key": "partySize", "value": {{ "path": "partySize" }} }}, {{ "key": "reservationTime", "value": {{ "path": "reservationTime" }} }}, {{ "key": "dietary", "value": {{ "path": "dietary" }} }}, {{ "key": "imageUrl", "value": {{ "path": "imageUrl" }} }} ] }} }} }} }}
           ]
-        }},
-        {{
+        }} }},
+        {{ "dataModelUpdate": {{
           "path": "/",
           "contents": {{
             "title": "Book a Table at [RestaurantName]",
@@ -113,7 +115,7 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
             "dietary": "",
             "imageUrl": ""
           }}
-        }}
+        }} }}
       ]
     }}
     ---END BOOKING FORM EXAMPLE---
@@ -121,8 +123,9 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
     ---BEGIN CONFIRMATION EXAMPLE (for booking submission)---
     {{
       "gulfMessages": [
-        {{ "root": "confirmation-card" }},
-        {{
+        {{ "streamHeader": {{"version": "1.0.0"}} }},
+        {{ "beginRendering": {{ "root": "confirmation-card" }} }},
+        {{ "componentUpdate": {{
           "components": [
             {{ "id": "confirmation-card", "componentProperties": {{ "Card": {{ "child": "confirmation-column" }} }} }},
             {{ "id": "confirmation-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["confirm-title", "confirm-image", "divider1", "confirm-details", "divider2", "confirm-dietary", "divider3", "confirm-text"] }} }} }} }},
@@ -135,8 +138,8 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
             {{ "id": "divider2", "componentProperties": {{ "Divider": {{}} }} }},
             {{ "id": "divider3", "componentProperties": {{ "Divider": {{}} }} }}
           ]
-        }},
-        {{
+        }} }},
+        {{ "dataModelUpdate": {{
           "path": "/",
           "contents": {{
             "title": "Booking at [RestaurantName]",
@@ -144,10 +147,11 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
             "dietaryRequirements": "Dietary Requirements: [Requirements]",
             "imageUrl": "[ImageUrl]"
           }}
-        }}
+        }} }}
       ]
     }}
     ---END CONFIRMATION EXAMPLE---
+
 """
 
 
