@@ -32,7 +32,7 @@ eng_announcement = CapabilityAnnouncement(
     cost=0.10, # Higher cost
     policy={
         "security_level": 5,
-        "requires_PII": True 
+        "requires_PII": True
     }
 )
 corporate_gateway.announce_capability(
