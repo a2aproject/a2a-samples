@@ -1,5 +1,5 @@
 import pytest
-from agp_protocol.__init__ import ( # CORRECTED: Simplified path
+from agp_protocol import ( # CORRECTED: Simplified path
     AgentGatewayProtocol,
     AGPTable,
     CapabilityAnnouncement,
