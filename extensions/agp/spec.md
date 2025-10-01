@@ -91,7 +91,7 @@ This declaration is placed within the `extensions` array of the Agent Card's `Ag
 
 ```json
 {
-  "uri": "[https://github.com/a2aproject/a2a-samples/tree/main/extensions/agp](https://github.com/a2aproject/a2a-samples/tree/main/extensions/agp)",
+  "uri": "https://github.com/a2aproject/a2a-samples/tree/main/extensions/agp",
   "params": {
     "agent_role": "gateway",
     "supported_agp_versions": ["1.0"]
