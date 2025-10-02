@@ -245,7 +245,7 @@ private fun jokeWriterStrategy() = strategy<A2AMessage, Unit>("joke-writer") {
                 status = TaskStatus(
                     state = TaskState.InputRequired,
                     message = A2AMessage(
-                        role = Role.User,
+                        role = Role.Agent,
                         parts = listOf(
                             TextPart(clarification.question)
                         ),

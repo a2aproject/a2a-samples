@@ -31,9 +31,9 @@ fun registerRunExampleTask(name: String, mainClassName: String) = tasks.register
     classpath = sourceSets["main"].runtimeClasspath
 }
 // Simple joke generation
-registerRunExampleTask("runExampleSimpleJokeAgentServer", "ai.koog.example.simplejoke.ServerKt")
-registerRunExampleTask("runExampleSimpleJokeAgentClient", "ai.koog.example.simplejoke.ClientKt")
+registerRunExampleTask("runExampleSimpleJokeServer", "ai.koog.example.simplejoke.ServerKt")
+registerRunExampleTask("runExampleSimpleJokeClient", "ai.koog.example.simplejoke.ClientKt")
 
 // Advanced joke generation
-registerRunExampleTask("runExampleAdvancedJokeAgentServer", "ai.koog.example.advancedjoke.ServerKt")
-registerRunExampleTask("runExampleAdvancedJokeAgentClient", "ai.koog.example.advancedjoke.ClientKt")
+registerRunExampleTask("runExampleAdvancedJokeServer", "ai.koog.example.advancedjoke.ServerKt")
+registerRunExampleTask("runExampleAdvancedJokeClient", "ai.koog.example.advancedjoke.ClientKt")

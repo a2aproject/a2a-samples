@@ -19,6 +19,11 @@ Koog is JetBrains' open-source agentic framework that empowers developers to bui
 
 Learn more at [koog.ai](https://koog.ai/)
 
+## Prerequisites
+
+- JDK 17 or higher
+- Set `GOOGLE_API_KEY` environment variable (or configure other LLM providers in the code)
+
 ## Examples
 
 ### Simple Joke Agent: [simplejoke](./src/main/kotlin/ai/koog/example/simplejoke)
@@ -102,11 +107,6 @@ To build your own A2A agent with Koog:
 6. **For complex agents**: Use GraphAIAgent with the A2AAgentServer plugin
 
 See the code comments in `JokeWriterAgentExecutor.kt` for detailed implementation guidance.
-
-## Prerequisites
-
-- JDK 17 or higher
-- Set `GOOGLE_API_KEY` environment variable (or configure other LLM providers in the code)
 
 ## Learn More
 
