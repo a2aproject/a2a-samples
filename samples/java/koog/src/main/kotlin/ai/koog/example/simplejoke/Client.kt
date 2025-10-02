@@ -73,8 +73,13 @@ suspend fun main() {
             Request(MessageSendParams(message = message))
         )
 
-        val reply = (response.data as Message).toKoogMessage().content
-        println("${BRIGHT_MAGENTA}Agent response:${RESET}\n$reply\n")
+        val replyMessage = response.data as? Message
+        if (replyMessage != null) {
+            val reply = replyMessage.toKoogMessage().content
+            println("${BRIGHT_MAGENTA}Agent response:${RESET}\n$reply\n")
+        } else {
+            println("${RED}Error: Unexpected response type from agent.$RESET\n")
+        }
     }
 
     println("${RED}Conversation complete!$RESET")
