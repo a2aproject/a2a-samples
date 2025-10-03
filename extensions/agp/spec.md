@@ -109,6 +109,6 @@ When a Gateway Agent attempts to route an Intent but fails due to policy or avai
 | **-32201** | `AGP_POLICY_VIOLATION` | Routes were found, but none satisfied the constraints in the Intent's `metadata` (e.g., no squad accepts PII data). | Intent cannot be routed safely; returned to sender. | 
 | **-32202** | `AGP_TABLE_STALE` | The Agent Gateway's routing table is outdated and needs a refresh via a standard AGP refresh mechanism. | Gateway attempts refresh before re-routing, or returns error. |
 
-## 6. Protocol Flow and Implementation
+## 6. Conclusion
 
-The protocol relies on the Gateway Agent maintaining an **AGP Table** (a routing table) built from Capability Announcements. When an Intent arrives, the Gateway Agent performs **Policy-Based Routing** to select the appropriate path by comparing compliance and cost metrics.
+The Agent Gateway Protocol (AGP) offers a powerful and necessary enhancement layer over the foundational A2A structure. By implementing Policy-Based Routing, AGP ensures that distributed AI systems are not only efficient and financially optimized but also secure and policy-compliant—a critical step toward trustworthy, industrial-scale multi-agent collaboration.

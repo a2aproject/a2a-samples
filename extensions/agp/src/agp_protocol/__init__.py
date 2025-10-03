@@ -1,6 +1,6 @@
-from typing import Optional, Dict, Any, List, Callable
+from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field, ConfigDict
-import logging # Import logging only if needed in __init__.py
+import logging
 
 # --- Core Data Structures ---
 
@@ -31,11 +31,9 @@ class RouteEntry(BaseModel):
 
 class AGPTable(BaseModel):
     """The central routing table maintained by a Gateway Agent."""
-    # Key: capability string (e.g., 'billing:invoice:generate')
-    # Value: List of possible RouteEntry objects
     routes: Dict[str, List[RouteEntry]] = Field(default_factory=dict)
     
-    model_config = ConfigDict(extra='forbid') # Forbid dynamic attribute assignment on the table itself
+    model_config = ConfigDict(extra='forbid')
 
 # --- Core AGP Routing Logic ---
 
@@ -59,7 +57,7 @@ class AgentGatewayProtocol:
         
         capability_key = announcement.capability
         
-        # Simpler, Pythonic way to initialize the list and append the entry
+        # Use setdefault to initialize the list if the key is new
         self.agp_table.routes.setdefault(capability_key, []).append(entry)
         
         print(f"[{self.squad_name}] ANNOUNCED: {capability_key} routed via {path}")
@@ -71,26 +69,30 @@ class AgentGatewayProtocol:
         
         Routing Logic:
         1. Find all routes matching the target_capability.
-        2. Filter routes based on matching all policy constraints (Intent metadata must match Route policy).
+        2. Filter routes based on matching all policy constraints.
         3. Select the lowest-cost route among the compliant options.
         """
         target_cap = intent.target_capability
         intent_constraints = intent.metadata
         
         if target_cap not in self.agp_table.routes:
-            # Using logging module for non-critical failures
             logging.warning(f"[{self.squad_name}] ROUTING FAILED: Capability '{target_cap}' is unknown.")
             return None
 
         possible_routes = self.agp_table.routes[target_cap]
         
-        # --- 2. Policy Filtering (Optimized using list comprehension and all()) ---
+        # --- 2. Policy Filtering (Robust Logic Applied Here) ---
         compliant_routes = [
             route for route in possible_routes
             if all(
-                # Check if the constraint key exists in the route policy AND the values match.
-                # If all requested constraints are met, the route is compliant.
-                key in route.policy and route.policy[key] == value
+                # Check if the constraint key exists in the route policy AND the values are sufficient.
+                key in route.policy and (
+                    # If the key is 'security_level' and both values are numeric, check for >= sufficiency.
+                    route.policy[key] >= value 
+                    if key == 'security_level' and isinstance(route.policy.get(key), (int, float)) and isinstance(value, (int, float))
+                    # Otherwise (e.g., boolean flags like 'requires_PII'), require exact equality.
+                    else route.policy[key] == value
+                )
                 for key, value in intent_constraints.items()
             )
         ]
