@@ -74,7 +74,7 @@ The protocol relies on the Gateway Agent maintaining an **AGP Table** (a routing
 | Field | Type | Required | Description |
  | ----- | ----- | ----- | ----- |
 | `path` | string | Yes | The destination Squad/API path (e.g., `Squad_Finance/gateway`). |
-| `cost` | number | Yes | The cost metric for this route (used for lowest-cost selection). | 
+| `cost` | number | Yes | The cost metric for this route (used for lowest-cost selection). |
 | `policy` | object | Yes | Policies of the destination, used for matching Intent constraints. |
 
 ### B. AGPTable Object
