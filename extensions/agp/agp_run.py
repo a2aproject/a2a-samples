@@ -3,8 +3,7 @@ from agp_protocol import (
     AgentGatewayProtocol,
     AGPTable,
     IntentPayload,
-    CapabilityAnnouncement,
-    RouteEntry
+    CapabilityAnnouncement
 )
 
 # Set logging level to WARNING so only our custom routing failures are visible
