@@ -3,7 +3,8 @@ from agp_protocol import (
     AgentGatewayProtocol,
     AGPTable,
     IntentPayload,
-    CapabilityAnnouncement
+    CapabilityAnnouncement,
+    RouteEntry
 )
 
 # Set logging level to WARNING so only our custom routing failures are visible
@@ -91,18 +92,19 @@ def run_simulation():
         payload={"type": "standard", "user": "bob"},
         metadata={"security_level": 3}
     )
-    print(f"\n[Intent A] Requesting standard VM provisioning (Lowest cost, Security Level 3).")
+    print("\n[Intent A] Requesting standard VM provisioning (Lowest cost, Security Level 3).")
     corporate_gateway.route_intent(intent_a)
 
 
     # Intent B: Sensitive VM provisioning (Policy-driven, requires PII)
     # Expected: Route to Engineering Squad (Cost: 0.10) because the External Vendor (0.05) fails the PII policy.
+    # The router uses the sufficiency check (5 >= 5 is True).
     intent_b = IntentPayload(
         target_capability="infra:provision:vm",
         payload={"type": "sensitive", "user": "alice", "data": "ssn_data"},
         metadata={"security_level": 5, "requires_PII": True}
     )
-    print(f"\n[Intent B] Requesting sensitive VM provisioning (Requires PII and Security Level 5).")
+    print("\n[Intent B] Requesting sensitive VM provisioning (Requires PII and Security Level 5).")
     corporate_gateway.route_intent(intent_b)
 
 
@@ -113,7 +115,7 @@ def run_simulation():
         payload={"type": "max_security"},
         metadata={"security_level": 7}
     )
-    print(f"\n[Intent C] Requesting provisioning with security level 7 (Unmatched Policy).")
+    print("\n[Intent C] Requesting provisioning with security level 7 (Unmatched Policy).")
     corporate_gateway.route_intent(intent_c)
 
 
@@ -124,9 +126,10 @@ def run_simulation():
         payload={"employee": "Charlie"},
         metadata={}
     )
-    print(f"\n[Intent D] Requesting HR onboarding (Unknown Capability).")
+    print("\n[Intent D] Requesting HR onboarding (Unknown Capability).")
     corporate_gateway.route_intent(intent_d)
 
 if __name__ == '__main__':
     run_simulation()
+
     

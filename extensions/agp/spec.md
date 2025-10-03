@@ -18,12 +18,12 @@ This payload is used by a Squad Gateway Agent to announce the services its squad
 
 ### CapabilityAnnouncement Object Schema
 
-| Field | Type | Required | Description | 
- | ----- | ----- | ----- | ----- | 
-| `capability` | string | Yes | The function or skill provided (e.g., `financial_analysis:quarterly`). | 
-| `version` | string | Yes | Version of the capability schema/interface (e.g., `1.5`). | 
-| `cost` | number | No | Estimated cost metric (e.g., `0.05` USD, or token count). | 
-| `policy` | object | Yes | Key-value pairs defining required policies (e.g., `requires_pii:true`, `security_level:5`). | 
+| Field | Type | Required | Description |
+ | ----- | ----- | ----- | ----- |
+| `capability` | string | Yes | The function or skill provided (e.g., `financial_analysis:quarterly`). |
+| `version` | string | Yes | Version of the capability schema/interface (e.g., `1.5`). |
+| `cost` | number | No | Estimated cost metric (e.g., `0.05` USD, or token count). |
+| `policy` | object | Yes | Key-value pairs defining required policies (e.g., `requires_pii:true`, `security_level:5`). |
 
 ### Example Announcement Payload
 
@@ -44,11 +44,11 @@ This payload defines the *what* (the goal) and *constraints* (metadata), replaci
 
 ### Intent Object Schema
 
-| Field | Type | Required | Description | 
- | ----- | ----- | ----- | ----- | 
-| `target_capability` | string | Yes | The capability the Intent seeks to fulfill. | 
-| `payload` | object | Yes | The core data arguments required for the task. | 
-| `metadata` | object | No | Client-defined constraints that must be matched against the announced `policy` during routing. | 
+| Field | Type | Required | Description |
+ | ----- | ----- | ----- | ----- |
+| `target_capability` | string | Yes | The capability the Intent seeks to fulfill. |
+| `payload` | object | Yes | The core data arguments required for the task. |
+| `metadata` | object | No | Client-defined constraints that must be matched against the announced `policy` during routing. |
 
 ### Example Intent Payload
 
@@ -71,9 +71,9 @@ The protocol relies on the Gateway Agent maintaining an **AGP Table** (a routing
 
 ### A. RouteEntry Object Schema
 
-| Field | Type | Required | Description | 
- | ----- | ----- | ----- | ----- | 
-| `path` | string | Yes | The destination Squad/API path (e.g., `Squad_Finance/gateway`). | 
+| Field | Type | Required | Description |
+ | ----- | ----- | ----- | ----- |
+| `path` | string | Yes | The destination Squad/API path (e.g., `Squad_Finance/gateway`). |
 | `cost` | number | Yes | The cost metric for this route (used for lowest-cost selection). | 
 | `policy` | object | Yes | Policies of the destination, used for matching Intent constraints. |
 
@@ -103,10 +103,10 @@ This declaration is placed within the `extensions` array of the Agent Card's `Ag
 
 When a Gateway Agent attempts to route an Intent but fails due to policy or availability issues, it **MUST** return a JSON-RPC error with specific AGP-defined codes.
 
-| Code | Name | Description | Routing Consequence | 
- | ----- | ----- | ----- | ----- | 
-| **-32200** | `AGP_ROUTE_NOT_FOUND` | No agent or squad has announced the requested `target_capability`. | Intent cannot be routed; returned to sender. | 
-| **-32201** | `AGP_POLICY_VIOLATION` | Routes were found, but none satisfied the constraints in the Intent's `metadata` (e.g., no squad accepts PII data). | Intent cannot be routed safely; returned to sender. | 
+| Code | Name | Description | Routing Consequence |
+ | ----- | ----- | ----- | ----- |
+| **-32200** | `AGP_ROUTE_NOT_FOUND` | No agent or squad has announced the requested `target_capability`. | Intent cannot be routed; returned to sender. |
+| **-32201** | `AGP_POLICY_VIOLATION` | Routes were found, but none satisfied the constraints in the Intent's `metadata` (e.g., no squad accepts PII data). | Intent cannot be routed safely; returned to sender. |
 | **-32202** | `AGP_TABLE_STALE` | The Agent Gateway's routing table is outdated and needs a refresh via a standard AGP refresh mechanism. | Gateway attempts refresh before re-routing, or returns error. |
 
 ## 6. Conclusion
