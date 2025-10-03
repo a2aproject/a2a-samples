@@ -1,3 +1,4 @@
+import json
 import logging
 
 from a2a.server.agent_execution import AgentExecutor, RequestContext
@@ -5,12 +6,14 @@ from a2a.server.events import EventQueue
 from a2a.server.tasks import TaskUpdater
 from a2a.types import (
     DataPart,
+    Part,
     Task,
     TaskState,
     TextPart,
     UnsupportedOperationError,
 )
 from a2a.utils import (
+    new_agent_parts_message,
     new_agent_text_message,
     new_task,
 )
@@ -35,6 +38,7 @@ class RestaurantAgentExecutor(AgentExecutor):
     ) -> None:
         query = ''
         ui_event_part = None
+        action = None
 
         if context.message and context.message.parts:
             # --- Logging Loop ---
@@ -129,12 +133,53 @@ class RestaurantAgentExecutor(AgentExecutor):
                 )
                 continue
 
+            # MODIFICATION: Determine the final task state
+            final_state = (
+                TaskState.completed
+                if action == 'submit_booking'
+                else TaskState.input_required
+            )
+
+            content = item['content']
+            parts = []
+            if '---GULFUI_JSON---' in content:
+                text_part, json_part_str = content.split('---GULFUI_JSON---', 1)
+                if text_part:
+                    parts.append(Part(root=TextPart(text=text_part.strip())))
+                if json_part_str:
+                    try:
+                        json_data = json.loads(json_part_str)
+                        if 'gulfMessages' in json_data:
+                            for message in json_data['gulfMessages']:
+                                parts.append(
+                                    Part(
+                                        root=DataPart(
+                                            data=message,
+                                            mimeType='application/json+gulfui',
+                                        )
+                                    )
+                                )
+                        else:
+                            parts.append(
+                                Part(
+                                    root=DataPart(
+                                        data=json_data,
+                                        mimeType='application/json+gulfui',
+                                    )
+                                )
+                            )
+                    except json.JSONDecodeError:
+                        # If JSON is invalid, send it as text
+                        parts.append(
+                            Part(root=TextPart(text=json_part_str.strip()))
+                        )
+            else:
+                parts.append(Part(root=TextPart(text=content.strip())))
+
             await updater.update_status(
-                TaskState.completed,
-                new_agent_text_message(
-                    item['content'], task.context_id, task.id
-                ),
-                final=True,
+                final_state,
+                new_agent_parts_message(parts, task.context_id, task.id),
+                final=(final_state == TaskState.completed),
             )
             break
 
