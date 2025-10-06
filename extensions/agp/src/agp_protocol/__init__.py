@@ -13,10 +13,11 @@ class CapabilityAnnouncement(BaseModel):
         ...,
         description="The function or skill provided (e.g., 'financial_analysis:quarterly').",
     )
-    version: str = Field(..., description="Version of the capability schema.")
-    cost: Optional[float] = Field(None, description="Estimated cost metric.")
+    version: str = Field(..., description='Version of the capability schema.')
+    cost: Optional[float] = Field(None, description='Estimated cost metric.')
     policy: Dict[str, Any] = Field(
-        ..., description="Key-value pairs defining required security/data policies."
+        ...,
+        description='Key-value pairs defining required security/data policies.',
     )
 
     model_config = ConfigDict(extra='forbid')
@@ -26,14 +27,14 @@ class IntentPayload(BaseModel):
     """The request payload routed by AGP."""
 
     target_capability: str = Field(
-        ..., description="The capability the Intent seeks to fulfill."
+        ..., description='The capability the Intent seeks to fulfill.'
     )
     payload: Dict[str, Any] = Field(
-        ..., description="The core data arguments required for the task."
+        ..., description='The core data arguments required for the task.'
     )
     metadata: Dict[str, Any] = Field(
         default_factory=dict,
-        description="Client-defined constraints for policy matching.",
+        description='Client-defined constraints for policy matching.',
     )
 
     model_config = ConfigDict(extra='forbid')
@@ -46,12 +47,13 @@ class RouteEntry(BaseModel):
     """A single possible route to fulfill a fulfill a capability."""
 
     path: str = Field(
-        ..., description="The destination Squad/API path (e.g., 'Squad_Finance/gateway')."
+        ...,
+        description="The destination Squad/API path (e.g., 'Squad_Finance/gateway').",
     )
-    cost: float = Field(..., description="Cost metric for this route.")
+    cost: float = Field(..., description='Cost metric for this route.')
     policy: Dict[str, Any] = Field(
         ...,
-        description="Policies of the destination, used for matching Intent constraints.",
+        description='Policies of the destination, used for matching Intent constraints.',
     )
 
 
@@ -76,7 +78,9 @@ class AgentGatewayProtocol:
         self.squad_name = squad_name
         self.agp_table = agp_table
 
-    def announce_capability(self, announcement: CapabilityAnnouncement, path: str):
+    def announce_capability(
+        self, announcement: CapabilityAnnouncement, path: str
+    ):
         """Simulates receiving a capability announcement and updating the AGP Table."""
         entry = RouteEntry(
             path=path,
@@ -89,12 +93,14 @@ class AgentGatewayProtocol:
         # Use setdefault to initialize the list if the key is new
         self.agp_table.routes.setdefault(capability_key, []).append(entry)
 
-        print(f"[{self.squad_name}] ANNOUNCED: {capability_key} routed via {path}")
+        print(
+            f'[{self.squad_name}] ANNOUNCED: {capability_key} routed via {path}'
+        )
 
     def route_intent(self, intent: IntentPayload) -> Optional[RouteEntry]:
         """
         Performs Policy-Based Routing to find the best available squad.
-        
+
         Routing Logic:
         1. Find all routes matching the target_capability.
         2. Filter routes based on matching all policy constraints.
@@ -133,7 +139,7 @@ class AgentGatewayProtocol:
 
         if not compliant_routes:
             logging.warning(
-                f"[{self.squad_name}] ROUTING FAILED: No compliant route found for constraints: {intent_constraints}"
+                f'[{self.squad_name}] ROUTING FAILED: No compliant route found for constraints: {intent_constraints}'
             )
             return None
 
