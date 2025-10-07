@@ -1,9 +1,10 @@
 import logging
+
 from agp_protocol import (
-    AgentGatewayProtocol,
     AGPTable,
-    IntentPayload,
+    AgentGatewayProtocol,
     CapabilityAnnouncement,
+    IntentPayload,
 )
 
 
@@ -12,8 +13,7 @@ logging.basicConfig(level=logging.WARNING)
 
 
 def run_simulation():
-    """
-    Simulates the core routing process of the Agent Gateway Protocol (AGP),
+    """Simulates the core routing process of the Agent Gateway Protocol (AGP),
     demonstrating Policy-Based Routing and cost optimization.
     """
     # --- PHASE 1: Setup and Announcement ---
@@ -23,91 +23,99 @@ def run_simulation():
 
     # 2. Initialize the Corporate Gateway Agent (Router)
     corporate_gateway = AgentGatewayProtocol(
-        squad_name="Corporate_GW", agp_table=corporate_agp_table
+        squad_name='Corporate_GW', agp_table=corporate_agp_table
     )
 
     # 3. Squads announce their capabilities to the Corporate Gateway
 
-    print("===============================================================")
-    print("      AGENT GATEWAY PROTOCOL (AGP) ROUTING SIMULATION")
-    print("===============================================================")
-    print("\n--- PHASE 1: SQUAD ANNOUNCEMENTS ---")
+    print('===============================================================')
+    print('      AGENT GATEWAY PROTOCOL (AGP) ROUTING SIMULATION')
+    print('===============================================================')
+    print('\n--- PHASE 1: SQUAD ANNOUNCEMENTS ---')
 
     # --- Announcement 1: Engineering Squad (Internal, Secure) ---
     # Can provision VMs, handles sensitive data (PII), but is more expensive than the external vendor.
     eng_announcement = CapabilityAnnouncement(
-        capability="infra:provision:vm",
-        version="1.0",
+        capability='infra:provision:vm',
+        version='1.0',
         cost=0.10,  # Higher cost
-        policy={"security_level": 5, "requires_PII": True},
+        policy={'security_level': 5, 'requires_PII': True},
     )
     corporate_gateway.announce_capability(
-        eng_announcement, path="Squad_Engineering/vm_provisioner"
+        eng_announcement, path='Squad_Engineering/vm_provisioner'
     )
 
     # --- Announcement 2: External Vendor Squad (Cheapest, Low Security) ---
     # Can provision VMs, but fails the PII check and only meets standard security.
     vendor_announcement = CapabilityAnnouncement(
-        capability="infra:provision:vm",
-        version="1.1",
+        capability='infra:provision:vm',
+        version='1.1',
         cost=0.05,  # Lowest cost
-        policy={"security_level": 3, "requires_PII": False},
+        policy={'security_level': 3, 'requires_PII': False},
     )
     corporate_gateway.announce_capability(
-        vendor_announcement, path="External_Vendor/vm_provisioning_api"
+        vendor_announcement, path='External_Vendor/vm_provisioning_api'
     )
 
     # --- Announcement 3: Finance Squad (Standard Analysis) ---
     finance_announcement = CapabilityAnnouncement(
-        capability="financial_analysis:quarterly",
-        version="2.0",
+        capability='financial_analysis:quarterly',
+        version='2.0',
         cost=0.15,
-        policy={"security_level": 3, "geo": "US"},
+        policy={'security_level': 3, 'geo': 'US'},
     )
     corporate_gateway.announce_capability(
-        finance_announcement, path="Squad_Finance/analysis_tool"
+        finance_announcement, path='Squad_Finance/analysis_tool'
     )
 
     # --- PHASE 2: Intent Routing Simulation ---
 
-    print("\n--- PHASE 2: INTENT ROUTING ---")
+    print('\n--- PHASE 2: INTENT ROUTING ---')
 
     # Intent A: Standard VM provisioning (Cost-driven, minimal policy)
     # CORRECTED: Using policy_constraints keyword
     intent_a = IntentPayload(
-        target_capability="infra:provision:vm",
-        payload={"type": "standard", "user": "bob"},
-        policy_constraints={"security_level": 3},
+        target_capability='infra:provision:vm',
+        payload={'type': 'standard', 'user': 'bob'},
+        policy_constraints={'security_level': 3},
     )
-    print("\n[Intent A] Requesting standard VM provisioning (Lowest cost, Security Level 3).")
+    print(
+        '\n[Intent A] Requesting standard VM provisioning (Lowest cost, Security Level 3).'
+    )
     corporate_gateway.route_intent(intent_a)
 
     # Intent B: Sensitive VM provisioning (Policy-driven, requires PII)
     # CORRECTED: Using policy_constraints keyword
     intent_b = IntentPayload(
-        target_capability="infra:provision:vm",
-        payload={"type": "sensitive", "user": "alice", "data": "ssn_data"},
-        policy_constraints={"security_level": 5, "requires_PII": True},
+        target_capability='infra:provision:vm',
+        payload={'type': 'sensitive', 'user': 'alice', 'data': 'ssn_data'},
+        policy_constraints={'security_level': 5, 'requires_PII': True},
     )
-    print("\n[Intent B] Requesting sensitive VM provisioning (Requires PII and Security Level 5).")
+    print(
+        '\n[Intent B] Requesting sensitive VM provisioning (Requires PII and Security Level 5).'
+    )
     corporate_gateway.route_intent(intent_b)
 
     # Intent C: Requesting provisioning with security level 7 (Unmatched Policy)
     # CORRECTED: Using policy_constraints keyword
     intent_c = IntentPayload(
-        target_capability="infra:provision:vm",
-        payload={"type": "max_security"},
-        policy_constraints={"security_level": 7},
+        target_capability='infra:provision:vm',
+        payload={'type': 'max_security'},
+        policy_constraints={'security_level': 7},
     )
-    print("\n[Intent C] Requesting provisioning with security level 7 (Unmatched Policy).")
+    print(
+        '\n[Intent C] Requesting provisioning with security level 7 (Unmatched Policy).'
+    )
     corporate_gateway.route_intent(intent_c)
 
     # Intent D: Requesting HR onboarding (Unknown Capability)
     # CORRECTED: Using policy_constraints keyword
     intent_d = IntentPayload(
-        target_capability="hr:onboard:new_hire", payload={"employee": "Charlie"}, policy_constraints={}
+        target_capability='hr:onboard:new_hire',
+        payload={'employee': 'Charlie'},
+        policy_constraints={},
     )
-    print("\n[Intent D] Requesting HR onboarding (Unknown Capability).")
+    print('\n[Intent D] Requesting HR onboarding (Unknown Capability).')
     corporate_gateway.route_intent(intent_d)
 
 
