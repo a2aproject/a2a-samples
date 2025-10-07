@@ -23,7 +23,8 @@ suspend fun main() {
         AgentCard(
             protocolVersion = "0.3.0",
             name = "Advanced Joke Generator",
-            description = "A sophisticated AI agent that generates jokes with clarifying questions and structured task flow",
+            description =
+                "A sophisticated AI agent that generates jokes with clarifying questions and structured task flow",
             version = "1.0.0",
             url = "http://localhost:9999$ADVANCED_JOKE_AGENT_PATH",
             preferredTransport = TransportProtocol.JSONRPC,
@@ -47,7 +48,8 @@ suspend fun main() {
                     AgentSkill(
                         id = "advanced_joke_generation",
                         name = "Advanced Joke Generation",
-                        description = "Generates humorous jokes with interactive clarification and customization options",
+                        description =
+                            "Generates humorous jokes with interactive clarification and customization options",
                         examples =
                             listOf(
                                 "Tell me a joke about programming",

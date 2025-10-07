@@ -78,7 +78,10 @@ private fun jokeWriterAgent(
                 prompt("joke-generation") {
                     system {
                         +"You are a very funny sarcastic assistant. You must help users generate funny jokes."
-                        +"When asked for something else, sarcastically decline the request because you can only assist with jokes."
+                        +(
+                            "When asked for something else, sarcastically decline the request because you can only" +
+                                " assist with jokes."
+                        )
                     }
                 },
             model = GoogleModels.Gemini2_5Flash,
@@ -106,7 +109,9 @@ private fun jokeWriterStrategy() =
         // Node: Load conversation history from message storage
         val setupMessageContext by node<A2AMessage, A2AMessage> { userInput ->
             if (!userInput.referenceTaskIds.isNullOrEmpty()) {
-                throw A2AUnsupportedOperationException("This agent doesn't understand task references in referenceTaskIds yet.")
+                throw A2AUnsupportedOperationException(
+                    "This agent doesn't understand task references in referenceTaskIds yet."
+                )
             }
 
             // Load current context messages
@@ -152,10 +157,8 @@ private fun jokeWriterStrategy() =
                 }
             }
 
-            /*
-             If task exists then the message belongs to the task, send event to update the task.
-             Otherwise, put it in general message storage for the current context.
-             */
+            // If task exists then the message belongs to the task, send event to update the task.
+            // Otherwise, put it in general message storage for the current context.
             withA2AAgentServer {
                 if (currentTask != null) {
                     val updateEvent =
