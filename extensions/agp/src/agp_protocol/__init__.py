@@ -1,6 +1,8 @@
-from typing import Optional, Dict, Any, List
-from pydantic import BaseModel, Field, ConfigDict
 import logging
+
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # --- Core Data Structures ---
@@ -14,8 +16,8 @@ class CapabilityAnnouncement(BaseModel):
         description="The function or skill provided (e.g., 'financial_analysis:quarterly').",
     )
     version: str = Field(..., description='Version of the capability schema.')
-    cost: Optional[float] = Field(None, description='Estimated cost metric.')
-    policy: Dict[str, Any] = Field(
+    cost: float | None = Field(None, description='Estimated cost metric.')
+    policy: dict[str, Any] = Field(
         ...,
         description='Key-value pairs defining required security/data policies.',
     )
@@ -29,10 +31,10 @@ class IntentPayload(BaseModel):
     target_capability: str = Field(
         ..., description='The capability the Intent seeks to fulfill.'
     )
-    payload: Dict[str, Any] = Field(
+    payload: dict[str, Any] = Field(
         ..., description='The core data arguments required for the task.'
     )
-    metadata: Dict[str, Any] = Field(
+    metadata: dict[str, Any] = Field(
         default_factory=dict,
         description='Client-defined constraints for policy matching.',
     )
@@ -51,7 +53,7 @@ class RouteEntry(BaseModel):
         description="The destination Squad/API path (e.g., 'Squad_Finance/gateway').",
     )
     cost: float = Field(..., description='Cost metric for this route.')
-    policy: Dict[str, Any] = Field(
+    policy: dict[str, Any] = Field(
         ...,
         description='Policies of the destination, used for matching Intent constraints.',
     )
@@ -60,7 +62,7 @@ class RouteEntry(BaseModel):
 class AGPTable(BaseModel):
     """The central routing table maintained by a Gateway Agent."""
 
-    routes: Dict[str, List[RouteEntry]] = Field(default_factory=dict)
+    routes: dict[str, list[RouteEntry]] = Field(default_factory=dict)
 
     model_config = ConfigDict(extra='forbid')
 
@@ -97,7 +99,7 @@ class AgentGatewayProtocol:
             f'[{self.squad_name}] ANNOUNCED: {capability_key} routed via {path}'
         )
 
-    def route_intent(self, intent: IntentPayload) -> Optional[RouteEntry]:
+    def route_intent(self, intent: IntentPayload) -> RouteEntry | None:
         """
         Performs Policy-Based Routing to find the best available squad.
 

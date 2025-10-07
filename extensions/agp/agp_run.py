@@ -1,11 +1,12 @@
 # run.py
 
 import logging
+
 from agp_protocol import (
-    AgentGatewayProtocol,
     AGPTable,
-    IntentPayload,
+    AgentGatewayProtocol,
     CapabilityAnnouncement,
+    IntentPayload,
 )
 
 
@@ -14,8 +15,7 @@ logging.basicConfig(level=logging.WARNING)
 
 
 def run_simulation():
-    """
-    Simulates the core routing process of the Agent Gateway Protocol (AGP),
+    """Simulates the core routing process of the Agent Gateway Protocol (AGP),
     demonstrating Policy-Based Routing and cost optimization.
     """
     # --- PHASE 1: Setup and Announcement ---
