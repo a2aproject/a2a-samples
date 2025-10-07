@@ -26,21 +26,24 @@ suspend fun main() {
     println("${YELLOW}Starting Joke Generator A2A Client$RESET\n")
 
     // Set up the HTTP JSON-RPC transport
-    val transport = HttpJSONRPCClientTransport(
-        url = "http://localhost:9998${JOKE_GENERATOR_AGENT_PATH}"
-    )
+    val transport =
+        HttpJSONRPCClientTransport(
+            url = "http://localhost:9998${JOKE_GENERATOR_AGENT_PATH}",
+        )
 
     // Set up the agent card resolver
-    val agentCardResolver = UrlAgentCardResolver(
-        baseUrl = "http://localhost:9998",
-        path = JOKE_GENERATOR_AGENT_CARD_PATH
-    )
+    val agentCardResolver =
+        UrlAgentCardResolver(
+            baseUrl = "http://localhost:9998",
+            path = JOKE_GENERATOR_AGENT_CARD_PATH,
+        )
 
     // Create the A2A client
-    val client = A2AClient(
-        transport = transport,
-        agentCardResolver = agentCardResolver
-    )
+    val client =
+        A2AClient(
+            transport = transport,
+            agentCardResolver = agentCardResolver,
+        )
 
     // Connect and fetch agent card
     client.connect()
@@ -62,16 +65,18 @@ suspend fun main() {
             break
         }
 
-        val message = Message(
-            messageId = Uuid.random().toString(),
-            role = Role.User,
-            parts = listOf(TextPart(request)),
-            contextId = contextId
-        )
+        val message =
+            Message(
+                messageId = Uuid.random().toString(),
+                role = Role.User,
+                parts = listOf(TextPart(request)),
+                contextId = contextId,
+            )
 
-        val response = client.sendMessage(
-            Request(MessageSendParams(message = message))
-        )
+        val response =
+            client.sendMessage(
+                Request(MessageSendParams(message = message)),
+            )
 
         val replyMessage = response.data as? Message
         if (replyMessage != null) {

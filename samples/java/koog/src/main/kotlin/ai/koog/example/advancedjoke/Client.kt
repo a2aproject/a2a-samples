@@ -4,7 +4,15 @@ package ai.koog.example.advancedjoke
 
 import ai.koog.a2a.client.A2AClient
 import ai.koog.a2a.client.UrlAgentCardResolver
-import ai.koog.a2a.model.*
+import ai.koog.a2a.model.Artifact
+import ai.koog.a2a.model.Message
+import ai.koog.a2a.model.MessageSendParams
+import ai.koog.a2a.model.Role
+import ai.koog.a2a.model.Task
+import ai.koog.a2a.model.TaskArtifactUpdateEvent
+import ai.koog.a2a.model.TaskState
+import ai.koog.a2a.model.TaskStatusUpdateEvent
+import ai.koog.a2a.model.TextPart
 import ai.koog.a2a.transport.Request
 import ai.koog.a2a.transport.client.jsonrpc.http.HttpJSONRPCClientTransport
 import kotlinx.serialization.json.Json
@@ -26,7 +34,8 @@ suspend fun main() {
     println("\n${YELLOW}Starting Advanced Joke Generator A2A Client$RESET\n")
 
     val transport = HttpJSONRPCClientTransport(url = "http://localhost:9999${ADVANCED_JOKE_AGENT_PATH}")
-    val agentCardResolver = UrlAgentCardResolver(baseUrl = "http://localhost:9999", path = ADVANCED_JOKE_AGENT_CARD_PATH)
+    val agentCardResolver =
+        UrlAgentCardResolver(baseUrl = "http://localhost:9999", path = ADVANCED_JOKE_AGENT_CARD_PATH)
     val client = A2AClient(transport = transport, agentCardResolver = agentCardResolver)
 
     client.connect()
@@ -53,18 +62,19 @@ suspend fun main() {
 
         if (request == "/q") break
 
-        val message = Message(
-            messageId = Uuid.random().toString(),
-            role = Role.User,
-            parts = listOf(TextPart(request)),
-            contextId = contextId,
-            taskId = currentTaskId
-        )
+        val message =
+            Message(
+                messageId = Uuid.random().toString(),
+                role = Role.User,
+                parts = listOf(TextPart(request)),
+                contextId = contextId,
+                taskId = currentTaskId,
+            )
 
         try {
             client.sendMessageStreaming(Request(MessageSendParams(message = message))).collect { response ->
                 val event = response.data
-                println("${BLUE}[${event.kind}]$RESET")
+                println("$BLUE[${event.kind}]$RESET")
                 println("${json.encodeToString(event)}\n")
 
                 when (event) {
@@ -83,9 +93,11 @@ suspend fun main() {
                     is TaskStatusUpdateEvent -> {
                         when (event.status.state) {
                             TaskState.InputRequired -> {
-                                val question = event.status.message?.parts
-                                    ?.filterIsInstance<TextPart>()
-                                    ?.joinToString("\n") { it.text }
+                                val question =
+                                    event.status.message
+                                        ?.parts
+                                        ?.filterIsInstance<TextPart>()
+                                        ?.joinToString("\n") { it.text }
                                 if (!question.isNullOrBlank()) {
                                     println("${MAGENTA}Question:$RESET\n$question\n")
                                 }
@@ -93,12 +105,14 @@ suspend fun main() {
 
                             TaskState.Completed -> {
                                 if (artifacts.isNotEmpty()) {
-                                    println("${GREEN}=== Artifacts ===$RESET")
+                                    println("$GREEN=== Artifacts ===$RESET")
                                     artifacts.values.forEach { artifact ->
-                                        val content = artifact.parts.filterIsInstance<TextPart>()
-                                            .joinToString("\n") { it.text }
+                                        val content =
+                                            artifact.parts
+                                                .filterIsInstance<TextPart>()
+                                                .joinToString("\n") { it.text }
                                         if (content.isNotBlank()) {
-                                            println("${GREEN}[${artifact.artifactId}]$RESET\n$content\n")
+                                            println("$GREEN[${artifact.artifactId}]$RESET\n$content\n")
                                         }
                                     }
                                 }
@@ -123,9 +137,10 @@ suspend fun main() {
                         if (event.append == true) {
                             val existing = artifacts[event.artifact.artifactId]
                             if (existing != null) {
-                                artifacts[event.artifact.artifactId] = existing.copy(
-                                    parts = existing.parts + event.artifact.parts
-                                )
+                                artifacts[event.artifact.artifactId] =
+                                    existing.copy(
+                                        parts = existing.parts + event.artifact.parts,
+                                    )
                             } else {
                                 artifacts[event.artifact.artifactId] = event.artifact
                             }

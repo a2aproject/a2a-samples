@@ -21,16 +21,17 @@ import kotlin.uuid.Uuid
  * This is a simple example of an agent executor that wraps LLM calls using prompt executor to generate jokes.
  */
 class SimpleJokeAgentExecutor : AgentExecutor {
-    private val promptExecutor = MultiLLMPromptExecutor(
+    private val promptExecutor =
+        MultiLLMPromptExecutor(
 //        LLMProvider.OpenAI to OpenAILLMClient(System.getenv("OPENAI_API_KEY")),
 //        LLMProvider.Anthropic to AnthropicLLMClient(System.getenv("ANTHROPIC_API_KEY")),
-        LLMProvider.Google to GoogleLLMClient(System.getenv("GOOGLE_API_KEY")),
-    )
+            LLMProvider.Google to GoogleLLMClient(System.getenv("GOOGLE_API_KEY")),
+        )
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun execute(
         context: RequestContext<MessageSendParams>,
-        eventProcessor: SessionEventProcessor
+        eventProcessor: SessionEventProcessor,
     ) {
         val userMessage = context.params.message
 
@@ -44,27 +45,30 @@ class SimpleJokeAgentExecutor : AgentExecutor {
         // Load all messages from the current context
         val contextMessages = context.messageStorage.getAll().map { it.toKoogMessage() }
 
-        val prompt = prompt("joke-generation") {
-            system {
-                +"You are an assistant helping user to generate jokes"
-            }
+        val prompt =
+            prompt("joke-generation") {
+                system {
+                    +"You are an assistant helping user to generate jokes"
+                }
 
-            // Append current message context
-            messages(contextMessages)
-        }
+                // Append current message context
+                messages(contextMessages)
+            }
 
         // Get a response from the LLM
-        val responseMessage = promptExecutor.execute(prompt, GoogleModels.Gemini2_5Flash)
-            .single()
-            .let { message ->
-                message as? Message.Assistant ?: throw IllegalStateException("Unexpected message type: $message")
-            }
-            .toA2AMessage(
-                a2aMetadata = MessageA2AMetadata(
-                    messageId = Uuid.random().toString(),
-                    contextId = context.contextId,
+        val responseMessage =
+            promptExecutor
+                .execute(prompt, GoogleModels.Gemini2_5Flash)
+                .single()
+                .let { message ->
+                    message as? Message.Assistant ?: throw IllegalStateException("Unexpected message type: $message")
+                }.toA2AMessage(
+                    a2aMetadata =
+                        MessageA2AMetadata(
+                            messageId = Uuid.random().toString(),
+                            contextId = context.contextId,
+                        ),
                 )
-            )
 
         // Save the response to the current context
         context.messageStorage.save(responseMessage)

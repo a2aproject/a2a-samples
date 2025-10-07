@@ -19,50 +19,56 @@ suspend fun main() {
     logger.info { "Starting Joke A2A Agent on http://localhost:9998" }
 
     // Create agent card with capabilities
-    val agentCard = AgentCard(
-        protocolVersion = "0.3.0",
-        name = "Joke Generator",
-        description = "A helpful AI agent that generates jokes based on user requests",
-        version = "1.0.0",
-        url = "http://localhost:9998$JOKE_GENERATOR_AGENT_PATH",
-        preferredTransport = TransportProtocol.JSONRPC,
-        additionalInterfaces = listOf(
-            AgentInterface(
-                url = "http://localhost:9998$JOKE_GENERATOR_AGENT_PATH",
-                transport = TransportProtocol.JSONRPC,
-            )
-        ),
-        capabilities = AgentCapabilities(
-            streaming = false,
-            pushNotifications = false,
-            stateTransitionHistory = false,
-        ),
-        defaultInputModes = listOf("text"),
-        defaultOutputModes = listOf("text"),
-        skills = listOf(
-            AgentSkill(
-                id = "joke_generation",
-                name = "Joke Generation",
-                description = "Generates humorous jokes on various topics",
-                examples = listOf(
-                    "Tell me a joke",
-                    "Generate a funny joke about programming",
-                    "Make me laugh with a dad joke"
+    val agentCard =
+        AgentCard(
+            protocolVersion = "0.3.0",
+            name = "Joke Generator",
+            description = "A helpful AI agent that generates jokes based on user requests",
+            version = "1.0.0",
+            url = "http://localhost:9998$JOKE_GENERATOR_AGENT_PATH",
+            preferredTransport = TransportProtocol.JSONRPC,
+            additionalInterfaces =
+                listOf(
+                    AgentInterface(
+                        url = "http://localhost:9998$JOKE_GENERATOR_AGENT_PATH",
+                        transport = TransportProtocol.JSONRPC,
+                    ),
                 ),
-                tags = listOf("humor", "jokes", "entertainment")
-            )
-        ),
-        supportsAuthenticatedExtendedCard = false
-    )
+            capabilities =
+                AgentCapabilities(
+                    streaming = false,
+                    pushNotifications = false,
+                    stateTransitionHistory = false,
+                ),
+            defaultInputModes = listOf("text"),
+            defaultOutputModes = listOf("text"),
+            skills =
+                listOf(
+                    AgentSkill(
+                        id = "joke_generation",
+                        name = "Joke Generation",
+                        description = "Generates humorous jokes on various topics",
+                        examples =
+                            listOf(
+                                "Tell me a joke",
+                                "Generate a funny joke about programming",
+                                "Make me laugh with a dad joke",
+                            ),
+                        tags = listOf("humor", "jokes", "entertainment"),
+                    ),
+                ),
+            supportsAuthenticatedExtendedCard = false,
+        )
 
     // Create agent executor
     val agentExecutor = SimpleJokeAgentExecutor()
 
     // Create A2A server
-    val a2aServer = A2AServer(
-        agentExecutor = agentExecutor,
-        agentCard = agentCard,
-    )
+    val a2aServer =
+        A2AServer(
+            agentExecutor = agentExecutor,
+            agentCard = agentCard,
+        )
 
     // Create and start server transport
     val serverTransport = HttpJSONRPCServerTransport(a2aServer)
@@ -74,6 +80,6 @@ suspend fun main() {
         path = JOKE_GENERATOR_AGENT_PATH,
         wait = true, // Block until server stops
         agentCard = agentCard,
-        agentCardPath = JOKE_GENERATOR_AGENT_CARD_PATH
+        agentCardPath = JOKE_GENERATOR_AGENT_CARD_PATH,
     )
 }

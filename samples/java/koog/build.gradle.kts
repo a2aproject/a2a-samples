@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ktlint)
 }
 
 dependencies {
@@ -21,7 +22,10 @@ dependencies {
     runtimeOnly(libs.logback.classic)
 }
 
-fun registerRunExampleTask(name: String, mainClassName: String) = tasks.register<JavaExec>(name) {
+fun registerRunExampleTask(
+    name: String,
+    mainClassName: String,
+) = tasks.register<JavaExec>(name) {
     doFirst {
         standardInput = System.`in`
         standardOutput = System.out
