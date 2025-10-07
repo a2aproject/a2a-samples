@@ -73,7 +73,7 @@ def run_simulation():
     print("\n--- PHASE 2: INTENT ROUTING ---")
 
     # Intent A: Standard VM provisioning (Cost-driven, minimal policy)
-    # CORRECTED: Using policy_constraints keyword
+    # Expected: Route to External Vendor (Cost: 0.05) because it's cheapest and complies with security_level: 3.
     intent_a = IntentPayload(
         target_capability="infra:provision:vm",
         payload={"type": "standard", "user": "bob"},
@@ -83,7 +83,8 @@ def run_simulation():
     corporate_gateway.route_intent(intent_a)
 
     # Intent B: Sensitive VM provisioning (Policy-driven, requires PII)
-    # CORRECTED: Using policy_constraints keyword
+    # Expected: Route to Engineering Squad (Cost: 0.10) because the External Vendor (0.05) fails the PII policy.
+    # The router uses the sufficiency check (5 >= 5 is True).
     intent_b = IntentPayload(
         target_capability="infra:provision:vm",
         payload={"type": "sensitive", "user": "alice", "data": "ssn_data"},
@@ -93,7 +94,7 @@ def run_simulation():
     corporate_gateway.route_intent(intent_b)
 
     # Intent C: Requesting provisioning with security level 7 (Unmatched Policy)
-    # CORRECTED: Using policy_constraints keyword
+    # Expected: Fails because no announced route can satisfy level 7.
     intent_c = IntentPayload(
         target_capability="infra:provision:vm",
         payload={"type": "max_security"},
@@ -103,7 +104,7 @@ def run_simulation():
     corporate_gateway.route_intent(intent_c)
 
     # Intent D: Requesting HR onboarding (Unknown Capability)
-    # CORRECTED: Using policy_constraints keyword
+    # Expected: Fails because the capability was never announced.
     intent_d = IntentPayload(
         target_capability="hr:onboard:new_hire", payload={"employee": "Charlie"}, policy_constraints={}
     )
