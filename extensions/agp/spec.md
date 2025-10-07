@@ -48,7 +48,7 @@ This payload defines the *what* (the goal) and *constraints* (metadata), replaci
  | ----- | ----- | ----- | ----- |
 | `target_capability` | string | Yes | The capability the Intent seeks to fulfill. |
 | `payload` | object | Yes | The core data arguments required for the task. |
-| `metadata` | object | No | Client-defined constraints that must be matched against the announced `policy` during routing. |
+| `policy_constraints` | object | No | Client-defined constraints that must be matched against the announced `policy` during routing. |
 
 ### Example Intent Payload
 
@@ -59,7 +59,7 @@ This payload defines the *what* (the goal) and *constraints* (metadata), replaci
     "customer_id": 123,
     "amount": 99.99
   },
-  "metadata": {
+  "policy_constraints": {
     "requires_pii": true
   }
 }

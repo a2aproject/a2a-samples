@@ -26,7 +26,7 @@ def all_available_routes() -> List[RouteEntry]:
         RouteEntry(
             path="Squad_Finance/payroll_service",
             cost=0.10,
-            # FIX APPLIED: Correctly setting 'requires_pii' to True on the route itself.
+            # Policy explicitly supports PII handling and higher security
             policy={"security_level": 5, "requires_pii": True, "geo": "US"},
         ),
         # 3. External Route (Cheapest, but low security/no PII)
@@ -79,16 +79,16 @@ def gateway(populated_agp_table) -> AgentGatewayProtocol:
 # --- Test Scenarios ---
 
 
-def test_01_lowest_cost_compliant_route(gateway: AgentGatewayProtocol):
+def test_01_lowest_cost_compliant_route_with_sufficiency(gateway: AgentGatewayProtocol):
     """
-    Verifies routing selects the lowest cost compliant route.
-    Constraint: security_level: 3, geo: US. Both Route 1 (0.20) and Route 2 (0.10) comply.
+    Verifies routing selects the lowest cost COMPLIANT route, checking for sufficiency (>=).
+    Constraint: security_level: 3, geo: US. Route 2 (Cost 0.10, Level 5) is compliant AND cheaper than Route 1 (Cost 0.20, Level 3).
     Expected: Route 2 (Squad_Finance/payroll_service, Cost 0.10).
     """
     intent = IntentPayload(
         target_capability="procure:license",
         payload={"item": "Standard License"},
-        metadata={"security_level": 3, "geo": "US"},
+        policy_constraints={"security_level": 3, "geo": "US"},
     )
 
     best_route = gateway.route_intent(intent)
@@ -107,7 +107,7 @@ def test_02_policy_filtering_sensitive_data(gateway: AgentGatewayProtocol):
     intent = IntentPayload(
         target_capability="procure:license",
         payload={"item": "Client Data License"},
-        metadata={"requires_pii": True},
+        policy_constraints={"requires_pii": True},
     )
 
     best_route = gateway.route_intent(intent)
@@ -132,7 +132,7 @@ def test_04_policy_violation_unmatched_constraint(gateway: AgentGatewayProtocol)
     intent = IntentPayload(
         target_capability="procure:license",
         payload={"item": "Executive Access"},
-        metadata={"security_level": 7},
+        policy_constraints={"security_level": 7},
     )
     best_route = gateway.route_intent(intent)
     assert best_route is None
@@ -172,7 +172,7 @@ def test_06_meta_intent_decomposition(gateway: AgentGatewayProtocol):
     intent_hardware = IntentPayload(
         target_capability="provision:hardware",
         payload={"developer": "Alice"},
-        metadata={"security_level": 3},
+        policy_constraints={"security_level": 3},
     )
     route_hw = gateway.route_intent(intent_hardware)
     assert route_hw is not None
@@ -182,7 +182,7 @@ def test_06_meta_intent_decomposition(gateway: AgentGatewayProtocol):
     intent_payroll = IntentPayload(
         target_capability="provision:payroll",
         payload={"salary": 100000},
-        metadata={"requires_pii": True, "security_level": 3},
+        policy_constraints={"requires_pii": True, "security_level": 3},
     )
     route_payroll = gateway.route_intent(intent_payroll)
     assert route_payroll is not None
@@ -192,9 +192,8 @@ def test_06_meta_intent_decomposition(gateway: AgentGatewayProtocol):
     intent_legal = IntentPayload(
         target_capability="contract:nda:generate",
         payload={"contract_type": "NDA"},
-        metadata={"security_level": 3},
+        policy_constraints={"security_level": 3},
     )
     route_legal = gateway.route_intent(intent_legal)
     assert route_legal is not None
     assert route_legal.path == "Squad_Legal/contracts_tool"
-    

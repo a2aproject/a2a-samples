@@ -5,19 +5,6 @@ import logging
 
 # --- Core Data Structures ---
 
-# NEW: Defines the standardized policy structure
-class PolicySchema(BaseModel):
-    """
-    Standardized, optional policy schema used by enterprises to enforce
-    security, geo-location, and compliance rules across the squad hierarchy.
-    """
-    security_level: Optional[int] = Field(None, description="Minimum security level required/offered (e.g., 3, 5, 7).")
-    requires_pii: Optional[bool] = Field(None, description="Whether the policy requires PII handling capability (True/False).")
-    geo: Optional[str] = Field(None, description="Geographical restrictions (e.g., 'US', 'EU').")
-    
-    # Allows additional custom policy fields to be included
-    model_config = ConfigDict(extra='allow') 
-
 
 class CapabilityAnnouncement(BaseModel):
     """Data structure for a service announcement by a Gateway Agent."""
@@ -28,9 +15,8 @@ class CapabilityAnnouncement(BaseModel):
     )
     version: str = Field(..., description="Version of the capability schema.")
     cost: Optional[float] = Field(None, description="Estimated cost metric.")
-    # UPDATED: Policy is now an instance of PolicySchema
-    policy: PolicySchema = Field(
-        ..., description="Standardized security and compliance policies for the capability."
+    policy: Dict[str, Any] = Field(
+        ..., description="Key-value pairs defining required security/data policies."
     )
 
     model_config = ConfigDict(extra='forbid')
@@ -45,13 +31,14 @@ class IntentPayload(BaseModel):
     payload: Dict[str, Any] = Field(
         ..., description="The core data arguments required for the task."
     )
-    # UPDATED: Intent metadata is now PolicySchema to enforce constraints
-    metadata: PolicySchema = Field(
-        default_factory=PolicySchema,
-        description="Client-defined policy constraints that must be matched against the announced policy.",
+    # FIX APPLIED: Renaming internal field to policy_constraints for clarity
+    policy_constraints: Dict[str, Any] = Field( 
+        default_factory=dict,
+        description="Client-defined constraints that must be matched against the announced policy.",
+        alias='policy_constraints'
     )
 
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra='forbid', populate_by_name=True)
 
 
 # --- AGP Routing Structures ---
@@ -64,8 +51,7 @@ class RouteEntry(BaseModel):
         ..., description="The destination Squad/API path (e.g., 'Squad_Finance/gateway')."
     )
     cost: float = Field(..., description="Cost metric for this route.")
-    # UPDATED: Policy is now an instance of PolicySchema
-    policy: PolicySchema = Field(
+    policy: Dict[str, Any] = Field(
         ...,
         description="Policies of the destination, used for matching Intent constraints.",
     )
@@ -98,7 +84,6 @@ class AgentGatewayProtocol:
         entry = RouteEntry(
             path=path,
             cost=announcement.cost or 0.0,
-            # Policy is already PolicySchema instance
             policy=announcement.policy,
         )
 
@@ -109,19 +94,6 @@ class AgentGatewayProtocol:
 
         print(f"[{self.squad_name}] ANNOUNCED: {capability_key} routed via {path}")
 
-    def route_intent(self, intent: IntentPayload) -> Optional[RouteEntry]:
-        """
-        Public entry point for routing an Intent payload. 
-        Calls the internal selection logic and prints the result.
-        """
-        best_route = self._select_best_route(intent)
-
-        if best_route:
-            print(
-                f"[{self.squad_name}] ROUTING SUCCESS: Intent for '{intent.target_capability}' routed to {best_route.path} (Cost: {best_route.cost})"
-            )
-        return best_route
-    
     # Protected method containing the core, overridable routing logic
     def _select_best_route(self, intent: IntentPayload) -> Optional[RouteEntry]:
         """
@@ -133,9 +105,8 @@ class AgentGatewayProtocol:
         3. Select the lowest-cost route among the compliant options.
         """
         target_cap = intent.target_capability
-        # CRITICAL CHANGE: Use intent.metadata.model_dump(exclude_none=True) 
-        # to iterate only over constraints that were explicitly set by the client.
-        intent_constraints = intent.metadata.model_dump(exclude_none=True) 
+        # CRITICAL CHANGE: Use the correct snake_case attribute name for constraints
+        intent_constraints = intent.policy_constraints 
 
         if target_cap not in self.agp_table.routes:
             logging.warning(
@@ -145,21 +116,21 @@ class AgentGatewayProtocol:
 
         possible_routes = self.agp_table.routes[target_cap]
 
-        # --- 2. Policy Filtering (Robust Logic Applied Here) ---
+        # --- 2. Policy Filtering (Optimized using list comprehension and all()) ---
         compliant_routes = [
             route
             for route in possible_routes
             if all(
-                # Use route.policy.model_dump() to treat route policy as a dictionary
-                key in route.policy.model_dump()
+                # Check if the constraint key exists in the route policy AND the values are sufficient.
+                key in route.policy
                 and (
                     # If the key is 'security_level' and both values are numeric, check for >= sufficiency.
-                    route.policy.model_dump().get(key) >= value
+                    route.policy[key] >= value
                     if key == 'security_level'
-                    and isinstance(route.policy.model_dump().get(key), (int, float))
+                    and isinstance(route.policy.get(key), (int, float))
                     and isinstance(value, (int, float))
                     # Otherwise (e.g., boolean flags like 'requires_PII'), require exact equality.
-                    else route.policy.model_dump().get(key) == value
+                    else route.policy[key] == value
                 )
                 for key, value in intent_constraints.items()
             )
@@ -174,4 +145,18 @@ class AgentGatewayProtocol:
         # --- 3. Best Route Selection (Lowest Cost) ---
         best_route = min(compliant_routes, key=lambda r: r.cost)
 
+        return best_route
+
+    # Public method that is typically called by the A2A endpoint
+    def route_intent(self, intent: IntentPayload) -> Optional[RouteEntry]:
+        """
+        Public entry point for routing an Intent payload. 
+        Calls the internal selection logic and prints the result.
+        """
+        best_route = self._select_best_route(intent)
+
+        if best_route:
+            print(
+                f"[{self.squad_name}] ROUTING SUCCESS: Intent for '{intent.target_capability}' routed to {best_route.path} (Cost: {best_route.cost})"
+            )
         return best_route

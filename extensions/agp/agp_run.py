@@ -1,5 +1,3 @@
-# run.py
-
 import logging
 from agp_protocol import (
     AgentGatewayProtocol,
@@ -41,11 +39,7 @@ def run_simulation():
         capability="infra:provision:vm",
         version="1.0",
         cost=0.10,  # Higher cost
-        # Policy updated to match PolicySchema structure
-        policy={
-            "security_level": 5,
-            "requires_pii": True,
-        },
+        policy={"security_level": 5, "requires_PII": True},
     )
     corporate_gateway.announce_capability(
         eng_announcement, path="Squad_Engineering/vm_provisioner"
@@ -57,8 +51,7 @@ def run_simulation():
         capability="infra:provision:vm",
         version="1.1",
         cost=0.05,  # Lowest cost
-        # Policy updated to match PolicySchema structure
-        policy={"security_level": 3, "requires_pii": False},
+        policy={"security_level": 3, "requires_PII": False},
     )
     corporate_gateway.announce_capability(
         vendor_announcement, path="External_Vendor/vm_provisioning_api"
@@ -69,7 +62,6 @@ def run_simulation():
         capability="financial_analysis:quarterly",
         version="2.0",
         cost=0.15,
-        # Policy updated to match PolicySchema structure
         policy={"security_level": 3, "geo": "US"},
     )
     corporate_gateway.announce_capability(
@@ -81,39 +73,39 @@ def run_simulation():
     print("\n--- PHASE 2: INTENT ROUTING ---")
 
     # Intent A: Standard VM provisioning (Cost-driven, minimal policy)
-    # Metadata updated to match PolicySchema structure
+    # CORRECTED: Using policy_constraints keyword
     intent_a = IntentPayload(
         target_capability="infra:provision:vm",
         payload={"type": "standard", "user": "bob"},
-        metadata={"security_level": 3},
+        policy_constraints={"security_level": 3},
     )
     print("\n[Intent A] Requesting standard VM provisioning (Lowest cost, Security Level 3).")
     corporate_gateway.route_intent(intent_a)
 
     # Intent B: Sensitive VM provisioning (Policy-driven, requires PII)
-    # Metadata updated to match PolicySchema structure
+    # CORRECTED: Using policy_constraints keyword
     intent_b = IntentPayload(
         target_capability="infra:provision:vm",
         payload={"type": "sensitive", "user": "alice", "data": "ssn_data"},
-        metadata={"security_level": 5, "requires_pii": True},
+        policy_constraints={"security_level": 5, "requires_PII": True},
     )
     print("\n[Intent B] Requesting sensitive VM provisioning (Requires PII and Security Level 5).")
     corporate_gateway.route_intent(intent_b)
 
     # Intent C: Requesting provisioning with security level 7 (Unmatched Policy)
-    # Metadata updated to match PolicySchema structure
+    # CORRECTED: Using policy_constraints keyword
     intent_c = IntentPayload(
         target_capability="infra:provision:vm",
         payload={"type": "max_security"},
-        metadata={"security_level": 7},
+        policy_constraints={"security_level": 7},
     )
     print("\n[Intent C] Requesting provisioning with security level 7 (Unmatched Policy).")
     corporate_gateway.route_intent(intent_c)
 
     # Intent D: Requesting HR onboarding (Unknown Capability)
-    # Metadata updated (empty PolicySchema is passed by default now)
+    # CORRECTED: Using policy_constraints keyword
     intent_d = IntentPayload(
-        target_capability="hr:onboard:new_hire", payload={"employee": "Charlie"}, metadata={}
+        target_capability="hr:onboard:new_hire", payload={"employee": "Charlie"}, policy_constraints={}
     )
     print("\n[Intent D] Requesting HR onboarding (Unknown Capability).")
     corporate_gateway.route_intent(intent_d)
