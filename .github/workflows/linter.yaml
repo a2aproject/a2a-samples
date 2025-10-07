@@ -5,17 +5,21 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  lint:
     name: Lint Code Base
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Lint Code Base
+      - name: GitHub Super Linter
         uses: super-linter/super-linter/slim@v8
         env:
           DEFAULT_BRANCH: main
@@ -44,3 +48,5 @@ jobs:
           VALIDATE_JUPYTER_NBQA_PYLINT: false
           VALIDATE_JUPYTER_NBQA_RUFF: false
           VALIDATE_TRIVY: false
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_BIOME_LINT: false
