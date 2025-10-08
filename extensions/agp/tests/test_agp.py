@@ -216,14 +216,14 @@ def test_06_meta_intent_decomposition(gateway: AgentGatewayProtocol):
     assert route_legal.path == "Squad_Legal/contracts_tool"
 
 
-# --- NEW SECURITY AND COMPLIANCE TESTS (19 Total Tests) ---
+# --- NEW SECURITY AND COMPLIANCE TESTS ---
 
 
 def test_07_geo_fencing_violation(gateway: AgentGatewayProtocol):
     """
     Tests routing failure when an Intent requires US processing, but the cheapest route is EU-locked.
     Constraint: geo: US. External Vendor (Cost 0.05, EU) fails geo-check.
-    Expected: Routed to cheapest compliant US vendor (Vendor_US/data_service, Cost 0.07).
+    Expected: Routed to cheapest compliant US vendor (Internal/Free_Cache, Cost 0.00).
     """
     intent = IntentPayload(
         target_capability="procure:license",
@@ -261,7 +261,7 @@ def test_08_required_security_tier_sufficiency(gateway: AgentGatewayProtocol):
 def test_09_policy_chaining_cost_after_geo(gateway: AgentGatewayProtocol):
     """
     Tests routing for a complex chain: Intent requires US geo AND Level 2 security.
-    Compliant routes: Route 6 (0.07, L2) and Route 1 (0.20, L3) and Route 2 (0.10, L5) and Route 7 (0.00, L3).
+    Compliant routes: Route 7 (0.00, L3), Route 6 (0.07, L2), Route 2 (0.10, L5), Route 1 (0.20, L3).
     Expected: Cheapest compliant US route (Internal/Free_Cache, Cost 0.00).
     """
     intent = IntentPayload(
