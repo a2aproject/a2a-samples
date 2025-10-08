@@ -8,7 +8,7 @@
 
 ## Abstract
 
-The Agent Gateway Protocol (AGP) proposes a hierarchical architecture for distributed AI systems, **enhancing the capabilities** of the flat A2A mesh by introducing a structure of interconnected Autonomous Squads (ASq). AGP routes **Intent** payloads based on declared **Capabilities**, mirroring the Border Gateway Protocol (BGP) for Internet scalability and policy enforcement. This structure divides agents into **hierarchical domains**, with each domain focusing on specific Agent Capabilities that reflect enterprise organizational needs (e.g., Finance, Engineering, and so on) - gulli@google.com
+The Agent Gateway Protocol (AGP) proposes a hierarchical architecture for distributed AI systems, **enhancing the capabilities** of the flat A2A mesh by introducing a structure of interconnected Autonomous Squads (ASq). AGP routes **Intent** payloads based on declared **Capabilities**, mirroring the Border Gateway Protocol (BGP) for Internet scalability and policy enforcement. This structure divides agents into **hierarchical domains**, with each domain focusing on specific Agent Capabilities that reflect enterprise organizational needs (e.g., Finance, Engineering, HR, BUs, and so on) - gulli@google.com 
 
 ## 1. Data Structure: Capability Announcement
 
