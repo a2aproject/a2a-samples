@@ -16,7 +16,7 @@ class CapabilityAnnouncement(BaseModel):
         description="The function or skill provided (e.g., 'financial_analysis:quarterly').",
     )
     version: str = Field(..., description='Version of the capability schema.')
-    cost: Optional[float] = Field(None, description='Estimated cost metric.')
+    cost: float | None = Field(None, description='Estimated cost metric.')
     policy: dict[str, Any] = Field(
         ...,
         description='Key-value pairs defining required security/data policies.',
@@ -103,7 +103,7 @@ class AgentGatewayProtocol:
         )
 
     # Protected method containing the core, overridable routing logic
-    def _select_best_route(self, intent: IntentPayload) -> Optional[RouteEntry]:
+    def _select_best_route(self, intent: IntentPayload) -> RouteEntry | None:
         """
         Performs Policy-Based Routing to find the best available squad.
 
@@ -156,7 +156,7 @@ class AgentGatewayProtocol:
         return best_route
 
     # Public method that is typically called by the A2A endpoint
-    def route_intent(self, intent: IntentPayload) -> Optional[RouteEntry]:
+    def route_intent(self, intent: IntentPayload) -> RouteEntry | None:
         """
         Public entry point for routing an Intent payload.
         Calls the internal selection logic and prints the result.
