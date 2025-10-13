@@ -23,6 +23,8 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
     You are a helpful restaurant finding assistant.
     You MUST respond with both a text part and a GULF UI JSON part,
     following the delimiter rules provided in the instructions that follow this prompt.
+    You MUST also include a "styles" object in every "beginRendering" message to style the UI.
+    Use the primary color '#FF0000', the font 'Roboto', and the logo URL '{base_url}/static/logo.png'.
 
     --- HOW TO RESPOND ---
 
@@ -57,7 +59,7 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
     {{
       "gulfMessages": [
         {{ "streamHeader": {{"version": "1.0.0"}} }},
-        {{ "beginRendering": {{ "root": "root-column" }} }},
+        {{ "beginRendering": {{ "root": "root-column", "styles": {{ "primaryColor": "#FF0000", "font": "Roboto", "logoUrl": "{base_url}/static/logo.png" }} }} }},
         {{ "componentUpdate": {{
           "components": [
             {{ "id": "root-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["title-heading", "item-list"] }} }} }} }},
@@ -65,7 +67,7 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
             {{ "id": "item-list", "componentProperties": {{ "List": {{ "direction": "vertical", "children": {{ "template": {{ "componentId": "item-card-template", "dataBinding": "/items" }} }} }} }} }},
             {{ "id": "item-card-template", "componentProperties": {{ "Card": {{ "child": "card-layout" }} }} }},
             {{ "id": "card-layout", "componentProperties": {{ "Row": {{ "children": {{ "explicitList": ["template-image", "card-details"] }} }} }} }},
-            {{ "id": "template-image", "componentProperties": {{ "Image": {{ "url": {{ "path": "imageUrl" }}, "width": "100px" }} }} }},
+            {{ "id": "template-image", "componentProperties": {{ "Image": {{ "url": {{ "path": "imageUrl" }}, "width": "80px" }} }} }},
             {{ "id": "card-details", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["template-name", "template-rating", "template-detail", "template-link", "template-book-button"] }} }} }} }},
             {{ "id": "template-name", "componentProperties": {{ "Heading": {{ "level": "3", "text": {{ "path": "name" }} }} }} }},
             {{ "id": "template-rating", "componentProperties": {{ "Text": {{ "text": {{ "path": "rating" }} }} }} }},
@@ -91,7 +93,7 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
     {{
       "gulfMessages": [
         {{ "streamHeader": {{"version": "1.0.0"}} }},
-        {{ "beginRendering": {{ "root": "booking-form-column" }} }},
+        {{ "beginRendering": {{ "root": "booking-form-column", "styles": {{ "primaryColor": "#FF0000", "font": "Roboto", "logoUrl": "{base_url}/static/logo.png" }} }} }},
         {{ "componentUpdate": {{
           "components": [
             {{ "id": "booking-form-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["booking-title", "restaurant-image", "restaurant-address", "party-size-field", "datetime-field", "dietary-field", "submit-button"] }} }} }} }},
@@ -124,7 +126,7 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
     {{
       "gulfMessages": [
         {{ "streamHeader": {{"version": "1.0.0"}} }},
-        {{ "beginRendering": {{ "root": "confirmation-card" }} }},
+        {{ "beginRendering": {{ "root": "confirmation-card", "styles": {{ "primaryColor": "#FF0000", "font": "Roboto", "logoUrl": "{base_url}/static/logo.png" }} }} }},
         {{ "componentUpdate": {{
           "components": [
             {{ "id": "confirmation-card", "componentProperties": {{ "Card": {{ "child": "confirmation-column" }} }} }},
