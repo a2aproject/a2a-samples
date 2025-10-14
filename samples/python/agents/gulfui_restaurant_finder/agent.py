@@ -30,7 +30,8 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
 
     1.  **If the user query is for a list of restaurants (e.g., "top 10 chinese restaurants"):**
         -   Your conversational text should be simple (e.g., "Here are some restaurants...").
-        -   Your JSON part MUST follow the "LIST EXAMPLE" below.
+        -   **If the user asks for 5 restaurants or fewer, you MUST use the `SINGLE_COLUMN_LIST_EXAMPLE` below.** This creates a standard vertical list.
+        -   **If the user asks for more than 5 restaurants, you MUST use the `TWO_COLUMN_LIST_EXAMPLE` below.** This creates a side-by-side grid layout.
         -   You MUST place the list of restaurants inside the `dataModelUpdate.contents.items` field.
         -   You MUST use an `imageUrl` from this list:
             - {base_url}/static/beefbroccoli.jpeg
@@ -55,7 +56,7 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
         -   Respond with a simple greeting (e.g., "How can I help you find a restaurant?")
         -   Your JSON part MUST be a simple "Text" component which includes the same information in text only format.
 
-    ---BEGIN LIST EXAMPLE (for restaurant lists)---
+    ---BEGIN SINGLE_COLUMN_LIST_EXAMPLE (for 5 or fewer restaurants)---
     {{
       "gulfMessages": [
         {{ "streamHeader": {{"version": "1.0.0"}} }},
@@ -87,7 +88,52 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
         }} }}
       ]
     }}
-    ---END LIST EXAMPLE---
+    ---END SINGLE_COLUMN_LIST_EXAMPLE---
+
+    ---BEGIN TWO_COLUMN_LIST_EXAMPLE (for more than 5 restaurants)---
+    {{
+      "gulfMessages": [
+        {{ "streamHeader": {{"version": "1.0.0"}} }},
+        {{ "beginRendering": {{ "root": "root-column", "styles": {{ "primaryColor": "#FF0000", "font": "Roboto", "logoUrl": "{base_url}/static/logo.png" }} }} }},
+        {{ "componentUpdate": {{
+          "components": [
+            {{ "id": "root-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["title-heading", "restaurant-row-1"] }} }} }} }},
+            {{ "id": "title-heading", "componentProperties": {{ "Heading": {{ "level": "1", "text": {{ "literalString": "Top Restaurants" }} }} }} }},
+            {{ "id": "restaurant-row-1", "componentProperties": {{ "Row": {{ "children": {{ "explicitList": ["item-card-1", "item-card-2"] }} }} }} }},
+            
+            {{ "id": "item-card-1", "weight": 1, "componentProperties": {{ "Card": {{ "child": "card-layout-1" }} }} }},
+            {{ "id": "card-layout-1", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["template-image-1", "card-details-1"] }} }} }} }},
+            {{ "id": "template-image-1", "componentProperties": {{ "Image": {{ "url": {{ "path": "/items/0/imageUrl" }}, "width": "100%" }} }} }},
+            {{ "id": "card-details-1", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["template-name-1", "template-rating-1", "template-detail-1", "template-link-1", "template-book-button-1"] }} }} }} }},
+            {{ "id": "template-name-1", "componentProperties": {{ "Heading": {{ "level": "3", "text": {{ "path": "/items/0/name" }} }} }} }},
+            {{ "id": "template-rating-1", "componentProperties": {{ "Text": {{ "text": {{ "path": "/items/0/rating" }} }} }} }},
+            {{ "id": "template-detail-1", "componentProperties": {{ "Text": {{ "text": {{ "path": "/items/0/detail" }} }} }} }},
+            {{ "id": "template-link-1", "componentProperties": {{ "Text": {{ "text": {{ "path": "/items/0/infoLink" }} }} }} }},
+            {{ "id": "template-book-button-1", "componentProperties": {{ "Button": {{ "label": {{ "literalString": "Book Now" }}, "action": {{ "action": "book_restaurant", "context": [ {{ "key": "restaurantName", "value": {{ "path": "/items/0/name" }} }}, {{ "key": "imageUrl", "value": {{ "path": "/items/0/imageUrl" }} }}, {{ "key": "address", "value": {{ "path": "/items/0/address" }} }} ] }} }} }} }},
+
+            {{ "id": "item-card-2", "weight": 1, "componentProperties": {{ "Card": {{ "child": "card-layout-2" }} }} }},
+            {{ "id": "card-layout-2", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["template-image-2", "card-details-2"] }} }} }} }},
+            {{ "id": "template-image-2", "componentProperties": {{ "Image": {{ "url": {{ "path": "/items/1/imageUrl" }}, "width": "100%" }} }} }},
+            {{ "id": "card-details-2", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["template-name-2", "template-rating-2", "template-detail-2", "template-link-2", "template-book-button-2"] }} }} }} }},
+            {{ "id": "template-name-2", "componentProperties": {{ "Heading": {{ "level": "3", "text": {{ "path": "/items/1/name" }} }} }} }},
+            {{ "id": "template-rating-2", "componentProperties": {{ "Text": {{ "text": {{ "path": "/items/1/rating" }} }} }} }},
+            {{ "id": "template-detail-2", "componentProperties": {{ "Text": {{ "text": {{ "path": "/items/1/detail" }} }} }} }},
+            {{ "id": "template-link-2", "componentProperties": {{ "Text": {{ "text": {{ "path": "/items/1/infoLink" }} }} }} }},
+            {{ "id": "template-book-button-2", "componentProperties": {{ "Button": {{ "label": {{ "literalString": "Book Now" }}, "action": {{ "action": "book_restaurant", "context": [ {{ "key": "restaurantName", "value": {{ "path": "/items/1/name" }} }}, {{ "key": "imageUrl", "value": {{ "path": "/items/1/imageUrl" }} }}, {{ "key": "address", "value": {{ "path": "/items/1/address" }} }} ] }} }} }} }}
+          ]
+        }} }},
+        {{ "dataModelUpdate": {{
+          "path": "/",
+          "contents": {{
+            "items": [
+              {{ "name": "Carbone", "detail": "Upscale Italian-American.", "imageUrl": "{base_url}/static/springrolls.jpeg", "rating": "★★★★☆", "infoLink": "[More Info](https://carbonenewyork.com/)", "address": "181 Thompson St, New York, NY 10012" }},
+              {{ "name": "Lilia", "detail": "Popular pasta spot.", "imageUrl": "{base_url}/static/mapotofu.jpeg", "rating": "★★★★★", "infoLink": "[More Info](https://www.lilianewyork.com/)", "address": "567 Union Ave, Brooklyn, NY 11222" }}
+            ]
+          }}
+        }} }}
+      ]
+    }}
+    ---END TWO_COLUMN_LIST_EXAMPLE---
 
     ---BEGIN BOOKING FORM EXAMPLE (for booking)---
     {{
