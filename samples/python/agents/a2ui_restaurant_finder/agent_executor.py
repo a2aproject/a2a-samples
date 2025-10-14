@@ -18,10 +18,10 @@ from a2a.utils import (
     new_task,
 )
 from a2a.utils.errors import ServerError
+from a2ui_ext import a2ui_MIME_TYPE
 from agent import RestaurantAgent
 
 
-# Set up logging for this module
 logger = logging.getLogger(__name__)
 
 
@@ -41,15 +41,20 @@ class RestaurantAgentExecutor(AgentExecutor):
         action = None
 
         if context.message and context.message.parts:
-            # --- Logging Loop ---
             logger.info(
                 f'--- AGENT_EXECUTOR: Processing {len(context.message.parts)} message parts ---'
             )
             for i, part in enumerate(context.message.parts):
                 if isinstance(part.root, DataPart):
-                    logger.info(
-                        f'  Part {i}: DataPart (data: {part.root.data})'
-                    )
+                    if 'actionName' in part.root.data:
+                        logger.info(
+                            f'  Part {i}: Found a2ui UI ClientEvent payload.'
+                        )
+                        ui_event_part = part.root
+                    else:
+                        logger.info(
+                            f'  Part {i}: DataPart (data: {part.root.data})'
+                        )
                 elif isinstance(part.root, TextPart):
                     logger.info(
                         f'  Part {i}: TextPart (text: {part.root.text})'
@@ -59,30 +64,12 @@ class RestaurantAgentExecutor(AgentExecutor):
                         f'  Part {i}: Unknown part type ({type(part.root)})'
                     )
 
-            # --- Main Logic Loop ---
-            # ==== MODIFICATION START ====
-            # Look for a spec-compliant ClientEvent payload.
-            for part in context.message.parts:
-                if (
-                    isinstance(part.root, DataPart)
-                    and isinstance(part.root.data, dict)
-                    and 'actionName' in part.root.data
-                ):
-                    logger.info('Found GULF UI ClientEvent payload.')
-                    ui_event_part = part.root
-                    break
-            # ==== MODIFICATION END ====
-
-        if ui_event_part:  # This will now be a DataPart object
-            # ==== MODIFICATION START ====
-            # Parse the spec-compliant ClientEvent object
+        if ui_event_part:
             event_data = ui_event_part.data
-            logger.info(f'Received GULF ClientEvent: {event_data}')
+            logger.info(f'Received a2ui ClientEvent: {event_data}')
             action = event_data.get('actionName')
             ctx = event_data.get('resolvedContext', {})
-            # ==== MODIFICATION END ====
 
-            # Format a new, descriptive query for the LLM
             if action == 'book_restaurant':
                 restaurant_name = ctx.get(
                     'restaurantName', 'Unknown Restaurant'
@@ -92,7 +79,6 @@ class RestaurantAgentExecutor(AgentExecutor):
                 query = f'USER_WANTS_TO_BOOK: {restaurant_name}, Address: {address}, ImageURL: {image_url}'
 
             elif action == 'submit_booking':
-                # Extract all details from the context
                 restaurant_name = ctx.get(
                     'restaurantName', 'Unknown Restaurant'
                 )
@@ -100,16 +86,13 @@ class RestaurantAgentExecutor(AgentExecutor):
                 reservation_time = ctx.get('reservationTime', 'Unknown Time')
                 dietary_reqs = ctx.get('dietary', 'None')
                 image_url = ctx.get('imageUrl', '')
-
-                # Create a specific query the LLM can parse
                 query = f'User submitted a booking for {restaurant_name} for {party_size} people at {reservation_time} with dietary requirements: {dietary_reqs}. The image URL is {image_url}'
 
             else:
                 query = f'User submitted an event: {action} with data: {ctx}'
         else:
-            # Fall back to old behavior if no UI event is found
             logger.info(
-                'No GULF UI event part found. Falling back to text input.'
+                'No a2ui UI event part found. Falling back to text input.'
             )
             query = context.get_user_input()
 
@@ -133,7 +116,6 @@ class RestaurantAgentExecutor(AgentExecutor):
                 )
                 continue
 
-            # MODIFICATION: Determine the final task state
             final_state = (
                 TaskState.completed
                 if action == 'submit_booking'
@@ -141,44 +123,74 @@ class RestaurantAgentExecutor(AgentExecutor):
             )
 
             content = item['content']
-            parts = []
-            if '---GULFUI_JSON---' in content:
-                text_part, json_part_str = content.split('---GULFUI_JSON---', 1)
-                if text_part:
-                    parts.append(Part(root=TextPart(text=text_part.strip())))
-                if json_part_str:
+            final_parts = []
+            if '---a2ui_JSON---' in content:
+                logger.info('Splitting final response into text and UI parts.')
+                text_content, json_string = content.split('---a2ui_JSON---', 1)
+
+                if text_content.strip():
+                    final_parts.append(
+                        Part(root=TextPart(text=text_content.strip()))
+                    )
+
+                if json_string.strip():
                     try:
-                        json_data = json.loads(json_part_str)
-                        if 'gulfMessages' in json_data:
-                            for message in json_data['gulfMessages']:
-                                parts.append(
+                        json_string_cleaned = (
+                            json_string.strip()
+                            .lstrip('```json')
+                            .rstrip('```')
+                            .strip()
+                        )
+                        json_data = json.loads(json_string_cleaned)
+
+                        if 'a2uiMessages' in json_data and isinstance(
+                            json_data['a2uiMessages'], list
+                        ):
+                            logger.info(
+                                f'Found {len(json_data["a2uiMessages"])} messages. Creating individual DataParts.'
+                            )
+                            for message in json_data['a2uiMessages']:
+                                final_parts.append(
                                     Part(
                                         root=DataPart(
                                             data=message,
-                                            mimeType='application/json+gulfui',
+                                            mime_type=a2ui_MIME_TYPE,
                                         )
                                     )
                                 )
                         else:
-                            parts.append(
+                            logger.warning(
+                                "Could not find 'a2uiMessages' list, sending the object as a single DataPart."
+                            )
+                            final_parts.append(
                                 Part(
                                     root=DataPart(
                                         data=json_data,
-                                        mimeType='application/json+gulfui',
+                                        mime_type=a2ui_MIME_TYPE,
                                     )
                                 )
                             )
-                    except json.JSONDecodeError:
-                        # If JSON is invalid, send it as text
-                        parts.append(
-                            Part(root=TextPart(text=json_part_str.strip()))
+
+                    except json.JSONDecodeError as e:
+                        logger.error(f'Failed to parse UI JSON: {e}')
+                        final_parts.append(
+                            Part(root=TextPart(text=json_string))
                         )
             else:
-                parts.append(Part(root=TextPart(text=content.strip())))
+                final_parts.append(Part(root=TextPart(text=content.strip())))
+
+            logger.info('--- FINAL PARTS TO BE SENT ---')
+            for i, part in enumerate(final_parts):
+                logger.info(f'  - Part {i}: Type = {type(part.root)}')
+                if isinstance(part.root, TextPart):
+                    logger.info(f'    - Text: {part.root.text[:200]}...')
+                elif isinstance(part.root, DataPart):
+                    logger.info(f'    - Data: {str(part.root.data)[:200]}...')
+            logger.info('-----------------------------')
 
             await updater.update_status(
                 final_state,
-                new_agent_parts_message(parts, task.context_id, task.id),
+                new_agent_parts_message(final_parts, task.context_id, task.id),
                 final=(final_state == TaskState.completed),
             )
             break

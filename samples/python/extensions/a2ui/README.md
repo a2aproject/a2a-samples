@@ -1,4 +1,4 @@
 # Hello World Extension Implementation
 
 This is the Python implementation of the Hello World Extension in
-extensions/gulfui/v1.
+extensions/a2ui/v1.

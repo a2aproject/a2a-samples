@@ -1,0 +1,433 @@
+Overall motivation and design philosophy
+Make the schema work with Gemini and other common LLMs.
+Reduce the importance of the data model, positioning more as a way to bind the UI to external data than a way for the LLM to express data for the UI. The rationale for this is:
+With a constantly morphing UI, it is difficult to keep the data model structure consistent with the UI structure while streaming etc. Streaming and incremental updates work better when chunks of UI are self-contained
+It is difficult to define arbitrary data model updates in a schema that Gemini will accept, because Gemini rejects schemas with an arbitrary object in them - it wants all objects to have only explicitly defined properties.
+New in this version
+Separate out message types into separate subschemas.
+Rationale: make it possible for Gemini to generate component_update directly, without needing it to also generate data_model_update. This could be modeled as a separate tool with output type application/json, but no schema perhaps.
+Catalog
+Remove Container type
+Remove the color and thickness parameters from divider
+Rename UIRoot message to “BeginRendering” message and include theming information
+Update handling of context in ‘action’
+Combine static and dynamicContext
+Now, each context item can be:
+A literal primitive value
+A reference to the data model
+A reference to another component. We discussed this previously and decided against it, but I added it back for now because I think it will allow us to avoid using the data model very much, which is helpful, because it may be complex to use the data model consistently for more complex UIs.
+Revert ‘model’ to just be a directly declared, nested structure, but add a ‘path’ parameter which specifies where in the model the new content should be placed.
+Rationale
+ Still allow incremental updateability
+Less overhead from wrapping every single value in a node with an ID associated with it 
+Add theming support based on response from comment - themeColor, logo, font
+Main open issues
+Gemini missing required properties issue
+Gemini specifically is failing to fill in the required properties for some widgets, even though I’ve specified that they are required clearly in the schema description. E.g. see this example: https: //paste.googleplex.com/4531432374534144 
+Schemas
+stream_header.json
+
+{
+    "title": "StreamHeader Message",
+    "description": "A schema for a StreamHeader message in the A2A streaming UI protocol.",
+    "type": "object",
+    "properties": {
+        "version": {
+            "type": "string",
+            "description": "The version of the protocol."
+        }
+    },
+    "required": [
+        "version"
+    ]
+}
+
+begin_rendering.json
+
+{
+    "title": "BeginRendering Message",
+    "description": "A schema for a BeginRendering message in the A2A streaming UI protocol. This message signals that the UI can now be rendered and provides initial root component and styling information.",
+    "type": "object",
+    "properties": {
+        "root": {
+            "type": "string",
+            "description": "The ID of the root component from which rendering should begin. This is a reference to a component instance by its unique ID."
+        },
+        "styles": {
+            "type": "object",
+            "description": "An object containing styling information for the UI.",
+            "properties": {
+                "font": {
+                    "type": "string",
+                    "description": "The primary font to be used throughout the UI."
+                },
+                "logoUrl": {
+                    "type": "string",
+                    "description": "A URL pointing to the logo image to be displayed."
+                },
+                "primaryColor": {
+                    "type": "string",
+                    "description": "The primary color for the UI, specified as a hexadecimal color code (e.g., '#00BFFF').",
+                    "pattern": "^#[0-9a-fA-F]{6}$"
+                }
+            }
+        }
+    },
+    "required": [
+        "root"
+    ]
+}
+
+component_update.json
+{
+    "title": "ComponentUpdate Message",
+    "description": "A schema for a ComponentUpdate message in the A2A streaming UI protocol.",
+    "type": "object",
+    "properties": {
+        "components": {
+            "type": "array",
+            "description": "A flat list of all component instances available for rendering. Components reference each other by ID.",
+            "items": {
+                "description": "A specific instance of a ComponentType with its own unique ID and properties. Only provide properties relevant to the component's 'type'.",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "A unique identifier for this component instance."
+                    },
+                    "type": {
+                        "description": "The set of supported component types.",
+                        "type": "string",
+                        "enum": [
+                            "Heading",
+                            "Text",
+                            "Image",
+                            "Video",
+                            "AudioPlayer",
+                            "Row",
+                            "Column",
+                            "List",
+                            "Card",
+                            "Tabs",
+                            "Divider",
+                            "Modal",
+                            "Button",
+                            "CheckBox",
+                            "TextField",
+                            "DateTimeInput",
+                            "MultipleChoice",
+                            "Slider"
+                        ]
+                    },
+                    "value": {
+                        "type": "object",
+                        "description": "For types with input/output data ('Heading', 'Text', 'Image', 'Video', 'AudioPlayer', 'TextField', 'CheckBox', 'DateTimeInput', 'MultipleChoice', 'Slider'): A dynamic value. Define EXACTLY ONE of the following properties to bind the component's value.",
+                        "properties": {
+                            "path": {
+                                "type": "string",
+                                "description": "A string path to data in the model (e.g., '/user/name')."
+                            },
+                            "literalString": {
+                                "type": "string",
+                                "description": "A literal string value."
+                            },
+                            "literalNumber": {
+                                "type": "number",
+                                "description": "A literal number value."
+                            },
+                            "literalBoolean": {
+                                "type": "boolean",
+                                "description": "A literal boolean value."
+                            },
+                            "literalArray": {
+                                "type": "array",
+                                "description": "A literal array value.",
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "level": {
+                        "type": "string",
+                        "enum": [
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5"
+                        ],
+                        "description": "For 'Heading' type: The semantic importance level."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "For 'AudioPlayer' or 'TextField' types: A label, title, or placeholder text."
+                    },
+                    "direction": {
+                        "type": "string",
+                        "enum": [
+                            "vertical",
+                            "horizontal"
+                        ],
+                        "default": "vertical",
+                        "description": "For 'List' type: The direction of the list."
+                    },
+                    "children": {
+                        "type": "object",
+                        "description": "*Required* for 'Row', 'Column', or 'List' types: The children. Define EITHER 'explicitList' OR 'template'. This can be an explicit list of IDs or a template with a data binding to a list in the data model.",
+                        "properties": {
+                            "explicitList": {
+                                "type": "array",
+                                "description": "An explicit list of component instance IDs.",
+                                "items": {
+                                    "type": "string",
+                                    "description": "A reference to a component instance by its unique ID."
+                                }
+                            },
+                            "template": {
+                                "type": "object",
+                                "description": "A template to be rendered for each item in a data-bound list.",
+                                "properties": {
+                                    "componentId": {
+                                        "type": "string",
+                                        "description": "The ID of the component (from the main 'components' list) to use as a template for each item."
+                                    },
+                                    "dataBinding": {
+                                        "type": "string",
+                                        "description": "A data binding reference to a list within the data model. Represent as a string data path (e.g., '/user/posts')."
+                                    }
+                                },
+                                "required": [
+                                    "componentId",
+                                    "dataBinding"
+                                ]
+                            }
+                        }
+                    },
+                    "distribution": {
+                        "type": "string",
+                        "enum": [
+                            "start",
+                            "center",
+                            "end",
+                            "spaceBetween",
+                            "spaceAround",
+                            "spaceEvenly"
+                        ],
+                        "description": "For 'Row' or 'Column' types: Distribution of items along the main axis."
+                    },
+                    "alignment": {
+                        "type": "string",
+                        "enum": [
+                            "start",
+                            "center",
+                            "end",
+                            "stretch"
+                        ],
+                        "description": "For 'Row', 'Column', or 'List' types: Alignment of items/child along the cross axis."
+                    },
+                    "child": {
+                        "type": "string",
+                        "description": "For 'Card' types: A reference to a component instance by its unique ID."
+                    },
+                    "tabItems": {
+                        "type": "array",
+                        "description": "For 'Tabs' type: The list of tabs, each with a title and a child component ID.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "description": "The title of the tab."
+                                },
+                                "child": {
+                                    "type": "string",
+                                    "description": "A reference to a component instance by its unique ID."
+                                }
+                            },
+                            "required": [
+                                "title",
+                                "child"
+                            ]
+                        }
+                    },
+                    "axis": {
+                        "type": "string",
+                        "enum": [
+                            "horizontal",
+                            "vertical"
+                        ],
+                        "default": "horizontal",
+                        "description": "For 'Divider' type: The orientation."
+                    },
+                    "color": {
+                        "type": "string",
+                        "description": "For 'Divider' type: The color of the divider (e.g., hex code or semantic name)."
+                    },
+                    "thickness": {
+                        "type": "number",
+                        "default": 1,
+                        "description": "For 'Divider' type: The thickness of the divider."
+                    },
+                    "entryPointChild": {
+                        "type": "string",
+                        "description": "For 'Modal' type: The ID of the component to display in the main layout (e.g., a button) that triggers the modal."
+                    },
+                    "contentChild": {
+                        "type": "string",
+                        "description": "For 'Modal' type: The ID of the component to display as the modal's content."
+                    },
+                    "label": {
+                        "type": "string",
+                        "description": "For 'Button' or 'CheckBox' types: The text label."
+                    },
+                    "action": {
+                        "type": "object",
+                        "description": "For 'Button' type: Represents a user-initiated action.",
+                        "properties": {
+                            "action": {
+                                "type": "string",
+                                "description": "A unique name identifying the action to be handled by the application logic (e.g., 'submitForm', 'generateDog')."
+                            },
+                            "context": {
+                                "type": "array",
+                                "description": "A key-value map of data bindings to be resolved at the moment the action is triggered.",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string",
+                                            "description": "The key name for this context value."
+                                        },
+                                        "value": {
+                                            "type": "object",
+                                            "description": "The dynamic value. Define EXACTLY ONE of the following properties.",
+                                            "properties": {
+                                                "path": {
+                                                    "type": "string",
+                                                    "description": "A string path to data in the model (e.g., '/user/name')."
+                                                },
+                                                "componentId": {
+                                                    "type": "string",
+                                                    "description": "The ID of a component which is relevant to this action, e.g. a textField with contents that is being submitted."
+                                                },
+                                                "literalString": {
+                                                    "type": "string"
+                                                },
+                                                "literalNumber": {
+                                                    "type": "number"
+                                                },
+                                                "literalBoolean": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "key",
+                                        "value"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "action"
+                        ]
+                    },
+                    "textFieldType": {
+                        "type": "string",
+                        "enum": [
+                            "shortText",
+                            "number",
+                            "date",
+                            "longText"
+                        ],
+                        "description": "For 'TextField' type: The type of data expected in the text field."
+                    },
+                    "validationRegexp": {
+                        "type": "string",
+                        "description": "For 'TextField' type: A regex string to validate the input."
+                    },
+                    "enableDate": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "For 'DateTimeInput' type: Allow date selection."
+                    },
+                    "enableTime": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "For 'DateTimeInput' type: Allow time selection."
+                    },
+                    "outputFormat": {
+                        "type": "string",
+                        "description": "For 'DateTimeInput' type: The string format for the output (e.g., 'YYYY-MM-DD')."
+                    },
+                    "options": {
+                        "type": "array",
+                        "description": "For 'MultipleChoice' type: A list of options.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "label": {
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "label",
+                                "value"
+                            ]
+                        }
+                    },
+                    "maxAllowedSelections": {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "For 'MultipleChoice' type: The maximum number of items that can be selected. 1 implies radio buttons."
+                    },
+                    "min_value": {
+                        "type": "number",
+                        "default": 0,
+                        "description": "For 'Slider' type: The minimum value of the slider."
+                    },
+                    "max_value": {
+                        "type": "number",
+                        "default": 100,
+                        "description": "For 'Slider' type: The maximum value of the slider."
+                    }
+                },
+                "required": [
+                    "id",
+                    "type"
+                ]
+            }
+        }
+    },
+    "required": [
+        "components"
+    ]
+}
+data_model_update.json
+
+{
+    "title": "DataModelUpdate Message",
+    "description": "A schema for a DataModelUpdate message in the A2A streaming UI protocol. This message sets or replaces a part of the data model at a specified path with new content.",
+    "type": "object",
+    "properties": {
+        "path": {
+            "type": "string",
+            "description": "An optional path to a location within the data model where the content should be inserted or replaced. The path is represented as a dot-separated string and can include array indexing (e.g., 'user.addresses[0].street'). If this field is omitted, the entire data model will be replaced with the provided 'contents'."
+        },
+        "contents": {
+            "description": "The JSON content to be placed at the specified path. This can be any valid JSON value (object, array, string, number, boolean, or null). The content at the target path will be completely replaced by this new value."
+        }
+    },
+    "required": [
+        "contents"
+    ]
+}

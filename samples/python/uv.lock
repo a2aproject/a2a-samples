@@ -5,7 +5,7 @@ requires-python = ">=3.13"
 [manifest]
 members = [
     "a2a-data-agent",
-    "a2a-gulfui-adk",
+    "a2a-a2ui-adk",
     "a2a-multiagent-host",
     "a2a-sample-agent-adk",
     "a2a-sample-client-cli",
@@ -16,7 +16,7 @@ members = [
     "a2a-samples-marvin",
     "a2a-samples-mcp",
     "airbnb-planner-multiagent",
-    "gulfui-ext",
+    "a2ui-ext",
     "timestamp-ext",
     "traceability-ext",
     "veo-video-sample-agent",
@@ -40,15 +40,15 @@ requires-dist = [
 ]
 
 [[package]]
-name = "a2a-gulfui-adk"
+name = "a2a-a2ui-adk"
 version = "0.1.0"
-source = { editable = "agents/gulfui_restaurant_finder" }
+source = { editable = "agents/a2ui_restaurant_finder" }
 dependencies = [
     { name = "a2a-sdk" },
     { name = "click" },
     { name = "google-adk" },
     { name = "google-genai" },
-    { name = "gulfui-ext" },
+    { name = "a2ui-ext" },
     { name = "litellm" },
     { name = "python-dotenv" },
 ]
@@ -59,7 +59,7 @@ requires-dist = [
     { name = "click", specifier = ">=8.1.8" },
     { name = "google-adk", specifier = ">=1.8.0" },
     { name = "google-genai", specifier = ">=1.27.0" },
-    { name = "gulfui-ext", editable = "extensions/gulfui" },
+    { name = "a2ui-ext", editable = "extensions/a2ui" },
     { name = "litellm" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
 ]
@@ -2073,9 +2073,9 @@ wheels = [
 ]
 
 [[package]]
-name = "gulfui-ext"
+name = "a2ui-ext"
 version = "0.1.0"
-source = { editable = "extensions/gulfui" }
+source = { editable = "extensions/a2ui" }
 dependencies = [
     { name = "a2a-sdk" },
 ]

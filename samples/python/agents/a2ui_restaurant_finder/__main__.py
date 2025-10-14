@@ -7,10 +7,10 @@ from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import AgentCapabilities, AgentCard, AgentSkill
+from a2ui_ext import a2uiExtension
 from agent import RestaurantAgent
 from agent_executor import RestaurantAgentExecutor
 from dotenv import load_dotenv
-from gulfui_ext import GulfUIExtension
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
@@ -37,7 +37,7 @@ def main(host, port):
                     'GEMINI_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
                 )
 
-        hello_ext = GulfUIExtension()
+        hello_ext = a2uiExtension()
         capabilities = AgentCapabilities(
             streaming=True,
             extensions=[
