@@ -52,7 +52,7 @@ def get_ui_instructions(base_url: str) -> str:
     To generate the response, you MUST follow these rules:
     1.  Your response MUST be in two parts, separated by the delimiter: `---a2ui_JSON---`.
     2.  The first part is your conversational text response.
-    3.  The second part is a single, raw JSON object with one key, "a2uiMessages".
+    3.  The second part is a single, raw JSON object with one key, "gulfuiMessages".
 
     --- UI TEMPLATE RULES ---
     -   If the query is for a list of restaurants, use the restaurant data you have already received from the `get_restaurants` tool to populate the `dataModelUpdate.contents.items` field.
@@ -64,7 +64,7 @@ def get_ui_instructions(base_url: str) -> str:
 
     ---BEGIN SINGLE_COLUMN_LIST_EXAMPLE---
     {{
-      "a2uiMessages": [
+      "gulfuiMessages": [
         {{ "streamHeader": {{"version": "1.0.0"}} }},
         {{ "beginRendering": {{ "root": "root-column", "styles": {{ "primaryColor": "#FF0000", "font": "Roboto", "logoUrl": "{base_url}/static/logo.png" }} }} }},
         {{ "componentUpdate": {{
@@ -95,7 +95,7 @@ def get_ui_instructions(base_url: str) -> str:
 
     ---BEGIN TWO_COLUMN_LIST_EXAMPLE---
     {{
-      "a2uiMessages": [
+      "gulfuiMessages": [
         {{ "streamHeader": {{"version": "1.0.0"}} }},
         {{ "beginRendering": {{ "root": "root-column", "styles": {{ "primaryColor": "#FF0000", "font": "Roboto", "logoUrl": "{base_url}/static/logo.png" }} }} }},
         {{ "componentUpdate": {{
@@ -135,7 +135,7 @@ def get_ui_instructions(base_url: str) -> str:
 
     ---BEGIN BOOKING_FORM_EXAMPLE---
     {{
-      "a2uiMessages": [
+      "gulfuiMessages": [
         {{ "streamHeader": {{"version": "1.0.0"}} }},
         {{ "beginRendering": {{ "root": "booking-form-column", "styles": {{ "primaryColor": "#FF0000", "font": "Roboto", "logoUrl": "{base_url}/static/logo.png" }} }} }},
         {{ "componentUpdate": {{
@@ -168,7 +168,7 @@ def get_ui_instructions(base_url: str) -> str:
 
     ---BEGIN CONFIRMATION_EXAMPLE---
     {{
-      "a2uiMessages": [
+      "gulfuiMessages": [
         {{ "streamHeader": {{"version": "1.0.0"}} }},
         {{ "beginRendering": {{ "root": "confirmation-card", "styles": {{ "primaryColor": "#FF0000", "font": "Roboto", "logoUrl": "{base_url}/static/logo.png" }} }} }},
         {{ "componentUpdate": {{

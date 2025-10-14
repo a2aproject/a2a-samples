@@ -143,13 +143,13 @@ class RestaurantAgentExecutor(AgentExecutor):
                         )
                         json_data = json.loads(json_string_cleaned)
 
-                        if 'a2uiMessages' in json_data and isinstance(
-                            json_data['a2uiMessages'], list
+                        if 'gulfuiMessages' in json_data and isinstance(
+                            json_data['gulfuiMessages'], list
                         ):
                             logger.info(
-                                f'Found {len(json_data["a2uiMessages"])} messages. Creating individual DataParts.'
+                                f'Found {len(json_data["gulfuiMessages"])} messages. Creating individual DataParts.'
                             )
-                            for message in json_data['a2uiMessages']:
+                            for message in json_data['gulfuiMessages']:
                                 final_parts.append(
                                     Part(
                                         root=DataPart(
@@ -160,7 +160,7 @@ class RestaurantAgentExecutor(AgentExecutor):
                                 )
                         else:
                             logger.warning(
-                                "Could not find 'a2uiMessages' list, sending the object as a single DataPart."
+                                "Could not find 'gulfuiMessages' list, sending the object as a single DataPart."
                             )
                             final_parts.append(
                                 Part(
