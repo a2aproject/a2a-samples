@@ -10,7 +10,7 @@ from a2a.types import AgentExtension, Task
 logger = logging.getLogger(__name__)
 
 # --- Define a2ui UI constants ---
-_CORE_PATH = 'github.com/a2aproject/a2a-samples/extensions/a2ui/v7'
+_CORE_PATH = 'a2ui.org/ext/a2a-ui/v0.1'
 URI = f'https://{_CORE_PATH}'
 a2ui_MIME_TYPE = 'application/json+a2ui'
 
@@ -23,6 +23,12 @@ class a2uiExtension:
         return AgentExtension(
             uri=URI,
             description='Provides a declarative a2ui UI JSON structure in messages.',
+            params={
+                'supportedSchemas': [
+                    'https://raw.githubusercontent.com/google/a2ui/refs/heads/main/schemas/v0.1/standard_catalog.json'
+                ],
+                'acceptsDynamicSchemas': True,
+            },
         )
 
     def activate(self, context: RequestContext) -> bool:
@@ -48,7 +54,6 @@ class _a2uiExecutor(AgentExecutor):
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
         # The extension's ONLY job is to check for the header and log activation.
-        # It no longer wraps the event queue or modifies the response.
         if self._ext.activate(context):
             logger.info('--- a2ui UI EXTENSION ACTIVATED ---')
         else:

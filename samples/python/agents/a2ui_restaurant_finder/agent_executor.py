@@ -46,11 +46,11 @@ class RestaurantAgentExecutor(AgentExecutor):
             )
             for i, part in enumerate(context.message.parts):
                 if isinstance(part.root, DataPart):
-                    if 'actionName' in part.root.data:
+                    if 'userAction' in part.root.data:
                         logger.info(
                             f'  Part {i}: Found a2ui UI ClientEvent payload.'
                         )
-                        ui_event_part = part.root
+                        ui_event_part = part.root.data['userAction']
                     else:
                         logger.info(
                             f'  Part {i}: DataPart (data: {part.root.data})'
@@ -65,10 +65,9 @@ class RestaurantAgentExecutor(AgentExecutor):
                     )
 
         if ui_event_part:
-            event_data = ui_event_part.data
-            logger.info(f'Received a2ui ClientEvent: {event_data}')
-            action = event_data.get('actionName')
-            ctx = event_data.get('resolvedContext', {})
+            logger.info(f'Received a2ui ClientEvent: {ui_event_part}')
+            action = ui_event_part.get('actionName')
+            ctx = ui_event_part.get('context', {})
 
             if action == 'book_restaurant':
                 restaurant_name = ctx.get(
@@ -141,15 +140,15 @@ class RestaurantAgentExecutor(AgentExecutor):
                             .rstrip('```')
                             .strip()
                         )
+                        # The new protocol sends a stream of JSON objects.
+                        # For this example, we'll assume they are sent as a list in the final response.
                         json_data = json.loads(json_string_cleaned)
 
-                        if 'gulfuiMessages' in json_data and isinstance(
-                            json_data['gulfuiMessages'], list
-                        ):
+                        if isinstance(json_data, list):
                             logger.info(
-                                f'Found {len(json_data["gulfuiMessages"])} messages. Creating individual DataParts.'
+                                f'Found {len(json_data)} messages. Creating individual DataParts.'
                             )
-                            for message in json_data['gulfuiMessages']:
+                            for message in json_data:
                                 final_parts.append(
                                     Part(
                                         root=DataPart(
@@ -159,8 +158,9 @@ class RestaurantAgentExecutor(AgentExecutor):
                                     )
                                 )
                         else:
-                            logger.warning(
-                                "Could not find 'gulfuiMessages' list, sending the object as a single DataPart."
+                            # Handle the case where a single JSON object is returned
+                            logger.info(
+                                'Received a single JSON object. Creating a DataPart.'
                             )
                             final_parts.append(
                                 Part(
