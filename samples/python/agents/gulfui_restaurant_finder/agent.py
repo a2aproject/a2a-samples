@@ -1,3 +1,4 @@
+import logging
 import os
 
 from collections.abc import AsyncIterable
@@ -10,10 +11,14 @@ from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
+from tools import get_restaurants
 
+
+logger = logging.getLogger(__name__)
 
 TEXT_ONLY_INSTRUCTION = """
     You are a helpful restaurant finding assistant.
+    When the user asks for a list of restaurants, you MUST use the "get_restaurants" tool.
     Respond to the user's request clearly and concisely.
     If the user asks for a booking, ask them for the party size and reservation time.
     If the user provides booking details, confirm the booking.
@@ -100,7 +105,7 @@ GULF_UI_INSTRUCTION_TEMPLATE = """
             {{ "id": "root-column", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["title-heading", "restaurant-row-1"] }} }} }} }},
             {{ "id": "title-heading", "componentProperties": {{ "Heading": {{ "level": "1", "text": {{ "literalString": "Top Restaurants" }} }} }} }},
             {{ "id": "restaurant-row-1", "componentProperties": {{ "Row": {{ "children": {{ "explicitList": ["item-card-1", "item-card-2"] }} }} }} }},
-            
+
             {{ "id": "item-card-1", "weight": 1, "componentProperties": {{ "Card": {{ "child": "card-layout-1" }} }} }},
             {{ "id": "card-layout-1", "componentProperties": {{ "Column": {{ "children": {{ "explicitList": ["template-image-1", "card-details-1"] }} }} }} }},
             {{ "id": "template-image-1", "componentProperties": {{ "Image": {{ "url": {{ "path": "/items/0/imageUrl" }}, "width": "100%" }} }} }},
@@ -237,7 +242,7 @@ class RestaurantAgent:
                 ' location, or rating.'
             ),
             instruction=TEXT_ONLY_INSTRUCTION,
-            tools=[],
+            tools=[get_restaurants],
         )
 
     async def stream(self, query, session_id) -> AsyncIterable[dict[str, Any]]:
@@ -259,6 +264,7 @@ class RestaurantAgent:
         async for event in self._runner.run_async(
             user_id=self._user_id, session_id=session.id, new_message=content
         ):
+            logger.info(f'Event from runner: {event}')
             if event.is_final_response():
                 response = ''
                 if (
@@ -270,11 +276,13 @@ class RestaurantAgent:
                         [p.text for p in event.content.parts if p.text]
                     )
 
+                logger.info(f'Final response: {response}')
                 yield {
                     'is_task_complete': True,
                     'content': response,
                 }
             else:
+                logger.info(f'Intermediate event: {event}')
                 yield {
                     'is_task_complete': False,
                     'updates': self.get_processing_message(),
