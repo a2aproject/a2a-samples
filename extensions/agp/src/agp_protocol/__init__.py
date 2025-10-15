@@ -16,7 +16,7 @@ class CapabilityAnnouncement(BaseModel):
         description="The function or skill provided (e.g., 'financial_analysis:quarterly').",
     )
     version: str = Field(..., description='Version of the capability schema.')
-    cost: float | None = Field(None, description='Estimated cost metric.')
+    cost: Optional[float] = Field(None, description='Estimated cost metric.')
     policy: dict[str, Any] = Field(
         ...,
         description='Key-value pairs defining required security/data policies.',
@@ -34,14 +34,13 @@ class IntentPayload(BaseModel):
     payload: dict[str, Any] = Field(
         ..., description='The core data arguments required for the task.'
     )
-    # FIX APPLIED: Renaming internal field to policy_constraints for clarity
+    # This field holds the constraints the client demands (e.g., security_level: 5)
     policy_constraints: dict[str, Any] = Field(
         default_factory=dict,
         description='Client-defined constraints that must be matched against the announced policy.',
-        alias='policy_constraints',
     )
 
-    model_config = ConfigDict(extra='forbid', populate_by_name=True)
+    model_config = ConfigDict(extra='forbid')
 
 
 # --- AGP Routing Structures ---
@@ -102,18 +101,14 @@ class AgentGatewayProtocol:
             f'[{self.squad_name}] ANNOUNCED: {capability_key} routed via {path}'
         )
 
-    # Protected method containing the core, overridable routing logic
-    def _select_best_route(self, intent: IntentPayload) -> RouteEntry | None:
+    # Private method containing the core, *unmodified* routing logic
+    def __select_best_route(
+        self, intent: IntentPayload
+    ) -> Optional[RouteEntry]:
         """
-        Performs Policy-Based Routing to find the best available squad.
-
-        Routing Logic:
-        1. Find all routes matching the target_capability.
-        2. Filter routes based on matching all policy constraints (PBR).
-        3. Select the lowest-cost route among the compliant options.
+        [Private Logic] Performs Policy-Based Routing to find the best available squad.
         """
         target_cap = intent.target_capability
-        # CRITICAL CHANGE: Use the correct snake_case attribute name for constraints
         intent_constraints = intent.policy_constraints
 
         if target_cap not in self.agp_table.routes:
@@ -129,15 +124,12 @@ class AgentGatewayProtocol:
             route
             for route in possible_routes
             if all(
-                # Check if the constraint key exists in the route policy AND the values are sufficient.
                 key in route.policy
                 and (
-                    # If the key is 'security_level' and both values are numeric, check for >= sufficiency.
                     route.policy[key] >= value
                     if key == 'security_level'
                     and isinstance(route.policy.get(key), (int, float))
                     and isinstance(value, (int, float))
-                    # Otherwise (e.g., boolean flags like 'requires_PII'), require exact equality.
                     else route.policy[key] == value
                 )
                 for key, value in intent_constraints.items()
@@ -155,13 +147,20 @@ class AgentGatewayProtocol:
 
         return best_route
 
-    # Public method that is typically called by the A2A endpoint
-    def route_intent(self, intent: IntentPayload) -> RouteEntry | None:
+    # Public, overridable method for core routing logic (used by external components)
+    def select_best_route(self, intent: IntentPayload) -> Optional[RouteEntry]:
         """
-        Public entry point for routing an Intent payload.
-        Calls the internal selection logic and prints the result.
+        Public entry point for external components (like DelegationRouter)
+        to retrieve the best route *without side effects*.
         """
-        best_route = self._select_best_route(intent)
+        return self.__select_best_route(intent)
+
+    # Public method that is typically called by the A2A endpoint (includes side effects)
+    def route_intent(self, intent: IntentPayload) -> Optional[RouteEntry]:
+        """
+        Public entry point for routing an Intent payload, including printing side effects.
+        """
+        best_route = self.__select_best_route(intent)
 
         if best_route:
             print(
