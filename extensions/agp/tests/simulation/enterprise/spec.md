@@ -71,13 +71,13 @@ The proposed enterprise simulation represents the necessary evolution of agent a
 
 The AGP acts as the crucial policy backbone, ensuring that all cross-domain tasks—from cost-sensitive provisioning to role-restricted audits—are routed securely and compliantly. The successful implementation of this simulation validates the AGP as a ready framework for trustworthy, cross-framework agent collaboration.
 
-# Appendix
+## Appendix
 
-## AGP's Relationship with A2A
+### AGP's Relationship with A2A
 
 The AGP is designed not to replace A2A but to serve as a **critical enhancement layer**. Without the basic A2A framework, AGP cannot function.
 
-## 1\. The A2A Foundation (The "How")
+#### 1\. The A2A Foundation (The "How")
 
 The AGP relies on the core capabilities of the A2A Protocol for all external communication:
 
@@ -85,7 +85,7 @@ The AGP relies on the core capabilities of the A2A Protocol for all external com
 * **Discovery:** A2A's native **Agent Card** mechanism is used by Squad Gateways to declare their role and supported AGP version to the network.  
 * **Message Format:** The AGP **Intent Payload** is structured to be compatible with A2A's core message exchange capabilities, often embedded within an A2A message's data payload.
 
-### 2\. The AGP Enhancement (The "Why")
+#### 2\. The AGP Enhancement (The "Why")
 
 The AGP layer handles the **routing decision** that A2A leaves undefined.
 
@@ -96,8 +96,9 @@ The AGP introduces the **hierarchical logic** (Policy-Based Routing, Cost Select
 
 In summary, AGP provides the intelligence and routing policy, while A2A provides the reliable, underlying communication transport layer. Your simulation verifies that this intelligent routing layer works.
 
-## Test phase
+### Test phase
 
+```none
 (base) gulli-mac:agp gulli$ poetry run pytest tests/simulation/enterprise/test_enterprise_sim.py
 ===================================================================== test session starts ======================================================================
 platform darwin -- Python 3.12.8, pytest-8.4.2, pluggy-1.6.0
@@ -121,3 +122,4 @@ tests/test_agp.py ...................                                           
 
 ====================================================================== 19 passed in 0.06s ======================================================================
 (base) gulli-mac:agp gulli$
+```
