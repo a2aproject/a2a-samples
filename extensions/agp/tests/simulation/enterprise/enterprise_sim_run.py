@@ -8,89 +8,81 @@ from agp_protocol.agp_delegation_models import (
 from typing import List
 
 
-# Set logging level to INFO or WARNING to focus on routing output
+# Set logging level to WARNING so only our custom routing failures are visible
 logging.basicConfig(level=logging.WARNING)
+
+
+# --- DATA DEFINITION: Centralized Capabilities List ---
+# This list defines all squads and their announced policies and costs in a data-driven structure.
+ENTERPRISE_CAPABILITIES = [
+    # 1. FINANCE (Policy-Critical / High-Trust / Google ADK)
+    {
+        "capability": "budget:authorize",
+        "version": "1.0",
+        "cost": 0.12,
+        "path": "Finance_ADK/budget_gateway",
+        "policy": {"security_level": 5, "requires_role": "finance_admin", "geo": "US"},
+    },
+    # 2. ENGINEERING (Cost-Sensitive / LangChain)
+    {
+        "capability": "infra:provision",
+        "version": "1.5",
+        "cost": 0.04,
+        "path": "Engineering_LC/provisioner_tool",
+        "policy": {"security_level": 3, "geo": "US"},
+    },
+    # 3. HR (Strict Compliance / PII / LangChain)
+    {
+        "capability": "onboarding:initiate",
+        "version": "1.0",
+        "cost": 0.15,
+        "path": "HR_LC/onboarding_service",
+        "policy": {"security_level": 4, "requires_pii": True, "geo": "US"},
+    },
+    # 4. MARKETING (High Volume / Low Security / LangGraph)
+    {
+        "capability": "content:draft",
+        "version": "2.0",
+        "cost": 0.08,
+        "path": "Marketing_LG/content_tool",
+        "policy": {"security_level": 2, "geo": "US"},
+    },
+    # 5. COMPLIANCE (Zero-Trust/RBAC / Google ADK)
+    {
+        "capability": "policy:audit",
+        "version": "1.0",
+        "cost": 0.20,
+        "path": "Compliance_ADK/audit_service",
+        "policy": {"security_level": 5, "requires_role": "exec", "geo": "US"},
+    },
+    # 6. CHEAP EXTERNAL VENDOR (Non-compliant competitor for 'infra:provision')
+    {
+        "capability": "infra:provision",
+        "version": "1.0",
+        "cost": 0.03,  # CHEAPER than Engineering, but fails security check
+        "path": "External_Vendor/vm_tool",
+        "policy": {"security_level": 1, "geo": "US"},
+    },
+]
 
 
 def setup_enterprise_agp_table(gateway: AgentGatewayProtocol):
     """
     Simulates Capability Announcements from five specialized, multi-framework Squads.
-    These announcements build the routing table used for PBR.
+    Refactored to be data-driven.
     """
 
-    print("--- 1. Announcing Capabilities (Building AGP Routing Table) ---")
+    # CORRECTED: Replaced print() with logging.info()
+    logging.info("--- 1. Announcing Capabilities (Building AGP Routing Table) ---")
 
-    # --- SQUAD 1: FINANCE (Google ADK) ---
-    # High-Trust, Policy-Critical (Security Level 5)
-    finance_announcement = CapabilityAnnouncement(
-        capability="budget:authorize",
-        version="1.0",
-        cost=0.12,
-        policy={"security_level": 5, "requires_role": "finance_admin", "geo": "US"},
-    )
-    gateway.announce_capability(
-        finance_announcement, path="Finance_ADK/budget_gateway"
-    )
-
-    # --- SQUAD 2: ENGINEERING (LangChain) ---
-    # Cost-Sensitive (Lowest cost, standard security)
-    eng_announcement = CapabilityAnnouncement(
-        capability="infra:provision",
-        version="1.5",
-        cost=0.04,  # Lowest cost option
-        policy={"security_level": 3, "geo": "US"},
-    )
-    gateway.announce_capability(
-        eng_announcement, path="Engineering_LC/provisioner_tool"
-    )
-
-    # --- SQUAD 3: HR (LangChain) ---
-    # Strict Compliance (Requires PII handling, Security Level 4)
-    hr_announcement = CapabilityAnnouncement(
-        capability="onboarding:initiate",
-        version="1.0",
-        cost=0.15,
-        policy={"security_level": 4, "requires_pii": True, "geo": "US"},
-    )
-    gateway.announce_capability(
-        hr_announcement, path="HR_LC/onboarding_service"
-    )
-
-    # --- SQUAD 4: MARKETING (LangGraph) ---
-    # Standard Content Task (High volume, low security)
-    marketing_announcement = CapabilityAnnouncement(
-        capability="content:draft",
-        version="2.0",
-        cost=0.08,
-        policy={"security_level": 2, "geo": "US"},
-    )
-    gateway.announce_capability(
-        marketing_announcement, path="Marketing_LG/content_tool"
-    )
-
-    # --- SQUAD 5: COMPLIANCE (Google ADK) ---
-    # Zero-Trust/RBAC (Role-restricted, highest security level offered internally)
-    compliance_announcement = CapabilityAnnouncement(
-        capability="policy:audit",
-        version="1.0",
-        cost=0.20,
-        policy={"security_level": 5, "requires_role": "exec", "geo": "US"},
-    )
-    gateway.announce_capability(
-        compliance_announcement, path="Compliance_ADK/audit_service"
-    )
-
-    # --- Announcement 6: CHEAP EXTERNAL VENDOR ---
-    # Non-compliant competitor—used to verify PBR filtering
-    cheap_external_announcement = CapabilityAnnouncement(
-        capability="infra:provision",
-        version="1.0",
-        cost=0.03,  # CHEAPER than Engineering, but fails security
-        policy={"security_level": 1, "geo": "US"},
-    )
-    gateway.announce_capability(
-        cheap_external_announcement, path="External_Vendor/vm_tool"
-    )
+    for item in ENTERPRISE_CAPABILITIES:
+        announcement = CapabilityAnnouncement(
+            capability=item["capability"],
+            version=item["version"],
+            cost=item["cost"],
+            policy=item["policy"],
+        )
+        gateway.announce_capability(announcement, path=item["path"])
 
 
 def run_enterprise_simulation():
@@ -107,7 +99,7 @@ def run_enterprise_simulation():
     # Build the routing table
     setup_enterprise_agp_table(central_gateway)
 
-    print("\n--- 2. Building Delegation Task (HR Initiates Project Setup) ---")
+    logging.info("\n--- 2. Building Delegation Task (HR Initiates Project Setup) ---")
 
     # Define the Complex Delegation Task (Executive Project Launch)
     project_delegation_intent = DelegationIntent(
@@ -150,16 +142,19 @@ def run_enterprise_simulation():
     # Initialize the Delegation Router
     router = DelegationRouter(central_gateway=central_gateway)
 
-    print("\n--- 3. Executing Delegation and Policy Routing ---")
-    print("Routing Agent: Central_AGP_Router")
+    logging.info("\n--- 3. Executing Delegation and Policy Routing ---")
+    logging.info("Routing Agent: Central_AGP_Router")
 
     # Execute the decomposition and routing
     final_status = router.route_delegation_intent(project_delegation_intent)
 
-    print("\n--- 4. Final Aggregation Status ---")
+    logging.info("\n--- 4. Final Aggregation Status ---")
     for task, status in final_status.items():
-        print(f"Task '{task}': {status}")
+        logging.info(f"Task '{task}': {status}")
 
+
+if __name__ == "__main__":
+    run_enterprise_simulation()
 
 if __name__ == "__main__":
     run_enterprise_simulation()

@@ -2,6 +2,9 @@ from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field, ConfigDict
 import logging
 
+# Get a module-level logger instance
+logger = logging.getLogger(__name__)
+
 # NOTE: Since this file is now in the src/agp_protocol package, 
 # we use relative import to pull necessary classes from the sibling file (__init__.py).
 from .__init__ import ( 
@@ -64,8 +67,9 @@ class DelegationRouter:
         each component through the core AGP Policy-Based Router.
         """
         
-        print(f"\n[{self.squad_name}] RECEIVED DELEGATION: '{delegation_intent.meta_task}' from {delegation_intent.origin_squad}")
-        print("--------------------------------------------------------------------------------")
+        # Replaced print() statements with logger.info()
+        logger.info(f"\n[{self.squad_name}] RECEIVED DELEGATION: '{delegation_intent.meta_task}' from {delegation_intent.origin_squad}")
+        logger.info("--------------------------------------------------------------------------------")
         
         results = {}
         
@@ -80,20 +84,20 @@ class DelegationRouter:
                 policy_constraints=sub_intent_data.policy_constraints, 
             )
             
-            # FIX APPLIED: Call the new PUBLIC method (select_best_route) 
-            # to respect encapsulation and perform routing without side effects.
+            # Route the synthesized Intent via the core AGP router
             route = self.central_gateway.select_best_route(sub_intent)
             
             status = "SUCCESS" if route else "FAILED"
             path = route.path if route else "N/A"
             cost = route.cost if route else "N/A"
             
-            print(f"[{i+1}/{len(delegation_intent.sub_intents)}] TASK: {sub_intent.target_capability}")
-            print(f"    STATUS: {status}")
-            print(f"    ROUTE: {path} (Cost: {cost})")
+            # Logging the result for each sub-task
+            logger.info(f"[{i+1}/{len(delegation_intent.sub_intents)}] TASK: {sub_intent.target_capability}")
+            logger.info(f"    STATUS: {status}")
+            logger.info(f"    ROUTE: {path} (Cost: {cost})")
             
             results[sub_intent.target_capability] = status
             
-        print("--------------------------------------------------------------------------------")
-        print(f"[{self.squad_name}] DELEGATION COMPLETE: Processed {len(results)} sub-tasks.")
+        logger.info("--------------------------------------------------------------------------------")
+        logger.info(f"[{self.squad_name}] DELEGATION COMPLETE: Processed {len(results)} sub-tasks.")
         return results

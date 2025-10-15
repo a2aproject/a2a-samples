@@ -2,10 +2,10 @@
 
 TL;DR: This document specifies a comprehensive, cross-framework agentic simulation built upon the Agent Gateway Protocol (AGP), designed to model distributed enterprise squads. This simulation, spanning five distinct departments—Finance, Engineering, Marketing, HR, and Compliance—and three diverse technology stacks, will robustly demonstrate the AGP's efficacy in cross-framework enterprise integration and, critically, its proficiency in managing security and trust boundaries.
 
-* URI: [https://github.com/a2aproject/a2a-samples/blob/main/extensions/agp/sim/enterprise-v1](https://github.com/a2aproject/a2a-samples/blob/main/extensions/agp/sim/enterprise-v1)   
-* Goal: Simulate cross-framework (ADK, LangChain, LangGraph) delegation of a complex "Executive Project Launch" task via the [AGP PBR layer](https://github.com/a2aproject/a2a-samples/blob/main/extensions/agp/), emphasizing security and compliance boundaries. 
 
-**Framework Agnosticism:** The core role of the AGP is to act as a secure, framework-agnostic routing layer. The Gateway's job is to route based purely on the Policy (e.g., `security_level`, `requires_pii`) and the Capability (e.g., `infra:provision and infra:performance`), without needing to know if the destination agent is written in ADK or LangChain or another Framework - gulli@google.com
+* URI: [https://github.com/a2aproject/a2a-samples/blob/main/extensions/agp/tests/simulation/enterprise/](https://github.com/a2aproject/a2a-samples/blob/main/extensions/agp/sim/enterprise-v1)   \
+* Goal: Simulate cross-framework (ADK, LangChain, LangGraph) delegation of a complex "Executive Project Launch" task via the [AGP PBR layer](https://github.com/a2aproject/a2a-samples/blob/main/extensions/agp/), emphasizing security and compliance boundaries. 
+**Framework Agnosticism:** The core role of the AGP is to act as a secure, framework-agnostic routing layer. The Gateway's job is to route based purely on the Policy (e.g., `security_level`, `requires_pii`) and the Capability (e.g., `infra:provision`, `infra:performance`), without needing to know if the destination agent is written in ADK or LangChain or another Framework.
 
 ## 1\. Domain and Technology Architecture
 
