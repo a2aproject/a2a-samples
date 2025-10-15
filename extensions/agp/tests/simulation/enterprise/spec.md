@@ -45,7 +45,7 @@ This object will be routed to the central AGP Gateway.
 
 ## 3\. Delegation Flow
 
-1. HR Delegation: The HR Agent generates a single DelegationIntent with two SubIntents: budget:authorize and infra:provision.  
+1. HR Delegation: The HR Agent generates a single DelegationIntent with five SubIntents corresponding to the tasks defined in Section 4.
 2. AGP Routing: The Central Gateway receives the DelegationIntent. It processes each SubIntent against its AGP Routing Table, applying Policy-Based Routing:  
    * Finance and Compliance tasks require high security/role checks.  
    * Engineering tasks require cost optimization.  
