@@ -2,8 +2,8 @@ from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field, ConfigDict
 import logging
 
-# FIX APPLIED: Using relative import to pull necessary classes from the sibling file (__init__.py)
-# This resolves the circular dependency crash during the test run.
+# NOTE: Since this file is now in the src/agp_protocol package, 
+# we use relative import to pull necessary classes from the sibling file (__init__.py).
 from .__init__ import ( 
     AgentGatewayProtocol,
     IntentPayload,
@@ -16,8 +16,7 @@ class SubIntent(BaseModel):
     """
     An atomic, routable sub-task created during decomposition.
     
-    NOTE: This structure aligns with the IntentPayload but uses the 
-    functional field name 'policy_constraints' for clarity.
+    This structure uses 'policy_constraints' for clarity.
     """
     
     target_capability: str = Field(
@@ -77,7 +76,7 @@ class DelegationRouter:
             sub_intent = IntentPayload(
                 target_capability=sub_intent_data.target_capability,
                 payload=sub_intent_data.payload,
-                # FINAL FIX APPLIED: Using the correct keyword for the core IntentPayload
+                # Use the correct keyword for the core IntentPayload
                 policy_constraints=sub_intent_data.policy_constraints, 
             )
             
@@ -97,4 +96,3 @@ class DelegationRouter:
         print("--------------------------------------------------------------------------------")
         print(f"[{self.squad_name}] DELEGATION COMPLETE: Processed {len(results)} sub-tasks.")
         return results
-
