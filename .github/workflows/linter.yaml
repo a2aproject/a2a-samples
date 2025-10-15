@@ -1,52 +1,52 @@
 name: Lint Code Base
 
 on:
-    pull_request:
-        branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-    lint:
-        name: Lint Code Base
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: read
-            statuses: write
+  lint:
+    name: Lint Code Base
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
 
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v5
-              with:
-                  fetch-depth: 0
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
-            - name: GitHub Super Linter
-              uses: super-linter/super-linter/slim@v8
-              env:
-                  DEFAULT_BRANCH: main
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  LOG_LEVEL: WARN
-                  SHELLCHECK_OPTS: -e SC1091 -e 2086
-                  VALIDATE_ALL_CODEBASE: false
-                  FILTER_REGEX_EXCLUDE: "^(\\.github/|\\.vscode/).*|CODE_OF_CONDUCT.md|(extensions/agp/).*|(extensions/agp/).*"
-                  VALIDATE_PYTHON_BLACK: false
-                  VALIDATE_PYTHON_FLAKE8: false
-                  VALIDATE_PYTHON_ISORT: false
-                  VALIDATE_PYTHON_MYPY: false
-                  VALIDATE_PYTHON_PYLINT: false
-                  VALIDATE_CHECKOV: false
-                  VALIDATE_NATURAL_LANGUAGE: false
-                  VALIDATE_MARKDOWN_PRETTIER: false
-                  VALIDATE_JAVASCRIPT_PRETTIER: false
-                  VALIDATE_JSON_PRETTIER: false
-                  VALIDATE_YAML_PRETTIER: false
-                  VALIDATE_GIT_COMMITLINT: false
-                  VALIDATE_JSCPD: false
-                  VALIDATE_JUPYTER_NBQA_BLACK: false
-                  VALIDATE_JUPYTER_NBQA_ISORT: false
-                  VALIDATE_JUPYTER_NBQA_FLAKE8: false
-                  VALIDATE_JUPYTER_NBQA_MYPY: false
-                  VALIDATE_JUPYTER_NBQA_PYLINT: false
-                  VALIDATE_JUPYTER_NBQA_RUFF: false
-                  VALIDATE_TRIVY: false
-                  VALIDATE_BIOME_FORMAT: false
-                  VALIDATE_BIOME_LINT: false
+      - name: GitHub Super Linter
+        uses: super-linter/super-linter/slim@v8
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LOG_LEVEL: WARN
+          SHELLCHECK_OPTS: -e SC1091 -e 2086
+          VALIDATE_ALL_CODEBASE: false
+          FILTER_REGEX_EXCLUDE: "^(\\.github/|\\.vscode/).*|CODE_OF_CONDUCT.md|(extensions/agp/).*|(extensions/agp/).*"
+          VALIDATE_PYTHON_BLACK: false
+          VALIDATE_PYTHON_FLAKE8: false
+          VALIDATE_PYTHON_ISORT: false
+          VALIDATE_PYTHON_MYPY: false
+          VALIDATE_PYTHON_PYLINT: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_MARKDOWN_PRETTIER: false
+          VALIDATE_JAVASCRIPT_PRETTIER: false
+          VALIDATE_JSON_PRETTIER: false
+          VALIDATE_YAML_PRETTIER: false
+          VALIDATE_GIT_COMMITLINT: false
+          VALIDATE_JSCPD: false
+          VALIDATE_JUPYTER_NBQA_BLACK: false
+          VALIDATE_JUPYTER_NBQA_ISORT: false
+          VALIDATE_JUPYTER_NBQA_FLAKE8: false
+          VALIDATE_JUPYTER_NBQA_MYPY: false
+          VALIDATE_JUPYTER_NBQA_PYLINT: false
+          VALIDATE_JUPYTER_NBQA_RUFF: false
+          VALIDATE_TRIVY: false
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_BIOME_LINT: false
