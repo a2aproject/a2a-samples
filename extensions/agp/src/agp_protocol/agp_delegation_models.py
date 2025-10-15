@@ -80,8 +80,9 @@ class DelegationRouter:
                 policy_constraints=sub_intent_data.policy_constraints, 
             )
             
-            # Route the synthesized Intent via the core AGP router
-            route = self.central_gateway._select_best_route(sub_intent)
+            # FIX APPLIED: Call the new PUBLIC method (select_best_route) 
+            # to respect encapsulation and perform routing without side effects.
+            route = self.central_gateway.select_best_route(sub_intent)
             
             status = "SUCCESS" if route else "FAILED"
             path = route.path if route else "N/A"
