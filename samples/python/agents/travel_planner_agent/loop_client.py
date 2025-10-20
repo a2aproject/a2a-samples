@@ -12,10 +12,8 @@ from a2a.client import (
     Client,
     create_text_message_object
 )
-from a2a.types import (
-    TransportProtocol,
-    Task
-)
+from a2a.types import TransportProtocol
+from a2a.utils.message import get_message_text
 
 
 def print_welcome_message() -> None:
@@ -41,13 +39,9 @@ async def interact_with_server(client: Client) -> None:
             # Send the request and get the streaming messages
             async for response in client.send_message(request):
                 task, _ = response
-                print(get_response_text(task))
+                print(get_message_text(task.artifacts[-1]))
         except Exception as e:
             print(f'An error occurred: {e}')
-
-
-def get_response_text(task: Task) -> str:
-    return task.artifacts[-1].parts[0].root.text
 
 
 async def main() -> None:
@@ -58,18 +52,23 @@ async def main() -> None:
             base_url="http://localhost:10001",
             # agent_card_path uses default, extended_agent_card_path also uses default
         )
-        agent_card = await resolver.get_agent_card()
 
-        # Create A2A client with the agent card
-        config = ClientConfig(
-            httpx_client=httpx_client,
-            supported_transports=[
-                TransportProtocol.jsonrpc,
-                TransportProtocol.http_json,
-            ],
-            streaming=agent_card.capabilities.streaming,
-        )
-        client = ClientFactory(config).create(agent_card)
+        try:
+            agent_card = await resolver.get_agent_card()
+
+            # Create A2A client with the agent card
+            config = ClientConfig(
+                httpx_client=httpx_client,
+                supported_transports=[
+                    TransportProtocol.jsonrpc,
+                    TransportProtocol.http_json,
+                ],
+                streaming=agent_card.capabilities.streaming,
+            )
+            client = ClientFactory(config).create(agent_card)
+        except Exception as e:
+            print(f"Error initializing client: {e}")
+            return
 
         await interact_with_server(client)
 
