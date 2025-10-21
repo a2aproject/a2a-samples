@@ -1,16 +1,13 @@
 import asyncio
 
-from typing import Any
-from uuid import uuid4
-
 import httpx
 
 from a2a.client import (
     A2ACardResolver,
+    Client,
     ClientConfig,
     ClientFactory,
-    Client,
-    create_text_message_object
+    create_text_message_object,
 )
 from a2a.types import TransportProtocol
 from a2a.utils.message import get_message_text
@@ -49,7 +46,7 @@ async def main() -> None:
     async with httpx.AsyncClient() as httpx_client:
         resolver = A2ACardResolver(
             httpx_client=httpx_client,
-            base_url="http://localhost:10001",
+            base_url='http://localhost:10001',
             # agent_card_path uses default, extended_agent_card_path also uses default
         )
 
@@ -67,7 +64,7 @@ async def main() -> None:
             )
             client = ClientFactory(config).create(agent_card)
         except Exception as e:
-            print(f"Error initializing client: {e}")
+            print(f'Error initializing client: {e}')
             return
 
         await interact_with_server(client)
