@@ -17,7 +17,7 @@ codegen_agent = ConversableAgent(
     system_message=(
         'You are specialist in Python with huge Clear Architecture experience. '
         'Also, you are an expert in FastAPI. '
-        'Please, focus on REST-full API principles while API design. '
+        'Please, focus on RESTful API principles while API design. '
         'Generate code in a single file. Do not use any other files. '
         'Generate just a code, no other text or comments. '
         'Terminate conversation when reviewer agent has no issues with the code.'
