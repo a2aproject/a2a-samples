@@ -1,6 +1,9 @@
 # AG2 Mypy tool Agent with A2A Protocol
 
-This sample demonstrates an AG2 agent that is exposed through the A2A protocol. It shows how an AG2 can communicate using A2A as a lingua franca, which is helpful for building a distributed agent system where different agents can communicate with each other using the A2A protocol. The agent-as-a-service architecture allows you to encapsulate agent logic, the local environment, tools, and other capabilities into a separate service that can be reused in different agent workflows.
+This sample demonstrates an AG2 agent that is exposed through the A2A protocol. It shows how an AG2 can communicate 
+using A2A as a lingua franca, which is helpful for building a distributed agent system where different agents 
+can communicate with each other using the A2A protocol. The agent-as-a-service architecture allows you to encapsulate agent logic, 
+the local environment, tools, and other capabilities into a separate service that can be reused in different agent workflows.
 
 Here is a sequence diagram that shows how the current demo implementation of the A2A protocol works:
 
@@ -37,9 +40,8 @@ sequenceDiagram
 
 Here we have a simple demo that shows how to use the A2A protocol to communicate with an AG2 agent. We have 
 - one A2A-served remote agent `a2a_python_reviewer.py`
-- two different A2A clients, which communicate with the remote agent using the A2A protocol
-    - CLI code generator `cli_codegen_a2a_client.py`
-    - FastAPI code generator `fastapi_codegen_a2a_client.py`
+- two different A2A clients, which communicate with the remote agent using the A2A protocol:
+    CLI code generator `cli_codegen_a2a_client.py` and FastAPI code generator `fastapi_codegen_a2a_client.py`
 
 ## Prerequisites
 
@@ -95,7 +97,8 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
 ## Disclaimer
 
 > [!WARNING]
-> **The sample code provided is for demonstration purposes only.** When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+> **The sample code provided is for demonstration purposes only.** When building production applications, it is critical 
+> to treat any agent operating outside of your direct control as a potentially untrusted entity.
 >
 > All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., `description`, `name`, `skills.description`). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks. Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
 >

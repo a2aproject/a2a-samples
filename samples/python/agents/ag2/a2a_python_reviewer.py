@@ -35,9 +35,11 @@ reviewer_agent = ConversableAgent(
     description='Check the code with mypy tool',
 )
 def review_code_with_mypy(
-    code: Annotated[str, 'Raw code content to review. Code should be formatted as single file.'],
+    code: Annotated[
+        str,
+        'Raw code content to review. Code should be formatted as single file.',
+    ],
 ) -> str:
-
     with tempfile.NamedTemporaryFile('w', suffix='.py') as tmp:
         tmp.write(code)
         stdout, stderr, exit_status = api.run([tmp.name])
@@ -52,4 +54,5 @@ server = A2aAgentServer(reviewer_agent).build()
 if __name__ == '__main__':
     # run server as regular ASGI application
     import uvicorn
+
     uvicorn.run(server, host='0.0.0.0', port=8000)
