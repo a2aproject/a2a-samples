@@ -15,7 +15,7 @@ codegen_agent = ConversableAgent(
     name='CodeGenAgent',
     description='A agent that generates code for the user',
     system_message=(
-        'You are specialist in Python with huge Clear Architecture experience. '
+        'You are specialist in Python with huge Clean Architecture experience. '
         'Also, you are an expert in argparse. '
         'You should create a simple scripts based on user demands. '
         'Generate code in a single file. Do not use any other files. '
@@ -40,7 +40,7 @@ async def main() -> str:
     # use A2A agent as regular one
     result = await reviewer_agent.a_initiate_chat(
         codegen_agent,
-        message='Please, generate a simple script, allows to trunsfer USD to EUR using any external API.',
+        message='Please, generate a simple script, allows to transfer USD to EUR using any external API.',
     )
     return result.chat_history[-2]['content']
 
