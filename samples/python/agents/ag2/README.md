@@ -71,7 +71,7 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
     uv run a2a_python_reviewer.py
     ```
 
-4. In a new terminal, start an A2AClient interface to interact with the remote (ag2) agent. You can use one of the following clients:
+5. In a new terminal, start an A2AClient interface to interact with the remote (ag2) agent. You can use one of the following clients:
 
     - **Method A: Run the CLI client**
 
