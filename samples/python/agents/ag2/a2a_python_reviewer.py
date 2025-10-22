@@ -40,9 +40,10 @@ def review_code_with_mypy(
 
     with tempfile.NamedTemporaryFile('w', suffix='.py') as tmp:
         tmp.write(code)
-        result = api.run([tmp.name])
-
-    return result[0]
+        stdout, stderr, exit_status = api.run([tmp.name])
+    if exit_status != 0:
+        return stderr
+    return stdout or 'No issues found.'
 
 
 # wrap agent to A2A server
