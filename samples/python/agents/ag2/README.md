@@ -1,6 +1,6 @@
 # AG2 Mypy tool Agent with A2A Protocol
 
-This sample demonstrates an AG2 agent that is exposed through the A2A protocol. It shows how an AG2 can communicate using A2A as a lingua franca. I think it could be helpful for building a distributed agent system where different agents can communicate with each other using the A2P protocol. The agent-as-a-service architecture allows you to encapsulate agent logic, the local environment, tools, and other capabilities into a separate service that can be reused in different agent workflows.
+This sample demonstrates an AG2 agent that is exposed through the A2A protocol. It shows how an AG2 can communicate using A2A as a lingua franca, which is helpful for building a distributed agent system where different agents can communicate with each other using the A2A protocol. The agent-as-a-service architecture allows you to encapsulate agent logic, the local environment, tools, and other capabilities into a separate service that can be reused in different agent workflows.
 
 Here is a sequence diagram that shows how the current demo implementation of the A2A protocol works:
 
