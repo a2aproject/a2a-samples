@@ -40,7 +40,7 @@ async def main() -> str:
     # use A2A agent as regular one
     result = await reviewer_agent.a_initiate_chat(
         codegen_agent,
-        message='Please, generate a simple script, allows to trunsfer USD to EUR using any external API.',
+        message='Please, generate a simple script, allows to transfer USD to EUR using any external API.',
     )
     return result.chat_history[-2]['content']
 
