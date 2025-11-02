@@ -136,7 +136,7 @@ Run the airbnb agent server:
 Open a new terminal and run the weather agent:
 
   ```bash
-  cd samples/multi_language/python_and_java_multiagent/weather_agent
+  cd samples/java/agents/weather_mcp
   mvn quarkus:dev
   ```
 
@@ -152,7 +152,7 @@ Open a new terminal and run the host agent server:
 
 ## 5. Test using the UI
 
-From your browser, navigate to <http://0.0.0.0:8083>.
+From your browser, navigate to <http://localhost:8083>.
 
 Here are example questions:
 
