@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "agp-protocol"
+version = "1.0.0"
+description = "Agent Gateway Protocol (AGP) routing layer implementation."
+authors = ["Google Octo <google-octo@google.com>"]
+license = "Apache-2.0"
+
+# Defines where the source code package 'agp_protocol' is located (inside the 'src' folder)
+packages = [
+    { include = "agp_protocol", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "^2.0.0"
+
+[tool.poetry.group.dev.dependencies]
+# Dependencies needed only for development and testing
+pytest = "^8.0.0"
+ruff = "^0.13.3"
+autoflake = "^2.3.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

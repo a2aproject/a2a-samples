@@ -15,6 +15,13 @@ Each agent can be run as its own A2A server with the instructions in its README.
 * [**Weather Agent**](weather_mcp/README.md)  
   Sample agent to provide weather information. To make use of this agent in a multi-language, multi-agent system, check out the [weather_and_airbnb_planner](../../python/hosts/weather_and_airbnb_planner/README.md) sample.
 
+* [**Dice Agent (Multi-Transport)**](dice_agent_multi_transport/README.md)  
+  Sample agent that can roll dice of different sizes and check if numbers are prime. This agent demonstrates
+  multi-transport capabilities.
+
+* [**Magic 8 Ball Agent (Security)**](magic_8_ball_security/README.md)  
+  Sample agent that can respond to yes/no questions by consulting a Magic 8 Ball. This sample demonstrates how to secure an A2A server with Keycloak using bearer token authentication and it shows how to configure an A2A client to specify the token when sending requests.
+
 ## Disclaimer
 
 Important: The sample code provided is for demonstration purposes and illustrates the
