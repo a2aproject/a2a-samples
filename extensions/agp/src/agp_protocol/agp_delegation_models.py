@@ -1,0 +1,119 @@
+import logging
+
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field
+
+
+# Get a module-level logger instance
+logger = logging.getLogger(__name__)
+
+# NOTE: Since this file is now in the src/agp_protocol package,
+# we use relative import to pull necessary classes from the sibling file (__init__.py).
+from .__init__ import (
+    AgentGatewayProtocol,
+    IntentPayload,
+)
+
+
+# --- NEW DELEGATION INTENT STRUCTURES ---
+
+
+class SubIntent(BaseModel):
+    """An atomic, routable sub-task created during decomposition.
+
+    This structure uses 'policy_constraints' for clarity.
+    """
+
+    target_capability: str = Field(
+        ...,
+        description="The specific AGP capability to route (e.g., 'infra:provision').",
+    )
+    payload: dict[str, Any] = Field(
+        ...,
+        description='Data specific to the sub-intent (e.g., VM type, budget amount).',
+    )
+    policy_constraints: dict[str, Any] = Field(
+        default_factory=dict,
+        description='Specific security/geo constraints for this individual sub-task.',
+    )
+
+    model_config = ConfigDict(extra='forbid')
+
+
+class DelegationIntent(BaseModel):
+    """A high-level meta-task requiring decomposition and routing to multiple squads."""
+
+    meta_task: str = Field(
+        ..., description="High-level goal (e.g., 'Setup Project Alpha')."
+    )
+    sub_intents: list[SubIntent] = Field(
+        ..., description='List of atomic tasks to be decomposed and routed.'
+    )
+    origin_squad: str = Field(
+        ..., description="The squad initiating the request (e.g., 'HR')."
+    )
+
+    model_config = ConfigDict(extra='forbid')
+
+
+# --- SIMULATION SPECIFIC DELEGATION ROUTER ---
+
+
+class DelegationRouter:
+    """Manages the overall decomposition of a meta-task into routable SubIntents
+    and aggregates the final results from the AGP Gateway.
+    """
+
+    def __init__(self, central_gateway: AgentGatewayProtocol):
+        self.central_gateway = central_gateway
+        # Access the squad_name attribute from the Gateway instance
+        self.squad_name = central_gateway.squad_name
+
+    def route_delegation_intent(self, delegation_intent: DelegationIntent):
+        """Simulates the Central Gateway receiving a meta-task, decomposing it, and routing
+        each component through the core AGP Policy-Based Router.
+        """
+        # Replaced print() statements with logger.info()
+        logger.info(
+            f"\n[{self.squad_name}] RECEIVED DELEGATION: '{delegation_intent.meta_task}' from {delegation_intent.origin_squad}"
+        )
+        logger.info(
+            '--------------------------------------------------------------------------------'
+        )
+
+        results = {}
+
+        for i, sub_intent_data in enumerate(delegation_intent.sub_intents):
+            # --- CRITICAL DECOMPOSITION STEP ---
+            # Synthesize a simple AGP IntentPayload from the SubIntent data
+            sub_intent = IntentPayload(
+                target_capability=sub_intent_data.target_capability,
+                payload=sub_intent_data.payload,
+                # Use the correct keyword for the core IntentPayload
+                policy_constraints=sub_intent_data.policy_constraints,
+            )
+
+            # Route the synthesized Intent via the core AGP router
+            route = self.central_gateway.select_best_route(sub_intent)
+
+            status = 'SUCCESS' if route else 'FAILED'
+            path = route.path if route else 'N/A'
+            cost = route.cost if route else 'N/A'
+
+            # Logging the result for each sub-task
+            logger.info(
+                f'[{i + 1}/{len(delegation_intent.sub_intents)}] TASK: {sub_intent.target_capability}'
+            )
+            logger.info(f'    STATUS: {status}')
+            logger.info(f'    ROUTE: {path} (Cost: {cost})')
+
+            results[sub_intent.target_capability] = status
+
+        logger.info(
+            '--------------------------------------------------------------------------------'
+        )
+        logger.info(
+            f'[{self.squad_name}] DELEGATION COMPLETE: Processed {len(results)} sub-tasks.'
+        )
+        return results
