@@ -1,0 +1,44 @@
+[workspace]
+resolver = "2"
+members = [
+    "a2a-core",
+    "a2a-server",
+    "agents/hello_world",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["A2A Contributors"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/google-a2a/a2a-samples"
+
+[workspace.dependencies]
+# Core A2A dependencies
+a2a-core = { path = "./a2a-core" }
+a2a-server = { path = "./a2a-server" }
+
+# Async runtime
+tokio = { version = "1.41", features = ["full"] }
+
+# HTTP server
+axum = { version = "0.7", features = ["macros"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Error handling
+thiserror = "2.0"
+anyhow = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Utilities
+uuid = { version = "1.11", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+async-trait = "0.1"
