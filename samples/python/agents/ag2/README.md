@@ -38,6 +38,7 @@ sequenceDiagram
 
 ## The demo
 
+<<<<<<< HEAD
 This demo shows how to use the A2A protocol to communicate with an AG2 agent using a **server-client architecture**:
 
 ### Server Side
@@ -82,6 +83,12 @@ For visual demonstrations only (not required for A2A):
 
 - `websocket.py` - FastAPI server with WebSocket wrapper
 - `demo-ui/` - Pixel-art themed browser interface with live updates
+=======
+Here we have a simple demo that shows how to use the A2A protocol to communicate with an AG2 agent. We have
+- one A2A-served remote agent `a2a_python_reviewer.py`
+- two different A2A clients, which communicate with the remote agent using the A2A protocol:
+    CLI code generator `cli_codegen_a2a_client.py` and FastAPI code generator `fastapi_codegen_a2a_client.py`
+>>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
 
 ## Prerequisites
 
@@ -112,22 +119,35 @@ For visual demonstrations only (not required for A2A):
     ```bash
     uv run a2a_python_reviewer.py
     ```
+<<<<<<< HEAD
+=======
+
+5. In a new terminal, start an A2AClient interface to interact with the remote (ag2) agent. You can use one of the following clients:
+>>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
 
 5. In a new terminal, start an A2A client to interact with the remote ReviewerAgent. You can use one of the following:
 
+<<<<<<< HEAD
     - **Method A: CLI code generator client**
 
+=======
+>>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
         ```bash
         uv run cli_codegen_a2a_client.py
         ```
         
         Generates CLI scripts and sends them to the reviewer for type checking.
 
+<<<<<<< HEAD
     - **Method B: FastAPI code generator client**
+=======
+    - **Method B: Run the FastAPI client**
+>>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
 
         ```bash
         uv run fastapi_codegen_a2a_client.py
         ```
+<<<<<<< HEAD
         
         Generates FastAPI applications and sends them to the reviewer for type checking.
 
@@ -138,6 +158,8 @@ For visual demonstrations only (not required for A2A):
         ```
         
         Then open `http://127.0.0.1:9000/` in your browser for a pixel-art themed interactive demo.
+=======
+>>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
 
 ## Learn More
 
@@ -149,7 +171,8 @@ For visual demonstrations only (not required for A2A):
 ## Disclaimer
 
 > [!WARNING]
-> **The sample code provided is for demonstration purposes only.** When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+> **The sample code provided is for demonstration purposes only.** When building production applications, it is critical
+> to treat any agent operating outside of your direct control as a potentially untrusted entity.
 >
 > All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., `description`, `name`, `skills.description`).
 > If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks. Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
