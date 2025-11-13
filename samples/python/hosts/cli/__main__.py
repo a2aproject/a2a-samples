@@ -196,19 +196,19 @@ async def completeTask(
         json_path = click.prompt(
             'Enter path to *.json file', default='', show_default=False
         )
-        if not json_path.strip():
-            click.echo('No file path provided.')
-            return True, None, None
-        if not os.path.exists(json_path):
-            click.echo('File not found.')
-            return True, None, None
         try:
             with open(json_path, 'r', encoding='utf-8') as f:
                 json_data = json.load(f)
             message.parts.append(Part(root=DataPart(data=json_data)))
             click.echo(f'Loaded DataPart from {json_path}')
-        except Exception as e:
-            click.echo(f'Failed to read JSON: {e}')
+        except FileNotFoundError:
+            click.echo(f'File not found: {json_path}')
+            return True, None, None
+        except json.JSONDecodeError as e:
+            click.echo(f'Invalid JSON in file {json_path}: {e}')
+            return True, None, None
+        except OSError as e:
+            click.echo(f'Error reading file {json_path}: {e}')
             return True, None, None
 
     payload = MessageSendParams(
