@@ -2,6 +2,7 @@ import asyncio
 import base64
 import os
 import urllib
+import json
 
 from uuid import uuid4
 
@@ -12,6 +13,7 @@ from a2a.client import A2ACardResolver, A2AClient
 from a2a.extensions.common import HTTP_EXTENSION_HEADER
 from a2a.types import (
     FilePart,
+    DataPart,
     FileWithBytes,
     GetTaskRequest,
     JSONRPCErrorResponse,
@@ -170,6 +172,39 @@ async def completeTask(
             )
         )
 
+    data_choice = click.prompt(
+        'Add structured data, choose inline or file (press enter to skip)',
+        default='',
+        show_default=False,
+    ).strip().lower()
+
+    if data_choice == 'inline':
+        raw_json = click.prompt('Enter JSON inline')
+        try:
+            json_data = json.loads(raw_json)
+            message.parts.append(Part(root=DataPart(data=json_data)))
+            click.echo('Added inline DataPart.')
+        except json.JSONDecodeError as e:
+            click.echo(f'Invalid JSON: {e}')
+            return True, None, None
+
+    elif data_choice == 'file':
+        json_path = click.prompt('Enter path to *.json file', default='', show_default=False)
+        if not json_path.strip():
+            click.echo('No file path provided.')
+            return True, None, None
+        if not os.path.exists(json_path):
+            click.echo('File not found.')
+            return True, None, None
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                json_data = json.load(f)
+            message.parts.append(Part(root=DataPart(data=json_data)))
+            click.echo(f'Loaded DataPart from {json_path}')
+        except Exception as e:
+            click.echo(f'Failed to read JSON: {e}')
+            return True, None, None
+                       
     payload = MessageSendParams(
         id=str(uuid4()),
         message=message,
