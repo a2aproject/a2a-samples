@@ -172,11 +172,15 @@ async def completeTask(
             )
         )
 
-    data_choice = click.prompt(
-        'Add structured data, choose inline or file (press enter to skip)',
-        default='',
-        show_default=False,
-    ).strip().lower()
+    data_choice = (
+        click.prompt(
+            'Add structured data, choose inline or file (press enter to skip)',
+            default='',
+            show_default=False,
+        )
+        .strip()
+        .lower()
+    )
 
     if data_choice == 'inline':
         raw_json = click.prompt('Enter JSON inline')
@@ -189,7 +193,9 @@ async def completeTask(
             return True, None, None
 
     elif data_choice == 'file':
-        json_path = click.prompt('Enter path to *.json file', default='', show_default=False)
+        json_path = click.prompt(
+            'Enter path to *.json file', default='', show_default=False
+        )
         if not json_path.strip():
             click.echo('No file path provided.')
             return True, None, None
@@ -204,7 +210,7 @@ async def completeTask(
         except Exception as e:
             click.echo(f'Failed to read JSON: {e}')
             return True, None, None
-                       
+
     payload = MessageSendParams(
         id=str(uuid4()),
         message=message,
