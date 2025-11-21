@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  real-estate-agent:
+    build: .
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./.env
+    environment:
+      - MCP_SERVER_URL=http://dafty-mcp:4000/sse
+    depends_on:
+      dafty-mcp:
+        condition: service_healthy
+    networks:
+      - app_net
+
+  dafty-mcp:
+    build: ./dafty-mcp
+    volumes:
+      - dafty-session:/usr/src/app/.session
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - ollama-setup
+    networks:
+      - app_net
+
+  ollama:
+    image: ollama/ollama
+    entrypoint: ["/bin/sh", "-c", "ollama serve > /dev/null 2>&1"]
+    volumes:
+      - ollama-data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - app_net
+
+  ollama-setup:
+    image: ollama/ollama
+    command: pull tinydolphin
+    environment:
+      - OLLAMA_HOST=ollama:11434
+    volumes:
+      - ollama-data:/root/.ollama
+    depends_on:
+      ollama:
+        condition: service_healthy
+    networks:
+      - app_net
+
+volumes:
+  ollama-data:
+  dafty-session:
+
+networks:
+  app_net:
+    enable_ipv6: true
