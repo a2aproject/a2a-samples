@@ -12,7 +12,7 @@ The agent:
 
 - **Python** 3.11 or higher  
   ```bash
-  python3 --version
+  python3 --version  # On macOS/Linux; use `python --version` on Windows
   ```
 - **Git** (if you need to clone the repo)  
   ```bash
@@ -100,10 +100,8 @@ export GOOGLE_API_KEY="YOUR_API_KEY_HERE"
 ### Windows (PowerShell)
 
 ```powershell
-setx GOOGLE_API_KEY "YOUR_API_KEY_HERE"
+$Env:GOOGLE_API_KEY = "YOUR_API_KEY_HERE"
 ```
-
-Then open a **new** terminal window (for `setx` to take effect) and, if using `venv`, activate it again.
 
 Verify:
 
