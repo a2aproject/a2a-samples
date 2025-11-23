@@ -1,52 +1,119 @@
-# Dice Agent (REST)
+# Dice Agent REST Example
 
-A minimal A2A agent that rolls dice and returns the result over the HTTP/JSON transport. Good for testing connectivity and latency without LLM overhead.
+## 1. Prerequisites
 
-## Prerequisites
-- Python 3.10+
-- `uv` (or `pip`) to install dependencies
+- **Python** 3.11 or higher  
+  ```bash
+  python3 --version
+  ```
+- **Git** (if you need to clone the repo)  
+  ```bash
+  git --version
+  ```
 
-## Install
+## 2. Get the Source Code
+
+If you don’t have the repo yet:
+
 ```bash
-cd samples/python/agents/dice_agent_rest
-uv sync  # or: pip install -r requirements.txt
+git clone https://github.com/google/a2a-samples.git
+cd a2a-samples/samples/python/agents/dice_agent_rest
 ```
 
-## Run the agent
+If you already have it:
+
 ```bash
-uv run .
-# Agent listens on http://0.0.0.0:9999 by default
+cd a2a-samples/samples/python/agents/dice_agent_rest
 ```
 
-## Try it with curl
+
+## 3. Create and Activate a Virtual Environment
+
+### macOS / Linux
+
 ```bash
-curl -X POST http://localhost:9999/message \
-  -H 'Content-Type: application/json' \
-  -d '{
-        "id": "req-1",
-        "params": {
-          "message": {
-            "role": "user",
-            "parts": [{"kind": "text", "text": "roll a d6"}],
-            "messageId": "msg-1"
-          }
-        }
-      }'
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-Example response (simplified):
-```json
-{
-  "result": {
-    "parts": [{"kind": "text", "text": "You rolled a 4"}]
-  }
-}
+### Windows (PowerShell)
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\activate
 ```
 
-## Agent card
-The public agent card is available at:
+You should now see `(.venv)` in your terminal prompt.
+
+
+## 4. Install Dependencies
+
+You can use **`uv`** (if installed) or **`pip`**.
+
+### Option A: Using `uv` (uses `uv.lock`)
+
+From the `dice_agent_rest` directory:
+
+```bash
+uv sync
 ```
-http://localhost:9999/.well-known/agent-card.json
+
+(Optional sanity check for uv environment):
+
+```bash
+uv run python -c "print('uv environment ready')"
+```
+
+### Option B: Using `pip`
+
+Make sure your virtual environment is active (`(.venv)` visible), then run:
+
+```bash
+pip install .
+```
+
+(Optional, if you want editable mode while developing):
+
+```bash
+pip install -e .
 ```
 
 
+## 5. Set the Google GenAI API Key
+
+You must set `GOOGLE_API_KEY` before running anything that calls Gemini.
+
+### macOS / Linux
+
+```bash
+export GOOGLE_API_KEY="YOUR_API_KEY_HERE"
+```
+
+### Windows (PowerShell)
+
+```powershell
+setx GOOGLE_API_KEY "YOUR_API_KEY_HERE"
+```
+
+Then open a **new** terminal window (for `setx` to take effect) and, if using `venv`, activate it again.
+
+Verify:
+
+```bash
+echo $GOOGLE_API_KEY      # macOS / Linux
+```
+
+```powershell
+echo $Env:GOOGLE_API_KEY  # Windows PowerShell
+```
+
+
+## 6. Environment Sanity Check
+
+With the virtual environment active and dependencies installed:
+
+```bash
+python -c "import google.adk, google.genai; print('Environment OK')"
+```
+
+If you see `Environment OK` with no errors, the setup is complete.
