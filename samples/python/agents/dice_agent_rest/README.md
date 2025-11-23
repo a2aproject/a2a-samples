@@ -1,4 +1,12 @@
-# Dice Agent REST Example
+# ADK A2A Dice Roll REST Agent Example
+
+This example shows how to build a small **tool-using LLM agent** with the **Google Agent Development Kit (ADK)**, designed to be exposed over REST (and/or A2A).  
+The agent:
+
+- Rolls an N-sided dice on request.
+- Checks whether numbers are prime using a tool.
+- Keeps **conversational state** via in-memory sessions.
+- Supports **streaming responses**, suitable for REST, WebSockets, or A2A.
 
 ## 1. Prerequisites
 
