@@ -3,31 +3,18 @@ import asyncio
 import json
 import os
 import uuid
-
 from typing import Any
 
 import httpx
-
 from a2a.client import A2ACardResolver
-from a2a.types import (
-    AgentCard,
-    MessageSendParams,
-    Part,
-    SendMessageRequest,
-    SendMessageResponse,
-    SendMessageSuccessResponse,
-    Task,
-)
+from a2a.types import (AgentCard, MessageSendParams, Part, SendMessageRequest,
+                       SendMessageResponse, SendMessageSuccessResponse, Task)
 from dotenv import load_dotenv
 from google.adk import Agent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.tools.tool_context import ToolContext
-from remote_agent_connection import (
-    RemoteAgentConnections,
-    TaskUpdateCallback,
-)
-
+from remote_agent_connection import RemoteAgentConnections, TaskUpdateCallback
 
 load_dotenv()
 
@@ -228,7 +215,11 @@ class RoutingAgent:
 
         if not client:
             raise ValueError(f'Client not available for {agent_name}')
-        task_id = state['task_id'] if 'task_id' in state else str(uuid.uuid4())
+        # task_id = state['task_id'] if 'task_id' in state else str(uuid.uuid4())
+        if 'task_id' in state and state['task_id'] is not None:
+            task_id = state['task_id']
+        else:
+            task_id = None
 
         if 'context_id' in state:
             context_id = state['context_id']

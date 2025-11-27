@@ -2,22 +2,17 @@
 # pylint: disable=logging-fstring-interpolation
 import logging
 import os
-
 from collections.abc import AsyncIterable
 from typing import Any, Literal
 
 import httpx
-
 from langchain_core.messages import AIMessage, AIMessageChunk
-from langchain_core.runnables.config import (
-    RunnableConfig,
-)
+from langchain_core.runnables.config import RunnableConfig
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_vertexai import ChatVertexAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
-
 
 logger = logging.getLogger(__name__)
 if not logger.hasHandlers():
@@ -63,7 +58,11 @@ class AirbnbAgent:
             if os.getenv('GOOGLE_GENAI_USE_VERTEXAI') == 'TRUE':
                 # If not using Vertex AI, initialize with Google Generative AI
                 logger.info('ChatVertexAI model initialized successfully.')
-                self.model = ChatVertexAI(model=model)
+                self.model = ChatVertexAI(
+                    model=model,
+                    project=os.getenv('GOOGLE_CLOUD_PROJECT'),
+                    location=os.getenv('GOOGLE_CLOUD_LOCATION'),
+                )
 
             else:
                 # Using the model name from your provided file
