@@ -2,10 +2,12 @@
 # pylint: disable=logging-fstring-interpolation
 import logging
 import os
+
 from collections.abc import AsyncIterable
 from typing import Any, Literal
 
 import httpx
+
 from langchain_core.messages import AIMessage, AIMessageChunk
 from langchain_core.runnables.config import RunnableConfig
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -13,6 +15,7 @@ from langchain_google_vertexai import ChatVertexAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
+
 
 logger = logging.getLogger(__name__)
 if not logger.hasHandlers():
