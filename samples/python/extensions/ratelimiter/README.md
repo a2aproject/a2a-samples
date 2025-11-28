@@ -139,18 +139,18 @@ https://github.com/a2aproject/a2a-samples/extensions/ratelimiter/v1
 This extension follows A2A protocol principles:
 
 1. **Extensions are about data, not behavior**
-   - Extension = communication protocol
-   - Behavior (enforcement) = agent's responsibility
+    - Extension = communication protocol
+    - Behavior (enforcement) = agent's responsibility
 
 2. **Optional client participation**
-   - Agents enforce limits regardless
-   - Extension gives clients visibility
-   - Clients choose whether to receive signals
+    - Agents enforce limits regardless
+    - Extension gives clients visibility
+    - Clients choose whether to receive signals
 
 3. **Server-driven policies**
-   - Server determines rate limits (not client)
-   - Server extracts client identity (OAuth, API keys, etc.)
-   - Client cannot dictate their own limits
+    - Server determines rate limits (not client)
+    - Server extracts client identity (OAuth, API keys, etc.)
+    - Client cannot dictate their own limits
 
 ## Examples
 

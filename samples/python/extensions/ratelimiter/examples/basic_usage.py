@@ -104,18 +104,18 @@ WITH EXTENSION (client sends X-A2A-Extensions header):
 - Same rate limiting enforcement
 - Client gets error message AND structured usage data
 - Response includes metadata:
-  {
-    "message": {
-      "parts": [{"text": "Rate limit exceeded..."}],
-      "metadata": {
-        "github.com/a2aproject/a2a-samples/extensions/ratelimiter/v1/result": {
-          "allowed": false,
-          "remaining": 0,
-          "retry_after": 15.3,
-          "reset_time": 1640995275.3,
-          "limit_type": "token_bucket"
+    {
+        "message": {
+            "parts": [{"text": "Rate limit exceeded..."}],
+            "metadata": {
+                "github.com/a2aproject/a2a-samples/extensions/ratelimiter/v1/result": {
+                    "allowed": false,
+                    "remaining": 0,
+                    "retry_after": 15.3,
+                    "reset_time": 1640995275.3,
+                    "limit_type": "token_bucket"
+                }
+            }
         }
-      }
     }
-  }
 """
