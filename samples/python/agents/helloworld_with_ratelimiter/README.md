@@ -406,13 +406,13 @@ uv run . --agent http://localhost:9999
 
 ## Comparison with Basic HelloWorld
 
-| Aspect | Basic HelloWorld | With Rate Limiting |
-|--------|------------------|-------------------|
-| **Request Handling** | Unlimited | 10 requests/minute |
-| **Resource Protection** | None | Token bucket enforcement |
-| **Usage Visibility** | None | Optional via extension |
-| **Burst Traffic** | Accepted | Controlled (20 initial, then 10/min) |
-| **Production Ready** | Demo only | Closer to production patterns |
+| Aspect                   | Basic HelloWorld | With Rate Limiting                      |
+| ------------------------ | ---------------- | --------------------------------------- |
+| **Request Handling**     | Unlimited        | 10 requests/minute                      |
+| **Resource Protection**  | None             | Token bucket enforcement                |
+| **Usage Visibility**     | None             | Optional via extension                  |
+| **Burst Traffic**        | Accepted         | Controlled (20 initial, then 10/min)    |
+| **Production Ready**     | Demo only        | Closer to production patterns           |
 
 ## Key Takeaways
 
