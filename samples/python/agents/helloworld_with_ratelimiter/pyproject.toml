@@ -16,12 +16,18 @@ dependencies = [
     "sse-starlette>=2.3.5",
     "starlette>=0.46.2",
     "uvicorn>=0.34.2",
-    "ratelimiter-ext @ file://../../extensions/ratelimiter",
+    "ratelimiter-ext",
 ]
+
+[tool.uv.sources]
+ratelimiter-ext = { path = "../../extensions/ratelimiter", editable = true }
 
 [project.optional-dependencies]
 ratelimiter = [
 ]
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
