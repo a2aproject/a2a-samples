@@ -11,14 +11,14 @@ This example demonstrates how to implement rate limiting in an A2A agent and how
 This example illustrates the important distinction between:
 
 1. **Rate Limiting Enforcement** (Agent's Responsibility)
-   - Always active, protects agent resources
-   - Implemented directly in the agent executor
-   - Happens regardless of extension activation
+    - Always active, protects agent resources
+    - Implemented directly in the agent executor
+    - Happens regardless of extension activation
 
 2. **Rate Limiting Communication** (Extension's Purpose)
-   - Optional, controlled by client activation
-   - Provides visibility into usage quotas
-   - Helps clients make intelligent decisions
+    - Optional, controlled by client activation
+    - Provides visibility into usage quotas
+    - Helps clients make intelligent decisions
 
 **Analogy**: The agent enforces a speed limit (rate limiting). The extension is like a speedometer - it shows you how fast you're going, but doesn't control your speed.
 
@@ -36,18 +36,18 @@ This example illustrates the important distinction between:
 
 ```text
 Client Request → Agent enforces limit → Response
-                      ↓
-                 If exceeded: "Rate limit exceeded"
-                 If allowed: "Hello World"
+                        ↓
+                    If exceeded: "Rate limit exceeded"
+                    If allowed: "Hello World"
 ```
 
 ### With Extension (Rate Limiting + Signals)
 
 ```text
 Client Request → Agent enforces limit → Response + Usage Signals
-  (activates        ↓                       ↓
-   extension)  If exceeded: "Rate limit exceeded" + {remaining: 0, retry_after: 15.3}
-               If allowed: "Hello World" + {remaining: 45, limit_type: "token_bucket"}
+    (activates        ↓                       ↓
+    extension)  If exceeded: "Rate limit exceeded" + {remaining: 0, retry_after: 15.3}
+                If allowed: "Hello World" + {remaining: 45, limit_type: "token_bucket"}
 ```
 
 ## Getting Started
@@ -69,18 +69,18 @@ Rate limiting is enforced, but you don't get usage signals:
 curl -X POST http://localhost:9999/ \
   -H "Content-Type: application/json" \
   -d '{
-    "jsonrpc": "2.0",
-    "id": "test",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-1",
-        "parts": [{"kind": "text", "text": "Hello"}],
-        "role": "user"
-      }
-    }
-  }'
+        "jsonrpc": "2.0",
+        "id": "test",
+        "method": "message/send",
+        "params": {
+            "message": {
+                "kind": "message",
+                "messageId": "msg-1",
+                "parts": [{"kind": "text", "text": "Hello"}],
+                "role": "user"
+            }
+        }
+    }'
 ```
 
 Response (rate limit enforced, no usage signals):
@@ -133,10 +133,10 @@ Response (same rate limiting, now with usage signals):
       "role": "agent",
       "metadata": {
         "github.com/a2aproject/a2a-samples/extensions/ratelimiter/v1/result": {
-          "allowed": true,
-          "remaining": 9,
-          "reset_time": 1640995260.0,
-          "limit_type": "token_bucket"
+            "allowed": true,
+            "remaining": 9,
+            "reset_time": 1640995260.0,
+            "limit_type": "token_bucket"
         }
       }
     }
@@ -160,10 +160,10 @@ for i in {1..15}; do
       "method": "message/send",
       "params": {
         "message": {
-          "kind": "message",
-          "messageId": "msg-'$i'",
-          "parts": [{"kind": "text", "text": "Hello"}],
-          "role": "user"
+            "kind": "message",
+            "messageId": "msg-'$i'",
+            "parts": [{"kind": "text", "text": "Hello"}],
+            "role": "user"
         }
       }
     }'
@@ -187,10 +187,10 @@ After exceeding the limit, you'll see:
       "role": "agent",
       "metadata": {
         "github.com/a2aproject/a2a-samples/extensions/ratelimiter/v1/result": {
-          "allowed": false,
-          "remaining": 0,
-          "retry_after": 15.3,
-          "limit_type": "token_bucket"
+            "allowed": false,
+            "remaining": 0,
+            "retry_after": 15.3,
+            "limit_type": "token_bucket"
         }
       }
     }
@@ -343,16 +343,16 @@ executor = HelloWorldAgentExecutor(
 
 ```text
 1. Agent advertises extension in AgentCard
-   → "I can send rate limit usage signals"
+    → "I can send rate limit usage signals"
 
 2. Client includes extension URI in X-A2A-Extensions header
-   → "I understand rate limit signals, please include them"
+    → "I understand rate limit signals, please include them"
 
 3. Agent checks is_activated(context)
-   → Returns True if client requested signals
+    → Returns True if client requested signals
 
 4. Agent adds usage signals to response metadata
-   → Client receives detailed usage information
+    → Client receives detailed usage information
 ```
 
 ## Production Considerations
@@ -417,21 +417,21 @@ uv run . --agent http://localhost:9999
 ## Key Takeaways
 
 1. **Enforcement is separate from communication**
-   - Agent always enforces limits
-   - Extension optionally communicates usage
+    - Agent always enforces limits
+    - Extension optionally communicates usage
 
 2. **Extension activation is client-driven**
-   - Client says "I want usage info"
-   - Agent decides whether to enforce (always yes)
+    - Client says "I want usage info"
+    - Agent decides whether to enforce (always yes)
 
 3. **Server controls policies**
-   - Server determines rate limits
-   - Server extracts client identity
-   - Client cannot set their own limits
+    - Server determines rate limits
+    - Server extracts client identity
+    - Client cannot set their own limits
 
 4. **Token bucket allows bursts**
-   - Good for real-world traffic patterns
-   - Balances burst and sustained rates
+    - Good for real-world traffic patterns
+    - Balances burst and sustained rates
 
 ## Next Steps
 

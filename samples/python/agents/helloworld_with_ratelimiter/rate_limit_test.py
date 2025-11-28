@@ -31,7 +31,7 @@ class RateLimitTestClient:
         Args:
             message_text: The text message to send
             use_extension: Whether to activate the rate limiting extension
-                          (requests usage signals in response)
+                (requests usage signals in response)
         """
         payload = {
             'jsonrpc': '2.0',
