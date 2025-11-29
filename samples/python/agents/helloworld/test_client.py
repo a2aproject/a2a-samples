@@ -21,6 +21,8 @@ from a2a.utils.constants import (
 async def main() -> None:
     # Configure logging to show INFO level messages
     logging.basicConfig(level=logging.INFO)
+    # Suppress verbose logs from a2a.client.client
+    logging.getLogger('a2a.client.client').setLevel(logging.WARNING)
     logger = logging.getLogger(__name__)  # Get a logger instance
 
     # --8<-- [start:A2ACardResolver]
@@ -121,7 +123,7 @@ async def main() -> None:
         )
 
         response = await client.send_message(request)
-        print(response.model_dump(mode='json', exclude_none=True))
+        print(response.model_dump_json(indent=2, exclude_none=True))
         # --8<-- [end:send_message]
 
         # --8<-- [start:send_message_streaming]
@@ -133,7 +135,7 @@ async def main() -> None:
         stream_response = client.send_message_streaming(streaming_request)
 
         async for chunk in stream_response:
-            print(chunk.model_dump(mode='json', exclude_none=True))
+            print(chunk.model_dump_json(indent=2, exclude_none=True))
         # --8<-- [end:send_message_streaming]
 
 
