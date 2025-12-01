@@ -46,10 +46,10 @@ class DspyAgentExecutor(AgentExecutor):
 
             query = context.get_user_input()
             try:
-                ctx = self.memory.retrieve(query=query, user_id=context.context_id)
+                ctx = await self.memory.retrieve(query=query, user_id=context.context_id)
                 result = self.agent(question=str(query), ctx=ctx)
                 current_span().log(input=query, output=result.answer)
-                self.memory.save(user_id=context.context_id, user_input=query, assistant_response=result.answer)
+                await self.memory.save(user_id=context.context_id, user_input=query, assistant_response=result.answer)
             except Exception as e:
                 current_span().log(error=e)
                 raise ServerError(error=InternalError()) from e
