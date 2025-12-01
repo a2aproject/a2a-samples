@@ -1,5 +1,6 @@
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
+from a2a.server.tasks import TaskUpdater
 from a2a.types import (
     InternalError,
     InvalidParamsError,
@@ -12,13 +13,11 @@ from a2a.utils import (
     new_agent_text_message,
 )
 from a2a.utils.errors import ServerError
-from a2a.server.tasks import TaskUpdater
-
-from braintrust import traced, current_span
-
-from memory.mem0 import Mem0Memory
 from agents.dspy_example import agent
+from braintrust import current_span, traced
 from logger import logger
+from memory.mem0 import Mem0Memory
+
 
 class DspyAgentExecutor(AgentExecutor):
     """Memory-aware DSPy AgentExecutor with per-user context."""

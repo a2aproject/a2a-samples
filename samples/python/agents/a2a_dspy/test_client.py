@@ -26,7 +26,7 @@ async def main() -> None:
     # --8<-- [start:A2ACardResolver]
 
     base_url = 'http://localhost:10020'
-    
+
     # Each user gets their own isolated memory space
     ctx_id = str(uuid4())
     # Create httpx client with authentication headers and no timeout
@@ -106,7 +106,7 @@ async def main() -> None:
 
         # --8<-- [start:send_message]
         client = A2AClient(
-            httpx_client=httpx_client, 
+            httpx_client=httpx_client,
             agent_card=final_agent_card_to_use
         )
 
@@ -128,13 +128,13 @@ async def main() -> None:
         logger.info('\n=== First Message: Sharing personal info ===')
         response = await client.send_message(request)
         print(response.model_dump(mode='json', exclude_none=True))
-        
+
         # Extract context_id from first response for conversation continuity
         # Note: We don't reuse task_id since each task is completed and unique
         if hasattr(response.root, 'error') and response.root.error is not None:
             logger.error(f'Error from agent: {response.root.error}')
             raise RuntimeError(f'Agent returned error: {response.root.error}')
-        
+
         context_id = response.root.result.context_id
         # --8<-- [end:send_message]
 
@@ -203,9 +203,9 @@ async def main() -> None:
                 'context_id': context_id,
             },
         }
-        
+
         streaming_request = SendStreamingMessageRequest(
-            id=str(uuid4()), 
+            id=str(uuid4()),
             params=MessageSendParams(**streaming_message_payload)
         )
 

@@ -4,13 +4,13 @@ import logging
 
 import click
 import uvicorn
-from starlette.middleware.cors import CORSMiddleware
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from executor import DspyAgentExecutor
+from starlette.middleware.cors import CORSMiddleware
 
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ logging.basicConfig()
 @click.command()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=10020)
-def main(host: str, port: int):
+def main(host: str, port: int) -> None:
     """A2A DSPy Sample Server with Bearer Token Authentication."""
     skill = AgentSkill(
         id='dspy_agent',
@@ -50,14 +50,14 @@ def main(host: str, port: int):
 
     server = A2AStarletteApplication(agent_card, request_handler)
     starlette_app = server.build()
-    
+
     starlette_app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_origins=['*'],
+        allow_methods=['*'],
+        allow_headers=['*'],
     )
-    
+
     uvicorn.run(starlette_app, host=host, port=port)
 
 
