@@ -1,10 +1,8 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import Any
 
-from pydantic import BaseModel
 
-
-class Memory(BaseModel):
+class Memory(ABC):
     """Base class for memory."""
     @abstractmethod
     async def save(self, user_id: str, user_input: str, assistant_response: str) -> Any:
