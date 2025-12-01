@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 from typing import List, Dict
 import traceback
-import asyncio
 import os
 
 from mem0 import AsyncMemoryClient
