@@ -4,7 +4,6 @@ import re
 from dotenv import load_dotenv
 
 from braintrust import init_logger, set_masking_function
-from braintrust.wrappers.dspy import BraintrustDSpyCallback
 from braintrust.wrappers.litellm import patch_litellm
 
 patch_litellm()

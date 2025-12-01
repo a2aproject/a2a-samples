@@ -3,22 +3,17 @@ from a2a.server.events import EventQueue
 from a2a.types import (
     InternalError,
     InvalidParamsError,
-    Message,
-    Part,
     Task,
     TaskState,
     TextPart,
     UnsupportedOperationError,
 )
 from a2a.utils import (
-    completed_task,
-    new_artifact,
     new_agent_text_message,
 )
 from a2a.utils.errors import ServerError
 from a2a.server.tasks import TaskUpdater
 
-from uuid import uuid4
 from braintrust import traced, current_span
 
 from memory.mem0 import Mem0Memory
@@ -38,7 +33,7 @@ class DspyAgentExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ) -> None:
-        with logger.start_span() as span:
+        with logger.start_span():
             error = self._validate_request(context)
             if error:
                 raise ServerError(error=InvalidParamsError())

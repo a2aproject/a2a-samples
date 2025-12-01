@@ -1,14 +1,10 @@
 from __future__ import annotations
 
 import logging
-import os
 
 import click
 import uvicorn
-from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-from starlette.requests import Request
-from starlette.responses import JSONResponse, RedirectResponse
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
