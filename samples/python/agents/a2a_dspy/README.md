@@ -22,7 +22,7 @@ This sample demonstrates an Agent-to-Agent (A2A) server built using [DSPy](https
 
 ## Prerequisites
 
-* Python 3.10+
+* Python 3.13
 * OpenAI API Key
 * Mem0 API Key
 * Braintrust API Key (optional, for observability)
