@@ -13,8 +13,9 @@ from a2a.utils import (
     new_agent_text_message,
 )
 from a2a.utils.errors import ServerError
-from agents.dspy_example import agent
 from braintrust import current_span, traced
+
+from agents.dspy_example import agent
 from logger import logger
 from memory.mem0 import Mem0Memory
 
@@ -32,6 +33,7 @@ class DspyAgentExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ) -> None:
+        """Execute the task."""
         with logger.start_span():
             error = self._validate_request(context)
             if error:
@@ -67,6 +69,7 @@ class DspyAgentExecutor(AgentExecutor):
     async def cancel(
         self, request: RequestContext, event_queue: EventQueue
     ) -> Task | None:
+        """Cancel the task."""
         raise ServerError(error=UnsupportedOperationError())
 
     def _validate_request(self, context: RequestContext) -> bool:

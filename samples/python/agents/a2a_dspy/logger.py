@@ -1,6 +1,8 @@
 import os
 import re
 
+from typing import Any
+
 from braintrust import init_logger, set_masking_function
 from braintrust.wrappers.litellm import patch_litellm
 from dotenv import load_dotenv
@@ -10,7 +12,8 @@ patch_litellm()
 
 load_dotenv()
 
-def mask_sensitive_data(data):
+def mask_sensitive_data(data: Any) -> Any:
+    """Mask sensitive data."""
     if isinstance(data, str):
         return re.sub(r'\b(api[_-]?key|password|token)[\s:=]+\S+', r'\1: [REDACTED]', data, flags=re.IGNORECASE)
 
