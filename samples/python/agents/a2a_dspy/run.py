@@ -17,6 +17,7 @@ from executor import DspyAgentExecutor
 logger = logging.getLogger(__name__)
 logging.basicConfig()
 
+
 @click.command()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=10020)

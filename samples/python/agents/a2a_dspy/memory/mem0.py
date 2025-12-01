@@ -12,8 +12,10 @@ load_dotenv()
 
 mem0 = AsyncMemoryClient(api_key=os.getenv('MEM0_API_KEY'))
 
+
 class Mem0Memory(Memory):
     """Mem0 memory implementation."""
+
     @traced
     async def retrieve(self, query: str, user_id: str) -> list[dict]:
         """Retrieve relevant context from Mem0."""
@@ -23,35 +25,40 @@ class Mem0Memory(Memory):
             context = [
                 {
                     'role': 'system',
-                    'content': f'Relevant information: {serialized_memories}'
+                    'content': f'Relevant information: {serialized_memories}',
                 },
-                {
-                    'role': 'user',
-                    'content': query
-                }
+                {'role': 'user', 'content': query},
             ]
-            current_span().log(metadata={'memory_retrieved': context, 'query': query, 'user_id': user_id})
+            current_span().log(
+                metadata={
+                    'memory_retrieved': context,
+                    'query': query,
+                    'user_id': user_id,
+                }
+            )
         except Exception as e:  # noqa: BLE001
-            current_span().log(metadata={'error': e, 'traceback': traceback.format_exc()})
+            current_span().log(
+                metadata={'error': e, 'traceback': traceback.format_exc()}
+            )
             return [{'role': 'user', 'content': query}]
         else:
             return context
 
     @traced
-    async def save(self, user_id: str, user_input: str, assistant_response: str) -> None:
+    async def save(
+        self, user_id: str, user_input: str, assistant_response: str
+    ) -> None:
         """Save the interaction to Mem0."""
         try:
             interaction = [
-                {
-                'role': 'user',
-                'content': user_input
-                },
-                {
-                    'role': 'assistant',
-                    'content': assistant_response
-                }
+                {'role': 'user', 'content': user_input},
+                {'role': 'assistant', 'content': assistant_response},
             ]
             result = await mem0.add(interaction, user_id=user_id)
-            current_span().log(metadata={'memory_saved': result, 'user_id': user_id})
+            current_span().log(
+                metadata={'memory_saved': result, 'user_id': user_id}
+            )
         except Exception as e:  # noqa: BLE001
-            current_span().log(metadata={'error': e, 'traceback': traceback.format_exc()})
+            current_span().log(
+                metadata={'error': e, 'traceback': traceback.format_exc()}
+            )

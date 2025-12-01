@@ -39,7 +39,9 @@ class DspyAgentExecutor(AgentExecutor):
             if error:
                 raise ServerError(error=InvalidParamsError())
 
-            updater = TaskUpdater(event_queue, context.task_id, context.context_id)
+            updater = TaskUpdater(
+                event_queue, context.task_id, context.context_id
+            )
             if not context.current_task:
                 await updater.submit()
 
@@ -47,10 +49,16 @@ class DspyAgentExecutor(AgentExecutor):
 
             query = context.get_user_input()
             try:
-                ctx = await self.memory.retrieve(query=query, user_id=context.context_id)
+                ctx = await self.memory.retrieve(
+                    query=query, user_id=context.context_id
+                )
                 result = self.agent(question=str(query), ctx=ctx)
                 current_span().log(input=query, output=result.answer)
-                await self.memory.save(user_id=context.context_id, user_input=query, assistant_response=result.answer)
+                await self.memory.save(
+                    user_id=context.context_id,
+                    user_input=query,
+                    assistant_response=result.answer,
+                )
             except Exception as e:
                 current_span().log(error=e)
                 raise ServerError(error=InternalError()) from e
@@ -63,7 +71,9 @@ class DspyAgentExecutor(AgentExecutor):
             else:
                 await updater.update_status(
                     TaskState.input_required,
-                    message=new_agent_text_message(result.answer, context.context_id, context.task_id),
+                    message=new_agent_text_message(
+                        result.answer, context.context_id, context.task_id
+                    ),
                 )
 
     async def cancel(
