@@ -11,6 +11,10 @@ Repository: https://github.com/jeremylongshore/bobs-brain
 from google.adk import LlmAgent
 from typing import Dict, Any, List
 
+# Configuration constants
+WORKER_PORT = 8001
+PENALTY_PER_ISSUE = 20  # Compliance score penalty for each issue found
+
 
 def analyze_compliance(context: str) -> Dict[str, Any]:
     """
@@ -52,7 +56,7 @@ def analyze_compliance(context: str) -> Dict[str, Any]:
         "issues_found": len(issues),
         "issues": issues,
         "suggestions": suggestions,
-        "compliance_score": max(0, 100 - (len(issues) * 20)),
+        "compliance_score": max(0, 100 - (len(issues) * PENALTY_PER_ISSUE)),
         "worker": "iam_adk_demo",
         "note": "Production analysis uses 28 canonical standards and full ADK spec"
     }
@@ -231,4 +235,4 @@ if __name__ == "__main__":
     print("🔧 Worker Agent (ADK Compliance Demo) starting...")
     print("📋 AgentCard: http://localhost:8001/.well-known/agent-card.json")
     print("🔗 Production: https://github.com/jeremylongshore/bobs-brain")
-    app.run(port=8001)
+    app.run(port=WORKER_PORT)

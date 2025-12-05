@@ -12,6 +12,10 @@ from google.adk import LlmAgent
 from typing import Dict, Any
 import requests
 
+# Configuration constants
+WORKER_URL = "http://localhost:8001"
+FOREMAN_PORT = 8000
+
 
 def route_task(task: str, context: str = "") -> Dict[str, Any]:
     """
@@ -28,13 +32,11 @@ def route_task(task: str, context: str = "") -> Dict[str, Any]:
         Dict containing worker selection and delegation result
     """
     # Simplified worker discovery (in production, queries AgentCard discovery)
-    worker_url = "http://localhost:8001"
-
     # Fetch worker AgentCard to check capabilities
     try:
-        agentcard = requests.get(f"{worker_url}/.well-known/agent-card.json").json()
+        agentcard = requests.get(f"{WORKER_URL}/.well-known/agent-card.json").json()
         worker_skills = [skill["id"] for skill in agentcard.get("skills", [])]
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         return {"error": f"Worker discovery failed: {e}"}
 
     # Analyze task requirements
@@ -48,7 +50,7 @@ def route_task(task: str, context: str = "") -> Dict[str, Any]:
         # Delegate to worker via A2A protocol
         try:
             response = requests.post(
-                f"{worker_url}/{skill_to_use}",
+                f"{WORKER_URL}/{skill_to_use}",
                 json={"context": context}
             )
             return {
@@ -58,7 +60,7 @@ def route_task(task: str, context: str = "") -> Dict[str, Any]:
                 "skill_used": skill_to_use,
                 "result": response.json()
             }
-        except Exception as e:
+        except requests.exceptions.RequestException as e:
             return {"error": f"Delegation failed: {e}"}
 
     return {"error": "No suitable worker found for task"}
@@ -214,4 +216,4 @@ if __name__ == "__main__":
     print("🧠 Foreman Agent (Bob's Brain Demo) starting...")
     print("📋 AgentCard: http://localhost:8000/.well-known/agent-card.json")
     print("🔗 Production: https://github.com/jeremylongshore/bobs-brain")
-    app.run(port=8000)
+    app.run(port=FOREMAN_PORT)

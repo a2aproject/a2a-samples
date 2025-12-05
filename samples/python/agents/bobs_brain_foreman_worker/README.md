@@ -75,7 +75,7 @@ Bob's Brain is a complete ADK compliance department with:
 
 ### Prerequisites
 ```bash
-pip install google-adk
+pip install -r requirements.txt
 ```
 
 ### Start the Worker Agent
