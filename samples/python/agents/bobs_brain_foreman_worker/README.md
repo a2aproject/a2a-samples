@@ -6,13 +6,39 @@
 
 ## Overview
 
-This is a simplified demonstration of the foreman-worker architectural pattern used in production by [Bob's Brain](https://github.com/jeremylongshore/bobs-brain), a multi-agent ADK compliance department deployed on Vertex AI Agent Engine.
+This sample demonstrates the foreman-worker delegation pattern from [Bob's Brain](https://github.com/jeremylongshore/bobs-brain), a multi-agent ADK compliance department deployed on Vertex AI Agent Engine.
 
 **What this demo shows:**
-- **Foreman Agent** - Routes tasks to specialist workers based on skill requirements
+- **Foreman Agent** - Analyzes requests and routes tasks to specialist workers
 - **Worker Agent** - Performs specific domain tasks (ADK compliance analysis)
-- **A2A Communication** - Clean agent-to-agent delegation using AgentCards
-- **Production Pattern** - Simplified version of real production architecture
+- **A2A Communication** - Service discovery via AgentCards and HTTP-based delegation
+- **Separation of Concerns** - Clear boundaries between coordination and execution
+
+## Scope and Limitations
+
+This is a simplified demonstration of patterns from the production system:
+
+### Current Implementation
+- ✅ Foreman and worker agents with AgentCards (A2A 0.3.0)
+- ✅ HTTP-based task delegation (Foreman → Worker)
+- ✅ Deterministic specialist functions (cost-optimized)
+- ⚠️ Foreman's `LlmAgent` instantiated but Flask routes call tools directly
+- ⚠️ No Bob orchestrator layer (demo starts at foreman level)
+
+### Not Yet Demonstrated
+- [ ] Foreman routing requests through `agent.run()` for LLM-based tool selection
+- [ ] Bob (orchestrator) → Foreman A2A communication
+- [ ] Multiple specialist workers (production has 8)
+- [ ] Memory integration (Session + Memory Bank)
+- [ ] CI/CD and deployment automation
+
+### Why These Choices?
+
+**Deterministic Workers**: In production Bob's Brain, specialists are deterministic tools without LLM calls. This optimizes cost and ensures consistent behavior. Only Bob (orchestrator) and the foreman (middle manager) use LLMs for reasoning.
+
+**Single Worker**: We implemented one specialist for clarity. Adding more workers follows the same pattern - each exposes an AgentCard with skill schemas.
+
+**Foreman Tool Selection**: The current implementation calls tools directly. A future refactor will route through `agent.run()` to let the LLM analyze natural language input and choose appropriate tools dynamically.
 
 ## Architecture
 
@@ -58,6 +84,39 @@ Each agent publishes an AgentCard (A2A 0.3.0) describing:
 This demo shows simplified versions of patterns used in the full Bob's Brain system:
 - **In Production:** 1 orchestrator + 1 foreman + 8 specialist workers
 - **This Demo:** 1 foreman + 1 worker (minimal viable example)
+
+## How This Relates to Production
+
+### This Demo
+```
+User → HTTP → Foreman → HTTP → Worker (1 specialist)
+                 ↓
+           (LlmAgent created but not used)
+```
+
+### Production Bob's Brain
+```
+User → Slack → Bob (LlmAgent) → A2A → Foreman (LlmAgent) → A2A → 8 Workers
+                                                                    ├─ iam-adk
+                                                                    ├─ iam-issue
+                                                                    ├─ iam-fix-plan
+                                                                    ├─ iam-fix-impl
+                                                                    ├─ iam-qa
+                                                                    ├─ iam-doc
+                                                                    ├─ iam-cleanup
+                                                                    └─ iam-indexer
+```
+
+### Key Differences
+
+| Feature | This Demo | Production |
+|---------|-----------|------------|
+| **Entry Point** | Direct HTTP to Foreman | Bob orchestrator with Slack integration |
+| **Foreman LLM** | Instantiated but bypassed | Actively uses `agent.run()` for routing |
+| **A2A Protocol** | AgentCards + HTTP delegation | Full A2A with Bob ↔ Foreman communication |
+| **Specialists** | 1 worker (demo) | 8 specialized workers |
+| **Memory** | None (stateless) | Dual memory (Session + Memory Bank) |
+| **Deployment** | Local demo | Vertex AI Agent Engine (us-central1) |
 
 ## Full Production System
 
@@ -125,17 +184,6 @@ Both agents publish A2A AgentCards at `/.well-known/agent-card.json`:
 - **ADK Documentation:** https://cloud.google.com/vertex-ai/docs/agent-development-kit
 - **A2A Protocol Spec:** https://github.com/a2aproject/a2a-protocol
 - **SPIFFE Identity:** https://spiffe.io/
-
-## Production Differences
-
-| Feature | This Demo | Production Bob's Brain |
-|---------|-----------|----------------------|
-| **Agents** | 2 (foreman + 1 worker) | 10 (orchestrator + foreman + 8 workers) |
-| **Deployment** | Local (demo) | Vertex AI Agent Engine |
-| **AgentCards** | Simplified | Full A2A 0.3.0 with trust attestations |
-| **Tools** | Minimal (demo) | GitHub, Terraform, Vertex AI Search, etc. |
-| **Memory** | None (stateless demo) | Dual memory (Session + Memory Bank) |
-| **CI/CD** | None | 8 GitHub Actions workflows with drift detection |
 
 ## Contributing
 
