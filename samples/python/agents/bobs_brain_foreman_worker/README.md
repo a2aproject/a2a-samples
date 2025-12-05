@@ -6,31 +6,35 @@
 
 ## Overview
 
-This sample demonstrates the foreman-worker delegation pattern from [Bob's Brain](https://github.com/jeremylongshore/bobs-brain), a multi-agent ADK compliance department deployed on Vertex AI Agent Engine.
+This sample demonstrates the complete orchestrator → foreman → worker pattern from [Bob's Brain](https://github.com/jeremylongshore/bobs-brain), a multi-agent ADK compliance department deployed on Vertex AI Agent Engine.
 
 **What this demo shows:**
-- **Foreman Agent** - Analyzes requests and routes tasks to specialist workers
-- **Worker Agent** - Performs specific domain tasks (ADK compliance analysis)
-- **A2A Communication** - Service discovery via AgentCards and HTTP-based delegation
-- **Separation of Concerns** - Clear boundaries between coordination and execution
+- **Bob (Orchestrator)** - Global coordinator with LlmAgent reasoning and natural language interface
+- **Foreman Agent** - Middle manager using LlmAgent to analyze and route tasks to specialists
+- **Worker Agent** - Specialist performing domain tasks (deterministic functions for cost optimization)
+- **A2A Communication** - Full chain: Bob → Foreman → Worker with AgentCard discovery
+- **Memory Integration** - Session and Memory Bank services (optional, requires GCP project)
+- **LLM Reasoning** - Both Bob and Foreman use `agent.run()` for intelligent tool selection
 
-## Scope and Limitations
+## Architecture Pattern
 
-This is a simplified demonstration of patterns from the production system:
+This demo implements the **production pattern** used in Bob's Brain:
 
-### Current Implementation
-- ✅ Foreman and worker agents with AgentCards (A2A 0.3.0)
-- ✅ HTTP-based task delegation (Foreman → Worker)
-- ✅ Deterministic specialist functions (cost-optimized)
-- ⚠️ Foreman's `LlmAgent` instantiated but Flask routes call tools directly
-- ⚠️ No Bob orchestrator layer (demo starts at foreman level)
+### What This Demo Shows
+- ✅ **Bob orchestrator** with LlmAgent for global coordination
+- ✅ **Foreman** using `agent.run()` for LLM-based task analysis and routing
+- ✅ **Worker** with deterministic tools (no LLM for cost optimization)
+- ✅ **Bob ↔ Foreman A2A** communication over HTTP with AgentCards
+- ✅ **Foreman ↔ Worker** delegation with skill-based routing
+- ✅ **Memory integration** (Session + Memory Bank) when GCP project configured
+- ✅ **SPIFFE identity** propagation across all agents
+- ✅ **Complete chain**: User → Bob → Foreman → Worker → Response
 
-### Not Yet Demonstrated
-- [ ] Foreman routing requests through `agent.run()` for LLM-based tool selection
-- [ ] Bob (orchestrator) → Foreman A2A communication
-- [ ] Multiple specialist workers (production has 8)
-- [ ] Memory integration (Session + Memory Bank)
-- [ ] CI/CD and deployment automation
+### Intentional Simplifications
+- ⚠️ Single worker instead of 8 specialized workers (production has iam-adk, iam-issue, iam-fix-plan, etc.)
+- ⚠️ No Slack integration (production Bob interfaces with Slack)
+- ⚠️ Memory disabled by default (enable with `ENABLE_MEMORY=true` and GCP_PROJECT_ID)
+- ⚠️ No CI/CD or deployment automation
 
 ### Why These Choices?
 
@@ -38,28 +42,46 @@ This is a simplified demonstration of patterns from the production system:
 
 **Single Worker**: We implemented one specialist for clarity. Adding more workers follows the same pattern - each exposes an AgentCard with skill schemas.
 
-**Foreman Tool Selection**: The current implementation calls tools directly. A future refactor will route through `agent.run()` to let the LLM analyze natural language input and choose appropriate tools dynamically.
+**LLM Reasoning Layers**: Bob and Foreman both use `agent.run()` to let Gemini analyze natural language input and intelligently choose which tools to invoke. This is the proper ADK pattern for agents that need reasoning capability.
+
+**Memory Integration**: When you set `ENABLE_MEMORY=true` and provide a GCP project ID, both Bob and Foreman use Vertex AI Session Service and Memory Bank Service for conversation context retention.
 
 ## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
+│                    Bob Orchestrator                         │
+│                      (bob_demo)                             │
+│                                                             │
+│  Uses: LlmAgent with agent.run()                           │
+│  Memory: Session + Memory Bank (optional)                  │
+│  Tools:                                                     │
+│  - call_foreman: Delegate to department foreman            │
+│                                                             │
+└────────────────┬────────────────────────────────────────────┘
+                 │ A2A Protocol
+                 │ (HTTP + AgentCard discovery)
+                 ▼
+┌─────────────────────────────────────────────────────────────┐
 │                      Foreman Agent                          │
 │         (iam_senior_adk_devops_lead_demo)                   │
 │                                                             │
-│  Skills:                                                    │
+│  Uses: LlmAgent with agent.run()                           │
+│  Memory: Session + Memory Bank (optional)                  │
+│  Tools:                                                     │
 │  - route_task: Analyze request, select worker              │
 │  - coordinate_workflow: Manage multi-step tasks            │
 │                                                             │
 └────────────────┬────────────────────────────────────────────┘
                  │ A2A Protocol
-                 │ (AgentCard-based delegation)
+                 │ (HTTP + AgentCard discovery)
                  ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                       Worker Agent                          │
 │                  (iam_adk_demo)                             │
 │                                                             │
-│  Skills:                                                    │
+│  Uses: Deterministic Python functions (no LLM)             │
+│  Tools:                                                     │
 │  - analyze_compliance: Check ADK pattern compliance        │
 │  - suggest_fix: Recommend improvements                     │
 │                                                             │
@@ -89,34 +111,35 @@ This demo shows simplified versions of patterns used in the full Bob's Brain sys
 
 ### This Demo
 ```
-User → HTTP → Foreman → HTTP → Worker (1 specialist)
-                 ↓
-           (LlmAgent created but not used)
+User → HTTP → Bob (LlmAgent) → A2A → Foreman (LlmAgent) → A2A → Worker (1 specialist)
+               ↓                       ↓                          ↓
+           agent.run()             agent.run()            deterministic tools
+           (reasons)               (routes)               (executes)
 ```
 
 ### Production Bob's Brain
 ```
 User → Slack → Bob (LlmAgent) → A2A → Foreman (LlmAgent) → A2A → 8 Workers
-                                                                    ├─ iam-adk
-                                                                    ├─ iam-issue
-                                                                    ├─ iam-fix-plan
-                                                                    ├─ iam-fix-impl
-                                                                    ├─ iam-qa
-                                                                    ├─ iam-doc
-                                                                    ├─ iam-cleanup
-                                                                    └─ iam-indexer
+               ↓ Memory                ↓ Memory                    ├─ iam-adk
+               Session +               Session +                   ├─ iam-issue
+               Memory Bank             Memory Bank                 ├─ iam-fix-plan
+                                                                   ├─ iam-fix-impl
+                                                                   ├─ iam-qa
+                                                                   ├─ iam-doc
+                                                                   ├─ iam-cleanup
+                                                                   └─ iam-indexer
 ```
 
 ### Key Differences
 
 | Feature | This Demo | Production |
 |---------|-----------|------------|
-| **Entry Point** | Direct HTTP to Foreman | Bob orchestrator with Slack integration |
-| **Foreman LLM** | Instantiated but bypassed | Actively uses `agent.run()` for routing |
-| **A2A Protocol** | AgentCards + HTTP delegation | Full A2A with Bob ↔ Foreman communication |
-| **Specialists** | 1 worker (demo) | 8 specialized workers |
-| **Memory** | None (stateless) | Dual memory (Session + Memory Bank) |
-| **Deployment** | Local demo | Vertex AI Agent Engine (us-central1) |
+| **Bob Orchestrator** | ✅ Full implementation with LlmAgent | ✅ Full implementation with Slack integration |
+| **Foreman LLM** | ✅ Uses `agent.run()` for routing | ✅ Uses `agent.run()` for routing |
+| **A2A Protocol** | ✅ Full chain: Bob ↔ Foreman ↔ Worker | ✅ Full chain with all agents |
+| **Memory** | ✅ Optional (disabled by default) | ✅ Always enabled (Session + Memory Bank) |
+| **Specialists** | 1 worker (demo simplification) | 8 specialized workers |
+| **Deployment** | Local demo (3 processes) | Vertex AI Agent Engine (us-central1) |
 
 ## Full Production System
 
@@ -137,46 +160,86 @@ Bob's Brain is a complete ADK compliance department with:
 pip install -r requirements.txt
 ```
 
-### Start the Worker Agent
+### Option 1: Full Chain (Bob → Foreman → Worker)
+
+**Terminal 1 - Start Worker:**
 ```bash
 python worker_agent.py
 # Worker running on localhost:8001
 ```
 
-### Start the Foreman Agent
+**Terminal 2 - Start Foreman:**
 ```bash
 python foreman_agent.py
 # Foreman running on localhost:8000
-# Discovers worker via AgentCard at localhost:8001/.well-known/agent-card.json
+# Discovers worker at localhost:8001/.well-known/agent-card.json
 ```
 
-### Send a Task
+**Terminal 3 - Start Bob:**
 ```bash
-curl -X POST http://localhost:8000/route_task \
+python bob_agent.py
+# Bob running on localhost:8002
+# Discovers foreman at localhost:8000/.well-known/agent-card.json
+```
+
+**Terminal 4 - Send Request to Bob:**
+```bash
+curl -X POST http://localhost:8002/task \
   -H "Content-Type: application/json" \
   -d '{
-    "task": "analyze_adk_compliance",
-    "context": "Check if agents follow ADK lazy-loading pattern"
+    "user_input": "Analyze our ADK agent for compliance issues with the lazy-loading pattern"
   }'
 ```
 
-The foreman will:
-1. Analyze the task requirements
-2. Query worker AgentCard for capabilities
-3. Delegate to the worker via A2A protocol
-4. Aggregate results and return
+The complete flow:
+1. **Bob** receives natural language request
+2. **Bob's LlmAgent** uses `agent.run()` to analyze and chooses to call `call_foreman` tool
+3. **Foreman** receives task from Bob via A2A
+4. **Foreman's LlmAgent** uses `agent.run()` to choose `route_task` tool
+5. **Worker** receives specific task and executes deterministic analysis
+6. **Results flow back**: Worker → Foreman → Bob → User
+
+### Option 2: Direct to Foreman (Skip Bob)
+
+```bash
+curl -X POST http://localhost:8000/task \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_input": "Analyze code for ADK compliance"
+  }'
+```
+
+### Option 3: Enable Memory (Requires GCP Project)
+
+```bash
+export ENABLE_MEMORY=true
+export GCP_PROJECT_ID=your-gcp-project
+export GCP_REGION=us-central1
+
+# Then start agents as usual
+python bob_agent.py
+python foreman_agent.py
+python worker_agent.py
+```
 
 ## AgentCards
 
-Both agents publish A2A AgentCards at `/.well-known/agent-card.json`:
+All three agents publish A2A AgentCards at `/.well-known/agent-card.json`:
+
+**Bob AgentCard:**
+- Skills: `process_request` (natural language interface)
+- SPIFFE ID: `spiffe://demo.intent.solutions/agent/bob/dev/us-central1/0.1.0`
+- Capabilities: orchestration, natural_language_interface, foreman_delegation
 
 **Foreman AgentCard:**
 - Skills: `route_task`, `coordinate_workflow`
 - SPIFFE ID: `spiffe://demo.intent.solutions/agent/foreman/dev/us-central1/0.1.0`
+- Capabilities: task_routing, workflow_orchestration, worker_delegation
 
 **Worker AgentCard:**
 - Skills: `analyze_compliance`, `suggest_fix`
 - SPIFFE ID: `spiffe://demo.intent.solutions/agent/adk-worker/dev/us-central1/0.1.0`
+- Capabilities: adk_expertise, compliance_analysis, fix_suggestions
 
 ## Learning Resources
 

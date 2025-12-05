@@ -9,12 +9,20 @@ Repository: https://github.com/jeremylongshore/bobs-brain
 """
 
 from google.adk import LlmAgent
+from google.adk.sessions import VertexAiSessionService
+from google.adk.memory import VertexAiMemoryBankService
 from typing import Dict, Any
 import requests
+import os
 
 # Configuration constants
 WORKER_URL = "http://localhost:8001"
 FOREMAN_PORT = 8000
+GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID", "demo-project")
+GCP_REGION = os.getenv("GCP_REGION", "us-central1")
+
+# Memory configuration (for production with real GCP project)
+ENABLE_MEMORY = os.getenv("ENABLE_MEMORY", "false").lower() == "true"
 
 
 def route_task(task: str, context: str = "") -> Dict[str, Any]:
@@ -113,24 +121,46 @@ def get_foreman_agent() -> LlmAgent:
     system_instruction = """You are the Foreman Agent for Bob's Brain (Demo Version).
 
 Your role:
-1. Receive complex tasks from users
-2. Analyze task requirements
-3. Query worker AgentCards to find specialists
+1. Receive tasks from Bob orchestrator or direct requests
+2. Analyze task requirements using your reasoning capability
+3. Determine which specialist workers are needed
 4. Delegate to appropriate workers via A2A protocol
-5. Aggregate results and respond
+5. Aggregate results and provide cohesive response
+
+Available tools:
+- route_task: Analyze a task and delegate to the appropriate worker
+- coordinate_workflow: Orchestrate multi-step workflows across workers
 
 Available workers:
 - iam_adk_demo: ADK compliance analysis and fixes
 
+Decision framework:
+- Single analysis task → Use route_task
+- Multi-step workflow → Use coordinate_workflow
+- Complex orchestration → Break into steps and delegate
+
 Production note: The full Bob's Brain has 8 specialist workers handling:
 - ADK design, issues, fix plans, implementation, QA, docs, cleanup, indexing"""
 
-    agent = LlmAgent(
-        model="gemini-2.0-flash-exp",
-        tools=[route_task, coordinate_workflow],
-        system_instruction=system_instruction
-    )
+    # Create agent with memory integration (if enabled)
+    agent_config = {
+        "model": "gemini-2.0-flash-exp",
+        "tools": [route_task, coordinate_workflow],
+        "system_instruction": system_instruction
+    }
 
+    # Add memory services if GCP project is configured
+    if ENABLE_MEMORY and GCP_PROJECT_ID != "demo-project":
+        agent_config["session_service"] = VertexAiSessionService(
+            project_id=GCP_PROJECT_ID,
+            location=GCP_REGION
+        )
+        agent_config["memory_bank_service"] = VertexAiMemoryBankService(
+            project_id=GCP_PROJECT_ID,
+            location=GCP_REGION
+        )
+
+    agent = LlmAgent(**agent_config)
     return agent
 
 
@@ -203,17 +233,54 @@ if __name__ == "__main__":
     def agentcard():
         return jsonify(create_foreman_agentcard())
 
-    @app.route("/route_task", methods=["POST"])
-    def handle_route_task():
-        data = request.json
-        return jsonify(route_task(data["task"], data.get("context", "")))
+    @app.route("/task", methods=["POST"])
+    def handle_task():
+        """
+        Main entrypoint for foreman agent.
 
-    @app.route("/coordinate_workflow", methods=["POST"])
-    def handle_coordinate_workflow():
+        Receives tasks from Bob orchestrator or direct requests and uses
+        LlmAgent.run() to analyze and delegate appropriately.
+
+        This is the KEY difference from the previous implementation:
+        We use agent.run() to let the LLM choose which tool to invoke!
+        """
         data = request.json
-        return jsonify(coordinate_workflow(data["workflow"], data["steps"]))
+        user_input = data.get("user_input", "")
+        session_id = data.get("session_id", "default")
+
+        if not user_input:
+            return jsonify({"error": "user_input is required"}), 400
+
+        # Use LlmAgent.run() - the LLM will analyze input and choose tools
+        # This is proper ADK pattern: LLM reasons about which tool to use
+        response = agent.run(
+            user_input=user_input,
+            session_id=session_id if ENABLE_MEMORY else None
+        )
+
+        return jsonify({
+            "foreman": "iam_senior_adk_devops_lead_demo",
+            "user_input": user_input,
+            "response": response,
+            "note": "Foreman used LlmAgent.run() to process this request"
+        })
+
+    @app.route("/health", methods=["GET"])
+    def health():
+        """Health check endpoint."""
+        return jsonify({
+            "status": "healthy",
+            "agent": "iam_senior_adk_devops_lead_demo",
+            "memory_enabled": ENABLE_MEMORY,
+            "worker_url": WORKER_URL
+        })
 
     print("🧠 Foreman Agent (Bob's Brain Demo) starting...")
-    print("📋 AgentCard: http://localhost:8000/.well-known/agent-card.json")
+    print(f"📋 AgentCard: http://localhost:{FOREMAN_PORT}/.well-known/agent-card.json")
+    print(f"💾 Memory: {'Enabled' if ENABLE_MEMORY else 'Disabled (set ENABLE_MEMORY=true and GCP_PROJECT_ID)'}")
     print("🔗 Production: https://github.com/jeremylongshore/bobs-brain")
+    print("\nExample usage:")
+    print(f'curl -X POST http://localhost:{FOREMAN_PORT}/task \\')
+    print('  -H "Content-Type: application/json" \\')
+    print('  -d \'{"user_input": "Analyze code for ADK compliance issues"}\'')
     app.run(port=FOREMAN_PORT)
