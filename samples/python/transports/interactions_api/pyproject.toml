@@ -1,0 +1,31 @@
+[project]
+name = "interactions-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "a2a-sdk[http-server]>=0.3.20",
+    "click>=8.2.1",
+    "dotenv>=0.9.9",
+    "httpx",
+    "httpx-sse>=0.4.0",
+    "sse-starlette>=3.0.2",
+    "starlette>=0.47.2",
+    "uvicorn>=0.35.0",
+]
+
+[dependency-groups]
+dev = ["ruff", "pyright"]
+
+[tool.setuptools.packages.find]
+# Ensure that setuptools finds all packages under the current directory.
+# This makes 'interactions_api_transport' discoverable.
+where = "."
+include = ["*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+# If there are any non-python files that need to be included, specify them here.
+# For now, we don't have any, but it's good to have the section.
+"" = ["*.txt", "*.md"]
