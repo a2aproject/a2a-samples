@@ -58,6 +58,12 @@ class InteractionsApiTransport(ClientTransport):
     _WELL_KNOWN_AGENTS_NAMES: dict[str, str] = {
         'deep-research-pro-preview-12-2025': 'Deep Research Preview',
     }
+    _WELL_KNOWN_AGENT_CONFIG: dict[str, dict[str, Any]] = {
+        'deep-research-pro-preview-12-2025': {
+            'type': 'deep-research',
+            'thinking_summaries': 'auto',
+        }
+    }
     _WELL_KNOWN_AGENTS_DESCRIPTIONS: dict[str, str] = {
         'deep-research-pro-preview-12-2025': 'Agent powered by Google Deep Research Preview',
     }
@@ -107,6 +113,7 @@ class InteractionsApiTransport(ClientTransport):
         url: str,
         agent: str | None = None,
         model: str | None = None,
+        thinking_summaries: bool = True,
         request_opts: dict[str, Any] | None = None,
         agent_card_overrides: dict[str, Any] | None = None,
     ) -> AgentCard:
@@ -119,6 +126,8 @@ class InteractionsApiTransport(ClientTransport):
             url: URL of the Interactions API endpoint.
             agent: The name of the agent within the endpoint to use.
             model: The name of the model within the endpoint to use.
+            thinking_summaries: Whether to enable thinking summary outputs. These are translated to
+              TaskStatusUpdateEvents.
             request_opts: Optional dictionary that is used to construct the request object when
               creating an interaction. This allows customizing the parameters passed to the Interactions API,
               such as specifying the generation_config field for model interactions and agent_config field for
@@ -135,6 +144,7 @@ class InteractionsApiTransport(ClientTransport):
         # Default AgentCard values
         request = {}
         agent_name: str = ''
+        agent_mode = True
         if agent:
             request['agent'] = agent
             agent_name = agent
@@ -143,11 +153,19 @@ class InteractionsApiTransport(ClientTransport):
                 request['agent'] = model
             else:
                 request['model'] = model
+                agent_mode = False
             agent_name = model
         else:
             raise ValueError(
                 'either agent or model parameter must be specified'
             )
+        if thinking_summaries:
+            if agent_mode and agent_name in cls._WELL_KNOWN_AGENT_CONFIG:
+                request['agent_config'] = cls._WELL_KNOWN_AGENT_CONFIG[agent_name]
+            elif not agent_mode:
+                request['generation_config'] = {
+                    'thinking_summaries': 'auto'
+                }
         if request_opts:
             request.update(request_opts)
         card = AgentCard(
@@ -489,9 +507,10 @@ class InteractionsApiTransport(ClientTransport):
                 if event_data['content']['type'] == 'thought':
                     thought_indexes.add(event_data['index'])
                     current_task.status.message = Message(
-                        message_id=f'output_{event_data["index"]}',
+                        message_id=f'output_{event_data["index"]}_0',
                         task_id=current_task.id,
                         role=Role.agent,
+                        metadata={'chunk': 0},
                         parts=[],
                     )
         elif event_type == 'content.delta':
@@ -499,10 +518,12 @@ class InteractionsApiTransport(ClientTransport):
             # message in-memory.
             if event_data['delta']['type'] == 'thought_summary':
                 # This should have been setup above.
-                current_status_message = current_task.status.message
-                current_status_message.parts.append(  # type: ignore
+                current_status_message: Message = current_task.status.message  # type: ignore
+                current_status_message.message_id = f'output_{event_data["index"]}_{current_status_message.metadata["chunk"]}'
+                current_status_message.metadata['chunk'] += 1
+                current_status_message.parts = [
                     _content_to_part(event_data['delta']['content'])
-                )
+                ]
                 return TaskStatusUpdateEvent(
                     task_id=current_task.id,
                     context_id=current_task.context_id,
@@ -549,6 +570,7 @@ class InteractionsApiTransport(ClientTransport):
                 status=current_task.status,
                 final=True,
             )
+        return None
 
     async def _process_stream(
         self,
@@ -675,13 +697,13 @@ def _interaction_status_to_a2a_task_state(status_str: str) -> TaskState:
     return mapping.get(status_str, TaskState.unknown)
 
 
-def _thought_to_message(index: int, thought: dict[str, Any]) -> Message:
+def _thought_to_messages(index: int, thought: dict[str, Any]) -> list[Message]:
     summaries = thought.get('summary', {}).get('items', [])
-    return Message(
-        message_id=f'output_{index}',
+    return [Message(
+        message_id=f'output_{index}_{i}',
         role=Role.agent,
-        parts=[_content_to_part(summary) for summary in summaries],
-    )
+        parts=[_content_to_part(summary)],
+    )  for i, summary in enumerate(summaries)]
 
 
 def _content_delta_to_artifact(
@@ -808,7 +830,7 @@ def _interaction_to_task(interaction: dict[str, Any]) -> Task:
 
     for i, output_content in enumerate(outputs):
         if output_content['type'] == 'thought':
-            thought_messages.append(_thought_to_message(i, output_content))
+            thought_messages.extend(_thought_to_messages(i, output_content))
         else:
             a2a_part = _content_to_part(output_content)
             a2a_artifacts.append(
