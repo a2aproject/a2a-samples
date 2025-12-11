@@ -48,7 +48,7 @@ def main(host, port, model):
         exported_card = interactions_agent_card.model_copy(
             update={
                 'url': f'http://{host}:{port}',
-                'preferred_transport': 'jsonrpc',
+                'preferred_transport': 'JSONRPC',
             }
         )
 
