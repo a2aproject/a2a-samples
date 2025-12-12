@@ -13,7 +13,7 @@ from request_handler import ClientTransportProxyRequestHandler
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 

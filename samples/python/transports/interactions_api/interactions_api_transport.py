@@ -3,6 +3,7 @@ Gemini Interactions API.
 """
 
 import json
+import logging
 import os
 
 from collections.abc import AsyncGenerator, AsyncIterator
@@ -46,6 +47,9 @@ from a2a.types import (
     TextPart,
     UnsupportedOperationError,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class InteractionsApiTransport(ClientTransport):
@@ -265,18 +269,7 @@ class InteractionsApiTransport(ClientTransport):
             await self._translate_response_error(event_source.response)
             stream = event_source.aiter_sse()
             first_event = await anext(stream)
-            if first_event.event == 'error':
-                raise A2AClientError(first_event.data)
-            elif first_event.event != 'interaction.start':
-                raise A2AClientError(
-                    f'unexpected first event type: {first_event.event}'
-                )
-            task = _interaction_to_task(first_event.json()['interaction'])
-            # Change current state to submitted, since A2A always emits a Task
-            # in submitted state first.
-            task.status.state = TaskState.submitted
-            yield task
-            async for event in self._process_stream(stream, task, set()):
+            async for event in self._process_stream(first_event, stream):
                 yield event
 
     async def get_task(
@@ -355,8 +348,10 @@ class InteractionsApiTransport(ClientTransport):
             stream = event_source.aiter_sse()
             first_event = await anext(stream)
             if first_event.event == 'error':
+                logger.debug('First event received on resubscribe was an error: %s', first_event)
                 event_data = first_event.json()
                 if event_data['error']['code'] == 'not_found':
+                    logger.debug('Assuming error is due to completed request.')
                     # Models behave differently from agents in the interactions
                     # API. If you attempt to resubscribe to model output that
                     # has completed, you get an error. We can just fetch the
@@ -368,19 +363,7 @@ class InteractionsApiTransport(ClientTransport):
                     return
                 # Otherwise raise the error.
                 raise A2AClientError(first_event.data)
-            if first_event.event == 'interaction.start':
-                current_task = _interaction_to_task(
-                    first_event.json()['interaction']
-                )
-                current_task.status.state = TaskState.submitted
-                yield current_task
-            else:
-                raise A2AClientError(
-                    f'unexpected first event type: {first_event.event}'
-                )
-            async for event in self._process_stream(
-                stream, current_task, set()
-            ):
+            async for event in self._process_stream(first_event, stream):
                 yield event
 
     async def get_card(
@@ -484,6 +467,7 @@ class InteractionsApiTransport(ClientTransport):
         current_task: Task,
         thought_indexes: set,
     ) -> TaskStatusUpdateEvent | TaskArtifactUpdateEvent | None:
+        logger.debug('Received event: %s', event.event)
         event_type = event.event
         event_data = event.json()
         if event_type == 'interaction.status_update':
@@ -491,6 +475,7 @@ class InteractionsApiTransport(ClientTransport):
                 event_data['status']
             )
             current_task.status = TaskStatus(state=new_state)
+            logger.debug('Changing current TaskStatus to %s', current_task.status)
             return TaskStatusUpdateEvent(
                 task_id=current_task.id,
                 context_id='',
@@ -505,6 +490,7 @@ class InteractionsApiTransport(ClientTransport):
             if 'content' in event_data:
                 # New thought incoming.
                 if event_data['content']['type'] == 'thought':
+                    logger.debug('Marking content at index %d as a thought', event_data['index'])
                     thought_indexes.add(event_data['index'])
                     current_task.status.message = Message(
                         message_id=f'output_{event_data["index"]}_0',
@@ -524,6 +510,7 @@ class InteractionsApiTransport(ClientTransport):
                 current_status_message.parts = [
                     _content_to_part(event_data['delta']['content'])
                 ]
+                logger.debug('Emitting thought as TaskStatusUpdateEvent')
                 return TaskStatusUpdateEvent(
                     task_id=current_task.id,
                     context_id=current_task.context_id,
@@ -531,23 +518,28 @@ class InteractionsApiTransport(ClientTransport):
                     final=False,
                 )
             if event_data['delta']['type'] == 'thought_signature':
-                pass
+                logger.debug('Ignoring thought signature')
             else:
+                logger.debug('Emitting delta for artifact %s', f'output_{event_data["index"]}')
                 return _content_delta_to_artifact(current_task.id, event_data)
 
         elif event_type == 'content.stop':
             if event_data['index'] not in thought_indexes:
+                artifact_id = f'output_{event_data["index"]}'
+                logger.debug('Emitting last_chunk for artifact %s', artifact_id)
                 return TaskArtifactUpdateEvent(
                     task_id=current_task.id,
                     context_id=current_task.context_id,
                     artifact=Artifact(
-                        artifact_id=f'output_{event_data["index"]}',
+                        artifact_id=artifact_id,
                         parts=[],
                         name=f'output-{event_data["index"]}',
                     ),
                     last_chunk=True,
                     append=True,
                 )
+            else:
+                logger.debug('Ignoring thought content stop event')
         elif event_type == 'error':
             # Emit TaskStatusUpdateEvent message with error details.
             error = event_data['error']
@@ -556,32 +548,49 @@ class InteractionsApiTransport(ClientTransport):
                 role=Role.agent,
                 parts=[Part(root=DataPart(data=error))],
             )
+            logger.debug('Emitting error TaskStatusUpdateEvent')
             return TaskStatusUpdateEvent(
                 task_id=current_task.id,
                 context_id=current_task.context_id,
-                status=current_task.status,
-                final=False,
+                # Note: errors in the stream seem to always terminate, but it's
+                # not clear if that's the actual contract.
+                status=TaskState.failed,
+                final=True,
             )
         elif event_type == 'interaction.complete':
             current_task = _interaction_to_task(event_data['interaction'])
+            logger.debug('Emitting final TaskStatusUpdateEvent')
             return TaskStatusUpdateEvent(
                 task_id=current_task.id,
                 context_id=current_task.context_id,
                 status=current_task.status,
                 final=True,
             )
+        logger.debug('Nothing to do for event %s', event.event)
         return None
 
     async def _process_stream(
         self,
+        first_event: httpx_sse.ServerSentEvent,
         stream: AsyncIterator[httpx_sse.ServerSentEvent],
-        current_task: Task,
-        thought_indexes: set[int],
     ) -> AsyncGenerator[
         Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent
     ]:
+        thought_indexes = set()
+        if first_event.event == 'interaction.start':
+            current_task = _interaction_to_task(
+                first_event.json()['interaction']
+            )
+            current_task.status.state = TaskState.submitted
+            logger.debug('Received interaction.start event for %s; returning initial Task', current_task.id)
+            yield current_task
+        else:
+            raise A2AClientError(
+                f'unexpected first event type: {first_event.event}'
+            )
         async for event in stream:
             if event.event == 'done':
+                logger.debug('Received done event, ending stream read')
                 return
             if processed := self._process_event(
                 event, current_task, thought_indexes
