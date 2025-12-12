@@ -245,7 +245,7 @@ if __name__ == '__main__':
         data = request.json
         return jsonify(suggest_fix(data['issue'], data.get('context', '')))
 
-    print('🔧 Worker Agent (ADK Compliance Demo) starting...')
-    print('📋 AgentCard: http://localhost:8001/.well-known/agent-card.json')
-    print('🔗 Production: https://github.com/jeremylongshore/bobs-brain')
+    print('[WORKER] Worker Agent (ADK Compliance Demo) starting...')
+    print('[INFO] AgentCard: http://localhost:8001/.well-known/agent-card.json')
+    print('[LINK] Production: https://github.com/jeremylongshore/bobs-brain')
     app.run(port=WORKER_PORT)

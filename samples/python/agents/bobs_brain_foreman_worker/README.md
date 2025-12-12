@@ -6,13 +6,13 @@
 
 ## Overview
 
-This sample demonstrates the complete orchestrator → foreman → worker pattern from [Bob's Brain](https://github.com/jeremylongshore/bobs-brain), a multi-agent ADK compliance department deployed on Vertex AI Agent Engine.
+This sample demonstrates the complete orchestrator -> foreman -> worker pattern from [Bob's Brain](https://github.com/jeremylongshore/bobs-brain), a multi-agent ADK compliance department deployed on Vertex AI Agent Engine.
 
 **What this demo shows:**
 - **Bob (Orchestrator)** - Global coordinator with LlmAgent reasoning and natural language interface
 - **Foreman Agent** - Middle manager using LlmAgent to analyze and route tasks to specialists
 - **Worker Agent** - Specialist performing domain tasks (deterministic functions for cost optimization)
-- **A2A Communication** - Full chain: Bob → Foreman → Worker with AgentCard discovery
+- **A2A Communication** - Full chain: Bob -> Foreman -> Worker with AgentCard discovery
 - **Memory Integration** - Session and Memory Bank services (optional, requires GCP project)
 - **LLM Reasoning** - Both Bob and Foreman use `agent.run()` for intelligent tool selection
 
@@ -21,20 +21,20 @@ This sample demonstrates the complete orchestrator → foreman → worker patter
 This demo implements the **production pattern** used in Bob's Brain:
 
 ### What This Demo Shows
-- ✅ **Bob orchestrator** with LlmAgent for global coordination
-- ✅ **Foreman** using `agent.run()` for LLM-based task analysis and routing
-- ✅ **Worker** with deterministic tools (no LLM for cost optimization)
-- ✅ **Bob ↔ Foreman A2A** communication over HTTP with AgentCards
-- ✅ **Foreman ↔ Worker** delegation with skill-based routing
-- ✅ **Memory integration** (Session + Memory Bank) when GCP project configured
-- ✅ **SPIFFE identity** propagation across all agents
-- ✅ **Complete chain**: User → Bob → Foreman → Worker → Response
+- [x] **Bob orchestrator** with LlmAgent for global coordination
+- [x] **Foreman** using `agent.run()` for LLM-based task analysis and routing
+- [x] **Worker** with deterministic tools (no LLM for cost optimization)
+- [x] **Bob <-> Foreman A2A** communication over HTTP with AgentCards
+- [x] **Foreman <-> Worker** delegation with skill-based routing
+- [x] **Memory integration** (Session + Memory Bank) when GCP project configured
+- [x] **SPIFFE identity** propagation across all agents
+- [x] **Complete chain**: User -> Bob -> Foreman -> Worker -> Response
 
 ### Intentional Simplifications
-- ⚠️ Single worker instead of 8 specialized workers (production has iam-adk, iam-issue, iam-fix-plan, etc.)
-- ⚠️ No Slack integration (production Bob interfaces with Slack)
-- ⚠️ Memory disabled by default (enable with `ENABLE_MEMORY=true` and GCP_PROJECT_ID)
-- ⚠️ No CI/CD or deployment automation
+- [!] Single worker instead of 8 specialized workers (production has iam-adk, iam-issue, iam-fix-plan, etc.)
+- [!] No Slack integration (production Bob interfaces with Slack)
+- [!] Memory disabled by default (enable with `ENABLE_MEMORY=true` and GCP_PROJECT_ID)
+- [!] No CI/CD or deployment automation
 
 ### Why These Choices?
 
@@ -49,43 +49,43 @@ This demo implements the **production pattern** used in Bob's Brain:
 ## Architecture
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│                    Bob Orchestrator                         │
-│                      (bob_demo)                             │
-│                                                             │
-│  Uses: LlmAgent with agent.run()                           │
-│  Memory: Session + Memory Bank (optional)                  │
-│  Tools:                                                     │
-│  - call_foreman: Delegate to department foreman            │
-│                                                             │
-└────────────────┬────────────────────────────────────────────┘
-                 │ A2A Protocol
-                 │ (HTTP + AgentCard discovery)
-                 ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      Foreman Agent                          │
-│         (iam_senior_adk_devops_lead_demo)                   │
-│                                                             │
-│  Uses: LlmAgent with agent.run()                           │
-│  Memory: Session + Memory Bank (optional)                  │
-│  Tools:                                                     │
-│  - route_task: Analyze request, select worker              │
-│  - coordinate_workflow: Manage multi-step tasks            │
-│                                                             │
-└────────────────┬────────────────────────────────────────────┘
-                 │ A2A Protocol
-                 │ (HTTP + AgentCard discovery)
-                 ▼
-┌─────────────────────────────────────────────────────────────┐
-│                       Worker Agent                          │
-│                  (iam_adk_demo)                             │
-│                                                             │
-│  Uses: Deterministic Python functions (no LLM)             │
-│  Tools:                                                     │
-│  - analyze_compliance: Check ADK pattern compliance        │
-│  - suggest_fix: Recommend improvements                     │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
++-------------------------------------------------------------+
+|                    Bob Orchestrator                         |
+|                      (bob_demo)                             |
+|                                                             |
+|  Uses: LlmAgent with agent.run()                           |
+|  Memory: Session + Memory Bank (optional)                  |
+|  Tools:                                                     |
+|  - call_foreman: Delegate to department foreman            |
+|                                                             |
+\-----------------+--------------------------------------------+
+                 | A2A Protocol
+                 | (HTTP + AgentCard discovery)
+                 V
++-------------------------------------------------------------+
+|                      Foreman Agent                          |
+|         (iam_senior_adk_devops_lead_demo)                   |
+|                                                             |
+|  Uses: LlmAgent with agent.run()                           |
+|  Memory: Session + Memory Bank (optional)                  |
+|  Tools:                                                     |
+|  - route_task: Analyze request, select worker              |
+|  - coordinate_workflow: Manage multi-step tasks            |
+|                                                             |
+\-----------------+--------------------------------------------+
+                 | A2A Protocol
+                 | (HTTP + AgentCard discovery)
+                 V
++-------------------------------------------------------------+
+|                       Worker Agent                          |
+|                  (iam_adk_demo)                             |
+|                                                             |
+|  Uses: Deterministic Python functions (no LLM)             |
+|  Tools:                                                     |
+|  - analyze_compliance: Check ADK pattern compliance        |
+|  - suggest_fix: Recommend improvements                     |
+|                                                             |
+\--------------------------------------------------------------+
 ```
 
 ## Key Concepts Demonstrated
@@ -111,40 +111,40 @@ This demo shows simplified versions of patterns used in the full Bob's Brain sys
 
 ### This Demo
 ```text
-User → HTTP → Bob (LlmAgent) → A2A → Foreman (LlmAgent) → A2A → Worker (1 specialist)
-               ↓                       ↓                          ↓
+User -> HTTP -> Bob (LlmAgent) -> A2A -> Foreman (LlmAgent) -> A2A -> Worker (1 specialist)
+               v                       v                          v
            agent.run()             agent.run()            deterministic tools
            (reasons)               (routes)               (executes)
 ```
 
 ### Production Bob's Brain
 ```text
-User → Slack → Bob (LlmAgent) → A2A → Foreman (LlmAgent) → A2A → 8 Workers
-               ↓ Memory                ↓ Memory                    ├─ iam-adk
-               Session +               Session +                   ├─ iam-issue
-               Memory Bank             Memory Bank                 ├─ iam-fix-plan
-                                                                   ├─ iam-fix-impl
-                                                                   ├─ iam-qa
-                                                                   ├─ iam-doc
-                                                                   ├─ iam-cleanup
-                                                                   └─ iam-indexer
+User -> Slack -> Bob (LlmAgent) -> A2A -> Foreman (LlmAgent) -> A2A -> 8 Workers
+               v Memory                v Memory                    |-- iam-adk
+               Session +               Session +                   |-- iam-issue
+               Memory Bank             Memory Bank                 |-- iam-fix-plan
+                                                                   |-- iam-fix-impl
+                                                                   |-- iam-qa
+                                                                   |-- iam-doc
+                                                                   |-- iam-cleanup
+                                                                   \-- iam-indexer
 ```
 
 ### Key Differences
 
 | Feature | This Demo | Production |
 |---------|-----------|------------|
-| **Bob Orchestrator** | ✅ Full implementation with LlmAgent | ✅ Full implementation with Slack integration |
-| **Foreman LLM** | ✅ Uses `agent.run()` for routing | ✅ Uses `agent.run()` for routing |
-| **A2A Protocol** | ✅ Full chain: Bob ↔ Foreman ↔ Worker | ✅ Full chain with all agents |
-| **Memory** | ✅ Optional (disabled by default) | ✅ Always enabled (Session + Memory Bank) |
+| **Bob Orchestrator** | [x] Full implementation with LlmAgent | [x] Full implementation with Slack integration |
+| **Foreman LLM** | [x] Uses `agent.run()` for routing | [x] Uses `agent.run()` for routing |
+| **A2A Protocol** | [x] Full chain: Bob <-> Foreman <-> Worker | [x] Full chain with all agents |
+| **Memory** | [x] Optional (disabled by default) | [x] Always enabled (Session + Memory Bank) |
 | **Specialists** | 1 worker (demo simplification) | 8 specialized workers |
 | **Deployment** | Local demo (3 processes) | Vertex AI Agent Engine (us-central1) |
 
 ## Full Production System
 
 Bob's Brain is a complete ADK compliance department with:
-- **10 Agents:** bob (orchestrator) → iam-senior-adk-devops-lead (foreman) → 8 specialist workers
+- **10 Agents:** bob (orchestrator) -> iam-senior-adk-devops-lead (foreman) -> 8 specialist workers
 - **Production Deployment:** Vertex AI Agent Engine (us-central1)
 - **Hard Mode Compliance:** R1-R8 architectural rules enforced via CI
 - **95/100 Quality Score:** 145 docs, 65%+ test coverage, 28 canonical standards
@@ -160,7 +160,7 @@ Bob's Brain is a complete ADK compliance department with:
 pip install -r requirements.txt
 ```
 
-### Option 1: Full Chain (Bob → Foreman → Worker)
+### Option 1: Full Chain (Bob -> Foreman -> Worker)
 
 **Terminal 1 - Start Worker:**
 ```bash
@@ -197,7 +197,7 @@ The complete flow:
 3. **Foreman** receives task from Bob via A2A
 4. **Foreman's LlmAgent** uses `agent.run()` to choose `route_task` tool
 5. **Worker** receives specific task and executes deterministic analysis
-6. **Results flow back**: Worker → Foreman → Bob → User
+6. **Results flow back**: Worker -> Foreman -> Bob -> User
 
 ### Option 2: Direct to Foreman (Skip Bob)
 

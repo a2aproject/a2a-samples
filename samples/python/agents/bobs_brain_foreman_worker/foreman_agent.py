@@ -86,7 +86,7 @@ def coordinate_workflow(workflow: str, steps: list) -> dict[str, Any]:
     """Coordinate multi-step workflows across workers.
 
     In production, this orchestrates complex workflows like:
-    - Issue detection → Plan creation → Implementation → QA → Documentation
+    - Issue detection -> Plan creation -> Implementation -> QA -> Documentation
 
     Args:
         workflow: Workflow name (e.g., "fix_compliance_issue")
@@ -141,9 +141,9 @@ Available workers:
 - iam_adk_demo: ADK compliance analysis and fixes
 
 Decision framework:
-- Single analysis task → Use route_task
-- Multi-step workflow → Use coordinate_workflow
-- Complex orchestration → Break into steps and delegate
+- Single analysis task -> Use route_task
+- Multi-step workflow -> Use coordinate_workflow
+- Complex orchestration -> Break into steps and delegate
 
 Production note: The full Bob's Brain has 8 specialist workers handling:
 - ADK design, issues, fix plans, implementation, QA, docs, cleanup, indexing"""
@@ -281,14 +281,14 @@ if __name__ == '__main__':
             }
         )
 
-    print("🧠 Foreman Agent (Bob's Brain Demo) starting...")
+    print("[BOB] Foreman Agent (Bob's Brain Demo) starting...")
     print(
-        f'📋 AgentCard: http://localhost:{FOREMAN_PORT}/.well-known/agent-card.json'
+        f'[INFO] AgentCard: http://localhost:{FOREMAN_PORT}/.well-known/agent-card.json'
     )
     print(
-        f'💾 Memory: {"Enabled" if ENABLE_MEMORY else "Disabled (set ENABLE_MEMORY=true and GCP_PROJECT_ID)"}'
+        f'[MEM] Memory: {"Enabled" if ENABLE_MEMORY else "Disabled (set ENABLE_MEMORY=true and GCP_PROJECT_ID)"}'
     )
-    print('🔗 Production: https://github.com/jeremylongshore/bobs-brain')
+    print('[LINK] Production: https://github.com/jeremylongshore/bobs-brain')
     print('\nExample usage:')
     print(f'curl -X POST http://localhost:{FOREMAN_PORT}/task \\')
     print('  -H "Content-Type: application/json" \\')
