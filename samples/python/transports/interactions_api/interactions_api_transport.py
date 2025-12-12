@@ -165,11 +165,11 @@ class InteractionsApiTransport(ClientTransport):
             )
         if thinking_summaries:
             if agent_mode and agent_name in cls._WELL_KNOWN_AGENT_CONFIG:
-                request['agent_config'] = cls._WELL_KNOWN_AGENT_CONFIG[agent_name]
+                request['agent_config'] = cls._WELL_KNOWN_AGENT_CONFIG[
+                    agent_name
+                ]
             elif not agent_mode:
-                request['generation_config'] = {
-                    'thinking_summaries': 'auto'
-                }
+                request['generation_config'] = {'thinking_summaries': 'auto'}
         if request_opts:
             request.update(request_opts)
         card = AgentCard(
@@ -259,6 +259,9 @@ class InteractionsApiTransport(ClientTransport):
         body = _a2a_request_to_interaction(
             request, stream=True, base_request=self._base_request
         )
+        thought_indexes = set()
+        last_event_id = None
+        interaction_id = None
         async with httpx_sse.aconnect_sse(
             self._client,
             'POST',
@@ -269,8 +272,25 @@ class InteractionsApiTransport(ClientTransport):
             await self._translate_response_error(event_source.response)
             stream = event_source.aiter_sse()
             first_event = await anext(stream)
-            async for event in self._process_stream(first_event, stream):
+            async for event_id, event in self._process_stream(
+                first_event, stream, thought_indexes
+            ):
+                last_event_id = event_id
+                if isinstance(event, Task):
+                    interaction_id = event.id
                 yield event
+        # Poll the interaction to ensure it's finished.
+        if not interaction_id:
+            return
+        interaction = await self._get_interaction(interaction_id)
+        while interaction['status'] == 'in_progress':
+            task = _interaction_to_task(interaction)
+            async for event_id, event in self._reattach(
+                interaction_id, last_event_id or '', task, thought_indexes
+            ):
+                last_event_id = event_id
+                yield event
+            interaction = await self._get_interaction(interaction_id)
 
     async def get_task(
         self,
@@ -336,7 +356,8 @@ class InteractionsApiTransport(ClientTransport):
     ) -> AsyncGenerator[
         Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent
     ]:
-        # Resubscribing has two different behaviors: if a model,
+        thought_indexes = set()
+        last_event_id = None
         async with httpx_sse.aconnect_sse(
             self._client,
             'GET',
@@ -348,7 +369,10 @@ class InteractionsApiTransport(ClientTransport):
             stream = event_source.aiter_sse()
             first_event = await anext(stream)
             if first_event.event == 'error':
-                logger.debug('First event received on resubscribe was an error: %s', first_event)
+                logger.debug(
+                    'First event received on resubscribe was an error: %s',
+                    first_event,
+                )
                 event_data = first_event.json()
                 if event_data['error']['code'] == 'not_found':
                     logger.debug('Assuming error is due to completed request.')
@@ -363,8 +387,21 @@ class InteractionsApiTransport(ClientTransport):
                     return
                 # Otherwise raise the error.
                 raise A2AClientError(first_event.data)
-            async for event in self._process_stream(first_event, stream):
+            async for event_id, event in self._process_stream(
+                first_event, stream, thought_indexes
+            ):
+                last_event_id = event_id
                 yield event
+        # Poll the interaction to ensure it's finished.
+        interaction = await self._get_interaction(request.id)
+        while interaction['status'] == 'in_progress':
+            task = _interaction_to_task(interaction)
+            async for event_id, event in self._reattach(
+                request.id, last_event_id or '', task, thought_indexes
+            ):
+                last_event_id = event_id
+                yield event
+            interaction = await self._get_interaction(request.id)
 
     async def get_card(
         self,
@@ -461,21 +498,49 @@ class InteractionsApiTransport(ClientTransport):
                 )
             ) from e
 
+    async def _reattach(
+        self,
+        interaction_id: str,
+        last_event_id: str,
+        current_task: Task,
+        thought_indexes: set,
+    ) -> AsyncGenerator[
+        tuple[
+            str | None, Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent
+        ]
+    ]:
+        async with httpx_sse.aconnect_sse(
+            self._client,
+            'GET',
+            f'/{self.INTERACTIONS_API_VERSION}/interactions/{interaction_id}',
+            params={'stream': True, 'last_event_id': last_event_id},
+            timeout=None,
+        ) as event_source:
+            await self._translate_response_error(event_source.response)
+            stream = event_source.aiter_sse()
+            async for event_id, event in self._process_rest(
+                stream, current_task, thought_indexes
+            ):
+                if event_id:
+                    last_event_id = event_id
+                yield event
+
     def _process_event(
         self,
-        event: httpx_sse.ServerSentEvent,
+        event_type: str,
+        event_data: dict,
         current_task: Task,
         thought_indexes: set,
     ) -> TaskStatusUpdateEvent | TaskArtifactUpdateEvent | None:
-        logger.debug('Received event: %s', event.event)
-        event_type = event.event
-        event_data = event.json()
+        logger.debug('Received event: %s', event_type)
         if event_type == 'interaction.status_update':
             new_state = _interaction_status_to_a2a_task_state(
                 event_data['status']
             )
             current_task.status = TaskStatus(state=new_state)
-            logger.debug('Changing current TaskStatus to %s', current_task.status)
+            logger.debug(
+                'Changing current TaskStatus to %s', current_task.status
+            )
             return TaskStatusUpdateEvent(
                 task_id=current_task.id,
                 context_id='',
@@ -490,7 +555,10 @@ class InteractionsApiTransport(ClientTransport):
             if 'content' in event_data:
                 # New thought incoming.
                 if event_data['content']['type'] == 'thought':
-                    logger.debug('Marking content at index %d as a thought', event_data['index'])
+                    logger.debug(
+                        'Marking content at index %d as a thought',
+                        event_data['index'],
+                    )
                     thought_indexes.add(event_data['index'])
                     current_task.status.message = Message(
                         message_id=f'output_{event_data["index"]}_0',
@@ -520,7 +588,10 @@ class InteractionsApiTransport(ClientTransport):
             if event_data['delta']['type'] == 'thought_signature':
                 logger.debug('Ignoring thought signature')
             else:
-                logger.debug('Emitting delta for artifact %s', f'output_{event_data["index"]}')
+                logger.debug(
+                    'Emitting delta for artifact %s',
+                    f'output_{event_data["index"]}',
+                )
                 return _content_delta_to_artifact(current_task.id, event_data)
 
         elif event_type == 'content.stop':
@@ -541,7 +612,6 @@ class InteractionsApiTransport(ClientTransport):
             else:
                 logger.debug('Ignoring thought content stop event')
         elif event_type == 'error':
-            # Emit TaskStatusUpdateEvent message with error details.
             error = event_data['error']
             error_message = Message(
                 message_id='error',
@@ -554,7 +624,9 @@ class InteractionsApiTransport(ClientTransport):
                 context_id=current_task.context_id,
                 # Note: errors in the stream seem to always terminate, but it's
                 # not clear if that's the actual contract.
-                status=TaskStatus(state=TaskState.failed, message=error_message),
+                status=TaskStatus(
+                    state=TaskState.failed, message=error_message
+                ),
                 final=True,
             )
         elif event_type == 'interaction.complete':
@@ -566,36 +638,66 @@ class InteractionsApiTransport(ClientTransport):
                 status=current_task.status,
                 final=True,
             )
-        logger.debug('Nothing to do for event %s', event.event)
+        logger.debug('Nothing to do for event %s', event_type)
         return None
 
     async def _process_stream(
         self,
         first_event: httpx_sse.ServerSentEvent,
         stream: AsyncIterator[httpx_sse.ServerSentEvent],
+        thought_indexes: set,
     ) -> AsyncGenerator[
-        Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent
+        tuple[
+            str | None, Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent
+        ]
     ]:
-        thought_indexes = set()
         if first_event.event == 'interaction.start':
-            current_task = _interaction_to_task(
-                first_event.json()['interaction']
-            )
+            first_event_data = first_event.json()
+            current_task = _interaction_to_task(first_event_data['interaction'])
             current_task.status.state = TaskState.submitted
-            logger.debug('Received interaction.start event for %s; returning initial Task', current_task.id)
-            yield current_task
+            logger.debug(
+                'Received interaction.start event for %s; returning initial Task',
+                current_task.id,
+            )
+            yield (first_event_data.get('event_id'), current_task)
         else:
             raise A2AClientError(
                 f'unexpected first event type: {first_event.event}'
             )
+        async for event_id, event in self._process_rest(
+            stream, current_task, thought_indexes
+        ):
+            yield (event_id, event)
+
+    async def _process_rest(
+        self,
+        stream: AsyncIterator[httpx_sse.ServerSentEvent],
+        current_task: Task,
+        thought_indexes: set,
+    ) -> AsyncGenerator[
+        tuple[
+            str | None, Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent
+        ]
+    ]:
         async for event in stream:
             if event.event == 'done':
                 logger.debug('Received done event, ending stream read')
                 return
+            event_type = event.event
+            event_data = event.json()
+            event_id: str | None = event_data.get('event_id')
             if processed := self._process_event(
-                event, current_task, thought_indexes
+                event_type, event_data, current_task, thought_indexes
             ):
-                yield processed
+                yield (event_id, processed)  # type: ignore
+
+    async def _get_interaction(self, interaction_id: str) -> dict[str, Any]:
+        resp = await self._do_request(
+            'GET',
+            f'/{self.INTERACTIONS_API_VERSION}/interactions/{interaction_id}',
+        )
+        await self._translate_response_error(resp)
+        return resp.json()
 
 
 # Data type converters.
@@ -708,11 +810,14 @@ def _interaction_status_to_a2a_task_state(status_str: str) -> TaskState:
 
 def _thought_to_messages(index: int, thought: dict[str, Any]) -> list[Message]:
     summaries = thought.get('summary', {}).get('items', [])
-    return [Message(
-        message_id=f'output_{index}_{i}',
-        role=Role.agent,
-        parts=[_content_to_part(summary)],
-    )  for i, summary in enumerate(summaries)]
+    return [
+        Message(
+            message_id=f'output_{index}_{i}',
+            role=Role.agent,
+            parts=[_content_to_part(summary)],
+        )
+        for i, summary in enumerate(summaries)
+    ]
 
 
 def _content_delta_to_artifact(
