@@ -15,6 +15,6 @@ This demo shows:
 - Production pattern: Simplified from real deployment on Vertex AI Agent Engine
 """
 
-__version__ = "0.1.0"
+__version__ = '0.1.0'
 __author__ = "Bob's Brain Team"
-__license__ = "Apache 2.0"
+__license__ = 'Apache 2.0'
