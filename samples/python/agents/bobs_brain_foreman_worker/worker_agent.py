@@ -9,7 +9,7 @@ Repository: https://github.com/jeremylongshore/bobs-brain
 """
 
 from google.adk import LlmAgent
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 # Configuration constants
 WORKER_PORT = 8001

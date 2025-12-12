@@ -156,7 +156,7 @@ def create_bob_agentcard() -> Dict[str, Any]:
             {
                 "id": "process_request",
                 "name": "Process User Request",
-                "description": "Analyze user request and orchestrate appropriate response via delegation or direct answer",
+                "description": "Analyze request and orchestrate response via delegation",
                 "input_schema": {
                     "type": "object",
                     "properties": {
