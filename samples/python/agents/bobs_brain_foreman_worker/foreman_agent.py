@@ -58,7 +58,9 @@ def route_task(task: str, context: str = '') -> dict[str, Any]:
         skill_to_use = 'analyze_compliance'
 
         if skill_to_use not in worker_skills:
-            return {'error': f"Worker doesn't have required skill: {skill_to_use}"}
+            return {
+                'error': f"Worker doesn't have required skill: {skill_to_use}"
+            }
 
         # Delegate to worker via A2A protocol
         try:
@@ -72,7 +74,7 @@ def route_task(task: str, context: str = '') -> dict[str, Any]:
                 'worker': agentcard.get('name', 'unknown'),
                 'task': task,
                 'skill_used': skill_to_use,
-                'result': response.json()
+                'result': response.json(),
             }
         except requests.exceptions.RequestException as e:
             return {'error': f'Delegation failed: {e}'}
@@ -108,7 +110,7 @@ def coordinate_workflow(workflow: str, steps: list) -> dict[str, Any]:
         'workflow': workflow,
         'foreman': 'iam_senior_adk_devops_lead_demo',
         'steps_completed': len(results),
-        'results': results
+        'results': results,
     }
 
 
@@ -150,18 +152,16 @@ Production note: The full Bob's Brain has 8 specialist workers handling:
     agent_config = {
         'model': 'gemini-2.0-flash-exp',
         'tools': [route_task, coordinate_workflow],
-        'system_instruction': system_instruction
+        'system_instruction': system_instruction,
     }
 
     # Add memory services if GCP project is configured
     if ENABLE_MEMORY and GCP_PROJECT_ID != 'demo-project':
         agent_config['session_service'] = VertexAiSessionService(
-            project_id=GCP_PROJECT_ID,
-            location=GCP_REGION
+            project_id=GCP_PROJECT_ID, location=GCP_REGION
         )
         agent_config['memory_bank_service'] = VertexAiMemoryBankService(
-            project_id=GCP_PROJECT_ID,
-            location=GCP_REGION
+            project_id=GCP_PROJECT_ID, location=GCP_REGION
         )
 
     return LlmAgent(**agent_config)
@@ -189,17 +189,17 @@ def create_foreman_agentcard() -> dict[str, Any]:
                     'type': 'object',
                     'properties': {
                         'task': {'type': 'string'},
-                        'context': {'type': 'string'}
+                        'context': {'type': 'string'},
                     },
-                    'required': ['task']
+                    'required': ['task'],
                 },
                 'output_schema': {
                     'type': 'object',
                     'properties': {
                         'worker': {'type': 'string'},
-                        'result': {'type': 'object'}
-                    }
-                }
+                        'result': {'type': 'object'},
+                    },
+                },
             },
             {
                 'id': 'coordinate_workflow',
@@ -209,19 +209,19 @@ def create_foreman_agentcard() -> dict[str, Any]:
                     'type': 'object',
                     'properties': {
                         'workflow': {'type': 'string'},
-                        'steps': {'type': 'array', 'items': {'type': 'string'}}
+                        'steps': {'type': 'array', 'items': {'type': 'string'}},
                     },
-                    'required': ['workflow', 'steps']
+                    'required': ['workflow', 'steps'],
                 },
                 'output_schema': {
                     'type': 'object',
                     'properties': {
                         'workflow': {'type': 'string'},
-                        'results': {'type': 'array'}
-                    }
-                }
-            }
-        ]
+                        'results': {'type': 'array'},
+                    },
+                },
+            },
+        ],
     }
 
 
@@ -257,29 +257,37 @@ if __name__ == '__main__':
         # This is proper ADK pattern: LLM reasons about which tool to use
         response = agent.run(
             user_input=user_input,
-            session_id=session_id if ENABLE_MEMORY else None
+            session_id=session_id if ENABLE_MEMORY else None,
         )
 
-        return jsonify({
-            'foreman': 'iam_senior_adk_devops_lead_demo',
-            'user_input': user_input,
-            'response': response,
-            'note': 'Foreman used LlmAgent.run() to process this request'
-        })
+        return jsonify(
+            {
+                'foreman': 'iam_senior_adk_devops_lead_demo',
+                'user_input': user_input,
+                'response': response,
+                'note': 'Foreman used LlmAgent.run() to process this request',
+            }
+        )
 
     @app.route('/health', methods=['GET'])
     def health() -> Any:
         """Health check endpoint."""
-        return jsonify({
-            'status': 'healthy',
-            'agent': 'iam_senior_adk_devops_lead_demo',
-            'memory_enabled': ENABLE_MEMORY,
-            'worker_url': WORKER_URL
-        })
+        return jsonify(
+            {
+                'status': 'healthy',
+                'agent': 'iam_senior_adk_devops_lead_demo',
+                'memory_enabled': ENABLE_MEMORY,
+                'worker_url': WORKER_URL,
+            }
+        )
 
     print("🧠 Foreman Agent (Bob's Brain Demo) starting...")
-    print(f'📋 AgentCard: http://localhost:{FOREMAN_PORT}/.well-known/agent-card.json')
-    print(f"💾 Memory: {'Enabled' if ENABLE_MEMORY else 'Disabled (set ENABLE_MEMORY=true and GCP_PROJECT_ID)'}")
+    print(
+        f'📋 AgentCard: http://localhost:{FOREMAN_PORT}/.well-known/agent-card.json'
+    )
+    print(
+        f'💾 Memory: {"Enabled" if ENABLE_MEMORY else "Disabled (set ENABLE_MEMORY=true and GCP_PROJECT_ID)"}'
+    )
     print('🔗 Production: https://github.com/jeremylongshore/bobs-brain')
     print('\nExample usage:')
     print(f'curl -X POST http://localhost:{FOREMAN_PORT}/task \\')

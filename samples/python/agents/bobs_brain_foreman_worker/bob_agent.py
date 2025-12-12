@@ -64,13 +64,13 @@ def call_foreman(task: str, context: str = '') -> dict[str, Any]:
             'orchestrator': 'bob_demo',
             'foreman': agentcard.get('name', 'unknown'),
             'task': task,
-            'foreman_response': response.json()
+            'foreman_response': response.json(),
         }
     except requests.exceptions.RequestException as e:
         return {
             'orchestrator': 'bob_demo',
             'error': f'Failed to reach foreman: {e}',
-            'suggestion': 'Ensure foreman agent is running on localhost:8000'
+            'suggestion': 'Ensure foreman agent is running on localhost:8000',
         }
 
 
@@ -124,18 +124,16 @@ Production note: The full Bob's Brain system has:
     agent_config = {
         'model': 'gemini-2.0-flash-exp',
         'tools': [call_foreman],
-        'system_instruction': system_instruction
+        'system_instruction': system_instruction,
     }
 
     # Add memory services if GCP project is configured
     if ENABLE_MEMORY and GCP_PROJECT_ID != 'demo-project':
         agent_config['session_service'] = VertexAiSessionService(
-            project_id=GCP_PROJECT_ID,
-            location=GCP_REGION
+            project_id=GCP_PROJECT_ID, location=GCP_REGION
         )
         agent_config['memory_bank_service'] = VertexAiMemoryBankService(
-            project_id=GCP_PROJECT_ID,
-            location=GCP_REGION
+            project_id=GCP_PROJECT_ID, location=GCP_REGION
         )
 
     return LlmAgent(**agent_config)
@@ -154,7 +152,11 @@ def create_bob_agentcard() -> dict[str, Any]:
         'url': 'http://localhost:8002',
         'preferred_transport': 'HTTP',
         'spiffe_id': 'spiffe://demo.intent.solutions/agent/bob/dev/us-central1/0.1.0',
-        'capabilities': ['orchestration', 'natural_language_interface', 'foreman_delegation'],
+        'capabilities': [
+            'orchestration',
+            'natural_language_interface',
+            'foreman_delegation',
+        ],
         'skills': [
             {
                 'id': 'process_request',
@@ -163,21 +165,27 @@ def create_bob_agentcard() -> dict[str, Any]:
                 'input_schema': {
                     'type': 'object',
                     'properties': {
-                        'user_input': {'type': 'string', 'description': 'Natural language user request'},
-                        'session_id': {'type': 'string', 'description': 'Session tracking ID'}
+                        'user_input': {
+                            'type': 'string',
+                            'description': 'Natural language user request',
+                        },
+                        'session_id': {
+                            'type': 'string',
+                            'description': 'Session tracking ID',
+                        },
                     },
-                    'required': ['user_input']
+                    'required': ['user_input'],
                 },
                 'output_schema': {
                     'type': 'object',
                     'properties': {
                         'response': {'type': 'string'},
                         'delegated_to': {'type': 'string'},
-                        'actions_taken': {'type': 'array'}
-                    }
-                }
+                        'actions_taken': {'type': 'array'},
+                    },
+                },
             }
-        ]
+        ],
     }
 
 
@@ -212,33 +220,43 @@ if __name__ == '__main__':
         # 2. Call call_foreman tool to delegate
         response = agent.run(
             user_input=user_input,
-            session_id=session_id if ENABLE_MEMORY else None
+            session_id=session_id if ENABLE_MEMORY else None,
         )
 
-        return jsonify({
-            'orchestrator': 'bob_demo',
-            'user_input': user_input,
-            'response': response,
-            'note': 'Bob used LlmAgent.run() to process this request'
-        })
+        return jsonify(
+            {
+                'orchestrator': 'bob_demo',
+                'user_input': user_input,
+                'response': response,
+                'note': 'Bob used LlmAgent.run() to process this request',
+            }
+        )
 
     @app.route('/health', methods=['GET'])
     def health() -> Any:
         """Health check endpoint."""
-        return jsonify({
-            'status': 'healthy',
-            'agent': 'bob_demo',
-            'memory_enabled': ENABLE_MEMORY,
-            'foreman_url': FOREMAN_URL
-        })
+        return jsonify(
+            {
+                'status': 'healthy',
+                'agent': 'bob_demo',
+                'memory_enabled': ENABLE_MEMORY,
+                'foreman_url': FOREMAN_URL,
+            }
+        )
 
     print('🧠 Bob Orchestrator (Global Coordinator) starting...')
-    print(f'📋 AgentCard: http://localhost:{BOB_PORT}/.well-known/agent-card.json')
+    print(
+        f'📋 AgentCard: http://localhost:{BOB_PORT}/.well-known/agent-card.json'
+    )
     print(f'🔗 Foreman URL: {FOREMAN_URL}')
-    print(f"💾 Memory: {'Enabled' if ENABLE_MEMORY else 'Disabled (set ENABLE_MEMORY=true and GCP_PROJECT_ID)'}")
+    print(
+        f'💾 Memory: {"Enabled" if ENABLE_MEMORY else "Disabled (set ENABLE_MEMORY=true and GCP_PROJECT_ID)"}'
+    )
     print('🔗 Production: https://github.com/jeremylongshore/bobs-brain')
     print('\nExample usage:')
     print(f'curl -X POST http://localhost:{BOB_PORT}/task \\')
     print('  -H "Content-Type: application/json" \\')
-    print('  -d \'{"user_input": "Analyze our ADK agent for compliance issues"}\'')
+    print(
+        '  -d \'{"user_input": "Analyze our ADK agent for compliance issues"}\''
+    )
     app.run(port=BOB_PORT)

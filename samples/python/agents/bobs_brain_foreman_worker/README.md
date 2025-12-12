@@ -48,7 +48,7 @@ This demo implements the **production pattern** used in Bob's Brain:
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Bob Orchestrator                         │
 │                      (bob_demo)                             │
@@ -110,7 +110,7 @@ This demo shows simplified versions of patterns used in the full Bob's Brain sys
 ## How This Relates to Production
 
 ### This Demo
-```
+```text
 User → HTTP → Bob (LlmAgent) → A2A → Foreman (LlmAgent) → A2A → Worker (1 specialist)
                ↓                       ↓                          ↓
            agent.run()             agent.run()            deterministic tools
@@ -118,7 +118,7 @@ User → HTTP → Bob (LlmAgent) → A2A → Foreman (LlmAgent) → A2A → Work
 ```
 
 ### Production Bob's Brain
-```
+```text
 User → Slack → Bob (LlmAgent) → A2A → Foreman (LlmAgent) → A2A → 8 Workers
                ↓ Memory                ↓ Memory                    ├─ iam-adk
                Session +               Session +                   ├─ iam-issue

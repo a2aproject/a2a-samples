@@ -35,19 +35,23 @@ def analyze_compliance(context: str) -> dict[str, Any]:
 
     # Check for common ADK patterns
     if 'google-adk' not in context.lower():
-        issues.append({
-            'type': 'dependency',
-            'message': 'Missing google-adk import',
-            'severity': 'high'
-        })
+        issues.append(
+            {
+                'type': 'dependency',
+                'message': 'Missing google-adk import',
+                'severity': 'high',
+            }
+        )
         suggestions.append('Add: from google.adk import LlmAgent')
 
     if 'LlmAgent' not in context:
-        issues.append({
-            'type': 'agent_initialization',
-            'message': 'No LlmAgent found',
-            'severity': 'medium'
-        })
+        issues.append(
+            {
+                'type': 'agent_initialization',
+                'message': 'No LlmAgent found',
+                'severity': 'medium',
+            }
+        )
         suggestions.append('Create agent using ADK LlmAgent class')
 
     return {
@@ -58,7 +62,7 @@ def analyze_compliance(context: str) -> dict[str, Any]:
         'suggestions': suggestions,
         'compliance_score': max(0, 100 - (len(issues) * PENALTY_PER_ISSUE)),
         'worker': 'iam_adk_demo',
-        'note': 'Production analysis uses 28 canonical standards and full ADK spec'
+        'note': 'Production analysis uses 28 canonical standards and full ADK spec',
     }
 
 
@@ -82,32 +86,36 @@ def suggest_fix(issue: str, context: str = '') -> dict[str, Any]:
     fixes = []
 
     if 'import' in issue.lower():
-        fixes.append({
-            'file': 'agent.py',
-            'change': 'Add ADK imports at top of file',
-            'code_snippet': 'from google.adk import LlmAgent, Tool',
-            'standard': '6767-DR-STND-adk-agent-engine-spec-and-hardmode-rules.md'
-        })
+        fixes.append(
+            {
+                'file': 'agent.py',
+                'change': 'Add ADK imports at top of file',
+                'code_snippet': 'from google.adk import LlmAgent, Tool',
+                'standard': '6767-DR-STND-adk-agent-engine-spec-and-hardmode-rules.md',
+            }
+        )
 
     if 'agent' in issue.lower():
-        fixes.append({
-            'file': 'agent.py',
-            'change': 'Create LlmAgent instance',
-            'code_snippet': """def get_agent() -> LlmAgent:
+        fixes.append(
+            {
+                'file': 'agent.py',
+                'change': 'Create LlmAgent instance',
+                'code_snippet': """def get_agent() -> LlmAgent:
     return LlmAgent(
         model="gemini-2.0-flash-exp",
         tools=[...],
         system_instruction="..."
     )""",
-            'standard': '6767-LAZY-DR-STND-adk-lazy-loading-app-pattern.md'
-        })
+                'standard': '6767-LAZY-DR-STND-adk-lazy-loading-app-pattern.md',
+            }
+        )
 
     return {
         'issue': issue,
         'fixes_available': len(fixes),
         'fixes': fixes,
         'worker': 'iam_adk_demo',
-        'note': 'Production fix plans include complete code changes and test cases'
+        'note': 'Production fix plans include complete code changes and test cases',
     }
 
 
@@ -161,7 +169,11 @@ def create_worker_agentcard() -> dict[str, Any]:
         'url': 'http://localhost:8001',
         'preferred_transport': 'HTTP',
         'spiffe_id': 'spiffe://demo.intent.solutions/agent/adk-worker/dev/us-central1/0.1.0',
-        'capabilities': ['adk_expertise', 'compliance_analysis', 'fix_suggestions'],
+        'capabilities': [
+            'adk_expertise',
+            'compliance_analysis',
+            'fix_suggestions',
+        ],
         'skills': [
             {
                 'id': 'analyze_compliance',
@@ -170,18 +182,21 @@ def create_worker_agentcard() -> dict[str, Any]:
                 'input_schema': {
                     'type': 'object',
                     'properties': {
-                        'context': {'type': 'string', 'description': 'Code or config to analyze'}
+                        'context': {
+                            'type': 'string',
+                            'description': 'Code or config to analyze',
+                        }
                     },
-                    'required': ['context']
+                    'required': ['context'],
                 },
                 'output_schema': {
                     'type': 'object',
                     'properties': {
                         'compliance_score': {'type': 'number'},
                         'issues': {'type': 'array'},
-                        'suggestions': {'type': 'array'}
-                    }
-                }
+                        'suggestions': {'type': 'array'},
+                    },
+                },
             },
             {
                 'id': 'suggest_fix',
@@ -191,19 +206,19 @@ def create_worker_agentcard() -> dict[str, Any]:
                     'type': 'object',
                     'properties': {
                         'issue': {'type': 'string'},
-                        'context': {'type': 'string'}
+                        'context': {'type': 'string'},
                     },
-                    'required': ['issue']
+                    'required': ['issue'],
                 },
                 'output_schema': {
                     'type': 'object',
                     'properties': {
                         'fixes': {'type': 'array'},
-                        'code_snippet': {'type': 'string'}
-                    }
-                }
-            }
-        ]
+                        'code_snippet': {'type': 'string'},
+                    },
+                },
+            },
+        ],
     }
 
 
