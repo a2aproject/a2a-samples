@@ -543,7 +543,7 @@ class InteractionsApiTransport(ClientTransport):
         elif event_type == 'error':
             # Emit TaskStatusUpdateEvent message with error details.
             error = event_data['error']
-            current_task.status.message = Message(
+            error_message = Message(
                 message_id='error',
                 role=Role.agent,
                 parts=[Part(root=DataPart(data=error))],
@@ -554,7 +554,7 @@ class InteractionsApiTransport(ClientTransport):
                 context_id=current_task.context_id,
                 # Note: errors in the stream seem to always terminate, but it's
                 # not clear if that's the actual contract.
-                status=TaskState.failed,
+                status=TaskStatus(state=TaskState.failed, message=error_message),
                 final=True,
             )
         elif event_type == 'interaction.complete':
