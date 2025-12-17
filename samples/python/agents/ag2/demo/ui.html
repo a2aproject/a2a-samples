@@ -1,413 +1,453 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AG2 & A2A Demo</title>
-    <style>
-        :root {
-            --terminal-text: #E6FFE6;
-            --log-connect: #5BC0EB;
-            --log-agent: #FFD166;
-            --log-step: #CDB4DB;
-            --log-ok: #6EEB83;
-            --log-error: #FF5C5C;
-            --code-text: #EDEDED;
-            --title-gold: #8B6914;
-            --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            --content-max: 1680px;
-            --ground-height: 50px;
-            --sky-padding-top: 8px;
-            --banner-max-width: 560px;
-            --banner-width: min(var(--banner-max-width), 92vw);
-            --banner-shift-y: -24%;
-            --banner-prompt-gap: 32px;
-            --prompt-offset-top: calc(var(--banner-width) * 0.38 + var(--banner-prompt-gap));
-            --panel-aspect: 1.7456;
-            --panel-vertical-chrome: 240px;
-            --panel-max-width: min(1000px, max(0px, calc((100vh - var(--ground-height) - var(--sky-padding-top) - var(--prompt-offset-top) - var(--panel-vertical-chrome)) * var(--panel-aspect))));
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html,
-        body {
-            height: 100%;
-        }
-
-        body {
-            font-family: var(--sans);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .sky-bg {
-            flex: 1;
-            background: url('/assets/background-clouds.png') center top / cover no-repeat;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            padding: 8px;
-            /* Minimal top padding - prompt will have its own margin */
-            padding-top: var(--sky-padding-top);
-            padding-bottom: 0;
-            min-height: 0;
-        }
-
-        .ground {
-            height: var(--ground-height);
-            background: url('/assets/grass-bottom.png') repeat-x center / auto 100%;
-            flex-shrink: 0;
-        }
-
-        .topbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            margin: 0;
-            padding: 8px 0 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .banner {
-            width: var(--banner-width);
-            height: auto;
-            margin: 0;
-            display: block;
-            image-rendering: pixelated;
-            filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.18));
-            transform: translateY(var(--banner-shift-y));
-        }
-
-
-
-        .prompt-section {
-            max-width: var(--content-max);
-            margin: var(--prompt-offset-top) auto 4px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.84);
-            border: 2px solid rgba(82, 62, 30, 0.45);
-            border-radius: 8px;
-            padding: 10px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-        }
-
-        .prompt-section h2 {
-            font-size: 15px;
-            color: var(--title-gold);
-            margin-bottom: 6px;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-        }
-
-        textarea {
-            width: 100%;
-            height: 70px;
-            font-family: var(--mono);
-            font-size: 16px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.96);
-            border: 2px solid rgba(82, 62, 30, 0.5);
-            border-radius: 8px;
-            resize: vertical;
-        }
-
-        textarea:focus {
-            outline: 3px solid rgba(91, 192, 235, 0.35);
-            border-color: rgba(91, 192, 235, 0.9);
-        }
-
-        textarea::placeholder {
-            color: rgba(0, 0, 0, 0.45);
-        }
-
-        .controls {
-            margin-top: 10px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            justify-content: flex-end;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: 700;
-            border: 2px solid rgba(82, 62, 30, 0.75);
-            background: linear-gradient(#f5f1e8, #e3dccf);
-            cursor: pointer;
-            border-radius: 4px;
-            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
-        }
-
-        button:hover {
-            background: linear-gradient(#fffaf0, #e1d9cc);
-        }
-
-        button:active {
-            transform: translateY(1px);
-            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .panels {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            max-width: 100%;
-            /* Panels stay at bottom, prompt pushed up from them */
-            margin: 0 auto 0;
-            width: 100%;
-            flex: 1;
-            min-height: 0;
-        }
-
-        .panel {
-            flex: 1 1 var(--panel-max-width);
-            max-width: var(--panel-max-width);
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        .panel-title {
-            align-self: center;
-            font-size: 15px;
-            font-weight: 800;
-            color: var(--title-gold);
-            text-align: center;
-            margin-bottom: 10px;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
-            background: rgba(255, 255, 255, 0.72);
-            border: 2px solid rgba(82, 62, 30, 0.22);
-            border-radius: 8px;
-            padding: 6px 14px;
-            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
-        }
-
-        .panel-frame {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1084 / 621;
-        }
-
-        .panel-frame img {
-            width: 100%;
-            height: 100%;
-            display: block;
-            image-rendering: pixelated;
-            object-fit: contain;
-            filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.22));
-        }
-
-        .panel-content {
-            position: absolute;
-            top: 21%;
-            left: 4.5%;
-            right: 4.5%;
-            bottom: 11%;
-            overflow: auto;
-            padding: 16px;
-            font-family: var(--mono);
-            font-size: 19px;
-            line-height: 1.6;
-        }
-
-        .terminal {
-            color: var(--terminal-text);
-            white-space: pre-wrap;
-        }
-
-        .code {
-            color: var(--code-text);
-            white-space: pre;
-        }
-
-        .log-line {
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        .log-connect {
-            color: var(--log-connect);
-        }
-
-        .log-agent {
-            color: var(--log-agent);
-        }
-
-        .log-step {
-            color: var(--log-step);
-        }
-
-        .log-ok {
-            color: var(--log-ok);
-        }
-
-        .log-error {
-            color: var(--log-error);
-        }
-
-        @media (max-width: 800px) {
-            .panels {
-                flex-direction: column;
-                align-items: center;
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>AG2 & A2A Demo</title>
+        <style>
+            :root {
+                --terminal-text: #e6ffe6;
+                --log-connect: #5bc0eb;
+                --log-agent: #ffd166;
+                --log-step: #cdb4db;
+                --log-ok: #6eeb83;
+                --log-error: #ff5c5c;
+                --code-text: #ededed;
+                --title-gold: #8b6914;
+                --mono:
+                    ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+                --sans:
+                    system-ui, -apple-system, Segoe UI, Roboto, Arial,
+                    sans-serif;
+                --content-max: 1680px;
+                --ground-height: 50px;
+                --sky-padding-top: 8px;
+                --banner-max-width: 560px;
+                --banner-width: min(var(--banner-max-width), 92vw);
+                --banner-shift-y: -24%;
+                --banner-prompt-gap: 32px;
+                --prompt-offset-top: calc(
+                    var(--banner-width) * 0.38 + var(--banner-prompt-gap)
+                );
+                --panel-aspect: 1.7456;
+                --panel-vertical-chrome: 240px;
+                --panel-max-width: min(
+                    1000px,
+                    max(
+                        0px,
+                        calc(
+                            (
+                                    100vh - var(--ground-height) -
+                                        var(--sky-padding-top) -
+                                        var(--prompt-offset-top) -
+                                        var(--panel-vertical-chrome)
+                                ) *
+                                var(--panel-aspect)
+                        )
+                    )
+                );
             }
 
-            .panel {
-                max-width: 100%;
-                width: 100%;
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html,
+            body {
+                height: 100%;
+            }
+
+            body {
+                font-family: var(--sans);
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            .sky-bg {
+                flex: 1;
+                background: url("/assets/background-clouds.png") center top /
+                    cover no-repeat;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                padding: 8px;
+                /* Minimal top padding - prompt will have its own margin */
+                padding-top: var(--sky-padding-top);
+                padding-bottom: 0;
+                min-height: 0;
+            }
+
+            .ground {
+                height: var(--ground-height);
+                background: url("/assets/grass-bottom.png") repeat-x center /
+                    auto 100%;
+                flex-shrink: 0;
             }
 
             .topbar {
-                width: calc(100% - 20px);
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                margin: 0;
+                padding: 8px 0 0;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                pointer-events: none;
+                z-index: 10;
             }
-        }
-    </style>
-</head>
 
-<body>
-    <div class="sky-bg">
-        <div class="topbar">
-            <img class="banner" src="/assets/banner.png" alt="AG2 & A2A Demo" />
-        </div>
+            .banner {
+                width: var(--banner-width);
+                height: auto;
+                margin: 0;
+                display: block;
+                image-rendering: pixelated;
+                filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.18));
+                transform: translateY(var(--banner-shift-y));
+            }
 
-        <div class="prompt-section">
-            <h2>Prompt</h2>
-            <textarea id="prompt" spellcheck="false" placeholder="Make your agentic request here..."></textarea>
-            <div class="controls">
-                <button id="btn">Run Demo</button>
+            .prompt-section {
+                max-width: var(--content-max);
+                margin: var(--prompt-offset-top) auto 4px;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.84);
+                border: 2px solid rgba(82, 62, 30, 0.45);
+                border-radius: 8px;
+                padding: 10px;
+                box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+            }
+
+            .prompt-section h2 {
+                font-size: 15px;
+                color: var(--title-gold);
+                margin-bottom: 6px;
+                text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+            }
+
+            textarea {
+                width: 100%;
+                height: 70px;
+                font-family: var(--mono);
+                font-size: 16px;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.96);
+                border: 2px solid rgba(82, 62, 30, 0.5);
+                border-radius: 8px;
+                resize: vertical;
+            }
+
+            textarea:focus {
+                outline: 3px solid rgba(91, 192, 235, 0.35);
+                border-color: rgba(91, 192, 235, 0.9);
+            }
+
+            textarea::placeholder {
+                color: rgba(0, 0, 0, 0.45);
+            }
+
+            .controls {
+                margin-top: 10px;
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                justify-content: flex-end;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+                font-weight: 700;
+                border: 2px solid rgba(82, 62, 30, 0.75);
+                background: linear-gradient(#f5f1e8, #e3dccf);
+                cursor: pointer;
+                border-radius: 4px;
+                box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+            }
+
+            button:hover {
+                background: linear-gradient(#fffaf0, #e1d9cc);
+            }
+
+            button:active {
+                transform: translateY(1px);
+                box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
+            }
+
+            button:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+            .panels {
+                display: flex;
+                gap: 16px;
+                justify-content: center;
+                align-items: flex-end;
+                flex-wrap: wrap;
+                max-width: 100%;
+                /* Panels stay at bottom, prompt pushed up from them */
+                margin: 0 auto 0;
+                width: 100%;
+                flex: 1;
+                min-height: 0;
+            }
+
+            .panel {
+                flex: 1 1 var(--panel-max-width);
+                max-width: var(--panel-max-width);
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+            }
+
+            .panel-title {
+                align-self: center;
+                font-size: 15px;
+                font-weight: 800;
+                color: var(--title-gold);
+                text-align: center;
+                margin-bottom: 10px;
+                text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+                background: rgba(255, 255, 255, 0.72);
+                border: 2px solid rgba(82, 62, 30, 0.22);
+                border-radius: 8px;
+                padding: 6px 14px;
+                box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+            }
+
+            .panel-frame {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 1084 / 621;
+            }
+
+            .panel-frame img {
+                width: 100%;
+                height: 100%;
+                display: block;
+                image-rendering: pixelated;
+                object-fit: contain;
+                filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.22));
+            }
+
+            .panel-content {
+                position: absolute;
+                top: 21%;
+                left: 4.5%;
+                right: 4.5%;
+                bottom: 11%;
+                overflow: auto;
+                padding: 16px;
+                font-family: var(--mono);
+                font-size: 19px;
+                line-height: 1.6;
+            }
+
+            .terminal {
+                color: var(--terminal-text);
+                white-space: pre-wrap;
+            }
+
+            .code {
+                color: var(--code-text);
+                white-space: pre;
+            }
+
+            .log-line {
+                display: block;
+                margin-bottom: 2px;
+            }
+
+            .log-connect {
+                color: var(--log-connect);
+            }
+
+            .log-agent {
+                color: var(--log-agent);
+            }
+
+            .log-step {
+                color: var(--log-step);
+            }
+
+            .log-ok {
+                color: var(--log-ok);
+            }
+
+            .log-error {
+                color: var(--log-error);
+            }
+
+            @media (max-width: 800px) {
+                .panels {
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .panel {
+                    max-width: 100%;
+                    width: 100%;
+                }
+
+                .topbar {
+                    width: calc(100% - 20px);
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="sky-bg">
+            <div class="topbar">
+                <img
+                    class="banner"
+                    src="/assets/banner.png"
+                    alt="AG2 & A2A Demo" />
             </div>
-        </div>
 
-        <div class="panels">
-            <div class="panel">
-                <div class="panel-title">Live Backend Logs</div>
-                <div class="panel-frame">
-                    <img src="/assets/code-box.png" alt="" />
-                    <div id="events" class="panel-content terminal">(type a prompt, then click "Run Demo")</div>
+            <div class="prompt-section">
+                <h2>Prompt</h2>
+                <textarea
+                    id="prompt"
+                    spellcheck="false"
+                    placeholder="Make your agentic request here..."></textarea>
+                <div class="controls">
+                    <button id="btn">Run Demo</button>
                 </div>
             </div>
 
-            <div class="panel">
-                <div class="panel-title">Generated Code</div>
-                <div class="panel-frame">
-                    <img src="/assets/code-box.png" alt="" />
-                    <pre id="code" class="panel-content code">(waiting)</pre>
+            <div class="panels">
+                <div class="panel">
+                    <div class="panel-title">Live Backend Logs</div>
+                    <div class="panel-frame">
+                        <img src="/assets/code-box.png" alt="" />
+                        <div id="events" class="panel-content terminal">
+                            (type a prompt, then click "Run Demo")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Generated Code</div>
+                    <div class="panel-frame">
+                        <img src="/assets/code-box.png" alt="" />
+                        <pre id="code" class="panel-content code">
+(waiting)</pre
+                        >
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="ground"></div>
+        <div class="ground"></div>
 
-    <script>
-        const wsUrl = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws';
+        <script>
+            const wsUrl =
+                (location.protocol === "https:" ? "wss://" : "ws://") +
+                location.host +
+                "/ws";
 
+            const btn = document.getElementById("btn");
+            const events = document.getElementById("events");
+            const code = document.getElementById("code");
+            const promptEl = document.getElementById("prompt");
 
-        const btn = document.getElementById('btn');
-        const events = document.getElementById('events');
-        const code = document.getElementById('code');
-        const promptEl = document.getElementById('prompt');
+            let running = false;
 
-        let running = false;
+            function updateButtonState() {
+                const hasPrompt = !!(promptEl && promptEl.value.trim().length);
+                btn.disabled = running || !hasPrompt;
+            }
 
-        function updateButtonState() {
-            const hasPrompt = !!(promptEl && promptEl.value.trim().length);
-            btn.disabled = running || !hasPrompt;
-        }
-
-        updateButtonState();
-        if (promptEl) promptEl.addEventListener('input', updateButtonState);
-
-        function reset() {
-            events.textContent = '';
-            code.textContent = '(waiting)';
-        }
-        function appendEvent(line, cls) {
-            if (events.textContent.startsWith('(type a prompt')) events.textContent = '';
-            const span = document.createElement('span');
-            span.className = cls ? `log-line ${cls}` : 'log-line';
-            span.textContent = line;
-            events.appendChild(span);
-            events.scrollTop = events.scrollHeight;
-        }
-
-        btn.addEventListener('click', () => {
-            reset();
-            running = true;
             updateButtonState();
+            if (promptEl) promptEl.addEventListener("input", updateButtonState);
 
-            const prompt = promptEl ? promptEl.value.trim() : '';
-            appendEvent('Connecting…', 'log-step');
+            function reset() {
+                events.textContent = "";
+                code.textContent = "(waiting)";
+            }
+            function appendEvent(line, cls) {
+                if (events.textContent.startsWith("(type a prompt"))
+                    events.textContent = "";
+                const span = document.createElement("span");
+                span.className = cls ? `log-line ${cls}` : "log-line";
+                span.textContent = line;
+                events.appendChild(span);
+                events.scrollTop = events.scrollHeight;
+            }
 
-            const ws = new WebSocket(wsUrl);
-
-            ws.onopen = () => {
-                appendEvent('Connected. Sending prompt…', 'log-connect');
-                ws.send(JSON.stringify({ prompt }));
-            };
-
-            ws.onmessage = (event) => {
-                let msg;
-                try { msg = JSON.parse(event.data); } catch { msg = { type: 'raw', data: event.data }; }
-
-                if (msg.type === 'status') {
-                    appendEvent(msg.message, 'log-step');
-                    return;
-                }
-
-                if (msg.type === 'chat') {
-                    const who = msg.name || msg.role || 'message';
-                    const cls = (who.includes('Reviewer') || who.includes('CodeGen')) ? 'log-agent' : '';
-                    appendEvent(`[${who}] ${msg.content}`, cls);
-                    return;
-                }
-
-                if (msg.type === 'result') {
-                    code.textContent = msg.code || '(no code)';
-                    appendEvent('Done.', 'log-ok');
-                    ws.close();
-                    return;
-                }
-
-                if (msg.type === 'error') {
-                    appendEvent('ERROR: ' + (msg.error || 'unknown'), 'log-error');
-                    ws.close();
-                    return;
-                }
-
-                appendEvent(String(event.data), '');
-            };
-
-            ws.onerror = () => {
-                appendEvent('WebSocket error.', 'log-error');
-            };
-
-            ws.onclose = () => {
-                running = false;
+            btn.addEventListener("click", () => {
+                reset();
+                running = true;
                 updateButtonState();
-            };
-        });
-    </script>
-</body>
 
+                const prompt = promptEl ? promptEl.value.trim() : "";
+                appendEvent("Connecting…", "log-step");
+
+                const ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    appendEvent("Connected. Sending prompt…", "log-connect");
+                    ws.send(JSON.stringify({ prompt }));
+                };
+
+                ws.onmessage = (event) => {
+                    let msg;
+                    try {
+                        msg = JSON.parse(event.data);
+                    } catch {
+                        msg = { type: "raw", data: event.data };
+                    }
+
+                    if (msg.type === "status") {
+                        appendEvent(msg.message, "log-step");
+                        return;
+                    }
+
+                    if (msg.type === "chat") {
+                        const who = msg.name || msg.role || "message";
+                        const cls =
+                            who.includes("Reviewer") || who.includes("CodeGen")
+                                ? "log-agent"
+                                : "";
+                        appendEvent(`[${who}] ${msg.content}`, cls);
+                        return;
+                    }
+
+                    if (msg.type === "result") {
+                        code.textContent = msg.code || "(no code)";
+                        appendEvent("Done.", "log-ok");
+                        ws.close();
+                        return;
+                    }
+
+                    if (msg.type === "error") {
+                        appendEvent(
+                            "ERROR: " + (msg.error || "unknown"),
+                            "log-error"
+                        );
+                        ws.close();
+                        return;
+                    }
+
+                    appendEvent(String(event.data), "");
+                };
+
+                ws.onerror = () => {
+                    appendEvent("WebSocket error.", "log-error");
+                };
+
+                ws.onclose = () => {
+                    running = false;
+                    updateButtonState();
+                };
+            });
+        </script>
+    </body>
 </html>
