@@ -9,7 +9,7 @@ COPY . /opt/app-root
 USER root
 
 # Install system build dependencies and UV package manager
-RUN dnf -y update && dnf install -y gcc gcc-c++ \
+RUN dnf -y update && dnf install -y gcc-11 gcc-c++-11 \
  && pip install --no-cache-dir uv==0.9 && dnf clean all
 
 # Set environment variables for uv: 
