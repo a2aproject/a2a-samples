@@ -8,6 +8,7 @@ class SignedAgent:
     """Signed Agent."""
 
     async def invoke(self) -> str:
+        """Returns a 'Verify me!' reminder."""
         return 'Verify me!'
 
 
@@ -28,6 +29,7 @@ class SignedAgentExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ) -> None:
+        """Execute the agent."""
         result = await self.agent.invoke()
         await event_queue.enqueue_event(new_agent_text_message(result))
 
@@ -37,6 +39,7 @@ class SignedAgentExecutor(AgentExecutor):
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
-        raise Exception('cancel not supported')
+        """Cancel method is not supported."""
+        raise Exception('cancel not supported')  # noqa: TRY002, TRY003
 
     # --8<-- [end:SignedAgentExecutor_cancel]

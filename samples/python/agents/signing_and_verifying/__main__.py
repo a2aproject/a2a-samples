@@ -1,5 +1,7 @@
 import json
 
+from pathlib import Path
+
 import uvicorn
 
 from a2a.server.apps import A2AStarletteApplication
@@ -19,10 +21,6 @@ from starlette.responses import FileResponse
 from starlette.routing import Route
 
 
-async def get_public_keys(request):
-    return FileResponse('public_keys.json')
-
-
 if __name__ == '__main__':
     # --8<-- [start:KeyPair]
     private_key = asymmetric.ec.generate_private_key(asymmetric.ec.SECP256R1())
@@ -37,7 +35,7 @@ if __name__ == '__main__':
     kid = 'my-key'
     keys = {}
     try:
-        with open('public_keys.json') as f:
+        with Path('public_keys.json').open() as f:
             keys = json.load(f)
     except FileNotFoundError:
         pass
@@ -46,7 +44,7 @@ if __name__ == '__main__':
 
     keys[kid] = pem
 
-    with open('public_keys.json', 'w') as f:
+    with Path('public_keys.json').open('w') as f:
         json.dump(keys, f, indent=2)
 
     # --8<-- [start:AgentSkill]
@@ -126,6 +124,10 @@ if __name__ == '__main__':
 
     app = server.build()
     app.routes.append(
-        Route('/public_keys.json', endpoint=get_public_keys, methods=['GET'])
+        Route(
+            '/public_keys.json',
+            endpoint=FileResponse('public_keys.json'),
+            methods=['GET'],
+        )
     )
-    uvicorn.run(app, host='0.0.0.0', port=9999)
+    uvicorn.run(app, host='127.0.0.1', port=9999)

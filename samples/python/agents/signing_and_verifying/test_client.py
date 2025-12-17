@@ -24,27 +24,25 @@ from jwt.api_jwk import PyJWK
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
-        raise ValueError('kid and jku must be provided')
+        raise ValueError('kid and jku must be provided')  # noqa: TRY003
     try:
         response = httpx.get(jku)
         response.raise_for_status()  # Raise an exception for bad status codes
         keys = response.json()
     except httpx.RequestError as e:
-        raise ValueError(f'Error fetching keys from {jku}: {e}')
-    except json.JSONDecodeError as e:
-        logging.warning(f'Invalid JSON response from {jku}', exc_info=True)
-        raise ValueError(f'Invalid JSON response from {jku}') from e
+        raise ValueError(f'Error fetching keys from {jku}: {e}')  # noqa: B904, TRY003
+    except json.JSONDecodeError:
+        logging.warning('Invalid JSON response from %s', jku, exc_info=True)
 
     pem_data_str = keys.get(kid)
     if pem_data_str:
         pem_data = pem_data_str.encode('utf-8')
         try:
             return serialization.load_pem_public_key(pem_data)
-        except Exception as e:
-            logging.exception(f"Error loading PEM key for kid '{kid}'")
-            raise ValueError(f"Error loading PEM key for kid '{kid}'") from e
+        except Exception:
+            logging.exception("Error loading PEM key for kid '%s'", kid)
     else:
-        raise ValueError(f"Key with kid '{kid}' not found in '{jku}'")
+        raise ValueError("Key with kid '%s' not found in '%s'", kid, jku)  # noqa: TRY003
 
 
 signature_verifier = create_signature_verifier(_key_provider, ['ES256'])
@@ -63,7 +61,6 @@ async def main() -> None:
         resolver = A2ACardResolver(
             httpx_client=httpx_client,
             base_url=base_url,
-            # agent_card_path uses default, extended_agent_card_path also uses default
         )
         # --8<-- [end:A2ACardResolver]
 
@@ -72,7 +69,9 @@ async def main() -> None:
 
         try:
             logger.info(
-                f'Attempting to fetch public agent card from: {base_url}{AGENT_CARD_WELL_KNOWN_PATH}'
+                'Attempting to fetch public agent card from: %s%s',
+                base_url,
+                AGENT_CARD_WELL_KNOWN_PATH,
             )
             _public_card = await resolver.get_agent_card(
                 signature_verifier=signature_verifier,
@@ -89,7 +88,9 @@ async def main() -> None:
             if _public_card.supports_authenticated_extended_card:
                 try:
                     logger.info(
-                        f'\nPublic card supports authenticated extended card. Attempting to fetch from: {base_url}{EXTENDED_AGENT_CARD_PATH}'
+                        '\nPublic card supports authenticated extended card. Attempting to fetch from: %s%s',
+                        base_url,
+                        EXTENDED_AGENT_CARD_PATH,
                     )
                     auth_headers_dict = {
                         'Authorization': 'Bearer dummy-token-for-extended-card'
@@ -113,9 +114,10 @@ async def main() -> None:
                     logger.info(
                         '\nUsing AUTHENTICATED EXTENDED agent card for client initialization.'
                     )
-                except Exception as e_extended:
+                except Exception as e_extended:  # noqa: BLE001
                     logger.warning(
-                        f'Failed to fetch or verify extended agent card: {e_extended}. Will proceed with public card.',
+                        'Failed to fetch or verify extended agent card: %s. Will proceed with public card.',
+                        e_extended,
                         exc_info=True,
                     )
             elif (
@@ -127,9 +129,11 @@ async def main() -> None:
 
         except Exception as e:
             logger.error(
-                f'Critical error fetching public agent card: {e}', exc_info=True
+                'Critical error fetching public agent card: %s',
+                e,
+                exc_info=True,
             )
-            raise RuntimeError(
+            raise RuntimeError(  # noqa: TRY003
                 'Failed to fetch the public agent card. Cannot continue.'
             ) from e
 
