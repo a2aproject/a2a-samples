@@ -10,7 +10,7 @@ USER root
 
 # Install system build dependencies and UV package manager
 RUN dnf -y update && dnf install -y gcc gcc-c++ \
- && pip install uv && dnf clean all
+ && pip install uv==0.9 && dnf clean all
 
 # Set environment variables for uv:
 # UV_COMPILE_BYTECODE=1: Compiles Python files to .pyc for faster startup
