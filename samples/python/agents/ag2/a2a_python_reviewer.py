@@ -28,7 +28,7 @@ reviewer_agent = ConversableAgent(
     description='An agent that reviews the code for the user',
     system_message=(
         'You are an expert in code review pretty strict and focused on typing. '
-        'Please, use mypy tool to validate the code.'
+        'Please, use mypy tool to validate the code. '
         'If mypy has no issues with the code, return "No issues found."'
     ),
     llm_config=config,
