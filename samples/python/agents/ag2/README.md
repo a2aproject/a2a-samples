@@ -38,57 +38,29 @@ sequenceDiagram
 
 ## The demo
 
-<<<<<<< HEAD
-This demo shows how to use the A2A protocol to communicate with an AG2 agent using a **server-client architecture**:
+This demo shows how to use the A2A protocol to communicate with an AG2 agent using a simple server/client architecture.
 
-### Server Side
+Server (A2A agent):
 
-**`a2a_python_reviewer.py`** - The A2A server that runs the ReviewerAgent
+- `a2a_python_reviewer.py` — runs the `ReviewerAgent` and exposes it via A2A (default: http://localhost:8000).
+- The reviewer registers a `mypy-checker` tool and returns exact token `No issues found.` when mypy passes.
 
-**What it does:**
-- Creates a `ReviewerAgent` that reviews Python code for type correctness
-- Registers a `mypy-checker` tool for code validation
-- Exposes the agent via A2A protocol on `http://localhost:8000`
-- Acts as a reusable code review service
+Clients (A2A clients):
 
-**🚀 Run this first** - it must be running before any client can connect.
+Pick one client depending on what you want to generate:
 
-### Client Side
+- `fastapi_codegen_a2a_client.py` — creates a local CodeGenAgent specialized in FastAPI apps, sends generated code to the ReviewerAgent and iterates until type-checking passes.
+- `cli_codegen_a2a_client.py` — creates a local CodeGenAgent specialized in CLI tools (argparse), sends generated code to the ReviewerAgent and iterates until type-checking passes.
 
-Pick **one** of the following clients based on what you want to generate:
+Optional demo UI (visual only):
 
-#### Option 1: `fastapi_codegen_a2a_client.py`
-**Purpose:** Generate FastAPI REST APIs with automated review
+- `demo/websocket.py` — a small FastAPI wrapper that serves a browser UI and streams status updates via WebSocket (default: http://127.0.0.1:9000).
+- The UI assets are located under `demo/assets/` and are only required for the pixel-art themed presentation.
 
-**What it does:**
-- Creates a local `CodeGenAgent` specialized in FastAPI development
-- Connects to the remote `ReviewerAgent` via A2A protocol
-- Generates FastAPI code and iterates with the reviewer until type-checking passes
+Notes:
 
-**Use when:** You need to generate web APIs
-
-#### Option 2: `cli_codegen_a2a_client.py`
-**Purpose:** Generate command-line scripts with automated review
-
-**What it does:**
-- Creates a local `CodeGenAgent` specialized in CLI tools (argparse)
-- Connects to the remote `ReviewerAgent` via A2A protocol
-- Generates CLI scripts and iterates with the reviewer until type-checking passes
-
-**Use when:** You need to generate command-line tools
-
-### Optional: WebSocket Demo UI
-
-For visual demonstrations only (not required for A2A):
-
-- `websocket.py` - FastAPI server with WebSocket wrapper
-- `demo-ui/` - Pixel-art themed browser interface with live updates
-=======
-Here we have a simple demo that shows how to use the A2A protocol to communicate with an AG2 agent. We have
-- one A2A-served remote agent `a2a_python_reviewer.py`
-- two different A2A clients, which communicate with the remote agent using the A2A protocol:
-    CLI code generator `cli_codegen_a2a_client.py` and FastAPI code generator `fastapi_codegen_a2a_client.py`
->>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
+- Start the reviewer server first (`a2a_python_reviewer.py`) so clients can connect.
+- The demo UI is optional and intended for presentation; the A2A clients are the canonical way to interact with the ReviewerAgent.
 
 ## Prerequisites
 

@@ -338,23 +338,16 @@
         updateButtonState();
         if (promptEl) promptEl.addEventListener('input', updateButtonState);
 
-        function escapeHtml(s) {
-            return String(s)
-                .replaceAll('&', '&amp;')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;');
-        }
-
         function reset() {
-            events.innerHTML = '';
+            events.textContent = '';
             code.textContent = '(waiting)';
         }
-
         function appendEvent(line, cls) {
-            if (events.textContent.startsWith('(click')) events.innerHTML = '';
-            const safe = escapeHtml(line);
-            const klass = cls ? `log-line ${cls}` : 'log-line';
-            events.innerHTML += `<span class="${klass}">${safe}</span>`;
+            if (events.textContent.startsWith('(type a prompt')) events.textContent = '';
+            const span = document.createElement('span');
+            span.className = cls ? `log-line ${cls}` : 'log-line';
+            span.textContent = line;
+            events.appendChild(span);
             events.scrollTop = events.scrollHeight;
         }
 
