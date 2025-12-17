@@ -3,6 +3,13 @@ import tempfile
 
 from typing import Annotated
 
+# Load .env file if python-dotenv is available
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 from autogen import ConversableAgent, LLMConfig
 from autogen.a2a import A2aAgentServer
 from mypy import api
@@ -40,11 +47,16 @@ def review_code_with_mypy(
         'Raw code content to review. Code should be formatted as single file.',
     ],
 ) -> str:
-    with tempfile.NamedTemporaryFile('w', suffix='.py') as tmp:
+    # Windows fix: close file before mypy reads it
+    with tempfile.NamedTemporaryFile('w', suffix='.py', delete=False) as tmp:
         tmp.write(code)
-        stdout, stderr, exit_status = api.run([tmp.name])
+        tmp_path = tmp.name
+    try:
+        stdout, stderr, exit_status = api.run([tmp_path, '--ignore-missing-imports'])
+    finally:
+        os.unlink(tmp_path)
     if exit_status != 0:
-        return stderr
+        return stdout or stderr
     return stdout or 'No issues found.'
 
 
