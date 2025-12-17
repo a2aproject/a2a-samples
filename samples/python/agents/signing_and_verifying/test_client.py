@@ -29,7 +29,7 @@ def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
         response.raise_for_status()  # Raise an exception for bad status codes
         keys = response.json()
     except httpx.RequestError as e:
-        raise ValueError("Error fetching keys from %s: %s", jku, e)
+        logging.warning("Error fetching keys from %s: %s", jku, e)
     except json.JSONDecodeError:
         logging.warning("Invalid JSON response from %s", jku, exc_info=True)
 
@@ -85,7 +85,8 @@ async def main() -> None:
             if _public_card.supports_authenticated_extended_card:
                 try:
                     logger.info(
-                        "\nPublic card supports authenticated extended card. Attempting to fetch from: %s%s",
+                        "\nPublic card supports authenticated extended card. "
+                        "Attempting to fetch from: %s%s",
                         base_url,
                         EXTENDED_AGENT_CARD_PATH,
                     )
@@ -98,7 +99,8 @@ async def main() -> None:
                         signature_verifier=signature_verifier,
                     )  # add signature verifier
                     logger.info(
-                        "Successfully fetched AND VERIFIED authenticated extended agent card:"
+                        "Successfully fetched AND VERIFIED authenticated "
+                        "extended agent card:"
                     )
                     logger.info(
                         _extended_card.model_dump_json(indent=2, exclude_none=True)
@@ -107,17 +109,20 @@ async def main() -> None:
                         _extended_card  # Update to use the extended card
                     )
                     logger.info(
-                        "\nUsing AUTHENTICATED EXTENDED agent card for client initialization."
+                        "\nUsing AUTHENTICATED EXTENDED agent card for "
+                        "client initialization."
                     )
                 except Exception as e_extended:
                     logger.warning(
-                        "Failed to fetch or verify extended agent card: %s. Will proceed with public card.",
+                        "Failed to fetch or verify extended agent card: %s. "
+                        "Will proceed with public card.",
                         e_extended,
                         exc_info=True,
                     )
             elif _public_card:  # supports_authenticated_extended_card is False or None
                 logger.info(
-                    "\nPublic card does not indicate support for an extended card. Using public card."
+                    "\nPublic card does not indicate support for an extended card. "
+                    "Using public card."
                 )
 
         except Exception as e:
