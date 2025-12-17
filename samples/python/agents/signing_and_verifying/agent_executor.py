@@ -40,6 +40,5 @@ class SignedAgentExecutor(AgentExecutor):
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
         """Cancel method is not supported."""
-        raise Exception('cancel not supported')  # noqa: TRY002, TRY003
 
     # --8<-- [end:SignedAgentExecutor_cancel]

@@ -24,13 +24,17 @@ from jwt.api_jwk import PyJWK
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
-        raise ValueError('kid and jku must be provided')  # noqa: TRY003
+        raise ValueError(  # noqa: TRY003
+            'Missing kid or jku'
+        )
     try:
         response = httpx.get(jku)
         response.raise_for_status()  # Raise an exception for bad status codes
         keys = response.json()
     except httpx.RequestError as e:
-        raise ValueError(f'Error fetching keys from {jku}: {e}')  # noqa: B904, TRY003
+        raise ValueError(  # noqa: B904, TRY003
+            'Error fetching keys from %s: %s', jku, e
+        )
     except json.JSONDecodeError:
         logging.warning('Invalid JSON response from %s', jku, exc_info=True)
 
@@ -42,7 +46,9 @@ def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
         except Exception:
             logging.exception("Error loading PEM key for kid '%s'", kid)
     else:
-        raise ValueError("Key with kid '%s' not found in '%s'", kid, jku)  # noqa: TRY003
+        raise ValueError(  # noqa: TRY003
+            "Key with kid '%s' not found in '%s'", kid, jku
+        )
 
 
 signature_verifier = create_signature_verifier(_key_provider, ['ES256'])
@@ -64,7 +70,7 @@ async def main() -> None:
         )
         # --8<-- [end:A2ACardResolver]
 
-        # Fetch Public Agent Card and Initialize BaseClient
+        # Fetch and Verify Agent Card and Initialize BaseClient
         final_agent_card_to_use: AgentCard | None = None
 
         try:
