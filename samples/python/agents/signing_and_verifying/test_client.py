@@ -75,8 +75,8 @@ async def main() -> None:
             logger.info(
                 f'Attempting to fetch public agent card from: {base_url}{AGENT_CARD_WELL_KNOWN_PATH}'
             )
-            _public_card = (
-                await resolver.get_agent_card()
+            _public_card = await resolver.get_agent_card(
+                signature_verifier=signature_verifier,
             )  # Fetches from default public path
             logger.info('Successfully fetched public agent card:')
             logger.info(
@@ -98,6 +98,7 @@ async def main() -> None:
                     _extended_card = await resolver.get_agent_card(
                         relative_card_path=EXTENDED_AGENT_CARD_PATH,
                         http_kwargs={'headers': auth_headers_dict},
+                        signature_verifier=signature_verifier,
                     )  # add signature verifier
                     logger.info(
                         'Successfully fetched AND VERIFIED authenticated extended agent card:'
