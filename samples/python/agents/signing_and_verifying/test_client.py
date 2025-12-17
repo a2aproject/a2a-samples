@@ -23,7 +23,7 @@ from jwt.api_jwk import PyJWK
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
-        raise ValueError("Missing kid or jku")
+        raise ValueError("Missing.")
     try:
         response = httpx.get(jku)
         response.raise_for_status()  # Raise an exception for bad status codes
@@ -48,6 +48,7 @@ signature_verifier = create_signature_verifier(_key_provider, ["ES256"])
 
 
 async def main() -> None:
+    """Main function."""
     # Configure logging to show INFO level messages
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)  # Get a logger instance
@@ -129,9 +130,7 @@ async def main() -> None:
             logger.exception(
                 "Critical error fetching public agent card.",
             )
-            raise RuntimeError(
-                "Failed to fetch the public agent card. Cannot continue."
-            ) from e
+            raise RuntimeError("Failed.") from e
 
         # Create Client Factory
         client_factory = ClientFactory(config=ClientConfig(streaming=False))
