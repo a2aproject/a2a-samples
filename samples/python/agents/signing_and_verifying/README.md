@@ -1,6 +1,6 @@
-# Signatures Example
+# Signing and Verifying Example
 
-Signatures example agent that only returns Message events
+Signed agent used as an example for AgentCard signing and verifying
 
 ## Getting started
 
@@ -20,16 +20,16 @@ Signatures example agent that only returns Message events
 
 Agent can also be built using a container file.
 
-1. Navigate to the directory `samples/python/agents/signatures` directory:
+1. Navigate to the directory `samples/python/agents/signing_and_verifying` directory:
 
   ```bash
-  cd samples/python/agents/signatures
+  cd samples/python/agents/signing_and_verifying
   ```
 
 2. Build the container file
 
     ```bash
-    podman build . -t signatures-a2a-server
+    podman build . -t signing_and_verifying-a2a-server
     ```
 
 > [!Tip]  
@@ -38,7 +38,7 @@ Agent can also be built using a container file.
 3. Run you container
 
     ```bash
-    podman run -p 9999:9999 signatures-a2a-server
+    podman run -p 9999:9999 signing_and_verifying-a2a-server
     ```
 
 ## Validate

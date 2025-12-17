@@ -1,38 +1,54 @@
+import json
 import logging
-
-from typing import Any
-from uuid import uuid4
 
 import httpx
 
 from a2a.client import A2ACardResolver
-from a2a.client.base_client import BaseClient
 from a2a.client.client import ClientConfig
-from a2a.client.transports import JsonRpcTransport
+from a2a.client.client_factory import ClientFactory
 from a2a.types import (
-    AgentCapabilities,
     AgentCard,
     Message,
-    MessageSendParams,
     Part,
     Role,
-    SendMessageRequest,
     TextPart,
 )
 from a2a.utils.constants import (
     AGENT_CARD_WELL_KNOWN_PATH,
     EXTENDED_AGENT_CARD_PATH,
 )
+from a2a.utils.signing import create_signature_verifier
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ec
+from jwt.api_jwk import PyJWK
 
 
-def load_public_key(filename: str) -> ec.EllipticCurvePublicKey:
-    with open(filename, 'rb') as f:
-        pem_data = f.read()
-    public_key = serialization.load_pem_public_key(pem_data)
-    assert isinstance(public_key, ec.EllipticCurvePublicKey)
-    return public_key
+def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
+    if not kid or not jku:
+        raise ValueError('kid and jku must be provided')
+
+    try:
+        with open(jku) as f:
+            keys = json.load(f)
+    except FileNotFoundError:
+        raise ValueError(f'JKU file not found: {jku}')
+    except json.JSONDecodeError:
+        logging.warning(f'Invalid JSON in {jku}')
+        raise ValueError(f'Invalid JSON in {jku}')
+
+    pem_data_str = keys.get(kid)
+    if pem_data_str:
+        pem_data = pem_data_str.encode('utf-8')
+        try:
+            public_key = serialization.load_pem_public_key(pem_data)
+            return public_key
+        except Exception as e:
+            logging.exception(f"Error loading PEM key for kid '{kid}': {e}")
+            raise ValueError(f"Error loading PEM key for kid '{kid}'")
+    else:
+        raise ValueError(f"Key with kid '{kid}' not found in '{jku}'")
+
+
+signature_verifier = create_signature_verifier(_key_provider, ['ES256'])
 
 
 async def main() -> None:
@@ -40,23 +56,7 @@ async def main() -> None:
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)  # Get a logger instance
 
-    # Load the public key
-    try:
-        public_key = load_public_key('public_key.pem')
-        logger.info(
-            f'Successfully loaded public key from public_key.pem: {public_key}'
-        )
-    except Exception as e:
-        logger.error(f'Failed to load public key: {e}', exc_info=True)
-        return
-
-    # Create the signature verifier function
-    # signature_verifier = create_signature_verifier(
-    #    public_key, expected_alg='ES256', expected_kid='my-key'
-    # )
-
     # --8<-- [start:A2ACardResolver]
-
     base_url = 'http://localhost:9999'
 
     async with httpx.AsyncClient() as httpx_client:
@@ -133,66 +133,36 @@ async def main() -> None:
                 'Failed to fetch the public agent card. Cannot continue.'
             ) from e
 
+        # Create Client Factory
+        client_factory = ClientFactory(config=ClientConfig(streaming=False))
+
+        # Create Base Client
+        client = client_factory.create(final_agent_card_to_use)
+
         # --8<-- [start:send_message]
-        transport = JsonRpcTransport(httpx_client=httpx_client, url=base_url)
-        client = BaseClient(
-            card=AgentCard(
-                name='Hello World Agent',
-                description='Just a hello world agent',
-                url='http://localhost:9999/',
-                version='1.0.0',
-                default_input_modes=['text'],
-                default_output_modes=['text'],
-                capabilities=AgentCapabilities(streaming=True),
-                skills=[],  # Only the basic skill for the public card
-                supports_authenticated_extended_card=True,
-            ),
-            config=ClientConfig(streaming=False),
-            transport=transport,
-            consumers=[],
-            middleware=[],
-        )
-        logger.info('Client initialized.')
-
-        send_message_payload: dict[str, Any] = {
-            'message': {
-                'role': 'user',
-                'parts': [
-                    {'kind': 'text', 'text': 'how much is 10 USD in INR?'}
-                ],
-                'messageId': uuid4().hex,
-            },
-        }
-        request = SendMessageRequest(
-            id=str(uuid4()), params=MessageSendParams(**send_message_payload)
-        )
-
         message_to_send = Message(
             role=Role.user,
-            message_id='msg-integration-test-extensions',
-            parts=[Part(root=TextPart(text='Hello, extensions test!'))],
+            message_id='msg-integration-test-signing-and-verifying',
+            parts=[
+                Part(root=TextPart(text='Hello, signature verification test!'))
+            ],
         )
 
         print('send_message response:')
         async for chunk in client.send_message(message_to_send):
-            print(chunk.model_dump(mode='json', exclude_none=True))
+            chunk_dict = chunk.model_dump(mode='json', exclude_none=True)
+            parts = chunk_dict['parts']
+            for part in parts:
+                print(part['text'])
         # --8<-- [end:send_message]
 
         # --8<-- [start:get_card]
-        get_card_response = await client.get_card()
-        # signature_verifier=signature_verifier # Verifier is used in resolver.get_agent_card for extended card
+        get_card_response = await client.get_card(
+            signature_verifier=signature_verifier
+        )
         print('fetched again:')
         print(get_card_response.model_dump(mode='json', exclude_none=True))
         # --8<-- [end:get_card]
-
-        ## --8<-- [start:send_message_streaming]
-        # streaming_request = SendStreamingMessageRequest(
-        #    id=str(uuid4()), params=MessageSendParams(**send_message_payload)
-        # )
-        # stream_response = client.send_message_streaming(streaming_request)
-        # async for chunk in stream_response:
-        #    print(chunk.model_dump(mode='json', exclude_none=True))
-        ## --8<-- [end:send_message_streaming]
 
 
 if __name__ == '__main__':
