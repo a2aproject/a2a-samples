@@ -128,10 +128,8 @@ async def main() -> None:
                 )
 
         except Exception as e:
-            logger.error(
-                'Critical error fetching public agent card: %s',
-                e,
-                exc_info=True,
+            logger.exception(
+                'Critical error fetching public agent card.',
             )
             raise RuntimeError(  # noqa: TRY003
                 'Failed to fetch the public agent card. Cannot continue.'
