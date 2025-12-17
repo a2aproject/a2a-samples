@@ -67,23 +67,6 @@ uv run websocket.py
 ```
 
 Then open [http://127.0.0.1:9000](http://127.0.0.1:9000) in your browser for the pixel-art themed interactive demo.
-    ```bash
-    uv run a2a_python_reviewer.py
-    ```
-
-5. In a new terminal, start an A2AClient interface to interact with the remote (ag2) agent. You can use one of the following clients:
-
-        ```bash
-        uv run cli_codegen_a2a_client.py
-        ```
-        
-        Generates CLI scripts and sends them to the reviewer for type checking.
-
-    - **Method B: Run the FastAPI client**
-
-        ```bash
-        uv run fastapi_codegen_a2a_client.py
-        ```
 
 ## Learn More
 
