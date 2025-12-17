@@ -31,9 +31,9 @@ def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
             keys = json.load(f)
     except FileNotFoundError:
         raise ValueError(f'JKU file not found: {jku}')
-    except json.JSONDecodeError:
-        logging.warning(f'Invalid JSON in {jku}')
-        raise ValueError(f'Invalid JSON in {jku}')
+    except json.JSONDecodeError as e:
+        logging.warning(f'Invalid JSON in {jku}', exc_info=True)
+        raise ValueError(f'Invalid JSON in {jku}') from e
 
     pem_data_str = keys.get(kid)
     if pem_data_str:
