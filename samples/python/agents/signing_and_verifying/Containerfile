@@ -31,7 +31,7 @@ RUN --mount=type=cache,target=/.cache/uv \
     uv sync --frozen --no-dev
 
 # Allow non-root user to access the everything in app-root
-RUN chgrp -R root /opt/app-root/ && chmod -R g+rwx /opt/app-root/
+RUN chgrp -R root /opt/app-root/ && chmod -R g+rX /opt/app-root/
 
 # Expose default port (change if needed)
 EXPOSE 9999

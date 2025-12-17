@@ -25,15 +25,15 @@ from jwt.api_jwk import PyJWK
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
         raise ValueError('kid and jku must be provided')
-
     try:
-        with open(jku) as f:
-            keys = json.load(f)
-    except FileNotFoundError:
-        raise ValueError(f'JKU file not found: {jku}')
+        response = httpx.get(jku)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        keys = response.json()
+    except httpx.RequestError as e:
+        raise ValueError(f'Error fetching keys from {jku}: {e}')
     except json.JSONDecodeError:
-        logging.warning(f'Invalid JSON in {jku}')
-        raise ValueError(f'Invalid JSON in {jku}')
+        logging.warning(f'Invalid JSON response from {jku}')
+        raise ValueError(f'Invalid JSON response from {jku}')
 
     pem_data_str = keys.get(kid)
     if pem_data_str:

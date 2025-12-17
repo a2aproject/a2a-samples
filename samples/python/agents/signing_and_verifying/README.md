@@ -35,7 +35,7 @@ Agent can also be built using a container file.
 > [!Tip]  
 > Podman is a drop-in replacement for `docker` which can also be used in these commands.
 
-3. Run you container
+3. Run your container
 
     ```bash
     podman run -p 9999:9999 signing_and_verifying-a2a-server

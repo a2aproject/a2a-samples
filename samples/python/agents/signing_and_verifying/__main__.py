@@ -15,6 +15,12 @@ from agent_executor import (
     SignedAgentExecutor,  # type: ignore[import-untyped]
 )
 from cryptography.hazmat.primitives import asymmetric, serialization
+from starlette.responses import FileResponse
+from starlette.routing import Route
+
+
+async def get_public_keys(request):
+    return FileResponse('public_keys.json')
 
 
 if __name__ == '__main__':
@@ -104,7 +110,7 @@ if __name__ == '__main__':
         protected_header={
             'kid': 'my-key',
             'alg': 'ES256',
-            'jku': 'public_keys.json',
+            'jku': 'http://localhost:9999/public_keys.json',
         },
     )
 
@@ -114,8 +120,12 @@ if __name__ == '__main__':
         http_handler=request_handler,
         card_modifier=signer,
         extended_agent_card=extended_agent_card,
-        extended_card_modifier=lambda card, ctx: signer(card),
+        extended_card_modifier=lambda card, _: signer(card),
     )
     # --8<-- [end:A2AStarletteApplication]
 
-    uvicorn.run(server.build(), host='0.0.0.0', port=9999)
+    app = server.build()
+    app.routes.append(
+        Route('/public_keys.json', endpoint=get_public_keys, methods=['GET'])
+    )
+    uvicorn.run(app, host='0.0.0.0', port=9999)
