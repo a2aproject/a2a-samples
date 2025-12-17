@@ -57,7 +57,7 @@ def review_code_with_mypy(
         os.unlink(tmp_path)
     if exit_status != 0:
         return stdout or stderr
-    return stdout or 'No issues found.'
+    return 'No issues found.'
 
 
 # wrap agent to A2A server
