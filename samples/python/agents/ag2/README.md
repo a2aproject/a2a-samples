@@ -40,98 +40,50 @@ sequenceDiagram
 
 This demo shows how to use the A2A protocol to communicate with an AG2 agent using a simple server/client architecture.
 
-Server (A2A agent):
-
-- `a2a_python_reviewer.py` — runs the `ReviewerAgent` and exposes it via A2A (default: http://localhost:8000).
-- The reviewer registers a `mypy-checker` tool and returns exact token `No issues found.` when mypy passes.
-
-Clients (A2A clients):
-
-Pick one client depending on what you want to generate:
-
-- `fastapi_codegen_a2a_client.py` — creates a local CodeGenAgent specialized in FastAPI apps, sends generated code to the ReviewerAgent and iterates until type-checking passes.
-- `cli_codegen_a2a_client.py` — creates a local CodeGenAgent specialized in CLI tools (argparse), sends generated code to the ReviewerAgent and iterates until type-checking passes.
-
-Optional demo UI (visual only):
-
-- `demo/websocket.py` — a small FastAPI wrapper that serves a browser UI and streams status updates via WebSocket (default: http://127.0.0.1:9000).
-- The UI assets are located under `demo/assets/` and are only required for the pixel-art themed presentation.
-
-Notes:
-
-- Start the reviewer server first (`a2a_python_reviewer.py`) so clients can connect.
-- The demo UI is optional and intended for presentation; the A2A clients are the canonical way to interact with the ReviewerAgent.
-
-## Prerequisites
-
-- Python 3.12 or higher
-- UV package manager
-- OpenAI API Key (for default configuration)
-
-## Setup & Running
-
-1. Navigate to the samples directory:
-
-    ```bash
-    cd samples/python/agents/ag2
-    ```
-
-2. Create an environment file with your API key (uses `openai gpt-4o`):
-
-    ```bash
-    echo "OPENAI_API_KEY=your_api_key_here" > .env
-    ```
-
-3. Install the dependencies:
-    ```bash
-    uv sync
-    ```
-
 4. Run the remote agent:
+
+```bash
+uv run a2a_python_reviewer.py
+```
+
+5. In a new terminal, start an A2A client to interact with the remote `ReviewerAgent`. Choose one of the following:
+
+- CLI client (generates CLI scripts):
+
+```bash
+uv run cli_codegen_a2a_client.py
+```
+
+- FastAPI client (generates FastAPI apps):
+
+```bash
+uv run fastapi_codegen_a2a_client.py
+```
+
+- Optional: WebSocket demo UI (visual demo only):
+
+```bash
+uv run websocket.py
+```
+
+Then open [http://127.0.0.1:9000](http://127.0.0.1:9000) in your browser for the pixel-art themed interactive demo.
     ```bash
     uv run a2a_python_reviewer.py
     ```
-<<<<<<< HEAD
-=======
 
 5. In a new terminal, start an A2AClient interface to interact with the remote (ag2) agent. You can use one of the following clients:
->>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
 
-5. In a new terminal, start an A2A client to interact with the remote ReviewerAgent. You can use one of the following:
-
-<<<<<<< HEAD
-    - **Method A: CLI code generator client**
-
-=======
->>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
         ```bash
         uv run cli_codegen_a2a_client.py
         ```
         
         Generates CLI scripts and sends them to the reviewer for type checking.
 
-<<<<<<< HEAD
-    - **Method B: FastAPI code generator client**
-=======
     - **Method B: Run the FastAPI client**
->>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
 
         ```bash
         uv run fastapi_codegen_a2a_client.py
         ```
-<<<<<<< HEAD
-        
-        Generates FastAPI applications and sends them to the reviewer for type checking.
-
-    - **Method C: WebSocket demo UI (optional - for visual demos)**
-
-        ```bash
-        uv run websocket.py
-        ```
-        
-        Then open `http://127.0.0.1:9000/` in your browser for a pixel-art themed interactive demo.
-=======
->>>>>>> 30c9ccc (feat: update AG2 example using 0.10 A2A builtins (#392))
 
 ## Learn More
 
