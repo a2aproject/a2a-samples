@@ -122,7 +122,16 @@ async def _run_codegen_then_review_loop(
 @app.get("/", response_class=HTMLResponse)
 async def index() -> HTMLResponse:
     html = UI_HTML_PATH.read_text(encoding="utf-8")
-    html = html.replace("window.__REVIEWER_URL__", f"{REVIEWER_URL!r}")
+
+    # Inject the reviewer URL into the page as a JS global so the UI can
+    # discover which ReviewerAgent to call. Replacing a literal token in the
+    # HTML was unreliable, so we append a small script before </body>.
+    script = f"<script>window.__REVIEWER_URL__ = {json.dumps(REVIEWER_URL)};</script>"
+    if "</body>" in html:
+        html = html.replace("</body>", script + "</body>")
+    else:
+        html = html + script
+
     return HTMLResponse(
         html,
         headers={
