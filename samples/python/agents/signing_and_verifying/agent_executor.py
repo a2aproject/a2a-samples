@@ -9,7 +9,7 @@ class SignedAgent:
 
     async def invoke(self) -> str:
         """Returns a 'Verify me!' reminder."""
-        return 'Verify me!'
+        return "Verify me!"
 
 
 # --8<-- [end:SignedAgent]
@@ -36,9 +36,9 @@ class SignedAgentExecutor(AgentExecutor):
     # --8<-- [end:SignedAgentExecutor_execute]
 
     # --8<-- [start:SignedAgentExecutor_cancel]
-    async def cancel(
-        self, context: RequestContext, event_queue: EventQueue
-    ) -> None:
+    async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Cancel method is not supported."""
+
+        raise Exception("Cancel not supported.")
 
     # --8<-- [end:SignedAgentExecutor_cancel]

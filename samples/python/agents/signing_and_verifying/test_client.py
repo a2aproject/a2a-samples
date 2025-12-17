@@ -2,7 +2,6 @@ import json
 import logging
 
 import httpx
-
 from a2a.client import A2ACardResolver
 from a2a.client.client import ClientConfig
 from a2a.client.client_factory import ClientFactory
@@ -24,34 +23,28 @@ from jwt.api_jwk import PyJWK
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
-        raise ValueError(  # noqa: TRY003
-            'Missing kid or jku'
-        )
+        raise ValueError("Missing kid or jku")
     try:
         response = httpx.get(jku)
         response.raise_for_status()  # Raise an exception for bad status codes
         keys = response.json()
     except httpx.RequestError as e:
-        raise ValueError(  # noqa: B904, TRY003
-            'Error fetching keys from %s: %s', jku, e
-        )
+        raise ValueError("Error fetching keys from %s: %s", jku, e)
     except json.JSONDecodeError:
-        logging.warning('Invalid JSON response from %s', jku, exc_info=True)
+        logging.warning("Invalid JSON response from %s", jku, exc_info=True)
 
     pem_data_str = keys.get(kid)
     if pem_data_str:
-        pem_data = pem_data_str.encode('utf-8')
+        pem_data = pem_data_str.encode("utf-8")
         try:
             return serialization.load_pem_public_key(pem_data)
         except Exception:
             logging.exception("Error loading PEM key for kid '%s'", kid)
     else:
-        raise ValueError(  # noqa: TRY003
-            "Key with kid '%s' not found in '%s'", kid, jku
-        )
+        raise ValueError("Key with kid '%s' not found in '%s'", kid, jku)
 
 
-signature_verifier = create_signature_verifier(_key_provider, ['ES256'])
+signature_verifier = create_signature_verifier(_key_provider, ["ES256"])
 
 
 async def main() -> None:
@@ -60,7 +53,7 @@ async def main() -> None:
     logger = logging.getLogger(__name__)  # Get a logger instance
 
     # --8<-- [start:A2ACardResolver]
-    base_url = 'http://localhost:9999'
+    base_url = "http://localhost:9999"
 
     async with httpx.AsyncClient() as httpx_client:
         # Initialize A2ACardResolver
@@ -75,70 +68,64 @@ async def main() -> None:
 
         try:
             logger.info(
-                'Attempting to fetch public agent card from: %s%s',
+                "Attempting to fetch public agent card from: %s%s",
                 base_url,
                 AGENT_CARD_WELL_KNOWN_PATH,
             )
             _public_card = await resolver.get_agent_card(
                 signature_verifier=signature_verifier,
             )  # Fetches from default public path
-            logger.info('Successfully fetched public agent card:')
-            logger.info(
-                _public_card.model_dump_json(indent=2, exclude_none=True)
-            )
+            logger.info("Successfully fetched public agent card:")
+            logger.info(_public_card.model_dump_json(indent=2, exclude_none=True))
             final_agent_card_to_use = _public_card
             logger.info(
-                '\nUsing PUBLIC agent card for client initialization (default).'
+                "\nUsing PUBLIC agent card for client initialization (default)."
             )
 
             if _public_card.supports_authenticated_extended_card:
                 try:
                     logger.info(
-                        '\nPublic card supports authenticated extended card. Attempting to fetch from: %s%s',
+                        "\nPublic card supports authenticated extended card. Attempting to fetch from: %s%s",
                         base_url,
                         EXTENDED_AGENT_CARD_PATH,
                     )
                     auth_headers_dict = {
-                        'Authorization': 'Bearer dummy-token-for-extended-card'
+                        "Authorization": "Bearer dummy-token-for-extended-card"
                     }
                     _extended_card = await resolver.get_agent_card(
                         relative_card_path=EXTENDED_AGENT_CARD_PATH,
-                        http_kwargs={'headers': auth_headers_dict},
+                        http_kwargs={"headers": auth_headers_dict},
                         signature_verifier=signature_verifier,
                     )  # add signature verifier
                     logger.info(
-                        'Successfully fetched AND VERIFIED authenticated extended agent card:'
+                        "Successfully fetched AND VERIFIED authenticated extended agent card:"
                     )
                     logger.info(
-                        _extended_card.model_dump_json(
-                            indent=2, exclude_none=True
-                        )
+                        _extended_card.model_dump_json(indent=2, exclude_none=True)
                     )
                     final_agent_card_to_use = (
                         _extended_card  # Update to use the extended card
                     )
                     logger.info(
-                        '\nUsing AUTHENTICATED EXTENDED agent card for client initialization.'
+                        "\nUsing AUTHENTICATED EXTENDED agent card for client initialization."
                     )
-                except Exception as e_extended:  # noqa: BLE001
+                except Exception as e_extended:
                     logger.warning(
-                        'Failed to fetch or verify extended agent card: %s. Will proceed with public card.',
+                        "Failed to fetch or verify extended agent card: %s. Will proceed with public card.",
                         e_extended,
                         exc_info=True,
                     )
-            elif (
-                _public_card
-            ):  # supports_authenticated_extended_card is False or None
+            elif _public_card:  # supports_authenticated_extended_card is False or None
                 logger.info(
-                    '\nPublic card does not indicate support for an extended card. Using public card.'
+                    "\nPublic card does not indicate support for an extended card. Using public card."
                 )
 
         except Exception as e:
             logger.exception(
-                'Critical error fetching public agent card.',
+                "Critical error fetching public agent card.",
             )
-            raise RuntimeError(  # noqa: TRY003
-                'Failed to fetch the public agent card. Cannot continue.'
+            raise RuntimeError(
+                "Failed to fetch the public agent card. Cannot continue."
             ) from e
 
         # Create Client Factory
@@ -150,30 +137,26 @@ async def main() -> None:
         # --8<-- [start:send_message]
         message_to_send = Message(
             role=Role.user,
-            message_id='msg-integration-test-signing-and-verifying',
-            parts=[
-                Part(root=TextPart(text='Hello, signature verification test!'))
-            ],
+            message_id="msg-integration-test-signing-and-verifying",
+            parts=[Part(root=TextPart(text="Hello, signature verification test!"))],
         )
 
-        print('send_message response:')
+        print("send_message response:")
         async for chunk in client.send_message(message_to_send):
-            chunk_dict = chunk.model_dump(mode='json', exclude_none=True)
-            parts = chunk_dict['parts']
+            chunk_dict = chunk.model_dump(mode="json", exclude_none=True)
+            parts = chunk_dict["parts"]
             for part in parts:
-                print(part['text'])
+                print(part["text"])
         # --8<-- [end:send_message]
 
         # --8<-- [start:get_card]
-        get_card_response = await client.get_card(
-            signature_verifier=signature_verifier
-        )
-        print('fetched again:')
-        print(get_card_response.model_dump(mode='json', exclude_none=True))
+        get_card_response = await client.get_card(signature_verifier=signature_verifier)
+        print("fetched again:")
+        print(get_card_response.model_dump(mode="json", exclude_none=True))
         # --8<-- [end:get_card]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import asyncio
 
     asyncio.run(main())
