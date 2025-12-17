@@ -31,9 +31,9 @@ def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
         keys = response.json()
     except httpx.RequestError as e:
         raise ValueError(f'Error fetching keys from {jku}: {e}')
-    except json.JSONDecodeError:
-        logging.warning(f'Invalid JSON response from {jku}')
-        raise ValueError(f'Invalid JSON response from {jku}')
+    except json.JSONDecodeError as e:
+        logging.warning(f'Invalid JSON response from {jku}', exc_info=True)
+        raise ValueError(f'Invalid JSON response from {jku}') from e
 
     pem_data_str = keys.get(kid)
     if pem_data_str:
@@ -42,8 +42,8 @@ def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
             public_key = serialization.load_pem_public_key(pem_data)
             return public_key
         except Exception as e:
-            logging.exception(f"Error loading PEM key for kid '{kid}': {e}")
-            raise ValueError(f"Error loading PEM key for kid '{kid}'")
+            logging.exception(f"Error loading PEM key for kid '{kid}'")
+            raise ValueError(f"Error loading PEM key for kid '{kid}'") from e
     else:
         raise ValueError(f"Key with kid '{kid}' not found in '{jku}'")
 
