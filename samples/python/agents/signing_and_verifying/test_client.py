@@ -39,8 +39,7 @@ def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if pem_data_str:
         pem_data = pem_data_str.encode('utf-8')
         try:
-            public_key = serialization.load_pem_public_key(pem_data)
-            return public_key
+            return serialization.load_pem_public_key(pem_data)
         except Exception as e:
             logging.exception(f"Error loading PEM key for kid '{kid}'")
             raise ValueError(f"Error loading PEM key for kid '{kid}'") from e

@@ -18,7 +18,7 @@ class SignedAgent:
 class SignedAgentExecutor(AgentExecutor):
     """Test AgentProxy Implementation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.agent = SignedAgent()
 
     # --8<-- [end:SignedAgentExecutor_init]
