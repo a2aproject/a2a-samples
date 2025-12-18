@@ -1,4 +1,3 @@
-import json
 import logging
 
 import httpx
@@ -23,23 +22,16 @@ from jwt.api_jwk import PyJWK
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
-        raise ValueError("Missing.")
-    try:
-        response = httpx.get(jku)
-        response.raise_for_status()  # Raise an exception for bad status codes
-        keys = response.json()
-    except httpx.RequestError as e:
-        logging.warning("Error fetching keys from %s: %s", jku, e)
-    except json.JSONDecodeError:
-        logging.warning("Invalid JSON response from %s", jku, exc_info=True)
+        print("kid or jku missing")
+        raise ValueError()
+
+    response = httpx.get(jku)
+    keys = response.json()
 
     pem_data_str = keys.get(kid)
     if pem_data_str:
         pem_data = pem_data_str.encode("utf-8")
-        try:
-            return serialization.load_pem_public_key(pem_data)
-        except Exception:
-            logging.exception("Error loading PEM key for kid '%s'", kid)
+        return serialization.load_pem_public_key(pem_data)
     else:
         raise ValueError("Key with kid '%s' not found in '%s'", kid, jku)
 
@@ -98,9 +90,9 @@ async def main() -> None:
                         relative_card_path=EXTENDED_AGENT_CARD_PATH,
                         http_kwargs={"headers": auth_headers_dict},
                         signature_verifier=signature_verifier,
-                    )  # add signature verifier
+                    )
                     logger.info(
-                        "Successfully fetched AND VERIFIED authenticated "
+                        "Successfully fetched and verified authenticated "
                         "extended agent card:"
                     )
                     logger.info(
@@ -130,7 +122,7 @@ async def main() -> None:
             logger.exception(
                 "Critical error fetching public agent card.",
             )
-            raise RuntimeError("Failed.") from e
+            raise RuntimeError() from e
 
         # Create Client Factory
         client_factory = ClientFactory(config=ClientConfig(streaming=False))
