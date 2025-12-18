@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "a2a-sdk>=0.3.22",
-    "click>=8.1.8",
     "cryptography>=43.0.0",
     "httpx>=0.28.1",
     "pydantic>=2.11.4",
@@ -24,15 +23,9 @@ packages = ["."]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.lint]
+line-length = 110
+
 [tool.ruff.lint]
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # Pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "C4", # flake8-comprehensions
-    "UP", # pyupgrade
-    "RUF", # Ruff-specific rules
-]
+ignore = ["E203"]
 
