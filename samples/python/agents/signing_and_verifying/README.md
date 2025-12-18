@@ -1,6 +1,8 @@
 # Signing and Verifying Example
 
-Signed agent used as an example for AgentCard signing and verifying
+Signed agent used as an example for AgentCard signing and verifying.
+
+Read more about signing and verifying AgentCards here: [Agent Card Signing](https://a2a-protocol.org/latest/specification/#84-agent-card-signing)
 
 ## Getting started
 
