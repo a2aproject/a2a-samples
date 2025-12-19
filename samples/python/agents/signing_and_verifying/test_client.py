@@ -41,11 +41,10 @@ signature_verifier = create_signature_verifier(_key_provider, ["ES256"])
 
 async def main() -> None:
     """Main function."""
-    # Configure logging to show INFO level messages
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)  # Get a logger instance
 
-    # --8<-- [start:A2ACardResolver]
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
     base_url = "http://localhost:9999"
 
     async with httpx.AsyncClient() as httpx_client:
@@ -54,9 +53,8 @@ async def main() -> None:
             httpx_client=httpx_client,
             base_url=base_url,
         )
-        # --8<-- [end:A2ACardResolver]
 
-        # Fetch and Verify Agent Card and Initialize BaseClient
+        # Fetch and verify Agent Card and initialize BaseClient
         final_agent_card_to_use: AgentCard | None = None
 
         try:
@@ -67,7 +65,7 @@ async def main() -> None:
             )
             _public_card = await resolver.get_agent_card(
                 signature_verifier=signature_verifier,
-            )  # Fetches from default public path
+            )  # Verifies the AgentCard using signature_verifier function before returning it
             logger.info("Successfully fetched public agent card:")
             logger.info(_public_card.model_dump_json(indent=2, exclude_none=True))
             final_agent_card_to_use = _public_card
@@ -85,10 +83,10 @@ async def main() -> None:
                         relative_card_path=EXTENDED_AGENT_CARD_PATH,
                         http_kwargs={"headers": auth_headers_dict},
                         signature_verifier=signature_verifier,
-                    )
+                    )  # Verifies the extended AgentCard using signature_verifier function before returning it
                     logger.info("Successfully fetched and verified authenticated extended agent card:")
                     logger.info(_extended_card.model_dump_json(indent=2, exclude_none=True))
-                    final_agent_card_to_use = _extended_card  # Update to use the extended card
+                    final_agent_card_to_use = _extended_card
                     logger.info("\nUsing AUTHENTICATED EXTENDED agent card for client initialization.")
                 except Exception as e_extended:
                     logger.warning(
@@ -96,7 +94,7 @@ async def main() -> None:
                         e_extended,
                         exc_info=True,
                     )
-            elif _public_card:  # supports_authenticated_extended_card is False or None
+            elif _public_card:
                 logger.info("\nPublic card does not indicate support for an extended card. Using public card.")
 
         except Exception as e:
@@ -111,7 +109,6 @@ async def main() -> None:
         # Create Base Client
         client = client_factory.create(final_agent_card_to_use)
 
-        # --8<-- [start:send_message]
         message_to_send = Message(
             role=Role.user,
             message_id="msg-integration-test-signing-and-verifying",
@@ -124,13 +121,12 @@ async def main() -> None:
             parts = chunk_dict["parts"]
             for part in parts:
                 print(part["text"])
-        # --8<-- [end:send_message]
 
-        # --8<-- [start:get_card]
-        get_card_response = await client.get_card(signature_verifier=signature_verifier)
+        get_card_response = await client.get_card(
+            signature_verifier=signature_verifier
+        )  # Verifies the AgentCard using signature_verifier function before returning it
         print("fetched again:")
         print(get_card_response.model_dump(mode="json", exclude_none=True))
-        # --8<-- [end:get_card]
 
 
 if __name__ == "__main__":

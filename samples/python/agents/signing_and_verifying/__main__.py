@@ -16,14 +16,13 @@ from starlette.responses import FileResponse
 from starlette.routing import Route
 
 from agent_executor import (
-    SignedAgentExecutor,  # type: ignore[import-untyped]
+    SignedAgentExecutor,
 )
 
 if __name__ == "__main__":
-    # --8<-- [start:KeyPair]
+    # Generate a private, public key pair
     private_key = asymmetric.ec.generate_private_key(asymmetric.ec.SECP256R1())
     public_key = private_key.public_key()
-    # --8<-- [end:KeyPair]
 
     # Save public key to a file
     pem = public_key.public_bytes(
@@ -45,7 +44,6 @@ if __name__ == "__main__":
     with Path("public_keys.json").open("w") as f:
         json.dump(keys, f, indent=2)
 
-    # --8<-- [start:AgentSkill]
     skill = AgentSkill(
         id="reminder",
         name="Verification Reminder",
@@ -53,7 +51,6 @@ if __name__ == "__main__":
         tags=["verify me"],
         examples=["Verify me!"],
     )
-    # --8<-- [end:AgentSkill]
 
     extended_skill = AgentSkill(
         id="reminder-please",
@@ -63,8 +60,6 @@ if __name__ == "__main__":
         examples=["Verify me, pretty please! :)", "Please verify me."],
     )
 
-    # --8<-- [start:AgentCard]
-    # This will be the public-facing agent card
     public_agent_card = AgentCard(
         name="Signed Agent",
         description="An Agent that is signed",
@@ -73,34 +68,28 @@ if __name__ == "__main__":
         default_input_modes=["text"],
         default_output_modes=["text"],
         capabilities=AgentCapabilities(streaming=True),
-        skills=[skill],  # Only the basic skill for the public card
+        skills=[skill],
         supports_authenticated_extended_card=True,
     )
-    # --8<-- [end:AgentCard]
 
-    # This will be the authenticated extended agent card
-    # It includes the additional 'extended_skill'
     extended_agent_card = public_agent_card.model_copy(
         update={
             "name": "Signed Agent - Extended Edition",
             "description": "The full-featured signed agent for authenticated users.",
-            "version": "1.0.1",  # Could even be a different version
-            # Capabilities and other fields like url, default_input_modes, default_output_modes,
-            # supports_authenticated_extended_card are inherited from public_agent_card unless specified here.
+            "version": "1.0.1",
             "skills": [
                 skill,
                 extended_skill,
-            ],  # Both skills for the extended card
+            ],
         }
     )
 
-    # --8<-- [start:DefaultRequestHandler]
     request_handler = DefaultRequestHandler(
         agent_executor=SignedAgentExecutor(),
         task_store=InMemoryTaskStore(),
     )
-    # --8<-- [end:DefaultRequestHandler]
 
+    # Create singer function which will be used for AgentCard signing
     signer = create_agent_card_signer(
         signing_key=private_key,
         protected_header={
@@ -110,17 +99,19 @@ if __name__ == "__main__":
         },
     )
 
-    # --8<-- [start:A2AStarletteApplication]
     server = A2AStarletteApplication(
         agent_card=public_agent_card,
         http_handler=request_handler,
-        card_modifier=signer,
+        card_modifier=signer,  # The signer function is used to sign the public Agent Card
         extended_agent_card=extended_agent_card,
-        extended_card_modifier=lambda card, _: signer(card),
+        extended_card_modifier=lambda card, _: signer(
+            card
+        ),  # The signer function is also used to sign the extended Agent Card
     )
-    # --8<-- [end:A2AStarletteApplication]
 
     app = server.build()
+    # Expose the public key for verification purposes
+    # Contents of public_keys.json will be fetched on the client side during AgentCard signatures verification
     app.routes.append(
         Route(
             "/public_keys.json",
