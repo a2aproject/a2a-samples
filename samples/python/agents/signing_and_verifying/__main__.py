@@ -30,17 +30,7 @@ if __name__ == "__main__":
         format=serialization.PublicFormat.SubjectPublicKeyInfo,
     ).decode("utf-8")
     kid = "my-key"
-    keys = {}
-    try:
-        with Path("public_keys.json").open() as f:
-            keys = json.load(f)
-    except FileNotFoundError:
-        pass
-    except json.JSONDecodeError:
-        print("Warning: public_keys.json is not valid JSON. Starting fresh.")
-
-    keys[kid] = pem
-
+    keys = {kid: pem}
     with Path("public_keys.json").open("w") as f:
         json.dump(keys, f, indent=2)
 
@@ -93,7 +83,7 @@ if __name__ == "__main__":
     signer = create_agent_card_signer(
         signing_key=private_key,
         protected_header={
-            "kid": "my-key",
+            "kid": kid,
             "alg": "ES256",
             "jku": "http://localhost:9999/public_keys.json",
         },

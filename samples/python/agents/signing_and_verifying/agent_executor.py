@@ -3,19 +3,11 @@ from a2a.server.events import EventQueue
 from a2a.utils import new_agent_text_message
 
 
-class SignedAgent:
-    """Signed Agent."""
-
-    async def invoke(self) -> str:
-        """Returns a 'Verify me!' reminder."""
-        return "Verify me!"
-
-
 class SignedAgentExecutor(AgentExecutor):
     """Test AgentProxy Implementation."""
 
     def __init__(self) -> None:
-        self.agent = SignedAgent()
+        return
 
     async def execute(
         self,
@@ -23,8 +15,7 @@ class SignedAgentExecutor(AgentExecutor):
         event_queue: EventQueue,
     ) -> None:
         """Execute the agent."""
-        result = await self.agent.invoke()
-        await event_queue.enqueue_event(new_agent_text_message(result))
+        await event_queue.enqueue_event(new_agent_text_message("Verify me!"))
 
     async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Cancel method is not supported."""

@@ -63,15 +63,15 @@ async def main() -> None:
                 base_url,
                 AGENT_CARD_WELL_KNOWN_PATH,
             )
-            _public_card = await resolver.get_agent_card(
+            public_card = await resolver.get_agent_card(
                 signature_verifier=signature_verifier,
             )  # Verifies the AgentCard using signature_verifier function before returning it
             logger.info("Successfully fetched public agent card:")
-            logger.info(_public_card.model_dump_json(indent=2, exclude_none=True))
-            final_agent_card_to_use = _public_card
+            logger.info(public_card.model_dump_json(indent=2, exclude_none=True))
+            final_agent_card_to_use = public_card
             logger.info("\nUsing PUBLIC agent card for client initialization (default).")
 
-            if _public_card.supports_authenticated_extended_card:
+            if public_card.supports_authenticated_extended_card:
                 try:
                     logger.info(
                         "\nPublic card supports authenticated extended card. Attempting to fetch from: %s%s",
@@ -94,7 +94,7 @@ async def main() -> None:
                         e_extended,
                         exc_info=True,
                     )
-            elif _public_card:
+            elif public_card:
                 logger.info("\nPublic card does not indicate support for an extended card. Using public card.")
 
         except Exception as e:
