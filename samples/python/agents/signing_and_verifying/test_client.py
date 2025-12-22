@@ -1,12 +1,12 @@
 import logging
 
+from typing import TYPE_CHECKING
+
 import httpx
+
 from a2a.client import A2ACardResolver
 from a2a.client.client import ClientConfig
 from a2a.client.client_factory import ClientFactory
-from a2a.types import (
-    AgentCard,
-)
 from a2a.utils.constants import (
     AGENT_CARD_WELL_KNOWN_PATH,
     EXTENDED_AGENT_CARD_PATH,
@@ -16,10 +16,14 @@ from cryptography.hazmat.primitives import serialization
 from jwt.api_jwk import PyJWK
 
 
+if TYPE_CHECKING:
+    from a2a.types import AgentCard
+
+
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
         print('kid or jku missing')
-        raise ValueError()
+        raise ValueError
 
     response = httpx.get(jku)
     keys = response.json()
@@ -28,8 +32,7 @@ def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if pem_data_str:
         pem_data = pem_data_str.encode('utf-8')
         return serialization.load_pem_public_key(pem_data)
-    else:
-        raise ValueError("Key with kid '%s' not found in '%s'", kid, jku)
+    raise ValueError
 
 
 signature_verifier = create_signature_verifier(_key_provider, ['ES256'])
@@ -98,7 +101,7 @@ async def main() -> None:
                     logger.info(
                         '\nUsing AUTHENTICATED EXTENDED agent card for client initialization.'
                     )
-                except Exception as e_extended:
+                except (httpx.HTTPError, ValueError) as e_extended:
                     logger.warning(
                         'Failed to fetch or verify extended agent card: %s. Will proceed with public card.',
                         e_extended,
@@ -113,7 +116,7 @@ async def main() -> None:
             logger.exception(
                 'Critical error fetching public agent card.',
             )
-            raise RuntimeError() from e
+            raise RuntimeError from e
 
         # Create Client Factory
         client_factory = ClientFactory(config=ClientConfig(streaming=False))

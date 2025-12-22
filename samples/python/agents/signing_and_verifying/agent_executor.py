@@ -18,5 +18,4 @@ class SignedAgentExecutor(AgentExecutor):
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
         """Cancel method is not supported."""
-
-        raise Exception('Cancel not supported.')
+        print('Cancel not supported.')

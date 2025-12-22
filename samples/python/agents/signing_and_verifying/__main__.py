@@ -1,7 +1,9 @@
 import json
+
 from pathlib import Path
 
 import uvicorn
+
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
@@ -11,13 +13,13 @@ from a2a.types import (
     AgentSkill,
 )
 from a2a.utils.signing import create_agent_card_signer
+from agent_executor import (
+    SignedAgentExecutor,
+)
 from cryptography.hazmat.primitives import asymmetric, serialization
 from starlette.responses import FileResponse
 from starlette.routing import Route
 
-from agent_executor import (
-    SignedAgentExecutor,
-)
 
 if __name__ == '__main__':
     # Generate a private, public key pair
