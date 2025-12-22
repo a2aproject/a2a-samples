@@ -6,9 +6,6 @@ from a2a.utils import new_agent_text_message
 class SignedAgentExecutor(AgentExecutor):
     """Test AgentProxy Implementation."""
 
-    def __init__(self) -> None:
-        return
-
     async def execute(
         self,
         context: RequestContext,

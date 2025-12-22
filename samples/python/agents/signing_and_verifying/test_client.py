@@ -6,10 +6,6 @@ from a2a.client.client import ClientConfig
 from a2a.client.client_factory import ClientFactory
 from a2a.types import (
     AgentCard,
-    Message,
-    Part,
-    Role,
-    TextPart,
 )
 from a2a.utils.constants import (
     AGENT_CARD_WELL_KNOWN_PATH,
@@ -79,14 +75,14 @@ async def main() -> None:
                         EXTENDED_AGENT_CARD_PATH,
                     )
                     auth_headers_dict = {"Authorization": "Bearer dummy-token-for-extended-card"}
-                    _extended_card = await resolver.get_agent_card(
+                    extended_card = await resolver.get_agent_card(
                         relative_card_path=EXTENDED_AGENT_CARD_PATH,
                         http_kwargs={"headers": auth_headers_dict},
                         signature_verifier=signature_verifier,
                     )  # Verifies the extended AgentCard using signature_verifier function before returning it
                     logger.info("Successfully fetched and verified authenticated extended agent card:")
-                    logger.info(_extended_card.model_dump_json(indent=2, exclude_none=True))
-                    final_agent_card_to_use = _extended_card
+                    logger.info(extended_card.model_dump_json(indent=2, exclude_none=True))
+                    final_agent_card_to_use = extended_card
                     logger.info("\nUsing AUTHENTICATED EXTENDED agent card for client initialization.")
                 except Exception as e_extended:
                     logger.warning(
@@ -108,19 +104,6 @@ async def main() -> None:
 
         # Create Base Client
         client = client_factory.create(final_agent_card_to_use)
-
-        message_to_send = Message(
-            role=Role.user,
-            message_id="msg-integration-test-signing-and-verifying",
-            parts=[Part(root=TextPart(text="Hello, signature verification test!"))],
-        )
-
-        print("send_message response:")
-        async for chunk in client.send_message(message_to_send):
-            chunk_dict = chunk.model_dump(mode="json", exclude_none=True)
-            parts = chunk_dict["parts"]
-            for part in parts:
-                print(part["text"])
 
         get_card_response = await client.get_card(
             signature_verifier=signature_verifier
