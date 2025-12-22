@@ -18,7 +18,7 @@ from jwt.api_jwk import PyJWK
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
-        print("kid or jku missing")
+        print('kid or jku missing')
         raise ValueError()
 
     response = httpx.get(jku)
@@ -26,13 +26,13 @@ def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
 
     pem_data_str = keys.get(kid)
     if pem_data_str:
-        pem_data = pem_data_str.encode("utf-8")
+        pem_data = pem_data_str.encode('utf-8')
         return serialization.load_pem_public_key(pem_data)
     else:
         raise ValueError("Key with kid '%s' not found in '%s'", kid, jku)
 
 
-signature_verifier = create_signature_verifier(_key_provider, ["ES256"])
+signature_verifier = create_signature_verifier(_key_provider, ['ES256'])
 
 
 async def main() -> None:
@@ -41,7 +41,7 @@ async def main() -> None:
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 
-    base_url = "http://localhost:9999"
+    base_url = 'http://localhost:9999'
 
     async with httpx.AsyncClient() as httpx_client:
         # Initialize A2ACardResolver
@@ -55,47 +55,63 @@ async def main() -> None:
 
         try:
             logger.info(
-                "Attempting to fetch public agent card from: %s%s",
+                'Attempting to fetch public agent card from: %s%s',
                 base_url,
                 AGENT_CARD_WELL_KNOWN_PATH,
             )
             public_card = await resolver.get_agent_card(
                 signature_verifier=signature_verifier,
             )  # Verifies the AgentCard using signature_verifier function before returning it
-            logger.info("Successfully fetched public agent card:")
-            logger.info(public_card.model_dump_json(indent=2, exclude_none=True))
+            logger.info('Successfully fetched public agent card:')
+            logger.info(
+                public_card.model_dump_json(indent=2, exclude_none=True)
+            )
             final_agent_card_to_use = public_card
-            logger.info("\nUsing PUBLIC agent card for client initialization (default).")
+            logger.info(
+                '\nUsing PUBLIC agent card for client initialization (default).'
+            )
 
             if public_card.supports_authenticated_extended_card:
                 try:
                     logger.info(
-                        "\nPublic card supports authenticated extended card. Attempting to fetch from: %s%s",
+                        '\nPublic card supports authenticated extended card. Attempting to fetch from: %s%s',
                         base_url,
                         EXTENDED_AGENT_CARD_PATH,
                     )
-                    auth_headers_dict = {"Authorization": "Bearer dummy-token-for-extended-card"}
+                    auth_headers_dict = {
+                        'Authorization': 'Bearer dummy-token-for-extended-card'
+                    }
                     extended_card = await resolver.get_agent_card(
                         relative_card_path=EXTENDED_AGENT_CARD_PATH,
-                        http_kwargs={"headers": auth_headers_dict},
+                        http_kwargs={'headers': auth_headers_dict},
                         signature_verifier=signature_verifier,
                     )  # Verifies the extended AgentCard using signature_verifier function before returning it
-                    logger.info("Successfully fetched and verified authenticated extended agent card:")
-                    logger.info(extended_card.model_dump_json(indent=2, exclude_none=True))
+                    logger.info(
+                        'Successfully fetched and verified authenticated extended agent card:'
+                    )
+                    logger.info(
+                        extended_card.model_dump_json(
+                            indent=2, exclude_none=True
+                        )
+                    )
                     final_agent_card_to_use = extended_card
-                    logger.info("\nUsing AUTHENTICATED EXTENDED agent card for client initialization.")
+                    logger.info(
+                        '\nUsing AUTHENTICATED EXTENDED agent card for client initialization.'
+                    )
                 except Exception as e_extended:
                     logger.warning(
-                        "Failed to fetch or verify extended agent card: %s. Will proceed with public card.",
+                        'Failed to fetch or verify extended agent card: %s. Will proceed with public card.',
                         e_extended,
                         exc_info=True,
                     )
             elif public_card:
-                logger.info("\nPublic card does not indicate support for an extended card. Using public card.")
+                logger.info(
+                    '\nPublic card does not indicate support for an extended card. Using public card.'
+                )
 
         except Exception as e:
             logger.exception(
-                "Critical error fetching public agent card.",
+                'Critical error fetching public agent card.',
             )
             raise RuntimeError() from e
 
@@ -108,11 +124,11 @@ async def main() -> None:
         get_card_response = await client.get_card(
             signature_verifier=signature_verifier
         )  # Verifies the AgentCard using signature_verifier function before returning it
-        print("fetched again:")
-        print(get_card_response.model_dump(mode="json", exclude_none=True))
+        print('fetched again:')
+        print(get_card_response.model_dump(mode='json', exclude_none=True))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import asyncio
 
     asyncio.run(main())
