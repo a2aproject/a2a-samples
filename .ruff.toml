@@ -18,19 +18,21 @@ ignore = [
     "FBT002", # Boolean default value in function definition
     "D203",   # 1 blank line required before class docstring (Google: 0)
     "D213",   # Multi-line docstring summary should start at the second line (Google: first line)
-    "D100",   # Ignore Missing docstring in public module (often desired at top level __init__.py)
-    "D104",   # Ignore Missing docstring in public package (often desired at top level __init__.py)
-    "D107",   # Ignore Missing docstring in __init__ (use class docstring)
-    "TD002",  # Ignore Missing author in TODOs (often not required)
-    "TD003",  # Ignore Missing issue link in TODOs (often not required/available)
-    "T201",   # Ignore print presence
-    "RUF012", # Ignore Mutable class attributes should be annotated with `typing.ClassVar`
+    "D100",   # Missing docstring in public module (often desired at top level __init__.py)
+    "D104",   # Missing docstring in public package (often desired at top level __init__.py)
+    "D107",   # Missing docstring in __init__ (use class docstring)
+    "TD002",  # Missing author in TODOs (often not required)
+    "TD003",  # Missing issue link in TODOs (often not required/available)
+    "T201",   # Print presence
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
     "UP007",  # Do not upgrade `Optional[T]` to `T | None` (PEP 604 syntax)
-    "E501",   # Ignore line length (handled by Ruff's dynamic line length)
-    "ANN002",
-    "ANN003",
-    "ANN401",
-    "E402",
+    "E501",   # Line length (handled by Ruff's dynamic line length)
+    "ANN002", # Missing type annotation for `*args`
+    "ANN003", # Missing type annotation for `**kwargs`
+    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed 
+    "E402",   # Module level import not at top of file
+    "TRY002", # Create your own exception.
+    "TRY003", # Avoid specifying long messages outside the exception class.
 ]
 
 select = [
