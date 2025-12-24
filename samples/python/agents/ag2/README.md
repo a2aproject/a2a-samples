@@ -38,54 +38,35 @@ sequenceDiagram
 
 ## The demo
 
-Here we have a simple demo that shows how to use the A2A protocol to communicate with an AG2 agent. We have
-- one A2A-served remote agent `a2a_python_reviewer.py`
-- two different A2A clients, which communicate with the remote agent using the A2A protocol:
-    CLI code generator `cli_codegen_a2a_client.py` and FastAPI code generator `fastapi_codegen_a2a_client.py`
-
-## Prerequisites
-
-- Python 3.12 or higher
-- UV package manager
-- OpenAI API Key (for default configuration)
-
-## Setup & Running
-
-1. Navigate to the samples directory:
-
-    ```bash
-    cd samples/python/agents/ag2
-    ```
-
-2. Create an environment file with your API key (uses `openai gpt-4o`):
-
-    ```bash
-    echo "OPENAI_API_KEY=your_api_key_here" > .env
-    ```
-
-3. Install the dependencies:
-    ```bash
-    uv sync
-    ```
+This demo shows how to use the A2A protocol to communicate with an AG2 agent using a simple server/client architecture.
 
 4. Run the remote agent:
-    ```bash
-    uv run a2a_python_reviewer.py
-    ```
 
-5. In a new terminal, start an A2AClient interface to interact with the remote (ag2) agent. You can use one of the following clients:
+```bash
+uv run a2a_python_reviewer.py
+```
 
-    - **Method A: Run the CLI client**
+5. In a new terminal, start an A2A client to interact with the remote `ReviewerAgent`. Choose one of the following:
 
-        ```bash
-        uv run cli_codegen_a2a_client.py
-        ```
+- CLI client (generates CLI scripts):
 
-    - **Method B: Run the FastAPI client**
+```bash
+uv run cli_codegen_a2a_client.py
+```
 
-        ```bash
-        uv run fastapi_codegen_a2a_client.py
-        ```
+- FastAPI client (generates FastAPI apps):
+
+```bash
+uv run fastapi_codegen_a2a_client.py
+```
+
+- Optional: WebSocket demo UI (visual demo only):
+
+```bash
+uv run websocket.py
+```
+
+Then open [http://127.0.0.1:9000](http://127.0.0.1:9000) in your browser for the pixel-art themed interactive demo.
 
 ## Learn More
 
