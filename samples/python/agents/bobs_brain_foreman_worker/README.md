@@ -133,7 +133,7 @@ User -> Slack -> Bob (LlmAgent) -> A2A -> Foreman (LlmAgent) -> A2A -> 8 Workers
 ### Key Differences
 
 | Feature | This Demo | Production |
-|---------|-----------|------------|
+| ------- | --------- | ---------- |
 | **Bob Orchestrator** | [x] Full implementation with LlmAgent | [x] Full implementation with Slack integration |
 | **Foreman LLM** | [x] Uses `agent.run()` for routing | [x] Uses `agent.run()` for routing |
 | **A2A Protocol** | [x] Full chain: Bob <-> Foreman <-> Worker | [x] Full chain with all agents |
@@ -149,9 +149,9 @@ Bob's Brain is a complete ADK compliance department with:
 - **Hard Mode Compliance:** R1-R8 architectural rules enforced via CI
 - **95/100 Quality Score:** 145 docs, 65%+ test coverage, 28 canonical standards
 
-**Repository:** https://github.com/jeremylongshore/bobs-brain
+**Repository:** <https://github.com/jeremylongshore/bobs-brain>
 **Release:** v0.13.0
-**Linux Foundation AI Card Reference:** https://github.com/Agent-Card/ai-card/pull/7
+**Linux Foundation AI Card Reference:** <https://github.com/Agent-Card/ai-card/pull/7>
 
 ## Running This Demo
 
@@ -243,18 +243,18 @@ All three agents publish A2A AgentCards at `/.well-known/agent-card.json`:
 
 ## Learning Resources
 
-- **Full Production System:** https://github.com/jeremylongshore/bobs-brain
-- **ADK Documentation:** https://cloud.google.com/vertex-ai/docs/agent-development-kit
-- **A2A Protocol Spec:** https://github.com/a2aproject/a2a-protocol
-- **SPIFFE Identity:** https://spiffe.io/
+- **Full Production System:** <https://github.com/jeremylongshore/bobs-brain>
+- **ADK Documentation:** <https://cloud.google.com/vertex-ai/docs/agent-development-kit>
+- **A2A Protocol Spec:** <https://github.com/a2aproject/a2a-protocol>
+- **SPIFFE Identity:** <https://spiffe.io/>
 
 ## Contributing
 
 This is a demonstration example. For production-grade patterns and real-world usage, see the full Bob's Brain repository.
 
 **Questions?**
-- **Full System:** https://github.com/jeremylongshore/bobs-brain
-- **Contact:** jeremy@intentsolutions.io
+- **Full System:** <https://github.com/jeremylongshore/bobs-brain>
+- **Contact:** <jeremy@intentsolutions.io>
 
 ---
 
