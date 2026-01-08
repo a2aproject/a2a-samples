@@ -8,8 +8,6 @@ proposed_by: origo Labs (GitHub: @origo-labs)
 last_updated: 2026-01-01
 ---
 
-# RFC: A2A-SAGA — Saga Orchestration Extension for Agent2Agent (A2A)
-
 ## 1. Abstract
 
 This document specifies **A2A-SAGA**, an extension to the Agent2Agent (A2A) protocol that standardizes **saga-style orchestration** for multi-agent workflows.
@@ -87,7 +85,7 @@ Clients invoking any method defined in this specification (`saga.*`) MUST includ
 - **Header Name:** `A2A-Extensions`
   - **Legacy Alias:** Implementations MAY also accept `X-A2A-Extensions` for backward compatibility only. The `X-` prefix is deprecated by RFC 6648.
 - **Header Value:** Must contain the Extension URI as one item in the comma-separated list.
-    - _Example:_ `A2A-Extensions: https://a2a.dev/extensions/saga/v1`
+  - _Example:_ `A2A-Extensions: https://a2a.dev/extensions/saga/v1`
 
 **Server Behavior:**
 
@@ -202,7 +200,7 @@ If a step result is not successful (`failed`, `unknown`, or `pending_approval`),
 If a participant returns `status = "unknown"`:
 
 1. If the step definition includes a `verify` action AND the participant supports `saga.step.verify`:
-  - The orchestrator MUST invoke `saga.step.verify` before deciding to retry or compensate.
+- The orchestrator MUST invoke `saga.step.verify` before deciding to retry or compensate.
 2. If verification confirms the action succeeded, the step is treated as `succeeded`.
 3. If verification confirms the action did _not_ happen, the orchestrator MAY retry (if safe) or fail.
 4. If verification returns `status = "not_supported"`, the orchestrator MUST treat the step as having an **unknown** outcome and decide by policy whether to retry `execute`, fail the saga, or compensate.
