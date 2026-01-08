@@ -26,7 +26,9 @@ This RFC is **fully self-contained**: all protocol rules, JSON Schemas, and norm
 
 ## 2. Motivation
 
-As agents evolve from conversational assistants into autonomous actors, they increasingly perform **state-changing actions** across external systems: creating records, provisioning infrastructure, modifying configurations, and sending notifications. The reliability challenge is not merely issuing actions, but **knowing what actually happened** and recovering safely when actions fail or outcomes are uncertain.
+As agents evolve from conversational assistants into autonomous actors, they increasingly perform **state-changing actions** across external systems: creating records, provisioning infrastructure, modifying configurations, and sending notifications.
+
+The reliability challenge is not merely issuing actions, but **knowing what actually happened** and recovering safely when actions fail or outcomes are uncertain.
 
 ### 2.1 The Need for Specialized Verbs
 
@@ -54,7 +56,6 @@ A2A-SAGA standardizes the **Compensation Pattern**: best-effort undo/mitigation 
 - Safe retries via mandated idempotency.
 - Deterministic compensation ordering (including parallel steps).
 - **Discovery:** Standardized advertisement of saga roles via the Agent Card.
-    
 
 ### 3.2 Non-Goals
 
@@ -74,7 +75,6 @@ The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** ar
 - **Verification:** Operation to determine whether an effect occurred.
 - **Protocol Error:** A failure in the RPC mechanics (e.g., malformed JSON, missing header).
 - **Application Error:** A valid RPC call resulting in a logical failure (e.g., "Out of Stock").
-    
 
 ## 5. Extension Identification and Activation
 
@@ -88,12 +88,11 @@ Clients invoking any method defined in this specification (`saga.*`) MUST includ
   - **Legacy Alias:** Implementations MAY also accept `X-A2A-Extensions` for backward compatibility only. The `X-` prefix is deprecated by RFC 6648.
 - **Header Value:** Must contain the Extension URI as one item in the comma-separated list.
     - _Example:_ `A2A-Extensions: https://a2a.dev/extensions/saga/v1`
-        
 
 **Server Behavior:**
 
 1. If the header is present and the server supports the extension, it MUST process the request according to this RFC.
- 
+
 2. If the header is **missing** or does not include this extension URI, and the client invokes a `saga.*` method, the server MUST reject the request with JSON-RPC error code `-32601` (Method not found) or a specific extension error `-32001` (Extension required).
    - If the Agent Card declares the extension as `required: true`, the server SHOULD use `-32001` to make the requirement explicit.
 
@@ -152,12 +151,11 @@ A2A-SAGA defines the following JSON-RPC methods:
 Implementations MUST distinguish between **Protocol Errors** and **Application Failures**.
 
 - **Protocol Errors:** Returned as JSON-RPC Error objects (non-200 semantic).
-    - `-32600`: Invalid Request (e.g., missing `idempotency_key`).
-    - `-32602`: Invalid Params (e.g., schema violation).
-        
+  - `-32600`: Invalid Request (e.g., missing `idempotency_key`).
+  - `-32602`: Invalid Params (e.g., schema violation).
 - **Application Failures:** Returned as a valid JSON-RPC `result` object with `status: "failed"` or `status: "unknown"`.
-    - This allows the orchestrator to inspect the `failure` payload (reason, criticality) and decide on retry vs. compensation.
-    
+  - This allows the orchestrator to inspect the `failure` payload (reason, criticality) and decide on retry vs. compensation.
+
 ## 7. Parallel Group Semantics (Normative)
 
 ### 7.1 Grouping
@@ -204,11 +202,10 @@ If a step result is not successful (`failed`, `unknown`, or `pending_approval`),
 If a participant returns `status = "unknown"`:
 
 1. If the step definition includes a `verify` action AND the participant supports `saga.step.verify`:
-    - The orchestrator MUST invoke `saga.step.verify` before deciding to retry or compensate.
+  - The orchestrator MUST invoke `saga.step.verify` before deciding to retry or compensate.
 2. If verification confirms the action succeeded, the step is treated as `succeeded`.
 3. If verification confirms the action did _not_ happen, the orchestrator MAY retry (if safe) or fail.
 4. If verification returns `status = "not_supported"`, the orchestrator MUST treat the step as having an **unknown** outcome and decide by policy whether to retry `execute`, fail the saga, or compensate.
-    
 
 ## 9. Idempotency (Normative)
 
@@ -230,14 +227,13 @@ Participants MUST ensure that repeated calls with the same `idempotency_key`:
 - **P-Min:** Implements `saga.step.execute` with strict idempotency.
 - **P0:** P-Min + `saga.step.compensate`.
 - **P1 (Recommended):** P0 + `saga.step.verify`.
-    
 
 ### 10.2 Orchestrator Conformance
 
 - **O0:** Serial execution, basic compensation on failure.
 - **O1:** Supports parallel groups (Section 7) and verification logic (Section 8.2).
 
-# Appendix A — Normative JSON Schemas
+## Appendix A — Normative JSON Schemas
 
 **Notes:** Schemas are JSON Schema Draft 2020-12.
 
@@ -557,8 +553,6 @@ Participants MUST ensure that repeated calls with the same `idempotency_key`:
     "evidence": { "$ref": "#/$defs/Evidence" },
     "failure": { "$ref": "#/$defs/FailureInfo" }
   },
-     "failure": { "$ref": "#/$defs/FailureInfo" }
-  },
   "allOf": [
     {
       "if": { "properties": { "status": { "const": "compensated" } } },
@@ -573,13 +567,12 @@ Participants MUST ensure that repeated calls with the same `idempotency_key`:
 }
 ```
 
-# Appendix B — Normative Test Vectors
+## Appendix B — Normative Test Vectors
 
 ## B.1 Test Vector Rules (Normative)
 
 - **Normativity:** Implementations claiming conformance MUST be able to process these message sequences and produce results that conform to the schemas and match the expected status.
 - **Evidence:** Evidence values (IDs, timestamps) MAY differ unless the vector explicitly requires stability (see B.3).
-    
 
 ## B.2 Test Vector Set A — Parallel Groups + Recovery
 
@@ -592,7 +585,6 @@ Goal: “Onboard customer c123” with parallel execution, failure, and compensa
 3. **Action:** Orchestrator verifies `provision_workspace` -> `not_verified` (Effect did not happen).
 4. **Action:** Orchestrator retries `provision_workspace` -> Fails deterministically.
 5. **Recovery:** Orchestrator aborts. Compensates G1 in parallel.
-    
 
 ### B.2.2 `saga.start`
 
