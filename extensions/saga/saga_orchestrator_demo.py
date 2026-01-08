@@ -20,8 +20,7 @@ A2A_EXTENSION_HEADER_KEY = 'A2A-Extensions'
 
 # Setup Logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger('SagaOrchestrator')
 
@@ -30,23 +29,23 @@ logger = logging.getLogger('SagaOrchestrator')
 _MOCK_RESPONSES: dict[tuple[str, str], dict] = {
     ('reserve_username', 'saga.step.execute'): {
         'status': 'succeeded',
-        'evidence': {'reservation_id': 'resv-001'}
+        'evidence': {'reservation_id': 'resv-001'},
     },
     ('create_customer_record', 'saga.step.execute'): {
         'status': 'succeeded',
-        'evidence': {'customer_row_id': 'crm-777'}
+        'evidence': {'customer_row_id': 'crm-777'},
     },
     ('provision_workspace', 'saga.step.verify'): {
         'status': 'not_verified',
-        'details': {'workspace': None}
+        'details': {'workspace': None},
     },
     ('reserve_username', 'saga.step.compensate'): {
         'status': 'compensated',
-        'evidence': {'released': True}
+        'evidence': {'released': True},
     },
     ('create_customer_record', 'saga.step.compensate'): {
         'status': 'compensated',
-        'evidence': {'deleted': True}
+        'evidence': {'deleted': True},
     },
 }
 
@@ -63,15 +62,15 @@ def _make_provision_response(idempotency_key: str | None) -> dict:
             'status': 'failed',
             'failure': {
                 'failure_class': 'deterministic',
-                'reason': 'Plan not available'
-            }
+                'reason': 'Plan not available',
+            },
         }
     return {
         'status': 'unknown',
         'failure': {
             'failure_class': 'unknown',
-            'reason': 'timeout after dispatch'
-        }
+            'reason': 'timeout after dispatch',
+        },
     }
 
 
@@ -83,11 +82,7 @@ class A2AClient:
     """
 
     async def call_method(
-        self,
-        url: str,
-        method: str,
-        params: dict,
-        headers: dict
+        self, url: str, method: str, params: dict, headers: dict
     ) -> dict:
         """Simulates the network call.
 
@@ -120,10 +115,7 @@ class A2AClient:
         return None
 
     def _get_mock_response(
-        self,
-        step_id: str,
-        method: str,
-        idempotency_key: str | None
+        self, step_id: str, method: str, idempotency_key: str | None
     ) -> dict:
         """Get the mock response for the given step and method."""
         key = (step_id, method)
@@ -146,6 +138,7 @@ class A2AClient:
 @dataclass(frozen=True)
 class ActionSpec:
     """Specification for an action to be executed."""
+
     action: str
     args: dict[str, Any]
 
@@ -153,18 +146,21 @@ class ActionSpec:
 @dataclass(frozen=True)
 class ExecuteSpec(ActionSpec):
     """Specification for executing an action with idempotency."""
+
     idempotency_key: str
 
 
 @dataclass(frozen=True)
 class CompensateSpec(ActionSpec):
     """Specification for compensating an action with idempotency."""
+
     idempotency_key: str
 
 
 @dataclass(frozen=True)
 class StepDefinition:
     """Definition of a single step in a saga."""
+
     step_id: str
     participant: str
     execute: ExecuteSpec
@@ -179,6 +175,7 @@ class StepDefinition:
 @dataclass(frozen=True)
 class SagaDefinition:
     """Definition of a complete saga with all its steps."""
+
     saga_id: str
     goal: str
     steps: list[StepDefinition]
@@ -189,6 +186,7 @@ class SagaDefinition:
 @dataclass
 class SagaContext:
     """Runtime context for a saga execution."""
+
     saga_id: str
     applied_steps_by_group: OrderedDict[str, list[StepDefinition]] = field(
         default_factory=OrderedDict
@@ -198,6 +196,7 @@ class SagaContext:
 
 class StepResult(Enum):
     """Enumeration of possible step result statuses."""
+
     SUCCEEDED = 'succeeded'
     FAILED = 'failed'
     UNKNOWN = 'unknown'
@@ -219,7 +218,7 @@ class SagaOrchestrator:
         """Normative Requirement: 5.1 Header Negotiation."""
         return {
             'Content-Type': 'application/json',
-            A2A_EXTENSION_HEADER_KEY: SAGA_EXTENSION_URI
+            A2A_EXTENSION_HEADER_KEY: SAGA_EXTENSION_URI,
         }
 
     async def run_saga(self, saga_def: SagaDefinition) -> dict:
@@ -240,19 +239,22 @@ class SagaOrchestrator:
         try:
             for group_id, group_steps in grouped_steps.items():
                 logger.info(
-                    'Executing Group: %s (%d steps)',
-                    group_id,
-                    len(group_steps)
+                    'Executing Group: %s (%d steps)', group_id, len(group_steps)
                 )
 
                 # Execute group in parallel (O1 Conformance)
-                results = await asyncio.gather(*[
-                    self._execute_step(ctx, step, group_id) for step in group_steps
-                ])
+                results = await asyncio.gather(
+                    *[
+                        self._execute_step(ctx, step, group_id)
+                        for step in group_steps
+                    ]
+                )
 
                 # Check for failures in the group
                 failed_results = [
-                    r for r in results if r['status'] != StepResult.SUCCEEDED.value
+                    r
+                    for r in results
+                    if r['status'] != StepResult.SUCCEEDED.value
                 ]
 
                 if failed_results:
@@ -267,15 +269,10 @@ class SagaOrchestrator:
         return {'status': 'completed', 'ctx': ctx}
 
     def _handle_group_failure(
-        self,
-        group_id: str,
-        failed_results: list[dict]
+        self, group_id: str, failed_results: list[dict]
     ) -> None:
         """Handle saga failure for a group."""
-        logger.error(
-            'Group %s failed. Initiating Compensation.',
-            group_id
-        )
+        logger.error('Group %s failed. Initiating Compensation.', group_id)
         raise SagaFailedError(
             'Saga Failed at group %s: %s', group_id, failed_results[0]
         )
@@ -310,8 +307,8 @@ class SagaOrchestrator:
             'execute': {
                 'action': step.execute.action,
                 'args': step.execute.args,
-                'idempotency_key': step.execute.idempotency_key
-            }
+                'idempotency_key': step.execute.idempotency_key,
+            },
         }
 
         # RPC Call
@@ -319,7 +316,7 @@ class SagaOrchestrator:
             url=step.participant,
             method='saga.step.execute',
             params=payload,
-            headers=self._get_headers()
+            headers=self._get_headers(),
         )
 
         status = response.get('status')
@@ -333,7 +330,7 @@ class SagaOrchestrator:
             elif verification['status'] == 'not_verified':
                 logger.info(
                     'Verification failed for %s. Retrying execute once.',
-                    step_id
+                    step_id,
                 )
                 response = await self._retry_execute_step(ctx, step)
                 status = response.get('status')
@@ -341,12 +338,12 @@ class SagaOrchestrator:
         if status in (
             StepResult.FAILED.value,
             StepResult.UNKNOWN.value,
-            'pending_approval'
+            'pending_approval',
         ):
-            response.setdefault('failure', {
-                'failure_class': 'unknown',
-                'reason': 'unspecified failure'
-            })
+            response.setdefault(
+                'failure',
+                {'failure_class': 'unknown', 'reason': 'unspecified failure'},
+            )
 
         # Record success for potential future compensation
         if status == StepResult.SUCCEEDED.value:
@@ -359,23 +356,18 @@ class SagaOrchestrator:
     ) -> dict:
         """Verifies the outcome of a step."""
         if step.verify is None:
-            raise ValueError(
-                'Missing verify action for step %s', step.step_id
-            )
+            raise ValueError('Missing verify action for step %s', step.step_id)
 
         payload = {
             'saga_id': ctx.saga_id,
             'step_id': step.step_id,
-            'verify': {
-                'action': step.verify.action,
-                'args': step.verify.args
-            }
+            'verify': {'action': step.verify.action, 'args': step.verify.args},
         }
         return await self.client.call_method(
             url=step.participant,
             method='saga.step.verify',
             params=payload,
-            headers=self._get_headers()
+            headers=self._get_headers(),
         )
 
     async def _retry_execute_step(
@@ -392,15 +384,15 @@ class SagaOrchestrator:
             'execute': {
                 'action': step.execute.action,
                 'args': step.execute.args,
-                'idempotency_key': f'{step.execute.idempotency_key}:retry-{retry_count}'
-            }
+                'idempotency_key': f'{step.execute.idempotency_key}:retry-{retry_count}',
+            },
         }
 
         return await self.client.call_method(
             url=step.participant,
             method='saga.step.execute',
             params=retry_payload,
-            headers=self._get_headers()
+            headers=self._get_headers(),
         )
 
     async def _compensate_saga(self, ctx: SagaContext) -> None:
@@ -415,9 +407,9 @@ class SagaOrchestrator:
             group_steps = ctx.applied_steps_by_group[group_id]
             if not group_steps:
                 continue
-            await asyncio.gather(*[
-                self._compensate_step(ctx, step) for step in group_steps
-            ])
+            await asyncio.gather(
+                *[self._compensate_step(ctx, step) for step in group_steps]
+            )
 
         logger.info('--- COMPENSATION COMPLETE ---')
 
@@ -443,8 +435,8 @@ class SagaOrchestrator:
             'compensate': {
                 'action': step.compensate.action,
                 'args': step.compensate.args,
-                'idempotency_key': step.compensate.idempotency_key
-            }
+                'idempotency_key': step.compensate.idempotency_key,
+            },
         }
 
         logger.info('Compensating %s...', step_id)
@@ -452,7 +444,7 @@ class SagaOrchestrator:
             url=step.participant,
             method='saga.step.compensate',
             params=payload,
-            headers=self._get_headers()
+            headers=self._get_headers(),
         )
 
 
@@ -475,19 +467,18 @@ async def main() -> None:
                 execute=ExecuteSpec(
                     action='reserve_username',
                     args={'customer_id': 'c123', 'username': 'acme'},
-                    idempotency_key='tvA-saga-001:reserve_username:exec'
+                    idempotency_key='tvA-saga-001:reserve_username:exec',
                 ),
                 compensate=CompensateSpec(
                     action='release_username',
                     args={'username': 'acme'},
-                    idempotency_key='tvA-saga-001:reserve_username:comp'
+                    idempotency_key='tvA-saga-001:reserve_username:comp',
                 ),
                 verify=ActionSpec(
-                    action='get_reservation',
-                    args={'username': 'acme'}
+                    action='get_reservation', args={'username': 'acme'}
                 ),
                 reversibility='full',
-                criticality='medium'
+                criticality='medium',
             ),
             StepDefinition(
                 step_id='create_customer_record',
@@ -496,15 +487,15 @@ async def main() -> None:
                 execute=ExecuteSpec(
                     action='create_customer',
                     args={'customer_id': 'c123', 'name': 'ACME'},
-                    idempotency_key='tvA-saga-001:create_customer_record:exec'
+                    idempotency_key='tvA-saga-001:create_customer_record:exec',
                 ),
                 compensate=CompensateSpec(
                     action='delete_customer',
                     args={'customer_id': 'c123'},
-                    idempotency_key='tvA-saga-001:create_customer_record:comp'
+                    idempotency_key='tvA-saga-001:create_customer_record:comp',
                 ),
                 reversibility='full',
-                criticality='high'
+                criticality='high',
             ),
             # Group 2: Dependent (Will Fail)
             StepDefinition(
@@ -514,16 +505,15 @@ async def main() -> None:
                 execute=ExecuteSpec(
                     action='provision_workspace',
                     args={'customer_id': 'c123', 'plan': 'pro'},
-                    idempotency_key='tvA-saga-001:provision_workspace:exec'
+                    idempotency_key='tvA-saga-001:provision_workspace:exec',
                 ),
                 verify=ActionSpec(
-                    action='get_workspace',
-                    args={'customer_id': 'c123'}
+                    action='get_workspace', args={'customer_id': 'c123'}
                 ),
                 reversibility='full',
-                criticality='high'
-            )
-        ]
+                criticality='high',
+            ),
+        ],
     )
 
     await orchestrator.run_saga(saga_definition)
@@ -535,14 +525,14 @@ async def main() -> None:
         'execute': {
             'action': 'reserve_username',
             'args': {'customer_id': 'c123', 'username': 'acme'},
-            'idempotency_key': 'tvA-saga-001:reserve_username:exec'
-        }
+            'idempotency_key': 'tvA-saga-001:reserve_username:exec',
+        },
     }
     tvb_response = await client.call_method(
         url='a2a://agent/identity',
         method='saga.step.execute',
         params=tvb_payload,
-        headers=orchestrator._get_headers()  # noqa: SLF001
+        headers=orchestrator._get_headers(),  # noqa: SLF001
     )
     logger.info('Test Vector B replay response: %s', tvb_response)
 
