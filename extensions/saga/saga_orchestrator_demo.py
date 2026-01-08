@@ -120,14 +120,17 @@ class SagaDefinition:
 @dataclass
 class SagaContext:
     saga_id: str
-    history: List[Dict] = field(default_factory=list)
-    applied_steps_by_group: "OrderedDict[str, List[StepDefinition]]" = field(default_factory=OrderedDict)
+    applied_steps_by_group: OrderedDict[str, List[StepDefinition]] = field(default_factory=OrderedDict)
     retry_counts: Dict[str, int] = field(default_factory=dict)
 
 class StepResult(Enum):
     SUCCEEDED = "succeeded"
     FAILED = "failed"
     UNKNOWN = "unknown"
+
+class SagaFailedException(Exception):
+    """Custom exception for saga failures."""
+    pass
 
 # --- The Orchestrator Implementation ---
 
@@ -173,12 +176,12 @@ class SagaOrchestrator:
                 
                 if failed_results:
                     logger.error(f"Group {group_id} failed. Initiating Compensation.")
-                    raise Exception(f"Saga Failed at group {group_id}: {failed_results[0]}")
+                    raise SagaFailedException(f"Saga Failed at group {group_id}: {failed_results[0]}")
 
             logger.info(f"Saga {saga_id} Completed Successfully!")
             return {"status": "completed", "ctx": ctx}
 
-        except Exception as e:
+        except SagaFailedException as e:
             logger.warning(f"Aborting Saga: {e}")
             await self._compensate_saga(ctx)
             return {"status": "compensated", "error": str(e)}

@@ -387,7 +387,7 @@ Participants MUST ensure that repeated calls with the same `idempotency_key`:
   "title": "saga.start params",
   "type": "object",
   "additionalProperties": false,
-  "required": ["saga_id", "goal"],
+  "required": ["saga_id", "goal", "steps"],
   "properties": {
     "saga_id": { "$ref": "#/$defs/SagaId" },
     "goal": { "type": "string", "minLength": 1, "maxLength": 4096 },
@@ -557,6 +557,18 @@ Participants MUST ensure that repeated calls with the same `idempotency_key`:
     "evidence": { "$ref": "#/$defs/Evidence" },
     "failure": { "$ref": "#/$defs/FailureInfo" }
   },
+     "failure": { "$ref": "#/$defs/FailureInfo" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "compensated" } } },
+      "then": { "required": ["evidence"] }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["failed", "unknown", "pending_approval"] } } },
+      "then": { "required": ["failure"] }
+    }
+  ],
   "$defs": {}
 }
 ```
