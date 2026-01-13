@@ -24,7 +24,6 @@ import io.a2a.spec.TextPart;
 import io.a2a.spec.UpdateEvent;
 import io.grpc.Channel;
 import io.grpc.ManagedChannelBuilder;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,18 +33,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-/**
- * Creates an A2A client that sends a test message to the A2A server agent.
- */
+/** Creates an A2A client that sends a test message to the A2A server agent. */
 public final class TestClient {
-  /**
-   * The default server URL to use.
-   */
+  /** The default server URL to use. */
   private static final String DEFAULT_SERVER_URL = "http://localhost:10000";
 
-  /**
-   * Object mapper to use.
-   */
+  /** Object mapper to use. */
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   private TestClient() {
@@ -64,17 +57,18 @@ public final class TestClient {
       System.out.println("Connecting to currency agent at: " + serverUrl);
 
       // Fetch the public agent card
-      AgentCard publicAgentCard =
-        new A2ACardResolver(serverUrl).getAgentCard();
-      System.out.printf("""
-        Successfully fetched public agent card:
-        %s
-        Using public agent card for client initialization.%n
-        """, OBJECT_MAPPER.writeValueAsString(publicAgentCard));
+      AgentCard publicAgentCard = new A2ACardResolver(serverUrl).getAgentCard();
+      System.out.printf(
+          """
+          Successfully fetched public agent card:
+          %s
+          Using public agent card for client initialization.%n
+          """,
+          OBJECT_MAPPER.writeValueAsString(publicAgentCard));
 
-      ClientConfig clientConfig = new ClientConfig.Builder()
-        .setAcceptedOutputModes(List.of("text"))
-        .build();
+      ClientConfig clientConfig =
+          new ClientConfig.Builder().setAcceptedOutputModes(List.of("text"))
+            .build();
 
       // Create and send the message without INPUT_REQUIRED
       runSingleTurnDemo(publicAgentCard, clientConfig);
@@ -87,34 +81,50 @@ public final class TestClient {
     }
   }
 
-  private static void runMultiTurnDemo(final AgentCard publicAgentCard,
-                                       final ClientConfig clientConfig) {
+  private static void runMultiTurnDemo(
+      final AgentCard publicAgentCard, final ClientConfig clientConfig) {
     StreamingClient streamingClient1 = getStreamingClient(publicAgentCard,
       clientConfig);
     StreamingClient streamingClient2 = getStreamingClient(publicAgentCard,
       clientConfig);
 
-    MessageResponse message1 = sendMessage(streamingClient1.client(),
-      "How much is the exchange rate for 1 USD?", null, null,
-      streamingClient1.messageResponse());
+    MessageResponse message1 =
+        sendMessage(
+            streamingClient1.client(),
+            "How much is the exchange rate for 1 USD?",
+            null,
+            null,
+            streamingClient1.messageResponse());
 
     // Resubscribe to a task to send additional information for this task
-    streamingClient2.client().resubscribe(new TaskIdParams(message1.taskId()),
-      streamingClient2.consumers(), streamingClient2.streamingErrorHandler());
-    sendMessage(streamingClient2.client(), "CAD", message1.contextId(),
-      message1.taskId(), streamingClient2.messageResponse());
+    streamingClient2
+        .client()
+        .resubscribe(
+            new TaskIdParams(message1.taskId()),
+            streamingClient2.consumers(),
+            streamingClient2.streamingErrorHandler());
+    sendMessage(
+        streamingClient2.client(),
+        "CAD",
+        message1.contextId(),
+        message1.taskId(),
+        streamingClient2.messageResponse());
   }
 
-  private static void runSingleTurnDemo(final AgentCard publicAgentCard,
-                                        final ClientConfig clientConfig) {
+  private static void runSingleTurnDemo(
+      final AgentCard publicAgentCard, final ClientConfig clientConfig) {
     StreamingClient streamingClient = getStreamingClient(publicAgentCard,
       clientConfig);
-    sendMessage(streamingClient.client(), "how much is 10 USD in INR?",
-      null, null, streamingClient.messageResponse());
+    sendMessage(
+        streamingClient.client(),
+        "how much is 10 USD in INR?",
+        null,
+        null,
+        streamingClient.messageResponse());
   }
 
   private static StreamingClient getStreamingClient(
-    final AgentCard publicAgentCard, final ClientConfig clientConfig) {
+      final AgentCard publicAgentCard, final ClientConfig clientConfig) {
     // Create a CompletableFuture to handle async response
     CompletableFuture<MessageResponse> messageResponse =
       new CompletableFuture<>();
@@ -124,28 +134,31 @@ public final class TestClient {
       getConsumers(messageResponse);
 
     // Create error handler for streaming errors
-    Consumer<Throwable> streamingErrorHandler = error -> {
-      if (!isStreamClosedError(error)) {
-        System.out.printf("Streaming error occurred: %s%n", error.getMessage());
-        error.printStackTrace();
-        messageResponse.completeExceptionally(error);
-      }
-    };
+    Consumer<Throwable> streamingErrorHandler =
+        error -> {
+          if (!isStreamClosedError(error)) {
+            System.out.printf("Streaming error occurred: %s%n",
+              error.getMessage());
+            error.printStackTrace();
+            messageResponse.completeExceptionally(error);
+          }
+        };
 
     // Create channel factory
     Function<String, Channel> channelFactory =
-      agentUrl -> ManagedChannelBuilder.forTarget(agentUrl)
-        .usePlaintext().build();
+        agentUrl -> ManagedChannelBuilder.forTarget(agentUrl).usePlaintext()
+          .build();
 
     // Create the client with both JSON-RPC and gRPC transport support
-    Client client = Client.builder(publicAgentCard)
-      .addConsumers(consumers)
-      .streamingErrorHandler(streamingErrorHandler)
-      .withTransport(GrpcTransport.class,
-        new GrpcTransportConfig(channelFactory))
-      .withTransport(JSONRPCTransport.class, new JSONRPCTransportConfig())
-      .clientConfig(clientConfig)
-      .build();
+    Client client =
+        Client.builder(publicAgentCard)
+            .addConsumers(consumers)
+            .streamingErrorHandler(streamingErrorHandler)
+            .withTransport(GrpcTransport.class,
+              new GrpcTransportConfig(channelFactory))
+            .withTransport(JSONRPCTransport.class, new JSONRPCTransportConfig())
+            .clientConfig(clientConfig)
+            .build();
     return new StreamingClient(messageResponse, consumers,
       streamingErrorHandler, client);
   }
@@ -158,8 +171,9 @@ public final class TestClient {
       if (cause instanceof EOFException) {
         return true;
       }
-      if (cause instanceof IOException && cause.getMessage() != null
-        && cause.getMessage().contains("cancelled")) {
+      if (cause instanceof IOException
+          && cause.getMessage() != null
+          && cause.getMessage().contains("cancelled")) {
         // stream is closed upon cancellation
         return true;
       }
@@ -169,22 +183,21 @@ public final class TestClient {
   }
 
   private record StreamingClient(
-    CompletableFuture<MessageResponse> messageResponse,
-    List<BiConsumer<ClientEvent, AgentCard>> consumers,
-    Consumer<Throwable> streamingErrorHandler, Client client) {
-  }
+      CompletableFuture<MessageResponse> messageResponse,
+      List<BiConsumer<ClientEvent, AgentCard>> consumers,
+      Consumer<Throwable> streamingErrorHandler,
+      Client client) {}
 
   // Format for the response
   public record MessageResponse(String message, String contextId,
-                                String taskId) {
-  }
+                                String taskId) {}
 
-  private static MessageResponse
-  sendMessage(final Client client,
-              final String messageText,
-              final String contextId,
-              final String taskId,
-              final CompletableFuture<MessageResponse> messageResponse) {
+  private static MessageResponse sendMessage(
+      final Client client,
+      final String messageText,
+      final String contextId,
+      final String taskId,
+      final CompletableFuture<MessageResponse> messageResponse) {
     Message message = A2A.toUserMessage(messageText);
 
     System.out.printf("Sending message: %s, %s, %s%n", messageText, contextId,
@@ -203,46 +216,43 @@ public final class TestClient {
     }
   }
 
-  private static List<BiConsumer<ClientEvent, AgentCard>>
-  getConsumers(final CompletableFuture<MessageResponse> messageResponse) {
+  private static List<BiConsumer<ClientEvent, AgentCard>> getConsumers(
+      final CompletableFuture<MessageResponse> messageResponse) {
     List<BiConsumer<ClientEvent, AgentCard>> consumers = new ArrayList<>();
     consumers.add(
-      (event, agentCard) -> {
-        if (event instanceof MessageEvent messageEvent) {
-          Message responseMessage = messageEvent.getMessage();
-          String text = extractTextFromParts(responseMessage.getParts());
-          System.out.println("Received message: " + text);
-          messageResponse.complete(
-            new MessageResponse(text, null, null));
-        } else if (event instanceof TaskUpdateEvent taskUpdateEvent) {
-          UpdateEvent updateEvent = taskUpdateEvent.getUpdateEvent();
-          if (updateEvent instanceof TaskStatusUpdateEvent
-            taskStatusUpdateEvent) {
-            System.out.println("Received status-update: "
-              + taskStatusUpdateEvent.getStatus().state().asString());
-            if (taskStatusUpdateEvent.isFinal()) {
-              StringBuilder builder = new StringBuilder();
-              List<Artifact> artifacts =
-                taskUpdateEvent.getTask().getArtifacts();
-              for (Artifact artifact : artifacts) {
-                builder.append(extractTextFromParts(artifact.parts()));
+        (event, agentCard) -> {
+          if (event instanceof MessageEvent messageEvent) {
+            Message responseMessage = messageEvent.getMessage();
+            String text = extractTextFromParts(responseMessage.getParts());
+            System.out.println("Received message: " + text);
+            messageResponse.complete(new MessageResponse(text, null, null));
+          } else if (event instanceof TaskUpdateEvent taskUpdateEvent) {
+            UpdateEvent updateEvent = taskUpdateEvent.getUpdateEvent();
+            if (updateEvent instanceof TaskStatusUpdateEvent taskStatusUpdateEvent) {
+              System.out.println(
+                  "Received status-update: "
+                      + taskStatusUpdateEvent.getStatus().state().asString());
+              if (taskStatusUpdateEvent.isFinal()) {
+                StringBuilder builder = new StringBuilder();
+                List<Artifact> artifacts = taskUpdateEvent.getTask().getArtifacts();
+                for (Artifact artifact : artifacts) {
+                  builder.append(extractTextFromParts(artifact.parts()));
+                }
+                messageResponse.complete(
+                    new MessageResponse(
+                        builder.toString(),
+                        taskStatusUpdateEvent.getContextId(),
+                        taskStatusUpdateEvent.getTaskId()));
               }
-              messageResponse.complete(new MessageResponse(builder.toString(),
-                taskStatusUpdateEvent.getContextId(),
-                taskStatusUpdateEvent.getTaskId()));
+            } else if (updateEvent instanceof TaskArtifactUpdateEvent taskArtifactUpdateEvent) {
+              List<Part<?>> parts = taskArtifactUpdateEvent.getArtifact().parts();
+              String text = extractTextFromParts(parts);
+              System.out.println("Received artifact-update: " + text);
             }
-          } else if (updateEvent instanceof TaskArtifactUpdateEvent
-            taskArtifactUpdateEvent) {
-            List<Part<?>> parts = taskArtifactUpdateEvent.getArtifact().parts();
-            String text = extractTextFromParts(parts);
-            System.out.println("Received artifact-update: " + text);
+          } else if (event instanceof TaskEvent taskEvent) {
+            System.out.println("Received task event: " + taskEvent.getTask().getId());
           }
-        } else if (event instanceof TaskEvent taskEvent) {
-          System.out.println("Received task event: "
-            + taskEvent.getTask().getId());
-        }
-      }
-    );
+        });
     return consumers;
   }
 
