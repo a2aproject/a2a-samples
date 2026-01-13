@@ -13,13 +13,18 @@ import io.a2a.spec.TextPart;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
+
 import java.util.List;
 
-/** Producer for currency agent executor. */
+/**
+ * Producer for currency agent executor.
+ */
 @ApplicationScoped
 public final class CurrencyAgentExecutorProducer {
 
-  /** The currency agent instance. */
+  /**
+   * The currency agent instance.
+   */
   private final CurrencyAgent agent;
 
   /**
@@ -50,9 +55,13 @@ public final class CurrencyAgentExecutorProducer {
     return new CurrencyAgentExecutor(getCurrencyAgent());
   }
 
-  /** Currency agent executor implementation. */
+  /**
+   * Currency agent executor implementation.
+   */
   private class CurrencyAgentExecutor implements AgentExecutor {
-    /** The currency agent instance. */
+    /**
+     * The currency agent instance.
+     */
     private final CurrencyAgent agent;
 
     /**
@@ -66,8 +75,7 @@ public final class CurrencyAgentExecutorProducer {
 
     @Override
     public void execute(final RequestContext context,
-                        final EventQueue eventQueue)
-        throws JSONRPCError {
+                        final EventQueue eventQueue) throws JSONRPCError {
       executeLoop(context, eventQueue);
     }
 
@@ -123,12 +131,11 @@ public final class CurrencyAgentExecutorProducer {
 
     @Override
     public void cancel(final RequestContext context,
-                       final EventQueue eventQueue)
-        throws JSONRPCError {
+                       final EventQueue eventQueue) throws JSONRPCError {
       var task = context.getTask();
 
       if (task.getStatus().state() == TaskState.CANCELED
-          || task.getStatus().state() == TaskState.COMPLETED) {
+        || task.getStatus().state() == TaskState.COMPLETED) {
         // task already canceled or completed
         throw new TaskNotCancelableError();
       }
