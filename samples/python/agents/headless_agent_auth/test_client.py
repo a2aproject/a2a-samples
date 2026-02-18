@@ -40,21 +40,42 @@ class AgentAuth(httpx.Auth):
 
     def auth_flow(self, request):
         global access_token
-        auth = self.agent_card.authentication
 
-        # skip if not using oauth2 or credentials details are missing
-        if not (
-            any(scheme.lower() == 'oauth2' for scheme in auth.schemes)
-            and auth.credentials
-        ):
-            yield request
-            return
+        # 1. Get the schemes map
+        schemes_obj = getattr(self.agent_card, "security_schemes", {})
+        # Handle Pydantic RootModel wrapper if it exists
+        security_schemes = schemes_obj.root if hasattr(schemes_obj, "root") else schemes_obj
+        
+        # Convert to dict if it's a Pydantic model so we can iterate keys
+        if not isinstance(security_schemes, dict):
+            security_schemes = security_schemes.model_dump() if hasattr(security_schemes, "model_dump") else dict(security_schemes)
+
+        # 2. Find the OAuth2 scheme (using the key we know exists)
+        auth_scheme = security_schemes.get('oauth2_m2m')
+
+        # 3. Extract the Token URL
+        # Turn the object into a dict so we can see EVERYTHING, including aliases
+        scheme_dict = auth_scheme if isinstance(auth_scheme, dict) else auth_scheme.model_dump(by_alias=True)
+        
+        # Look for 'flows' or 'flows' (aliased)
+        flows = scheme_dict.get("flows")
+        
+        token_url = None
+        if flows:
+            # The A2A spec uses 'clientCredentials' in JSON
+            # We check every possible naming convention
+            cc_flow = (flows.get("clientCredentials") or 
+                       flows.get("client_credentials") or 
+                       flows.get("client-credentials"))
+            
+            if cc_flow:
+                token_url = (cc_flow.get("tokenUrl") or 
+                             cc_flow.get("token_url"))
 
         if not access_token:
-            token_url = json.loads(auth.credentials)['tokenUrl']
             print(f'\nFetching agent access token from {token_url}...')
             get_token = GetToken(
-                domain=urlparse(token_url).hostname,
+                domain=urlparse(str(token_url)).hostname,
                 client_id=os.getenv('A2A_CLIENT_AUTH0_CLIENT_ID'),
                 client_secret=os.getenv('A2A_CLIENT_AUTH0_CLIENT_SECRET'),
             )
@@ -73,7 +94,12 @@ class AgentAuth(httpx.Auth):
 @click.option('--history', default=False, is_flag=True)
 @click.option('--debug', default=False, is_flag=True)
 async def cli(agent: str, context_id: str | None, history: bool, debug: bool):
-    async with httpx.AsyncClient() as httpx_client:
+    # 1. Define a robust timeout (e.g., 60 seconds)
+    # We set 'read' to None to allow the stream to stay open indefinitely 
+    # as long as the server is still sending chunks.
+    timeout = httpx.Timeout(60.0, read=None)
+
+    async with httpx.AsyncClient(timeout=timeout) as httpx_client:
         agent_card = await (
             A2ACardResolver(
                 httpx_client=httpx_client,
@@ -98,7 +124,7 @@ async def cli(agent: str, context_id: str | None, history: bool, debug: bool):
         streaming = agent_card.capabilities.streaming
 
         while continue_loop:
-            task_id = uuid4().hex
+            task_id = None
             print('=========  Starting a New Task ======== ')
             continue_loop = await complete_task(
                 client,
@@ -150,7 +176,7 @@ def create_send_params(
 async def complete_task(
     client: A2AClient,
     streaming: bool,
-    task_id: str,
+    task_id: str | None,
     context_id: str,
     debug: bool = False,
 ) -> bool:
@@ -174,74 +200,59 @@ async def complete_task(
         )
         async for chunk in stream_response:
             result = chunk.root.result
-            print(
-                f'stream event => {chunk.root.model_dump_json(exclude_none=True)}'
-                if debug
-                else (
-                    next(
-                        (
-                            f'stream message => role: {result.role.value}, type: {part.root.type}, text: {part.root.text}'
-                            for part in result.parts
-                            if isinstance(part.root, TextPart)
-                        ),
-                        '',
-                    )
-                    if isinstance(result, Message)
-                    else next(
-                        (
-                            f'stream message => role: {msg.role.value}, type: {part.root.type}, text: {part.root.text}'
-                            for msg in result.history or []
-                            for part in msg.parts
-                            if isinstance(part.root, TextPart)
-                        ),
-                        '',
-                    )
-                    if isinstance(result, Task)
-                    else next(
-                        (
-                            f'stream message => role: {result.status.message.role.value}, type: {part.root.type}, text: {part.root.text}'
-                            for part in (
-                                result.status.message.parts
-                                if result.status.message
-                                else []
-                            )
-                            if isinstance(part.root, TextPart)
-                        ),
-                        '',
-                    )
-                    if isinstance(result, TaskStatusUpdateEvent)
-                    else next(
-                        (
-                            f'stream artifact => type: {part.root.type}, text: {part.root.text}'
-                            for part in result.artifact.parts
-                            if isinstance(part.root, TextPart)
-                        ),
-                        '',
-                    )
-                    if isinstance(result, TaskArtifactUpdateEvent)
-                    else ''
-                )
-            )
 
-        get_task_response = await client.get_task(
-            GetTaskRequest(id=str(uuid4()), params=TaskQueryParams(id=task_id))
-        )
-        task = get_task_response.root.result
+            # 1. CAPTURE THE TASK ID (Crucial fix)
+            # The logs show the ID is in result.id OR result.task_id
+            task_id = getattr(result, "id", None) or getattr(result, "task_id", None) or task_id
+
+            # 2. EXTRACT TEXT FROM STATUS UPDATES
+            output = ""
+            if isinstance(result, TaskStatusUpdateEvent) and result.status.message:
+                # This catches "Looking up...", "Processing...", and the final error
+                output = next((p.root.text for p in result.status.message.parts if isinstance(p.root, TextPart)), "")
+            elif isinstance(result, Message):
+                output = next((p.root.text for p in result.parts if isinstance(p.root, TextPart)), "")
+            elif isinstance(result, TaskArtifactUpdateEvent):
+                # Handle artifacts (though we prefer status messages for the main reply)
+                if hasattr(result.artifact, "text"):
+                    output = result.artifact.text
+            elif hasattr(result, "status") and result.status.message:
+                # Handle Task objects if they appear in the stream
+                output = next((p.root.text for p in result.status.message.parts if isinstance(p.root, TextPart)), "")
+            
+            if output:
+                # This will stop the "empty result chunk" messages and show you the Agent's thoughts
+                print(f"Agent: {output}")
+
+        # 3. FINAL VALIDATION: Only poll if we actually got an ID
+        if task_id:
+            get_task_response = await client.get_task(
+                GetTaskRequest(id=str(uuid4()), params=TaskQueryParams(id=task_id))
+            )
+            task = get_task_response.root.result
+            
+            # Print the final result if it's available in the task status
+            if task and task.status.message:
+                final_output = next((p.root.text for p in task.status.message.parts if isinstance(p.root, TextPart)), "")
+                if final_output:
+                    print(f"\nFinal Result: {final_output}")
+        else:
+            print("\nError: Agent stream ended without providing a Task ID.")
+            return False
     else:
+        # non-streaming path
         send_message_response = await client.send_message(
             SendMessageRequest(id=str(uuid4()), params=send_params)
         )
         task = send_message_response.root.result
-        print(f'\n{task.model_dump_json(exclude_none=True)}')
+        task_id = task.id
+        # Simple print for non-streaming
+        print(f"\nAgent: {next((p.root.text for p in task.status.message.parts if isinstance(p.root, TextPart)), 'Done.')}")
 
-    # if the result is that more input is required, loop again.
-    if task.status.state == TaskState.input_required:
+    # Handle recursion for "input_required"
+    if task and task.status.state == TaskState.input_required:
         return await complete_task(
-            client,
-            streaming,
-            task_id,
-            context_id,
-            debug,
+            client, streaming, task_id, context_id, debug
         )
 
     # task is complete

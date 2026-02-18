@@ -47,7 +47,14 @@ class HRAgentExecutor(AgentExecutor):
                 )
                 await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
-                        status=TaskStatus(state=task_state),
+                        status=TaskStatus(
+                            state=task_state,
+                            message=new_agent_text_message(
+                                event['content'],
+                                task.context_id,
+                                task.id,
+                            ),
+                        ),
                         final=True,
                         context_id=task.context_id,
                         task_id=task.id,

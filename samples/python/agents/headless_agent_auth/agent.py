@@ -148,31 +148,36 @@ class HRAgent:
     async def stream(
         self, query: str, context_id: str
     ) -> AsyncIterable[dict[str, Any]]:
-        inputs: dict[str, Any] = {'messages': [('user', query)]}
-        config: RunnableConfig = {'configurable': {'thread_id': context_id}}
+        inputs = {'messages': [('user', query)]}
+        config = {'configurable': {'thread_id': context_id}}
 
-        async for item in self.graph.astream(
-            inputs, config, stream_mode='values'
+        async for chunk in self.graph.astream(
+            inputs, config, stream_mode='updates'
         ):
-            message = item['messages'][-1] if 'messages' in item else None
+            node_name = list(chunk.keys())[0]
+            data = chunk[node_name]
+
+            # 1. Handle intermediate tool steps
+            messages = data.get('messages', [])
+            message = messages[-1] if messages else None
             if message:
-                if (
-                    isinstance(message, AIMessage)
-                    and message.tool_calls
-                    and len(message.tool_calls) > 0
-                ):
-                    yield {
-                        'is_task_complete': False,
-                        'task_state': 'working',
-                        'content': 'Looking up the employment status...',
-                    }
+                if isinstance(message, AIMessage) and message.tool_calls:
+                    yield {'is_task_complete': False, 'task_state': 'working', 'content': 'Looking up...'}
                 elif isinstance(message, ToolMessage):
+                    yield {'is_task_complete': False, 'task_state': 'working', 'content': 'Processing...'}
+
+            # 2. ADD THIS: Handle the final structured response node
+            if node_name == 'generate_structured_response':
+                # The response is usually in a variable called 'structured_response'
+                resp = data.get('structured_response')
+                if resp:
                     yield {
-                        'is_task_complete': False,
-                        'task_state': 'working',
-                        'content': 'Processing the employment status...',
+                        'is_task_complete': resp.status == 'completed',
+                        'task_state': resp.status,
+                        'content': resp.message, # THIS is your "John Doe is active" message
                     }
 
+        # 3. Fallback: Always try to get the final state if the loop finishes
         yield self.get_agent_response(config)
 
     def get_agent_response(self, config: RunnableConfig) -> dict[str, Any]:

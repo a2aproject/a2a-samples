@@ -36,15 +36,20 @@ class OAuth2Middleware(BaseHTTPMiddleware):
         # Use app state for this demonstration (simplicity)
         self.a2a_auth = {}
 
-        # Process the Authentication Requirements Object
-        if agent_card.authentication:
-            credentials = json.loads(
-                agent_card.authentication.credentials or '{}'
-            )
-            if 'scopes' in credentials:
+        # Access the modern 'security' and 'security_schemes' fields
+        # security is a list of dicts: [{'scheme_name': ['scope1', 'scope2']}]
+        security = getattr(agent_card, "security", [])
+        
+        if security and len(security) > 0:
+            # We take the first requirement set defined in the card
+            requirement = security[0]
+            for scheme_name, scopes in requirement.items():
+                # Store the scopes for the dispatch check
                 self.a2a_auth = {
-                    'required_scopes': credentials['scopes'].keys()
+                    'scheme': scheme_name,
+                    'required_scopes': scopes
                 }
+                break
 
         # # Process the Security Requirements Object
         # for sec_req in agent_card.security or []:
