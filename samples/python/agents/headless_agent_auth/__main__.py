@@ -69,7 +69,7 @@ async def start_agent(host: str, port: int) -> None:
             'oauth2_m2m': {
                 'type': 'oauth2',
                 'flows': {
-                    'client_credentials': {  # Use snake_case here
+                    'client_credentials': {
                         'token_url': f'https://{os.getenv("HR_AUTH0_DOMAIN")}/oauth/token',
                         'scopes': {'read:employee_status': 'Verify status'},
                     }

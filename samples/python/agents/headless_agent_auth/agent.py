@@ -157,8 +157,8 @@ class HRAgent:
         self, query: str, context_id: str
     ) -> AsyncIterable[dict[str, Any]]:
         """Stream the agent's response."""
-        inputs = {'messages': [('user', query)]}
-        config = {'configurable': {'thread_id': context_id}}
+        inputs: dict[str, any] = {'messages': [('user', query)]}
+        config: RunnableConfig = {'configurable': {'thread_id': context_id}}
 
         async for chunk in self.graph.astream(
             inputs, config, stream_mode='updates'
@@ -191,7 +191,7 @@ class HRAgent:
                     yield {
                         'is_task_complete': resp.status == 'completed',
                         'task_state': resp.status,
-                        'content': resp.message,  # THIS is your "John Doe is active" message
+                        'content': resp.message,
                     }
 
         # 3. Fallback: Always try to get the final state if the loop finishes
