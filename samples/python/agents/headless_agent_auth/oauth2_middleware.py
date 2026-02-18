@@ -16,15 +16,31 @@ api_client = ApiClient(
 )
 
 
+from collections.abc import Callable
+from typing import Any
+
+from auth0_api_python import ApiClient, ApiClientOptions
+from starlette.responses import Response
+
+
+api_client = ApiClient(
+    ApiClientOptions(
+        domain=os.getenv('HR_AUTH0_DOMAIN'),
+        audience=os.getenv('HR_AGENT_AUTH0_AUDIENCE'),
+    )
+)
+
+
 class OAuth2Middleware(BaseHTTPMiddleware):
     """Starlette middleware that authenticates A2A access using an OAuth2 bearer token."""
 
     def __init__(
         self,
         app: Starlette,
-        agent_card: AgentCard = None,
-        public_paths: list[str] = None,
-    ):
+        agent_card: AgentCard | None = None,
+        public_paths: list[str] | None = None,
+    ) -> None:
+        """Initialize the OAuth2 middleware."""
         super().__init__(app)
         self.agent_card = agent_card
         self.public_paths = set(public_paths or [])
@@ -33,7 +49,7 @@ class OAuth2Middleware(BaseHTTPMiddleware):
         # AgentCard, indicating agent-level authentication/authorization.
 
         # Use app state for this demonstration (simplicity)
-        self.a2a_auth = {}
+        self.a2a_auth: dict[str, Any] = {}
 
         # Access the modern 'security' and 'security_schemes' fields
         # security is a list of dicts: [{'scheme_name': ['scope1', 'scope2']}]
@@ -46,33 +62,14 @@ class OAuth2Middleware(BaseHTTPMiddleware):
                 # Store the scopes for the dispatch check
                 self.a2a_auth = {
                     'scheme': scheme_name,
-                    'required_scopes': scopes
+                    'required_scopes': scopes,
                 }
                 break
 
-        # # Process the Security Requirements Object
-        # for sec_req in agent_card.security or []:
-        #     # Since we pre-validated (non-exhaustive) the used parts of the Security Schemes and Security
-        #     # Requirements, the code below WILL NOT do any validation.
-
-        #     # An empty Security Requirement Object means you allow anonymous, no need to process any other Security
-        #     # Requirements Objects
-        #     if not sec_req:
-        #         break
-
-        #     # Demonstrate how one could process the Security Requirements to configure the machinery used to
-        #     # authenticate and/or authorize agent interactions.
-        #     #
-        #     # Note: This is written purely to support the sample and is for demonstration purposes only.
-        #     for name, scopes in sec_req.items():
-        #         # sec_scheme = self.agent_card.security_schemes[name]
-
-        #         # if not isinstance(sec_scheme, OAuth2SecurityScheme) or sec_scheme.flows.authorization_code is None:
-        #         #     raise NotImplementedError('Only OAuth2SecurityScheme -> ClientCredentialsOAuthFlow is supported.')
-
-        #         self.a2a_auth = { 'required_scopes': scopes }
-
-    async def dispatch(self, request: Request, call_next):
+    async def dispatch(
+        self, request: Request, call_next: Callable[[Request], Any]
+    ) -> Response:
+        """Verify the authentication and authorization of the request."""
         path = request.url.path
 
         # Allow public paths and anonymous access
@@ -104,12 +101,13 @@ class OAuth2Middleware(BaseHTTPMiddleware):
                         f'Missing required scopes: {missing_scopes}', request
                     )
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             return self._forbidden(f'Authentication failed: {e}', request)
 
         return await call_next(request)
 
-    def _forbidden(self, reason: str, request: Request):
+    def _forbidden(self, reason: str, request: Request) -> Response:
+        """Return a forbidden response."""
         accept_header = request.headers.get('accept', '')
         if 'text/event-stream' in accept_header:
             return PlainTextResponse(
@@ -121,7 +119,8 @@ class OAuth2Middleware(BaseHTTPMiddleware):
             {'error': 'forbidden', 'reason': reason}, status_code=403
         )
 
-    def _unauthorized(self, reason: str, request: Request):
+    def _unauthorized(self, reason: str, request: Request) -> Response:
+        """Return an unauthorized response."""
         accept_header = request.headers.get('accept', '')
         if 'text/event-stream' in accept_header:
             return PlainTextResponse(

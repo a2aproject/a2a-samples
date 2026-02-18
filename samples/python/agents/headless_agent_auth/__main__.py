@@ -27,11 +27,14 @@ logger = logging.getLogger()
 
 
 @click.command()
-@click.option('--host', default='0.0.0.0')
+@click.option('--host', default='0.0.0.0')  # noqa: S104
 @click.option('--port_agent', default=10050)
 @click.option('--port_api', default=10051)
-def main(host: str, port_agent: int, port_api: int):
-    async def run_all():
+def main(host: str, port_agent: int, port_api: int) -> None:
+    """Run the HR Agent and the HR API."""
+
+    async def run_all() -> None:
+        """Run all components concurrently."""
         await asyncio.gather(
             start_agent(host, port_agent),
             start_api(host, port_api),
@@ -40,7 +43,8 @@ def main(host: str, port_agent: int, port_api: int):
     asyncio.run(run_all())
 
 
-async def start_agent(host: str, port):
+async def start_agent(host: str, port: int) -> None:
+    """Start the HR Agent server."""
     # We define the configuration as a raw dictionary first.
     # This avoids the "no attribute root" error by letting the AgentCard
     # constructor handle the internal Pydantic mapping itself.
@@ -58,23 +62,21 @@ async def start_agent(host: str, port):
                 'name': 'Check Employment Status Tool',
                 'description': 'Confirm whether a person is an active employee.',
                 'tags': ['employment status'],
-                'examples': ['Does John Doe work at Staff0?']
+                'examples': ['Does John Doe work at Staff0?'],
             }
         ],
         'security_schemes': {
             'oauth2_m2m': {
                 'type': 'oauth2',
                 'flows': {
-                    'client_credentials': { # Use snake_case here
-                        'token_url': f"https://{os.getenv('HR_AUTH0_DOMAIN')}/oauth/token",
-                        'scopes': {
-                            'read:employee_status': 'Verify status'
-                        }
+                    'client_credentials': {  # Use snake_case here
+                        'token_url': f'https://{os.getenv("HR_AUTH0_DOMAIN")}/oauth/token',
+                        'scopes': {'read:employee_status': 'Verify status'},
                     }
-                }
+                },
             }
         },
-        'security': [{'oauth2_m2m': ['read:employee_status']}]
+        'security': [{'oauth2_m2m': ['read:employee_status']}],
     }
 
     # Now, pass the WHOLE dictionary into the constructor.
@@ -97,16 +99,17 @@ async def start_agent(host: str, port):
         agent_card=agent_card,
         public_paths=[
             '/.well-known/agent.json',
-            '/.well-known/agent-card.json'
+            '/.well-known/agent-card.json',
         ],
     )
 
-    logger.info(f'Starting HR Agent server on {host}:{port}')
+    logger.info('Starting HR Agent server on %s:%s', host, port)
     await uvicorn.Server(uvicorn.Config(app=app, host=host, port=port)).serve()
 
 
-async def start_api(host: str, port):
-    logger.info(f'Starting HR API server on {host}:{port}')
+async def start_api(host: str, port: int) -> None:
+    """Start the HR API server."""
+    logger.info('Starting HR API server on %s:%s', host, port)
     await uvicorn.Server(
         uvicorn.Config(app=hr_api, host=host, port=port)
     ).serve()
