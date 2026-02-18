@@ -1,4 +1,3 @@
-import json
 import os
 
 from a2a.types import AgentCard
@@ -38,8 +37,8 @@ class OAuth2Middleware(BaseHTTPMiddleware):
 
         # Access the modern 'security' and 'security_schemes' fields
         # security is a list of dicts: [{'scheme_name': ['scope1', 'scope2']}]
-        security = getattr(agent_card, "security", [])
-        
+        security = getattr(agent_card, 'security', [])
+
         if security and len(security) > 0:
             # We take the first requirement set defined in the card
             requirement = security[0]

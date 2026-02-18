@@ -1,5 +1,4 @@
 import asyncio
-import json
 import logging
 import os
 import sys
@@ -16,14 +15,8 @@ from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
-    AgentCapabilities,
     AgentCard,
-    AgentSkill,
-    ClientCredentialsOAuthFlow,
-    OAuth2SecurityScheme,
-    OAuthFlows,
 )
-from agent import HRAgent
 from agent_executor import HRAgentExecutor
 from api import hr_api
 from oauth2_middleware import OAuth2Middleware
@@ -49,43 +42,43 @@ def main(host: str, port_agent: int, port_api: int):
 
 async def start_agent(host: str, port):
     # We define the configuration as a raw dictionary first.
-    # This avoids the "no attribute root" error by letting the AgentCard 
+    # This avoids the "no attribute root" error by letting the AgentCard
     # constructor handle the internal Pydantic mapping itself.
     card_config = {
-        "name": 'Staff0 HR Agent',
-        "description": 'This agent handles external verification requests...',
-        "url": f'http://{host}:{port}/',
-        "version": '0.1.0',
-        "default_input_modes": ["application/json"],
-        "default_output_modes": ["application/json"],
-        "capabilities": {"streaming": True},
-        "skills": [
+        'name': 'Staff0 HR Agent',
+        'description': 'This agent handles external verification requests...',
+        'url': f'http://{host}:{port}/',
+        'version': '0.1.0',
+        'default_input_modes': ['application/json'],
+        'default_output_modes': ['application/json'],
+        'capabilities': {'streaming': True},
+        'skills': [
             {
-                "id": 'is_active_employee',
-                "name": 'Check Employment Status Tool',
-                "description": 'Confirm whether a person is an active employee.',
-                "tags": ['employment status'],
-                "examples": ['Does John Doe work at Staff0?']
+                'id': 'is_active_employee',
+                'name': 'Check Employment Status Tool',
+                'description': 'Confirm whether a person is an active employee.',
+                'tags': ['employment status'],
+                'examples': ['Does John Doe work at Staff0?']
             }
         ],
-        "security_schemes": {
-            "oauth2_m2m": {
-                "type": "oauth2",
-                "flows": {
-                    "client_credentials": { # Use snake_case here
-                        "token_url": f"https://{os.getenv('HR_AUTH0_DOMAIN')}/oauth/token",
-                        "scopes": {
-                            "read:employee_status": "Verify status"
+        'security_schemes': {
+            'oauth2_m2m': {
+                'type': 'oauth2',
+                'flows': {
+                    'client_credentials': { # Use snake_case here
+                        'token_url': f"https://{os.getenv('HR_AUTH0_DOMAIN')}/oauth/token",
+                        'scopes': {
+                            'read:employee_status': 'Verify status'
                         }
                     }
                 }
             }
         },
-        "security": [{"oauth2_m2m": ["read:employee_status"]}]
+        'security': [{'oauth2_m2m': ['read:employee_status']}]
     }
 
     # Now, pass the WHOLE dictionary into the constructor.
-    # The SDK will convert the nested dicts into the proper 
+    # The SDK will convert the nested dicts into the proper
     # OAuth2SecurityScheme objects internally.
     agent_card = AgentCard(**card_config)
 
