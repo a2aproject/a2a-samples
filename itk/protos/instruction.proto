@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package itk;
+
+
+message Instruction {
+  // what should the "agent" do
+  oneof step {
+    CallAgent call_agent = 1;
+    ReturnResponse return_response = 2;
+    SeriesOfSteps steps = 3;
+  }
+}
+
+// gets the agent card from a remote agent, calls it and returns the response
+message CallAgent {
+  // which transport use to get agent card and later call
+  string transport = 1;
+  // where to get the agent card from
+  string agent_card_uri = 2;
+  // instruction for the called agent
+  Instruction instruction = 3;
+}
+
+// this option just returns a response
+message ReturnResponse {
+  // what to return to the calling agent
+  string response = 1;
+}
+
+// executes step series and returns response based on response_generator
+message SeriesOfSteps {
+  repeated Instruction instructions = 1;
+
+  enum ResponseGenerator {
+    // default
+    RESPONSE_GENERATOR_UNSPECIFIED = 0;
+    RESPONSE_GENERATOR_CONCAT = 1;
+  }
+
+  ResponseGenerator response_generator = 2;
+}
