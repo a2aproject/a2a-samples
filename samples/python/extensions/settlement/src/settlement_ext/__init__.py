@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import re
 import time
 
 from typing import TYPE_CHECKING, Any
@@ -61,6 +62,13 @@ _TERMINAL_REFUND = {
     'TASK_STATE_REJECTED',
 }
 _MESSAGING_METHODS = {'message/send', 'message/stream'}
+
+_ESCROW_ID_RE = re.compile(r'^[A-Za-z0-9_\-]{1,128}$')
+
+
+def _valid_escrow_id(value: str | None) -> bool:
+    """Return True if *value* looks like a well-formed escrow ID."""
+    return bool(value and _ESCROW_ID_RE.fullmatch(value))
 
 
 class SettlementExtension:
@@ -323,9 +331,11 @@ class _SettledAgentExecutor(AgentExecutor):
     async def _verify(self, se_block: dict) -> bool:
         self._prune_used()
         escrow_id = se_block.get('escrowId')
-        if not escrow_id or escrow_id in self._used_escrows:
-            if escrow_id:
-                logger.warning('Escrow %s already used', escrow_id)
+        if not _valid_escrow_id(escrow_id):
+            logger.warning('Invalid or missing escrow ID')
+            return False
+        if escrow_id in self._used_escrows:
+            logger.warning('Escrow already used')
             return False
         escrow = await asyncio.to_thread(self._ext.verify_escrow, escrow_id)
         if not escrow:
@@ -392,7 +402,8 @@ class _SettledClient(Client):
         context: ClientCallContext | None = None,
     ) -> AsyncIterator[ClientEvent | Message]:
         se_block = self._ext.read_metadata(request)
-        escrow_id = se_block.get('escrowId') if se_block else None
+        raw_id = se_block.get('escrowId') if se_block else None
+        escrow_id = raw_id if _valid_escrow_id(raw_id) else None
         tracked = False
 
         async for event in self._delegate.send_message(
