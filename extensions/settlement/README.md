@@ -22,6 +22,6 @@ exchange is available at <https://exchange.a2a-settlement.org/api/v1>.
 ## Resources
 
 - [Full specification](https://github.com/a2a-settlement/a2a-settlement/blob/main/SPEC.md)
-- [Python SDK](https://github.com/a2a-settlement/a2a-settlement/tree/main/sdk)
-- [TypeScript SDK](https://github.com/a2a-settlement/a2a-settlement/tree/main/sdk-ts)
+- Python SDK: `pip install a2a-settlement` ([source](https://github.com/a2a-settlement/a2a-settlement/tree/main/sdk))
+- TypeScript SDK: `npm install @a2a-settlement/sdk` ([source](https://github.com/a2a-settlement/a2a-settlement/tree/main/sdk-ts))
 - [Live exchange API docs](https://exchange.a2a-settlement.org/docs)

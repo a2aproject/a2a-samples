@@ -28,6 +28,7 @@ from a2a.types import (
     TaskIdParams,
     TaskPushNotificationConfig,
     TaskQueryParams,
+    TaskState,
     TaskStatusUpdateEvent,
 )
 from a2a_settlement import SettlementExchangeClient
@@ -50,11 +51,11 @@ logger = logging.getLogger(__name__)
 URI = 'https://a2a-settlement.org/extensions/settlement/v1'
 METADATA_KEY = 'a2a-se'
 
-_TERMINAL_RELEASE = {'completed', 'TASK_STATE_COMPLETED'}
+_TERMINAL_RELEASE = {TaskState.completed, 'TASK_STATE_COMPLETED'}
 _TERMINAL_REFUND = {
-    'failed',
-    'canceled',
-    'rejected',
+    TaskState.failed,
+    TaskState.canceled,
+    TaskState.rejected,
     'TASK_STATE_FAILED',
     'TASK_STATE_CANCELED',
     'TASK_STATE_REJECTED',
@@ -73,6 +74,10 @@ class SettlementExtension:
             escrow cannot be verified on the exchange.
         auto_settle: If True, the client wrapper releases/refunds escrow
             automatically when a task reaches a terminal state.
+            **Security note**: when enabled, the provider controls when
+            payment is released by setting the task to COMPLETED.  Set to
+            False and call ``release()`` explicitly when the client must
+            review the outcome before payment.
         settlement_required: If True, the executor wrapper rejects tasks
             that activate settlement but do not include settlement
             metadata. Default False (freemium — unpaid requests allowed).
@@ -85,7 +90,7 @@ class SettlementExtension:
             escrow cannot be verified on the exchange. Default True.
         auto_settle: If True, the client wrapper releases/refunds escrow
             automatically when a task reaches a terminal state.
-            Default True.
+            Default False.
     """
 
     def __init__(
@@ -95,7 +100,7 @@ class SettlementExtension:
         account_id: str,
         *,
         auto_verify: bool = True,
-        auto_settle: bool = True,
+        auto_settle: bool = False,
     ) -> None:
         self._exchange_url = exchange_url
         self._api_key = api_key
@@ -290,7 +295,7 @@ class _SettledAgentExecutor(AgentExecutor):
                         contextId=context.context_id or '',
                         final=True,
                         status=TaskStatusUpdateEvent.Status(
-                            state='failed',
+                            state=TaskState.failed,
                             message=Message(
                                 messageId='settlement-reject',
                                 role='agent',
