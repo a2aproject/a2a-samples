@@ -272,7 +272,7 @@ class _SettledAgentExecutor(AgentExecutor):
     ) -> None:
         self._delegate = delegate
         self._ext = ext
-        self._used_escrows: set[str] = set()
+        self._used_escrows: dict[str, float] = {}
 
     async def execute(
         self,
@@ -321,6 +321,7 @@ class _SettledAgentExecutor(AgentExecutor):
         return None
 
     async def _verify(self, se_block: dict) -> bool:
+        self._prune_used()
         escrow_id = se_block.get('escrowId')
         if not escrow_id or escrow_id in self._used_escrows:
             if escrow_id:
@@ -334,8 +335,14 @@ class _SettledAgentExecutor(AgentExecutor):
         if reason:
             logger.warning('Escrow %s rejected: %s', escrow_id, reason)
             return False
-        self._used_escrows.add(escrow_id)
+        self._used_escrows[escrow_id] = time.monotonic()
         return True
+
+    def _prune_used(self) -> None:
+        cutoff = time.monotonic() - _ESCROW_TTL_S
+        stale = [k for k, ts in self._used_escrows.items() if ts < cutoff]
+        for k in stale:
+            self._used_escrows.pop(k, None)
 
     def _check_escrow(
         self, se_block: dict, escrow: dict, escrow_id: str
