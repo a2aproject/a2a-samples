@@ -66,9 +66,9 @@ _MESSAGING_METHODS = {'message/send', 'message/stream'}
 _ESCROW_ID_RE = re.compile(r'^[A-Za-z0-9_\-]{1,128}$')
 
 
-def _valid_escrow_id(value: str | None) -> bool:
+def _valid_escrow_id(value: Any) -> bool:
     """Return True if *value* looks like a well-formed escrow ID."""
-    return bool(value and _ESCROW_ID_RE.fullmatch(value))
+    return isinstance(value, str) and bool(_ESCROW_ID_RE.fullmatch(value))
 
 
 class SettlementExtension:
@@ -281,6 +281,7 @@ class _SettledAgentExecutor(AgentExecutor):
         self._delegate = delegate
         self._ext = ext
         self._used_escrows: dict[str, float] = {}
+        self._verify_lock = asyncio.Lock()
 
     async def execute(
         self,
@@ -329,14 +330,18 @@ class _SettledAgentExecutor(AgentExecutor):
         return None
 
     async def _verify(self, se_block: dict) -> bool:
-        self._prune_used()
         escrow_id = se_block.get('escrowId')
         if not _valid_escrow_id(escrow_id):
             logger.warning('Invalid or missing escrow ID')
             return False
-        if escrow_id in self._used_escrows:
-            logger.warning('Escrow already used')
-            return False
+
+        async with self._verify_lock:
+            self._prune_used()
+            if escrow_id in self._used_escrows:
+                logger.warning('Escrow already used')
+                return False
+            self._used_escrows[escrow_id] = time.monotonic()
+
         escrow = await asyncio.to_thread(self._ext.verify_escrow, escrow_id)
         if not escrow:
             return False
@@ -345,7 +350,6 @@ class _SettledAgentExecutor(AgentExecutor):
         if reason:
             logger.warning('Escrow %s rejected: %s', escrow_id, reason)
             return False
-        self._used_escrows[escrow_id] = time.monotonic()
         return True
 
     def _prune_used(self) -> None:
