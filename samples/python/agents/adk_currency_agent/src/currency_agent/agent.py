@@ -1,9 +1,14 @@
-import httpx
 from typing import Literal
+
+import httpx
+
 from google.adk.agents import LlmAgent
 from pydantic import BaseModel, Field
 
-async def get_latest_rates(base: str = 'EUR', symbols: str | None = None) -> dict:
+
+async def get_latest_rates(
+    base: str = 'EUR', symbols: str | None = None
+) -> dict:
     """Retrieve the latest exchange rates.
 
     Args:
@@ -16,12 +21,16 @@ async def get_latest_rates(base: str = 'EUR', symbols: str | None = None) -> dic
             params['base'] = base
         if symbols:
             params['symbols'] = symbols
-        response = await client.get('https://api.frankfurter.dev/v1/latest', params=params)
+        response = await client.get(
+            'https://api.frankfurter.dev/v1/latest', params=params
+        )
         response.raise_for_status()
         return response.json()
 
 
-async def get_historical_rates(date: str, base: str | None = None, symbols: str | None = None) -> dict:
+async def get_historical_rates(
+    date: str, base: str | None = None, symbols: str | None = None
+) -> dict:
     """Retrieve exchange rates for a specific past date.
 
     Args:
@@ -35,12 +44,19 @@ async def get_historical_rates(date: str, base: str | None = None, symbols: str 
             params['base'] = base
         if symbols:
             params['symbols'] = symbols
-        response = await client.get(f'https://api.frankfurter.dev/v1/{date}', params=params)
+        response = await client.get(
+            f'https://api.frankfurter.dev/v1/{date}', params=params
+        )
         response.raise_for_status()
         return response.json()
 
 
-async def get_time_series_rates(start_date: str, end_date: str | None = None, base: str | None = None, symbols: str | None = None) -> dict:
+async def get_time_series_rates(
+    start_date: str,
+    end_date: str | None = None,
+    base: str | None = None,
+    symbols: str | None = None,
+) -> dict:
     """Retrieve exchange rates over a specific time period.
 
     Args:
@@ -52,7 +68,7 @@ async def get_time_series_rates(start_date: str, end_date: str | None = None, ba
     url = f'https://api.frankfurter.dev/v1/{start_date}..'
     if end_date:
         url += end_date
-    
+
     async with httpx.AsyncClient() as client:
         params = {}
         if base:
@@ -70,6 +86,7 @@ async def get_available_currencies() -> dict:
         response = await client.get('https://api.frankfurter.dev/v1/currencies')
         response.raise_for_status()
         return response.json()
+
 
 class AgentResponse(BaseModel):
     """Agent response schema.
@@ -95,8 +112,8 @@ root_agent = LlmAgent(
     model='gemini-3-flash-preview',
     description=('Currency Conversion agent'),
     instruction=(
-        "You are an agent that helps with user's currency conversions. Use available tools to help with the conversion." \
-        "For currency conversions, do not assume target currencies. If user did not specify the target currency, ask for it."
+        "You are an agent that helps with user's currency conversions. Use available tools to help with the conversion."
+        'For currency conversions, do not assume target currencies. If user did not specify the target currency, ask for it.'
     ),
     tools=[
         get_latest_rates,

@@ -17,18 +17,18 @@ Traceability extension helps return tool trajectory data and can help with agent
 
 ## Setup
 
-1.  **Switch to the agent directory:**
-    ```bash    
+1. **Switch to the agent directory:**
+    ```bash
     cd adk_currency_agent
     ```
 
-2.  **Set the Google API Key:**
+2. **Set the Google API Key:**
     ```bash
     export ENV=development
     export GOOGLE_API_KEY="your-google-api-key"
     ```
 
-3.  **Install dependencies:**
+3. **Install dependencies:**
     ```bash
     uv sync
     ```
@@ -56,21 +56,21 @@ Trace information (tool trajectory) will be included in the response metadata un
 
 ## Evaluation
 
-The project includes a structured evaluation notebook `agent_eval.ipynb` to assess agent performance using the **Vertex AI Generative AI Evaluation SDK**. 
+The project includes a structured evaluation notebook `agent_eval.ipynb` to assess agent performance using the **Vertex AI Generative AI Evaluation SDK**.
 
-#### How to Use
+### How to Use
 
-1.  **Dependencies**: Ensure the required SDKs are installed (see the first cell in the notebook):
+1. **Dependencies**: Ensure the required SDKs are installed (see the first cell in the notebook):
     ```python
     %pip install a2a-sdk google-cloud-aiplatform[evaluation] pandas httpx
     ```
-2.  **Configuration**: Set your Agent URL and Google Cloud Project ID in the setup cell.
-3.  **Define Test Data**: Update the `test_sets` dictionary with your evaluation scenarios.
-4.  **Run Evaluation**: Execute all cells to run the evaluation task and view the results.
+2. **Configuration**: Set your Agent URL and Google Cloud Project ID in the setup cell.
+3. **Define Test Data**: Update the `test_sets` dictionary with your evaluation scenarios.
+4. **Run Evaluation**: Execute all cells to run the evaluation task and view the results.
 
-### Example Agent Response:
+### Example Agent Response
 
-```
+```json
 Request:
 
 POST http://localhost:10999
@@ -106,7 +106,16 @@ Response:
         "parts": [
           {
             "kind": "text",
-            "text": "Here are the supported EU currencies and their exchange rates with USD (as of 2026-03-10):\n\n| Currency Code | Currency Name | Exchange Rate (1 USD to) |\n| :--- | :--- | :--- |\n| **EUR** | Euro | 0.85903 |\n| **CZK** | Czech Koruna | 20.943 |\n| **DKK** | Danish Krone | 6.4181 |\n| **HUF** | Hungarian Forint | 331.44 |\n| **PLN** | Polish Złoty | 3.655 |\n| **RON** | Romanian Leu | 4.3756 |\n| **SEK** | Swedish Krona | 9.1109 |"
+            "text": "Here are the supported EU currencies and their exchange rates with USD (as of 2026-03-10):\n\n"
+                    "| Currency Code | Currency Name | Exchange Rate (1 USD to) |\n"
+                    "| :--- | :--- | :--- |\n"
+                    "| **EUR** | Euro | 0.85903 |\n"
+                    "| **CZK** | Czech Koruna | 20.943 |\n"
+                    "| **DKK** | Danish Krone | 6.4181 |\n"
+                    "| **HUF** | Hungarian Forint | 331.44 |\n"
+                    "| **PLN** | Polish Złoty | 3.655 |\n"
+                    "| **RON** | Romanian Leu | 4.3756 |\n"
+                    "| **SEK** | Swedish Krona | 9.1109 |"
           }
         ]
       }
@@ -263,7 +272,16 @@ Response:
         "parts": [
           {
             "kind": "text",
-            "text": "Here are the supported EU currencies and their exchange rates with USD (as of 2026-03-10):\n\n| Currency Code | Currency Name | Exchange Rate (1 USD to) |\n| :--- | :--- | :--- |\n| **EUR** | Euro | 0.85903 |\n| **CZK** | Czech Koruna | 20.943 |\n| **DKK** | Danish Krone | 6.4181 |\n| **HUF** | Hungarian Forint | 331.44 |\n| **PLN** | Polish Złoty | 3.655 |\n| **RON** | Romanian Leu | 4.3756 |\n| **SEK** | Swedish Krona | 9.1109 |"
+            "text": "Here are the supported EU currencies and their exchange rates with USD (as of 2026-03-10):\n\n"
+                    "| Currency Code | Currency Name | Exchange Rate (1 USD to) |\n"
+                    "| :--- | :--- | :--- |\n"
+                    "| **EUR** | Euro | 0.85903 |\n"
+                    "| **CZK** | Czech Koruna | 20.943 |\n"
+                    "| **DKK** | Danish Krone | 6.4181 |\n"
+                    "| **HUF** | Hungarian Forint | 331.44 |\n"
+                    "| **PLN** | Polish Złoty | 3.655 |\n"
+                    "| **RON** | Romanian Leu | 4.3756 |\n"
+                    "| **SEK** | Swedish Krona | 9.1109 |"
           }
         ],
         "role": "agent",

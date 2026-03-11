@@ -1,3 +1,4 @@
+import traceback
 import types
 import uuid
 
@@ -53,7 +54,7 @@ class TraceRecord:
 
     # Disable the "too many arguments" lint warning for this method
     # as all parameters are necessary for the trace record initialization
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         call_type: CallTypeEnum,
         name: str | None = None,
@@ -101,17 +102,16 @@ class TraceRecord:
             additional_attributes (dict[str, Any] | None, optional): Additional information to record. Defaults to None.
             error (Any, optional): Error information if the step failed. Defaults to None.
         """
-        self.end_time = datetime.now(timezone.utc)
-        self.latency = int(
-            (self.end_time - self.start_time).total_seconds() * 1000
-        )
+        if self.end_time is None:
+            self.end_time = datetime.now(timezone.utc)
+            self.latency = int(
+                (self.end_time - self.start_time).total_seconds() * 1000
+            )
         if cost:
             self.cost = cost
         if total_tokens:
             self.total_tokens = total_tokens
-            print(
-                f'### TraceRecord: end_step called with cost={cost}, total_tokens={total_tokens}'
-            )
+
         if additional_attributes:
             self.additional_attributes.update(additional_attributes)
         if error:
@@ -197,7 +197,7 @@ class TraceStep:
             step.end_step(cost=x, additional_attributes={...})
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         response_trace: ResponseTrace | None,
         call_type: CallTypeEnum,
@@ -247,7 +247,7 @@ class TraceStep:
         Args:
             exc_type: The exception type if an exception was raised in the context.
             exc_val: The exception value if an exception was raised in the context.
-            traceback: The traceback if an exception was raised in the context.
+            exc_traceback: The traceback if an exception was raised in the context.
 
         Returns:
             bool: False to indicate that exceptions should not be suppressed.
@@ -255,7 +255,7 @@ class TraceStep:
         error_msg = None
         if exc_type:
             error_msg = ''.join(
-                exc_traceback.format_exception(exc_type, exc_val, exc_traceback)
+                traceback.format_exception(exc_type, exc_val, exc_traceback)
             )
         self.step.end_step(error=error_msg)
         if self.response_trace:
