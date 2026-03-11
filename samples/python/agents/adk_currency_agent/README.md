@@ -1,6 +1,6 @@
 # ADK Currency Agent
 
-A currency conversion agent built using the [Google Agent Development Kit (ADK)](https://github.com/google/adk) with support for traceability extension.
+A currency conversion agent built using the [Google Agent Development Kit (ADK)](https://github.com/google/adk-python) with support for traceability extension.
 
 Traceability extension helps return tool trajectory data and can help with agent evals in non-prod environments.
 
