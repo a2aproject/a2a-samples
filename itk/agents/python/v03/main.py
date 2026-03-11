@@ -307,6 +307,10 @@ async def _run_agent(http_port: int, grpc_port: int) -> None:
         preferred_transport=TransportProtocol.jsonrpc,
         additional_interfaces=[
             AgentInterface(
+                url=f'http://{host}:{http_port}',
+                transport=TransportProtocol.jsonrpc,
+            ),
+            AgentInterface(
                 url=f'http://{host}:{http_port}/rest',
                 transport=TransportProtocol.http_json,
             ),
