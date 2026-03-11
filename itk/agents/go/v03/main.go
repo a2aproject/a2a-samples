@@ -223,7 +223,9 @@ func run() error {
 		DefaultOutputModes: []string{"text"},
 		Capabilities:       a2a.AgentCapabilities{Streaming: false},
 		Skills:             []a2a.AgentSkill{skill},
+		PreferredTransport: a2a.TransportProtocolJSONRPC,
 		AdditionalInterfaces: []a2a.AgentInterface{
+			{URL: jsonRPCAddr, Transport: a2a.TransportProtocolJSONRPC},
 			{URL: grpcAddr, Transport: a2a.TransportProtocolGRPC},
 		},
 	}
