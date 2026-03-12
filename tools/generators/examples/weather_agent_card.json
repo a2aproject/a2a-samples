@@ -1,0 +1,59 @@
+{
+  "protocolVersion": "1.0",
+  "name": "Weather Agent",
+  "description": "Provides real-time weather information, forecasts, and severe weather alerts for locations worldwide.",
+  "version": "3.0.0",
+  "provider": {
+    "organization": "WeatherNow",
+    "url": "https://weathernow.io"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://api.weathernow.io/a2a",
+      "protocolBinding": "JSONRPC"
+    }
+  ],
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": true,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "current-weather",
+      "name": "Current Weather",
+      "description": "Get current weather conditions for any location",
+      "tags": [
+        "weather",
+        "current",
+        "conditions"
+      ],
+      "examples": [
+        "What's the weather in Tokyo?",
+        "Current temperature in New York"
+      ]
+    },
+    {
+      "id": "weather-forecast",
+      "name": "Weather Forecast",
+      "description": "Get weather forecasts up to 10 days ahead",
+      "tags": [
+        "weather",
+        "forecast",
+        "prediction"
+      ],
+      "examples": [
+        "Will it rain tomorrow in London?",
+        "5-day forecast for San Francisco"
+      ]
+    }
+  ]
+}
