@@ -176,7 +176,9 @@ type CallAgent struct {
 	// where to get the agent card from
 	AgentCardUri string `protobuf:"bytes,2,opt,name=agent_card_uri,json=agentCardUri,proto3" json:"agent_card_uri,omitempty"`
 	// instruction for the called agent
-	Instruction   *Instruction `protobuf:"bytes,3,opt,name=instruction,proto3" json:"instruction,omitempty"`
+	Instruction *Instruction `protobuf:"bytes,3,opt,name=instruction,proto3" json:"instruction,omitempty"`
+	// whether to use streaming
+	Streaming     bool `protobuf:"varint,4,opt,name=streaming,proto3" json:"streaming,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -230,6 +232,13 @@ func (x *CallAgent) GetInstruction() *Instruction {
 		return x.Instruction
 	}
 	return nil
+}
+
+func (x *CallAgent) GetStreaming() bool {
+	if x != nil {
+		return x.Streaming
+	}
+	return false
 }
 
 // this option just returns a response
@@ -341,11 +350,12 @@ const file_instruction_proto_rawDesc = "" +
 	"call_agent\x18\x01 \x01(\v2\x0e.itk.CallAgentH\x00R\tcallAgent\x12>\n" +
 	"\x0freturn_response\x18\x02 \x01(\v2\x13.itk.ReturnResponseH\x00R\x0ereturnResponse\x12*\n" +
 	"\x05steps\x18\x03 \x01(\v2\x12.itk.SeriesOfStepsH\x00R\x05stepsB\x06\n" +
-	"\x04step\"\x83\x01\n" +
+	"\x04step\"\xa1\x01\n" +
 	"\tCallAgent\x12\x1c\n" +
 	"\ttransport\x18\x01 \x01(\tR\ttransport\x12$\n" +
 	"\x0eagent_card_uri\x18\x02 \x01(\tR\fagentCardUri\x122\n" +
-	"\vinstruction\x18\x03 \x01(\v2\x10.itk.InstructionR\vinstruction\",\n" +
+	"\vinstruction\x18\x03 \x01(\v2\x10.itk.InstructionR\vinstruction\x12\x1c\n" +
+	"\tstreaming\x18\x04 \x01(\bR\tstreaming\",\n" +
 	"\x0eReturnResponse\x12\x1a\n" +
 	"\bresponse\x18\x01 \x01(\tR\bresponse\"\xf2\x01\n" +
 	"\rSeriesOfSteps\x124\n" +

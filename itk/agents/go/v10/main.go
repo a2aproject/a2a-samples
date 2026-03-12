@@ -61,11 +61,9 @@ func (e *V10AgentExecutor) Execute(ctx context.Context, execCtx *a2asrv.Executor
 		}
 
 		response := strings.Join(results, "\n")
-		if !yield(a2a.NewMessage(a2a.MessageRoleAgent, a2a.NewTextPart(response)), nil) {
+		if !yield(a2a.NewStatusUpdateEvent(execCtx, a2a.TaskStateCompleted, a2a.NewMessage(a2a.MessageRoleAgent, a2a.NewTextPart(response))), nil) {
 			return
 		}
-
-		yield(a2a.NewStatusUpdateEvent(execCtx, a2a.TaskStateCompleted, nil), nil)
 	}
 }
 
@@ -122,9 +120,7 @@ func (e *V10AgentExecutor) handleCallAgent(ctx context.Context, call *pb.CallAge
 
 	// 1. Resolve agent card
 	resolver := agentcard.NewResolver(nil)
-	if *v03Compat {
-		resolver.CardParser = a2av0.NewAgentCardParser()
-	}
+	resolver.CardParser = a2av0.NewAgentCardParser()
 	card, err := resolver.Resolve(ctx, call.AgentCardUri)
 	if err != nil {
 		return nil, fmt.Errorf("failed to resolve agent card for %s: %w", call.AgentCardUri, err)
@@ -163,21 +159,19 @@ func (e *V10AgentExecutor) handleCallAgent(ctx context.Context, call *pb.CallAge
 			ProtocolBinding: protocol,
 			ProtocolVersion: pVer,
 		}
+	} else {
+		selectedInterface.URL = strings.TrimSuffix(selectedInterface.URL, "/")
 	}
 
 	// 4. Create client using a factory
 	var factory *a2aclient.Factory
-	if *v03Compat {
-		compatFactory := a2av0.NewJSONRPCTransportFactory(a2av0.JSONRPCTransportConfig{})
-		factory = a2aclient.NewFactory(
-			a2aclient.WithCompatTransport("0.3", a2a.TransportProtocolJSONRPC, compatFactory),
-			a2aclient.WithCompatTransport("0.3.0", a2a.TransportProtocolJSONRPC, compatFactory),
-		)
-	} else {
-		factory = a2aclient.NewFactory(
-			a2agrpc.WithGRPCTransport(grpc.WithTransportCredentials(insecure.NewCredentials())),
-		)
-	}
+	compatFactory := a2av0.NewJSONRPCTransportFactory(a2av0.JSONRPCTransportConfig{})
+	factory = a2aclient.NewFactory(
+		a2agrpc.WithGRPCTransport(grpc.WithTransportCredentials(insecure.NewCredentials())),
+		a2aclient.WithCompatTransport("0.3", a2a.TransportProtocolJSONRPC, compatFactory),
+		a2aclient.WithCompatTransport("0.3.0", a2a.TransportProtocolJSONRPC, compatFactory),
+		a2aclient.WithCompatTransport("", a2a.TransportProtocolJSONRPC, compatFactory),
+	)
 
 	client, err := factory.CreateFromEndpoints(ctx, []*a2a.AgentInterface{selectedInterface})
 	if err != nil {
@@ -189,23 +183,34 @@ func (e *V10AgentExecutor) handleCallAgent(ctx context.Context, call *pb.CallAge
 		return nil, fmt.Errorf("failed to wrap nested instruction: %w", err)
 	}
 
-	result, err := client.SendMessage(ctx, &a2a.SendMessageRequest{
-		Message: wrappedMsg,
-	})
-
-	if err != nil {
-		log.Printf("Error sending message to %s: %v", call.AgentCardUri, err)
-		return nil, fmt.Errorf("failed to send message to agent %s: %w", call.AgentCardUri, err)
+	var responses []string
+	if call.Streaming {
+		events := client.SendStreamingMessage(ctx, &a2a.SendMessageRequest{Message: wrappedMsg})
+		for ev, err := range events {
+			if err != nil {
+				log.Printf("Error inside streaming call to %s: %v", call.AgentCardUri, err)
+				return nil, fmt.Errorf("streaming call failed to agent %s: %w", call.AgentCardUri, err)
+			}
+			responses = append(responses, extractResponses(ev)...)
+		}
+	} else {
+		result, err := client.SendMessage(ctx, &a2a.SendMessageRequest{
+			Message: wrappedMsg,
+		})
+		if err != nil {
+			log.Printf("Error sending message to %s: %v", call.AgentCardUri, err)
+			return nil, fmt.Errorf("failed to send message to agent %s: %w", call.AgentCardUri, err)
+		}
+		responses = extractResponses(result)
 	}
 
-	log.Printf("Received response of type %T from %s", result, call.AgentCardUri)
-	responses := extractResponses(result)
-	log.Printf("Extracted %d responses from %s: %v", len(responses), call.AgentCardUri, responses)
+	log.Printf("Received responses from %s", call.AgentCardUri)
 	return responses, nil
 }
 
 func extractResponses(result any) []string {
 	var responses []string
+	log.Printf("Extracting responses from result of type %T", result)
 	switch r := result.(type) {
 	case *a2a.Message:
 		for _, part := range r.Parts {
@@ -214,13 +219,28 @@ func extractResponses(result any) []string {
 			}
 		}
 	case *a2a.Task:
-		// For Task, typically we want the parts of the messages in its history
+		// Check both Status.Message and History
+		if r.Status.Message != nil {
+			for _, part := range r.Status.Message.Parts {
+				if t := part.Text(); t != "" {
+					responses = append(responses, t)
+				}
+			}
+		}
 		for _, msg := range r.History {
 			if msg.Role == a2a.MessageRoleAgent {
 				for _, part := range msg.Parts {
 					if t := part.Text(); t != "" {
 						responses = append(responses, t)
 					}
+				}
+			}
+		}
+	case *a2a.TaskStatusUpdateEvent:
+		if r.Status.Message != nil {
+			for _, part := range r.Status.Message.Parts {
+				if t := part.Text(); t != "" {
+					responses = append(responses, t)
 				}
 			}
 		}
@@ -268,16 +288,16 @@ func getTransportURL(t string, card *a2a.AgentCard, defaultURL string) string {
 	// already mapped into SupportedInterfaces.
 	for _, iface := range card.SupportedInterfaces {
 		if iface.ProtocolBinding == tEnum {
-			return iface.URL
+			return strings.TrimSuffix(iface.URL, "/")
 		}
 	}
 
-	return defaultURL
+	return strings.TrimSuffix(defaultURL, "/")
 }
 
 var httpPort = flag.Int("httpPort", 10102, "HTTP port")
 var grpcPort = flag.Int("grpcPort", 11002, "gRPC port")
-var v03Compat = flag.Bool("v03Compat", true, "Enable v0.3 compatibility mode")
+
 
 func main() {
 	if err := run(); err != nil {
@@ -290,47 +310,35 @@ func run() error {
 
 	jsonRPCV0Addr := fmt.Sprintf("http://127.0.0.1:%d", *httpPort)
 
-	var agentCard *a2a.AgentCard
-	if *v03Compat {
-		agentCard = &a2a.AgentCard{
-			Name:               "ITK v10 Agent (v03-compat)",
-			Description:        "Simplified Go agent using SDK 1.0 with a2av0 compatibility.",
-			Version:            "1.0.0-alpha",
-			DefaultInputModes:  []string{"text"},
-			DefaultOutputModes: []string{"text"},
-			SupportedInterfaces: []*a2a.AgentInterface{
-				{
-					URL:             jsonRPCV0Addr,
-					ProtocolBinding: a2a.TransportProtocolJSONRPC,
-					ProtocolVersion: a2av0.Version,
-				},
+	agentCard := &a2a.AgentCard{
+		Name:               "ITK v10 Agent",
+		Description:        "Multi-transport Go agent with A2A v0.3 compatibility.",
+		Version:            "1.0.0-alpha",
+		Capabilities:       a2a.AgentCapabilities{Streaming: true},
+		DefaultInputModes:  []string{"text"},
+		DefaultOutputModes: []string{"text"},
+		SupportedInterfaces: []*a2a.AgentInterface{
+			{
+				URL:             fmt.Sprintf("http://127.0.0.1:%d/jsonrpc", *httpPort),
+				ProtocolBinding: a2a.TransportProtocolJSONRPC,
+				ProtocolVersion: a2a.Version,
 			},
-		}
-	} else {
-		agentCard = &a2a.AgentCard{
-			Name:               "ITK v10 Agent",
-			Description:        "Multi-transport Go agent using A2A SDK 1.0.",
-			Version:            "1.0.0-alpha",
-			DefaultInputModes:  []string{"text"},
-			DefaultOutputModes: []string{"text"},
-			SupportedInterfaces: []*a2a.AgentInterface{
-				{
-					URL:             fmt.Sprintf("http://127.0.0.1:%d/jsonrpc", *httpPort),
-					ProtocolBinding: a2a.TransportProtocolJSONRPC,
-					ProtocolVersion: a2a.Version,
-				},
-				{
-					URL:             fmt.Sprintf("http://127.0.0.1:%d/rest", *httpPort),
-					ProtocolBinding: a2a.TransportProtocolHTTPJSON,
-					ProtocolVersion: a2a.Version,
-				},
-				{
-					URL:             fmt.Sprintf("127.0.0.1:%d", *grpcPort),
-					ProtocolBinding: a2a.TransportProtocolGRPC,
-					ProtocolVersion: a2a.Version,
-				},
+			{
+				URL:             jsonRPCV0Addr,
+				ProtocolBinding: a2a.TransportProtocolJSONRPC,
+				ProtocolVersion: a2av0.Version,
 			},
-		}
+			{
+				URL:             fmt.Sprintf("http://127.0.0.1:%d/rest", *httpPort),
+				ProtocolBinding: a2a.TransportProtocolHTTPJSON,
+				ProtocolVersion: a2a.Version,
+			},
+			{
+				URL:             fmt.Sprintf("127.0.0.1:%d", *grpcPort),
+				ProtocolBinding: a2a.TransportProtocolGRPC,
+				ProtocolVersion: a2a.Version,
+			},
+		},
 	}
 
 	executor := &V10AgentExecutor{}
@@ -338,15 +346,13 @@ func run() error {
 
 	// Servers
 	mux := http.NewServeMux()
-	if *v03Compat {
-		mux.Handle("/", a2av0.NewJSONRPCHandler(requestHandler, a2av0.JSONRPCHandlerConfig{}))
-		cardProducer := a2av0.NewStaticAgentCardProducer(agentCard)
-		mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewAgentCardHandler(cardProducer))
-	} else {
-		mux.Handle("/jsonrpc", a2asrv.NewJSONRPCHandler(requestHandler))
-		mux.Handle("/rest/", http.StripPrefix("/rest", a2asrv.NewRESTHandler(requestHandler)))
-		mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewStaticAgentCardHandler(agentCard))
-	}
+	agentCardRoute := fmt.Sprintf("/jsonrpc%s", a2asrv.WellKnownAgentCardPath)
+	mux.Handle("/", a2av0.NewJSONRPCHandler(requestHandler))
+	mux.Handle("/jsonrpc", a2asrv.NewJSONRPCHandler(requestHandler))
+	mux.Handle("/rest/", http.StripPrefix("/rest", a2asrv.NewRESTHandler(requestHandler)))
+
+	cardProducer := a2av0.NewStaticAgentCardProducer(agentCard)
+	mux.Handle(agentCardRoute, a2asrv.NewAgentCardHandler(cardProducer))
 
 	httpServer := &http.Server{
 		Addr:              fmt.Sprintf(":%d", *httpPort),
@@ -360,10 +366,7 @@ func run() error {
 	g, ctx := errgroup.WithContext(ctx)
 
 	g.Go(func() error {
-		serverType := "standard v1.0"
-		if *v03Compat {
-			serverType = "v0.3 compatibility"
-		}
+		serverType := "consolidated v1.0 & v0.3"
 		log.Printf("Starting HTTP server on 127.0.0.1:%d (%s)", *httpPort, serverType)
 		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			return err
@@ -371,23 +374,21 @@ func run() error {
 		return nil
 	})
 
-	if !*v03Compat {
-		grpcServer := grpc.NewServer()
-		a2agrpc.NewHandler(requestHandler).RegisterWith(grpcServer)
-		g.Go(func() error {
-			lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *grpcPort))
-			if err != nil {
-				return err
-			}
-			log.Printf("Starting gRPC server on 127.0.0.1:%d", *grpcPort)
-			return grpcServer.Serve(lis)
-		})
-		g.Go(func() error {
-			<-ctx.Done()
-			grpcServer.GracefulStop()
-			return nil
-		})
-	}
+	grpcServer := grpc.NewServer()
+	a2agrpc.NewHandler(requestHandler).RegisterWith(grpcServer)
+	g.Go(func() error {
+		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *grpcPort))
+		if err != nil {
+			return err
+		}
+		log.Printf("Starting gRPC server on 127.0.0.1:%d", *grpcPort)
+		return grpcServer.Serve(lis)
+	})
+	g.Go(func() error {
+		<-ctx.Done()
+		grpcServer.GracefulStop()
+		return nil
+	})
 
 	// Wait for stop signal
 	g.Go(func() error {

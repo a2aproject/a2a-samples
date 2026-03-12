@@ -12,11 +12,8 @@ echo "Compiling protos from ../../../protos into pyproto/..."
 # Create pyproto directory if it doesn't exist
 mkdir -p pyproto
 
-# Run protoc via grpc_tools using uv
-# -I../../../protos: look for imports in the protos directory
-# --python_out=pyproto: output generated files into the pyproto directory
-# --grpc_python_out=pyproto: output generated gRPC files into the pyproto directory
-uv run python -m grpc_tools.protoc --proto_path=../../../protos \
+# Run protoc via grpc_tools using system python3
+python3 -m grpc_tools.protoc --proto_path=../../../protos \
 	--python_out=pyproto \
 	--grpc_python_out=pyproto \
 	../../../protos/instruction.proto

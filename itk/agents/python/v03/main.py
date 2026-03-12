@@ -21,7 +21,7 @@ from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.apps import A2AFastAPIApplication, A2ARESTFastAPIApplication
 from a2a.server.events import EventQueue
 from a2a.server.request_handlers import DefaultRequestHandler, GrpcHandler
-from a2a.server.tasks import InMemoryTaskStore
+from a2a.server.tasks import InMemoryTaskStore, TaskUpdater
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
@@ -32,7 +32,6 @@ from a2a.types import (
     Message,
     Part,
     Role,
-    TextPart,
     TransportProtocol,
 )
 from a2a.utils import new_agent_text_message
@@ -71,11 +70,15 @@ def wrap_instruction_to_request(
                 )
             )
         ],
+        metadata={'a2a/protocol_version': '0.3'},
     )
 
 
 async def get_client_with_transport(
-    http_client: httpx.AsyncClient, url: str, transport: TransportProtocol | str
+    http_client: httpx.AsyncClient,
+    url: str,
+    transport: TransportProtocol | str,
+    streaming: bool = False,
 ) -> Any:
     """Resolves the agent card and returns an A2AClient configured with the specified transport.
 
@@ -83,6 +86,7 @@ async def get_client_with_transport(
         http_client: An asynchronous HTTPX client used for communication.
         url: The URL pointing to the agent's well-known card endpoint.
         transport: The requested transport protocol (e.g., 'jsonrpc', 'grpc', 'http_json').
+        streaming: Whether to use streaming.
 
     Returns:
         Any: An initialized A2A client bound to the specified transport.
@@ -109,7 +113,7 @@ async def get_client_with_transport(
     config.grpc_channel_factory = grpc.aio.insecure_channel
     config.supported_transports = [transport]
     config.use_client_preference = True
-    config.streaming = False
+    config.streaming = streaming
 
     return await ClientFactory.connect(url, client_config=config)
 
@@ -143,6 +147,62 @@ async def handle_instruction(
     raise ValueError('Unknown instruction type')
 
 
+async def _call_agent_func(
+    call_agent_proto: instruction_pb2.CallAgent,
+) -> AsyncIterator[str]:
+    logger.info(
+        'Calling outbound agent: %s via %s',
+        call_agent_proto.agent_card_uri,
+        call_agent_proto.transport,
+    )
+    async with httpx.AsyncClient(timeout=30) as http_client:
+        client = await get_client_with_transport(
+            http_client,
+            call_agent_proto.agent_card_uri,
+            call_agent_proto.transport,
+            streaming=call_agent_proto.streaming,
+        )
+        msg = wrap_instruction_to_request(call_agent_proto.instruction)
+        async for event in client.send_message(msg):
+            logger.info('Event received: %s: %s', type(event), event)
+
+            message = None
+            if hasattr(event, 'role') and hasattr(
+                event, 'parts'
+            ):  # Likely a Message
+                message = event
+            elif isinstance(event, tuple):
+                for item in event:
+                    if item is None:
+                        continue
+                    if hasattr(item, 'role') and hasattr(item, 'parts'):
+                        message = item
+                        break
+                    status = getattr(item, 'status', None) or getattr(
+                        getattr(item, 'status_update', None),
+                        'status',
+                        None,
+                    )
+                    if status and getattr(status, 'message', None):
+                        message = status.message
+                        break
+                    if getattr(item, 'message', None) and hasattr(
+                        item.message, 'parts'
+                    ):
+                        message = item.message
+                        break
+
+            if message:
+                text_parts = []
+                for p in message.parts:
+                    p_root = getattr(p, 'root', p)
+                    t = getattr(p_root, 'text', None)
+                    if t:
+                        text_parts.append(t)
+                if text_parts:
+                    yield '\n'.join(text_parts)
+
+
 class V03AgentExecutor(AgentExecutor):
     """Simplified AgentExecutor for ITK v0.3 logic."""
 
@@ -156,6 +216,14 @@ class V03AgentExecutor(AgentExecutor):
             event_queue: The event queue to send responses to.
 
         """
+        task_updater = TaskUpdater(
+            event_queue,
+            task_id=context.task_id or str(uuid.uuid4()),
+            context_id=context.context_id or str(uuid.uuid4()),
+        )
+        await task_updater.submit()
+        await task_updater.start_work()
+
         instruction = None
         # Extract proto from message parts
         for part in context.message.parts:
@@ -174,49 +242,18 @@ class V03AgentExecutor(AgentExecutor):
 
         if not instruction:
             logger.error('No valid Instruction found in message parts')
-            await event_queue.enqueue_event(
-                new_agent_text_message(
-                    'Error: No valid Instruction found in request.'
-                )
-            )
+            error_msg = 'Error: No valid Instruction found in request.'
+            await task_updater.failed(message=new_agent_text_message(error_msg))
             return
 
-        async def call_agent_func(
-            call_agent_proto: instruction_pb2.CallAgent,
-        ) -> AsyncIterator[str]:
-            logger.info(
-                'Calling outbound agent: %s via %s',
-                call_agent_proto.agent_card_uri,
-                call_agent_proto.transport,
-            )
-            async with httpx.AsyncClient(timeout=30) as http_client:
-                client = await get_client_with_transport(
-                    http_client,
-                    call_agent_proto.agent_card_uri,
-                    call_agent_proto.transport,
-                )
-                msg = wrap_instruction_to_request(call_agent_proto.instruction)
-                async for response in client.send_message(msg):
-                    if isinstance(response, Message):
-                        text = '\n'.join(
-                            p.root.text
-                            for p in response.parts
-                            if isinstance(p.root, TextPart)
-                        )
-                        yield text
-
         try:
-            result = await handle_instruction(instruction, call_agent_func)
-            await event_queue.enqueue_event(
-                new_agent_text_message('\n'.join(result))
-            )
+            result = await handle_instruction(instruction, _call_agent_func)
+            response_msg = new_agent_text_message('\n'.join(result))
+            await task_updater.complete(message=response_msg)
         except Exception:
             logger.exception('Instruction execution failed')
-            await event_queue.enqueue_event(
-                new_agent_text_message(
-                    'Execution Error: instruction handling failed'
-                )
-            )
+            error_msg = 'Execution Error: instruction handling failed'
+            await task_updater.failed(message=new_agent_text_message(error_msg))
 
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue
@@ -275,7 +312,10 @@ def create_http_server(
 
     """
     app = FastAPI(title='ITK v03 Agent Server (Consolidated)')
-    A2AFastAPIApplication(agent_card, request_handler).add_routes_to_app(app)
+
+    app.mount(
+        '/jsonrpc', A2AFastAPIApplication(agent_card, request_handler).build()
+    )
     app.mount(
         '/rest', A2ARESTFastAPIApplication(agent_card, request_handler).build()
     )
@@ -298,24 +338,22 @@ async def _run_agent(http_port: int, grpc_port: int) -> None:
     agent_card = AgentCard(
         name='ITK v03 Agent',
         description='Multi-transport agent supporting raw Instruction protos (Consolidated).',
-        url=f'http://{host}:{http_port}',
+        url=f'http://{host}:{http_port}/jsonrpc/',
         version='0.3.0',
+        protocol_version='0.3.0',
         default_input_modes=['text'],
         default_output_modes=['text'],
-        capabilities=AgentCapabilities(streaming=False),
+        capabilities=AgentCapabilities(streaming=True),
         skills=[skill],
         preferred_transport=TransportProtocol.jsonrpc,
         additional_interfaces=[
             AgentInterface(
-                url=f'http://{host}:{http_port}',
-                transport=TransportProtocol.jsonrpc,
-            ),
-            AgentInterface(
-                url=f'http://{host}:{http_port}/rest',
+                url=f'http://{host}:{http_port}/rest/',
                 transport=TransportProtocol.http_json,
             ),
             AgentInterface(
-                url=f'{host}:{grpc_port}', transport=TransportProtocol.grpc
+                url=f'{host}:{grpc_port}',
+                transport=TransportProtocol.grpc,
             ),
         ],
     )
@@ -343,9 +381,7 @@ async def _run_agent(http_port: int, grpc_port: int) -> None:
         loop.add_signal_handler(sig, lambda: asyncio.create_task(shutdown()))
 
     await grpc_server.start()
-    await asyncio.gather(
-        http_server.serve(), grpc_server.wait_for_termination()
-    )
+    await http_server.serve()
 
 
 @click.command()
