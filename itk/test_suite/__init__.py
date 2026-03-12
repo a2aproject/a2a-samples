@@ -1,20 +1,22 @@
 import logging
+import socket
 import subprocess
 import sys
 
 from agents.python.v03.pyproto import instruction_pb2
-from test_suite.go_v03 import AGENT_DEF as GO_V03_AGENT_DEF
-from test_suite.go_v10_v03_compat import (
-    AGENT_DEF as GO_V10_V03_COMPAT_AGENT_DEF,
-)
-from test_suite.python_v03 import AGENT_DEF as PYTHON_V03_AGENT_DEF
+from test_suite.go_v03 import spawn_agent as spawn_agent_go_v03
+from test_suite.go_v10 import spawn_agent as spawn_agent_go_v10
+from test_suite.python_v03 import spawn_agent as spawn_agent_python_v03
+from test_suite.python_v10 import spawn_agent as spawn_agent_python_v10
 
 
 _AGENT_DEFS = {
-    'go_v03': GO_V03_AGENT_DEF,
-    'python_v03': PYTHON_V03_AGENT_DEF,
-    'go_v10_v03_compat': GO_V10_V03_COMPAT_AGENT_DEF,
+    'go_v03': {'launcher': spawn_agent_go_v03},
+    'python_v03': {'launcher': spawn_agent_python_v03},
+    'go_v10': {'launcher': spawn_agent_go_v10},
+    'python_v10': {'launcher': spawn_agent_python_v10},
 }
+
 
 _TRAVERSAL_FUNCTIONS = {}
 
@@ -32,7 +34,8 @@ def register_traversal(name: str):
 _SUPPORTED_TRANSPORTS_PER_SDK = {
     'go_v03': {'jsonrpc', 'grpc'},
     'python_v03': {'jsonrpc', 'grpc', 'http_json'},
-    'go_v10_v03_compat': {'jsonrpc'},
+    'go_v10': {'jsonrpc', 'grpc'},
+    'python_v10': {'grpc', 'jsonrpc', 'http_json'},
 }
 
 _HOST = '127.0.0.1'
@@ -42,6 +45,61 @@ _ALL_TRANSPORTS = {'jsonrpc', 'grpc', 'http_json'}
 _END_OF_TRAVERSAL_TOKEN = 'traversal-completed'  # noqa: S105
 
 _MIN_SDKS_PER_TRANSPORT = 2
+
+
+def _get_free_port() -> int:
+    """Finds an available TCP port on localhost."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(('', 0))
+        return s.getsockname()[1]
+
+
+def allocate_agent_ports(sdk_name: str) -> None:
+    """Allocates dynamic ports for an agent if not already assigned."""
+    agent_def = _AGENT_DEFS.get(sdk_name)
+    if not agent_def:
+        raise ValueError(f'Unknown SDK: {sdk_name}')
+    if 'httpPort' not in agent_def:
+        p1 = _get_free_port()
+        p2 = _get_free_port()
+        max_retries = 10
+        for _ in range(max_retries):
+            if p2 != p1:
+                break
+            p2 = _get_free_port()
+        else:
+            raise RuntimeError(
+                f'Failed to allocate distinct ports for {sdk_name} after {max_retries} attempts'
+            )
+        agent_def['httpPort'] = p1
+        agent_def['grpcPort'] = p2
+
+
+def get_agent_launcher(sdk_name: str):
+    """Returns a launcher function with allocated ports bound."""
+    agent_def = _AGENT_DEFS.get(sdk_name)
+    if not agent_def:
+        raise ValueError(f'Unknown SDK: {sdk_name}')
+    launcher_func = agent_def['launcher']
+    h = agent_def['httpPort']
+    g = agent_def['grpcPort']
+    return lambda h=h, g=g, f=launcher_func: f(h, g)
+
+
+def get_agent_card_uri(sdk_name: str) -> str:
+    """Returns the well-known agent card URI."""
+    agent_def = _AGENT_DEFS.get(sdk_name)
+    if not agent_def:
+        raise ValueError(f'Unknown SDK: {sdk_name}')
+    return f'http://{_HOST}:{agent_def["httpPort"]}/jsonrpc'
+
+
+def get_agent_def(sdk_name: str) -> dict:
+    """Returns the agent definition dictionary for the given SDK."""
+    agent_def = _AGENT_DEFS.get(sdk_name)
+    if not agent_def:
+        raise ValueError(f'Unknown SDK: {sdk_name}')
+    return agent_def
 
 
 def _parse_edge_strings(
@@ -80,12 +138,39 @@ def _parse_edge_strings(
     return parsed
 
 
+def _decompose_into_components(
+    nodes_with_edges: list[str], adj: dict[str, list[str]]
+) -> list[list[str]]:
+    """Decomposes nodes with edges into connected components (undirected view)."""
+    undirected_adj = {u: set() for u in adj}
+    for u, neighbors in adj.items():
+        for v in neighbors:
+            undirected_adj[u].add(v)
+            undirected_adj[v].add(u)
+
+    visited = set()
+    components = []
+    for node in nodes_with_edges:
+        if node not in visited:
+            component = []
+            stack = [node]
+            visited_component = {node}
+            while stack:
+                u = stack.pop()
+                component.append(u)
+                for v in undirected_adj[u]:
+                    if v not in visited_component:
+                        visited_component.add(v)
+                        stack.append(v)
+            components.append(component)
+            visited.update(visited_component)
+    return components
+
+
 def _verify_eulerian_graph(
-    adj: dict[str, list[str]],
     in_degree: dict[str, int],
     out_degree: dict[str, int],
     all_sdks: list[str],
-    current_sdk: str,
 ) -> None:
     """Verifies that the graph defined by degrees and adjacency list is Eulerian.
 
@@ -107,37 +192,13 @@ def _verify_eulerian_graph(
                 f'and out-degree={out_degree[node]}.'
             )
 
-    # 2. Verify Strong Connectedness
-    # All nodes with non-zero degree must belong to a single strongly connected component.
-    # Since in_degree == out_degree, this is equivalent to verifying all edges are reachable
-    # from any node that has edges.
-    nodes_with_edges = [n for n in all_sdks if out_degree[n] > 0]
-    if nodes_with_edges:
-        # Start from current_sdk if it has edges, otherwise any node with edges
-        start_node = (
-            current_sdk if out_degree[current_sdk] > 0 else nodes_with_edges[0]
-        )
-
-        # Verify strong connectedness using a DFS-based reachability check.
-        visited = {start_node}
-        stack = [start_node]
-        while stack:
-            u = stack.pop()
-            for v in adj[u]:
-                if v not in visited:
-                    visited.add(v)
-                    stack.append(v)
-
-        for node in nodes_with_edges:
-            if node not in visited:
-                raise ValueError(
-                    f"Graph is not strongly connected. Node '{node}' is unreachable "
-                    f"from '{start_node}'."
-                )
+    # 2. Strong Connectedness verification is deferred to component decomposition
+    # in the traversal logic. All components must locally satisfy Eulerian conditions
+    # (checked in step 1), making them independently traversable.
 
 
 def _traversal_to_instruction(
-    circuit: list[str], transport: str
+    circuit: list[str], transport: str, streaming: bool = False
 ) -> tuple[instruction_pb2.Instruction, list[str]]:
     """Converts a circuit of SDK names into a nested A2A instruction.
 
@@ -175,10 +236,11 @@ def _traversal_to_instruction(
             raise ValueError(f'Unknown SDK: {v}')
 
         port = agent_def.get('httpPort')
-        agent_card_uri = f'http://{_HOST}:{port}'
+        agent_card_uri = f'http://{_HOST}:{port}/jsonrpc'
 
         call_step.call_agent.agent_card_uri = agent_card_uri
         call_step.call_agent.transport = transport
+        call_step.call_agent.streaming = streaming
         call_step.call_agent.instruction.CopyFrom(current_inst)
 
         current_inst = hop
@@ -186,16 +248,15 @@ def _traversal_to_instruction(
     return current_inst, trace_tokens
 
 
-def create_test_suite(
+def create_test_suite(  # noqa: PLR0913
     sdks: list[str],
     logger: logging.Logger,
     traversal_name: str = 'euler',
     edges: list[str] | None = None,
+    protocols: list[str] | None = None,
+    streaming: bool = False,
 ) -> tuple[
     instruction_pb2.Instruction,
-    list[str],
-    list[subprocess.Popen],
-    list[str],
     list[str],
 ]:
 
@@ -209,62 +270,33 @@ def create_test_suite(
 
     parsed_edges = _parse_edge_strings(edges, sdks) if edges else None
 
-    expected_end_tokens = []
-    for transport in _ALL_TRANSPORTS:
-        sdks_for_transport = [
-            sdk
-            for sdk in sdks
-            if transport in _SUPPORTED_TRANSPORTS_PER_SDK[sdk]
-        ]
-        if len(sdks_for_transport) < _MIN_SDKS_PER_TRANSPORT:
-            logger.info(
-                'Skipping transport %s because only %d of specified SDKs support it - A2A tests require at least 2 SDKs for cross-SDK testing',
-                transport,
-                len(sdks_for_transport),
-            )
-            continue
-        try:
-            circuit = traversal_function(
-                sdks_for_transport[0],
-                sdks_for_transport,
-                transport,
-                edges=parsed_edges,
-            )
-        except ValueError as e:
-            logger.warning(
-                'Skipping transport %s because %s',
-                transport,
-                e,
-            )
-            continue
-        instruction_for_transport, trace_tokens = _traversal_to_instruction(
-            circuit, transport
-        )
-        expected_end_tokens.extend(
-            [*trace_tokens, f'{_END_OF_TRAVERSAL_TOKEN}:{transport}']
-        )
-        testing_instruction.steps.instructions.add().CopyFrom(
-            instruction_for_transport
-        )
+    transports_to_test = (
+        protocols if protocols is not None else list(_ALL_TRANSPORTS)
+    )
 
-    ports = []
-    agent_launchers = []
-    agent_card_uris = []
-    for sdk in sdks:
-        agent_def_for_sdk = _AGENT_DEFS.get(sdk)
-        if not agent_def_for_sdk:
-            raise ValueError(f'Unknown SDK: {sdk}')
-        ports.append(agent_def_for_sdk['httpPort'])
-        ports.append(agent_def_for_sdk['grpcPort'])
-        agent_launchers.append(agent_def_for_sdk['launcher'])
-        agent_card_uris.append(
-            f'http://{_HOST}:{agent_def_for_sdk["httpPort"]}'
+    expected_end_tokens = []
+    for transport in transports_to_test:
+        circuits = traversal_function(
+            sdks[0],
+            sdks,
+            transport,
+            edges=parsed_edges,
         )
+        for circuit in circuits:
+            instruction_for_transport, trace_tokens = _traversal_to_instruction(
+                circuit, transport, streaming=streaming
+            )
+            expected_end_tokens.extend(
+                [*trace_tokens, f'{_END_OF_TRAVERSAL_TOKEN}:{transport}']
+            )
+            testing_instruction.steps.instructions.add().CopyFrom(
+                instruction_for_transport
+            )
+
+    for sdk in sdks:
+        allocate_agent_ports(sdk)
     return (
         testing_instruction,
-        ports,
-        agent_launchers,
-        agent_card_uris,
         expected_end_tokens,
     )
 
@@ -289,6 +321,14 @@ def _euler_traversal_with_hierholzer(
     A strongly connected graph where In(X) = Out(X) for all nodes is guaranteed
     to possess an Eulerian Circuit, traversing all segments linearly without
     duplicate activation overlaps.
+
+    **Note on DFS vs Eulerian traversal**:
+    Standard Depth-First Search (DFS) is vertex-focused (it visits vertices and
+    marks them as visited to avoid cycles). In a graph with multiple edges or
+    cycles, a standard DFS will skip edges that lead to already-visited nodes
+    (such as back-edges or cross-edges). Consequently, DFS may skip edges and
+    fail to produce an Eulerian traversal. Hierholzer's algorithm, in contrast,
+    consumes *edges* to ensure that every directed edge is visited exactly once.
 
     Args:
         current_sdk: The starting agent/SDK node.
@@ -317,20 +357,32 @@ def _euler_traversal_with_hierholzer(
         out_degree[u] += 1
         in_degree[v] += 1
 
-    # 3. Verify Eulerian Cycle existence
-    _verify_eulerian_graph(adj, in_degree, out_degree, all_sdks, current_sdk)
+    # 3. Verify Eulerian Balance existence
+    _verify_eulerian_graph(in_degree, out_degree, all_sdks)
 
-    # 4. Hierholzer's Algorithm to find Eulerian Circuit
-    stack = [current_sdk]
-    circuit = []
+    # 4. Decompose into components and run Hierholzer for each
+    nodes_with_edges = [n for n in all_sdks if out_degree[n] > 0]
+    components = _decompose_into_components(nodes_with_edges, adj)
+    circuits = []
 
-    while stack:
-        u = stack[-1]
-        if adj[u]:
-            v = adj[u].pop()
-            stack.append(v)
-        else:
-            circuit.append(stack.pop())
+    if not components:
+        return [[current_sdk]]
 
-    circuit.reverse()
-    return circuit
+    # Sort to prioritize component containing current_sdk (execute first)
+    components.sort(key=lambda c: current_sdk not in c)
+
+    for comp in components:
+        start_node = current_sdk if current_sdk in comp else comp[0]
+        stack = [start_node]
+        comp_circuit = []
+        while stack:
+            u = stack[-1]
+            if adj[u]:
+                v = adj[u].pop()
+                stack.append(v)
+            else:
+                comp_circuit.append(stack.pop())
+        comp_circuit.reverse()
+        circuits.append(comp_circuit)
+
+    return circuits

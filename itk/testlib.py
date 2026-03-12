@@ -1,4 +1,4 @@
-import asyncio
+import asyncio  # noqa: I001
 import base64
 import logging
 import subprocess
@@ -7,6 +7,8 @@ import uuid
 
 import httpx
 
+import test_suite
+
 from a2a.client import ClientConfig, ClientFactory
 from a2a.types import (
     FilePart,
@@ -14,11 +16,9 @@ from a2a.types import (
     Message,
     Part,
     Role,
-    TextPart,
     TransportProtocol,
 )
 from agents.python.v03.pyproto import instruction_pb2
-from test_suite import create_test_suite
 
 
 logger = logging.getLogger(__name__)
@@ -38,12 +38,15 @@ def _clean_ports(*ports: int) -> None:
         )
 
 
-def _log_process_output(proc: subprocess.Popen, name: str) -> None:
+def _log_process_output(
+    proc: subprocess.Popen, name: str, err: Exception | None = None
+) -> None:
     """Helper to log some output from a process if it fails or for debugging.
 
     Args:
         proc: The process from which to read standard output.
         name: A human-readable identifier for the process being logged.
+        err: Optional exception to log and raise.
     """
     try:
         # Read available output without blocking
@@ -54,6 +57,10 @@ def _log_process_output(proc: subprocess.Popen, name: str) -> None:
             )
     except Exception:  # noqa: BLE001
         logger.debug('Failed to read %s output', name, exc_info=True)
+    finally:
+        if err:
+            logger.error('Error: %s', err)
+        raise err
 
 
 def _wrap_instruction(instruction: instruction_pb2.Instruction) -> Message:
@@ -125,32 +132,35 @@ async def start_itk_cluster(
     Returns:
         tuple: (list of Popen processes, list of card URIs, list of ports).
     """
-    (
-        _,
-        ports,
-        agent_launchers,
-        agent_card_uris,
-        _,
-    ) = create_test_suite(
-        sdks, logger, 'euler'
-    )  # Traversal doesn't matter for start
-
-    _clean_ports(*ports)
-    agent_procs = [launcher() for launcher in agent_launchers]
+    agent_procs = []
+    ports = []
+    agent_card_uris = []
 
     logger.info('Initializing agent cluster with SDKs: %s', ', '.join(sdks))
 
-    async def _verify_readiness() -> None:
-        for sdk, url, agent_proc in zip(
-            sdks, agent_card_uris, agent_procs, strict=True
-        ):
-            if not await _check_agent_ready(sdk, url):
-                _log_process_output(agent_proc, sdk)
-                raise RuntimeError(f'{sdk} agent failed SDK readiness check.')
-
     try:
-        logger.info('Waiting for agent cluster stability...')
-        await _verify_readiness()
+        for sdk in sdks:
+            test_suite.allocate_agent_ports(sdk)
+            agent_def = test_suite.get_agent_def(sdk)
+            h_port = agent_def['httpPort']
+            g_port = agent_def['grpcPort']
+            ports.extend([h_port, g_port])
+
+            _clean_ports(h_port, g_port)
+
+            launcher = test_suite.get_agent_launcher(sdk)
+            uri = test_suite.get_agent_card_uri(sdk)
+            agent_card_uris.append(uri)
+
+            logger.info('Starting %s agent...', sdk)
+            proc = launcher()
+            agent_procs.append(proc)
+
+            logger.info('Verifying %s readiness at %s...', sdk, uri)
+            if not await _check_agent_ready(sdk, uri):
+                err = RuntimeError(f'{sdk} agent failed SDK readiness check.')
+                _log_process_output(proc, sdk, err)
+
     except Exception:
         for proc in agent_procs:
             proc.terminate()
@@ -160,12 +170,14 @@ async def start_itk_cluster(
         return agent_procs, agent_card_uris, ports
 
 
-async def execute_itk_test(
+async def execute_itk_test(  # noqa: PLR0913
     sdks: list[str],
     traversal: str,
     edges: list[str] | None = None,
     scenario_name: str | None = None,
-) -> None:
+    protocols: list[str] | None = None,
+    streaming: bool = False,
+) -> bool:
     """Executes a traversal test against an ALREADY RUNNING cluster.
 
     Args:
@@ -173,53 +185,76 @@ async def execute_itk_test(
         traversal: Name of the graph traversal algorithm.
         edges: Optional custom edges.
         scenario_name: Optional label for logging.
+        protocols: Optional list of protocols to test.
+        streaming: Whether to use streaming.
     """
     label = scenario_name or traversal
     (
         test_instruction,
-        _,
-        _,
-        agent_card_uris,
         expected_end_tokens,
-    ) = create_test_suite(sdks, logger, traversal, edges=edges)
+    ) = test_suite.create_test_suite(
+        sdks,
+        logger,
+        traversal,
+        edges=edges,
+        protocols=protocols,
+        streaming=streaming,
+    )
 
     logger.info('Executing %s traversal test...', label)
+    logger.info('Test instruction: %s', test_instruction)
     msg = _wrap_instruction(test_instruction)
 
     async with httpx.AsyncClient(timeout=120) as http_client:
         config = ClientConfig()
         config.httpx_client = http_client
         config.supported_transports = [TransportProtocol.jsonrpc]
+        config.streaming = streaming
 
         client = await ClientFactory.connect(
-            agent_card_uris[0], client_config=config
+            test_suite.get_agent_card_uri(sdks[0]), client_config=config
         )
 
         responses = []
         logger.info(
             'Dispatching %s payload to %s via JSON-RPC...',
             label,
-            agent_card_uris[0],
+            test_suite.get_agent_card_uri(sdks[0]),
         )
         async for resp in client.send_message(msg):
-            if isinstance(resp, Message):
-                responses.extend(
-                    part.root.text
-                    for part in resp.parts
-                    if isinstance(part.root, TextPart)
-                )
+            logger.info('!!!!!!!!!!!!Received response: %s!!!!!!!!!!!!!', resp)
+            item = resp
+            if isinstance(resp, tuple):
+                for i in resp:
+                    if i is not None:
+                        item = i
+                        break
+
+            message = None
+            if isinstance(item, Message):
+                message = item
+            elif hasattr(item, 'status') and getattr(
+                item.status, 'message', None
+            ):
+                message = item.status.message
+
+            if message:
+                for part in message.parts:
+                    p_root = getattr(part, 'root', part)
+                    if hasattr(p_root, 'text') and p_root.text:
+                        responses.append(p_root.text)
 
         full_response = ''.join(responses).strip()
         logger.info('Test Result for %s: %s', label, full_response)
 
         if all(token in full_response for token in expected_end_tokens):
             logger.info('--- INTEGRATION TEST PASSED: %s ---', label)
-        else:
-            logger.error(
-                '--- INTEGRATION TEST FAILED: Verification tokens missing for %s ---',
-                label,
-            )
-            raise RuntimeError(f'Verification tokens missing for {label}')
+            return True
+        logger.error(
+            '--- INTEGRATION TEST FAILED: Verification tokens missing for %s ---',
+            label,
+        )
+        return False
 
 
 async def run_itk_test(
@@ -227,7 +262,7 @@ async def run_itk_test(
     traversal: str,
     edges: list[str] | None = None,
     scenario_name: str | None = None,
-) -> None:
+) -> bool:
     """Executes a multi-agent integration test traversal.
 
     Args:
@@ -241,7 +276,7 @@ async def run_itk_test(
     """
     procs, _, ports = await start_itk_cluster(sdks)
     try:
-        await execute_itk_test(sdks, traversal, edges, scenario_name)
+        return await execute_itk_test(sdks, traversal, edges, scenario_name)
     finally:
         logger.info(
             'Decommissioning agents for %s...', scenario_name or traversal
