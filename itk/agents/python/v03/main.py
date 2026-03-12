@@ -70,7 +70,11 @@ def wrap_instruction_to_request(
                     )
                 )
             )
+            # Part(root=TextPart(text="something")),
         ],
+        metadata={
+            "a2a/protocol_version": "0.3"
+        }
     )
 
 
@@ -114,7 +118,7 @@ async def get_client_with_transport(
     return await ClientFactory.connect(url, client_config=config)
 
 
-async def handle_instruction(
+async def handle_instruction( 
     instruction: instruction_pb2.Instruction,
     call_agent_func: Callable[[instruction_pb2.CallAgent], AsyncIterator[str]],
 ) -> list[str]:
@@ -196,14 +200,40 @@ class V03AgentExecutor(AgentExecutor):
                     call_agent_proto.transport,
                 )
                 msg = wrap_instruction_to_request(call_agent_proto.instruction)
-                async for response in client.send_message(msg):
-                    if isinstance(response, Message):
-                        text = '\n'.join(
-                            p.root.text
-                            for p in response.parts
-                            if isinstance(p.root, TextPart)
-                        )
-                        yield text
+                async for event in client.send_message(msg):
+                    logger.info(f"Event received: {type(event)}: {event}")
+                    
+                    message = None
+                    if hasattr(event, "role") and hasattr(event, "parts"):  # Likely a Message
+                        message = event
+                    elif isinstance(event, tuple):
+                        # V1.0 SDK yields (StreamResponse, Task | None) or (Task, Update | None)
+                        for item in event:
+                            if item is None:
+                                continue
+                            if hasattr(item, "role") and hasattr(item, "parts"):
+                                message = item
+                                break
+                            # Check status or status_update for message
+                            status = getattr(item, "status", None) or getattr(getattr(item, "status_update", None), "status", None)
+                            if status and getattr(status, "message", None):
+                                message = status.message
+                                break
+                            # Check StreamResponse.message
+                            if getattr(item, "message", None) and hasattr(item.message, "parts"):
+                                message = item.message
+                                break
+
+                    if message:
+                        text_parts = []
+                        for p in message.parts:
+                            # Handle Pydantic Part (root) or Proto Part (text)
+                            p_root = getattr(p, "root", p)
+                            t = getattr(p_root, "text", None)
+                            if t:
+                                text_parts.append(t)
+                        if text_parts:
+                            yield "\n".join(text_parts)
 
         try:
             result = await handle_instruction(instruction, call_agent_func)
@@ -275,7 +305,8 @@ def create_http_server(
 
     """
     app = FastAPI(title='ITK v03 Agent Server (Consolidated)')
-    A2AFastAPIApplication(agent_card, request_handler).add_routes_to_app(app)
+    #A2AFastAPIApplication(agent_card, request_handler).add_routes_to_app(app)
+    app.mount("/jsonrpc", A2AFastAPIApplication(agent_card, request_handler).build())
     app.mount(
         '/rest', A2ARESTFastAPIApplication(agent_card, request_handler).build()
     )
@@ -298,24 +329,27 @@ async def _run_agent(http_port: int, grpc_port: int) -> None:
     agent_card = AgentCard(
         name='ITK v03 Agent',
         description='Multi-transport agent supporting raw Instruction protos (Consolidated).',
-        url=f'http://{host}:{http_port}',
+        url=f'http://{host}:{http_port}/jsonrpc/',
         version='0.3.0',
+        protocol_version='0.3.0',
         default_input_modes=['text'],
         default_output_modes=['text'],
         capabilities=AgentCapabilities(streaming=False),
         skills=[skill],
         preferred_transport=TransportProtocol.jsonrpc,
         additional_interfaces=[
+            # AgentInterface(
+            #     url=f'http://{host}:{http_port}/jsonrpc',
+            #     transport=TransportProtocol.jsonrpc,
+
+            # ),
             AgentInterface(
-                url=f'http://{host}:{http_port}',
-                transport=TransportProtocol.jsonrpc,
-            ),
-            AgentInterface(
-                url=f'http://{host}:{http_port}/rest',
+                url=f'http://{host}:{http_port}/rest/',
                 transport=TransportProtocol.http_json,
             ),
             AgentInterface(
-                url=f'{host}:{grpc_port}', transport=TransportProtocol.grpc
+                url=f'{host}:{grpc_port}',
+                transport=TransportProtocol.grpc,
             ),
         ],
     )
@@ -343,9 +377,10 @@ async def _run_agent(http_port: int, grpc_port: int) -> None:
         loop.add_signal_handler(sig, lambda: asyncio.create_task(shutdown()))
 
     await grpc_server.start()
-    await asyncio.gather(
-        http_server.serve(), grpc_server.wait_for_termination()
-    )
+    await http_server.serve()
+    # await asyncio.gather(
+    #     http_server.serve(), grpc_server.wait_for_termination()
+    # )
 
 
 @click.command()

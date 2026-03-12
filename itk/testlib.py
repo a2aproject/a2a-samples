@@ -132,7 +132,7 @@ async def start_itk_cluster(
         agent_card_uris,
         _,
     ) = create_test_suite(
-        sdks, logger, 'euler'
+        sdks, logger, 'euler', protocols=[]
     )  # Traversal doesn't matter for start
 
     _clean_ports(*ports)
@@ -165,6 +165,7 @@ async def execute_itk_test(
     traversal: str,
     edges: list[str] | None = None,
     scenario_name: str | None = None,
+    protocols: list[str] | None = None,
 ) -> None:
     """Executes a traversal test against an ALREADY RUNNING cluster.
 
@@ -181,9 +182,12 @@ async def execute_itk_test(
         _,
         agent_card_uris,
         expected_end_tokens,
-    ) = create_test_suite(sdks, logger, traversal, edges=edges)
+    ) = create_test_suite(
+        sdks, logger, traversal, edges=edges, protocols=protocols
+    )
 
     logger.info('Executing %s traversal test...', label)
+    logger.info(f"Test instruction: {test_instruction}")
     msg = _wrap_instruction(test_instruction)
 
     async with httpx.AsyncClient(timeout=120) as http_client:
@@ -202,6 +206,7 @@ async def execute_itk_test(
             agent_card_uris[0],
         )
         async for resp in client.send_message(msg):
+            logger.info(f"!!!!!!!!!!!!Received response: {resp}!!!!!!!!!!!!!")
             if isinstance(resp, Message):
                 responses.extend(
                     part.root.text
