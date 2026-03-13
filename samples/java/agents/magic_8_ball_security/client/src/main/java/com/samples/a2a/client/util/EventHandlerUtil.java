@@ -37,7 +37,7 @@ public final class EventHandlerUtil {
         (event, agentCard) -> {
           if (event instanceof MessageEvent messageEvent) {
             Message responseMessage = messageEvent.getMessage();
-            String text = extractTextFromParts(responseMessage.getParts());
+            String text = extractTextFromParts(responseMessage.parts());
             System.out.println("Received message: " + text);
             messageResponse.complete(text);
           } else if (event instanceof TaskUpdateEvent taskUpdateEvent) {
@@ -46,27 +46,27 @@ public final class EventHandlerUtil {
                     instanceof TaskStatusUpdateEvent taskStatusUpdateEvent) {
               System.out.println(
                   "Received status-update: "
-                      + taskStatusUpdateEvent.getStatus().state().asString());
+                      + taskStatusUpdateEvent.status().state().name());
               if (taskStatusUpdateEvent.isFinal()) {
                 String text = extractTextFromArtifacts(
-                        taskUpdateEvent.getTask().getArtifacts());
+                        taskUpdateEvent.getTask().artifacts());
                 messageResponse.complete(text);
               }
             } else if (updateEvent
                     instanceof
                     TaskArtifactUpdateEvent taskArtifactUpdateEvent) {
               List<Part<?>> parts = taskArtifactUpdateEvent
-                      .getArtifact()
+                      .artifact()
                       .parts();
               String text = extractTextFromParts(parts);
               System.out.println("Received artifact-update: " + text);
             }
           } else if (event instanceof TaskEvent taskEvent) {
             System.out.println("Received task event: "
-                    + taskEvent.getTask().getId());
-            if (taskEvent.getTask().getStatus().state().isFinal()) {
+                    + taskEvent.getTask().id());
+            if (taskEvent.getTask().status().state().isFinal()) {
               String text = extractTextFromArtifacts(
-                      taskEvent.getTask().getArtifacts());
+                      taskEvent.getTask().artifacts());
               messageResponse.complete(text);
             }
           }
@@ -109,7 +109,7 @@ public final class EventHandlerUtil {
     if (parts != null) {
       for (final Part<?> part : parts) {
         if (part instanceof TextPart textPart) {
-          textBuilder.append(textPart.getText());
+          textBuilder.append(textPart.text());
         }
       }
     }

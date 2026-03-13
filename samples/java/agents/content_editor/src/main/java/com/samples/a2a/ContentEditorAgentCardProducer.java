@@ -3,6 +3,7 @@ package com.samples.a2a;
 import io.a2a.server.PublicAgentCard;
 import io.a2a.spec.AgentCapabilities;
 import io.a2a.spec.AgentCard;
+import io.a2a.spec.AgentInterface;
 import io.a2a.spec.AgentSkill;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -40,23 +41,23 @@ public final class ContentEditorAgentCardProducer {
   @Produces
   @PublicAgentCard
   public AgentCard agentCard() {
-    return new AgentCard.Builder()
+    return AgentCard.builder()
         .name("Content Editor Agent")
         .description("An agent that can proof-read and polish content.")
-        .url("http://localhost:" + getHttpPort())
+        .supportedInterfaces(Collections.singletonList(
+            new AgentInterface("JSONRPC", "http://localhost:" + getHttpPort())))
         .version("1.0.0")
         .documentationUrl("http://example.com/docs")
         .capabilities(
-            new AgentCapabilities.Builder()
+            AgentCapabilities.builder()
                 .streaming(true)
                 .pushNotifications(false)
-                .stateTransitionHistory(false)
                 .build())
         .defaultInputModes(Collections.singletonList("text"))
         .defaultOutputModes(Collections.singletonList("text"))
         .skills(
             Collections.singletonList(
-                new AgentSkill.Builder()
+                AgentSkill.builder()
                     .id("editor")
                     .name("Edits content")
                     .description("Edits content by proof-reading and polishing")
@@ -66,7 +67,6 @@ public final class ContentEditorAgentCardProducer {
                             "Edit the following article, make sure it has "
                                 + "a professional tone"))
                     .build()))
-        .protocolVersion("0.3.0")
         .build();
   }
 }

@@ -31,27 +31,24 @@ public final class DiceAgentCardProducer {
   @Produces
   @PublicAgentCard
   public AgentCard agentCard() {
-    return new AgentCard.Builder()
+    return AgentCard.builder()
         .name("Dice Agent")
         .description(
             "Rolls an N-sided dice and answers questions about the "
                 + "outcome of the dice rolls. Can also answer questions "
                 + "about prime numbers.")
-        .preferredTransport(TransportProtocol.GRPC.asString())
-        .url("localhost:" + httpPort)
         .version("1.0.0")
         .documentationUrl("http://example.com/docs")
         .capabilities(
-            new AgentCapabilities.Builder()
+            AgentCapabilities.builder()
                 .streaming(true)
                 .pushNotifications(false)
-                .stateTransitionHistory(false)
                 .build())
         .defaultInputModes(List.of("text"))
         .defaultOutputModes(List.of("text"))
         .skills(
             List.of(
-                new AgentSkill.Builder()
+                AgentSkill.builder()
                     .id("dice_roller")
                     .name("Roll dice")
                     .description("Rolls dice and discusses outcomes")
@@ -59,7 +56,7 @@ public final class DiceAgentCardProducer {
                     .examples(
                         List.of("Can you roll a 6-sided die?"))
                     .build(),
-                new AgentSkill.Builder()
+                AgentSkill.builder()
                     .id("prime_checker")
                     .name("Check prime numbers")
                     .description("Checks if given numbers are prime")
@@ -69,14 +66,10 @@ public final class DiceAgentCardProducer {
                             "Is 17 a prime number?",
                             "Which of these numbers are prime: 1, 4, 6, 7"))
                     .build()))
-        .protocolVersion("0.3.0")
-        .additionalInterfaces(
+        .supportedInterfaces(
             List.of(
-                new AgentInterface(TransportProtocol.GRPC.asString(),
-                        "localhost:" + httpPort),
-                new AgentInterface(
-                    TransportProtocol.JSONRPC.asString(),
-                        "http://localhost:" + httpPort)))
+                new AgentInterface(TransportProtocol.GRPC.asString(), "localhost:" + httpPort),
+                new AgentInterface(TransportProtocol.JSONRPC.asString(), "http://localhost:" + httpPort)))
         .build();
   }
 }
