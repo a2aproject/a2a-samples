@@ -8,12 +8,14 @@ from test_suite.go_v10_v03_compat import (
     AGENT_DEF as GO_V10_V03_COMPAT_AGENT_DEF,
 )
 from test_suite.python_v03 import AGENT_DEF as PYTHON_V03_AGENT_DEF
+from test_suite.python_v10 import AGENT_DEF as PYTHON_V10_AGENT_DEF
 
 
 _AGENT_DEFS = {
     'go_v03': GO_V03_AGENT_DEF,
     'python_v03': PYTHON_V03_AGENT_DEF,
     'go_v10_v03_compat': GO_V10_V03_COMPAT_AGENT_DEF,
+    'python_v10': PYTHON_V10_AGENT_DEF,
 }
 
 _TRAVERSAL_FUNCTIONS = {}
@@ -33,6 +35,7 @@ _SUPPORTED_TRANSPORTS_PER_SDK = {
     'go_v03': {'jsonrpc', 'grpc'},
     'python_v03': {'jsonrpc', 'grpc', 'http_json'},
     'go_v10_v03_compat': {'jsonrpc'},
+    'python_v10': {'grpc', 'jsonrpc', 'http_json'},
 }
 
 _HOST = '127.0.0.1'
@@ -175,7 +178,7 @@ def _traversal_to_instruction(
             raise ValueError(f'Unknown SDK: {v}')
 
         port = agent_def.get('httpPort')
-        agent_card_uri = f'http://{_HOST}:{port}'
+        agent_card_uri = f'http://{_HOST}:{port}/jsonrpc'
 
         call_step.call_agent.agent_card_uri = agent_card_uri
         call_step.call_agent.transport = transport
@@ -191,6 +194,7 @@ def create_test_suite(
     logger: logging.Logger,
     traversal_name: str = 'euler',
     edges: list[str] | None = None,
+    protocols: list[str] | None = None,
 ) -> tuple[
     instruction_pb2.Instruction,
     list[str],
@@ -209,34 +213,23 @@ def create_test_suite(
 
     parsed_edges = _parse_edge_strings(edges, sdks) if edges else None
 
+    transports_to_test = protocols if protocols is not None else list(_ALL_TRANSPORTS)
+
+    for transport in transports_to_test:
+        for sdk in sdks:
+            if transport not in _SUPPORTED_TRANSPORTS_PER_SDK.get(sdk, {}):
+                raise ValueError(
+                    f"Validation failed: SDK '{sdk}' does not support protocol '{transport}'"
+                )
+
     expected_end_tokens = []
-    for transport in _ALL_TRANSPORTS:
-        sdks_for_transport = [
-            sdk
-            for sdk in sdks
-            if transport in _SUPPORTED_TRANSPORTS_PER_SDK[sdk]
-        ]
-        if len(sdks_for_transport) < _MIN_SDKS_PER_TRANSPORT:
-            logger.info(
-                'Skipping transport %s because only %d of specified SDKs support it - A2A tests require at least 2 SDKs for cross-SDK testing',
-                transport,
-                len(sdks_for_transport),
-            )
-            continue
-        try:
-            circuit = traversal_function(
-                sdks_for_transport[0],
-                sdks_for_transport,
-                transport,
-                edges=parsed_edges,
-            )
-        except ValueError as e:
-            logger.warning(
-                'Skipping transport %s because %s',
-                transport,
-                e,
-            )
-            continue
+    for transport in transports_to_test:
+        circuit = traversal_function(
+            sdks[0],
+            sdks,
+            transport,
+            edges=parsed_edges,
+        )
         instruction_for_transport, trace_tokens = _traversal_to_instruction(
             circuit, transport
         )
@@ -258,7 +251,7 @@ def create_test_suite(
         ports.append(agent_def_for_sdk['grpcPort'])
         agent_launchers.append(agent_def_for_sdk['launcher'])
         agent_card_uris.append(
-            f'http://{_HOST}:{agent_def_for_sdk["httpPort"]}'
+            f'http://{_HOST}:{agent_def_for_sdk["httpPort"]}/jsonrpc'
         )
     return (
         testing_instruction,

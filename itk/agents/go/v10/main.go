@@ -206,6 +206,7 @@ func (e *V10AgentExecutor) handleCallAgent(ctx context.Context, call *pb.CallAge
 
 func extractResponses(result any) []string {
 	var responses []string
+	log.Printf("Extracting responses from result of type %T", result)
 	switch r := result.(type) {
 	case *a2a.Message:
 		for _, part := range r.Parts {
@@ -214,7 +215,14 @@ func extractResponses(result any) []string {
 			}
 		}
 	case *a2a.Task:
-		// For Task, typically we want the parts of the messages in its history
+		// Check both Status.Message and History
+		if r.Status.Message != nil {
+			for _, part := range r.Status.Message.Parts {
+				if t := part.Text(); t != "" {
+					responses = append(responses, t)
+				}
+			}
+		}
 		for _, msg := range r.History {
 			if msg.Role == a2a.MessageRoleAgent {
 				for _, part := range msg.Parts {
@@ -338,14 +346,15 @@ func run() error {
 
 	// Servers
 	mux := http.NewServeMux()
+	agentCardRoute := fmt.Sprintf("/jsonrpc%s", a2asrv.WellKnownAgentCardPath)
 	if *v03Compat {
 		mux.Handle("/", a2av0.NewJSONRPCHandler(requestHandler, a2av0.JSONRPCHandlerConfig{}))
 		cardProducer := a2av0.NewStaticAgentCardProducer(agentCard)
-		mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewAgentCardHandler(cardProducer))
+		mux.Handle(agentCardRoute, a2asrv.NewAgentCardHandler(cardProducer))
 	} else {
 		mux.Handle("/jsonrpc", a2asrv.NewJSONRPCHandler(requestHandler))
 		mux.Handle("/rest/", http.StripPrefix("/rest", a2asrv.NewRESTHandler(requestHandler)))
-		mux.Handle(a2asrv.WellKnownAgentCardPath, a2asrv.NewStaticAgentCardHandler(agentCard))
+		mux.Handle(agentCardRoute, a2asrv.NewStaticAgentCardHandler(agentCard))
 	}
 
 	httpServer := &http.Server{

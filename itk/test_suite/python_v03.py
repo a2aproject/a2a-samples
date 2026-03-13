@@ -10,7 +10,9 @@ HTTP_PORT = '10102'
 GRPC_PORT = '11002'
 
 
-def _spawn_agent() -> None:
+def _spawn_agent() -> subprocess.Popen:
+    log_path = _ROOT_DIR / 'python_v03.log'
+    log_file = log_path.open('w')
     return subprocess.Popen(  # noqa: S603
         [  # noqa: S607
             'uv',
@@ -22,7 +24,7 @@ def _spawn_agent() -> None:
             GRPC_PORT,
         ],
         cwd=_ROOT_DIR / 'agents/python/v03',
-        stdout=subprocess.PIPE,
+        stdout=log_file,
         stderr=subprocess.STDOUT,
         text=True,
     )

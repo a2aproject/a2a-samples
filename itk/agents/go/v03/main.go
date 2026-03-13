@@ -111,13 +111,31 @@ func (e *V03AgentExecutor) handleInstruction(ctx context.Context, reqCtx *a2asrv
 		}
 
 		var responses []string
-		if msg, ok := result.(*a2a.Message); ok {
-			for _, part := range msg.Parts {
+		switch r := result.(type) {
+		case *a2a.Message:
+			for _, part := range r.Parts {
 				if textPart, ok := part.(a2a.TextPart); ok {
 					responses = append(responses, textPart.Text)
 				}
 			}
-		} else {
+		case *a2a.Task:
+			if r.Status.Message != nil {
+				for _, part := range r.Status.Message.Parts {
+					if textPart, ok := part.(a2a.TextPart); ok {
+						responses = append(responses, textPart.Text)
+					}
+				}
+			}
+			for _, msg := range r.History {
+				if msg.Role == a2a.MessageRoleAgent {
+					for _, part := range msg.Parts {
+						if textPart, ok := part.(a2a.TextPart); ok {
+							responses = append(responses, textPart.Text)
+						}
+					}
+				}
+			}
+		default:
 			return nil, fmt.Errorf("unexpected result type from SendMessage: %T", result)
 		}
 		return responses, nil
@@ -139,6 +157,10 @@ func (e *V03AgentExecutor) handleInstruction(ctx context.Context, reqCtx *a2asrv
 	default:
 		return nil, fmt.Errorf("unknown instruction type")
 	}
+}
+
+func boolPtr(b bool) *bool {
+	return &b
 }
 
 func (e *V03AgentExecutor) Cancel(_ context.Context, reqCtx *a2asrv.RequestContext, _ eventqueue.Queue) error {
@@ -164,6 +186,9 @@ func wrapInstructionToRequest(inst *pb.Instruction) (*a2a.MessageSendParams, err
 	})
 
 	return &a2a.MessageSendParams{
+		Config: &a2a.MessageSendConfig{
+			Blocking: boolPtr(true),
+		},
 		Message: msg,
 	}, nil
 }
@@ -228,6 +253,7 @@ func run() error {
 			{URL: jsonRPCAddr, Transport: a2a.TransportProtocolJSONRPC},
 			{URL: grpcAddr, Transport: a2a.TransportProtocolGRPC},
 		},
+		ProtocolVersion: "0.3.0",
 	}
 
 	executor := &V03AgentExecutor{}
@@ -238,7 +264,7 @@ func run() error {
 	cardHandler := a2asrv.NewStaticAgentCardHandler(agentCard)
 
 	mux := http.NewServeMux()
-	mux.Handle(a2asrv.WellKnownAgentCardPath, cardHandler)
+	mux.Handle(fmt.Sprintf("/jsonrpc%s", a2asrv.WellKnownAgentCardPath), cardHandler)
 	mux.Handle("/jsonrpc", jsonrpcHandler)
 
 	httpServer := &http.Server{
