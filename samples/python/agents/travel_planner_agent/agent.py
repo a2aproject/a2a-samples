@@ -17,10 +17,10 @@ class TravelPlannerAgent:
         try:
             with open('config.json') as f:
                 config = json.load(f)
-            if not os.getenv(config['api_key']):
-                print(f'{config["api_key"]} environment variable not set.')
+            if not config['api_key']:
+                print('api_key configuration not set.')
                 sys.exit(1)
-            api_key = os.getenv(config['api_key'])
+            api_key = config['api_key']
 
             self.model = ChatOpenAI(
                 model=config['model_name'] or 'gpt-4o',
