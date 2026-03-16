@@ -7,14 +7,11 @@ COPY ../.. /opt/app-root
 
 USER root
 
-RUN dnf -y update && dnf install -y gcc gcc-c++ \
+RUN dnf -y update && dnf install -y gcc gcc-c++ && dnf clean all \
  && pip install uv
 
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy
-
-RUN --mount=type=cache,target=/.cache/uv \
-    uv sync --frozen --no-install-project --no-dev
 
 RUN --mount=type=cache,target=/.cache/uv \
     uv sync --frozen --no-dev

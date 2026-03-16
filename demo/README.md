@@ -102,9 +102,11 @@ Click on the task list to see all the A2A task updates from the remote agents
 
    ```bash
    cd ../../samples/python/agents/ag2/
-   cp ../../../../demo/ui/.env ./
    uv run . --host 0.0.0.0
    ```
+
+   > **Note:** The agent needs a `GOOGLE_API_KEY` or `OPENAI_API_KEY` in its `.env` file.
+   > See [AG2 Setup & Running](../samples/python/agents/ag2/README.md#setup--running) for details.
 
    Then add `localhost:10012` in the Demo UI.
 

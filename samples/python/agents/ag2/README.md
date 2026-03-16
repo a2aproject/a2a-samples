@@ -129,7 +129,7 @@ Agent can also be built using a container file.
 3. Run your container
 
     ```bash
-    podman run -p 10012:10012 -e GOOGLE_API_KEY=your_key ag2-a2a
+    podman run -p 10012:10012 -e GOOGLE_API_KEY=your_api_key_here ag2-a2a
     ```
 
 ## Learn More

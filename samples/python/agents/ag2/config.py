@@ -29,8 +29,8 @@ def get_llm_config() -> LLMConfig:
         return LLMConfig(
             {
                 'api_type': 'google',
-                # Change to 'gemini-2.0-pro' or another model as needed.
-                'model': 'gemini-2.0-flash',
+                # Change to 'gemini-2.5-flash' or another model as needed.
+                'model': 'gemini-3-flash-preview',
                 'api_key': google_key,
             }
         )
