@@ -47,7 +47,9 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
 
 - Python 3.12 or higher
 - UV package manager
-- OpenAI API Key (for default configuration)
+- One of the following API keys:
+    - **Google AI Studio** (`GOOGLE_API_KEY`) for Gemini (default)
+    - **OpenAI** (`OPENAI_API_KEY`) for GPT
 
 ## Setup & Running
 
@@ -57,7 +59,15 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
     cd samples/python/agents/ag2
     ```
 
-2. Create an environment file with your API key (uses `openai gpt-4o`):
+2. Create an environment file with your API key:
+
+    **Option A: Google Gemini (default)**
+
+    ```bash
+    echo "GOOGLE_API_KEY=your_api_key_here" > .env
+    ```
+
+    **Option B: OpenAI**
 
     ```bash
     echo "OPENAI_API_KEY=your_api_key_here" > .env
@@ -70,7 +80,7 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
 
 4. Run the remote agent:
     ```bash
-    uv run a2a_python_reviewer.py
+    uv run .
     ```
 
 5. In a new terminal, start an A2AClient interface to interact with the remote (ag2) agent. You can use one of the following clients:
@@ -86,6 +96,41 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
         ```bash
         uv run fastapi_codegen_a2a_client.py
         ```
+
+## Using with the Demo UI
+
+You can also use this agent with the [Demo Web App](/demo/README.md). Start the agent server with:
+
+```bash
+uv run . --host 0.0.0.0
+```
+
+Then add `localhost:10012` as a remote agent in the Demo UI.
+
+## Build Container Image
+
+Agent can also be built using a container file.
+
+1. Navigate to the `samples/python` directory:
+
+    ```bash
+    cd samples/python
+    ```
+
+2. Build the container file
+
+    ```bash
+    podman build -f agents/ag2/Containerfile . -t ag2-a2a
+    ```
+
+> [!Tip]
+> Podman is a drop-in replacement for `docker` which can also be used in these commands.
+
+3. Run your container
+
+    ```bash
+    podman run -p 10012:10012 -e GOOGLE_API_KEY=your_key ag2-a2a
+    ```
 
 ## Learn More
 
