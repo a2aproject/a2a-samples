@@ -48,8 +48,8 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
 - Python 3.12 or higher
 - UV package manager
 - One of the following API keys:
-    - **Google AI Studio** (`GOOGLE_API_KEY`) for Gemini (default)
-    - **OpenAI** (`OPENAI_API_KEY`) for GPT
+  - **Google AI Studio** (`GOOGLE_API_KEY`) for Gemini (default)
+  - **OpenAI** (`OPENAI_API_KEY`) for GPT
 
 ## Setup & Running
 

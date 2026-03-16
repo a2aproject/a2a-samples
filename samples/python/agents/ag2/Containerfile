@@ -8,7 +8,7 @@ COPY ../.. /opt/app-root
 USER root
 
 RUN dnf -y update && dnf install -y gcc gcc-c++ && dnf clean all \
- && pip install uv
+ && pip install --no-cache-dir uv
 
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy
@@ -22,4 +22,4 @@ EXPOSE 10012
 
 USER 1001
 
-CMD uv run . --host 0.0.0.0
+CMD ["uv", "run", ".", "--host", "0.0.0.0"]
