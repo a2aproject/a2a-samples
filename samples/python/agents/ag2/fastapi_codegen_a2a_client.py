@@ -1,15 +1,13 @@
-import os
+"""FastAPI client: AG2 codegen agent that sends code to remote reviewer via A2A."""
 
-from autogen import ConversableAgent, LLMConfig
+import asyncio
+
+from autogen import ConversableAgent
 from autogen.a2a import A2aRemoteAgent
+from config import get_llm_config
 
 
-config = LLMConfig(
-    {
-        'model': 'gpt-4o-mini',
-        'api_key': os.getenv('OPENAI_API_KEY'),
-    }
-)
+config = get_llm_config()
 
 codegen_agent = ConversableAgent(
     name='CodeGenAgent',
@@ -27,24 +25,22 @@ codegen_agent = ConversableAgent(
 )
 
 
-# create A2A remote agent
 reviewer_agent = A2aRemoteAgent(
-    url='http://localhost:8000',
+    url='http://localhost:10012',
     name='ReviewerAgent',
 )
 
 
 async def main() -> str:
-    # use A2A agent as regular one
+    """Run the codegen + review loop and return the final code."""
     result = await reviewer_agent.a_initiate_chat(
         codegen_agent,
-        message='Please, generate a simple FastAPI application that returns a list of users.',
+        message='Please, generate a simple FastAPI application '
+        'that returns a list of users.',
     )
     return result.chat_history[-2]['content']
 
 
 if __name__ == '__main__':
-    import asyncio
-
     code = asyncio.run(main())
     print(code)

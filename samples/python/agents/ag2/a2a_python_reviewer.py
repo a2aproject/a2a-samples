@@ -1,20 +1,16 @@
-import os
+"""AG2 Python Reviewer agent exposed via A2A protocol."""
+
 import tempfile
 
 from typing import Annotated
 
-from autogen import ConversableAgent, LLMConfig
+from autogen import ConversableAgent
 from autogen.a2a import A2aAgentServer
+from config import get_llm_config
 from mypy import api
 
 
-# create regular AG2 agent
-config = LLMConfig(
-    {
-        'model': 'gpt-4o-mini',
-        'api_key': os.getenv('OPENAI_API_KEY'),
-    }
-)
+config = get_llm_config()
 
 reviewer_agent = ConversableAgent(
     name='ReviewerAgent',
@@ -29,7 +25,6 @@ reviewer_agent = ConversableAgent(
 )
 
 
-# Add mypy tool to validate the code
 @reviewer_agent.register_for_llm(
     name='mypy-checker',
     description='Check the code with mypy tool',
@@ -40,19 +35,19 @@ def review_code_with_mypy(
         'Raw code content to review. Code should be formatted as single file.',
     ],
 ) -> str:
+    """Run mypy on the provided code and return results."""
     with tempfile.NamedTemporaryFile('w', suffix='.py') as tmp:
         tmp.write(code)
+        tmp.flush()
         stdout, stderr, exit_status = api.run([tmp.name])
     if exit_status != 0:
         return stderr
     return stdout or 'No issues found.'
 
 
-# wrap agent to A2A server
-server = A2aAgentServer(reviewer_agent).build()
-
-if __name__ == '__main__':
-    # run server as regular ASGI application
-    import uvicorn
-
-    uvicorn.run(server, host='0.0.0.0', port=8000)
+def build_server(host: str = 'localhost', port: int = 10012) -> object:
+    """Build A2A server with correct discovery URL."""
+    return A2aAgentServer(
+        reviewer_agent,
+        url=f'http://{host}:{port}',
+    ).build()

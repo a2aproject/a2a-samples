@@ -98,6 +98,18 @@ Click on the task list to see all the A2A task updates from the remote agents
 
    Answer it's questions in a normal... If you need help converting currency, try adding the LangGraph sample agent too.
 
+   You can also try the **AG2 Python Reviewer** agent:
+
+   ```bash
+   cd ../../samples/python/agents/ag2/
+   uv run . --host 0.0.0.0
+   ```
+
+   > **Note:** The agent needs a `GOOGLE_API_KEY` or `OPENAI_API_KEY` in its `.env` file.
+   > See [AG2 Setup & Running](../samples/python/agents/ag2/README.md#setup--running) for details.
+
+   Then add `localhost:10012` in the Demo UI.
+
    Review the events to see what happened.
 
 ## Build Container Image
