@@ -9,6 +9,7 @@ Fetch currency exchange rates from the frankfurter.dev API.
 ## get_latest_rates
 Retrieve the latest exchange rates.
 
+<!-- markdownlint-disable-next-line MD034 -->
 - **Base URL**: https://api.frankfurter.dev
 - **Method**: GET
 - **Endpoint**: /v1/latest
@@ -19,6 +20,7 @@ Retrieve the latest exchange rates.
 ## get_historical_rates
 Retrieve exchange rates for a specific past date.
 
+<!-- markdownlint-disable-next-line MD034 -->
 - **Base URL**: https://api.frankfurter.dev
 - **Method**: GET
 - **Endpoint**: /v1/{date}
@@ -30,6 +32,7 @@ Retrieve exchange rates for a specific past date.
 ## get_time_series_rates
 Retrieve exchange rates over a specific time period.
 
+<!-- markdownlint-disable-next-line MD034 -->
 - **Base URL**: https://api.frankfurter.dev
 - **Method**: GET
 - **Endpoint**: /v1/{start_date}..{end_date}
@@ -42,6 +45,7 @@ Retrieve exchange rates over a specific time period.
 ## get_available_currencies
 Retrieve a list of all available currency symbols and their full names.
 
+<!-- markdownlint-disable-next-line MD034 -->
 - **Base URL**: https://api.frankfurter.dev
 - **Method**: GET
 - **Endpoint**: /v1/currencies

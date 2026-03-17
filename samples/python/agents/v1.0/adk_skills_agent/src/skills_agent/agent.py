@@ -1,6 +1,6 @@
 import pathlib
 
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Literal, Optional
 
 import httpx
 
@@ -10,13 +10,13 @@ from google.adk.tools import skill_toolset
 from pydantic import BaseModel, Field
 
 
-# a generic tool to faciliate outbound http requests by the agent
+# a generic tool to facilitate outbound http requests by the agent
 async def execute_http_request(
     url: str,
     method: str,
-    params: Optional[Dict[str, Any]] = None,
-    headers: Optional[Dict[str, Any]] = None,
-    body: Optional[Dict[str, Any]] = None,
+    params: Optional[dict[str, Any]] = None,
+    headers: Optional[dict[str, Any]] = None,
+    body: Optional[dict[str, Any]] = None,
 ) -> Any:
     """Executes an HTTP request.
 
