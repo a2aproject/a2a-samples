@@ -1,11 +1,13 @@
 import json
 
 from pathlib import Path
+from typing import Any
 
 import uvicorn
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.request_handlers.response_helpers import agent_card_to_dict
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
@@ -13,7 +15,6 @@ from a2a.types import (
     AgentInterface,
     AgentSkill,
 )
-from a2a.server.request_handlers.response_helpers import agent_card_to_dict
 from a2a.utils.helpers import maybe_await
 from a2a.utils.signing import create_agent_card_signer
 from agent_executor import (
@@ -24,7 +25,7 @@ from starlette.responses import FileResponse, JSONResponse
 from starlette.routing import Route
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     # Generate a private, public key pair
     private_key = asymmetric.ec.generate_private_key(asymmetric.ec.SECP256R1())
     public_key = private_key.public_key()
@@ -33,57 +34,61 @@ if __name__ == "__main__":
     pem = public_key.public_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PublicFormat.SubjectPublicKeyInfo,
-    ).decode("utf-8")
-    kid = "my-key"
+    ).decode('utf-8')
+    kid = 'my-key'
     keys = {kid: pem}
-    with Path("public_keys.json").open("w") as f:
+    with Path('public_keys.json').open('w') as f:
         json.dump(keys, f, indent=2)
 
     skill = AgentSkill(
-        id="reminder",
-        name="Verification Reminder",
-        description="Reminds the user to verify the Agent Card.",
-        tags=["verify me"],
-        examples=["Verify me!"],
+        id='reminder',
+        name='Verification Reminder',
+        description='Reminds the user to verify the Agent Card.',
+        tags=['verify me'],
+        examples=['Verify me!'],
     )
 
     extended_skill = AgentSkill(
-        id="reminder-please",
-        name="Verification Reminder Please!",
-        description="Politely reminds user to verify the Agent Card.",
-        tags=["verify me", "pretty please", "extended"],
-        examples=["Verify me, pretty please! :)", "Please verify me."],
+        id='reminder-please',
+        name='Verification Reminder Please!',
+        description='Politely reminds user to verify the Agent Card.',
+        tags=['verify me', 'pretty please', 'extended'],
+        examples=['Verify me, pretty please! :)', 'Please verify me.'],
     )
 
     public_agent_card = AgentCard(
-        name="Signed Agent",
-        description="An Agent that is signed",
-        icon_url="http://localhost:9999/",
-        version="1.0.0",
-        default_input_modes=["text"],
-        default_output_modes=["text"],
-        capabilities=AgentCapabilities(streaming=True, extended_agent_card=True),
+        name='Signed Agent',
+        description='An Agent that is signed',
+        icon_url='http://localhost:9999/',
+        version='1.0.0',
+        default_input_modes=['text'],
+        default_output_modes=['text'],
+        capabilities=AgentCapabilities(
+            streaming=True, extended_agent_card=True
+        ),
         supported_interfaces=[
             AgentInterface(
-                protocol_binding="JSONRPC",
-                url="http://localhost:9999",
+                protocol_binding='JSONRPC',
+                url='http://localhost:9999',
             )
         ],
         skills=[skill],
     )
 
     extended_agent_card = AgentCard(
-        name="Signed Agent - Extended Edition",
-        description="The full-featured signed agent for authenticated users.",
-        icon_url="http://localhost:9999/",
-        version="1.0.1",
-        default_input_modes=["text"],
-        default_output_modes=["text"],
-        capabilities=AgentCapabilities(streaming=True, extended_agent_card=True),
+        name='Signed Agent - Extended Edition',
+        description='The full-featured signed agent for authenticated users.',
+        icon_url='http://localhost:9999/',
+        version='1.0.1',
+        default_input_modes=['text'],
+        default_output_modes=['text'],
+        capabilities=AgentCapabilities(
+            streaming=True, extended_agent_card=True
+        ),
         supported_interfaces=[
             AgentInterface(
-                protocol_binding="JSONRPC",
-                url="http://localhost:9999",
+                protocol_binding='JSONRPC',
+                url='http://localhost:9999',
             )
         ],
         skills=[
@@ -101,9 +106,9 @@ if __name__ == "__main__":
     signer = create_agent_card_signer(
         signing_key=private_key,
         protected_header={
-            "kid": kid,
-            "alg": "ES256",
-            "jku": "http://localhost:9999/public_keys.json",
+            'kid': kid,
+            'alg': 'ES256',
+            'jku': 'http://localhost:9999/public_keys.json',
         },
     )
 
@@ -122,13 +127,14 @@ if __name__ == "__main__":
     # Contents of public_keys.json will be fetched on the client side during AgentCard signatures verification
     app.routes.append(
         Route(
-            "/public_keys.json",
-            endpoint=FileResponse("public_keys.json"),
-            methods=["GET"],
+            '/public_keys.json',
+            endpoint=FileResponse('public_keys.json'),
+            methods=['GET'],
         )
     )
 
-    async def get_extended_card(request):
+    async def get_extended_card(request: Any) -> JSONResponse:
+        """Fetch the authenticated extended agent card."""
         card_to_serve = extended_agent_card
         if signer:
             card_to_serve = await maybe_await(signer(card_to_serve))
@@ -136,9 +142,9 @@ if __name__ == "__main__":
 
     app.routes.append(
         Route(
-            "/.well-known/extended-agent-card.json",
+            '/.well-known/extended-agent-card.json',
             endpoint=get_extended_card,
-            methods=["GET"],
+            methods=['GET'],
         )
     )
-    uvicorn.run(app, host="127.0.0.1", port=9999)
+    uvicorn.run(app, host='127.0.0.1', port=9999)
