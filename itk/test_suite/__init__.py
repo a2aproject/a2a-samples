@@ -4,6 +4,7 @@ import subprocess
 import sys
 
 from agents.python.v03.pyproto import instruction_pb2
+from test_suite.current import spawn_agent as spawn_agent_current
 from test_suite.go_v03 import spawn_agent as spawn_agent_go_v03
 from test_suite.go_v10 import spawn_agent as spawn_agent_go_v10
 from test_suite.python_v03 import spawn_agent as spawn_agent_python_v03
@@ -15,6 +16,7 @@ _AGENT_DEFS = {
     'python_v03': {'launcher': spawn_agent_python_v03},
     'go_v10': {'launcher': spawn_agent_go_v10},
     'python_v10': {'launcher': spawn_agent_python_v10},
+    'current': {'launcher': spawn_agent_current},
 }
 
 
@@ -30,13 +32,6 @@ def register_traversal(name: str):
 
     return decorator
 
-
-_SUPPORTED_TRANSPORTS_PER_SDK = {
-    'go_v03': {'jsonrpc', 'grpc'},
-    'python_v03': {'jsonrpc', 'grpc', 'http_json'},
-    'go_v10': {'jsonrpc', 'grpc'},
-    'python_v10': {'grpc', 'jsonrpc', 'http_json'},
-}
 
 _HOST = '127.0.0.1'
 
