@@ -152,7 +152,6 @@ func (e *V10AgentExecutor) handleCallAgent(ctx context.Context, call *pb.CallAge
 	factory = a2aclient.NewFactory(
 		a2agrpc.WithGRPCTransport(grpc.WithTransportCredentials(insecure.NewCredentials())),
 		a2aclient.WithCompatTransport("0.3", a2a.TransportProtocolJSONRPC, compatFactory),
-		a2aclient.WithCompatTransport("", a2a.TransportProtocolJSONRPC, compatFactory),
 	)
 
 	client, err := factory.CreateFromEndpoints(ctx, matchedInterfaces)
