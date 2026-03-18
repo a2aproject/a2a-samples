@@ -52,7 +52,9 @@ async def start_server(host: str, port: int) -> None:
     )
 
     a2a_app = A2AStarletteApplication(
-        agent_card=agent_card, http_handler=request_handler
+        agent_card=agent_card,
+        http_handler=request_handler,
+        enable_v0_3_compat=True,
     )
     app = a2a_app.build()
 

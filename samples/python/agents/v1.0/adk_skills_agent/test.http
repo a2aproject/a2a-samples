@@ -1,4 +1,22 @@
 GET http://localhost:10999/.well-known/agent-card.json
+### v0.3 (message/stream)
+POST http://localhost:10999
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "id": 33,
+  "method": "message/stream",
+  "params": {          
+    "message": {     
+      "role": "user",
+      "parts": [
+        { "kind": "text", "text": "how did the INR value fluctuate against USD from jan 1st, 2026 to now?" }
+      ],
+      "messageId":"foo1"
+    }
+  }
+}
 ###
 POST http://localhost:10999
 Content-Type: application/json
