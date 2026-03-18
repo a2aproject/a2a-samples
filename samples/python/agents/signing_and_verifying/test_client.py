@@ -9,8 +9,9 @@ from a2a.client.client import ClientConfig
 from a2a.client.client_factory import ClientFactory
 from a2a.utils.constants import (
     AGENT_CARD_WELL_KNOWN_PATH,
-    EXTENDED_AGENT_CARD_PATH,
 )
+
+EXTENDED_AGENT_CARD_PATH = '/.well-known/extended-agent-card.json'
 from a2a.utils.signing import create_signature_verifier
 from cryptography.hazmat.primitives import serialization
 from jwt.api_jwk import PyJWK
@@ -18,6 +19,8 @@ from jwt.api_jwk import PyJWK
 
 if TYPE_CHECKING:
     from a2a.types import AgentCard
+
+from a2a.types.a2a_pb2 import GetExtendedAgentCardRequest
 
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
@@ -66,15 +69,13 @@ async def main() -> None:
                 signature_verifier=signature_verifier,
             )  # Verifies the AgentCard using signature_verifier function before returning it
             logger.info('Successfully fetched public agent card:')
-            logger.info(
-                public_card.model_dump_json(indent=2, exclude_none=True)
-            )
+            logger.info(public_card)
             final_agent_card_to_use = public_card
             logger.info(
                 '\nUsing PUBLIC agent card for client initialization (default).'
             )
 
-            if public_card.supports_authenticated_extended_card:
+            if public_card.capabilities.extended_agent_card:
                 try:
                     logger.info(
                         '\nPublic card supports authenticated extended card. Attempting to fetch from: %s%s',
@@ -92,11 +93,7 @@ async def main() -> None:
                     logger.info(
                         'Successfully fetched and verified authenticated extended agent card:'
                     )
-                    logger.info(
-                        extended_card.model_dump_json(
-                            indent=2, exclude_none=True
-                        )
-                    )
+                    logger.info(extended_card)
                     final_agent_card_to_use = extended_card
                     logger.info(
                         '\nUsing AUTHENTICATED EXTENDED agent card for client initialization.'
@@ -124,11 +121,12 @@ async def main() -> None:
         # Create Base Client
         client = client_factory.create(final_agent_card_to_use)
 
-        get_card_response = await client.get_card(
+        get_card_response = await client.get_extended_agent_card(
+            GetExtendedAgentCardRequest(),
             signature_verifier=signature_verifier
         )  # Verifies the AgentCard using signature_verifier function before returning it
         print('fetched again:')
-        print(get_card_response.model_dump(mode='json', exclude_none=True))
+        print(get_card_response)
 
 
 if __name__ == '__main__':

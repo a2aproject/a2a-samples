@@ -10,14 +10,17 @@ from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
+    AgentInterface,
     AgentSkill,
 )
+from a2a.server.request_handlers.response_helpers import agent_card_to_dict
+from a2a.utils.helpers import maybe_await
 from a2a.utils.signing import create_agent_card_signer
 from agent_executor import (
     SignedAgentExecutor,
 )
 from cryptography.hazmat.primitives import asymmetric, serialization
-from starlette.responses import FileResponse
+from starlette.responses import FileResponse, JSONResponse
 from starlette.routing import Route
 
 
@@ -55,25 +58,38 @@ if __name__ == '__main__':
     public_agent_card = AgentCard(
         name='Signed Agent',
         description='An Agent that is signed',
-        url='http://localhost:9999/',
+        icon_url='http://localhost:9999/',
         version='1.0.0',
         default_input_modes=['text'],
         default_output_modes=['text'],
-        capabilities=AgentCapabilities(streaming=True),
+        capabilities=AgentCapabilities(streaming=True, extended_agent_card=True),
+        supported_interfaces=[
+            AgentInterface(
+                protocol_binding='JSONRPC',
+                url='http://localhost:9999',
+            )
+        ],
         skills=[skill],
-        supports_authenticated_extended_card=True,
     )
 
-    extended_agent_card = public_agent_card.model_copy(
-        update={
-            'name': 'Signed Agent - Extended Edition',
-            'description': 'The full-featured signed agent for authenticated users.',
-            'version': '1.0.1',
-            'skills': [
-                skill,
-                extended_skill,
-            ],
-        }
+    extended_agent_card = AgentCard(
+        name='Signed Agent - Extended Edition',
+        description='The full-featured signed agent for authenticated users.',
+        icon_url='http://localhost:9999/',
+        version='1.0.1',
+        default_input_modes=['text'],
+        default_output_modes=['text'],
+        capabilities=AgentCapabilities(streaming=True, extended_agent_card=True),
+        supported_interfaces=[
+            AgentInterface(
+                protocol_binding='JSONRPC',
+                url='http://localhost:9999',
+            )
+        ],
+        skills=[
+            skill,
+            extended_skill,
+        ],
     )
 
     request_handler = DefaultRequestHandler(
@@ -108,6 +124,20 @@ if __name__ == '__main__':
         Route(
             '/public_keys.json',
             endpoint=FileResponse('public_keys.json'),
+            methods=['GET'],
+        )
+    )
+
+    async def get_extended_card(request):
+        card_to_serve = extended_agent_card
+        if signer:
+            card_to_serve = await maybe_await(signer(card_to_serve))
+        return JSONResponse(agent_card_to_dict(card_to_serve))
+
+    app.routes.append(
+        Route(
+            '/.well-known/extended-agent-card.json',
+            endpoint=get_extended_card,
             methods=['GET'],
         )
     )
