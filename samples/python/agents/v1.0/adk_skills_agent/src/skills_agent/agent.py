@@ -14,9 +14,9 @@ from pydantic import BaseModel, Field
 async def execute_http_request(
     url: str,
     method: str,
-    params: Optional[dict[str, Any]] = None,
-    headers: Optional[dict[str, Any]] = None,
-    body: Optional[dict[str, Any]] = None,
+    params: Optional[dict[str, Any]] = None,  # noqa: UP045
+    headers: Optional[dict[str, Any]] = None,  # noqa: UP045
+    body: Optional[dict[str, Any]] = None,  # noqa: UP045
 ) -> Any:
     """Executes an HTTP request.
 
@@ -66,7 +66,7 @@ class AgentResponse(BaseModel):
 root_agent = LlmAgent(
     name='skills_agent',
     model='gemini-3-flash-preview',
-    description=('Currency Conversion agent'),
+    description='Currency Conversion agent',
     instruction=(
         "You are an agent that helps with user's currency conversions. Use available tools to help with the conversion."
         'For currency conversions, do not assume target currencies. If user did not specify the target currency, ask for it.'

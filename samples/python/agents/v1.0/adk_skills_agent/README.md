@@ -15,17 +15,17 @@ A currency conversion agent built using the [Google Agent Development Kit (ADK)]
 
 ## Setup
 
-1.  **Switch to the agent directory:**
-    ```bash    
+1. **Switch to the agent directory:**
+    ```bash
     cd adk_skills_agent
     ```
 
-2.  **Set the Google API Key:**
+2. **Set the Google API Key:**
     ```bash
     export GOOGLE_API_KEY="your-google-api-key"
     ```
 
-3.  **Install dependencies:**
+3. **Install dependencies:**
     ```bash
     uv sync
     ```
