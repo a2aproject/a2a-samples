@@ -17,12 +17,14 @@ logger = logging.getLogger(__name__)
 
 
 class CurrencyAgentExecutor(AgentExecutor):
+    """Executor for the Skills based Currency Agent that handles task execution."""
     def __init__(self, runner: Runner):
         self._runner = runner
 
     async def execute(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
+        """Executes the agent task based on the provided context."""
         context_id = context.context_id
 
         query = context.get_user_input()
@@ -45,7 +47,7 @@ class CurrencyAgentExecutor(AgentExecutor):
             ):  # type: ignore
                 if event.is_final_response():
                     await self._process_final_response(event, updater, task)
-        except Exception as e:
+        except Exception:
             logger.exception('Error during agent execution')
             await self._update_task_status(
                 updater,
@@ -100,6 +102,7 @@ class CurrencyAgentExecutor(AgentExecutor):
                     metadata=metadata,
                 )
         except Exception:
+            logger.exception('Error while processing agent response')
             # Fallback to standard failure if JSON parsing fails
             await self._update_task_status(
                 updater,
@@ -124,6 +127,7 @@ class CurrencyAgentExecutor(AgentExecutor):
         )
 
     async def ensure_session(self, context_id: str) -> None:
+        """Ensures that a session exists for the given context ID."""
         session = await self._runner.session_service.get_session(
             app_name=self._runner.app_name,
             user_id=context_id,

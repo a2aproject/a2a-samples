@@ -26,7 +26,8 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 
 
-async def start_server(host, port):
+async def start_server(host: str, port: int) -> None:
+    """Starts the A2A server with the specified host and port."""
     if not os.getenv('GOOGLE_API_KEY'):
         logger.error('GOOGLE_API_KEY must be set')
         sys.exit(1)
@@ -63,7 +64,7 @@ async def start_server(host, port):
 @click.command()
 @click.option('--host', default='localhost')
 @click.option('--port', default=10999)
-def run(host, port):
+def run(host: str, port: int) -> None:
     """Run the A2A business agent server.
 
     Args:
