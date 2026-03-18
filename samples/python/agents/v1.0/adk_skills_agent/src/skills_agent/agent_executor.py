@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 class CurrencyAgentExecutor(AgentExecutor):
     """Executor for the Skills based Currency Agent that handles task execution."""
+
     def __init__(self, runner: Runner):
         self._runner = runner
 
