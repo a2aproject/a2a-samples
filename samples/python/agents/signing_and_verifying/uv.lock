@@ -8,7 +8,8 @@ resolution-markers = [
 
 [[package]]
 name = "a2a-sdk"
-source = { editable = "../../../../../a2a-python" }
+version = "1.0.0a0"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "google-api-core" },
     { name = "googleapis-common-protos" },
@@ -18,77 +19,14 @@ dependencies = [
     { name = "protobuf" },
     { name = "pydantic" },
 ]
+sdist = { url = "https://files.pythonhosted.org/packages/77/e3/e0d0b93877dc7d7ad45d59f82a254664e8d78f35fe20c8cd8584eb9bcba0/a2a_sdk-1.0.0a0.tar.gz", hash = "sha256:83ee525015b8577091750ea823af1afe41ccf350789539e421b0ab06d3622eb2", size = 343086, upload-time = "2026-03-17T14:11:04.071Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/97/f7/673b61a8272c9d36baf9df7169a784e6eda214a830569e9f0c3e442d75bb/a2a_sdk-1.0.0a0-py3-none-any.whl", hash = "sha256:a062e00a00d0fffcdd4325c36392dff27bf0e9ef99a6a6d35344c08676ca45c4", size = 225939, upload-time = "2026-03-17T14:11:02.672Z" },
+]
 
 [package.optional-dependencies]
 sqlite = [
     { name = "sqlalchemy", extra = ["aiosqlite", "asyncio"] },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "alembic", marker = "extra == 'all'", specifier = ">=1.14.0" },
-    { name = "alembic", marker = "extra == 'db-cli'", specifier = ">=1.14.0" },
-    { name = "cryptography", marker = "extra == 'all'", specifier = ">=43.0.0" },
-    { name = "cryptography", marker = "extra == 'encryption'", specifier = ">=43.0.0" },
-    { name = "fastapi", marker = "extra == 'all'", specifier = ">=0.115.2" },
-    { name = "fastapi", marker = "extra == 'http-server'", specifier = ">=0.115.2" },
-    { name = "google-api-core", specifier = ">=1.26.0" },
-    { name = "googleapis-common-protos", specifier = ">=1.70.0" },
-    { name = "grpcio", marker = "extra == 'all'", specifier = ">=1.60" },
-    { name = "grpcio", marker = "extra == 'grpc'", specifier = ">=1.60" },
-    { name = "grpcio-reflection", marker = "extra == 'all'", specifier = ">=1.7.0" },
-    { name = "grpcio-reflection", marker = "extra == 'grpc'", specifier = ">=1.7.0" },
-    { name = "grpcio-tools", marker = "extra == 'all'", specifier = ">=1.60" },
-    { name = "grpcio-tools", marker = "extra == 'grpc'", specifier = ">=1.60" },
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "httpx-sse", specifier = ">=0.4.0" },
-    { name = "json-rpc", specifier = ">=1.15.0" },
-    { name = "opentelemetry-api", marker = "extra == 'all'", specifier = ">=1.33.0" },
-    { name = "opentelemetry-api", marker = "extra == 'telemetry'", specifier = ">=1.33.0" },
-    { name = "opentelemetry-sdk", marker = "extra == 'all'", specifier = ">=1.33.0" },
-    { name = "opentelemetry-sdk", marker = "extra == 'telemetry'", specifier = ">=1.33.0" },
-    { name = "protobuf", specifier = ">=5.29.5" },
-    { name = "pydantic", specifier = ">=2.11.3" },
-    { name = "pyjwt", marker = "extra == 'all'", specifier = ">=2.0.0" },
-    { name = "pyjwt", marker = "extra == 'signing'", specifier = ">=2.0.0" },
-    { name = "sqlalchemy", extras = ["aiomysql", "asyncio"], marker = "extra == 'all'", specifier = ">=2.0.0" },
-    { name = "sqlalchemy", extras = ["aiomysql", "asyncio"], marker = "extra == 'mysql'", specifier = ">=2.0.0" },
-    { name = "sqlalchemy", extras = ["aiomysql", "asyncio"], marker = "extra == 'sql'", specifier = ">=2.0.0" },
-    { name = "sqlalchemy", extras = ["aiosqlite", "asyncio"], marker = "extra == 'all'", specifier = ">=2.0.0" },
-    { name = "sqlalchemy", extras = ["aiosqlite", "asyncio"], marker = "extra == 'sql'", specifier = ">=2.0.0" },
-    { name = "sqlalchemy", extras = ["aiosqlite", "asyncio"], marker = "extra == 'sqlite'", specifier = ">=2.0.0" },
-    { name = "sqlalchemy", extras = ["asyncio", "postgresql-asyncpg"], marker = "extra == 'all'", specifier = ">=2.0.0" },
-    { name = "sqlalchemy", extras = ["asyncio", "postgresql-asyncpg"], marker = "extra == 'postgresql'", specifier = ">=2.0.0" },
-    { name = "sqlalchemy", extras = ["asyncio", "postgresql-asyncpg"], marker = "extra == 'sql'", specifier = ">=2.0.0" },
-    { name = "sse-starlette", marker = "extra == 'all'" },
-    { name = "sse-starlette", marker = "extra == 'http-server'" },
-    { name = "starlette", marker = "extra == 'all'" },
-    { name = "starlette", marker = "extra == 'http-server'" },
-]
-provides-extras = ["all", "db-cli", "encryption", "grpc", "http-server", "mysql", "postgresql", "signing", "sql", "sqlite", "telemetry"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "a2a-sdk", extras = ["all"], editable = "../../../../../a2a-python" },
-    { name = "autoflake" },
-    { name = "mypy", specifier = ">=1.15.0" },
-    { name = "no-implicit-optional" },
-    { name = "pre-commit" },
-    { name = "pyjwt", specifier = ">=2.0.0" },
-    { name = "pytest", specifier = ">=8.3.5" },
-    { name = "pytest-asyncio", specifier = ">=0.26.0" },
-    { name = "pytest-cov", specifier = ">=6.1.1" },
-    { name = "pytest-mock", specifier = ">=3.14.0" },
-    { name = "pytest-timeout", specifier = ">=2.4.0" },
-    { name = "pytest-xdist", specifier = ">=3.6.1" },
-    { name = "pyupgrade" },
-    { name = "respx", specifier = ">=0.20.2" },
-    { name = "ruff", specifier = ">=0.12.8" },
-    { name = "trio" },
-    { name = "types-protobuf" },
-    { name = "types-requests" },
-    { name = "uv-dynamic-versioning", specifier = ">=0.8.2" },
-    { name = "uvicorn", specifier = ">=0.35.0" },
 ]
 
 [[package]]
@@ -857,7 +795,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "a2a-sdk", extras = ["sqlite"], editable = "../../../../../a2a-python" },
+    { name = "a2a-sdk", extras = ["sqlite"], specifier = ">=1.0.0a0" },
     { name = "cryptography", specifier = ">=43.0.0" },
     { name = "fastapi", specifier = ">=0.115.0" },
     { name = "httpx", specifier = ">=0.28.1" },
