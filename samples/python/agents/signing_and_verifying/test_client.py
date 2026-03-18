@@ -11,7 +11,6 @@ from a2a.utils.constants import (
     AGENT_CARD_WELL_KNOWN_PATH,
 )
 
-EXTENDED_AGENT_CARD_PATH = "/.well-known/extended-agent-card.json"
 from a2a.utils.signing import create_signature_verifier
 from cryptography.hazmat.primitives import serialization
 from jwt.api_jwk import PyJWK
@@ -22,6 +21,8 @@ if TYPE_CHECKING:
 
 from a2a.types.a2a_pb2 import GetExtendedAgentCardRequest
 
+
+EXTENDED_AGENT_CARD_PATH = "/.well-known/extended-agent-card.json"
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
