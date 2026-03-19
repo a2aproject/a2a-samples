@@ -1,5 +1,4 @@
 import json
-
 from pathlib import Path
 from typing import Any
 
@@ -7,7 +6,6 @@ import uvicorn
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
-from a2a.server.request_handlers.response_helpers import agent_card_to_dict
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
@@ -15,16 +13,13 @@ from a2a.types import (
     AgentInterface,
     AgentSkill,
 )
-from a2a.utils.helpers import maybe_await
 from a2a.utils.signing import create_agent_card_signer
 from agent_executor import (
     SignedAgentExecutor,
 )
 from cryptography.hazmat.primitives import asymmetric, serialization
-from starlette.responses import FileResponse, JSONResponse
+from starlette.responses import FileResponse
 from starlette.routing import Route
-
-EXTENDED_AGENT_CARD_PATH = '/.well-known/extended-agent-card.json'
 
 
 if __name__ == '__main__':
@@ -135,18 +130,4 @@ if __name__ == '__main__':
         )
     )
 
-    async def get_extended_card(request: Any) -> JSONResponse:
-        """Fetch the authenticated extended agent card."""
-        card_to_serve = extended_agent_card
-        if signer:
-            card_to_serve = await maybe_await(signer(card_to_serve))
-        return JSONResponse(agent_card_to_dict(card_to_serve))
-
-    app.routes.append(
-        Route(
-            EXTENDED_AGENT_CARD_PATH,
-            endpoint=get_extended_card,
-            methods=['GET'],
-        )
-    )
     uvicorn.run(app, host='127.0.0.1', port=9999)
