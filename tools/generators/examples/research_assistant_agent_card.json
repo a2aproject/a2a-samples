@@ -1,0 +1,66 @@
+{
+  "protocolVersion": "1.0",
+  "name": "Research Assistant Agent",
+  "description": "An AI agent that assists with academic research tasks including literature search, summarization, and citation management.",
+  "version": "2.1.0",
+  "provider": {
+    "organization": "ResearchLab",
+    "url": "https://researchlab.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://api.researchlab.ai/a2a",
+      "protocolBinding": "JSONRPC"
+    },
+    {
+      "url": "https://api.researchlab.ai/a2a/grpc",
+      "protocolBinding": "GRPC"
+    }
+  ],
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": true
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json",
+    "application/pdf"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json",
+    "text/markdown"
+  ],
+  "skills": [
+    {
+      "id": "literature-search",
+      "name": "Literature Search",
+      "description": "Search academic databases for relevant papers and articles",
+      "tags": [
+        "research",
+        "papers",
+        "search",
+        "academic"
+      ],
+      "examples": [
+        "Find recent papers on transformer architectures",
+        "Search for studies on climate change impacts in Southeast Asia"
+      ]
+    },
+    {
+      "id": "paper-summarize",
+      "name": "Paper Summarization",
+      "description": "Generate concise summaries of academic papers",
+      "tags": [
+        "summarization",
+        "papers",
+        "analysis"
+      ],
+      "examples": [
+        "Summarize this paper on epistemic injustice",
+        "Give me the key findings from this study"
+      ]
+    }
+  ]
+}
