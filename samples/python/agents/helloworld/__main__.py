@@ -37,7 +37,7 @@ if __name__ == '__main__':
     public_agent_card = AgentCard(
         name='Hello World Agent',
         description='Just a hello world agent',
-        url='http://localhost:9999/',
+        icon_url='http://localhost:9999/',
         version='1.0.0',
         default_input_modes=['text'],
         default_output_modes=['text'],
