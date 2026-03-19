@@ -1,8 +1,6 @@
 import asyncio
 import logging
 
-from typing import TYPE_CHECKING
-
 import httpx
 
 from a2a.client import A2ACardResolver
@@ -15,10 +13,6 @@ from a2a.utils.constants import (
 from a2a.utils.signing import create_signature_verifier
 from cryptography.hazmat.primitives import serialization
 from jwt.api_jwk import PyJWK
-
-
-if TYPE_CHECKING:
-    from a2a.types import AgentCard
 
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
@@ -53,9 +47,6 @@ async def main() -> None:
             httpx_client=httpx_client,
             base_url=base_url,
         )
-
-        # Fetch and verify Agent Card and initialize BaseClient
-        final_agent_card_to_use: AgentCard | None = None
 
         try:
             logger.info(
