@@ -24,6 +24,8 @@ from cryptography.hazmat.primitives import asymmetric, serialization
 from starlette.responses import FileResponse, JSONResponse
 from starlette.routing import Route
 
+EXTENDED_AGENT_CARD_PATH = '/.well-known/extended-agent-card.json'
+
 
 if __name__ == '__main__':
     # Generate a private, public key pair
@@ -142,7 +144,7 @@ if __name__ == '__main__':
 
     app.routes.append(
         Route(
-            '/.well-known/extended-agent-card.json',
+            EXTENDED_AGENT_CARD_PATH,
             endpoint=get_extended_card,
             methods=['GET'],
         )
