@@ -7,7 +7,6 @@ import httpx
 from a2a.client import A2ACardResolver
 from a2a.client.client import ClientConfig
 from a2a.client.client_factory import ClientFactory
-from a2a.types import AgentCard
 from a2a.types.a2a_pb2 import (
     GetExtendedAgentCardRequest,
     Message,
@@ -34,7 +33,7 @@ async def main() -> None:
             base_url=base_url,
             # agent_card_path uses default
         )
-        
+
         # --8<-- [end:A2ACardResolver]
 
         try:
@@ -46,9 +45,7 @@ async def main() -> None:
             )  # Fetches from default public path
             logger.info('\nSuccessfully fetched public agent card:')
             logger.info(_public_card)
-            logger.info(
-                '\nUsing public agent card for client initialization.'
-            )
+            logger.info('\nUsing public agent card for client initialization.')
             client_factory = ClientFactory(config=ClientConfig(streaming=False))
             client = client_factory.create(_public_card)
             logger.info('\nA2AClient initialized via ClientFactory.')
@@ -80,7 +77,8 @@ async def main() -> None:
 
         except Exception as e:
             logger.error(
-                f'\nCritical error fetching public agent card: {e}', exc_info=True
+                f'\nCritical error fetching public agent card: {e}',
+                exc_info=True,
             )
             raise RuntimeError(
                 '\nFailed to fetch the public agent card. Cannot continue.'
@@ -106,13 +104,14 @@ async def main() -> None:
 
         client._config.streaming = True
 
-        print("\nStream response:")
+        print('\nStream response:')
         async for chunk in client.send_message(request):
             print(chunk)
 
         # --8<-- [end:send_message_streaming]
 
         await client.close()
+
 
 if __name__ == '__main__':
     import asyncio

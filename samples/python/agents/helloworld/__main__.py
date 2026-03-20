@@ -76,7 +76,7 @@ if __name__ == '__main__':
         skills=[
             skill,
             extended_skill,
-        ], # Both skills for the extended card
+        ],  # Both skills for the extended card
     )
 
     request_handler = DefaultRequestHandler(
