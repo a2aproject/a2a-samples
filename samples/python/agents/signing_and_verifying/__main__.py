@@ -10,6 +10,7 @@ from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
+    AgentInterface,
     AgentSkill,
 )
 from a2a.utils.signing import create_agent_card_signer
@@ -55,25 +56,42 @@ if __name__ == '__main__':
     public_agent_card = AgentCard(
         name='Signed Agent',
         description='An Agent that is signed',
-        url='http://localhost:9999/',
+        icon_url='http://localhost:9999/',
         version='1.0.0',
         default_input_modes=['text'],
         default_output_modes=['text'],
-        capabilities=AgentCapabilities(streaming=True),
+        capabilities=AgentCapabilities(
+            streaming=True, extended_agent_card=True
+        ),
+        supported_interfaces=[
+            AgentInterface(
+                protocol_binding='JSONRPC',
+                url='http://localhost:9999',
+            )
+        ],
         skills=[skill],
-        supports_authenticated_extended_card=True,
     )
 
-    extended_agent_card = public_agent_card.model_copy(
-        update={
-            'name': 'Signed Agent - Extended Edition',
-            'description': 'The full-featured signed agent for authenticated users.',
-            'version': '1.0.1',
-            'skills': [
-                skill,
-                extended_skill,
-            ],
-        }
+    extended_agent_card = AgentCard(
+        name='Signed Agent - Extended Edition',
+        description='The full-featured signed agent for authenticated users.',
+        icon_url='http://localhost:9999/',
+        version='1.0.1',
+        default_input_modes=['text'],
+        default_output_modes=['text'],
+        capabilities=AgentCapabilities(
+            streaming=True, extended_agent_card=True
+        ),
+        supported_interfaces=[
+            AgentInterface(
+                protocol_binding='JSONRPC',
+                url='http://localhost:9999',
+            )
+        ],
+        skills=[
+            skill,
+            extended_skill,
+        ],
     )
 
     request_handler = DefaultRequestHandler(
@@ -111,4 +129,5 @@ if __name__ == '__main__':
             methods=['GET'],
         )
     )
+
     uvicorn.run(app, host='127.0.0.1', port=9999)
