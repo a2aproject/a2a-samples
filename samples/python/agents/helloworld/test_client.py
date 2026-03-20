@@ -65,7 +65,7 @@ async def main() -> None:
                     )
                     logger.info(_extended_card)
 
-                except Exception as e_extended:
+                except Exception:
                     logger.exception(
                         'Failed to fetch extended agent card.'
                     )
