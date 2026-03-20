@@ -1,0 +1,29 @@
+[project]
+name = "skills_agent"
+version = "0.1.0"
+description = "ADK+Skills agent that helps with currency conversion and supports A2A v1.0"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "a2a-sdk>=1.0.0a0",
+    "google-adk>=1.27.2",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.1"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/skills_agent"]
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+skills_agent = "skills_agent.main:run"
