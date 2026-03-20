@@ -38,7 +38,9 @@ async def main() -> None:
 
         try:
             logger.info(
-                f'\nAttempting to fetch public agent card from: {base_url}{AGENT_CARD_WELL_KNOWN_PATH}'
+                '\nAttempting to fetch public agent card from: %s%s',
+                base_url,
+                AGENT_CARD_WELL_KNOWN_PATH,
             )
             _public_card = (
                 await resolver.get_agent_card()
@@ -64,9 +66,8 @@ async def main() -> None:
                     logger.info(_extended_card)
 
                 except Exception as e_extended:
-                    logger.warning(
-                        f'Failed to fetch extended agent card: {e_extended}.',
-                        exc_info=True,
+                    logger.exception(
+                        'Failed to fetch extended agent card.'
                     )
             elif (
                 _public_card
@@ -76,9 +77,8 @@ async def main() -> None:
                 )
 
         except Exception as e:
-            logger.error(
-                f'\nCritical error fetching public agent card: {e}',
-                exc_info=True,
+            logger.exception(
+                '\nCritical error fetching public agent card.'
             )
             raise RuntimeError(
                 '\nFailed to fetch the public agent card. Cannot continue.'
@@ -102,10 +102,11 @@ async def main() -> None:
 
         # --8<-- [start:send_message_streaming]
 
-        client._config.streaming = True
+        client_factory = ClientFactory(config=ClientConfig(streaming=True))
+        streaming_client = client_factory.create(_public_card)
 
         print('\nStream response:')
-        async for chunk in client.send_message(request):
+        async for chunk in streaming_client.send_message(request):
             print(chunk)
 
         # --8<-- [end:send_message_streaming]
