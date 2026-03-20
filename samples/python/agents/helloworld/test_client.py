@@ -66,9 +66,7 @@ async def main() -> None:
                     logger.info(_extended_card)
 
                 except Exception:
-                    logger.exception(
-                        'Failed to fetch extended agent card.'
-                    )
+                    logger.exception('Failed to fetch extended agent card.')
             elif (
                 _public_card
             ):  # supports_authenticated_extended_card is False or None
@@ -77,9 +75,7 @@ async def main() -> None:
                 )
 
         except Exception as e:
-            logger.exception(
-                '\nCritical error fetching public agent card.'
-            )
+            logger.exception('\nCritical error fetching public agent card.')
             raise RuntimeError(
                 '\nFailed to fetch the public agent card. Cannot continue.'
             ) from e
