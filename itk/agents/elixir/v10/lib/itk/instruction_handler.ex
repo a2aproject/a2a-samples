@@ -96,8 +96,7 @@ defmodule Itk.InstructionHandler do
     inst_bytes = Itk.Proto.Instruction.encode(nested_instruction)
     b64 = Base.encode64(inst_bytes)
 
-    # Build A2A v1.0 JSON-RPC request
-    # Use proto enum names for roles and "raw" for binary parts
+    # Build A2A v1.0 message payload
     message = %{
       "role" => "ROLE_USER",
       "messageId" => Itk.UUID.generate(),
@@ -110,6 +109,11 @@ defmodule Itk.InstructionHandler do
       ]
     }
 
+    # Always use regular SendMessage for outbound calls.
+    # SSE streaming is handled on the inbound side (when receiving
+    # SendStreamingMessage from the test runner). For outbound hops,
+    # we use non-streaming SendMessage which works reliably across
+    # all SDK versions and avoids SSE redirect/format issues.
     case send_a2a_message(uri, message) do
       {:ok, results} -> results
       {:error, reason} ->
@@ -118,8 +122,9 @@ defmodule Itk.InstructionHandler do
     end
   end
 
+  # --- Regular (non-streaming) outbound call ---
+
   defp send_a2a_message(jsonrpc_url, message) do
-    # Use v1.0 method name "SendMessage" (not v0.3 "message/send")
     request_body = %{
       "jsonrpc" => "2.0",
       "id" => Itk.UUID.generate(),
@@ -129,7 +134,7 @@ defmodule Itk.InstructionHandler do
       }
     }
 
-    Logger.info("Sending JSON-RPC to #{jsonrpc_url}")
+    Logger.info("Sending JSON-RPC SendMessage to #{jsonrpc_url}")
 
     headers = [{"a2a-version", "1.0"}]
 
@@ -145,6 +150,8 @@ defmodule Itk.InstructionHandler do
     end
   end
 
+  # --- Response text extraction ---
+
   defp extract_response_text(%{"result" => result}) do
     texts = extract_texts_from_result(result)
     {:ok, texts}
@@ -159,9 +166,6 @@ defmodule Itk.InstructionHandler do
   end
 
   defp extract_texts_from_result(result) when is_map(result) do
-    # Try various response formats:
-    # v1.0: result has id, contextId, status, history, artifacts
-    # v0.3: result has task with similar structure
     message = find_agent_message(result)
 
     case message do
@@ -169,7 +173,6 @@ defmodule Itk.InstructionHandler do
         extract_text_parts(parts)
 
       _ ->
-        # Try artifacts
         artifacts = get_artifacts(result)
         case artifacts do
           [%{"parts" => parts} | _] when is_list(parts) ->
@@ -186,11 +189,9 @@ defmodule Itk.InstructionHandler do
 
   defp find_agent_message(result) do
     cond do
-      # Direct task with status.message
       is_map(result["status"]) and is_map(result["status"]["message"]) ->
         result["status"]["message"]
 
-      # Task with history - get last agent message
       is_list(result["history"]) and length(result["history"]) > 0 ->
         result["history"]
         |> Enum.filter(fn msg ->
@@ -199,15 +200,12 @@ defmodule Itk.InstructionHandler do
         end)
         |> List.last()
 
-      # Direct message format
       is_list(result["parts"]) ->
         result
 
-      # Wrapped in "task" key
       is_map(result["task"]) ->
         find_agent_message(result["task"])
 
-      # Message wrapper (v1.0)
       is_map(result["message"]) ->
         result["message"]
 

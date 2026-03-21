@@ -6,6 +6,10 @@ defmodule Itk.Router do
 
   Each HTTP request is processed in its own Bandit handler process,
   so concurrent inbound calls don't block each other.
+
+  Supports both regular (SendMessage) and streaming (SendStreamingMessage)
+  requests. Streaming responses use Server-Sent Events (SSE) with
+  `text/event-stream` content type.
   """
 
   @behaviour Plug
@@ -29,6 +33,7 @@ defmodule Itk.Router do
     json =
       A2A.JSON.encode_agent_card(card,
         url: opts.base_url,
+        capabilities: %{},
         supported_interfaces: [
           %{url: opts.base_url, protocol_binding: "JSONRPC", protocol_version: "1.0"}
         ]
@@ -45,11 +50,7 @@ defmodule Itk.Router do
 
     case Jason.decode(body) do
       {:ok, decoded} ->
-        response = handle_jsonrpc(decoded)
-
-        conn
-        |> put_resp_content_type("application/json")
-        |> send_resp(200, Jason.encode!(response))
+        handle_jsonrpc(conn, decoded)
 
       {:error, _} ->
         conn
@@ -64,51 +65,60 @@ defmodule Itk.Router do
 
   # --- JSON-RPC dispatch ---
 
-  defp handle_jsonrpc(%{"method" => method, "id" => id, "params" => params}) do
+  defp handle_jsonrpc(conn, %{"method" => method, "id" => id, "params" => params}) do
     case method do
+      # v1.0 streaming
+      "SendStreamingMessage" ->
+        handle_streaming_message(conn, id, params)
+
+      # v0.3 streaming
+      "message/stream" ->
+        handle_streaming_message(conn, id, params)
+
       # v1.0 method names — wrapped response
       "SendMessage" ->
-        handle_send_message(id, params, :v10)
+        response = handle_send_message(id, params, :v10)
+        json_response(conn, response)
 
       # v0.3 compat — flat response
       "message/send" ->
-        handle_send_message(id, params, :v03)
+        response = handle_send_message(id, params, :v03)
+        json_response(conn, response)
 
       "GetTask" ->
-        handle_get_task(id, params)
+        json_response(conn, handle_get_task(id, params))
 
       "tasks/get" ->
-        handle_get_task(id, params)
+        json_response(conn, handle_get_task(id, params))
 
       "ListTasks" ->
-        jsonrpc_response(id, %{"tasks" => []})
+        json_response(conn, jsonrpc_response(id, %{"tasks" => []}))
 
       "tasks/list" ->
-        jsonrpc_response(id, %{"tasks" => []})
+        json_response(conn, jsonrpc_response(id, %{"tasks" => []}))
 
       "CancelTask" ->
-        jsonrpc_error(id, -32001, "Task not found")
+        json_response(conn, jsonrpc_error(id, -32001, "Task not found"))
 
       "tasks/cancel" ->
-        jsonrpc_error(id, -32001, "Task not found")
+        json_response(conn, jsonrpc_error(id, -32001, "Task not found"))
 
       _ ->
-        jsonrpc_error(id, -32601, "Method not found")
+        json_response(conn, jsonrpc_error(id, -32601, "Method not found"))
     end
   end
 
-  defp handle_jsonrpc(%{"id" => id}) do
-    jsonrpc_error(id, -32600, "Invalid Request")
+  defp handle_jsonrpc(conn, %{"id" => id}) do
+    json_response(conn, jsonrpc_error(id, -32600, "Invalid Request"))
   end
 
-  defp handle_jsonrpc(_) do
-    jsonrpc_error(nil, -32600, "Invalid Request")
+  defp handle_jsonrpc(conn, _) do
+    json_response(conn, jsonrpc_error(nil, -32600, "Invalid Request"))
   end
 
-  # --- Message handling (runs in the Bandit handler process, not the GenServer) ---
+  # --- Regular message handling ---
 
   defp handle_send_message(id, %{"message" => message_map}, version) do
-    # Parse the message parts
     message = parse_message(message_map)
 
     case Itk.InstructionHandler.handle(message) do
@@ -117,7 +127,6 @@ defmodule Itk.Router do
 
         result =
           case version do
-            # v1.0: wrap in "message" key with proto enum names
             :v10 ->
               %{
                 "message" => %{
@@ -128,7 +137,6 @@ defmodule Itk.Router do
                 }
               }
 
-            # v0.3: flat with lowercase role names
             :v03 ->
               %{
                 "role" => "agent",
@@ -149,8 +157,154 @@ defmodule Itk.Router do
     jsonrpc_error(id, -32602, "Invalid params: missing 'message'")
   end
 
+  # --- Streaming message handling (SSE) ---
+
+  defp handle_streaming_message(conn, id, %{"message" => message_map}) do
+    message = parse_message(message_map)
+    context_id = Map.get(message_map, "contextId", Itk.UUID.generate())
+    task_id = Itk.UUID.generate()
+
+    # Start chunked SSE response
+    conn =
+      conn
+      |> put_resp_content_type("text/event-stream")
+      |> put_resp_header("cache-control", "no-cache")
+      |> put_resp_header("connection", "keep-alive")
+      |> send_chunked(200)
+
+    # Send initial status: submitted
+    conn = send_sse_status(conn, id, task_id, context_id, "submitted", false)
+
+    # Send working status
+    conn = send_sse_status(conn, id, task_id, context_id, "working", false)
+
+    # Process instruction
+    case Itk.InstructionHandler.handle(message) do
+      {:ok, response_text} ->
+        # Send artifact update
+        conn = send_sse_artifact(conn, id, task_id, context_id, response_text)
+
+        # Send completed status with message (final=true)
+        conn =
+          send_sse_status_with_message(
+            conn,
+            id,
+            task_id,
+            context_id,
+            "completed",
+            true,
+            response_text
+          )
+
+        conn
+
+      {:error, reason} ->
+        error_text = "Instruction error: #{reason}"
+
+        conn =
+          send_sse_status_with_message(
+            conn,
+            id,
+            task_id,
+            context_id,
+            "failed",
+            true,
+            error_text
+          )
+
+        conn
+    end
+  end
+
+  defp handle_streaming_message(conn, id, _params) do
+    conn =
+      conn
+      |> put_resp_content_type("text/event-stream")
+      |> put_resp_header("cache-control", "no-cache")
+      |> put_resp_header("connection", "keep-alive")
+      |> send_chunked(200)
+
+    error_result = %{
+      "jsonrpc" => "2.0",
+      "id" => id,
+      "error" => %{"code" => -32602, "message" => "Invalid params: missing 'message'"}
+    }
+
+    chunk(conn, "data: #{Jason.encode!(error_result)}\n\n")
+    conn
+  end
+
+  # --- SSE helpers ---
+  # Format: flat events with `kind` discriminator, lowercase states
+  # Matches pydantic SDK (a2a-sdk 0.3.x) expected format
+
+  defp send_sse_status(conn, id, task_id, context_id, state, final) do
+    result = %{
+      "kind" => "status-update",
+      "taskId" => task_id,
+      "contextId" => context_id,
+      "final" => final,
+      "status" => %{
+        "state" => state,
+        "timestamp" => DateTime.utc_now() |> DateTime.to_iso8601()
+      }
+    }
+
+    send_sse_chunk(conn, id, result)
+  end
+
+  defp send_sse_status_with_message(conn, id, task_id, context_id, state, final, text) do
+    result = %{
+      "kind" => "status-update",
+      "taskId" => task_id,
+      "contextId" => context_id,
+      "final" => final,
+      "status" => %{
+        "state" => state,
+        "timestamp" => DateTime.utc_now() |> DateTime.to_iso8601(),
+        "message" => %{
+          "kind" => "message",
+          "role" => "agent",
+          "messageId" => Itk.UUID.generate(),
+          "parts" => [%{"kind" => "text", "text" => text}]
+        }
+      }
+    }
+
+    send_sse_chunk(conn, id, result)
+  end
+
+  defp send_sse_artifact(conn, id, task_id, context_id, text) do
+    result = %{
+      "kind" => "artifact-update",
+      "taskId" => task_id,
+      "contextId" => context_id,
+      "artifact" => %{
+        "artifactId" => Itk.UUID.generate(),
+        "parts" => [%{"kind" => "text", "text" => text}]
+      },
+      "lastChunk" => true
+    }
+
+    send_sse_chunk(conn, id, result)
+  end
+
+  defp send_sse_chunk(conn, id, result) do
+    payload = %{
+      "jsonrpc" => "2.0",
+      "id" => id,
+      "result" => result
+    }
+
+    case chunk(conn, "data: #{Jason.encode!(payload)}\n\n") do
+      {:ok, conn} -> conn
+      {:error, _reason} -> conn
+    end
+  end
+
+  # --- GetTask ---
+
   defp handle_get_task(id, %{"id" => _task_id}) do
-    # We don't store tasks — always return not found
     jsonrpc_error(id, -32001, "Task not found")
   end
 
@@ -159,6 +313,12 @@ defmodule Itk.Router do
   end
 
   # --- Helpers ---
+
+  defp json_response(conn, response) do
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(200, Jason.encode!(response))
+  end
 
   defp parse_message(message_map) do
     parts = Map.get(message_map, "parts", [])
