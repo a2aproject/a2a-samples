@@ -9,16 +9,16 @@ defmodule ItkElixirAgent.Application do
     http_port = get_port("ITK_HTTP_PORT", 10200)
     _grpc_port = get_port("ITK_GRPC_PORT", 11200)
 
-    base_url = "http://127.0.0.1:#{http_port}"
+    base_url = "http://127.0.0.1:#{http_port}/jsonrpc"
 
-    plug_opts = [
-      agent: Itk.Agent,
+    router_opts = [
+      agent_module: Itk.Agent,
       base_url: base_url
     ]
 
     children = [
       Itk.Agent,
-      {Bandit, plug: {A2A.Plug, plug_opts}, port: http_port, startup_log: false}
+      {Bandit, plug: {Itk.Router, router_opts}, port: http_port, startup_log: false}
     ]
 
     Logger.info("Starting ITK Elixir v1.0 Agent on HTTP port #{http_port}")

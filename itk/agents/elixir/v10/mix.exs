@@ -21,7 +21,7 @@ defmodule ItkElixirAgent.MixProject do
   defp deps do
     [
       # A2A Elixir SDK
-      {:a2a, github: "zeroasterisk/a2a-elixir-1", branch: "combined-v1"},
+      {:a2a, github: "zeroasterisk/a2a-elixir", branch: "combined-v1"},
       # HTTP client for outbound A2A calls
       {:req, "~> 0.5"},
       # JSON
