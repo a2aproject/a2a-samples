@@ -106,6 +106,28 @@ TEST_CASES = [
         'streaming': True,
     },
     {
+        'name': 'elixir-v10-python-v10-jsonrpc',
+        'sdks': ['elixir_v10', 'python_v10'],
+        'protocols': ['jsonrpc'],
+        'traversal': 'euler',
+        'edges': None,
+    },
+    {
+        'name': 'elixir-v10-python-v10-jsonrpc-streaming',
+        'sdks': ['elixir_v10', 'python_v10'],
+        'protocols': ['jsonrpc'],
+        'traversal': 'euler',
+        'edges': None,
+        'streaming': True,
+    },
+    {
+        'name': 'elixir-v10-go-v10-jsonrpc',
+        'sdks': ['elixir_v10', 'go_v10'],
+        'protocols': ['jsonrpc'],
+        'traversal': 'euler',
+        'edges': None,
+    },
+    {
         'name': 'disconnected-components',
         'sdks': ['python_v03', 'go_v03', 'python_v10', 'go_v10'],
         'protocols': ['jsonrpc'],
