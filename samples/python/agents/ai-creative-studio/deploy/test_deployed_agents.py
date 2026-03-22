@@ -46,15 +46,12 @@ SPECIALIST_AGENTS = {
 SPECIALIST_TESTS = {
     "Brand Strategist": """Analyze the market for eco-friendly water bottles targeting Gen-Z consumers.
     Focus on: competitors, trends, and target audience insights.""",
-
     "Copywriter": """Write 3 Instagram captions for an eco-friendly coffee brand called "GreenBrew".
     Target audience: environmentally conscious Gen-Z, 18-25 years old.
     Brand voice: authentic, playful, educational.""",
-
     "Designer": """Create visual concepts for 3 Instagram posts promoting sustainable fashion.
     Style: modern, minimalist, eco-friendly aesthetic.
     Color palette: earth tones with vibrant accents.""",
-
     "Critic": """Review this social media post:
     Caption: "Save the planet, one sip at a time! ☕🌍"
     Image: Coffee cup with leaves
@@ -62,13 +59,12 @@ SPECIALIST_TESTS = {
     Platform: Instagram
 
     Provide constructive feedback on effectiveness and engagement potential.""",
-
     "Project Manager": """Create a project timeline for a 2-week social media campaign launch:
     - 5 Instagram posts
     - Target: Gen-Z
     - Budget: $5,000
     - Goal: Brand awareness
-    Include key milestones and deliverables."""
+    Include key milestones and deliverables.""",
 }
 
 # Creative Director test query
@@ -111,27 +107,21 @@ async def test_specialist_a2a(name: str, url: str, query: str) -> bool:
         remote_agent = RemoteA2aAgent(
             name=name.lower().replace(" ", "_"),
             description=f"Test connection to {name}",
-            agent_card=f"{url}/.well-known/agent.json"
+            agent_card=f"{url}/.well-known/agent.json",
         )
 
         print("  ⏳ Calling agent...")
 
         # Create session service and runner
         session_service = InMemorySessionService()
-        runner = Runner(
-            app_name="test",
-            agent=remote_agent,
-            session_service=session_service
-        )
+        runner = Runner(app_name="test", agent=remote_agent, session_service=session_service)
 
         # Create session
         session_id = f"test_session_{name.lower().replace(' ', '_')}"
         user_id = "test_user"
 
         await session_service.create_session(
-            app_name="test",
-            user_id=user_id,
-            session_id=session_id
+            app_name="test", user_id=user_id, session_id=session_id
         )
 
         # Run agent and collect response
@@ -139,14 +129,14 @@ async def test_specialist_a2a(name: str, url: str, query: str) -> bool:
         async for event in runner.run_async(
             user_id=user_id,
             session_id=session_id,
-            new_message=types.Content(parts=[types.Part(text=query)])
+            new_message=types.Content(parts=[types.Part(text=query)]),
         ):
-            if hasattr(event, 'text') and event.text:
+            if hasattr(event, "text") and event.text:
                 response_text.append(event.text)
-            elif hasattr(event, 'content') and event.content:
-                if hasattr(event.content, 'parts'):
+            elif hasattr(event, "content") and event.content:
+                if hasattr(event.content, "parts"):
                     for part in event.content.parts:
-                        if hasattr(part, 'text') and part.text:
+                        if hasattr(part, "text") and part.text:
                             response_text.append(part.text)
 
         # Clean up
@@ -161,6 +151,7 @@ async def test_specialist_a2a(name: str, url: str, query: str) -> bool:
     except Exception as e:
         print(f"  ❌ Error: {str(e)}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -216,6 +207,7 @@ async def test_orchestrator(resource_name: str, query: str) -> bool:
     except Exception as e:
         print(f"  ❌ Error: {str(e)}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -298,12 +290,12 @@ async def main():
         "--test",
         choices=["all", "specialists", "orchestrator"],
         default="all",
-        help="Which agents to test"
+        help="Which agents to test",
     )
     parser.add_argument(
         "--agent",
         choices=list(SPECIALIST_AGENTS.keys()),
-        help="Test specific specialist agent only"
+        help="Test specific specialist agent only",
     )
 
     args = parser.parse_args()

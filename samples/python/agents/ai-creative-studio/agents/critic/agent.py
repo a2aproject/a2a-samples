@@ -102,6 +102,7 @@ Review each deliverable separately and provide a clear status for the orchestrat
 Be thorough but concise. Your structured feedback enables the orchestrator to coordinate revisions effectively.
 """
 
+
 def create_critic_agent():
     """Create the Critic agent"""
     logger.info("Creating Critic agent with Gemini 2.5 Flash")
@@ -109,7 +110,7 @@ def create_critic_agent():
         name="critic",
         model="gemini-2.5-flash",
         instruction=SYSTEM_INSTRUCTION,
-        description="Creative critic for reviewing campaign materials and providing constructive feedback"
+        description="Creative critic for reviewing campaign materials and providing constructive feedback",
     )
     logger.info("Critic agent created successfully")
     return agent
@@ -143,7 +144,9 @@ if __name__ == "__main__":
 
     # Start server
     logger.info(f"🚀 Starting Critic A2A Server on {PROTOCOL}://{HOST}:{PORT}")
-    logger.info(f"📋 Agent card available at: {PROTOCOL}://{HOST}:{PORT}/.well-known/agent-card.json")
+    logger.info(
+        f"📋 Agent card available at: {PROTOCOL}://{HOST}:{PORT}/.well-known/agent-card.json"
+    )
     logger.info(f"🌐 Public URL: {PROTOCOL}://{PUBLIC_HOST}:{PUBLIC_PORT}")
 
     uvicorn.run(a2a_app, host=HOST, port=PORT)

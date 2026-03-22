@@ -65,7 +65,7 @@ root_agent = Agent(
     name="designer",
     model="gemini-2.5-flash",
     instruction=SYSTEM_INSTRUCTION,
-    description="Creative visual designer for generating social media image concepts"
+    description="Creative visual designer for generating social media image concepts",
 )
 
 logger.info("Designer agent created successfully")
@@ -97,7 +97,9 @@ if __name__ == "__main__":
 
     # Start server
     logger.info(f"🚀 Starting Designer A2A Server on {PROTOCOL}://{HOST}:{PORT}")
-    logger.info(f"📋 Agent card available at: {PROTOCOL}://{HOST}:{PORT}/.well-known/agent-card.json")
+    logger.info(
+        f"📋 Agent card available at: {PROTOCOL}://{HOST}:{PORT}/.well-known/agent-card.json"
+    )
     logger.info(f"🌐 Public URL: {PROTOCOL}://{PUBLIC_HOST}:{PUBLIC_PORT}")
 
     uvicorn.run(a2a_app, host=HOST, port=PORT)
@@ -120,7 +122,7 @@ def run_local_test():
     log_level = os.getenv("AGENT_LOG_LEVEL", "INFO")
     logging.basicConfig(
         level=getattr(logging, log_level.upper(), logging.INFO),
-        format='%(asctime)s - %(levelname)s - %(name)s - %(message)s'
+        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
 
     async def main():
@@ -139,6 +141,7 @@ def run_local_test():
 
         # Optional: Use ADK's built-in LoggingPlugin for detailed debugging
         from google.adk.plugins.logging_plugin import LoggingPlugin
+
         plugins = []
         if os.getenv("AGENT_LOG_LEVEL", "INFO").upper() == "DEBUG":
             plugins.append(LoggingPlugin())
@@ -147,10 +150,7 @@ def run_local_test():
         # Create runner with session service
         session_service = InMemorySessionService()
         runner = Runner(
-            app_name="agents",
-            agent=agent,
-            session_service=session_service,
-            plugins=plugins
+            app_name="agents", agent=agent, session_service=session_service, plugins=plugins
         )
 
         session_id = "test_session"
@@ -160,9 +160,7 @@ def run_local_test():
             # Create session first
             logger.debug(f"Creating session: {session_id} for user: {user_id}")
             await session_service.create_session(
-                app_name="agents",
-                user_id=user_id,
-                session_id=session_id
+                app_name="agents", user_id=user_id, session_id=session_id
             )
             logger.info("Session created successfully")
 
@@ -171,15 +169,15 @@ def run_local_test():
             async for event in runner.run_async(
                 user_id=user_id,
                 session_id=session_id,
-                new_message=types.Content(parts=[types.Part(text=brief)])
+                new_message=types.Content(parts=[types.Part(text=brief)]),
             ):
-                if hasattr(event, 'text') and event.text:
-                    print(event.text, end='', flush=True)
-                elif hasattr(event, 'content') and event.content:
-                    if hasattr(event.content, 'parts'):
+                if hasattr(event, "text") and event.text:
+                    print(event.text, end="", flush=True)
+                elif hasattr(event, "content") and event.content:
+                    if hasattr(event.content, "parts"):
                         for part in event.content.parts:
-                            if hasattr(part, 'text') and part.text:
-                                print(part.text, end='', flush=True)
+                            if hasattr(part, "text") and part.text:
+                                print(part.text, end="", flush=True)
         finally:
             # Proper async cleanup
             logger.info("Closing runner")

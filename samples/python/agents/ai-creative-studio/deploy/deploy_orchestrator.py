@@ -129,7 +129,7 @@ def deploy_orchestrator(auto_deploy_specialists=False):
     init_vertex_ai()
 
     # Import the app from agent.py
-    sys.path.insert(0, str(project_root / 'agents'))
+    sys.path.insert(0, str(project_root / "agents"))
     from creative_director.agent import root_app  # App object with compaction config
 
     # Wrap App in AdkApp for Agent Engine deployment
@@ -187,7 +187,7 @@ def deploy_orchestrator(auto_deploy_specialists=False):
                     "PM_AGENT_URL": PM_URL,
                     # Note: GOOGLE_CLOUD_PROJECT and GOOGLE_CLOUD_LOCATION are auto-set
                 },
-            }
+            },
         )
 
         # Extract resource name and ID
@@ -233,6 +233,7 @@ def deploy_orchestrator(auto_deploy_specialists=False):
 
         # Print detailed error info
         import traceback
+
         print("\nFull Traceback:")
         print(traceback.format_exc())
 
@@ -250,6 +251,7 @@ def deploy_orchestrator(auto_deploy_specialists=False):
 # =============================================================================
 # TESTING
 # =============================================================================
+
 
 async def test_deployed_agent(resource_name: str):
     """Test the deployed agent."""
@@ -303,6 +305,7 @@ async def test_deployed_agent(resource_name: str):
 # CLEANUP
 # =============================================================================
 
+
 def cleanup_agent_engine(resource_name: str):
     """Delete the deployed Agent Engine resource."""
     print("\n" + "=" * 70)
@@ -352,6 +355,7 @@ def cleanup_agent_engine(resource_name: str):
 # CLI
 # =============================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="Deploy Creative Director Orchestrator for Creative Director Agent Engine (Testing)"
@@ -360,17 +364,17 @@ def main():
         "--action",
         choices=["deploy", "test", "cleanup"],
         default="deploy",
-        help="Action to perform: deploy (create Agent Engine), test (test deployment), cleanup (delete Agent Engine)"
+        help="Action to perform: deploy (create Agent Engine), test (test deployment), cleanup (delete Agent Engine)",
     )
     parser.add_argument(
         "--resource_name",
         type=str,
-        help="Resource name for test/cleanup actions (e.g., projects/.../reasoningEngines/...)"
+        help="Resource name for test/cleanup actions (e.g., projects/.../reasoningEngines/...)",
     )
     parser.add_argument(
         "--auto-deploy-specialists",
         action="store_true",
-        help="Automatically deploy all specialist agents to Cloud Run before deploying orchestrator"
+        help="Automatically deploy all specialist agents to Cloud Run before deploying orchestrator",
     )
 
     args = parser.parse_args()
@@ -411,7 +415,9 @@ def main():
                 print("ERROR: --resource_name required for cleanup")
                 print("   Or set AGENT_ENGINE_RESOURCE_NAME in .env")
                 print("\nUsage:")
-                print(f'  python3 {__file__} --action cleanup --resource_name "projects/.../reasoningEngines/..."')
+                print(
+                    f'  python3 {__file__} --action cleanup --resource_name "projects/.../reasoningEngines/..."'
+                )
                 return
         cleanup_agent_engine(args.resource_name)
 

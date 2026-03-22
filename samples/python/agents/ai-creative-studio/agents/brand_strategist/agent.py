@@ -28,7 +28,7 @@ logger = logging.getLogger("ai_creative_studio.brand_strategist")
 
 SYSTEM_INSTRUCTION = f"""You are a Brand Strategist specializing in market research and trend analysis.
 
-IMPORTANT: Today's date is {datetime.date.today().strftime('%B %d, %Y')} (Year: {datetime.date.today().year}).
+IMPORTANT: Today's date is {datetime.date.today().strftime("%B %d, %Y")} (Year: {datetime.date.today().year}).
 When conducting research, focus on current trends and data from {datetime.date.today().year}, not outdated information.
 Use search queries like "[topic] trends {datetime.date.today().year}" to get the most recent insights.
 
@@ -72,18 +72,18 @@ Format your output as:
 **Key Strategic Insights:**
 [High-level themes and positioning opportunities]
 """
-#After providing these insights, your work is complete. Return control to the Creative Director.
-#"""
+# After providing these insights, your work is complete. Return control to the Creative Director.
+# """
 
 logger.info("Creating Brand Strategist agent with Gemini 2.5 Flash")
-  
+
 root_agent = Agent(
-        name="brand_strategist",
-        model="gemini-2.5-flash",
-        instruction=SYSTEM_INSTRUCTION,
-        description="Brand strategist for market research, trend analysis, and competitive insights",
-        tools=[google_search]  # Built-in Google Search tool
-    )
+    name="brand_strategist",
+    model="gemini-2.5-flash",
+    instruction=SYSTEM_INSTRUCTION,
+    description="Brand strategist for market research, trend analysis, and competitive insights",
+    tools=[google_search],  # Built-in Google Search tool
+)
 
 logger.info("Brand Strategist agent created successfully")
 
@@ -109,7 +109,9 @@ if __name__ == "__main__":
 
     # Start server
     logger.info(f"🚀 Starting Brand Strategist A2A Server on {PROTOCOL}://{HOST}:{PORT}")
-    logger.info(f"📋 Agent card available at: {PROTOCOL}://{HOST}:{PORT}/.well-known/agent-card.json")
+    logger.info(
+        f"📋 Agent card available at: {PROTOCOL}://{HOST}:{PORT}/.well-known/agent-card.json"
+    )
     logger.info(f"🌐 Public URL: {PROTOCOL}://{PUBLIC_HOST}:{PUBLIC_PORT}")
 
     uvicorn.run(a2a_app, host=HOST, port=PORT)

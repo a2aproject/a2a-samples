@@ -28,13 +28,18 @@ from mcp import StdioServerParameters
 # Get logger for this agent
 logger = logging.getLogger("ai_creative_studio.project_manager")
 
+
 def get_system_instruction(database_id=None):
     """Generate system instruction with current date and database ID"""
-    db_info = f'The Notion database ID is: {database_id}' if database_id else 'No Notion database configured.'
+    db_info = (
+        f"The Notion database ID is: {database_id}"
+        if database_id
+        else "No Notion database configured."
+    )
 
     return f"""You are a Project Manager specializing in creative campaign execution.
 
-IMPORTANT: Today's date is {datetime.date.today().strftime('%B %d, %Y')}.
+IMPORTANT: Today's date is {datetime.date.today().strftime("%B %d, %Y")}.
 Use this as the starting point for all timeline planning. All dates must be in the future, starting from today or later.
 
 {db_info}
@@ -153,7 +158,7 @@ When given a campaign brief and timeline:
 
 Format your text output as:
 **Project Timeline:**
-[Phase breakdown with dates - must start from {datetime.date.today().strftime('%B %d, %Y')} or later]
+[Phase breakdown with dates - must start from {datetime.date.today().strftime("%B %d, %Y")} or later]
 
 **Task List:**
 - [Task name] | Owner: [Agent] | Deadline: [Date] | Status: [To Do]
@@ -175,6 +180,7 @@ Format your text output as:
 REMEMBER: You must ALWAYS include the complete text timeline above (Project Timeline, Task List, Budget Breakdown, Milestones) in your response. Only after providing this text output should you attempt Notion operations. Both deliverables (text + Notion integration) are expected when possible.
 """
 
+
 def create_project_manager_agent():
     """Create the Project Manager agent with Notion MCP integration"""
     logger.info("Creating Project Manager agent with Gemini 2.5 Flash and Notion MCP")
@@ -190,13 +196,15 @@ def create_project_manager_agent():
     logger.info(f"NOTION_DATABASE_ID from env: {notion_database_id}")
 
     if not notion_api_key or not notion_database_id:
-        logger.warning("NOTION_API_KEY or NOTION_DATABASE_ID not set - agent will work without Notion integration")
+        logger.warning(
+            "NOTION_API_KEY or NOTION_DATABASE_ID not set - agent will work without Notion integration"
+        )
         # Create agent without Notion tools
         agent = Agent(
             name="project_manager",
             model="gemini-2.5-flash",
             instruction=get_system_instruction(database_id=None),
-            description="Project manager for creating timelines, tasks, and organizing campaign deliverables"
+            description="Project manager for creating timelines, tasks, and organizing campaign deliverables",
         )
     else:
         # Create Notion MCP toolset
@@ -207,7 +215,7 @@ def create_project_manager_agent():
         # IMPORTANT: Notion MCP server expects NOTION_TOKEN, not NOTION_API_KEY
         mcp_env = {
             "NOTION_TOKEN": notion_api_key,  # Notion MCP uses NOTION_TOKEN
-            "PATH": os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin")  # Required for npx
+            "PATH": os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin"),  # Required for npx
         }
 
         logger.info(f"MCP environment configured with {len(mcp_env)} variables")
@@ -215,13 +223,13 @@ def create_project_manager_agent():
         server_params = StdioServerParameters(
             command="notion-mcp-server",  # Use globally installed version from Dockerfile
             args=[],
-            env=mcp_env
+            env=mcp_env,
         )
 
         notion_toolset = McpToolset(
             connection_params=StdioConnectionParams(
                 server_params=server_params,
-                timeout=30.0  # Increased timeout for MCP server startup
+                timeout=30.0,  # Increased timeout for MCP server startup
             )
         )
 
@@ -231,7 +239,7 @@ def create_project_manager_agent():
             model="gemini-2.5-flash",
             instruction=get_system_instruction(database_id=notion_database_id),
             description="Project manager for creating timelines, tasks, and organizing campaign deliverables with Notion integration",
-            tools=[notion_toolset]
+            tools=[notion_toolset],
         )
 
         logger.info("Project Manager agent created with Notion MCP integration")
@@ -267,7 +275,9 @@ if __name__ == "__main__":
 
     # Start server
     logger.info(f"🚀 Starting Project Manager A2A Server on {PROTOCOL}://{HOST}:{PORT}")
-    logger.info(f"📋 Agent card available at: {PROTOCOL}://{HOST}:{PORT}/.well-known/agent-card.json")
+    logger.info(
+        f"📋 Agent card available at: {PROTOCOL}://{HOST}:{PORT}/.well-known/agent-card.json"
+    )
     logger.info(f"🌐 Public URL: {PROTOCOL}://{PUBLIC_HOST}:{PUBLIC_PORT}")
 
     uvicorn.run(a2a_app, host=HOST, port=PORT)

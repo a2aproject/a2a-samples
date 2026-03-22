@@ -69,21 +69,14 @@ async def run_command_async(cmd: list[str], cwd: Path | None = None) -> tuple[in
         Tuple of (returncode, stdout, stderr)
     """
     process = await asyncio.create_subprocess_exec(
-        *cmd,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-        cwd=cwd
+        *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, cwd=cwd
     )
 
     stdout, stderr = await process.communicate()
     return process.returncode, stdout.decode(), stderr.decode()
 
 
-async def deploy_single_agent(
-    agent_config: dict,
-    project_id: str,
-    region: str
-) -> str | None:
+async def deploy_single_agent(agent_config: dict, project_id: str, region: str) -> str | None:
     """
     Deploy a single agent to Cloud Run
 
@@ -119,10 +112,15 @@ async def deploy_single_agent(
             print(f"   Adding Notion MCP credentials to {name}...")
             env_vars += f",NOTION_API_KEY={notion_api_key},NOTION_DATABASE_ID={notion_database_id}"
         else:
-            print(f"   Warning: NOTION_API_KEY or NOTION_DATABASE_ID not set - {name} will work without Notion integration")
+            print(
+                f"   Warning: NOTION_API_KEY or NOTION_DATABASE_ID not set - {name} will work without Notion integration"
+            )
 
     cmd = [
-        "gcloud", "run", "deploy", name,
+        "gcloud",
+        "run",
+        "deploy",
+        name,
         "--source=.",
         "--port=8080",
         "--platform=managed",
@@ -135,7 +133,7 @@ async def deploy_single_agent(
         "--timeout=300",
         "--max-instances=10",
         "--min-instances=0",
-        "--quiet"
+        "--quiet",
     ]
 
     # Run deployment
@@ -171,11 +169,15 @@ async def get_service_url(service_name: str, project_id: str, region: str) -> st
         Service URL or None if not found
     """
     cmd = [
-        "gcloud", "run", "services", "describe", service_name,
+        "gcloud",
+        "run",
+        "services",
+        "describe",
+        service_name,
         "--platform=managed",
         f"--region={region}",
         f"--project={project_id}",
-        "--format=value(status.url)"
+        "--format=value(status.url)",
     ]
 
     returncode, stdout, stderr = await run_command_async(cmd)
@@ -190,10 +192,7 @@ async def get_service_url(service_name: str, project_id: str, region: str) -> st
 
 
 async def update_agent_a2a_config(
-    service_name: str,
-    url: str,
-    project_id: str,
-    region: str
+    service_name: str, url: str, project_id: str, region: str
 ) -> None:
     """
     Update deployed agent with A2A configuration (PUBLIC_HOST, PORT, PROTOCOL)
@@ -220,17 +219,25 @@ async def update_agent_a2a_config(
 
         if notion_api_key and notion_database_id:
             print(f"   Adding Notion MCP credentials to {service_name}...")
-            env_vars_update += f",NOTION_API_KEY={notion_api_key},NOTION_DATABASE_ID={notion_database_id}"
+            env_vars_update += (
+                f",NOTION_API_KEY={notion_api_key},NOTION_DATABASE_ID={notion_database_id}"
+            )
         else:
-            print(f"   Warning: NOTION_API_KEY or NOTION_DATABASE_ID not set - {service_name} will work without Notion integration")
+            print(
+                f"   Warning: NOTION_API_KEY or NOTION_DATABASE_ID not set - {service_name} will work without Notion integration"
+            )
 
     cmd = [
-        "gcloud", "run", "services", "update", service_name,
+        "gcloud",
+        "run",
+        "services",
+        "update",
+        service_name,
         "--platform=managed",
         f"--region={region}",
         f"--project={project_id}",
         f"--update-env-vars={env_vars_update}",
-        "--quiet"
+        "--quiet",
     ]
 
     returncode, stdout, stderr = await run_command_async(cmd)
@@ -257,10 +264,7 @@ async def deploy_all_agents(project_id: str, region: str) -> dict[str, str]:
     print("=" * 70 + "\n")
 
     # Deploy all agents in parallel using asyncio.gather
-    tasks = [
-        deploy_single_agent(agent, project_id, region)
-        for agent in AGENTS
-    ]
+    tasks = [deploy_single_agent(agent, project_id, region) for agent in AGENTS]
 
     results = await asyncio.gather(*tasks)
 
@@ -335,6 +339,7 @@ async def main_async():
     except Exception as e:
         print(f"\n❌ Error during deployment: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 

@@ -571,7 +571,7 @@ def create_creative_director():
         strategist_agent = RemoteA2aAgent(
             name="brand_strategist",
             description="Brand strategist for market research, trend analysis, and competitive insights",
-            agent_card=f"{strategist_url}/.well-known/agent.json"
+            agent_card=f"{strategist_url}/.well-known/agent.json",
         )
         agent_tools.append(AgentTool(agent=strategist_agent))
 
@@ -583,7 +583,7 @@ def create_creative_director():
         copywriter_agent = RemoteA2aAgent(
             name="copywriter",
             description="Expert social media copywriter for creating engaging captions and copy",
-            agent_card=f"{copywriter_url}/.well-known/agent.json"
+            agent_card=f"{copywriter_url}/.well-known/agent.json",
         )
         agent_tools.append(AgentTool(agent=copywriter_agent))
 
@@ -595,7 +595,7 @@ def create_creative_director():
         designer_agent = RemoteA2aAgent(
             name="designer",
             description="Creative visual designer for generating social media image concepts",
-            agent_card=f"{designer_url}/.well-known/agent.json"
+            agent_card=f"{designer_url}/.well-known/agent.json",
         )
         agent_tools.append(AgentTool(agent=designer_agent))
 
@@ -607,7 +607,7 @@ def create_creative_director():
         critic_agent = RemoteA2aAgent(
             name="critic",
             description="Creative critic for reviewing campaign materials and providing constructive feedback",
-            agent_card=f"{critic_url}/.well-known/agent.json"
+            agent_card=f"{critic_url}/.well-known/agent.json",
         )
         agent_tools.append(AgentTool(agent=critic_agent))
 
@@ -619,7 +619,7 @@ def create_creative_director():
         pm_agent = RemoteA2aAgent(
             name="project_manager",
             description="Project manager for creating timelines, tasks, and organizing campaign deliverables",
-            agent_card=f"{pm_url}/.well-known/agent.json"
+            agent_card=f"{pm_url}/.well-known/agent.json",
         )
         agent_tools.append(AgentTool(agent=pm_agent))
 
@@ -630,13 +630,13 @@ def create_creative_director():
         for agent_desc in available_agents_list:
             logger.info(f"  {agent_desc}")
     else:
-        available_agents_text = "⚠️ No specialist agents configured. Set agent URLs in environment variables."
+        available_agents_text = (
+            "⚠️ No specialist agents configured. Set agent URLs in environment variables."
+        )
         logger.warning("⚠️  No specialist agents configured!")
 
     # Inject dynamic agent list into instruction
-    system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.format(
-        available_agents=available_agents_text
-    )
+    system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.format(available_agents=available_agents_text)
 
     logger.info("Orchestrator initialization complete")
     logger.info("=" * 70)
@@ -754,11 +754,7 @@ if __name__ == "__main__":
 
         # Create runner with session service
         session_service = InMemorySessionService()
-        runner = Runner(
-            app_name="agents",
-            agent=director,
-            session_service=session_service
-        )
+        runner = Runner(app_name="agents", agent=director, session_service=session_service)
 
         session_id = "test_session"
         user_id = "test_user"
@@ -766,24 +762,22 @@ if __name__ == "__main__":
         try:
             # Create session first
             await session_service.create_session(
-                app_name="agents",
-                user_id=user_id,
-                session_id=session_id
+                app_name="agents", user_id=user_id, session_id=session_id
             )
 
             # Run agent asynchronously
             async for event in runner.run_async(
                 user_id=user_id,
                 session_id=session_id,
-                new_message=types.Content(parts=[types.Part(text=brief)])
+                new_message=types.Content(parts=[types.Part(text=brief)]),
             ):
-                if hasattr(event, 'text') and event.text:
-                    print(event.text, end='', flush=True)
-                elif hasattr(event, 'content') and event.content:
-                    if hasattr(event.content, 'parts'):
+                if hasattr(event, "text") and event.text:
+                    print(event.text, end="", flush=True)
+                elif hasattr(event, "content") and event.content:
+                    if hasattr(event.content, "parts"):
                         for part in event.content.parts:
-                            if hasattr(part, 'text') and part.text:
-                                print(part.text, end='', flush=True)
+                            if hasattr(part, "text") and part.text:
+                                print(part.text, end="", flush=True)
         finally:
             # Proper async cleanup
             await runner.close()

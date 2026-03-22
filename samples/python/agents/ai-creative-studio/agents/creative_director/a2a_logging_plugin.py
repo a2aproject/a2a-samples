@@ -66,7 +66,13 @@ class A2ALoggingPlugin(BasePlugin):
 
         # Only log AgentTool calls to our specialist agents
         # Skip if this is some other tool type
-        specialist_agents = ["brand_strategist", "copywriter", "designer", "critic", "project_manager"]
+        specialist_agents = [
+            "brand_strategist",
+            "copywriter",
+            "designer",
+            "critic",
+            "project_manager",
+        ]
         if tool_name not in specialist_agents:
             return
 
@@ -80,7 +86,7 @@ class A2ALoggingPlugin(BasePlugin):
         logger.info(f"Timestamp: {timestamp}")
 
         # Log input (request sent to specialist agent)
-        if hasattr(tool_context, 'arguments') and tool_context.arguments:
+        if hasattr(tool_context, "arguments") and tool_context.arguments:
             logger.info(f"\n📤 REQUEST TO {tool_name}:")
             try:
                 logger.info(json.dumps(tool_context.arguments, indent=2))
@@ -88,17 +94,19 @@ class A2ALoggingPlugin(BasePlugin):
                 logger.info(str(tool_context.arguments))
 
         # Log output (response received from specialist agent)
-        if hasattr(tool_context, 'result') and tool_context.result:
+        if hasattr(tool_context, "result") and tool_context.result:
             logger.info(f"\n📥 RESPONSE FROM {tool_name}:")
             result_str = str(tool_context.result)
             # Truncate very long responses for readability
             if len(result_str) > 2000:
-                logger.info(result_str[:2000] + f"\n... (truncated, full length: {len(result_str)} chars)")
+                logger.info(
+                    result_str[:2000] + f"\n... (truncated, full length: {len(result_str)} chars)"
+                )
             else:
                 logger.info(result_str)
 
         # Log any errors
-        if hasattr(tool_context, 'error') and tool_context.error:
+        if hasattr(tool_context, "error") and tool_context.error:
             logger.error(f"\n❌ ERROR IN {tool_name}:")
             logger.error(str(tool_context.error))
 
