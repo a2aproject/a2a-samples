@@ -25,7 +25,7 @@ if [ -f "$ENV_FILE" ]; then
 fi
 
 # Configuration - support both LOCATION and REGION naming conventions
-PROJECT_ID="${PROJECT_ID:-devfestahlen}"
+PROJECT_ID="${PROJECT_ID:-}"
 REGION="${LOCATION:-${REGION:-us-central1}}"
 USER_EMAIL="${USER_EMAIL:-}"
 

@@ -29,7 +29,7 @@ from vertexai import agent_engines
 # Load environment variables
 load_dotenv()
 
-PROJECT_ID = os.getenv("PROJECT_ID", "devfestahlen")
+PROJECT_ID = os.getenv("PROJECT_ID", "")
 LOCATION = os.getenv("LOCATION", "us-central1")
 AGENT_ENGINE_RESOURCE = os.getenv("AGENT_ENGINE_RESOURCE_NAME")
 

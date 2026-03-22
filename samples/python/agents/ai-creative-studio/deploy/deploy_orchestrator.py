@@ -48,7 +48,7 @@ sys.path.insert(0, str(project_root))
 load_dotenv()
 
 # Configuration - support both LOCATION and REGION naming conventions
-PROJECT_ID = os.getenv("PROJECT_ID", "devfestahlen")
+PROJECT_ID = os.getenv("PROJECT_ID", "")
 LOCATION = os.getenv("LOCATION") or os.getenv("REGION", "us-central1")
 STAGING_BUCKET = f"gs://{PROJECT_ID}-agent-staging"
 DISPLAY_NAME = "Creative Director"

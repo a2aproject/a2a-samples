@@ -6,8 +6,8 @@
 
 set -e
 
-PROJECT_ID="${PROJECT_ID:-devfestahlen}"
-USER_EMAIL="${USER_EMAIL:-arfaamalg@gmail.com}"
+PROJECT_ID="${PROJECT_ID:-}"
+USER_EMAIL="${USER_EMAIL:-}"
 
 echo "=========================================="
 echo "Fixing IAM Permissions for Deployment"

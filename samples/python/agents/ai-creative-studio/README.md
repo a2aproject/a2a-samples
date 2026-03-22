@@ -866,7 +866,7 @@ python3 analyze_agent_logs.py /tmp/orchestrator_logs_*.txt
 # Monitor live
 gcloud logging tail \
   'resource.type="aiplatform.googleapis.com/ReasoningEngine"' \
-  --project=devfestahlen
+  --project=YOUR_PROJECT_ID
 ```
 
 **📖 Complete Guide:** [A2A_LOGGING_GUIDE.md](tools/a2a-inspector/A2A_LOGGING_GUIDE.md)
