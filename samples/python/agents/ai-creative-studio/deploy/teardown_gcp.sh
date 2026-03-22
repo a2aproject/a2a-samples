@@ -3,7 +3,7 @@
 # GCP Teardown Script for Brand Strategist A2A Agent
 # This script removes the deployed agent and cleans up GCP resources
 
-set -e  # Exit on error
+set -e # Exit on error
 
 # Color codes for output
 RED='\033[0;31m'
@@ -20,7 +20,7 @@ SERVICE_ACCOUNT_NAME="brand-strategist-sa"
 echo -e "${RED}=== Brand Strategist A2A Agent - GCP Teardown ===${NC}\n"
 
 # Check if gcloud is installed
-if ! command -v gcloud &> /dev/null; then
+if ! command -v gcloud &>/dev/null; then
     echo -e "${RED}Error: gcloud CLI is not installed${NC}"
     exit 1
 fi

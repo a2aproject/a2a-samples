@@ -12,13 +12,13 @@ NC='\033[0m' # No Color
 echo -e "${GREEN}=== AI Creative Studio - Complete Deployment ===${NC}\n"
 
 # Check prerequisites
-if ! command -v gcloud &> /dev/null; then
+if ! command -v gcloud &>/dev/null; then
     echo -e "${RED}Error: gcloud CLI not installed${NC}"
     echo "Please install from: https://cloud.google.com/sdk/docs/install"
     exit 1
 fi
 
-if ! command -v python3 &> /dev/null; then
+if ! command -v python3 &>/dev/null; then
     echo -e "${RED}Error: Python 3 not installed${NC}"
     exit 1
 fi

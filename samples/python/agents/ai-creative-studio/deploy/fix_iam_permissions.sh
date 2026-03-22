@@ -54,7 +54,7 @@ for sa in "${SERVICE_ACCOUNTS[@]}"; do
     if gcloud iam service-accounts add-iam-policy-binding "$SA_EMAIL" \
         --member="user:$USER_EMAIL" \
         --role="roles/iam.serviceAccountUser" \
-        --project="$PROJECT_ID" > /dev/null 2>&1; then
+        --project="$PROJECT_ID" >/dev/null 2>&1; then
         echo "  ✓ Success"
         ((SUCCESS_COUNT++))
     else

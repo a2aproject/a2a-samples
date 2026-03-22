@@ -4,7 +4,7 @@
 # This script creates service accounts and grants necessary IAM permissions
 #
 
-set -e  # Exit on error
+set -e # Exit on error
 
 # Color codes
 RED='\033[0;31m'
@@ -32,7 +32,7 @@ USER_EMAIL="${USER_EMAIL:-}"
 echo -e "${GREEN}=== AI Creative Studio - Complete GCP Setup ===${NC}\n"
 
 # Check if gcloud is installed
-if ! command -v gcloud &> /dev/null; then
+if ! command -v gcloud &>/dev/null; then
     echo -e "${RED}Error: gcloud CLI is not installed${NC}"
     echo "Please install it from: https://cloud.google.com/sdk/docs/install"
     exit 1
@@ -124,9 +124,9 @@ for SA_NAME in "${!SERVICE_ACCOUNTS[@]}"; do
                 echo "  ✓ Service account ready"
                 break
             fi
-            echo "  ⏳ Still propagating... (attempt $((RETRY_COUNT+1))/$MAX_RETRIES)"
+            echo "  ⏳ Still propagating... (attempt $((RETRY_COUNT + 1))/$MAX_RETRIES)"
             sleep 5
-            RETRY_COUNT=$((RETRY_COUNT+1))
+            RETRY_COUNT=$((RETRY_COUNT + 1))
         done
     fi
 

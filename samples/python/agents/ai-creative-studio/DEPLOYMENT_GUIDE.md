@@ -100,7 +100,7 @@ gcloud --version
    **Projects Database:**
    - Create a new database in Notion
    - Add properties with these **types** (names can be anything you want):
-     - One **Title** property (e.g., "Project name", "Nom du projet", "Title", etc.)
+     - One **Title** property (e.g., "Project name", "Name", "Title", etc.)
      - One **Status** property (e.g., "Status", "État", "Progress", etc.)
      - One **Select** property for priority (e.g., "Priority", "Priorité", etc.) - optional
      - One **Date** property with start & end enabled (e.g., "Dates", "Timeline", "Période", etc.)
@@ -115,8 +115,8 @@ gcloud --version
      - One **Title** property (e.g., "Task name", "Tâche", "Task", etc.)
      - One **Status** property (e.g., "Status", "État", etc.)
      - One **Select** property for priority (e.g., "Priority", "Priorité", etc.) - optional
-     - One **Date** property (e.g., "Due", "Deadline", "Date limite", etc.)
-     - One **Relation** property → select your Projects database (e.g., "Project", "Projet", etc.)
+     - One **Date** property (e.g., "Due", "Deadline", "Due date", etc.)
+     - One **Relation** property → select your Projects database (e.g., "Project", "Related project", etc.)
    - Share with your integration
    - Copy the database ID
    - **The agent will discover your exact property names automatically!**

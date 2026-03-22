@@ -3,7 +3,7 @@
 # GCP Initial Setup Script for Brand Strategist A2A Agent
 # This script sets up the GCP infrastructure (run once)
 
-set -e  # Exit on error
+set -e # Exit on error
 
 # Color codes for output
 RED='\033[0;31m'
@@ -35,7 +35,7 @@ SERVICE_ACCOUNT_NAME="${GCP_SERVICE_ACCOUNT_NAME:-brand-strategist-sa}"
 echo -e "${GREEN}=== Brand Strategist A2A Agent - GCP Setup ===${NC}\n"
 
 # Check if gcloud is installed
-if ! command -v gcloud &> /dev/null; then
+if ! command -v gcloud &>/dev/null; then
     echo -e "${RED}Error: gcloud CLI is not installed${NC}"
     echo "Please install it from: https://cloud.google.com/sdk/docs/install"
     exit 1
