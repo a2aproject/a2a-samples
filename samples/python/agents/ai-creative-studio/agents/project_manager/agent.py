@@ -17,9 +17,10 @@ Project Manager Agent
 Creates project timelines and tasks with Notion integration
 """
 
-import logging
 import datetime
+import logging
 import os
+
 from google.adk.agents import Agent
 from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
 from mcp import StdioServerParameters
@@ -244,9 +245,10 @@ root_agent = create_project_manager_agent()
 
 if __name__ == "__main__":
     import os
+
     import uvicorn
-    from google.adk.a2a.utils.agent_to_a2a import to_a2a
     from dotenv import load_dotenv
+    from google.adk.a2a.utils.agent_to_a2a import to_a2a
 
     # Load environment variables
     load_dotenv()

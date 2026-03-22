@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import datetime
+import logging
+import os
+
+from dotenv import load_dotenv
 from google.adk.agents import Agent
 from google.adk.tools import google_search
-import os
-from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
@@ -89,6 +90,7 @@ logger.info("Brand Strategist agent created successfully")
 
 if __name__ == "__main__":
     import os
+
     import uvicorn
     from google.adk.a2a.utils.agent_to_a2a import to_a2a
 

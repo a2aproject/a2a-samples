@@ -19,6 +19,7 @@ Uses Gemini API directly (no MCP needed)
 """
 
 import logging
+
 from google.adk.agents import Agent
 
 # Get logger for this agent
@@ -120,9 +121,10 @@ root_agent = create_critic_agent()
 
 if __name__ == "__main__":
     import os
+
     import uvicorn
-    from google.adk.a2a.utils.agent_to_a2a import to_a2a
     from dotenv import load_dotenv
+    from google.adk.a2a.utils.agent_to_a2a import to_a2a
 
     # Load environment variables
     load_dotenv()

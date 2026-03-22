@@ -18,12 +18,13 @@ Uses AgentTool pattern + InstaVibe prompting strategy
 Features: Dynamic agent list, strong verification, error handling, comprehensive logging
 """
 
-import os
 import logging
+import os
+
 from google.adk.agents import Agent
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
-from google.adk.tools.agent_tool import AgentTool
 from google.adk.plugins.logging_plugin import LoggingPlugin
+from google.adk.tools.agent_tool import AgentTool
 
 # Configure logging
 logger = logging.getLogger("ai_creative_studio.creative_director")
@@ -680,10 +681,10 @@ def create_creative_director():
     # - Preserves quality for early agents (full context)
     # - Scales to 10+ agent workflows
     # - Cost efficient (only summarizes when needed)
+    from google.adk.apps import App
+    from google.adk.apps.app import EventsCompactionConfig
     from google.adk.apps.llm_event_summarizer import LlmEventSummarizer
     from google.adk.models import Gemini
-    from google.adk.apps.app import EventsCompactionConfig
-    from google.adk.apps import App
 
     # Use fast model for summarization
     summarization_llm = Gemini(model_id="gemini-2.5-flash")
@@ -724,10 +725,11 @@ root_agent, root_app = create_creative_director()
 if __name__ == "__main__":
     # Test the Creative Director locally
     import asyncio
+
+    from dotenv import load_dotenv
     from google.adk import Runner
     from google.adk.sessions import InMemorySessionService
     from google.genai import types
-    from dotenv import load_dotenv
 
     # Load environment variables from .env file
     load_dotenv()

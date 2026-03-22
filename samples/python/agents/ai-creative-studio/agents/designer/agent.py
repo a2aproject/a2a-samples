@@ -19,6 +19,7 @@ Uses Imagen API directly (no MCP needed)
 """
 
 import logging
+
 from google.adk.agents import Agent
 
 # Get logger for this agent
@@ -77,6 +78,7 @@ def create_designer_agent():
 
 if __name__ == "__main__":
     import os
+
     import uvicorn
     from google.adk.a2a.utils.agent_to_a2a import to_a2a
 
@@ -105,10 +107,11 @@ if __name__ == "__main__":
 def run_local_test():
     """Run local test of the agent"""
     import asyncio
+
+    from dotenv import load_dotenv
     from google.adk import Runner
     from google.adk.sessions import InMemorySessionService
     from google.genai import types
-    from dotenv import load_dotenv
 
     # Load environment variables from .env file
     load_dotenv()

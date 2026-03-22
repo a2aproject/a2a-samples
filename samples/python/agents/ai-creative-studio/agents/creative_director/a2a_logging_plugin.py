@@ -34,9 +34,10 @@ A2A Logging Plugin - LOCAL TESTING ONLY
    Then run locally with: python agents/creative_director/agent.py
 """
 
-import logging
 import json
+import logging
 from datetime import datetime
+
 from google.adk.plugins.base_plugin import BasePlugin
 
 # Configure logging
