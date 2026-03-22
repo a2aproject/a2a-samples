@@ -35,9 +35,10 @@ import asyncio
 import os
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
+
 import vertexai
-from vertexai import agent_engines, Client
+from dotenv import load_dotenv
+from vertexai import Client, agent_engines
 
 # Add project root to Python path
 project_root = Path(__file__).parent.parent
@@ -67,7 +68,7 @@ def init_vertex_ai():
         location=LOCATION,
         staging_bucket=STAGING_BUCKET,
     )
-    print(f"✓ Initialized Vertex AI")
+    print("✓ Initialized Vertex AI")
     print(f"  Project: {PROJECT_ID}")
     print(f"  Location: {LOCATION}")
     print(f"  Staging: {STAGING_BUCKET}")
@@ -87,8 +88,8 @@ def deploy_orchestrator(auto_deploy_specialists=False):
         print("=" * 70)
 
         # Import specialist deployment module (now in deploy/)
-        from deploy_all_specialists import deploy_all_agents
         import env_utils
+        from deploy_all_specialists import deploy_all_agents
 
         # Run specialist deployment
         print("\n⏳ Deploying all 5 specialist agents to Cloud Run...")
@@ -146,16 +147,16 @@ def deploy_orchestrator(auto_deploy_specialists=False):
     print("\n⏳ Creating Agent Engine with full configuration...")
     print("   (Single API call with all env vars and requirements)")
 
-    print(f"\n  Configuration:")
+    print("\n  Configuration:")
     print(f"    - Display Name: {DISPLAY_NAME}")
-    print(f"    - Requirements:")
-    print(f"      • google-cloud-aiplatform[agent_engines]>=1.112")
-    print(f"      • google-adk[a2a]==1.20.0")
-    print(f"      • google-genai>=1.51.0")
-    print(f"      • python-dotenv>=1.0.0")
-    print(f"      • pydantic>=2.0.0")
-    print(f"      • cloudpickle>=3.0.0")
-    print(f"    - Environment Variables:")
+    print("    - Requirements:")
+    print("      • google-cloud-aiplatform[agent_engines]>=1.112")
+    print("      • google-adk[a2a]==1.20.0")
+    print("      • google-genai>=1.51.0")
+    print("      • python-dotenv>=1.0.0")
+    print("      • pydantic>=2.0.0")
+    print("      • cloudpickle>=3.0.0")
+    print("    - Environment Variables:")
     print(f"      • COPYWRITER_AGENT_URL={COPYWRITER_URL or '(not set)'}")
     print(f"      • DESIGNER_AGENT_URL={DESIGNER_URL or '(not set)'}")
     print(f"      • STRATEGIST_AGENT_URL={STRATEGIST_URL or '(not set)'}")
@@ -203,21 +204,21 @@ def deploy_orchestrator(auto_deploy_specialists=False):
         print(f"\nResource Name: {resource_name}")
         print(f"Agent Engine ID: {agent_engine_id}")
 
-        print(f"\n✓ Agent deployed with environment variables!")
+        print("\n✓ Agent deployed with environment variables!")
         print(f"  - COPYWRITER_AGENT_URL={COPYWRITER_URL or '(not set)'}")
         print(f"  - DESIGNER_AGENT_URL={DESIGNER_URL or '(not set)'}")
         print(f"  - STRATEGIST_AGENT_URL={STRATEGIST_URL or '(not set)'}")
         print(f"  - CRITIC_AGENT_URL={CRITIC_URL or '(not set)'}")
         print(f"  - PM_AGENT_URL={PM_URL or '(not set)'}")
 
-        print(f"\nUpdate your .env file with:")
+        print("\nUpdate your .env file with:")
         print(f'AGENT_ENGINE_RESOURCE_NAME="{resource_name}"')
         print(f'AGENT_ENGINE_ID="{agent_engine_id}"')
 
-        print(f"\nView in Cloud Console:")
+        print("\nView in Cloud Console:")
         print(f"https://console.cloud.google.com/vertex-ai/reasoning-engines?project={PROJECT_ID}")
 
-        print(f"\n💡 To test the deployment, run:")
+        print("\n💡 To test the deployment, run:")
         print(f'python3 {__file__} --action test --resource_name "{resource_name}"')
 
         return agent_engine_resource, resource_name
@@ -232,7 +233,7 @@ def deploy_orchestrator(auto_deploy_specialists=False):
 
         # Print detailed error info
         import traceback
-        print(f"\nFull Traceback:")
+        print("\nFull Traceback:")
         print(traceback.format_exc())
 
         print("\n" + "=" * 70)
@@ -310,7 +311,7 @@ def cleanup_agent_engine(resource_name: str):
 
     init_vertex_ai()
 
-    print(f"\n⚠️  WARNING: This will DELETE the following resource:")
+    print("\n⚠️  WARNING: This will DELETE the following resource:")
     print(f"   {resource_name}")
     print()
 
@@ -333,16 +334,16 @@ def cleanup_agent_engine(resource_name: str):
         print("✅ AGENT ENGINE DELETED SUCCESSFULLY!")
         print("=" * 70)
         print(f"\n✓ Deleted: {resource_name}")
-        print(f"\n💡 Don't forget to:")
-        print(f"   - Remove AGENT_ENGINE_RESOURCE_NAME from your .env file")
-        print(f"   - Remove AGENT_ENGINE_ID from your .env file")
+        print("\n💡 Don't forget to:")
+        print("   - Remove AGENT_ENGINE_RESOURCE_NAME from your .env file")
+        print("   - Remove AGENT_ENGINE_ID from your .env file")
 
     except Exception as e:
         print("\n" + "=" * 70)
         print("❌ CLEANUP FAILED!")
         print("=" * 70)
         print(f"\nError: {str(e)}")
-        print(f"\nYou can also delete the Agent Engine manually from:")
+        print("\nYou can also delete the Agent Engine manually from:")
         print(f"https://console.cloud.google.com/vertex-ai/reasoning-engines?project={PROJECT_ID}")
         raise
 
@@ -379,11 +380,11 @@ def main():
             remote_app, resource_name = deploy_orchestrator(
                 auto_deploy_specialists=args.auto_deploy_specialists
             )
-            print(f"\n💡 To test the deployment, run:")
+            print("\n💡 To test the deployment, run:")
             print(f'python3 {__file__} --action test --resource_name "{resource_name}"')
-            print(f"\n💡 To delete the deployment, run:")
+            print("\n💡 To delete the deployment, run:")
             print(f'python3 {__file__} --action cleanup --resource_name "{resource_name}"')
-        except Exception as e:
+        except Exception:
             print("\n\n" + "=" * 70)
             print("CONCLUSION:")
             print("=" * 70)

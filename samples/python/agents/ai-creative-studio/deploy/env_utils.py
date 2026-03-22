@@ -19,11 +19,11 @@ Provides shared functions for loading, validating, and formatting environment va
 
 import os
 from pathlib import Path
-from typing import Dict, Optional
+
 from dotenv import load_dotenv
 
 
-def load_env_file(env_path: Optional[Path] = None) -> Dict[str, str]:
+def load_env_file(env_path: Path | None = None) -> dict[str, str]:
     """
     Load and return environment variables from .env file
 
@@ -54,7 +54,7 @@ def load_env_file(env_path: Optional[Path] = None) -> Dict[str, str]:
     }
 
 
-def validate_required_vars(config: Dict[str, str]) -> bool:
+def validate_required_vars(config: dict[str, str]) -> bool:
     """
     Validate required environment variables are set
 
@@ -76,7 +76,7 @@ def validate_required_vars(config: Dict[str, str]) -> bool:
     return True
 
 
-def format_env_vars_for_orchestrator(agent_urls: Dict[str, str]) -> Dict[str, str]:
+def format_env_vars_for_orchestrator(agent_urls: dict[str, str]) -> dict[str, str]:
     """
     Format agent URLs as environment variables for orchestrator deployment
 
@@ -96,7 +96,7 @@ def format_env_vars_for_orchestrator(agent_urls: Dict[str, str]) -> Dict[str, st
     }
 
 
-def get_agent_name_mapping() -> Dict[str, str]:
+def get_agent_name_mapping() -> dict[str, str]:
     """
     Get mapping between service names and environment variable keys
 
@@ -112,7 +112,7 @@ def get_agent_name_mapping() -> Dict[str, str]:
     }
 
 
-def save_urls_to_env_file(agent_urls: Dict[str, str], output_file: str = ".env.specialists") -> None:
+def save_urls_to_env_file(agent_urls: dict[str, str], output_file: str = ".env.specialists") -> None:
     """
     Save agent URLs to .env file for later use
 
@@ -160,6 +160,6 @@ if __name__ == "__main__":
     }
 
     env_vars = format_env_vars_for_orchestrator(test_urls)
-    print(f"\nFormatted environment variables:")
+    print("\nFormatted environment variables:")
     for key, value in env_vars.items():
         print(f"  {key}={value}")

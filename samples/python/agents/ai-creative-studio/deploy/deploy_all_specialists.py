@@ -18,18 +18,14 @@ Deploy all 5 specialist agents to Cloud Run and collect their URLs
 Supports parallel deployment for faster execution
 """
 
-import subprocess
 import asyncio
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
-from dotenv import load_dotenv
 
 # Import env_utils from same directory
 sys.path.insert(0, str(Path(__file__).parent))
 import env_utils
-
 
 # Agent configuration for deployment
 AGENTS = [
@@ -61,7 +57,7 @@ AGENTS = [
 ]
 
 
-async def run_command_async(cmd: List[str], cwd: Optional[Path] = None) -> tuple[int, str, str]:
+async def run_command_async(cmd: list[str], cwd: Path | None = None) -> tuple[int, str, str]:
     """
     Run a command asynchronously
 
@@ -84,10 +80,10 @@ async def run_command_async(cmd: List[str], cwd: Optional[Path] = None) -> tuple
 
 
 async def deploy_single_agent(
-    agent_config: Dict,
+    agent_config: dict,
     project_id: str,
     region: str
-) -> Optional[str]:
+) -> str | None:
     """
     Deploy a single agent to Cloud Run
 
@@ -162,7 +158,7 @@ async def deploy_single_agent(
     return url
 
 
-async def get_service_url(service_name: str, project_id: str, region: str) -> Optional[str]:
+async def get_service_url(service_name: str, project_id: str, region: str) -> str | None:
     """
     Get Cloud Run service URL after deployment
 
@@ -245,7 +241,7 @@ async def update_agent_a2a_config(
         print(f"   Warning: Could not update A2A config for {service_name}: {stderr}")
 
 
-async def deploy_all_agents(project_id: str, region: str) -> Dict[str, str]:
+async def deploy_all_agents(project_id: str, region: str) -> dict[str, str]:
     """
     Deploy all agents in parallel and collect their URLs
 
@@ -332,7 +328,7 @@ async def main_async():
         env_utils.save_urls_to_env_file(agent_urls)
 
         print("\n✓ All specialist agents are ready!")
-        print(f"  URLs saved to .env.specialists")
+        print("  URLs saved to .env.specialists")
 
         return agent_urls
 

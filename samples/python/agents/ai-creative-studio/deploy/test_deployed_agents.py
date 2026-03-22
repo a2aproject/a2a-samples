@@ -21,9 +21,9 @@ Tests both specialist agents (Cloud Run) and orchestrator (Agent Engine)
 import asyncio
 import os
 import sys
-from pathlib import Path
-from dotenv import load_dotenv
+
 import vertexai
+from dotenv import load_dotenv
 from vertexai import agent_engines
 
 # Load environment variables
@@ -94,7 +94,7 @@ def print_header(title: str, char="="):
 async def test_specialist_a2a(name: str, url: str, query: str) -> bool:
     """Test a specialist agent via A2A protocol"""
     if not url:
-        print(f"  ⚠️  Skipped: No URL configured")
+        print("  ⚠️  Skipped: No URL configured")
         return False
 
     print(f"  URL: {url}")
@@ -102,8 +102,8 @@ async def test_specialist_a2a(name: str, url: str, query: str) -> bool:
 
     try:
         # Import required modules
-        from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
         from google.adk import Runner
+        from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
         from google.adk.sessions import InMemorySessionService
         from google.genai import types
 
@@ -114,7 +114,7 @@ async def test_specialist_a2a(name: str, url: str, query: str) -> bool:
             agent_card=f"{url}/.well-known/agent.json"
         )
 
-        print(f"  ⏳ Calling agent...")
+        print("  ⏳ Calling agent...")
 
         # Create session service and runner
         session_service = InMemorySessionService()
@@ -180,14 +180,14 @@ async def test_orchestrator(resource_name: str, query: str) -> bool:
 
         # Connect to deployed agent
         remote_app = agent_engines.get(resource_name)
-        print(f"  ✓ Connected to Agent Engine")
+        print("  ✓ Connected to Agent Engine")
 
         # Create session
         session = await remote_app.async_create_session(user_id="test_user")
         print(f"  ✓ Session created: {session['id']}")
 
         # Stream query
-        print(f"  ⏳ Streaming response...\n")
+        print("  ⏳ Streaming response...\n")
         print("  " + "─" * 66)
 
         response_parts = []
@@ -229,7 +229,7 @@ async def test_all_specialists():
         print(f"🧪 Testing: {name}")
 
         if name not in SPECIALIST_TESTS:
-            print(f"  ⚠️  No test query defined")
+            print("  ⚠️  No test query defined")
             results[name] = False
             continue
 
