@@ -84,7 +84,8 @@ async def main() -> None:
 
         async for chunk in streaming_response:
             print('Response chunk:')
-            print(chunk)
+            task, update_event = chunk
+            print(task)
         # --8<-- [end:send_message_streaming]
 
         print('\n--- Extended Card Call ---')
