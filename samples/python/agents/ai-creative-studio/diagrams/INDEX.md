@@ -121,7 +121,7 @@ These diagrams highlight your unique contributions:
 All diagrams use consistent Google-inspired colors:
 
 | Color | Hex | Usage |
-|-------|-----|-------|
+| ------- | ----- | ------- |
 | 🔵 Blue | `#4285f4` | Orchestrator, tools, innovations |
 | 🟢 Green | `#34a853` | Specialist agents, success |
 | 🟡 Yellow | `#fbbc04` | Gemini API, triggers, warnings |

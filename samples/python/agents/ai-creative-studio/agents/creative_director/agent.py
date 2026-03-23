@@ -630,13 +630,13 @@ def create_creative_director():
         for agent_desc in available_agents_list:
             logger.info(f"  {agent_desc}")
     else:
-        available_agents_text = (
-            "⚠️ No specialist agents configured. Set agent URLs in environment variables."
-        )
+        available_agents_text = "⚠️ No specialist agents configured. Set agent URLs in environment variables."
         logger.warning("⚠️  No specialist agents configured!")
 
     # Inject dynamic agent list into instruction
-    system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.format(available_agents=available_agents_text)
+    system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.format(
+        available_agents=available_agents_text
+    )
 
     logger.info("Orchestrator initialization complete")
     logger.info("=" * 70)
@@ -711,7 +711,9 @@ def create_creative_director():
 
     logger.info("✅ App created with lazy context compaction (interval=3, overlap=1)")
     logger.info("✅ LoggingPlugin enabled for LLM and tool call logging")
-    logger.info("   Context will be summarized only when necessary to stay within token limits")
+    logger.info(
+        "   Context will be summarized only when necessary to stay within token limits"
+    )
 
     return agent, app
 
@@ -754,7 +756,9 @@ if __name__ == "__main__":
 
         # Create runner with session service
         session_service = InMemorySessionService()
-        runner = Runner(app_name="agents", agent=director, session_service=session_service)
+        runner = Runner(
+            app_name="agents", agent=director, session_service=session_service
+        )
 
         session_id = "test_session"
         user_id = "test_user"

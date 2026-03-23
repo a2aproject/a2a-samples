@@ -9,7 +9,7 @@ Test cases for validating the Creative Director orchestrator with both multi-age
 **Objective**: Verify orchestrator can coordinate all 5 specialist agents sequentially to create a complete social media campaign.
 
 **Input Prompt**:
-```
+```text
 Create a complete Instagram campaign for:
 - Product: EcoFlow smart water bottle with temperature display
 - Target Audience: Fitness enthusiasts and gym-goers, 25-40 years old
@@ -45,7 +45,7 @@ Please create: market research, 3 Instagram posts with captions, visual concepts
 - ✅ Total execution time: 45-90 seconds
 
 **What to Check**:
-```
+```text
 □ Orchestrator presented plan upfront
 □ Brand Strategist returned competitor analysis
 □ Brand Strategist returned trending topics
@@ -70,7 +70,7 @@ Please create: market research, 3 Instagram posts with captions, visual concepts
 **Objective**: Verify orchestrator can handle multi-turn workflows where critic feedback triggers agent revisions.
 
 **Input Prompt (Initial)**:
-```
+```text
 Create a social media campaign for a new vegan protein powder called "PlantFuel":
 - Target: Young professionals who work out, 22-35
 - Platform: Instagram
@@ -84,7 +84,7 @@ Create a social media campaign for a new vegan protein powder called "PlantFuel"
 3. Critic provides feedback (likely suggests improvements)
 
 **Input Prompt (Follow-up)**:
-```
+```text
 The critic suggested making the tone more energetic. Please update the copy based on this feedback.
 ```
 
@@ -107,7 +107,7 @@ The critic suggested making the tone more energetic. Please update the copy base
 - ✅ Optional: Critic is called again to verify improvements
 
 **What to Check**:
-```
+```text
 □ Phase 1: All 4 agents executed
 □ Phase 1: Critic provided specific feedback
 □ Phase 2: Only Copywriter was called (not full workflow)
@@ -125,7 +125,7 @@ The critic suggested making the tone more energetic. Please update the copy base
 **Objective**: Verify orchestrator can correctly identify simple requests and call only one agent without executing full workflow.
 
 **Input Prompt**:
-```
+```text
 Research the eco-friendly water bottle market. Who are the main competitors and what trends are emerging?
 ```
 
@@ -151,7 +151,7 @@ Research the eco-friendly water bottle market. Who are the main competitors and 
 - ✅ Orchestrator correctly identified this as simple request
 
 **What to Check**:
-```
+```text
 □ Orchestrator identified request as "research only"
 □ Plan mentioned only Brand Strategist (not all 5)
 □ Brand Strategist executed
@@ -165,7 +165,7 @@ Research the eco-friendly water bottle market. Who are the main competitors and 
 ```
 
 **Alternative Simple Request Examples**:
-```
+```text
 ✓ "Write 3 Instagram captions for a coffee brand" → Copywriter only
 ✓ "Create image concepts for a tech startup" → Designer only
 ✓ "Review these social media posts: [paste content]" → Critic only
@@ -206,7 +206,7 @@ Research the eco-friendly water bottle market. Who are the main competitors and 
 cd agents
 adk web
 ```
-- Open browser to http://127.0.0.1:8000
+- Open browser to <http://127.0.0.1:8000>
 - Select "creative_director" app
 - Paste test prompts and observe behavior
 
@@ -254,7 +254,7 @@ python deploy/test_deployed_agents.py --test orchestrator
 ## Success Metrics
 
 | Metric | Target | How to Measure |
-|--------|--------|----------------|
+| -------- | -------- | ---------------- |
 | **Full Workflow Time** | 45-90 seconds | End-to-end execution |
 | **Single Agent Time** | 15-25 seconds | Research-only test |
 | **Agent Call Accuracy** | 100% | Correct agents for request type |

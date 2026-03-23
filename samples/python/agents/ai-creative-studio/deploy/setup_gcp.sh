@@ -16,15 +16,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="$SCRIPT_DIR/../brand_strategist/.env"
 
 if [ -f "$ENV_FILE" ]; then
-    echo -e "${GREEN}Loading environment variables from .env file...${NC}"
-    # Export variables from .env file, ignoring comments and empty lines
-    set -a
-    source <(grep -v '^#' "$ENV_FILE" | grep -v '^[[:space:]]*$' | sed 's/\r$//')
-    set +a
-    echo -e "${GREEN}.env file loaded${NC}\n"
+	echo -e "${GREEN}Loading environment variables from .env file...${NC}"
+	# Export variables from .env file, ignoring comments and empty lines
+	set -a
+	# shellcheck source=/dev/null
+	source <(grep -v '^#' "$ENV_FILE" | grep -v '^[[:space:]]*$' | sed 's/\r$//')
+	set +a
+	echo -e "${GREEN}.env file loaded${NC}\n"
 else
-    echo -e "${YELLOW}No .env file found at $ENV_FILE${NC}"
-    echo -e "${YELLOW}Will use environment variables or prompt for values${NC}\n"
+	echo -e "${YELLOW}No .env file found at $ENV_FILE${NC}"
+	echo -e "${YELLOW}Will use environment variables or prompt for values${NC}\n"
 fi
 
 # Configuration variables (can be overridden by .env or environment)
@@ -36,20 +37,20 @@ echo -e "${GREEN}=== Brand Strategist A2A Agent - GCP Setup ===${NC}\n"
 
 # Check if gcloud is installed
 if ! command -v gcloud &>/dev/null; then
-    echo -e "${RED}Error: gcloud CLI is not installed${NC}"
-    echo "Please install it from: https://cloud.google.com/sdk/docs/install"
-    exit 1
+	echo -e "${RED}Error: gcloud CLI is not installed${NC}"
+	echo "Please install it from: https://cloud.google.com/sdk/docs/install"
+	exit 1
 fi
 
 # Prompt for project ID if not set
 if [ -z "$PROJECT_ID" ]; then
-    echo -e "${YELLOW}Enter your GCP Project ID:${NC}"
-    read -r PROJECT_ID
+	echo -e "${YELLOW}Enter your GCP Project ID:${NC}"
+	read -r PROJECT_ID
 fi
 
 if [ -z "$PROJECT_ID" ]; then
-    echo -e "${RED}Error: Project ID is required${NC}"
-    exit 1
+	echo -e "${RED}Error: Project ID is required${NC}"
+	exit 1
 fi
 
 echo -e "${GREEN}Using Project ID: ${PROJECT_ID}${NC}"
@@ -63,22 +64,22 @@ gcloud config set project "$PROJECT_ID"
 echo -e "\n${YELLOW}Enabling required GCP APIs...${NC}"
 echo -e "${YELLOW}(This may take a few minutes)${NC}\n"
 gcloud services enable run.googleapis.com \
-    cloudbuild.googleapis.com \
-    secretmanager.googleapis.com \
-    aiplatform.googleapis.com \
-    --project="$PROJECT_ID"
+	cloudbuild.googleapis.com \
+	secretmanager.googleapis.com \
+	aiplatform.googleapis.com \
+	--project="$PROJECT_ID"
 
 echo -e "${GREEN}APIs enabled successfully${NC}"
 
 # Create service account
 echo -e "\n${YELLOW}Creating service account...${NC}"
 if gcloud iam service-accounts describe "${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" --project="$PROJECT_ID" &>/dev/null; then
-    echo -e "${GREEN}Service account already exists${NC}"
+	echo -e "${GREEN}Service account already exists${NC}"
 else
-    gcloud iam service-accounts create "$SERVICE_ACCOUNT_NAME" \
-        --display-name="Brand Strategist Agent Service Account" \
-        --project="$PROJECT_ID"
-    echo -e "${GREEN}Service account created${NC}"
+	gcloud iam service-accounts create "$SERVICE_ACCOUNT_NAME" \
+		--display-name="Brand Strategist Agent Service Account" \
+		--project="$PROJECT_ID"
+	echo -e "${GREEN}Service account created${NC}"
 fi
 
 # Grant IAM roles
@@ -86,15 +87,15 @@ echo -e "\n${YELLOW}Granting IAM roles to service account...${NC}"
 
 # Vertex AI User role
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-    --member="serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
-    --role="roles/aiplatform.user" \
-    --quiet
+	--member="serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
+	--role="roles/aiplatform.user" \
+	--quiet
 
 # Secret Manager Secret Accessor role
 gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-    --member="serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
-    --role="roles/secretmanager.secretAccessor" \
-    --quiet
+	--member="serviceAccount:${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
+	--role="roles/secretmanager.secretAccessor" \
+	--quiet
 
 echo -e "${GREEN}IAM roles granted${NC}"
 

@@ -114,7 +114,9 @@ async def test_specialist_a2a(name: str, url: str, query: str) -> bool:
 
         # Create session service and runner
         session_service = InMemorySessionService()
-        runner = Runner(app_name="test", agent=remote_agent, session_service=session_service)
+        runner = Runner(
+            app_name="test", agent=remote_agent, session_service=session_service
+        )
 
         # Create session
         session_id = f"test_session_{name.lower().replace(' ', '_')}"
@@ -285,7 +287,9 @@ async def main():
     """Main entry point"""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Test deployed AI Creative Studio agents")
+    parser = argparse.ArgumentParser(
+        description="Test deployed AI Creative Studio agents"
+    )
     parser.add_argument(
         "--test",
         choices=["all", "specialists", "orchestrator"],

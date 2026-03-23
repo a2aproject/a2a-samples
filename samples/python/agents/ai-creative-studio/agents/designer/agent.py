@@ -150,7 +150,10 @@ def run_local_test():
         # Create runner with session service
         session_service = InMemorySessionService()
         runner = Runner(
-            app_name="agents", agent=agent, session_service=session_service, plugins=plugins
+            app_name="agents",
+            agent=agent,
+            session_service=session_service,
+            plugins=plugins,
         )
 
         session_id = "test_session"

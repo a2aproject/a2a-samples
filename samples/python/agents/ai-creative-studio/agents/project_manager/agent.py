@@ -192,7 +192,9 @@ def create_project_manager_agent():
     notion_api_key = os.getenv("NOTION_API_KEY")
     notion_database_id = os.getenv("NOTION_DATABASE_ID")
 
-    logger.info(f"NOTION_API_KEY from env: {notion_api_key[:20] if notion_api_key else 'None'}...")
+    logger.info(
+        f"NOTION_API_KEY from env: {notion_api_key[:20] if notion_api_key else 'None'}..."
+    )
     logger.info(f"NOTION_DATABASE_ID from env: {notion_database_id}")
 
     if not notion_api_key or not notion_database_id:
@@ -215,7 +217,9 @@ def create_project_manager_agent():
         # IMPORTANT: Notion MCP server expects NOTION_TOKEN, not NOTION_API_KEY
         mcp_env = {
             "NOTION_TOKEN": notion_api_key,  # Notion MCP uses NOTION_TOKEN
-            "PATH": os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin"),  # Required for npx
+            "PATH": os.environ.get(
+                "PATH", "/usr/local/bin:/usr/bin:/bin"
+            ),  # Required for npx
         }
 
         logger.info(f"MCP environment configured with {len(mcp_env)} variables")

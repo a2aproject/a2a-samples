@@ -57,7 +57,9 @@ AGENTS = [
 ]
 
 
-async def run_command_async(cmd: list[str], cwd: Path | None = None) -> tuple[int, str, str]:
+async def run_command_async(
+    cmd: list[str], cwd: Path | None = None
+) -> tuple[int, str, str]:
     """
     Run a command asynchronously
 
@@ -76,7 +78,9 @@ async def run_command_async(cmd: list[str], cwd: Path | None = None) -> tuple[in
     return process.returncode, stdout.decode(), stderr.decode()
 
 
-async def deploy_single_agent(agent_config: dict, project_id: str, region: str) -> str | None:
+async def deploy_single_agent(
+    agent_config: dict, project_id: str, region: str
+) -> str | None:
     """
     Deploy a single agent to Cloud Run
 
@@ -156,7 +160,9 @@ async def deploy_single_agent(agent_config: dict, project_id: str, region: str) 
     return url
 
 
-async def get_service_url(service_name: str, project_id: str, region: str) -> str | None:
+async def get_service_url(
+    service_name: str, project_id: str, region: str
+) -> str | None:
     """
     Get Cloud Run service URL after deployment
 
@@ -219,9 +225,7 @@ async def update_agent_a2a_config(
 
         if notion_api_key and notion_database_id:
             print(f"   Adding Notion MCP credentials to {service_name}...")
-            env_vars_update += (
-                f",NOTION_API_KEY={notion_api_key},NOTION_DATABASE_ID={notion_database_id}"
-            )
+            env_vars_update += f",NOTION_API_KEY={notion_api_key},NOTION_DATABASE_ID={notion_database_id}"
         else:
             print(
                 f"   Warning: NOTION_API_KEY or NOTION_DATABASE_ID not set - {service_name} will work without Notion integration"

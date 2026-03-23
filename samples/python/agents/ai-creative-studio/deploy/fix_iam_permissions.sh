@@ -19,25 +19,25 @@ echo ""
 
 # List of service accounts that failed
 SERVICE_ACCOUNTS=(
-    "copywriter-sa"
-    "designer-sa"
-    "critic-sa"
-    "project-manager-sa"
+	"copywriter-sa"
+	"designer-sa"
+	"critic-sa"
+	"project-manager-sa"
 )
 
 echo "This script will grant you the 'iam.serviceAccountUser' role"
 echo "on the following service accounts:"
 echo ""
 for sa in "${SERVICE_ACCOUNTS[@]}"; do
-    echo "  - ${sa}@${PROJECT_ID}.iam.gserviceaccount.com"
+	echo "  - ${sa}@${PROJECT_ID}.iam.gserviceaccount.com"
 done
 echo ""
 
 read -p "Continue? (y/n) " -n 1 -r
 echo ""
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "Aborted."
-    exit 1
+	echo "Aborted."
+	exit 1
 fi
 
 echo ""
@@ -48,19 +48,19 @@ SUCCESS_COUNT=0
 FAIL_COUNT=0
 
 for sa in "${SERVICE_ACCOUNTS[@]}"; do
-    SA_EMAIL="${sa}@${PROJECT_ID}.iam.gserviceaccount.com"
-    echo "→ Granting iam.serviceAccountUser on $SA_EMAIL..."
+	SA_EMAIL="${sa}@${PROJECT_ID}.iam.gserviceaccount.com"
+	echo "→ Granting iam.serviceAccountUser on $SA_EMAIL..."
 
-    if gcloud iam service-accounts add-iam-policy-binding "$SA_EMAIL" \
-        --member="user:$USER_EMAIL" \
-        --role="roles/iam.serviceAccountUser" \
-        --project="$PROJECT_ID" >/dev/null 2>&1; then
-        echo "  ✓ Success"
-        ((SUCCESS_COUNT++))
-    else
-        echo "  ✗ Failed (service account may not exist yet)"
-        ((FAIL_COUNT++))
-    fi
+	if gcloud iam service-accounts add-iam-policy-binding "$SA_EMAIL" \
+		--member="user:$USER_EMAIL" \
+		--role="roles/iam.serviceAccountUser" \
+		--project="$PROJECT_ID" >/dev/null 2>&1; then
+		echo "  ✓ Success"
+		((SUCCESS_COUNT++))
+	else
+		echo "  ✗ Failed (service account may not exist yet)"
+		((FAIL_COUNT++))
+	fi
 done
 
 echo ""
@@ -72,9 +72,9 @@ echo "  ✗ Failed: $FAIL_COUNT"
 echo ""
 
 if [ $FAIL_COUNT -gt 0 ]; then
-    echo "Note: Failed service accounts may not exist yet."
-    echo "They will be created during deployment."
-    echo ""
+	echo "Note: Failed service accounts may not exist yet."
+	echo "They will be created during deployment."
+	echo ""
 fi
 
 echo "You can now retry the deployment with:"

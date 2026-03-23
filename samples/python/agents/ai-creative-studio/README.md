@@ -51,7 +51,7 @@ AI Creative Studio demonstrates **distributed multi-agent orchestration** for cr
 ### What It Does
 
 **Input**: Campaign brief
-```
+```text
 "Create Instagram campaign for EcoFlow smart water bottle targeting health-conscious millennials"
 ```
 
@@ -332,13 +332,13 @@ For a 5-agent workflow:
 ![Context Compaction](diagrams/06-context-compaction.png)
 
 **Simple Request** → Calls 1 agent:
-```
+```text
 User: "Just research the market for eco water bottles"
 → Creative Director calls brand_strategist only
 ```
 
 **Complex Request** → Calls all 5 agents:
-```
+```text
 User: "Create complete campaign with posts and timeline"
 → Creative Director executes all 5 steps sequentially
 ```
@@ -671,7 +671,7 @@ python agent.py
 ```
 
 Expected output:
-```
+```text
 🎯 Starting Brand Strategist Agent...
 
 Brief:
@@ -734,7 +734,7 @@ python test_orchestrator.py
 ```
 
 Expected output:
-```
+```text
 ================================================================================
 Testing Campaign: EcoFlow Water Bottle (B2C)
 ================================================================================
@@ -876,7 +876,7 @@ gcloud logging tail \
 - Performance monitoring
 
 **Example Log Output**:
-```
+```text
 ======================================================================
 🔧 A2A AGENT CALL: brand_strategist
    Timestamp: 2025-12-18T22:45:12.123456
@@ -940,7 +940,7 @@ python test_orchestrator_local_with_plugins.py
   - Summary report
 
 **Output**:
-```
+```text
 ================================================================================
 🔍 AGENT DELEGATION TRACKER - SUMMARY
 ================================================================================
@@ -1007,7 +1007,7 @@ Then open `http://localhost:8000` to interact with the agent through a web inter
 
 ### Project Structure
 
-```
+```text
 ai-creative-studio/
 ├── agents/
 │   ├── creative_director/     # Orchestrator
@@ -1280,4 +1280,4 @@ Built with:
 ---
 
 **Questions?** Check `QUICK_START.md` or review the architecture diagrams above.
- 
+

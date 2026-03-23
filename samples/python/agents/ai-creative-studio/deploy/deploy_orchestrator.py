@@ -216,7 +216,9 @@ def deploy_orchestrator(auto_deploy_specialists=False):
         print(f'AGENT_ENGINE_ID="{agent_engine_id}"')
 
         print("\nView in Cloud Console:")
-        print(f"https://console.cloud.google.com/vertex-ai/reasoning-engines?project={PROJECT_ID}")
+        print(
+            f"https://console.cloud.google.com/vertex-ai/reasoning-engines?project={PROJECT_ID}"
+        )
 
         print("\n💡 To test the deployment, run:")
         print(f'python3 {__file__} --action test --resource_name "{resource_name}"')
@@ -319,7 +321,9 @@ def cleanup_agent_engine(resource_name: str):
     print()
 
     # Confirm deletion
-    confirmation = input("⚠️  Are you SURE you want to delete this Agent Engine? (yes/no): ")
+    confirmation = input(
+        "⚠️  Are you SURE you want to delete this Agent Engine? (yes/no): "
+    )
     if confirmation.lower() != "yes":
         print("\n❌ Cleanup cancelled.")
         return
@@ -347,7 +351,9 @@ def cleanup_agent_engine(resource_name: str):
         print("=" * 70)
         print(f"\nError: {str(e)}")
         print("\nYou can also delete the Agent Engine manually from:")
-        print(f"https://console.cloud.google.com/vertex-ai/reasoning-engines?project={PROJECT_ID}")
+        print(
+            f"https://console.cloud.google.com/vertex-ai/reasoning-engines?project={PROJECT_ID}"
+        )
         raise
 
 
@@ -387,7 +393,9 @@ def main():
             print("\n💡 To test the deployment, run:")
             print(f'python3 {__file__} --action test --resource_name "{resource_name}"')
             print("\n💡 To delete the deployment, run:")
-            print(f'python3 {__file__} --action cleanup --resource_name "{resource_name}"')
+            print(
+                f'python3 {__file__} --action cleanup --resource_name "{resource_name}"'
+            )
         except Exception:
             print("\n\n" + "=" * 70)
             print("CONCLUSION:")

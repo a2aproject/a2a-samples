@@ -7,7 +7,7 @@
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Initial Setup](#initial-setup)
-- [Notion Database Setup](#notion-database-setup)
+- [Notion Database Setup](#4-notion-setup-optional---for-project-manager)
 - [Deployment Steps](#deployment-steps)
 - [Testing Your Deployment](#testing-your-deployment)
 - [Troubleshooting](#troubleshooting)
@@ -237,7 +237,7 @@ This script:
 - Outputs complete configuration
 
 **Expected Output:**
-```
+```text
 🚀 Deploying AI Creative Studio
 ================================
 
@@ -345,7 +345,7 @@ cd deploy
 This tests each specialist agent individually to verify they're working.
 
 **Expected Output:**
-```
+```text
 Testing Brand Strategist...
   ✓ Agent accessible
   ✓ Response received
@@ -368,7 +368,7 @@ Testing Copywriter...
 This tests the complete workflow with the orchestrator calling all 5 specialists.
 
 **Expected Output:**
-```
+```text
 Testing Creative Director Orchestrator...
   ✓ Connected to Agent Engine
   ✓ Session created

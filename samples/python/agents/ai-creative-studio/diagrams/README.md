@@ -5,7 +5,7 @@ This directory contains Mermaid diagrams illustrating the architecture and key i
 ## Diagram Overview
 
 | Diagram | Description | Use in Article |
-|---------|-------------|----------------|
+| --------- | ------------- | ---------------- |
 | `01-system-architecture.mmd` | Overall hub-and-spoke architecture | Article 1: Introduction |
 | `02-agent-workflow.mmd` | Complete campaign sequence flow | Article 1, 4: Workflow overview |
 | `03-deployment-architecture.mmd` | Cloud infrastructure deployment | Article 7: Deployment |
@@ -24,10 +24,10 @@ This directory contains Mermaid diagrams illustrating the architecture and key i
 
 Simply copy the content of any `.mmd` file and paste it into a Markdown code block with the `mermaid` language tag:
 
-\`\`\`mermaid
+```mermaid
 graph TB
     # ... diagram content ...
-\`\`\`
+```
 
 ### In Mermaid Live Editor
 
@@ -40,9 +40,9 @@ graph TB
 
 GitHub automatically renders Mermaid diagrams in Markdown files. Just use:
 
-\`\`\`mermaid
+```mermaid
 # ... diagram content ...
-\`\`\`
+```
 
 ### In VS Code
 
@@ -243,9 +243,9 @@ Medium doesn't support Mermaid natively. Export as PNG:
 ### For GitHub README
 Just embed directly:
 
-\`\`\`mermaid
+```mermaid
 # diagram content
-\`\`\`
+```
 
 ### For Presentations
 Export as SVG for scalable graphics:

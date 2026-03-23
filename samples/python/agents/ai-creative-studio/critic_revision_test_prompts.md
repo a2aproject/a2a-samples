@@ -6,7 +6,7 @@ Test prompts to verify the critic revision workflow on the `feature/critic-revis
 
 ## Test Prompt 1: Likely to trigger POST revision (weak CTAs, casual tone)
 
-```
+```text
 Create a complete social media campaign for:
 
 Product: LuxeWatch - Premium Swiss mechanical watches ($5,000-$15,000)
@@ -33,7 +33,7 @@ Please create the complete campaign.
 
 ## Test Prompt 2: Likely to trigger VISUAL revision (generic imagery)
 
-```
+```text
 Create a complete social media campaign for:
 
 Product: EcoFlow - Smart home energy management system
@@ -60,7 +60,7 @@ Please create the complete campaign.
 
 ## Test Prompt 3: Likely to get approved (clear, well-defined brief)
 
-```
+```text
 Create a complete social media campaign for:
 
 Product: BarkBox - Monthly dog treat subscription box
@@ -87,7 +87,7 @@ Please create the complete campaign with strong CTAs and authentic dog-parent vo
 
 ## Test Prompt 4: Likely to trigger BOTH revisions
 
-```
+```text
 Create a complete social media campaign for:
 
 Product: MindfulMed - Mental health therapy app with AI-powered matching
@@ -172,7 +172,7 @@ Full workflow:
 
 ## Expected Revision Workflow Output Example
 
-```
+```text
 ✓ Brand Strategist complete
 ✓ Copywriter complete (created 3 posts)
 ✓ Designer complete (created image concepts)

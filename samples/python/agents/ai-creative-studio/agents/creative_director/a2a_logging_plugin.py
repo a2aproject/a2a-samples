@@ -100,7 +100,8 @@ class A2ALoggingPlugin(BasePlugin):
             # Truncate very long responses for readability
             if len(result_str) > 2000:
                 logger.info(
-                    result_str[:2000] + f"\n... (truncated, full length: {len(result_str)} chars)"
+                    result_str[:2000]
+                    + f"\n... (truncated, full length: {len(result_str)} chars)"
                 )
             else:
                 logger.info(result_str)

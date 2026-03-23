@@ -71,7 +71,9 @@ def validate_required_vars(config: dict[str, str]) -> bool:
     missing = [key for key in required if not config.get(key)]
 
     if missing:
-        raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
+        raise ValueError(
+            f"Missing required environment variables: {', '.join(missing)}"
+        )
 
     return True
 
