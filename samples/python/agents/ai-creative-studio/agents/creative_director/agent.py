@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Creative Director Agent - Enhanced Orchestrator
-Uses AgentTool pattern + InstaVibe prompting strategy
-Features: Dynamic agent list, strong verification, error handling, comprehensive logging
+"""Creative Director Agent - Enhanced Orchestrator.
+
+Uses AgentTool pattern + InstaVibe prompting strategy.
+Features: Dynamic agent list, strong verification, error handling, comprehensive logging.
 """
 
 import logging
@@ -26,8 +26,9 @@ from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 from google.adk.plugins.logging_plugin import LoggingPlugin
 from google.adk.tools.agent_tool import AgentTool
 
+
 # Configure logging
-logger = logging.getLogger("ai_creative_studio.creative_director")
+logger = logging.getLogger('ai_creative_studio.creative_director')
 logger.setLevel(logging.INFO)
 
 # NOTE: A2ALoggingPlugin cannot be deployed to Agent Engine due to cloudpickle serialization
@@ -541,23 +542,22 @@ This revision workflow ensures critic feedback is actually used to improve deliv
 """
 
 
-def create_creative_director():
-    """
-    Create the Creative Director orchestrator agent using AgentTool pattern.
+def create_creative_director():  # noqa: ANN201, PLR0915
+    """Create the Creative Director orchestrator agent using AgentTool pattern.
+
     Features: Dynamic agent list, enhanced verification, error handling, comprehensive logging.
     """
-
-    logger.info("=" * 70)
-    logger.info("Initializing Creative Director Orchestrator")
-    logger.info("=" * 70)
+    logger.info('=' * 70)
+    logger.info('Initializing Creative Director Orchestrator')
+    logger.info('=' * 70)
 
     # Read environment variables AT RUNTIME, not at module load time
     # This ensures Agent Engine's env vars are used
-    copywriter_url = os.getenv("COPYWRITER_AGENT_URL")
-    designer_url = os.getenv("DESIGNER_AGENT_URL")
-    strategist_url = os.getenv("STRATEGIST_AGENT_URL")
-    critic_url = os.getenv("CRITIC_AGENT_URL")
-    pm_url = os.getenv("PM_AGENT_URL")
+    copywriter_url = os.getenv('COPYWRITER_AGENT_URL')
+    designer_url = os.getenv('DESIGNER_AGENT_URL')
+    strategist_url = os.getenv('STRATEGIST_AGENT_URL')
+    critic_url = os.getenv('CRITIC_AGENT_URL')
+    pm_url = os.getenv('PM_AGENT_URL')
 
     # Build dynamic agent list for prompt injection
     available_agents_list = []
@@ -566,84 +566,84 @@ def create_creative_director():
     # Brand Strategist
     if strategist_url:
         available_agents_list.append(
-            "- **brand_strategist**: Researches market trends, competitors, and target audience insights"
+            '- **brand_strategist**: Researches market trends, competitors, and target audience insights'
         )
         strategist_agent = RemoteA2aAgent(
-            name="brand_strategist",
-            description="Brand strategist for market research, trend analysis, and competitive insights",
-            agent_card=f"{strategist_url}/.well-known/agent.json",
+            name='brand_strategist',
+            description='Brand strategist for market research, trend analysis, and competitive insights',
+            agent_card=f'{strategist_url}/.well-known/agent.json',
         )
         agent_tools.append(AgentTool(agent=strategist_agent))
 
     # Copywriter
     if copywriter_url:
         available_agents_list.append(
-            "- **copywriter**: Creates engaging social media captions and copy"
+            '- **copywriter**: Creates engaging social media captions and copy'
         )
         copywriter_agent = RemoteA2aAgent(
-            name="copywriter",
-            description="Expert social media copywriter for creating engaging captions and copy",
-            agent_card=f"{copywriter_url}/.well-known/agent.json",
+            name='copywriter',
+            description='Expert social media copywriter for creating engaging captions and copy',
+            agent_card=f'{copywriter_url}/.well-known/agent.json',
         )
         agent_tools.append(AgentTool(agent=copywriter_agent))
 
     # Designer
     if designer_url:
         available_agents_list.append(
-            "- **designer**: Generates AI image concepts and visual design prompts"
+            '- **designer**: Generates AI image concepts and visual design prompts'
         )
         designer_agent = RemoteA2aAgent(
-            name="designer",
-            description="Creative visual designer for generating social media image concepts",
-            agent_card=f"{designer_url}/.well-known/agent.json",
+            name='designer',
+            description='Creative visual designer for generating social media image concepts',
+            agent_card=f'{designer_url}/.well-known/agent.json',
         )
         agent_tools.append(AgentTool(agent=designer_agent))
 
     # Critic
     if critic_url:
         available_agents_list.append(
-            "- **critic**: Reviews creative work and provides quality feedback"
+            '- **critic**: Reviews creative work and provides quality feedback'
         )
         critic_agent = RemoteA2aAgent(
-            name="critic",
-            description="Creative critic for reviewing campaign materials and providing constructive feedback",
-            agent_card=f"{critic_url}/.well-known/agent.json",
+            name='critic',
+            description='Creative critic for reviewing campaign materials and providing constructive feedback',
+            agent_card=f'{critic_url}/.well-known/agent.json',
         )
         agent_tools.append(AgentTool(agent=critic_agent))
 
     # Project Manager
     if pm_url:
         available_agents_list.append(
-            "- **project_manager**: Creates project timelines, tasks, and deliverables"
+            '- **project_manager**: Creates project timelines, tasks, and deliverables'
         )
         pm_agent = RemoteA2aAgent(
-            name="project_manager",
-            description="Project manager for creating timelines, tasks, and organizing campaign deliverables",
-            agent_card=f"{pm_url}/.well-known/agent.json",
+            name='project_manager',
+            description='Project manager for creating timelines, tasks, and organizing campaign deliverables',
+            agent_card=f'{pm_url}/.well-known/agent.json',
         )
         agent_tools.append(AgentTool(agent=pm_agent))
 
     # Format available agents for prompt
     if available_agents_list:
-        available_agents_text = "\n".join(available_agents_list)
-        logger.info(f"✅ Configured {len(agent_tools)} specialist agents:")
+        available_agents_text = '\n'.join(available_agents_list)
+        logger.info('✅ Configured %d specialist agents:', len(agent_tools))
         for agent_desc in available_agents_list:
-            logger.info(f"  {agent_desc}")
+            logger.info('  %s', agent_desc)
     else:
-        available_agents_text = "⚠️ No specialist agents configured. Set agent URLs in environment variables."
-        logger.warning("⚠️  No specialist agents configured!")
+        available_agents_text = '⚠️ No specialist agents configured. Set agent URLs in environment variables.'
+        logger.warning('⚠️  No specialist agents configured!')
 
     # Inject dynamic agent list into instruction
     system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.format(
         available_agents=available_agents_text
     )
 
-    logger.info("Orchestrator initialization complete")
-    logger.info("=" * 70)
+    logger.info('Orchestrator initialization complete')
+    logger.info('=' * 70)
 
     # Create orchestrator using Agent (not LlmAgent) with AgentTools
     # Configure generation settings to allow longer multi-step workflows
-    from google.genai.types import GenerateContentConfig
+    from google.genai.types import GenerateContentConfig  # noqa: PLC0415
 
     generation_config = GenerateContentConfig(
         max_output_tokens=20000,  # Increased to support full 5-agent workflows with complete outputs
@@ -656,18 +656,18 @@ def create_creative_director():
     # - Cloud Logging integration (automatic when deployed)
     # - Agent Engine's built-in tracing (enabled by default)
     agent = Agent(
-        name="creative_director",
-        model="gemini-2.5-flash",
-        description="Creative Director orchestrator with lazy context compaction",
+        name='creative_director',
+        model='gemini-2.5-flash',
+        description='Creative Director orchestrator with lazy context compaction',
         instruction=system_instruction,
         tools=agent_tools,  # 🔧 AgentTools! LLM can call these as tools
         generate_content_config=generation_config,
     )
 
-    logger.info("✅ Agent created successfully")
+    logger.info('✅ Agent created successfully')
 
     # Configure context compaction for scalability
-    # Strategy: "Summarize only when necessary"
+    # Summarize only when necessary:
     # - compaction_interval=3: Summarize after every 3 completed agents
     # - overlap_size=1: Keep the most recent agent's full output
     #
@@ -681,13 +681,15 @@ def create_creative_director():
     # - Preserves quality for early agents (full context)
     # - Scales to 10+ agent workflows
     # - Cost efficient (only summarizes when needed)
-    from google.adk.apps import App
-    from google.adk.apps.app import EventsCompactionConfig
-    from google.adk.apps.llm_event_summarizer import LlmEventSummarizer
-    from google.adk.models import Gemini
+    from google.adk.apps import App  # noqa: PLC0415
+    from google.adk.apps.app import EventsCompactionConfig  # noqa: PLC0415
+    from google.adk.apps.llm_event_summarizer import (  # noqa: PLC0415
+        LlmEventSummarizer,
+    )
+    from google.adk.models import Gemini  # noqa: PLC0415
 
     # Use fast model for summarization
-    summarization_llm = Gemini(model_id="gemini-2.5-flash")
+    summarization_llm = Gemini(model_id='gemini-2.5-flash')
     summarizer = LlmEventSummarizer(llm=summarization_llm)
 
     # Create compaction config
@@ -701,7 +703,7 @@ def create_creative_director():
     # Note: Custom plugins (like A2ALoggingPlugin) cannot be deployed due to serialization issues
     # Only use ADK's built-in plugins which are part of the installed packages
     app = App(
-        name="creative_director",
+        name='creative_director',
         root_agent=agent,
         events_compaction_config=compaction_config,
         plugins=[
@@ -709,10 +711,12 @@ def create_creative_director():
         ],
     )
 
-    logger.info("✅ App created with lazy context compaction (interval=3, overlap=1)")
-    logger.info("✅ LoggingPlugin enabled for LLM and tool call logging")
     logger.info(
-        "   Context will be summarized only when necessary to stay within token limits"
+        '✅ App created with lazy context compaction (interval=3, overlap=1)'
+    )
+    logger.info('✅ LoggingPlugin enabled for LLM and tool call logging')
+    logger.info(
+        '   Context will be summarized only when necessary to stay within token limits'
     )
 
     return agent, app
@@ -724,7 +728,7 @@ def create_creative_director():
 root_agent, root_app = create_creative_director()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     # Test the Creative Director locally
     import asyncio
 
@@ -736,7 +740,8 @@ if __name__ == "__main__":
     # Load environment variables from .env file
     load_dotenv()
 
-    async def main():
+    async def main() -> None:
+        """Run the Creative Director agent locally for testing."""
         director = create_creative_director()
 
         # Example brief
@@ -751,22 +756,22 @@ if __name__ == "__main__":
         - Brand Voice: Authentic, playful, educational
         """
 
-        print("🎬 Starting Creative Director Agent...")
-        print(f"\n📋 Brief:\n{brief}\n")
+        print('🎬 Starting Creative Director Agent...')
+        print(f'\n📋 Brief:\n{brief}\n')
 
         # Create runner with session service
         session_service = InMemorySessionService()
         runner = Runner(
-            app_name="agents", agent=director, session_service=session_service
+            app_name='agents', agent=director, session_service=session_service
         )
 
-        session_id = "test_session"
-        user_id = "test_user"
+        session_id = 'test_session'
+        user_id = 'test_user'
 
         try:
             # Create session first
             await session_service.create_session(
-                app_name="agents", user_id=user_id, session_id=session_id
+                app_name='agents', user_id=user_id, session_id=session_id
             )
 
             # Run agent asynchronously
@@ -775,17 +780,20 @@ if __name__ == "__main__":
                 session_id=session_id,
                 new_message=types.Content(parts=[types.Part(text=brief)]),
             ):
-                if hasattr(event, "text") and event.text:
-                    print(event.text, end="", flush=True)
-                elif hasattr(event, "content") and event.content:
-                    if hasattr(event.content, "parts"):
-                        for part in event.content.parts:
-                            if hasattr(part, "text") and part.text:
-                                print(part.text, end="", flush=True)
+                if hasattr(event, 'text') and event.text:
+                    print(event.text, end='', flush=True)
+                elif (
+                    hasattr(event, 'content')
+                    and event.content
+                    and hasattr(event.content, 'parts')
+                ):
+                    for part in event.content.parts:
+                        if hasattr(part, 'text') and part.text:
+                            print(part.text, end='', flush=True)
         finally:
             # Proper async cleanup
             await runner.close()
 
-        print("\n\n✅ Campaign Created!")
+        print('\n\n✅ Campaign Created!')
 
     asyncio.run(main())

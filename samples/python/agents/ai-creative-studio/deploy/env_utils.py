@@ -12,20 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Environment utilities for multi-agent deployment
-Provides shared functions for loading, validating, and formatting environment variables
+"""Environment utilities for multi-agent deployment.
+
+Provides shared functions for loading, validating, and formatting environment variables.
 """
 
 import os
+
 from pathlib import Path
 
 from dotenv import load_dotenv
 
 
 def load_env_file(env_path: Path | None = None) -> dict[str, str]:
-    """
-    Load and return environment variables from .env file
+    """Load and return environment variables from .env file.
 
     Args:
         env_path: Optional path to .env file. If None, looks for .env in parent directory
@@ -35,28 +35,24 @@ def load_env_file(env_path: Path | None = None) -> dict[str, str]:
     """
     if env_path is None:
         # Look for .env in project root (one level up from deploy/)
-        # __file__ = .../deploy/env_utils.py
-        # parent = .../deploy
-        # parent.parent = .../ (project root)
-        env_path = Path(__file__).parent.parent / ".env"
+        env_path = Path(__file__).parent.parent / '.env'
 
     if env_path.exists():
         load_dotenv(env_path)
 
     # Support both naming conventions: GCP_PROJECT_ID/PROJECT_ID and GCP_REGION/LOCATION
-    project_id = os.getenv("GCP_PROJECT_ID") or os.getenv("PROJECT_ID")
-    region = os.getenv("GCP_REGION") or os.getenv("LOCATION") or "us-central1"
+    project_id = os.getenv('GCP_PROJECT_ID') or os.getenv('PROJECT_ID')
+    region = os.getenv('GCP_REGION') or os.getenv('LOCATION') or 'us-central1'
 
     return {
-        "PROJECT_ID": project_id,
-        "REGION": region,
-        "GOOGLE_API_KEY": os.getenv("GOOGLE_API_KEY"),
+        'PROJECT_ID': project_id,
+        'REGION': region,
+        'GOOGLE_API_KEY': os.getenv('GOOGLE_API_KEY'),
     }
 
 
 def validate_required_vars(config: dict[str, str]) -> bool:
-    """
-    Validate required environment variables are set
+    """Validate required environment variables are set.
 
     Args:
         config: Dictionary of environment variables
@@ -67,20 +63,21 @@ def validate_required_vars(config: dict[str, str]) -> bool:
     Raises:
         ValueError: If any required variable is missing
     """
-    required = ["PROJECT_ID", "REGION"]
+    required = ['PROJECT_ID', 'REGION']
     missing = [key for key in required if not config.get(key)]
 
     if missing:
         raise ValueError(
-            f"Missing required environment variables: {', '.join(missing)}"
+            f'Missing required environment variables: {", ".join(missing)}'
         )
 
     return True
 
 
-def format_env_vars_for_orchestrator(agent_urls: dict[str, str]) -> dict[str, str]:
-    """
-    Format agent URLs as environment variables for orchestrator deployment
+def format_env_vars_for_orchestrator(
+    agent_urls: dict[str, str],
+) -> dict[str, str]:
+    """Format agent URLs as environment variables for orchestrator deployment.
 
     Args:
         agent_urls: Dict mapping agent names to their Cloud Run URLs
@@ -90,35 +87,33 @@ def format_env_vars_for_orchestrator(agent_urls: dict[str, str]) -> dict[str, st
         Dict with standardized environment variable names for orchestrator
     """
     return {
-        "STRATEGIST_AGENT_URL": agent_urls.get("brand-strategist", ""),
-        "COPYWRITER_AGENT_URL": agent_urls.get("copywriter", ""),
-        "DESIGNER_AGENT_URL": agent_urls.get("designer", ""),
-        "CRITIC_AGENT_URL": agent_urls.get("critic", ""),
-        "PM_AGENT_URL": agent_urls.get("project-manager", ""),
+        'STRATEGIST_AGENT_URL': agent_urls.get('brand-strategist', ''),
+        'COPYWRITER_AGENT_URL': agent_urls.get('copywriter', ''),
+        'DESIGNER_AGENT_URL': agent_urls.get('designer', ''),
+        'CRITIC_AGENT_URL': agent_urls.get('critic', ''),
+        'PM_AGENT_URL': agent_urls.get('project-manager', ''),
     }
 
 
 def get_agent_name_mapping() -> dict[str, str]:
-    """
-    Get mapping between service names and environment variable keys
+    """Get mapping between service names and environment variable keys.
 
     Returns:
-        Dict mapping service names to env var keys
+        Dict mapping service names to env var keys.
     """
     return {
-        "brand-strategist": "STRATEGIST_AGENT_URL",
-        "copywriter": "COPYWRITER_AGENT_URL",
-        "designer": "DESIGNER_AGENT_URL",
-        "critic": "CRITIC_AGENT_URL",
-        "project-manager": "PM_AGENT_URL",
+        'brand-strategist': 'STRATEGIST_AGENT_URL',
+        'copywriter': 'COPYWRITER_AGENT_URL',
+        'designer': 'DESIGNER_AGENT_URL',
+        'critic': 'CRITIC_AGENT_URL',
+        'project-manager': 'PM_AGENT_URL',
     }
 
 
 def save_urls_to_env_file(
-    agent_urls: dict[str, str], output_file: str = ".env.specialists"
+    agent_urls: dict[str, str], output_file: str = '.env.specialists'
 ) -> None:
-    """
-    Save agent URLs to .env file for later use
+    """Save agent URLs to .env file for later use.
 
     Args:
         agent_urls: Dict mapping agent names to URLs
@@ -130,40 +125,47 @@ def save_urls_to_env_file(
     project_root = Path(__file__).parent.parent
     output_path = project_root / output_file
 
-    with open(output_path, "w") as f:
-        f.write("# Specialist Agent URLs (auto-generated by deployment script)\n")
-        f.write(f"# Generated at: {os.popen('date').read().strip()}\n\n")
+    import datetime  # noqa: PLC0415
+
+    generated_at = datetime.datetime.now(tz=datetime.timezone.utc).strftime(
+        '%Y-%m-%d %H:%M:%S UTC'
+    )
+    with output_path.open('w') as f:
+        f.write(
+            '# Specialist Agent URLs (auto-generated by deployment script)\n'
+        )
+        f.write(f'# Generated at: {generated_at}\n\n')
 
         for key, value in env_vars.items():
             if value:
-                f.write(f"{key}={value}\n")
+                f.write(f'{key}={value}\n')
 
-    print(f"✓ Saved agent URLs to {output_path}")
+    print(f'✓ Saved agent URLs to {output_path}')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     # Test the utilities
-    print("Testing environment utilities...")
+    print('Testing environment utilities...')
 
     config = load_env_file()
-    print(f"\nLoaded config: {config}")
+    print(f'\nLoaded config: {config}')
 
     try:
         validate_required_vars(config)
-        print("✓ All required variables present")
+        print('✓ All required variables present')
     except ValueError as e:
-        print(f"✗ Validation failed: {e}")
+        print(f'✗ Validation failed: {e}')
 
     # Test URL formatting
     test_urls = {
-        "brand-strategist": "https://brand-strategist-123.us-central1.run.app",
-        "copywriter": "https://copywriter-123.us-central1.run.app",
-        "designer": "https://designer-123.us-central1.run.app",
-        "critic": "https://critic-123.us-central1.run.app",
-        "project-manager": "https://project-manager-123.us-central1.run.app",
+        'brand-strategist': 'https://brand-strategist-123.us-central1.run.app',
+        'copywriter': 'https://copywriter-123.us-central1.run.app',
+        'designer': 'https://designer-123.us-central1.run.app',
+        'critic': 'https://critic-123.us-central1.run.app',
+        'project-manager': 'https://project-manager-123.us-central1.run.app',
     }
 
     env_vars = format_env_vars_for_orchestrator(test_urls)
-    print("\nFormatted environment variables:")
+    print('\nFormatted environment variables:')
     for key, value in env_vars.items():
-        print(f"  {key}={value}")
+        print(f'  {key}={value}')

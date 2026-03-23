@@ -12,18 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Critic Agent
-Reviews campaign outputs and suggests improvements
-Uses Gemini API directly (no MCP needed)
+"""Critic Agent.
+
+Reviews campaign outputs and suggests improvements.
+Uses Gemini API directly (no MCP needed).
 """
 
 import logging
 
 from google.adk.agents import Agent
 
+
 # Get logger for this agent
-logger = logging.getLogger("ai_creative_studio.critic")
+logger = logging.getLogger('ai_creative_studio.critic')
 
 SYSTEM_INSTRUCTION = """You are a Creative Critic with expertise in social media marketing and brand communication.
 
@@ -103,16 +104,16 @@ Be thorough but concise. Your structured feedback enables the orchestrator to co
 """
 
 
-def create_critic_agent():
-    """Create the Critic agent"""
-    logger.info("Creating Critic agent with Gemini 2.5 Flash")
+def create_critic_agent():  # noqa: ANN201
+    """Create the Critic agent."""
+    logger.info('Creating Critic agent with Gemini 2.5 Flash')
     agent = Agent(
-        name="critic",
-        model="gemini-2.5-flash",
+        name='critic',
+        model='gemini-2.5-flash',
         instruction=SYSTEM_INSTRUCTION,
-        description="Creative critic for reviewing campaign materials and providing constructive feedback",
+        description='Creative critic for reviewing campaign materials and providing constructive feedback',
     )
-    logger.info("Critic agent created successfully")
+    logger.info('Critic agent created successfully')
     return agent
 
 
@@ -120,10 +121,11 @@ def create_critic_agent():
 root_agent = create_critic_agent()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import os
 
     import uvicorn
+
     from dotenv import load_dotenv
     from google.adk.a2a.utils.agent_to_a2a import to_a2a
 
@@ -131,22 +133,29 @@ if __name__ == "__main__":
     load_dotenv()
 
     # Server listening configuration
-    PORT = int(os.getenv("PORT", "8080"))
-    HOST = os.getenv("HOST", "0.0.0.0")
+    PORT = int(os.getenv('PORT', '8080'))
+    HOST = os.getenv('HOST', '0.0.0.0')  # noqa: S104
 
     # Public-facing configuration for A2A agent card
-    PUBLIC_HOST = os.getenv("PUBLIC_HOST", "localhost")
-    PUBLIC_PORT = int(os.getenv("PUBLIC_PORT", str(PORT)))
-    PROTOCOL = os.getenv("PROTOCOL", "http")
+    PUBLIC_HOST = os.getenv('PUBLIC_HOST', 'localhost')
+    PUBLIC_PORT = int(os.getenv('PUBLIC_PORT', str(PORT)))
+    PROTOCOL = os.getenv('PROTOCOL', 'http')
 
     # Convert agent to A2A application
-    a2a_app = to_a2a(root_agent, host=PUBLIC_HOST, port=PUBLIC_PORT, protocol=PROTOCOL)
+    a2a_app = to_a2a(
+        root_agent, host=PUBLIC_HOST, port=PUBLIC_PORT, protocol=PROTOCOL
+    )
 
     # Start server
-    logger.info(f"🚀 Starting Critic A2A Server on {PROTOCOL}://{HOST}:{PORT}")
     logger.info(
-        f"📋 Agent card available at: {PROTOCOL}://{HOST}:{PORT}/.well-known/agent-card.json"
+        '🚀 Starting Critic A2A Server on %s://%s:%s', PROTOCOL, HOST, PORT
     )
-    logger.info(f"🌐 Public URL: {PROTOCOL}://{PUBLIC_HOST}:{PUBLIC_PORT}")
+    logger.info(
+        '📋 Agent card available at: %s://%s:%s/.well-known/agent-card.json',
+        PROTOCOL,
+        HOST,
+        PORT,
+    )
+    logger.info('🌐 Public URL: %s://%s:%s', PROTOCOL, PUBLIC_HOST, PUBLIC_PORT)
 
     uvicorn.run(a2a_app, host=HOST, port=PORT)
