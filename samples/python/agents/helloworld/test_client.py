@@ -23,7 +23,6 @@ async def main() -> None:
     logger = logging.getLogger(__name__)  # Get a logger instance
 
     # --8<-- [start:A2ACardResolver]
-
     base_url = 'http://localhost:9999'
 
     async with httpx.AsyncClient() as httpx_client:
@@ -47,32 +46,6 @@ async def main() -> None:
             )  # Fetches from default public path
             logger.info('\nSuccessfully fetched public agent card:')
             logger.info(_public_card)
-            logger.info('\nUsing public agent card for client initialization.')
-            client_factory = ClientFactory(config=ClientConfig(streaming=False))
-            client = client_factory.create(_public_card)
-            logger.info('\nA2AClient initialized via ClientFactory.')
-
-            if _public_card.capabilities.extended_agent_card:
-                try:
-                    logger.info(
-                        '\nPublic card supports authenticated extended card. Attempting to fetch via Client.'
-                    )
-                    _extended_card = await client.get_extended_agent_card(
-                        GetExtendedAgentCardRequest()
-                    )
-                    logger.info(
-                        '\nSuccessfully fetched authenticated extended agent card:'
-                    )
-                    logger.info(_extended_card)
-
-                except Exception:
-                    logger.exception('Failed to fetch extended agent card.')
-            elif (
-                _public_card
-            ):  # supports_authenticated_extended_card is False or None
-                logger.info(
-                    '\nPublic card does not indicate support for an extended card.'
-                )
 
         except Exception as e:
             logger.exception('\nCritical error fetching public agent card.')
@@ -80,7 +53,11 @@ async def main() -> None:
                 '\nFailed to fetch the public agent card. Cannot continue.'
             ) from e
 
+        print('\n--- Non-Streaming Call ---')
         # --8<-- [start:send_message]
+        client_factory = ClientFactory(config=ClientConfig(streaming=False))
+        client = client_factory.create(_public_card)
+        logger.info('\nNon-streaming A2AClient initialized.')
 
         parts = [Part(text='how much is 10 USD in INR?')]
         message = Message(
@@ -90,22 +67,45 @@ async def main() -> None:
         )
         request = SendMessageRequest(message=message)
 
-        print('\nSend message response:')
-        async for chunk in client.send_message(request):
-            print(chunk)
+        response = client.send_message(request)
 
+        async for chunk in response:
+            print(chunk)
         # --8<-- [end:send_message]
 
+        print('\n--- Streaming Call ---')
         # --8<-- [start:send_message_streaming]
-
         client_factory = ClientFactory(config=ClientConfig(streaming=True))
         streaming_client = client_factory.create(_public_card)
+        logger.info('\nStreaming A2AClient initialized.')
 
-        print('\nStream response:')
-        async for chunk in streaming_client.send_message(request):
+        streaming_response = streaming_client.send_message(request)
+
+        async for chunk in streaming_response:
             print(chunk)
-
         # --8<-- [end:send_message_streaming]
+
+        print('\n--- Extended Card Call ---')
+        if _public_card.capabilities.extended_agent_card:
+            try:
+                logger.info(
+                    '\nPublic card supports authenticated extended card. Attempting to fetch via Client.'
+                )
+                _extended_card = await client.get_extended_agent_card(
+                    GetExtendedAgentCardRequest()
+                )
+                logger.info(
+                    '\nSuccessfully fetched authenticated extended agent card:'
+                )
+                logger.info(_extended_card)
+            except Exception:
+                logger.exception('Failed to fetch extended agent card.')
+        elif (
+            _public_card
+        ):  # supports_authenticated_extended_card is False or None
+            logger.info(
+                '\nPublic card does not indicate support for an extended card.'
+            )
 
         await client.close()
 
