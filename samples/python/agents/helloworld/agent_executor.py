@@ -60,6 +60,7 @@ class HelloWorldAgentExecutor(AgentExecutor):
                 task_id=context.task_id,
                 context_id=context.context_id,
                 artifact=new_text_artifact(name='result', text=result),
+                last_chunk=True,
             )
         )
 
