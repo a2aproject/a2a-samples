@@ -71,7 +71,8 @@ async def main() -> None:
 
         async for chunk in response:
             print('Response:')
-            print(chunk)
+            task, _ = chunk
+            print(task)
         # --8<-- [end:send_message]
 
         print('\n--- Streaming Call ---')
@@ -84,7 +85,7 @@ async def main() -> None:
 
         async for chunk in streaming_response:
             print('Response chunk:')
-            task, update_event = chunk
+            task, _ = chunk
             print(task)
         # --8<-- [end:send_message_streaming]
 
