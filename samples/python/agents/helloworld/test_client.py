@@ -70,6 +70,7 @@ async def main() -> None:
         response = client.send_message(request)
 
         async for chunk in response:
+            print('Response:')
             print(chunk)
         # --8<-- [end:send_message]
 
@@ -82,6 +83,7 @@ async def main() -> None:
         streaming_response = streaming_client.send_message(request)
 
         async for chunk in streaming_response:
+            print('Response chunk:')
             print(chunk)
         # --8<-- [end:send_message_streaming]
 
