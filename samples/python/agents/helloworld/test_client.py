@@ -54,7 +54,7 @@ async def main() -> None:
             ) from e
 
         print('\n--- Non-Streaming Call ---')
-        # --8<-- [start:send_message]
+        # --8<-- [start:message/send]
         client_factory = ClientFactory(config=ClientConfig(streaming=False))
         client = client_factory.create(_public_card)
         logger.info('\nNon-streaming A2AClient initialized.')
@@ -73,10 +73,10 @@ async def main() -> None:
             print('Response:')
             task, _ = chunk
             print(task)
-        # --8<-- [end:send_message]
+        # --8<-- [end:message/send]
 
         print('\n--- Streaming Call ---')
-        # --8<-- [start:send_message_streaming]
+        # --8<-- [start:message/stream]
         client_factory = ClientFactory(config=ClientConfig(streaming=True))
         streaming_client = client_factory.create(_public_card)
         logger.info('\nStreaming A2AClient initialized.')
@@ -87,7 +87,7 @@ async def main() -> None:
             print('Response chunk:')
             task, _ = chunk
             print(task)
-        # --8<-- [end:send_message_streaming]
+        # --8<-- [end:message/stream]
 
         print('\n--- Extended Card Call ---')
         if _public_card.capabilities.extended_agent_card:
