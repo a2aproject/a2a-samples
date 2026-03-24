@@ -59,7 +59,7 @@ async def main() -> None:
         client = client_factory.create(_public_card)
         logger.info('\nNon-streaming A2AClient initialized.')
 
-        parts = [Part(text='how much is 10 USD in INR?')]
+        parts = [Part(text='Say hello.')]
         message = Message(
             role=Role.ROLE_USER,
             parts=parts,
