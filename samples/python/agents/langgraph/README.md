@@ -65,16 +65,19 @@ sequenceDiagram
 2. Create an environment file with your API key:
 
    ```bash
-   If you're using a Google Gemini model (gemini-pro, etc.):
+   # If you're using a Google Gemini model (gemini-pro, etc.):
    echo "GOOGLE_API_KEY=your_api_key_here" > .env
-  
-   
-   If you're using OpenAI or any compatible API (e.g., local LLM via Ollama, LM Studio, etc.):
 
-   echo "API_KEY=your_api_key_here" > .env  (not neccessary if have no api key)
-   echo "TOOL_LLM_URL=your_llm_url" > .env
-   echo "TOOL_LLM_NAME=your_llm_name" > .env
+   # If you're using MiniMax (https://platform.minimax.io):
+   echo "model_source=minimax" >> .env
+   echo "MINIMAX_API_KEY=your_minimax_api_key_here" >> .env
+   # Optionally override the model (default: MiniMax-M2.7):
+   # echo "TOOL_LLM_NAME=MiniMax-M2.7-highspeed" >> .env
 
+   # If you're using OpenAI or any compatible API (e.g., local LLM via Ollama, LM Studio, etc.):
+   echo "API_KEY=your_api_key_here" > .env  # not necessary if have no api key
+   echo "TOOL_LLM_URL=your_llm_url" >> .env
+   echo "TOOL_LLM_NAME=your_llm_name" >> .env
    ```
 
 3. Run the agent:
@@ -480,6 +483,7 @@ data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"co
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [Frankfurter API](https://www.frankfurter.app/docs/)
 - [Google Gemini API](https://ai.google.dev/gemini-api)
+- [MiniMax API (OpenAI Compatible)](https://platform.minimax.io/docs/api-reference/text-openai-api)
 
 
 ## Disclaimer

@@ -11,6 +11,8 @@ import httpx
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
+import openai
+
 from semantic_kernel.connectors.ai.open_ai import (
     AzureChatCompletion,
     OpenAIChatCompletion,
@@ -43,6 +45,7 @@ class ChatServices(str, Enum):
 
     AZURE_OPENAI = 'azure_openai'
     OPENAI = 'openai'
+    MINIMAX = 'minimax'
 
 
 service_id = 'default'
@@ -66,6 +69,8 @@ def get_chat_completion_service(
         return _get_azure_openai_chat_completion_service()
     if service_name == ChatServices.OPENAI:
         return _get_openai_chat_completion_service()
+    if service_name == ChatServices.MINIMAX:
+        return _get_minimax_chat_completion_service()
     raise ValueError(f'Unsupported service name: {service_name}')
 
 
@@ -88,6 +93,28 @@ def _get_openai_chat_completion_service() -> OpenAIChatCompletion:
         service_id=service_id,
         ai_model_id=os.getenv('OPENAI_MODEL_ID'),
         api_key=os.getenv('OPENAI_API_KEY'),
+    )
+
+
+def _get_minimax_chat_completion_service() -> OpenAIChatCompletion:
+    """Return MiniMax chat completion service via OpenAI-compatible API.
+
+    MiniMax provides an OpenAI-compatible API at https://api.minimax.io/v1.
+    For more details, see: https://platform.minimax.io/docs/api-reference/text-openai-api
+
+    Returns:
+        OpenAIChatCompletion: Configured MiniMax service.
+    """
+    async_client = openai.AsyncOpenAI(
+        api_key=os.getenv('MINIMAX_API_KEY'),
+        base_url=os.getenv(
+            'MINIMAX_BASE_URL', 'https://api.minimax.io/v1'
+        ),
+    )
+    return OpenAIChatCompletion(
+        service_id=service_id,
+        ai_model_id=os.getenv('MINIMAX_MODEL_ID', 'MiniMax-M2.7'),
+        async_client=async_client,
     )
 
 
@@ -157,7 +184,8 @@ class SemanticKernelTravelAgent:
 
     def __init__(self):
         # Configure the chat completion service explicitly
-        # It uses Azure OpenAI by default. Please change to ChatServices.OPENAI in case you want to use OpenAI service.
+        # It uses Azure OpenAI by default. Change to ChatServices.OPENAI or
+        # ChatServices.MINIMAX to use OpenAI or MiniMax service respectively.
         chat_service = get_chat_completion_service(ChatServices.AZURE_OPENAI)
 
         currency_exchange_agent = ChatCompletionAgent(
