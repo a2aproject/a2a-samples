@@ -18,15 +18,6 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
     Returns:
         subprocess.Popen: The spawned process object.
     """
-    subprocess.run(
-        [  # noqa: S607
-            'uv',
-            'lock',
-            '--upgrade',
-        ],
-        cwd=_ROOT_DIR / 'agents/python/v10',
-        check=True,
-    )
     return subprocess.Popen(  # noqa: S603
         [  # noqa: S607
             'uv',

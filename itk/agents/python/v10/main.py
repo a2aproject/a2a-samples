@@ -16,7 +16,8 @@ from a2a.client import ClientConfig, ClientFactory
 from a2a.compat.v0_3 import a2a_v0_3_pb2_grpc
 from a2a.compat.v0_3.grpc_handler import CompatGrpcHandler
 from a2a.server.agent_execution import AgentExecutor, RequestContext
-from a2a.server.apps import A2AFastAPIApplication, A2ARESTFastAPIApplication
+from a2a.server.apps import A2ARESTFastAPIApplication
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
 from a2a.server.events import EventQueue
 from a2a.server.events.in_memory_queue_manager import InMemoryQueueManager
 from a2a.server.request_handlers import DefaultRequestHandler, GrpcHandler
@@ -295,10 +296,21 @@ async def main_async(http_port: int, grpc_port: int) -> None:
 
     app = FastAPI()
 
-    json_rpc_app = A2AFastAPIApplication(
-        agent_card, handler, enable_v0_3_compat=True
-    ).build()
-    app.mount('/jsonrpc', json_rpc_app)
+    agent_card_routes = create_agent_card_routes(
+        agent_card=agent_card, card_url='/.well-known/agent-card.json'
+    )
+    jsonrpc_routes = create_jsonrpc_routes(
+        agent_card=agent_card,
+        request_handler=handler,
+        extended_agent_card=agent_card,
+        rpc_url='/',
+        enable_v0_3_compat=True,
+    )
+    app.mount(
+        '/jsonrpc',
+        FastAPI(routes=jsonrpc_routes + agent_card_routes),
+    )
+
     rest_app = A2ARESTFastAPIApplication(
         http_handler=handler, agent_card=agent_card, enable_v0_3_compat=True
     ).build()
