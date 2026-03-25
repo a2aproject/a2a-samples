@@ -2,6 +2,7 @@ import asyncio
 import base64
 import datetime
 import json
+import logging
 import os
 import uuid
 
@@ -141,21 +142,25 @@ class ADKHostManager(ApplicationManager):
                     message.task_id = task_id
         return message
 
-    async def process_message(self, message: Message):
+    async def process_message(self, message: Message) -> None:
+        """Process an incoming message and route it to the host agent.
+
+        Ensures the message is removed from the pending list regardless of
+        whether processing succeeds or raises an exception.
+        """
         message_id = message.message_id
         if message_id:
             self._pending_message_ids.append(message_id)
         try:
             await self._process_message_inner(message)
-        except Exception as e:
-            import traceback
-            print(f'[ERROR] process_message failed: {e}')
-            traceback.print_exc()
+        except Exception:
+            logging.exception('process_message failed')
         finally:
             if message_id and message_id in self._pending_message_ids:
                 self._pending_message_ids.remove(message_id)
 
-    async def _process_message_inner(self, message: Message):
+    async def _process_message_inner(self, message: Message) -> None:
+        """Execute the core message processing logic via the ADK host runner."""
         context_id = message.context_id
         conversation = self.get_conversation(context_id)
         self._messages.append(message)
