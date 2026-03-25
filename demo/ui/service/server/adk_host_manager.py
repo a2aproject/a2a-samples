@@ -145,6 +145,17 @@ class ADKHostManager(ApplicationManager):
         message_id = message.message_id
         if message_id:
             self._pending_message_ids.append(message_id)
+        try:
+            await self._process_message_inner(message)
+        except Exception as e:
+            import traceback
+            print(f'[ERROR] process_message failed: {e}')
+            traceback.print_exc()
+        finally:
+            if message_id and message_id in self._pending_message_ids:
+                self._pending_message_ids.remove(message_id)
+
+    async def _process_message_inner(self, message: Message):
         context_id = message.context_id
         conversation = self.get_conversation(context_id)
         self._messages.append(message)
@@ -216,7 +227,6 @@ class ADKHostManager(ApplicationManager):
 
         if conversation and response:
             conversation.messages.append(response)
-        self._pending_message_ids.remove(message_id)
 
     def add_task(self, task: Task):
         self._tasks.append(task)
