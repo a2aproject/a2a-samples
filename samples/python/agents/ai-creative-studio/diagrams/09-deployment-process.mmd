@@ -1,0 +1,49 @@
+%% Deployment Process - Parallel Deployment Innovation
+%% Shows how 5 agents are deployed in parallel for speed
+
+graph TB
+    START[🚀 Start Deployment] --> LOAD[⚙️ Load .env Configuration<br/>- GCP Project ID<br/>- Region<br/>- API Keys<br/>- Notion credentials]
+
+    LOAD --> PARALLEL{💡 Deploy Specialists<br/>in Parallel}
+
+    subgraph "Parallel Deployment (asyncio.gather)"
+        PARALLEL --> D1[📦 Deploy brand-strategist<br/>Build + Push Container<br/>Set env vars<br/>Configure A2A]
+        PARALLEL --> D2[📦 Deploy copywriter<br/>Build + Push Container<br/>Set env vars<br/>Configure A2A]
+        PARALLEL --> D3[📦 Deploy designer<br/>Build + Push Container<br/>Set env vars<br/>Configure A2A]
+        PARALLEL --> D4[📦 Deploy critic<br/>Build + Push Container<br/>Set env vars<br/>Configure A2A]
+        PARALLEL --> D5[📦 Deploy project-manager<br/>Build + Push Container<br/>Set env vars + Notion<br/>Configure A2A]
+    end
+
+    D1 --> URL1[URL 1:<br/>https://brand-strategist-xxx.run.app]
+    D2 --> URL2[URL 2:<br/>https://copywriter-xxx.run.app]
+    D3 --> URL3[URL 3:<br/>https://designer-xxx.run.app]
+    D4 --> URL4[URL 4:<br/>https://critic-xxx.run.app]
+    D5 --> URL5[URL 5:<br/>https://project-manager-xxx.run.app]
+
+    URL1 & URL2 & URL3 & URL4 & URL5 --> UPDATE[🔄 Update A2A Configuration<br/>For each service:<br/>- Extract public URL<br/>- Set PUBLIC_HOST<br/>- Set PUBLIC_PORT=443<br/>- Set PROTOCOL=https]
+
+    UPDATE --> COLLECT[📝 Collect All URLs<br/>agent_urls = {<br/>  brand-strategist: url1,<br/>  copywriter: url2,<br/>  ...<br/>}]
+
+    COLLECT --> SAVE[💾 Save to .env.specialists<br/>STRATEGIST_AGENT_URL=url1<br/>COPYWRITER_AGENT_URL=url2<br/>DESIGNER_AGENT_URL=url3<br/>CRITIC_AGENT_URL=url4<br/>PM_AGENT_URL=url5]
+
+    SAVE --> ORCHESTRATOR[🎬 Deploy Orchestrator<br/>to Agent Engine<br/>with all agent URLs<br/>in env vars]
+
+    ORCHESTRATOR --> TEST[✅ Test Complete System<br/>python test_orchestrator.py]
+
+    TEST --> COMPLETE[🎉 Deployment Complete!]
+
+    subgraph "⏱️ Performance Comparison"
+        SEQ[❌ Sequential Deployment:<br/>5 agents × 3 min each<br/>= ~15 minutes]
+
+        PAR[✅ Parallel Deployment:<br/>All 5 simultaneously<br/>= ~5 minutes<br/><br/>3x FASTER!]
+
+        SEQ -.->|Improved by| PAR
+    end
+
+    style START fill:#34a853,color:#fff
+    style PARALLEL fill:#fbbc04,color:#000,stroke:#333,stroke-width:3px
+    style UPDATE fill:#4285f4,color:#fff
+    style ORCHESTRATOR fill:#4285f4,color:#fff,stroke:#333,stroke-width:3px
+    style COMPLETE fill:#34a853,color:#fff
+    style PAR fill:#34a853,color:#fff
+    style SEQ fill:#ea4335,color:#fff
