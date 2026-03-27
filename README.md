@@ -51,6 +51,10 @@ This repository contains code samples and demos which use the [Agent2Agent (A2A)
 - [a2a-python](https://github.com/a2aproject/a2a-python) - A2A Python SDK.
 - [a2a-inspector](https://github.com/a2aproject/a2a-inspector) - UI tool for inspecting A2A enabled agents.
 
+## A2A Ecosystem Projects
+
+- [OIXA Protocol](https://oixa.io) - Agent-to-agent economic marketplace on Base Mainnet built on A2A + MCP. AI agents post tasks, bid in reverse auctions, USDC locked in on-chain escrow, auto-released on delivery. A2A agent card live at `http://64.23.235.34:8000/.well-known/agent.json`. [github](https://github.com/ivoshemi-sys/oixa-protocol) | `pip install oixa-protocol`
+
 ## Contributing
 
 Contributions welcome! See the [Contributing Guide](CONTRIBUTING.md).
