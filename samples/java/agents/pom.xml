@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>test-utils</module>
         <module>content_editor</module>
         <module>content_writer</module>
         <module>dice_agent_multi_transport</module>
@@ -23,29 +24,32 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- A2A SDK version - centralized for all agents -->
-        <io.a2a.sdk.version>0.3.2.Final</io.a2a.sdk.version>
+        <io.a2a.sdk.version>1.0.0.Alpha3</io.a2a.sdk.version>
 
         <!-- Common dependency versions -->
-        <jakarta.enterprise.cdi-api.version>4.1.0</jakarta.enterprise.cdi-api.version>
-        <quarkus.platform.version>3.26.1</quarkus.platform.version>
+        <!-- Quarkus version must match a2a-java-sdk-reference-bom version -->
+        <quarkus.platform.version>3.30.6</quarkus.platform.version>
         <quarkus.langchain4j.version>1.3.1</quarkus.langchain4j.version>
-        <protobuf.version>4.31.1</protobuf.version>
+        <wiremock.version>3.10.0</wiremock.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- Import A2A Java SDK Reference BOM (includes SDK BOM and Quarkus BOM) -->
             <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.platform.version}</version>
+                <groupId>io.github.a2asdk</groupId>
+                <artifactId>a2a-java-sdk-reference-bom</artifactId>
+                <version>${io.a2a.sdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Temporarily need this version override until Quarkus updates to gRPC v4 -->
+
+            <!-- Testing dependencies -->
             <dependency>
-                <groupId>com.google.protobuf</groupId>
-                <artifactId>protobuf-java</artifactId>
-                <version>${protobuf.version}</version>
+                <groupId>org.wiremock</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>${wiremock.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
