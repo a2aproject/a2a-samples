@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/python-312
+FROM registry.access.redhat.com/ubi8/python-312:latest
 
 WORKDIR /opt/app-root/agents/ag2
 
@@ -8,7 +8,7 @@ COPY ../.. /opt/app-root
 USER root
 
 RUN dnf -y update && dnf install -y gcc gcc-c++ && dnf clean all \
- && pip install --no-cache-dir uv
+ && pip install --no-cache-dir uv==0.6.6
 
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy
