@@ -1,0 +1,25 @@
+FROM registry.access.redhat.com/ubi8/python-312:1
+
+WORKDIR /opt/app-root/agents/ag2
+
+# Copy Python Project Files (Container context must be the `python` directory)
+COPY ../.. /opt/app-root
+
+USER root
+
+RUN dnf -y update && dnf install -y gcc-8 gcc-c++-8 && dnf clean all \
+ && pip install --no-cache-dir uv==0.6.6
+
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
+
+RUN --mount=type=cache,target=/.cache/uv \
+    uv sync --frozen --no-dev
+
+RUN chgrp -R root /opt/app-root/ && chmod -R g+rwx /opt/app-root/
+
+EXPOSE 10012
+
+USER 1001
+
+CMD ["uv", "run", ".", "--host", "0.0.0.0"]

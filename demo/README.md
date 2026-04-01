@@ -1,4 +1,4 @@
-## Demo Web App
+# Demo Web App
 
 This demo application showcases agents talking to other agents over A2A.
 
@@ -88,7 +88,7 @@ Click on the task list to see all the A2A task updates from the remote agents
 
    Back in the demo UI you can go to the _Remote Agents_ tab and add this agent's address:
 
-   ```
+   ```text
    localhost:10002
    ```
 
@@ -97,6 +97,18 @@ Click on the task list to see all the A2A task updates from the remote agents
    You can ask it to _"reimburse lunch for 20 EUR but needs to be converted to USD ahead of time."_
 
    Answer it's questions in a normal... If you need help converting currency, try adding the LangGraph sample agent too.
+
+   You can also try the **AG2 Python Reviewer** agent:
+
+   ```bash
+   cd ../../samples/python/agents/ag2/
+   uv run . --host 0.0.0.0
+   ```
+
+   > **Note:** The agent needs a `GOOGLE_API_KEY` or `OPENAI_API_KEY` in its `.env` file.
+   > See [AG2 Setup & Running](../samples/python/agents/ag2/README.md#setup--running) for details.
+
+   Then add `localhost:10012` in the Demo UI.
 
    Review the events to see what happened.
 
