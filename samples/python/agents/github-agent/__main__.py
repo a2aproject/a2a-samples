@@ -30,8 +30,8 @@ logging.basicConfig()
 @click.option('--port', 'port', default=10007)
 def main(host: str, port: int):
     # Verify an API key is set.
-    if not os.getenv('OPENROUTER_API_KEY'):
-        raise ValueError('OPENROUTER_API_KEY environment variable not set')
+    if not os.getenv('OPENAI_API_KEY'):
+        raise ValueError('OPENAI_API_KEY environment variable not set')
 
     skill = AgentSkill(
         id='github_repositories',
@@ -63,7 +63,7 @@ def main(host: str, port: int):
     agent_executor = OpenAIAgentExecutor(
         card=agent_card,
         tools=agent_data['tools'],
-        api_key=os.getenv('OPENROUTER_API_KEY'),
+        api_key=os.getenv('OPENAI_API_KEY'),
         system_prompt=agent_data['system_prompt'],
     )
 

@@ -33,15 +33,8 @@ class OpenAIAgentExecutor(AgentExecutor):
     ):
         self._card = card
         self.tools = tools
-        self.client = AsyncOpenAI(
-            api_key=api_key,
-            base_url='https://openrouter.ai/api/v1',
-            default_headers={
-                'HTTP-Referer': 'http://localhost:10007',
-                'X-Title': 'GitHub Agent',
-            },
-        )
-        self.model = 'anthropic/claude-3.5-sonnet'
+        self.client = AsyncOpenAI(api_key=api_key)
+        self.model = 'gpt-4'
         self.system_prompt = system_prompt
 
     async def _process_request(
