@@ -14,8 +14,8 @@ from a2a.types import (
 )
 from dotenv import load_dotenv
 from openai_agent import create_agent  # type: ignore[import-not-found]
-from openai_agent_executor import (
-    OpenAIAgentExecutor,  # type: ignore[import-untyped]
+from anthropic_agent_executor import (
+    AnthropicAgentExecutor,  # type: ignore[import-untyped]
 )
 from starlette.applications import Starlette
 
@@ -30,8 +30,8 @@ logging.basicConfig()
 @click.option('--port', 'port', default=10007)
 def main(host: str, port: int):
     # Verify an API key is set.
-    if not os.getenv('OPENAI_API_KEY'):
-        raise ValueError('OPENAI_API_KEY environment variable not set')
+    if not os.getenv('ANTHROPIC_API_KEY'):
+        raise ValueError('ANTHROPIC_API_KEY environment variable not set')
 
     skill = AgentSkill(
         id='github_repositories',
@@ -60,10 +60,10 @@ def main(host: str, port: int):
     # Create OpenAI agent
     agent_data = create_agent()
 
-    agent_executor = OpenAIAgentExecutor(
+    agent_executor = AnthropicAgentExecutor(
         card=agent_card,
         tools=agent_data['tools'],
-        api_key=os.getenv('OPENAI_API_KEY'),
+        api_key=os.getenv('ANTHROPIC_API_KEY'),
         system_prompt=agent_data['system_prompt'],
     )
 
