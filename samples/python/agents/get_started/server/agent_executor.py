@@ -11,6 +11,7 @@ from a2a.utils import (
     new_agent_text_message,
     new_task,
 )
+
 # Loading from agent.py
 from agent import WeatherReportingPoet
 
@@ -37,10 +38,10 @@ class WeatherReportingPoetExecutor(AgentExecutor):
         # If this request does not have current task, create a new one and use it.
         task = None
         if not context.current_task:
-            task = new_task(context.message)        # Create task
-            await event_queue.enqueue_event(task)   # Add task to A2A's Event Queue
+            task = new_task(context.message)  # Create task
+            await event_queue.enqueue_event(task)  # Add task to A2A's Event Queue
         else:
-            task = context.current_task             # Refer to existing queue
+            task = context.current_task  # Refer to existing queue
 
         ## Event Queue
         # Acts as a buffer the agent's asynchronous execution and the server's response handling

@@ -9,11 +9,10 @@ from google.genai import types
 from google.adk.tools import google_search
 
 
-
 def create_agent() -> LlmAgent:
     return LlmAgent(
-        model='gemini-2.5-flash-lite',
-        name='poet_weather_report',
+        model="gemini-2.5-flash-lite",
+        name="poet_weather_report",
         instruction="""
         You are a Weather Reporting Agent.
         Your report should include details on temperature and weather for next 4-6 hours.
@@ -21,20 +20,19 @@ def create_agent() -> LlmAgent:
         Generated Haiku's or Poems should be simple and easy to sing.
         Use Google search tool to find factual information as and when required.
         """,
-        description='Weather Reporting Poet',
+        description="Weather Reporting Poet",
         tools=[google_search],
     )
-
 
 
 class WeatherReportingPoet:
     """An agent that report weather updates in a haiku or poem format."""
 
-    SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
+    SUPPORTED_CONTENT_TYPES = ["text", "text/plain"]
 
     def __init__(self) -> None:
         self._agent = create_agent()
-        self._user_id = 'weather_reporting_poet'
+        self._user_id = "weather_reporting_poet"
         self._runner = Runner(
             app_name=self._agent.name,
             agent=self._agent,
@@ -43,19 +41,19 @@ class WeatherReportingPoet:
             memory_service=InMemoryMemoryService(),
         )
 
-    async def run(self, query: str, session_id: str) -> str|list[str]:
+    async def run(self, query: str, session_id: str) -> str | list[str]:
         """Run the agent with the given query."""
         response = await self._runner.run_debug(
             user_id=self._user_id,
             session_id=session_id,
             user_messages=query,
-            quiet= True
+            quiet=True,
         )
         text_response = []
         for event in response:
             for part in event.content.parts:
                 text_response.append(part.text)
-        return ''.join(text_response)
+        return "".join(text_response)
 
     async def stream(
         self, query: str, session_id: str
@@ -66,9 +64,7 @@ class WeatherReportingPoet:
             user_id=self._user_id,
             session_id=session_id,
         )
-        content = types.Content(
-            role='user', parts=[types.Part.from_text(text=query)]
-        )
+        content = types.Content(role="user", parts=[types.Part.from_text(text=query)])
         if session is None:
             session = await self._runner.session_service.create_session(
                 app_name=self._agent.name,
@@ -82,29 +78,29 @@ class WeatherReportingPoet:
             if event.is_final_response():
                 yield (
                     True,
-                    '\n'.join([p.text for p in event.content.parts if p.text]),
+                    "\n".join([p.text for p in event.content.parts if p.text]),
                 )
             else:
-                yield (False, 'working...')
+                yield (False, "working...")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import asyncio
 
     poet = WeatherReportingPoet()
-    print('################################')
-    print('#### Weather Reporting Poet ####')
-    print('################################')
-    print('To exit use `exit` or `quit`.')
-    print('---')
+    print("################################")
+    print("#### Weather Reporting Poet ####")
+    print("################################")
+    print("To exit use `exit` or `quit`.")
+    print("---")
     query = "How is the weather in Warsaw, Poland today?"
     print(f"user> {query}")
-    while query not in ['exit', 'quit']:
+    while query not in ["exit", "quit"]:
         if query:
             response = asyncio.run(poet.run(query, "mock_session"))
             print(f"model> {response}")
-            print('---')
-        query = input('user> ')
+            print("---")
+        query = input("user> ").strip()
     # Example output:
     #     (.venv) $ python run.py
     #
