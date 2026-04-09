@@ -26,9 +26,8 @@ if __name__ == '__main__':
     # This will be the public-facing agent card
     public_agent_card = AgentCard(
         name='Weather Reporting Poet',
-        url='http://localhost:9999/',
         description='Weather reporting Poet',
-        # icon_url='http://localhost:9999/',
+        icon_url='http://localhost:9999/',
         version='1.0.0',
         default_input_modes=['text'],
         default_output_modes=['text'],
@@ -39,7 +38,6 @@ if __name__ == '__main__':
             AgentInterface(
                 protocol_binding='JSONRPC',
                 url='http://localhost:9999',
-                transport='HTTP+JSON'
             )
         ],
         skills=[skill],  # Only the basic skill for the public card

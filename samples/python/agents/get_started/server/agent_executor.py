@@ -5,15 +5,12 @@ from a2a.types import (
     Part,
     Task,
     TaskState,
-    TextPart,
     UnsupportedOperationError,
 )
 from a2a.utils import (
     new_agent_text_message,
     new_task,
 )
-from a2a.utils.errors import ServerError
-
 # Loading from agent.py
 from agent import WeatherReportingPoet
 
@@ -60,7 +57,7 @@ class WeatherReportingPoetExecutor(AgentExecutor):
                 continue
             # Emit the appropriate events
             await updater.add_artifact(
-                [Part(root=TextPart(text=text))],
+                [Part(text=text)],
                 name="response",
             )
             await updater.complete()
@@ -69,4 +66,4 @@ class WeatherReportingPoetExecutor(AgentExecutor):
     async def cancel(
         self, request: RequestContext, event_queue: EventQueue
     ) -> Task | None:
-        raise ServerError(error=UnsupportedOperationError())
+        raise UnsupportedOperationError("Error: Streaming Operation not supported")

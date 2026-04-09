@@ -12,7 +12,7 @@ from google.adk.tools import google_search
 
 def create_agent() -> LlmAgent:
     return LlmAgent(
-        model='gemini-2.5-flash',
+        model='gemini-2.5-flash-lite',
         name='poet_weather_report',
         instruction="""
         You are a Weather Reporting Agent.
@@ -49,8 +49,13 @@ class WeatherReportingPoet:
             user_id=self._user_id,
             session_id=session_id,
             user_messages=query,
+            quiet= True
         )
-        return response
+        text_response = []
+        for event in response:
+            for part in event.content.parts:
+                text_response.append(part.text)
+        return ''.join(text_response)
 
     async def stream(
         self, query: str, session_id: str
@@ -87,7 +92,19 @@ if __name__ == '__main__':
     import asyncio
 
     poet = WeatherReportingPoet()
-    asyncio.run(poet.run("How is the weather in Warsaw, Poland today?", "mock_session"))
+    print('################################')
+    print('#### Weather Reporting Poet ####')
+    print('################################')
+    print('To exit use `exit` or `quit`.')
+    print('---')
+    query = "How is the weather in Warsaw, Poland today?"
+    print(f"user> {query}")
+    while query not in ['exit', 'quit']:
+        if query:
+            response = asyncio.run(poet.run(query, "mock_session"))
+            print(f"model> {response}")
+            print('---')
+        query = input('user> ')
     # Example output:
     #     (.venv) $ python run.py
     #
