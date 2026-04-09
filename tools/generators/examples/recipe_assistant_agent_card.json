@@ -1,0 +1,47 @@
+{
+  "protocolVersion": "1.0",
+  "name": "Recipe Assistant Agent",
+  "description": "An AI agent that helps users find, create, and modify recipes based on ingredients, dietary preferences, and cuisine types.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CookingAI Inc.",
+    "url": "https://cookingai.com"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://api.cookingai.com/a2a/v1",
+      "protocolBinding": "JSONRPC"
+    }
+  ],
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json",
+    "image/jpeg"
+  ],
+  "skills": [
+    {
+      "id": "recipe-search",
+      "name": "Recipe Search",
+      "description": "Search for recipes by ingredients, cuisine type, or dietary restrictions",
+      "tags": [
+        "cooking",
+        "recipes",
+        "search",
+        "ingredients"
+      ],
+      "examples": [
+        "Find me a pasta recipe",
+        "What can I make with chicken and rice?"
+      ]
+    }
+  ]
+}
