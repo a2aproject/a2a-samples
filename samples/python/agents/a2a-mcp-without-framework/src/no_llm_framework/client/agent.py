@@ -8,8 +8,11 @@ from typing import Literal
 
 import httpx
 
-from a2a.client import A2ACardResolver, create_client
-from a2a.client.helpers import create_text_message_object
+from a2a.client import (
+    A2ACardResolver,
+    create_client,
+    create_text_message_object,
+)
 from a2a.types import (
     AgentCard,
     SendMessageRequest,
