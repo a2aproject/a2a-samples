@@ -4,9 +4,7 @@ from uuid import uuid4
 
 import httpx
 
-from a2a.client import A2ACardResolver
-from a2a.client.client import ClientConfig
-from a2a.client.client_factory import ClientFactory
+from a2a.client import A2ACardResolver, ClientConfig, ClientFactory
 from a2a.types.a2a_pb2 import (
     GetExtendedAgentCardRequest,
     Message,
@@ -61,7 +59,7 @@ async def main() -> None:
 
         parts = [Part(text='Say hello.')]
         message = Message(
-            role=Role.ROLE_USER,
+            role=Role.user,
             parts=parts,
             message_id=uuid4().hex,
         )
