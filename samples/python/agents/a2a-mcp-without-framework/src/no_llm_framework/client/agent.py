@@ -86,7 +86,7 @@ class Agent:
             agent_prompt = agents_template.render(agent_cards=agent_cards)
             return agents_registry, agent_prompt
 
-    def call_llm(self, prompt: str) -> str:
+    def call_llm(self, prompt: str) -> str | Generator[str]:
         """Call the LLM with the given prompt and return the response as a string or generator.
 
         Args:
@@ -95,7 +95,7 @@ class Agent:
         Returns:
             str or Generator[str]: The LLM response as a string or generator, depending on mode.
         """
-        if self.mode == 'complete':
+        if self.mode == 'stream':
             return stream_llm(prompt)
 
         result = ''
@@ -156,20 +156,20 @@ class Agent:
         Yields:
             str: The streaming response from the agent.
         """
-        client = await create_client(agent_card)
-        msg = create_text_message_object(content=message)
-        request = SendMessageRequest(message=msg)
+        async with await create_client(agent_card) as client:
+            msg = create_text_message_object(content=message)
+            request = SendMessageRequest(message=msg)
 
-        async for chunk in client.send_message(request):
-            if chunk.HasField('status_update'):
-                status_update = chunk.status_update
-                if status_update.status.message:
-                    text = ''.join(
-                        part.text
-                        for part in status_update.status.message.parts
-                        if part.text
-                    )
-                    yield text
+            async for chunk in client.send_message(request):
+                if chunk.HasField('status_update'):
+                    status_update = chunk.status_update
+                    if status_update.status.message:
+                        text = ''.join(
+                            part.text
+                            for part in status_update.status.message.parts
+                            if part.text
+                        )
+                        yield text
 
     async def stream(self, question: str) -> AsyncGenerator[str, None]:
         """Stream the process of answering a question, possibly involving multiple agents.

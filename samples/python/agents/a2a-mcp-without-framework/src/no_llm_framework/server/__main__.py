@@ -1,7 +1,6 @@
 import click
 import uvicorn
 
-from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
 from a2a.server.tasks.inmemory_task_store import InMemoryTaskStore
@@ -10,10 +9,6 @@ from a2a.types import (
     AgentCard,
     AgentInterface,
     AgentSkill,
-    GetTaskRequest,
-    Message,
-    SendMessageRequest,
-    Task,
 )
 from starlette.applications import Starlette
 
@@ -22,26 +17,6 @@ from no_llm_framework.server.agent_executor import HelloWorldAgentExecutor
 
 class A2ARequestHandler(DefaultRequestHandler):
     """A2A Request Handler for the A2A Repo Agent."""
-
-    def __init__(
-        self,
-        agent_executor: AgentExecutor,
-        task_store: InMemoryTaskStore,
-        agent_card: AgentCard,
-    ):
-        super().__init__(agent_executor, task_store, agent_card)
-
-    async def on_get_task(
-        self, request: GetTaskRequest, context: RequestContext
-    ) -> Task:
-        """Get task."""
-        return await super().on_get_task(request, context)
-
-    async def on_message_send(
-        self, request: SendMessageRequest, context: RequestContext
-    ) -> Message | Task:
-        """Handle message send."""
-        return await super().on_message_send(request, context)
 
 
 @click.command()

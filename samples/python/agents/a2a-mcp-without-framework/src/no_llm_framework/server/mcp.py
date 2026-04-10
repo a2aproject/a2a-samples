@@ -29,8 +29,8 @@ async def get_mcp_tool_prompt(url: str) -> str:
     ):
         await session.initialize()
 
-        resources = await session.list_tools()
-        return template.render(tools=resources.tools)
+        tools_result = await session.list_tools()
+        return template.render(tools=tools_result.tools)
 
 
 async def call_mcp_tool(
