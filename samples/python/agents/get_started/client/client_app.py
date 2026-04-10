@@ -1,3 +1,17 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import asyncio
 import httpx
 import time
@@ -6,6 +20,7 @@ import uuid
 from a2a import types
 from a2a.client import A2ACardResolver, ClientConfig, ClientFactory
 from a2a.utils.message import get_message_text
+from a2a.client.helpers import create_text_message_object
 
 # Assuming the server is running at http://localhost:9999 and exposes an /invoke endpoint
 SERVER_URL = "http://localhost:9999/"
@@ -46,7 +61,7 @@ async def show_agent_card():
     print("#" * 45)
 
 
-async def send_message(query: str):
+async def send_message(text_query: str):
     print("########################################")
     print("#### Weather Reporting Poet via A2A ####")
     print("########################################")
@@ -55,11 +70,11 @@ async def send_message(query: str):
     client = client_factory.create(agent_card)
 
     print("To exit use `exit` or `quit`.")
-    print(f"user> {query}")
-    while query not in ["exit", "quit"]:
-        if query:
+    print(f"user> {text_query}")
+    while text_query not in ["exit", "quit"]:
+        if text_query:
             # create a client message object
-            parts = [types.Part(text=query)]
+            parts = [types.Part(text=text_query)]
             message = types.Message(
                 role=types.Role.ROLE_USER,
                 parts=parts,
@@ -75,7 +90,7 @@ async def send_message(query: str):
             async for response_chunk, task in response:
                 text_response = get_message_text(task.artifacts[0])
                 print(f"model> {text_response}")
-        query = input("user> ").strip()
+        text_query = input("user> ").strip()
     print("#" * 45)
 
 
