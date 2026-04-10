@@ -16,7 +16,9 @@
 -->
 # Get Started with A2A
 
-This project implements a Google ADK-powered agent that poetically reports weather updates. It leverages Google Search to gather factual weather data and presents it in the form of haikus or short poems, making weather forecasts engaging and unique.
+This project implements a Google ADK-powered agent(A2A Server) that poetically reports weather updates. It leverages Google Search to gather factual weather data and presents it in the form of haikus or short poems, making weather forecasts engaging and unique.
+
+DEMO: Using a simple A2A client(pure python), we will send queries and receive messages from A2A Server.
 
 ## ✨ Features
 
