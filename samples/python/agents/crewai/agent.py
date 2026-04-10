@@ -49,9 +49,18 @@ class Imagedata(BaseModel):
 
 @tool('ImageGenerationTool')
 def generate_image_tool(
-    prompt: str, session_id: str, artifact_file_id: str = None
+    prompt: str, session_id: str, artifact_file_id: str | None = None
 ) -> str:
-    """Image generation tool that generates images or modifies a given image based on a prompt."""
+    """Image generation tool that generates images based on a prompt.
+
+    Args:
+        prompt: The text description of the image to generate.
+        session_id: The session identifier for caching.
+        artifact_file_id: Optional ID of an existing image to modify (can be omitted for new images).
+
+    Returns:
+        The ID of the generated image.
+    """
     if not prompt:
         raise ValueError('Prompt cannot be empty')
 
@@ -99,7 +108,7 @@ def generate_image_tool(
 
     try:
         response = client.models.generate_content(
-            model='gemini-2.0-flash-exp',
+            model='gemini-2.5-flash-image',
             contents=contents,
             config=types.GenerateContentConfig(
                 response_modalities=['Text', 'Image']
@@ -144,10 +153,10 @@ class ImageGenerationAgent:
 
     def __init__(self):
         if os.getenv('GOOGLE_GENAI_USE_VERTEXAI'):
-            self.model = LLM(model='vertex_ai/gemini-2.0-flash')
+            self.model = LLM(model='vertex_ai/gemini-2.5-flash')
         elif os.getenv('GOOGLE_API_KEY'):
             self.model = LLM(
-                model='gemini/gemini-2.0-flash',
+                model='gemini/gemini-2.5-flash',
                 api_key=os.getenv('GOOGLE_API_KEY'),
             )
 
