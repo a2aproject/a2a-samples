@@ -4,7 +4,7 @@ import re
 
 from collections.abc import AsyncGenerator, Callable, Generator
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from google import genai
 from jinja2 import Template
@@ -118,7 +118,7 @@ class Agent:
             ]
         )
 
-    async def stream(self, question: str) -> AsyncGenerator[str]:
+    async def stream(self, question: str) -> AsyncGenerator[dict[str, Any]]:
         """Stream the process of answering a question, possibly involving tool calls.
 
         Args:
@@ -179,7 +179,7 @@ if __name__ == '__main__':
         mcp_url='https://gitmcp.io/google/A2A',
     )
 
-    async def main():
+    async def main() -> None:
         """Main function."""
         async for chunk in agent.stream('What is A2A Protocol?'):
             print(chunk)
