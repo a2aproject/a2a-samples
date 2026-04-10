@@ -2,19 +2,19 @@ import click
 import uvicorn
 
 from a2a.server.agent_execution import AgentExecutor
-from a2a.server.apps import A2AStarletteApplication
-from a2a.server.request_handlers.default_request_handler import (
-    DefaultRequestHandler,
-)
+from starlette.applications import Starlette
+from a2a.server.routes import create_jsonrpc_routes, create_agent_card_routes
+from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks.inmemory_task_store import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
+    AgentInterface,
     AgentSkill,
     GetTaskRequest,
-    GetTaskResponse,
     SendMessageRequest,
-    SendMessageResponse,
+    Task,
+    Message,
 )
 
 from no_llm_framework.server.agent_executor import HelloWorldAgentExecutor
@@ -24,17 +24,17 @@ class A2ARequestHandler(DefaultRequestHandler):
     """A2A Request Handler for the A2A Repo Agent."""
 
     def __init__(
-        self, agent_executor: AgentExecutor, task_store: InMemoryTaskStore
+        self, agent_executor: AgentExecutor, task_store: InMemoryTaskStore, agent_card: AgentCard
     ):
-        super().__init__(agent_executor, task_store)
+        super().__init__(agent_executor, task_store, agent_card)
 
-    async def on_get_task(self, request: GetTaskRequest) -> GetTaskResponse:
-        return await super().on_get_task(request)
+    async def on_get_task(self, request: GetTaskRequest, context) -> Task:
+        return await super().on_get_task(request, context)
 
     async def on_message_send(
-        self, request: SendMessageRequest
-    ) -> SendMessageResponse:
-        return await super().on_message_send(request)
+        self, request: SendMessageRequest, context
+    ) -> Message | Task:
+        return await super().on_message_send(request, context)
 
 
 @click.command()
@@ -61,30 +61,35 @@ def main(host: str, port: int):
     agent_card = AgentCard(
         name='A2A Protocol Agent',
         description='A2A Protocol knowledge agent who has information about A2A Protocol and can answer questions about it',
-        url=f'http://{host}:{port}/',
+        supported_interfaces=[
+            AgentInterface(
+                protocol_binding='JSONRPC',
+                url=f'http://{host}:{port}/',
+            )
+        ],
         version='1.0.0',
         default_input_modes=['text'],
         default_output_modes=['text'],
         capabilities=AgentCapabilities(
-            input_modes=['text'],
-            output_modes=['text'],
             streaming=True,
         ),
         skills=[skill],
         # authentication=AgentAuthentication(schemes=['public']),
-        examples=['What is A2A protocol?', 'What is Google A2A?'],
     )
 
     task_store = InMemoryTaskStore()
     request_handler = A2ARequestHandler(
         agent_executor=HelloWorldAgentExecutor(),
         task_store=task_store,
+        agent_card=agent_card,
     )
 
-    server = A2AStarletteApplication(
-        agent_card=agent_card, http_handler=request_handler
-    )
-    uvicorn.run(server.build(), host=host, port=port)
+    routes = []
+    routes.extend(create_agent_card_routes(agent_card))
+    routes.extend(create_jsonrpc_routes(request_handler, rpc_url="/"))
+
+    app = Starlette(routes=routes)
+    uvicorn.run(app, host=host, port=port)
 
 
 if __name__ == '__main__':

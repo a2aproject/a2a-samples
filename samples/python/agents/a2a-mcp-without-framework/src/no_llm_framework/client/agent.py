@@ -9,20 +9,17 @@ from uuid import uuid4
 
 import httpx
 
-from a2a.client import A2ACardResolver, A2AClient
+from a2a.client import A2ACardResolver, create_client
 from a2a.types import (
     AgentCard,
     Message,
-    MessageSendParams,
     Part,
     Role,
-    SendStreamingMessageRequest,
-    SendStreamingMessageSuccessResponse,
-    TaskStatusUpdateEvent,
-    TextPart,
+    SendMessageRequest,
 )
 from google import genai
 from jinja2 import Template
+from a2a.client.helpers import create_text_message_object
 
 from no_llm_framework.client.constant import GOOGLE_API_KEY
 
@@ -163,27 +160,16 @@ class Agent:
         Yields:
             str: The streaming response from the agent.
         """
-        async with httpx.AsyncClient() as httpx_client:
-            client = A2AClient(httpx_client, agent_card=agent_card)
-            message = MessageSendParams(
-                message=Message(
-                    role=Role.user,
-                    parts=[Part(TextPart(text=message))],
-                    message_id=uuid4().hex,
-                    task_id=uuid4().hex,
-                )
-            )
+        client = await create_client(agent_card)
+        msg = create_text_message_object(content=message)
+        request = SendMessageRequest(message=msg)
 
-            streaming_request = SendStreamingMessageRequest(
-                id=str(uuid4().hex), params=message
-            )
-            async for chunk in client.send_message_streaming(streaming_request):
-                if isinstance(
-                    chunk.root, SendStreamingMessageSuccessResponse
-                ) and isinstance(chunk.root.result, TaskStatusUpdateEvent):
-                    message = chunk.root.result.status.message
-                    if message:
-                        yield message.parts[0].root.text
+        async for chunk in client.send_message(request):
+            if chunk.HasField('status_update'):
+                status_update = chunk.status_update
+                if status_update.status.message:
+                    text = "".join(part.text for part in status_update.status.message.parts if part.text)
+                    yield text
 
     async def stream(self, question: str):
         """Stream the process of answering a question, possibly involving multiple agents.

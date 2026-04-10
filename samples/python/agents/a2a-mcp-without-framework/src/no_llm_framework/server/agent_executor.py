@@ -55,8 +55,7 @@ class HelloWorldAgentExecutor(AgentExecutor):
                 )
                 await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
-                        status=TaskStatus(state=TaskState.completed),
-                        final=True,
+                        status=TaskStatus(state=TaskState.TASK_STATE_COMPLETED),
                         context_id=task.context_id,
                         task_id=task.id,
                     )
@@ -65,14 +64,13 @@ class HelloWorldAgentExecutor(AgentExecutor):
                 await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(
-                            state=TaskState.input_required,
+                            state=TaskState.TASK_STATE_INPUT_REQUIRED,
                             message=new_agent_text_message(
                                 event['content'],
                                 task.context_id,
                                 task.id,
                             ),
                         ),
-                        final=True,
                         context_id=task.context_id,
                         task_id=task.id,
                     )
@@ -80,16 +78,14 @@ class HelloWorldAgentExecutor(AgentExecutor):
             else:
                 await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
-                        append=True,
                         status=TaskStatus(
-                            state=TaskState.working,
+                            state=TaskState.TASK_STATE_WORKING,
                             message=new_agent_text_message(
                                 event['content'],
                                 task.context_id,
                                 task.id,
                             ),
                         ),
-                        final=False,
                         context_id=task.context_id,
                         task_id=task.id,
                     )
