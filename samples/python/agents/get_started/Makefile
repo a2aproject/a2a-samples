@@ -29,3 +29,20 @@ run_server: ## Run python a2a server
 
 run_client: ## Prints the Application Version
 	cd client && python client_app.py
+
+# With CrewAI
+
+run_server_crewai: # TODO: implement crewai client
+	cd server_crewai && python client_app.py
+
+run_client_crewai: # TODO: implement crewai client
+	cd client_crewai && python client_app.py
+
+# With LangGraph
+
+run_server_langgraph: # TODO: implement crewai client
+	cd server_crewai && python client_app.py
+
+run_client_langgraph: # TODO: implement crewai client
+	cd client_crewai && python client_app.py
+

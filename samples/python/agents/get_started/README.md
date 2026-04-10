@@ -14,7 +14,7 @@
 # limitations under the License.
 
 -->
-# Weather Reporting Poet Agent
+# Get Started with A2A
 
 This project implements a Google ADK-powered agent that poetically reports weather updates. It leverages Google Search to gather factual weather data and presents it in the form of haikus or short poems, making weather forecasts engaging and unique.
 
@@ -35,12 +35,16 @@ This project implements a Google ADK-powered agent that poetically reports weath
 *   `uvicorn` (for running the ASGI server)
 *   Google Generative AI
 
+### Important Clarification on A2A Implementation
+
+This example showcases Agent-to-Agent (A2A) communication using the Google ADK and Gemini Models. It's crucial to understand that the A2A protocol itself is flexible and not tied to these specific technologies (or Models). You can build A2A-enabled agents and clients using various frameworks like LangGraph or CrewAI, and integrate them with different LLMs, to achieve interoperability between agents.
+
 ## 🛠 Setup and Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository_url>
-    cd get_started
+    git clone https://github.com/a2aproject/a2a-samples.git
+    cd a2a-samples/samples/python/agents/get_started
     ```
 2.  **Create a virtual environment:**
     ```bash
