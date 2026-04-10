@@ -1,10 +1,12 @@
 import asyncio
+
 from pathlib import Path
 
 from jinja2 import Template
 from mcp.client.session import ClientSession
 from mcp.client.sse import sse_client
 from mcp.types import CallToolResult, TextContent
+
 
 dir_path = Path(__file__).parent
 
@@ -43,7 +45,7 @@ async def call_mcp_tool(
 
     Returns:
         CallToolResult: The result of the tool call.
-    """  # noqa: E501
+    """
     async with (
         sse_client(
             url=url,

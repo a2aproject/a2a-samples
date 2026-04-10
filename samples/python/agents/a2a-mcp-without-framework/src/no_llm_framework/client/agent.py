@@ -2,24 +2,20 @@ import asyncio
 import json
 import re
 
-from collections.abc import Callable, Generator
+from collections.abc import AsyncGenerator, Callable, Generator
 from pathlib import Path
 from typing import Literal
-from uuid import uuid4
 
 import httpx
 
 from a2a.client import A2ACardResolver, create_client
+from a2a.client.helpers import create_text_message_object
 from a2a.types import (
     AgentCard,
-    Message,
-    Part,
-    Role,
     SendMessageRequest,
 )
 from google import genai
 from jinja2 import Template
-from a2a.client.helpers import create_text_message_object
 
 from no_llm_framework.client.constant import GOOGLE_API_KEY
 
@@ -150,7 +146,7 @@ class Agent:
 
     async def send_message_to_an_agent(
         self, agent_card: AgentCard, message: str
-    ):
+    ) -> AsyncGenerator[str, None]:
         """Send a message to a specific agent and yield the streaming response.
 
         Args:
@@ -168,10 +164,14 @@ class Agent:
             if chunk.HasField('status_update'):
                 status_update = chunk.status_update
                 if status_update.status.message:
-                    text = "".join(part.text for part in status_update.status.message.parts if part.text)
+                    text = ''.join(
+                        part.text
+                        for part in status_update.status.message.parts
+                        if part.text
+                    )
                     yield text
 
-    async def stream(self, question: str):
+    async def stream(self, question: str) -> AsyncGenerator[str, None]:
         """Stream the process of answering a question, possibly involving multiple agents.
 
         Args:
@@ -226,7 +226,7 @@ if __name__ == '__main__':
 
     import colorama
 
-    async def main():
+    async def main() -> None:
         """Main function to run the A2A Repo Agent client."""
         agent = Agent(
             mode='stream',

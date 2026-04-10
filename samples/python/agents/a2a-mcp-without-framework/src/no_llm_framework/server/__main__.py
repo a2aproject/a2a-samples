@@ -1,10 +1,9 @@
 import click
 import uvicorn
 
-from a2a.server.agent_execution import AgentExecutor
-from starlette.applications import Starlette
-from a2a.server.routes import create_jsonrpc_routes, create_agent_card_routes
+from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
 from a2a.server.tasks.inmemory_task_store import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
@@ -12,10 +11,11 @@ from a2a.types import (
     AgentInterface,
     AgentSkill,
     GetTaskRequest,
+    Message,
     SendMessageRequest,
     Task,
-    Message,
 )
+from starlette.applications import Starlette
 
 from no_llm_framework.server.agent_executor import HelloWorldAgentExecutor
 
@@ -24,23 +24,30 @@ class A2ARequestHandler(DefaultRequestHandler):
     """A2A Request Handler for the A2A Repo Agent."""
 
     def __init__(
-        self, agent_executor: AgentExecutor, task_store: InMemoryTaskStore, agent_card: AgentCard
+        self,
+        agent_executor: AgentExecutor,
+        task_store: InMemoryTaskStore,
+        agent_card: AgentCard,
     ):
         super().__init__(agent_executor, task_store, agent_card)
 
-    async def on_get_task(self, request: GetTaskRequest, context) -> Task:
+    async def on_get_task(
+        self, request: GetTaskRequest, context: RequestContext
+    ) -> Task:
+        """Get task."""
         return await super().on_get_task(request, context)
 
     async def on_message_send(
-        self, request: SendMessageRequest, context
+        self, request: SendMessageRequest, context: RequestContext
     ) -> Message | Task:
+        """Handle message send."""
         return await super().on_message_send(request, context)
 
 
 @click.command()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=9999)
-def main(host: str, port: int):
+def main(host: str, port: int) -> None:
     """Start the A2A Repo Agent server.
 
     This function initializes the A2A Repo Agent server with the specified host and port.
@@ -74,7 +81,6 @@ def main(host: str, port: int):
             streaming=True,
         ),
         skills=[skill],
-        # authentication=AgentAuthentication(schemes=['public']),
     )
 
     task_store = InMemoryTaskStore()
@@ -86,7 +92,7 @@ def main(host: str, port: int):
 
     routes = []
     routes.extend(create_agent_card_routes(agent_card))
-    routes.extend(create_jsonrpc_routes(request_handler, rpc_url="/"))
+    routes.extend(create_jsonrpc_routes(request_handler, rpc_url='/'))
 
     app = Starlette(routes=routes)
     uvicorn.run(app, host=host, port=port)

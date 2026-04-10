@@ -1,9 +1,10 @@
 import asyncio
-from typing import Literal
 
+from typing import Literal
 
 import asyncclick as click
 import colorama
+
 from no_llm_framework.client.agent import Agent
 
 
@@ -17,7 +18,7 @@ async def a_main(
     port: int,
     mode: Literal['completion', 'streaming'],
     question: str,
-):
+) -> None:
     """Main function to run the A2A Repo Agent client.
 
     Args:
@@ -25,7 +26,7 @@ async def a_main(
         port (int): The port number to run the server on.
         mode (Literal['completion', 'streaming']): The mode to run the server on.
         question (str): The question to ask the Agent.
-    """  # noqa: E501
+    """
     agent = Agent(
         mode='stream',
         token_stream_callback=None,

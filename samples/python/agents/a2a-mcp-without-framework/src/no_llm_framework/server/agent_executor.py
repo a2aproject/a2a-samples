@@ -15,7 +15,7 @@ from src.no_llm_framework.server.agent import Agent
 class HelloWorldAgentExecutor(AgentExecutor):
     """Test AgentProxy Implementation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.agent = Agent(
             mode='stream',
             token_stream_callback=print,

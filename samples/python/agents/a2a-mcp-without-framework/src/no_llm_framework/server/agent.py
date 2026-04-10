@@ -179,7 +179,7 @@ if __name__ == '__main__':
         mcp_url='https://gitmcp.io/google/A2A',
     )
 
-    async def main():
+    async def main() -> None:
         """Main function."""
         async for chunk in agent.stream('What is A2A Protocol?'):
             print(chunk)
