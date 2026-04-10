@@ -2,11 +2,10 @@ import logging
 import os
 
 import click
-import httpx
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
-from a2a.server.tasks import InMemoryPushNotifier, InMemoryTaskStore
+from a2a.server.tasks import InMemoryPushNotificationConfigStore, InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
@@ -65,13 +64,12 @@ def main(host, port):
             skills=[skill],
         )
 
-        httpx_client = httpx.AsyncClient()
         request_handler = DefaultRequestHandler(
             agent_executor=LlamaIndexAgentExecutor(
                 agent=ParseAndChat(),
             ),
             task_store=InMemoryTaskStore(),
-            push_notifier=InMemoryPushNotifier(httpx_client),
+            push_config_store=InMemoryPushNotificationConfigStore(),
         )
         server = A2AStarletteApplication(
             agent_card=agent_card, http_handler=request_handler

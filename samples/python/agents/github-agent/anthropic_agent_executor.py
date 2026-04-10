@@ -14,15 +14,15 @@ from a2a.types import (
     UnsupportedOperationError,
 )
 from a2a.utils.errors import ServerError
-from openai import AsyncOpenAI
+from anthropic import AsyncAnthropic
 
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
-class OpenAIAgentExecutor(AgentExecutor):
-    """An AgentExecutor that runs an OpenAI-based Agent."""
+class AnthropicAgentExecutor(AgentExecutor):
+    """An AgentExecutor that runs an Anthropic Claude-based Agent."""
 
     def __init__(
         self,
@@ -33,8 +33,8 @@ class OpenAIAgentExecutor(AgentExecutor):
     ):
         self._card = card
         self.tools = tools
-        self.client = AsyncOpenAI(api_key=api_key)
-        self.model = 'gpt-4o-mini'
+        self.client = AsyncAnthropic(api_key=api_key)
+        self.model = 'claude-sonnet-4-20250514'
         self.system_prompt = system_prompt
 
     async def _process_request(
@@ -44,18 +44,17 @@ class OpenAIAgentExecutor(AgentExecutor):
         task_updater: TaskUpdater,
     ) -> None:
         messages = [
-            {'role': 'system', 'content': self.system_prompt},
             {'role': 'user', 'content': message_text},
         ]
 
-        # Convert tools to OpenAI format
-        openai_tools = []
+        # Convert tools to Anthropic format
+        anthropic_tools = []
         for tool_name, tool_instance in self.tools.items():
             if hasattr(tool_instance, tool_name):
                 func = getattr(tool_instance, tool_name)
                 # Extract function schema from the method
                 schema = self._extract_function_schema(func)
-                openai_tools.append({'type': 'function', 'function': schema})
+                anthropic_tools.append(schema)
 
         max_iterations = 10
         iteration = 0
@@ -64,33 +63,46 @@ class OpenAIAgentExecutor(AgentExecutor):
             iteration += 1
 
             try:
-                # Make API call to OpenAI
-                response = await self.client.chat.completions.create(
+                # Make API call to Anthropic
+                response = await self.client.messages.create(
                     model=self.model,
-                    messages=messages,
-                    tools=openai_tools if openai_tools else None,
-                    tool_choice='auto' if openai_tools else None,
-                    temperature=0.1,
                     max_tokens=4000,
+                    system=self.system_prompt,
+                    messages=messages,
+                    tools=anthropic_tools if anthropic_tools else None,
                 )
 
-                message = response.choices[0].message
+                # Process response content blocks
+                assistant_content = []
+                tool_use_blocks = []
+                text_content = ""
+
+                for block in response.content:
+                    if block.type == 'text':
+                        text_content += block.text
+                        assistant_content.append({'type': 'text', 'text': block.text})
+                    elif block.type == 'tool_use':
+                        tool_use_blocks.append(block)
+                        assistant_content.append({
+                            'type': 'tool_use',
+                            'id': block.id,
+                            'name': block.name,
+                            'input': block.input
+                        })
 
                 # Add assistant's response to messages
-                messages.append(
-                    {
-                        'role': 'assistant',
-                        'content': message.content,
-                        'tool_calls': message.tool_calls,
-                    }
-                )
+                messages.append({
+                    'role': 'assistant',
+                    'content': assistant_content
+                })
 
                 # Check if there are tool calls to execute
-                if message.tool_calls:
-                    # Execute tool calls
-                    for tool_call in message.tool_calls:
-                        function_name = tool_call.function.name
-                        function_args = json.loads(tool_call.function.arguments)
+                if tool_use_blocks:
+                    tool_results = []
+
+                    for tool_use in tool_use_blocks:
+                        function_name = tool_use.name
+                        function_args = tool_use.input
 
                         logger.debug(
                             f'Calling function: {function_name} with args: {function_args}'
@@ -114,23 +126,23 @@ class OpenAIAgentExecutor(AgentExecutor):
 
                         # Serialize result properly - handle Pydantic models
                         if hasattr(result, 'model_dump'):
-                            # It's a Pydantic model, use model_dump() to convert to dict
                             result_json = json.dumps(result.model_dump())
                         elif isinstance(result, dict):
-                            # It's a regular dict
                             result_json = json.dumps(result)
                         else:
-                            # Convert to string as fallback
                             result_json = str(result)
 
-                        # Add tool result to messages
-                        messages.append(
-                            {
-                                'role': 'tool',
-                                'tool_call_id': tool_call.id,
-                                'content': result_json,
-                            }
-                        )
+                        tool_results.append({
+                            'type': 'tool_result',
+                            'tool_use_id': tool_use.id,
+                            'content': result_json
+                        })
+
+                    # Add tool results to messages
+                    messages.append({
+                        'role': 'user',
+                        'content': tool_results
+                    })
 
                     # Send update to show we're processing
                     await task_updater.update_status(
@@ -142,16 +154,18 @@ class OpenAIAgentExecutor(AgentExecutor):
 
                     # Continue the loop to get the final response
                     continue
-                # No more tool calls, this is the final response
-                if message.content:
-                    parts = [TextPart(text=message.content)]
-                    logger.debug(f'Yielding final response: {parts}')
-                    await task_updater.add_artifact(parts)
+
+                # No more tool calls, check stop reason
+                if response.stop_reason == 'end_turn' or text_content:
+                    if text_content:
+                        parts = [TextPart(text=text_content)]
+                        logger.debug(f'Yielding final response: {parts}')
+                        await task_updater.add_artifact(parts)
                     await task_updater.complete()
                 break
 
             except Exception as e:
-                logger.error(f'Error in OpenAI API call: {e}')
+                logger.error(f'Error in Anthropic API call: {e}')
                 error_parts = [
                     TextPart(
                         text=f'Sorry, an error occurred while processing the request: {e!s}'
@@ -171,7 +185,7 @@ class OpenAIAgentExecutor(AgentExecutor):
             await task_updater.complete()
 
     def _extract_function_schema(self, func):
-        """Extract OpenAI function schema from a Python function"""
+        """Extract Anthropic tool schema from a Python function"""
         import inspect
 
         # Get function signature
@@ -217,7 +231,7 @@ class OpenAIAgentExecutor(AgentExecutor):
         return {
             'name': func.__name__,
             'description': description,
-            'parameters': {
+            'input_schema': {
                 'type': 'object',
                 'properties': properties,
                 'required': required,

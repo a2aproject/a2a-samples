@@ -158,7 +158,7 @@ class SemanticKernelTravelAgent:
     def __init__(self):
         # Configure the chat completion service explicitly
         # It uses Azure OpenAI by default. Please change to ChatServices.OPENAI in case you want to use OpenAI service.
-        chat_service = get_chat_completion_service(ChatServices.AZURE_OPENAI)
+        chat_service = get_chat_completion_service(ChatServices.OPENAI)
 
         currency_exchange_agent = ChatCompletionAgent(
             service=chat_service,
