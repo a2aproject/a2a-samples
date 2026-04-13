@@ -61,8 +61,8 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
 
     if (current_dir.parent / 'package.json').exists():
         # JS/TS agent
-        return subprocess.Popen(
-            [
+        return subprocess.Popen(  # noqa: S603
+            [  # noqa: S607
                 'npm',
                 'run',
                 'itk-agent',
@@ -72,7 +72,7 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
                 '--grpcPort',
                 str(grpc_port),
             ],
-            cwd=current_dir.parent,
+            cwd=current_dir,
             stderr=subprocess.STDOUT,
             text=True,
         )
