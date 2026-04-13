@@ -59,7 +59,25 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
             text=True,
         )
 
+    if (current_dir.parent / 'package.json').exists():
+        # JS/TS agent
+        return subprocess.Popen(  # noqa: S603
+            [  # noqa: S607
+                'npm',
+                'run',
+                'itk-agent',
+                '--',
+                '--httpPort',
+                str(http_port),
+                '--grpcPort',
+                str(grpc_port),
+            ],
+            cwd=current_dir,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+
     raise RuntimeError(
         f'Could not determine agent type in {current_dir}. '
-        'Neither main.go nor main.py found.'
+        'Neither main.go, main.py nor package.json found.'
     )

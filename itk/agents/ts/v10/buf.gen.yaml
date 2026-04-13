@@ -1,0 +1,18 @@
+version: v2
+inputs:
+  - directory: protos
+plugins:
+  - remote: buf.build/community/stephenh-ts-proto:v2.11.0
+    out: ./pb
+    opt:
+      - oneof=unions-value
+      - importSuffix=.js
+      - outputServices=false
+      - env=node
+      - esModuleInterop=true
+      - outputJsonMethods=true
+      - outputEncodeMethods=true
+      - outputPartialMethods=true
+      - snakeToCamel=keys
+      - emitImportedFiles=false
+      - useDate=string
