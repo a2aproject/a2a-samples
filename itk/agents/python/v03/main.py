@@ -13,7 +13,7 @@ import httpx
 import uvicorn
 
 from fastapi import FastAPI
-from agents.python.v03.pyproto import instruction_pb2
+from pyproto import instruction_pb2
 
 from a2a.client import ClientConfig, ClientFactory
 from a2a.grpc import a2a_pb2_grpc
