@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "grpcio-tools>=1.60.0",
-    "a2a-sdk[http-server]>=0.3.24",
     "httpx>=0.27.0",
     "fastapi>=0.110.0",
     "uvicorn>=0.29.0",
@@ -19,9 +18,6 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
-
-[tool.uv]
-workspace = { members = ["agents/python/v03"] }
 
 [build-system]
 requires = ["hatchling"]

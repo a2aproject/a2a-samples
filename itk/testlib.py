@@ -9,15 +9,7 @@ import httpx
 
 import test_suite
 
-from a2a.client import ClientConfig, ClientFactory
-from a2a.types import (
-    FilePart,
-    FileWithBytes,
-    Message,
-    Part,
-    Role,
-    TransportProtocol,
-)
+
 from agents.python.v03.pyproto import instruction_pb2
 
 
@@ -63,56 +55,34 @@ def _log_process_output(
         raise err
 
 
-def _wrap_instruction(instruction: instruction_pb2.Instruction) -> Message:
-    """Wraps a proto instruction into an A2A Message for transport.
 
-    Args:
-        instruction: The instruction protobuf to wrap.
-
-    Returns:
-        Message: An initialized A2A Message with the serialized instruction logic.
-    """
-    inst_bytes = instruction.SerializeToString()
-    b64_inst = base64.b64encode(inst_bytes).decode('utf-8')
-    return Message(
-        role=Role.user,
-        message_id=str(uuid.uuid4()),
-        parts=[
-            Part(
-                root=FilePart(
-                    file=FileWithBytes(
-                        bytes=b64_inst,
-                        mime_type='application/x-protobuf',
-                        name='instruction.bin',
-                    )
-                )
-            )
-        ],
-    )
 
 
 async def _check_agent_ready(
     name: str, url: str, timeout_seconds: int = 35
 ) -> bool:
-    """Use A2A SDK to verify agent readiness by attempting to connect.
+    """Verify agent readiness by attempting to fetch the agent card.
 
     Args:
         name: Name of the agent.
-        url: The URL pointing to the agent's well-known root.
+        url: The URL pointing to the agent's JSON-RPC endpoint.
         timeout_seconds: Duration in seconds to wait for readiness. Defaults to 35.
 
     Returns:
-        bool: True if connected successfully within the timeout, otherwise False.
+        bool: True if card fetched successfully within the timeout, otherwise False.
     """
     start = time.time()
-    async with httpx.AsyncClient(timeout=10) as http_client:
-        config = ClientConfig()
-        config.httpx_client = http_client
+    base_url = url.rstrip('/')
+    if not base_url.endswith('/jsonrpc'):
+        target_url = f"{base_url}/jsonrpc/.well-known/agent-card.json"
+    else:
+        target_url = f"{base_url}/.well-known/agent-card.json"
+
+    async with httpx.AsyncClient(timeout=5) as http_client:
         while time.time() - start < timeout_seconds:
             try:
-                # ClientFactory.connect resolves the card and verifies connectivity
-                client = await ClientFactory.connect(url, client_config=config)
-                if client:
+                response = await http_client.get(target_url)
+                if response.status_code == 200:
                     logger.info('%s is ready at %s', name, url)
                     return True
             except Exception:  # noqa: BLE001
@@ -170,6 +140,54 @@ async def start_itk_cluster(
         return agent_procs, agent_card_uris, ports
 
 
+def _create_payload(is_v0: bool, test_instruction: instruction_pb2.Instruction) -> dict:
+    """Creates the JSON-RPC payload for the test instruction."""
+    inst_bytes = test_instruction.SerializeToString()
+    b64_inst = base64.b64encode(inst_bytes).decode('utf-8')
+    
+    if is_v0:
+        method = 'message/send'
+        params = {
+            "message": {
+                "role": "user",
+                "messageId": str(uuid.uuid4()),
+                "parts": [
+                    {
+                        "kind": "file",
+                        "file": {
+                            "bytes": b64_inst,
+                            "mimeType": "application/x-protobuf",
+                            "name": "instruction.bin"
+                        }
+                    }
+                ],
+                "metadata": {"a2a/protocol_version": "0.3"}
+            }
+        }
+    else:
+        method = 'SendMessage'
+        params = {
+            "message": {
+                "role": "ROLE_USER",
+                "messageId": str(uuid.uuid4()),
+                "parts": [
+                    {
+                        "raw": b64_inst,
+                        "mediaType": "application/x-protobuf",
+                        "filename": "instruction.bin"
+                    }
+                ]
+            }
+        }
+
+    return {
+        "jsonrpc": "2.0",
+        "method": method,
+        "params": params,
+        "id": str(uuid.uuid4())
+    }
+
+
 async def execute_itk_test(  # noqa: PLR0913
     sdks: list[str],
     traversal: str,
@@ -203,46 +221,53 @@ async def execute_itk_test(  # noqa: PLR0913
 
     logger.info('Executing %s traversal test...', label)
     logger.info('Test instruction: %s', test_instruction)
-    msg = _wrap_instruction(test_instruction)
+    first_sdk = sdks[0]
+    is_v0 = 'v03' in first_sdk
+    
+    target_url = test_suite.get_agent_card_uri(first_sdk)
+    if 'go' in first_sdk:
+        target_url = target_url.rstrip('/')
+    else:
+        target_url = target_url.rstrip('/') + '/'
+    
+    json_rpc_request = _create_payload(is_v0, test_instruction)
 
+    responses = []
+    logger.info(
+        'Dispatching %s payload to %s via JSON-RPC (%s)...',
+        label,
+        target_url,
+        "v0" if is_v0 else "v1"
+    )
+    
+    headers = {}
+    if is_v0:
+        headers['A2A-Version'] = '0.3'
+        
     async with httpx.AsyncClient(timeout=120) as http_client:
-        config = ClientConfig()
-        config.httpx_client = http_client
-        config.supported_transports = [TransportProtocol.jsonrpc]
-        config.streaming = streaming
-
-        client = await ClientFactory.connect(
-            test_suite.get_agent_card_uri(sdks[0]), client_config=config
-        )
-
-        responses = []
-        logger.info(
-            'Dispatching %s payload to %s via JSON-RPC...',
-            label,
-            test_suite.get_agent_card_uri(sdks[0]),
-        )
-        async for resp in client.send_message(msg):
-            logger.info('!!!!!!!!!!!!Received response: %s!!!!!!!!!!!!!', resp)
-            item = resp
-            if isinstance(resp, tuple):
-                for i in resp:
-                    if i is not None:
-                        item = i
-                        break
-
-            message = None
-            if isinstance(item, Message):
-                message = item
-            elif hasattr(item, 'status') and getattr(
-                item.status, 'message', None
-            ):
-                message = item.status.message
-
-            if message:
-                for part in message.parts:
-                    p_root = getattr(part, 'root', part)
-                    if hasattr(p_root, 'text') and p_root.text:
-                        responses.append(p_root.text)
+        response = await http_client.post(target_url, json=json_rpc_request, headers=headers)
+        response.raise_for_status()
+        response_json = response.json()
+        
+        logger.info('!!!!!!!!!!!!Received response: %s!!!!!!!!!!!!!', response_json)
+        
+        if 'error' in response_json:
+            raise RuntimeError(f"JSON-RPC Error: {response_json['error']}")
+            
+        result = response_json.get('result', {})
+        
+        message_data = None
+        if 'message' in result:
+            message_data = result['message']
+        elif 'status' in result and 'message' in result['status']:
+            message_data = result['status']['message']
+        elif 'task' in result and 'status' in result['task'] and 'message' in result['task']['status']:
+            message_data = result['task']['status']['message']
+                
+        if message_data and 'parts' in message_data:
+            for part in message_data['parts']:
+                if 'text' in part and part['text']:
+                    responses.append(part['text'])
 
         full_response = ''.join(responses).strip()
         logger.info('Test Result for %s: %s', label, full_response)
