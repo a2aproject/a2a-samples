@@ -3,13 +3,14 @@ module itk/agents/go/v10
 go 1.24.13
 
 require (
-	github.com/a2aproject/a2a-go v1.0.0-alpha.3.0.20260309154536-e4af18e0d8c2
+	github.com/a2aproject/a2a-go/v2 v2.2.0
 	golang.org/x/sync v0.19.0
-	google.golang.org/grpc v1.79.2
+	google.golang.org/grpc v1.79.3
 	google.golang.org/protobuf v1.36.11
 )
 
 require (
+	github.com/a2aproject/a2a-go v0.3.14-0.20260404065426-6a9878f8f8a8 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	golang.org/x/mod v0.33.0 // indirect
 	golang.org/x/net v0.48.0 // indirect
