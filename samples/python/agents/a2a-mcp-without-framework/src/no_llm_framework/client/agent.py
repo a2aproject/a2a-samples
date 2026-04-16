@@ -17,6 +17,7 @@ from a2a.types import (
     AgentCard,
     SendMessageRequest,
 )
+from a2a.utils.artifact import get_artifact_text
 from google import genai
 from jinja2 import Template
 
@@ -164,14 +165,9 @@ class Agent:
             request = SendMessageRequest(message=msg)
 
             async for chunk in client.send_message(request):
-                if chunk.HasField('status_update'):
-                    status_update = chunk.status_update
-                    if status_update.status.message:
-                        text = ''.join(
-                            part.text
-                            for part in status_update.status.message.parts
-                            if part.text
-                        )
+                if chunk.HasField('artifact_update'):
+                    text = get_artifact_text(chunk.artifact_update.artifact)
+                    if text:
                         yield text
 
     async def stream(self, question: str) -> AsyncGenerator[str, None]:
