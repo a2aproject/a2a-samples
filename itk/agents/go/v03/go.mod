@@ -3,7 +3,7 @@ module itk/agents/go/v03
 go 1.24.13
 
 require (
-	github.com/a2aproject/a2a-go v0.3.7
+	github.com/a2aproject/a2a-go v0.3.15
 	golang.org/x/sync v0.15.0
 	google.golang.org/grpc v1.73.0
 	google.golang.org/protobuf v1.36.11

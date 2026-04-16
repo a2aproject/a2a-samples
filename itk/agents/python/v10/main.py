@@ -2,6 +2,7 @@ import argparse  # noqa: I001
 import asyncio
 import base64
 import logging
+import os
 import uuid
 
 import grpc
@@ -35,7 +36,9 @@ from a2a.types.a2a_pb2 import (
 from a2a.utils import TransportProtocol
 
 
-logging.basicConfig(level=logging.INFO)
+log_level_str = os.environ.get('ITK_LOG_LEVEL', 'INFO').upper()
+log_level = getattr(logging, log_level_str, logging.INFO)
+logging.basicConfig(level=log_level)
 logger = logging.getLogger(__name__)
 
 

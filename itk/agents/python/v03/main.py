@@ -1,6 +1,7 @@
 import asyncio  # noqa: I001
 import base64
 import logging
+import os
 import signal
 import uuid
 
@@ -37,7 +38,9 @@ from a2a.types import (
 from a2a.utils import new_agent_text_message
 
 
-logging.basicConfig(level=logging.INFO)
+log_level_str = os.environ.get('ITK_LOG_LEVEL', 'INFO').upper()
+log_level = getattr(logging, log_level_str, logging.INFO)
+logging.basicConfig(level=log_level)
 logger = logging.getLogger(__name__)
 
 

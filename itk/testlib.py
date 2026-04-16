@@ -4,6 +4,7 @@ import logging
 import subprocess
 import time
 import uuid
+import os
 
 import httpx
 
@@ -225,7 +226,8 @@ async def execute_itk_test(  # noqa: PLR0913
     is_v0 = 'v03' in first_sdk
     
     target_url = test_suite.get_agent_card_uri(first_sdk)
-    if 'go' in first_sdk:
+    is_go_env = os.path.exists('/app/agents/repo/itk/go.mod')
+    if 'go' in first_sdk or (first_sdk == 'current' and is_go_env):
         target_url = target_url.rstrip('/')
     else:
         target_url = target_url.rstrip('/') + '/'
@@ -243,6 +245,8 @@ async def execute_itk_test(  # noqa: PLR0913
     headers = {}
     if is_v0:
         headers['A2A-Version'] = '0.3'
+    else:
+        headers['A2A-Version'] = '1.0'
         
     async with httpx.AsyncClient(timeout=120) as http_client:
         response = await http_client.post(target_url, json=json_rpc_request, headers=headers)
