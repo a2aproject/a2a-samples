@@ -33,6 +33,9 @@ from a2a.types import (
     Message,
     Part,
     Role,
+    Task,
+    TaskState,
+    TaskStatus,
     TransportProtocol,
 )
 from a2a.utils import new_agent_text_message
@@ -224,7 +227,17 @@ class V03AgentExecutor(AgentExecutor):
             task_id=context.task_id or str(uuid.uuid4()),
             context_id=context.context_id or str(uuid.uuid4()),
         )
-        await task_updater.submit()
+        
+        # Explicitly create the task by sending it to the queue
+        task = Task(
+            id=task_updater.task_id,
+            context_id=task_updater.context_id,
+            status=TaskStatus(state=TaskState.submitted),
+            history=[context.message] if context.message else [],
+        )
+        async with task_updater._lock:
+            await event_queue.enqueue_event(task)
+
         await task_updater.start_work()
 
         instruction = None
