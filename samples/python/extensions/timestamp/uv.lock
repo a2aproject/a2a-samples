@@ -8,7 +8,7 @@ resolution-markers = [
 
 [[package]]
 name = "a2a-sdk"
-version = "1.0.0a2"
+version = "1.0.0a3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "culsans", marker = "python_full_version < '3.13'" },
@@ -21,9 +21,9 @@ dependencies = [
     { name = "protobuf" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ca/09/3af130f319b372d711d28ddfd9e43b4fefca0fbff3e0b4d417ac971c25e3/a2a_sdk-1.0.0a2.tar.gz", hash = "sha256:ed69776616c9e1666198ff32740adb0170ba5ed2b2dae00defafb9706b2ca0c0", size = 378995, upload-time = "2026-04-17T13:48:35.443Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/84/41/a742f2e3c94ac7388bd43230e50079d7b9158331312bcccc5d149177a2c7/a2a_sdk-1.0.0a3.tar.gz", hash = "sha256:65483a01150718ab59d0a1216bf27fcd7d9547fa339e50447594afe791c29cea", size = 379213, upload-time = "2026-04-17T15:48:21.119Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/83/adc9b3acc835b00998c7f54cbbcd23c652dd625255371542e25c53eb4a0e/a2a_sdk-1.0.0a2-py3-none-any.whl", hash = "sha256:1a8b96568452340b2e256f546bc1c3729d7a4ce55055bc8443b2b028f533fa78", size = 236876, upload-time = "2026-04-17T13:48:33.906Z" },
+    { url = "https://files.pythonhosted.org/packages/31/29/215b8b9c7b9a99f6fbcabfb29ff009eeaadde69136454f8a8f3775b47d47/a2a_sdk-1.0.0a3-py3-none-any.whl", hash = "sha256:b915430ed5fe7ca7906da3e69f8cb1bef0f9ad9d7dfc4eb3a292384e4e02850b", size = 237008, upload-time = "2026-04-17T15:48:19.537Z" },
 ]
 
 [package.optional-dependencies]
@@ -43,9 +43,9 @@ name = "aiologic"
 version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "sniffio" },
+    { name = "sniffio", marker = "python_full_version < '3.13'" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
-    { name = "wrapt" },
+    { name = "wrapt", marker = "python_full_version < '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a8/13/50b91a3ea6b030d280d2654be97c48b6ed81753a50286ee43c646ba36d3c/aiologic-0.16.0.tar.gz", hash = "sha256:c267ccbd3ff417ec93e78d28d4d577ccca115d5797cdbd16785a551d9658858f", size = 225952, upload-time = "2025-11-27T23:48:41.195Z" }
 wheels = [
@@ -354,7 +354,7 @@ name = "culsans"
 version = "0.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "aiologic" },
+    { name = "aiologic", marker = "python_full_version < '3.13'" },
     { name = "typing-extensions", marker = "python_full_version < '3.13'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/d9/e3/49afa1bc180e0d28008ec6bcdf82a4072d1c7a41032b5b759b60814ca4b0/culsans-0.11.0.tar.gz", hash = "sha256:0b43d0d05dce6106293d114c86e3fb4bfc63088cfe8ff08ed3fe36891447fe33", size = 107546, upload-time = "2025-12-31T23:15:38.196Z" }
@@ -962,11 +962,11 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "a2a-sdk", specifier = ">=1.0.0a2" }]
+requires-dist = [{ name = "a2a-sdk", specifier = ">=1.0.0a3" }]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "a2a-sdk", extras = ["grpc", "http-server"], specifier = ">=1.0.0a2" },
+    { name = "a2a-sdk", extras = ["grpc", "http-server"], specifier = ">=1.0.0a3" },
     { name = "httpx", specifier = ">=0.28" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-asyncio", specifier = ">=0.23" },

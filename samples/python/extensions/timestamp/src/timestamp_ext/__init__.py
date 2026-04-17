@@ -12,7 +12,11 @@ from a2a.client import (
 from a2a.client.client import ClientCallContext
 from a2a.client.client_factory import TransportProducer
 from a2a.client.interceptors import AfterArgs, BeforeArgs
-from a2a.extensions.common import HTTP_EXTENSION_HEADER, find_extension_by_uri
+from a2a.client.service_parameters import (
+    ServiceParametersFactory,
+    with_a2a_extensions,
+)
+from a2a.extensions.common import find_extension_by_uri
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events.event_queue import Event, EventQueue
 from a2a.types.a2a_pb2 import (
@@ -141,12 +145,9 @@ class TimestampExtension:
         self, http_kwargs: dict[str, Any]
     ) -> dict[str, Any]:
         """Update an http_kwargs to request this extension."""
-        if not (headers := http_kwargs.get('headers')):
-            headers = http_kwargs['headers'] = {}
-        header_val = URI
-        if headers.get(HTTP_EXTENSION_HEADER):
-            header_val = headers[HTTP_EXTENSION_HEADER] + ', ' + URI
-        headers[HTTP_EXTENSION_HEADER] = header_val
+        http_kwargs['headers'] = ServiceParametersFactory.create_from(
+            http_kwargs.get('headers'), [with_a2a_extensions([URI])]
+        )
         return http_kwargs
 
     # Option 2 for clients: timestamp your outgoing requests.
@@ -400,15 +401,12 @@ class _TimestampingClientInterceptor(ClientCallInterceptor):
             return
         # Timestamp the outgoing message.
         self._ext.timestamp_request_message(args.input)
-        # Request that the server apply the extension by adding the URI to
-        # the A2A-Extensions header (via service parameters).
+        # Request the extension via the A2A-Extensions header. Other
+        # interceptors' extensions are preserved by with_a2a_extensions.
         if args.context is None:
             args.context = ClientCallContext()
-        if args.context.service_parameters is None:
-            args.context.service_parameters = {}
-        existing = args.context.service_parameters.get(HTTP_EXTENSION_HEADER)
-        args.context.service_parameters[HTTP_EXTENSION_HEADER] = (
-            f'{existing}, {URI}' if existing else URI
+        args.context.service_parameters = ServiceParametersFactory.create_from(
+            args.context.service_parameters, [with_a2a_extensions([URI])]
         )
 
     async def after(self, args: AfterArgs) -> None:
