@@ -25,7 +25,6 @@ from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.tool_context import ToolContext
 from google.genai import types
 from remote_agent_connection import RemoteAgentConnections, TaskUpdateCallback
-from timestamp_ext import TimestampExtension
 
 
 class HostAgent:
@@ -43,7 +42,6 @@ class HostAgent:
     ):
         self.task_callback = task_callback
         self.httpx_client = http_client
-        self.timestamp_extension = TimestampExtension()
         config = ClientConfig(
             httpx_client=self.httpx_client,
             supported_transports=[
@@ -51,11 +49,7 @@ class HostAgent:
                 TransportProtocol.http_json,
             ],
         )
-        client_factory = ClientFactory(config)
-        client_factory = self.timestamp_extension.wrap_client_factory(
-            client_factory
-        )
-        self.client_factory = client_factory
+        self.client_factory = ClientFactory(config)
         self.remote_agent_connections: dict[str, RemoteAgentConnections] = {}
         self.cards: dict[str, AgentCard] = {}
         self.agents: str = ''
@@ -223,17 +217,11 @@ Current agent: {current_agent['active_agent']}
         response = []
         if task.status.message:
             # Assume the information is in the task message.
-            if ts := self.timestamp_extension.get_timestamp(
-                task.status.message
-            ):
-                response.append(f'[at {ts.astimezone().isoformat()}]')
             response.extend(
                 await convert_parts(task.status.message.parts, tool_context)
             )
         if task.artifacts:
             for artifact in task.artifacts:
-                if ts := self.timestamp_extension.get_timestamp(artifact):
-                    response.append(f'[at {ts.astimezone().isoformat()}]')
                 response.extend(
                     await convert_parts(artifact.parts, tool_context)
                 )
