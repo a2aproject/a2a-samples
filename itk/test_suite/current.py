@@ -66,7 +66,7 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
             '--grpcPort',
             str(grpc_port),
         ]
-        return popen_with_logs(args, current_dir, stdout_override=subprocess.PIPE)
+        return popen_with_logs(args, current_dir)
 
     if (current_dir / 'main.py').exists():
         # Python agent
