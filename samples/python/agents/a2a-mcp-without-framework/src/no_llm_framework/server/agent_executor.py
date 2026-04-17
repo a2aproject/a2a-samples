@@ -12,7 +12,7 @@ from a2a.types import (
     TaskStatus,
     TaskStatusUpdateEvent,
 )
-from a2a.utils import new_task
+from a2a.utils import new_agent_text_message, new_task
 
 from no_llm_framework.server.agent import Agent
 
@@ -47,7 +47,6 @@ class HelloWorldAgentExecutor(AgentExecutor):
         first_chunk = True
 
         async for event in self.agent.stream(query):
-            print(event)
             if event['is_task_complete']:
                 await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
@@ -72,23 +71,14 @@ class HelloWorldAgentExecutor(AgentExecutor):
                 )
             elif event['require_user_input']:
                 await event_queue.enqueue_event(
-                    TaskArtifactUpdateEvent(
-                        append=not first_chunk,
-                        context_id=task.context_id,
-                        task_id=task.id,
-                        last_chunk=False,
-                        artifact=Artifact(
-                            artifact_id=artifact_id,
-                            name='current_result',
-                            description='Result of request to agent.',
-                            parts=[Part(text=event['content'])],
-                        ),
-                    )
-                )
-                await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
                         status=TaskStatus(
                             state=TaskState.TASK_STATE_INPUT_REQUIRED,
+                            message=new_agent_text_message(
+                                event['content'],
+                                task.context_id,
+                                task.id,
+                            ),
                         ),
                         context_id=task.context_id,
                         task_id=task.id,
@@ -96,6 +86,16 @@ class HelloWorldAgentExecutor(AgentExecutor):
                 )
                 first_chunk = False
             else:
+                if first_chunk:
+                    await event_queue.enqueue_event(
+                        TaskStatusUpdateEvent(
+                            status=TaskStatus(
+                                state=TaskState.TASK_STATE_WORKING,
+                            ),
+                            context_id=task.context_id,
+                            task_id=task.id,
+                        )
+                    )
                 await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=not first_chunk,
@@ -108,15 +108,6 @@ class HelloWorldAgentExecutor(AgentExecutor):
                             description='Result of request to agent.',
                             parts=[Part(text=event['content'])],
                         ),
-                    )
-                )
-                await event_queue.enqueue_event(
-                    TaskStatusUpdateEvent(
-                        status=TaskStatus(
-                            state=TaskState.TASK_STATE_WORKING,
-                        ),
-                        context_id=task.context_id,
-                        task_id=task.id,
                     )
                 )
                 first_chunk = False

@@ -14,11 +14,6 @@ from starlette.applications import Starlette
 
 from no_llm_framework.server.agent_executor import HelloWorldAgentExecutor
 
-
-class A2ARequestHandler(DefaultRequestHandler):
-    """A2A Request Handler for the A2A Repo Agent."""
-
-
 @click.command()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=9999)
@@ -59,7 +54,7 @@ def main(host: str, port: int) -> None:
     )
 
     task_store = InMemoryTaskStore()
-    request_handler = A2ARequestHandler(
+    request_handler = DefaultRequestHandler(
         agent_executor=HelloWorldAgentExecutor(),
         task_store=task_store,
         agent_card=agent_card,
