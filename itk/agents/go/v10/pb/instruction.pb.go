@@ -65,7 +65,7 @@ func (x SeriesOfSteps_ResponseGenerator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SeriesOfSteps_ResponseGenerator.Descriptor instead.
 func (SeriesOfSteps_ResponseGenerator) EnumDescriptor() ([]byte, []int) {
-	return file_instruction_proto_rawDescGZIP(), []int{3, 0}
+	return file_instruction_proto_rawDescGZIP(), []int{5, 0}
 }
 
 type Instruction struct {
@@ -168,6 +168,87 @@ func (*Instruction_ReturnResponse) isInstruction_Step() {}
 
 func (*Instruction_Steps) isInstruction_Step() {}
 
+// Behavior messages
+type SendMessageBehavior struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendMessageBehavior) Reset() {
+	*x = SendMessageBehavior{}
+	mi := &file_instruction_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendMessageBehavior) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendMessageBehavior) ProtoMessage() {}
+
+func (x *SendMessageBehavior) ProtoReflect() protoreflect.Message {
+	mi := &file_instruction_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendMessageBehavior.ProtoReflect.Descriptor instead.
+func (*SendMessageBehavior) Descriptor() ([]byte, []int) {
+	return file_instruction_proto_rawDescGZIP(), []int{1}
+}
+
+type PushNotificationBehavior struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PushNotificationBehavior) Reset() {
+	*x = PushNotificationBehavior{}
+	mi := &file_instruction_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PushNotificationBehavior) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PushNotificationBehavior) ProtoMessage() {}
+
+func (x *PushNotificationBehavior) ProtoReflect() protoreflect.Message {
+	mi := &file_instruction_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PushNotificationBehavior.ProtoReflect.Descriptor instead.
+func (*PushNotificationBehavior) Descriptor() ([]byte, []int) {
+	return file_instruction_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PushNotificationBehavior) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
 // gets the agent card from a remote agent, calls it and returns the response
 type CallAgent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -178,14 +259,21 @@ type CallAgent struct {
 	// instruction for the called agent
 	Instruction *Instruction `protobuf:"bytes,3,opt,name=instruction,proto3" json:"instruction,omitempty"`
 	// whether to use streaming
-	Streaming     bool `protobuf:"varint,4,opt,name=streaming,proto3" json:"streaming,omitempty"`
+	Streaming bool `protobuf:"varint,4,opt,name=streaming,proto3" json:"streaming,omitempty"`
+	// behavior mode
+	//
+	// Types that are valid to be assigned to Behavior:
+	//
+	//	*CallAgent_SendMessage
+	//	*CallAgent_PushNotification
+	Behavior      isCallAgent_Behavior `protobuf_oneof:"behavior"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CallAgent) Reset() {
 	*x = CallAgent{}
-	mi := &file_instruction_proto_msgTypes[1]
+	mi := &file_instruction_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -197,7 +285,7 @@ func (x *CallAgent) String() string {
 func (*CallAgent) ProtoMessage() {}
 
 func (x *CallAgent) ProtoReflect() protoreflect.Message {
-	mi := &file_instruction_proto_msgTypes[1]
+	mi := &file_instruction_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -210,7 +298,7 @@ func (x *CallAgent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CallAgent.ProtoReflect.Descriptor instead.
 func (*CallAgent) Descriptor() ([]byte, []int) {
-	return file_instruction_proto_rawDescGZIP(), []int{1}
+	return file_instruction_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CallAgent) GetTransport() string {
@@ -241,6 +329,47 @@ func (x *CallAgent) GetStreaming() bool {
 	return false
 }
 
+func (x *CallAgent) GetBehavior() isCallAgent_Behavior {
+	if x != nil {
+		return x.Behavior
+	}
+	return nil
+}
+
+func (x *CallAgent) GetSendMessage() *SendMessageBehavior {
+	if x != nil {
+		if x, ok := x.Behavior.(*CallAgent_SendMessage); ok {
+			return x.SendMessage
+		}
+	}
+	return nil
+}
+
+func (x *CallAgent) GetPushNotification() *PushNotificationBehavior {
+	if x != nil {
+		if x, ok := x.Behavior.(*CallAgent_PushNotification); ok {
+			return x.PushNotification
+		}
+	}
+	return nil
+}
+
+type isCallAgent_Behavior interface {
+	isCallAgent_Behavior()
+}
+
+type CallAgent_SendMessage struct {
+	SendMessage *SendMessageBehavior `protobuf:"bytes,5,opt,name=send_message,json=sendMessage,proto3,oneof"`
+}
+
+type CallAgent_PushNotification struct {
+	PushNotification *PushNotificationBehavior `protobuf:"bytes,6,opt,name=push_notification,json=pushNotification,proto3,oneof"`
+}
+
+func (*CallAgent_SendMessage) isCallAgent_Behavior() {}
+
+func (*CallAgent_PushNotification) isCallAgent_Behavior() {}
+
 // this option just returns a response
 type ReturnResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -252,7 +381,7 @@ type ReturnResponse struct {
 
 func (x *ReturnResponse) Reset() {
 	*x = ReturnResponse{}
-	mi := &file_instruction_proto_msgTypes[2]
+	mi := &file_instruction_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -264,7 +393,7 @@ func (x *ReturnResponse) String() string {
 func (*ReturnResponse) ProtoMessage() {}
 
 func (x *ReturnResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_instruction_proto_msgTypes[2]
+	mi := &file_instruction_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -277,7 +406,7 @@ func (x *ReturnResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReturnResponse.ProtoReflect.Descriptor instead.
 func (*ReturnResponse) Descriptor() ([]byte, []int) {
-	return file_instruction_proto_rawDescGZIP(), []int{2}
+	return file_instruction_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ReturnResponse) GetResponse() string {
@@ -298,7 +427,7 @@ type SeriesOfSteps struct {
 
 func (x *SeriesOfSteps) Reset() {
 	*x = SeriesOfSteps{}
-	mi := &file_instruction_proto_msgTypes[3]
+	mi := &file_instruction_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -310,7 +439,7 @@ func (x *SeriesOfSteps) String() string {
 func (*SeriesOfSteps) ProtoMessage() {}
 
 func (x *SeriesOfSteps) ProtoReflect() protoreflect.Message {
-	mi := &file_instruction_proto_msgTypes[3]
+	mi := &file_instruction_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -323,7 +452,7 @@ func (x *SeriesOfSteps) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SeriesOfSteps.ProtoReflect.Descriptor instead.
 func (*SeriesOfSteps) Descriptor() ([]byte, []int) {
-	return file_instruction_proto_rawDescGZIP(), []int{3}
+	return file_instruction_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *SeriesOfSteps) GetInstructions() []*Instruction {
@@ -350,12 +479,19 @@ const file_instruction_proto_rawDesc = "" +
 	"call_agent\x18\x01 \x01(\v2\x0e.itk.CallAgentH\x00R\tcallAgent\x12>\n" +
 	"\x0freturn_response\x18\x02 \x01(\v2\x13.itk.ReturnResponseH\x00R\x0ereturnResponse\x12*\n" +
 	"\x05steps\x18\x03 \x01(\v2\x12.itk.SeriesOfStepsH\x00R\x05stepsB\x06\n" +
-	"\x04step\"\xa1\x01\n" +
+	"\x04step\"\x15\n" +
+	"\x13SendMessageBehavior\",\n" +
+	"\x18PushNotificationBehavior\x12\x10\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url\"\xba\x02\n" +
 	"\tCallAgent\x12\x1c\n" +
 	"\ttransport\x18\x01 \x01(\tR\ttransport\x12$\n" +
 	"\x0eagent_card_uri\x18\x02 \x01(\tR\fagentCardUri\x122\n" +
 	"\vinstruction\x18\x03 \x01(\v2\x10.itk.InstructionR\vinstruction\x12\x1c\n" +
-	"\tstreaming\x18\x04 \x01(\bR\tstreaming\",\n" +
+	"\tstreaming\x18\x04 \x01(\bR\tstreaming\x12=\n" +
+	"\fsend_message\x18\x05 \x01(\v2\x18.itk.SendMessageBehaviorH\x00R\vsendMessage\x12L\n" +
+	"\x11push_notification\x18\x06 \x01(\v2\x1d.itk.PushNotificationBehaviorH\x00R\x10pushNotificationB\n" +
+	"\n" +
+	"\bbehavior\",\n" +
 	"\x0eReturnResponse\x12\x1a\n" +
 	"\bresponse\x18\x01 \x01(\tR\bresponse\"\xf2\x01\n" +
 	"\rSeriesOfSteps\x124\n" +
@@ -378,26 +514,30 @@ func file_instruction_proto_rawDescGZIP() []byte {
 }
 
 var file_instruction_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_instruction_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_instruction_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_instruction_proto_goTypes = []any{
 	(SeriesOfSteps_ResponseGenerator)(0), // 0: itk.SeriesOfSteps.ResponseGenerator
 	(*Instruction)(nil),                  // 1: itk.Instruction
-	(*CallAgent)(nil),                    // 2: itk.CallAgent
-	(*ReturnResponse)(nil),               // 3: itk.ReturnResponse
-	(*SeriesOfSteps)(nil),                // 4: itk.SeriesOfSteps
+	(*SendMessageBehavior)(nil),          // 2: itk.SendMessageBehavior
+	(*PushNotificationBehavior)(nil),     // 3: itk.PushNotificationBehavior
+	(*CallAgent)(nil),                    // 4: itk.CallAgent
+	(*ReturnResponse)(nil),               // 5: itk.ReturnResponse
+	(*SeriesOfSteps)(nil),                // 6: itk.SeriesOfSteps
 }
 var file_instruction_proto_depIdxs = []int32{
-	2, // 0: itk.Instruction.call_agent:type_name -> itk.CallAgent
-	3, // 1: itk.Instruction.return_response:type_name -> itk.ReturnResponse
-	4, // 2: itk.Instruction.steps:type_name -> itk.SeriesOfSteps
+	4, // 0: itk.Instruction.call_agent:type_name -> itk.CallAgent
+	5, // 1: itk.Instruction.return_response:type_name -> itk.ReturnResponse
+	6, // 2: itk.Instruction.steps:type_name -> itk.SeriesOfSteps
 	1, // 3: itk.CallAgent.instruction:type_name -> itk.Instruction
-	1, // 4: itk.SeriesOfSteps.instructions:type_name -> itk.Instruction
-	0, // 5: itk.SeriesOfSteps.response_generator:type_name -> itk.SeriesOfSteps.ResponseGenerator
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	2, // 4: itk.CallAgent.send_message:type_name -> itk.SendMessageBehavior
+	3, // 5: itk.CallAgent.push_notification:type_name -> itk.PushNotificationBehavior
+	1, // 6: itk.SeriesOfSteps.instructions:type_name -> itk.Instruction
+	0, // 7: itk.SeriesOfSteps.response_generator:type_name -> itk.SeriesOfSteps.ResponseGenerator
+	8, // [8:8] is the sub-list for method output_type
+	8, // [8:8] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_instruction_proto_init() }
@@ -410,13 +550,17 @@ func file_instruction_proto_init() {
 		(*Instruction_ReturnResponse)(nil),
 		(*Instruction_Steps)(nil),
 	}
+	file_instruction_proto_msgTypes[3].OneofWrappers = []any{
+		(*CallAgent_SendMessage)(nil),
+		(*CallAgent_PushNotification)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_instruction_proto_rawDesc), len(file_instruction_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

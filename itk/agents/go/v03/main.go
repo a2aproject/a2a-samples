@@ -24,6 +24,7 @@ import (
 	"github.com/a2aproject/a2a-go/a2aclient/agentcard"
 	"github.com/a2aproject/a2a-go/a2asrv"
 	"github.com/a2aproject/a2a-go/a2asrv/eventqueue"
+	"github.com/a2aproject/a2a-go/a2asrv/push"
 	"github.com/a2aproject/a2a-go/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -38,6 +39,16 @@ type V03AgentExecutor struct {
 
 func (e *V03AgentExecutor) Execute(ctx context.Context, reqCtx *a2asrv.RequestContext, queue eventqueue.Queue) error {
 	log.Info(ctx, "Executing task", "taskId", reqCtx.Message.ID)
+
+	if reqCtx.StoredTask == nil {
+		if err := queue.Write(ctx, a2a.NewSubmittedTask(reqCtx, reqCtx.Message)); err != nil {
+			return err
+		}
+	}
+
+	if err := queue.Write(ctx, a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateWorking, nil)); err != nil {
+		return err
+	}
 
 	// 1. Extract Instruction from message parts
 	var instruction pb.Instruction
@@ -61,6 +72,9 @@ func (e *V03AgentExecutor) Execute(ctx context.Context, reqCtx *a2asrv.RequestCo
 	if !found {
 		errMsg := "Error: No valid Instruction found in request."
 		log.Log(ctx, slog.LevelError, errMsg)
+		if err := queue.Write(ctx, a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateFailed, nil)); err != nil {
+			log.Error(ctx, "Failed to write status update", err)
+		}
 		return queue.Write(ctx, a2a.NewMessageForTask(a2a.MessageRoleAgent, reqCtx, a2a.TextPart{Text: errMsg}))
 	}
 
@@ -68,12 +82,18 @@ func (e *V03AgentExecutor) Execute(ctx context.Context, reqCtx *a2asrv.RequestCo
 	results, err := e.handleInstruction(ctx, reqCtx, &instruction)
 	if err != nil {
 		log.Error(ctx, "Error handling instruction", err)
+		if err := queue.Write(ctx, a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateFailed, nil)); err != nil {
+			log.Error(ctx, "Failed to write status update", err)
+		}
 		return queue.Write(ctx, a2a.NewMessageForTask(a2a.MessageRoleAgent, reqCtx, a2a.TextPart{Text: fmt.Sprintf("Execution Error: %v", err)}))
 	}
 
 	// 3. Return response
 	response := strings.Join(results, "\n")
-	return queue.Write(ctx, a2a.NewMessageForTask(a2a.MessageRoleAgent, reqCtx, a2a.TextPart{Text: response}))
+	msg := a2a.NewMessageForTask(a2a.MessageRoleAgent, reqCtx, a2a.TextPart{Text: response})
+	event := a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateCompleted, msg)
+	event.Final = true
+	return queue.Write(ctx, event)
 }
 
 func (e *V03AgentExecutor) handleInstruction(ctx context.Context, reqCtx *a2asrv.RequestContext, inst *pb.Instruction) ([]string, error) {
@@ -90,6 +110,19 @@ func (e *V03AgentExecutor) handleInstruction(ctx context.Context, reqCtx *a2asrv
 
 		opts := []a2aclient.FactoryOption{
 			a2aclient.WithGRPCTransport(grpc.WithTransportCredentials(insecure.NewCredentials())),
+		}
+
+		if call.GetPushNotification() != nil {
+			url := call.GetPushNotification().GetUrl()
+			if url == "" {
+				return nil, fmt.Errorf("URL not specified in push_notification behavior")
+			}
+			opts = append(opts, a2aclient.WithConfig(a2aclient.Config{
+				PushConfig: &a2a.PushConfig{
+					URL:   fmt.Sprintf("%s/notifications", url),
+					Token: "itk-token",
+				},
+			}))
 		}
 
 		tp := mapTransport(call.Transport)
@@ -335,11 +368,15 @@ func run() error {
 		ProtocolVersion: "0.3.0",
 	}
 
+	pushStore := push.NewInMemoryStore()
+	pushSender := push.NewHTTPPushSender(nil)
+
 	executor := &V03AgentExecutor{}
 	requestHandler := a2asrv.NewHandler(
 		executor,
 		a2asrv.WithExtendedAgentCard(agentCard),
 		a2asrv.WithCallInterceptor(CustomLoggingInterceptor{}),
+		a2asrv.WithPushNotifications(pushStore, pushSender),
 	)
 
 	jsonrpcHandler := a2asrv.NewJSONRPCHandler(requestHandler)
