@@ -13,8 +13,6 @@
 use axum::{
     Json, Router,
     extract::State,
-    http::StatusCode,
-    response::IntoResponse,
     routing::{get, post},
 };
 use serde::{Deserialize, Serialize};
@@ -157,8 +155,8 @@ type TaskStore = Arc<Mutex<HashMap<String, Task>>>;
 // Handlers
 // ---------------------------------------------------------------------------
 
-async fn agent_card() -> impl IntoResponse {
-    let card = AgentCard {
+async fn agent_card() -> Json<AgentCard> {
+    Json(AgentCard {
         name: "Hello World Agent (Rust)".into(),
         description: "A minimal A2A agent implemented in Rust. Responds with a greeting.".into(),
         url: "http://localhost:9999".into(),
@@ -173,17 +171,15 @@ async fn agent_card() -> impl IntoResponse {
             tags: vec!["hello".into(), "greeting".into()],
             examples: vec!["hi".into(), "hello".into(), "greet me".into()],
         }],
-    };
-    Json(card)
+    })
 }
 
 async fn rpc_handler(
     State(store): State<TaskStore>,
     Json(req): Json<JsonRpcRequest>,
-) -> impl IntoResponse {
+) -> Json<JsonRpcResponse> {
     if req.jsonrpc != "2.0" {
-        let resp = JsonRpcResponse::err(req.id, -32600, "Invalid JSON-RPC version");
-        return (StatusCode::OK, Json(serde_json::to_value(resp).unwrap()));
+        return Json(JsonRpcResponse::err(req.id, -32600, "Invalid JSON-RPC version"));
     }
 
     let resp = match req.method.as_str() {
@@ -192,11 +188,10 @@ async fn rpc_handler(
         _ => JsonRpcResponse::err(req.id, -32601, "Method not found"),
     };
 
-    (StatusCode::OK, Json(serde_json::to_value(resp).unwrap()))
+    Json(resp)
 }
 
 fn handle_message_send(store: &TaskStore, id: Value, params: Value) -> JsonRpcResponse {
-    // Accept either a top-level `id` field in params or generate a fresh one.
     let task_id = params
         .get("id")
         .and_then(Value::as_str)
@@ -225,11 +220,9 @@ fn handle_message_send(store: &TaskStore, id: Value, params: Value) -> JsonRpcRe
         artifacts: Some(vec![artifact]),
     };
 
+    let result = serde_json::to_value(&task).unwrap();
     store.lock().unwrap().insert(task_id, task);
-
-    let stored = store.lock().unwrap();
-    let task_ref = stored.values().last().unwrap();
-    JsonRpcResponse::ok(id, serde_json::to_value(task_ref).unwrap())
+    JsonRpcResponse::ok(id, result)
 }
 
 fn handle_tasks_get(store: &TaskStore, id: Value, params: Value) -> JsonRpcResponse {
