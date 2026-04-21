@@ -83,10 +83,6 @@ curl -s http://localhost:9999/ \
   }' | jq .
 ```
 
-## Production deployments
-
-For teams that need a full Rust A2A + MCP governance runtime with authentication, streaming, and multi-agent orchestration, see **[systemprompt-template](https://github.com/systempromptio/systemprompt-template)** — a production-grade Rust A2A + MCP runtime distributed as a single self-hosted binary.
-
 ## Disclaimer
 
 > **Important:** The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, treat any agent operating outside your direct control as a potentially untrusted entity.
