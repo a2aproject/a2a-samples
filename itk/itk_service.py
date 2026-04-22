@@ -25,6 +25,7 @@ class TestCase(BaseModel):
     name: str
     sdks: list[str]
     traversal: str
+    behavior: str
     edges: list[str] | None = None
     protocols: list[str] | None = None
     streaming: bool = False
@@ -41,6 +42,12 @@ class RunTestsResponse(BaseModel):
 
     results: dict[str, bool]
     all_passed: bool
+
+
+@app.get('/health')
+async def health() -> dict[str, str]:
+    """Health check endpoint."""
+    return {"status": "ok"}
 
 
 @app.post('/run', response_model=RunTestsResponse)
@@ -94,6 +101,7 @@ async def _test(request: RunTestsRequest) -> RunTestsResponse:
             execute_itk_test(
                 sdks=case.sdks,
                 traversal=case.traversal,
+                behavior=case.behavior,
                 edges=case.edges,
                 scenario_name=case.name,
                 protocols=case.protocols,

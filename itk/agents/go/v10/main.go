@@ -26,6 +26,7 @@ import (
 	"github.com/a2aproject/a2a-go/v2/a2acompat/a2av0"
 	a2agrpc "github.com/a2aproject/a2a-go/v2/a2agrpc/v1"
 	"github.com/a2aproject/a2a-go/v2/a2asrv"
+	"github.com/a2aproject/a2a-go/v2/a2asrv/push"
 	"github.com/a2aproject/a2a-go/v2/log"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -148,10 +149,26 @@ func (e *V10AgentExecutor) handleCallAgent(ctx context.Context, call *pb.CallAge
 	// 4. Create client using a factory
 	var factory *a2aclient.Factory
 	compatFactory := a2av0.NewJSONRPCTransportFactory(a2av0.JSONRPCTransportConfig{})
-	factory = a2aclient.NewFactory(
+	
+	clientOpts := []a2aclient.FactoryOption{
 		a2agrpc.WithGRPCTransport(grpc.WithTransportCredentials(insecure.NewCredentials())),
 		a2aclient.WithCompatTransport("0.3", a2a.TransportProtocolJSONRPC, compatFactory),
-	)
+	}
+
+	if call.GetPushNotification() != nil {
+		url := call.GetPushNotification().GetUrl()
+		if url == "" {
+			return nil, fmt.Errorf("URL not specified in push_notification behavior")
+		}
+		clientOpts = append(clientOpts, a2aclient.WithConfig(a2aclient.Config{
+			PushConfig: &a2a.PushConfig{
+				URL:   fmt.Sprintf("%s/notifications", url),
+				Token: "itk-token",
+			},
+		}))
+	}
+
+	factory = a2aclient.NewFactory(clientOpts...)
 
 	client, err := factory.CreateFromEndpoints(ctx, matchedInterfaces)
 	if err != nil {
@@ -340,10 +357,14 @@ func run() error {
 		},
 	}
 
+	pushStore := push.NewInMemoryStore()
+	pushSender := push.NewHTTPPushSender(nil)
+
 	executor := &V10AgentExecutor{}
 	requestHandler := a2asrv.NewHandler(
 		executor,
 		a2asrv.WithCallInterceptors(a2asrv.NewLoggingInterceptor(&a2asrv.LoggingConfig{LogPayload: true})),
+		a2asrv.WithPushNotifications(pushStore, pushSender),
 	)
 
 	mux := http.NewServeMux()

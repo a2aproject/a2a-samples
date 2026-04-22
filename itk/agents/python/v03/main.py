@@ -22,7 +22,12 @@ from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.apps import A2AFastAPIApplication, A2ARESTFastAPIApplication
 from a2a.server.events import EventQueue
 from a2a.server.request_handlers import DefaultRequestHandler, GrpcHandler
-from a2a.server.tasks import InMemoryTaskStore, TaskUpdater
+from a2a.server.tasks import (
+    InMemoryPushNotificationConfigStore,
+    InMemoryTaskStore,
+    TaskUpdater,
+    BasePushNotificationSender,
+)
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
@@ -32,6 +37,7 @@ from a2a.types import (
     FileWithBytes,
     Message,
     Part,
+    PushNotificationConfig,
     Role,
     Task,
     TaskState,
@@ -85,6 +91,7 @@ async def get_client_with_transport(
     url: str,
     transport: TransportProtocol | str,
     streaming: bool = False,
+    push_notification_url: str | None = None,
 ) -> Any:
     """Resolves the agent card and returns an A2AClient configured with the specified transport.
 
@@ -93,6 +100,7 @@ async def get_client_with_transport(
         url: The URL pointing to the agent's well-known card endpoint.
         transport: The requested transport protocol (e.g., 'jsonrpc', 'grpc', 'http_json').
         streaming: Whether to use streaming.
+        push_notification_url: Optional URL for push notifications.
 
     Returns:
         Any: An initialized A2A client bound to the specified transport.
@@ -120,6 +128,14 @@ async def get_client_with_transport(
     config.supported_transports = [transport]
     config.use_client_preference = True
     config.streaming = streaming
+
+    if push_notification_url:
+        config.push_notification_configs = [
+            PushNotificationConfig(
+                url=f'{push_notification_url}/notifications',
+                token='itk-token',
+            )
+        ]
 
     return await ClientFactory.connect(url, client_config=config)
 
@@ -161,12 +177,24 @@ async def _call_agent_func(
         call_agent_proto.agent_card_uri,
         call_agent_proto.transport,
     )
+
+    push_notification_url = None
+    if call_agent_proto.HasField('push_notification'):
+        url = call_agent_proto.push_notification.url
+        if not url:
+            raise ValueError('URL not specified in push_notification behavior')
+        push_notification_url = url
+        logger.info(
+            'Push notification URL extracted: %s', push_notification_url
+        )
+
     async with httpx.AsyncClient(timeout=30) as http_client:
         client = await get_client_with_transport(
             http_client,
             call_agent_proto.agent_card_uri,
             call_agent_proto.transport,
             streaming=call_agent_proto.streaming,
+            push_notification_url=push_notification_url,
         )
         msg = wrap_instruction_to_request(call_agent_proto.instruction)
         async for event in client.send_message(msg):
@@ -212,6 +240,12 @@ async def _call_agent_func(
 class V03AgentExecutor(AgentExecutor):
     """Simplified AgentExecutor for ITK v0.3 logic."""
 
+    def __init__(
+        self,
+        push_config_store: InMemoryPushNotificationConfigStore | None = None,
+    ):
+        self._push_config_store = push_config_store
+
     async def execute(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
@@ -227,7 +261,7 @@ class V03AgentExecutor(AgentExecutor):
             task_id=context.task_id or str(uuid.uuid4()),
             context_id=context.context_id or str(uuid.uuid4()),
         )
-        
+
         # Explicitly create the task by sending it to the queue
         task = Task(
             id=task_updater.task_id,
@@ -235,7 +269,7 @@ class V03AgentExecutor(AgentExecutor):
             status=TaskStatus(state=TaskState.submitted),
             history=[context.message] if context.message else [],
         )
-        async with task_updater._lock: # noqa: SLF001
+        async with task_updater._lock:  # noqa: SLF001
             await event_queue.enqueue_event(task)
 
         await task_updater.start_work()
@@ -263,7 +297,30 @@ class V03AgentExecutor(AgentExecutor):
             return
 
         try:
-            result = await handle_instruction(instruction, _call_agent_func)
+
+            async def call_agent_func_wrapper(
+                call_agent_proto: instruction_pb2.CallAgent,
+            ) -> AsyncIterator[str]:
+                if self._push_config_store and call_agent_proto.HasField(
+                    'push_notification'
+                ):
+                    url = call_agent_proto.push_notification.url
+                    if url:
+                        await self._push_config_store.set_info(
+                            task_updater.task_id,
+                            PushNotificationConfig(url=f'{url}/notifications'),
+                        )
+                        logger.info(
+                            'Saved push notification config for current task %s in executor',
+                            task_updater.task_id,
+                        )
+
+                async for event in _call_agent_func(call_agent_proto):
+                    yield event
+
+            result = await handle_instruction(
+                instruction, call_agent_func_wrapper
+            )
             response_msg = new_agent_text_message('\n'.join(result))
             await task_updater.complete(message=response_msg)
         except Exception:
@@ -374,8 +431,14 @@ async def _run_agent(http_port: int, grpc_port: int) -> None:
         ],
     )
 
+    httpx_client = httpx.AsyncClient()
+    push_config_store = InMemoryPushNotificationConfigStore()
+    push_sender = BasePushNotificationSender(httpx_client, push_config_store)
     request_handler = DefaultRequestHandler(
-        agent_executor=V03AgentExecutor(), task_store=InMemoryTaskStore()
+        agent_executor=V03AgentExecutor(push_config_store=push_config_store),
+        task_store=InMemoryTaskStore(),
+        push_config_store=push_config_store,
+        push_sender=push_sender,
     )
 
     http_server = create_http_server(
@@ -392,6 +455,7 @@ async def _run_agent(http_port: int, grpc_port: int) -> None:
         logger.info('Shutting down...')
         http_server.should_exit = True
         await grpc_server.stop(5)
+        await httpx_client.aclose()
 
     for sig in (signal.SIGINT, signal.SIGTERM):
         loop.add_signal_handler(sig, lambda: asyncio.create_task(shutdown()))

@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11instruction.proto\x12\x03itk\"\x90\x01\n\x0bInstruction\x12$\n\ncall_agent\x18\x01 \x01(\x0b\x32\x0e.itk.CallAgentH\x00\x12.\n\x0freturn_response\x18\x02 \x01(\x0b\x32\x13.itk.ReturnResponseH\x00\x12#\n\x05steps\x18\x03 \x01(\x0b\x32\x12.itk.SeriesOfStepsH\x00\x42\x06\n\x04step\"p\n\tCallAgent\x12\x11\n\ttransport\x18\x01 \x01(\t\x12\x16\n\x0e\x61gent_card_uri\x18\x02 \x01(\t\x12%\n\x0binstruction\x18\x03 \x01(\x0b\x32\x10.itk.Instruction\x12\x11\n\tstreaming\x18\x04 \x01(\x08\"\"\n\x0eReturnResponse\x12\x10\n\x08response\x18\x01 \x01(\t\"\xd1\x01\n\rSeriesOfSteps\x12&\n\x0cinstructions\x18\x01 \x03(\x0b\x32\x10.itk.Instruction\x12@\n\x12response_generator\x18\x02 \x01(\x0e\x32$.itk.SeriesOfSteps.ResponseGenerator\"V\n\x11ResponseGenerator\x12\"\n\x1eRESPONSE_GENERATOR_UNSPECIFIED\x10\x00\x12\x1d\n\x19RESPONSE_GENERATOR_CONCAT\x10\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11instruction.proto\x12\x03itk\"\x90\x01\n\x0bInstruction\x12$\n\ncall_agent\x18\x01 \x01(\x0b\x32\x0e.itk.CallAgentH\x00\x12.\n\x0freturn_response\x18\x02 \x01(\x0b\x32\x13.itk.ReturnResponseH\x00\x12#\n\x05steps\x18\x03 \x01(\x0b\x32\x12.itk.SeriesOfStepsH\x00\x42\x06\n\x04step\"\x15\n\x13SendMessageBehavior\"\'\n\x18PushNotificationBehavior\x12\x0b\n\x03url\x18\x01 \x01(\t\"\xea\x01\n\tCallAgent\x12\x11\n\ttransport\x18\x01 \x01(\t\x12\x16\n\x0e\x61gent_card_uri\x18\x02 \x01(\t\x12%\n\x0binstruction\x18\x03 \x01(\x0b\x32\x10.itk.Instruction\x12\x11\n\tstreaming\x18\x04 \x01(\x08\x12\x30\n\x0csend_message\x18\x05 \x01(\x0b\x32\x18.itk.SendMessageBehaviorH\x00\x12:\n\x11push_notification\x18\x06 \x01(\x0b\x32\x1d.itk.PushNotificationBehaviorH\x00\x42\n\n\x08\x62\x65havior\"\"\n\x0eReturnResponse\x12\x10\n\x08response\x18\x01 \x01(\t\"\xd1\x01\n\rSeriesOfSteps\x12&\n\x0cinstructions\x18\x01 \x03(\x0b\x32\x10.itk.Instruction\x12@\n\x12response_generator\x18\x02 \x01(\x0e\x32$.itk.SeriesOfSteps.ResponseGenerator\"V\n\x11ResponseGenerator\x12\"\n\x1eRESPONSE_GENERATOR_UNSPECIFIED\x10\x00\x12\x1d\n\x19RESPONSE_GENERATOR_CONCAT\x10\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,12 +33,16 @@ if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_INSTRUCTION']._serialized_start=27
   _globals['_INSTRUCTION']._serialized_end=171
-  _globals['_CALLAGENT']._serialized_start=173
-  _globals['_CALLAGENT']._serialized_end=285
-  _globals['_RETURNRESPONSE']._serialized_start=287
-  _globals['_RETURNRESPONSE']._serialized_end=321
-  _globals['_SERIESOFSTEPS']._serialized_start=324
-  _globals['_SERIESOFSTEPS']._serialized_end=533
-  _globals['_SERIESOFSTEPS_RESPONSEGENERATOR']._serialized_start=447
-  _globals['_SERIESOFSTEPS_RESPONSEGENERATOR']._serialized_end=533
+  _globals['_SENDMESSAGEBEHAVIOR']._serialized_start=173
+  _globals['_SENDMESSAGEBEHAVIOR']._serialized_end=194
+  _globals['_PUSHNOTIFICATIONBEHAVIOR']._serialized_start=196
+  _globals['_PUSHNOTIFICATIONBEHAVIOR']._serialized_end=235
+  _globals['_CALLAGENT']._serialized_start=238
+  _globals['_CALLAGENT']._serialized_end=472
+  _globals['_RETURNRESPONSE']._serialized_start=474
+  _globals['_RETURNRESPONSE']._serialized_end=508
+  _globals['_SERIESOFSTEPS']._serialized_start=511
+  _globals['_SERIESOFSTEPS']._serialized_end=720
+  _globals['_SERIESOFSTEPS_RESPONSEGENERATOR']._serialized_start=634
+  _globals['_SERIESOFSTEPS_RESPONSEGENERATOR']._serialized_end=720
 # @@protoc_insertion_point(module_scope)

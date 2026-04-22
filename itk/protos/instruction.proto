@@ -12,6 +12,12 @@ message Instruction {
   }
 }
 
+// Behavior messages
+message SendMessageBehavior {}
+message PushNotificationBehavior {
+  string url = 1;
+}
+
 // gets the agent card from a remote agent, calls it and returns the response
 message CallAgent {
   // which transport use to get agent card and later call
@@ -22,6 +28,12 @@ message CallAgent {
   Instruction instruction = 3;
   // whether to use streaming
   bool streaming = 4;
+
+  // behavior mode
+  oneof behavior {
+    SendMessageBehavior send_message = 5;
+    PushNotificationBehavior push_notification = 6;
+  }
 }
 
 // this option just returns a response

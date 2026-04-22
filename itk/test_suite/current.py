@@ -28,11 +28,13 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
 
     log_level = os.environ.get('ITK_LOG_LEVEL', 'INFO')
     is_debug = log_level.upper() == 'DEBUG'
-    
+
     if is_debug:
         logs_dir = _ROOT_DIR / 'logs'
         if not logs_dir.exists():
-            raise RuntimeError(f"Logs directory '{logs_dir}' does not exist. Please create it or mount it.")
+            raise RuntimeError(
+                f"Logs directory '{logs_dir}' does not exist. Please create it or mount it."
+            )
         stdout_file = open(logs_dir / 'agent_current.log', 'w')
 
     def popen_with_logs(args, cwd, stdout_override=None):
@@ -66,7 +68,9 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
             '--grpcPort',
             str(grpc_port),
         ]
-        return popen_with_logs(args, current_dir, stdout_override=subprocess.PIPE)
+        return popen_with_logs(
+            args, current_dir, stdout_override=subprocess.PIPE
+        )
 
     if (current_dir / 'main.py').exists():
         # Python agent
@@ -95,8 +99,6 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
         ]
         return popen_with_logs(args, current_dir)
 
-
-        
     raise RuntimeError(
         f'Could not determine agent type in {current_dir}. '
         'Neither main.go, main.py nor package.json found.'

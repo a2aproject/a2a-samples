@@ -16,6 +16,7 @@ _AGENT_DEFS = {
     'python_v03': {'launcher': spawn_agent_python_v03},
     'go_v10': {'launcher': spawn_agent_go_v10},
     'python_v10': {'launcher': spawn_agent_python_v10},
+    'python_v10_2': {'launcher': spawn_agent_python_v10},
     'current': {'launcher': spawn_agent_current},
 }
 
@@ -193,13 +194,20 @@ def _verify_eulerian_graph(
 
 
 def _traversal_to_instruction(
-    circuit: list[str], transport: str, streaming: bool = False
+    circuit: list[str],
+    transport: str,
+    streaming: bool = False,
+    behavior: str = 'send_message',
+    notification_server_url: str = '',
 ) -> tuple[instruction_pb2.Instruction, list[str]]:
     """Converts a circuit of SDK names into a nested A2A instruction.
 
     Args:
         circuit: Ordered list of SDK names representing the traversal path.
         transport: The transport protocol to use for hops.
+        streaming: Whether to use streaming.
+        behavior: The behavior to set in CallAgent.
+        notification_server_url: The URL of the notification server.
 
     Returns:
         tuple[instruction_pb2.Instruction, list[str]]: The nested instruction and trace tokens.
@@ -238,6 +246,17 @@ def _traversal_to_instruction(
         call_step.call_agent.streaming = streaming
         call_step.call_agent.instruction.CopyFrom(current_inst)
 
+        if behavior == 'push_notification':
+            call_step.call_agent.push_notification.CopyFrom(
+                instruction_pb2.PushNotificationBehavior(
+                    url=notification_server_url
+                )
+            )
+        elif behavior == 'send_message':
+            call_step.call_agent.send_message.CopyFrom(
+                instruction_pb2.SendMessageBehavior()
+            )
+
         current_inst = hop
 
     return current_inst, trace_tokens
@@ -250,6 +269,8 @@ def create_test_suite(  # noqa: PLR0913
     edges: list[str] | None = None,
     protocols: list[str] | None = None,
     streaming: bool = False,
+    behavior: str = 'send_message',
+    notification_server_url: str = '',
 ) -> tuple[
     instruction_pb2.Instruction,
     list[str],
@@ -279,7 +300,11 @@ def create_test_suite(  # noqa: PLR0913
         )
         for circuit in circuits:
             instruction_for_transport, trace_tokens = _traversal_to_instruction(
-                circuit, transport, streaming=streaming
+                circuit,
+                transport,
+                streaming=streaming,
+                behavior=behavior,
+                notification_server_url=notification_server_url,
             )
             expected_end_tokens.extend(
                 [*trace_tokens, f'{_END_OF_TRAVERSAL_TOKEN}:{transport}']

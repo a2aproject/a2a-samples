@@ -27,14 +27,16 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
         str(grpc_port),
     ]
     cwd = _ROOT_DIR / 'agents/python/v03'
-    
+
     log_level = os.environ.get('ITK_LOG_LEVEL', 'INFO')
     if log_level.upper() == 'DEBUG':
         logs_dir = _ROOT_DIR / 'logs'
         if not logs_dir.exists():
-            raise RuntimeError(f"Logs directory '{logs_dir}' does not exist. Please create it or mount it.")
+            raise RuntimeError(
+                f"Logs directory '{logs_dir}' does not exist. Please create it or mount it."
+            )
         stdout_file = open(logs_dir / 'agent_python_v03.log', 'w')
-        
+
         p = subprocess.Popen(  # noqa: S603
             args,
             cwd=cwd,
