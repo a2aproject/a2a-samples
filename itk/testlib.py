@@ -8,6 +8,7 @@ import uuid
 import os
 
 import httpx
+from httpx_sse import aconnect_sse
 
 import test_suite
 
@@ -209,14 +210,16 @@ async def start_notification_server(
 
 
 def _create_payload(
-    is_v0: bool, test_instruction: instruction_pb2.Instruction
+    is_v0: bool,
+    test_instruction: instruction_pb2.Instruction,
+    streaming: bool = False,
 ) -> dict:
     """Creates the JSON-RPC payload for the test instruction."""
     inst_bytes = test_instruction.SerializeToString()
     b64_inst = base64.b64encode(inst_bytes).decode('utf-8')
 
     if is_v0:
-        method = 'message/send'
+        method = 'message/stream' if streaming else 'message/send'
         params = {
             'message': {
                 'role': 'user',
@@ -235,7 +238,7 @@ def _create_payload(
             }
         }
     else:
-        method = 'SendMessage'
+        method = 'SendStreamingMessage' if streaming else 'SendMessage'
         params = {
             'message': {
                 'role': 'ROLE_USER',
@@ -341,12 +344,23 @@ def _verify_send_message(
     result: dict,
     expected_end_tokens: list[str],
     label: str,
+    expected_finnished_count: int = 0,
 ) -> bool:
     full_response = _extract_response_text(result)
 
     logger.info('Test Result for %s: %s', label, full_response)
 
     if all(token in full_response for token in expected_end_tokens):
+        if expected_finnished_count > 0:
+            count = full_response.count('task-finnished')
+            if count < expected_finnished_count:
+                logger.error(
+                    '--- INTEGRATION TEST FAILED: Expected %d "task-finnished" tokens, found %d for %s ---',
+                    expected_finnished_count,
+                    count,
+                    label,
+                )
+                return False
         logger.info('--- INTEGRATION TEST PASSED: %s ---', label)
         return True
 
@@ -416,6 +430,82 @@ async def _verify_push_notification(
     return False
 
 
+async def _read_stream_response(
+    http_client: httpx.AsyncClient,
+    target_url: str,
+    json_rpc_request: dict,
+    headers: dict,
+    is_v0: bool,
+    expected_end_tokens: list[str],
+    expected_finnished_count: int = 0,
+) -> dict:
+    """Reads a streaming response using SSE and aggregates results."""
+    logger.info('Starting streaming request to agent...')
+    collected_text = []
+    async with aconnect_sse(
+        http_client, 'POST', target_url, json=json_rpc_request, headers=headers
+    ) as event_source:
+        async for sse in event_source.aiter_sse():
+            logger.info('SSE Event: %s', sse.data)
+            import json
+
+            try:
+                event_data = json.loads(sse.data)
+                if 'result' in event_data:
+                    res = event_data['result']
+                    if is_v0:
+                        text = _extract_response_text(res)
+                    else:
+                        texts = _read_v10_notif(res)
+                        text = '\n'.join(texts)
+
+                    if text:
+                        collected_text.append(text)
+
+                    # Check if traversal completed!
+                    joined_text = '\n'.join(collected_text)
+                    print(joined_text)
+                    if all(
+                        token in joined_text for token in expected_end_tokens
+                    ):
+                        if (
+                            expected_finnished_count == 0
+                            or joined_text.count('task-finnished')
+                            >= expected_finnished_count
+                        ):
+                            logger.info(
+                                'Found all expected tokens and finnished count in stream, breaking.'
+                            )
+                            break
+            except Exception:
+                logger.debug('Failed to parse SSE data', exc_info=True)
+
+    return {
+        'status': {'message': {'parts': [{'text': '\n'.join(collected_text)}]}}
+    }
+
+
+async def _read_sync_response(
+    http_client: httpx.AsyncClient,
+    target_url: str,
+    json_rpc_request: dict,
+    headers: dict,
+) -> dict:
+    """Reads a synchronous JSON-RPC response."""
+    response = await http_client.post(
+        target_url, json=json_rpc_request, headers=headers
+    )
+    response.raise_for_status()
+    response_json = response.json()
+
+    logger.info('!!!!!!!!!!!!Received response: %s!!!!!!!!!!!!!', response_json)
+
+    if 'error' in response_json:
+        raise RuntimeError(f'JSON-RPC Error: {response_json["error"]}')
+
+    return response_json.get('result', {})
+
+
 async def execute_itk_test(  # noqa: PLR0913
     sdks: list[str],
     traversal: str,
@@ -481,7 +571,7 @@ async def execute_itk_test(  # noqa: PLR0913
         else:
             target_url = target_url.rstrip('/') + '/'
 
-        json_rpc_request = _create_payload(is_v0, test_instruction)
+        json_rpc_request = _create_payload(is_v0, test_instruction, streaming)
 
         test_token = str(uuid.uuid4())
 
@@ -513,20 +603,30 @@ async def execute_itk_test(  # noqa: PLR0913
             headers['A2A-Version'] = '1.0'
 
         async with httpx.AsyncClient(timeout=120) as http_client:
-            response = await http_client.post(
-                target_url, json=json_rpc_request, headers=headers
-            )
-            response.raise_for_status()
-            response_json = response.json()
+            expected_finnished_count = 0
+            if behavior == 'resubscribe':
+                expected_finnished_count = sum(
+                    1 for t in expected_end_tokens if t.startswith('[')
+                )
+                logger.info(
+                    'Expected "task-finnished" count: %d',
+                    expected_finnished_count,
+                )
 
-            logger.info(
-                '!!!!!!!!!!!!Received response: %s!!!!!!!!!!!!!', response_json
-            )
-
-            if 'error' in response_json:
-                raise RuntimeError(f'JSON-RPC Error: {response_json["error"]}')
-
-            result = response_json.get('result', {})
+            if streaming:
+                result = await _read_stream_response(
+                    http_client,
+                    target_url,
+                    json_rpc_request,
+                    headers,
+                    is_v0,
+                    expected_end_tokens,
+                    expected_finnished_count=expected_finnished_count,
+                )
+            else:
+                result = await _read_sync_response(
+                    http_client, target_url, json_rpc_request, headers
+                )
 
             full_response = ''
 
@@ -540,6 +640,13 @@ async def execute_itk_test(  # noqa: PLR0913
             elif behavior == 'send_message':
                 test_result = _verify_send_message(
                     result, expected_end_tokens, label
+                )
+            elif behavior == 'resubscribe':
+                test_result = _verify_send_message(
+                    result,
+                    expected_end_tokens,
+                    label,
+                    expected_finnished_count=expected_finnished_count,
                 )
             else:
                 raise ValueError(f'Unsupported behavior: {behavior}')

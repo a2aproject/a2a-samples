@@ -65,7 +65,7 @@ func (x SeriesOfSteps_ResponseGenerator) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SeriesOfSteps_ResponseGenerator.Descriptor instead.
 func (SeriesOfSteps_ResponseGenerator) EnumDescriptor() ([]byte, []int) {
-	return file_instruction_proto_rawDescGZIP(), []int{5, 0}
+	return file_instruction_proto_rawDescGZIP(), []int{6, 0}
 }
 
 type Instruction struct {
@@ -249,6 +249,42 @@ func (x *PushNotificationBehavior) GetUrl() string {
 	return ""
 }
 
+type ResubscribeBehavior struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResubscribeBehavior) Reset() {
+	*x = ResubscribeBehavior{}
+	mi := &file_instruction_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResubscribeBehavior) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResubscribeBehavior) ProtoMessage() {}
+
+func (x *ResubscribeBehavior) ProtoReflect() protoreflect.Message {
+	mi := &file_instruction_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResubscribeBehavior.ProtoReflect.Descriptor instead.
+func (*ResubscribeBehavior) Descriptor() ([]byte, []int) {
+	return file_instruction_proto_rawDescGZIP(), []int{3}
+}
+
 // gets the agent card from a remote agent, calls it and returns the response
 type CallAgent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -266,6 +302,7 @@ type CallAgent struct {
 	//
 	//	*CallAgent_SendMessage
 	//	*CallAgent_PushNotification
+	//	*CallAgent_Resubscribe
 	Behavior      isCallAgent_Behavior `protobuf_oneof:"behavior"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -273,7 +310,7 @@ type CallAgent struct {
 
 func (x *CallAgent) Reset() {
 	*x = CallAgent{}
-	mi := &file_instruction_proto_msgTypes[3]
+	mi := &file_instruction_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -285,7 +322,7 @@ func (x *CallAgent) String() string {
 func (*CallAgent) ProtoMessage() {}
 
 func (x *CallAgent) ProtoReflect() protoreflect.Message {
-	mi := &file_instruction_proto_msgTypes[3]
+	mi := &file_instruction_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -298,7 +335,7 @@ func (x *CallAgent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CallAgent.ProtoReflect.Descriptor instead.
 func (*CallAgent) Descriptor() ([]byte, []int) {
-	return file_instruction_proto_rawDescGZIP(), []int{3}
+	return file_instruction_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CallAgent) GetTransport() string {
@@ -354,6 +391,15 @@ func (x *CallAgent) GetPushNotification() *PushNotificationBehavior {
 	return nil
 }
 
+func (x *CallAgent) GetResubscribe() *ResubscribeBehavior {
+	if x != nil {
+		if x, ok := x.Behavior.(*CallAgent_Resubscribe); ok {
+			return x.Resubscribe
+		}
+	}
+	return nil
+}
+
 type isCallAgent_Behavior interface {
 	isCallAgent_Behavior()
 }
@@ -366,22 +412,30 @@ type CallAgent_PushNotification struct {
 	PushNotification *PushNotificationBehavior `protobuf:"bytes,6,opt,name=push_notification,json=pushNotification,proto3,oneof"`
 }
 
+type CallAgent_Resubscribe struct {
+	Resubscribe *ResubscribeBehavior `protobuf:"bytes,7,opt,name=resubscribe,proto3,oneof"`
+}
+
 func (*CallAgent_SendMessage) isCallAgent_Behavior() {}
 
 func (*CallAgent_PushNotification) isCallAgent_Behavior() {}
+
+func (*CallAgent_Resubscribe) isCallAgent_Behavior() {}
 
 // this option just returns a response
 type ReturnResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// what to return to the calling agent
-	Response      string `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
+	Response string `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
+	// whether to hold the task in WORKING state instead of completing it
+	HoldTask      bool `protobuf:"varint,2,opt,name=hold_task,json=holdTask,proto3" json:"hold_task,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ReturnResponse) Reset() {
 	*x = ReturnResponse{}
-	mi := &file_instruction_proto_msgTypes[4]
+	mi := &file_instruction_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -393,7 +447,7 @@ func (x *ReturnResponse) String() string {
 func (*ReturnResponse) ProtoMessage() {}
 
 func (x *ReturnResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_instruction_proto_msgTypes[4]
+	mi := &file_instruction_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -406,7 +460,7 @@ func (x *ReturnResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReturnResponse.ProtoReflect.Descriptor instead.
 func (*ReturnResponse) Descriptor() ([]byte, []int) {
-	return file_instruction_proto_rawDescGZIP(), []int{4}
+	return file_instruction_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ReturnResponse) GetResponse() string {
@@ -414,6 +468,13 @@ func (x *ReturnResponse) GetResponse() string {
 		return x.Response
 	}
 	return ""
+}
+
+func (x *ReturnResponse) GetHoldTask() bool {
+	if x != nil {
+		return x.HoldTask
+	}
+	return false
 }
 
 // executes step series and returns response based on response_generator
@@ -427,7 +488,7 @@ type SeriesOfSteps struct {
 
 func (x *SeriesOfSteps) Reset() {
 	*x = SeriesOfSteps{}
-	mi := &file_instruction_proto_msgTypes[5]
+	mi := &file_instruction_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -439,7 +500,7 @@ func (x *SeriesOfSteps) String() string {
 func (*SeriesOfSteps) ProtoMessage() {}
 
 func (x *SeriesOfSteps) ProtoReflect() protoreflect.Message {
-	mi := &file_instruction_proto_msgTypes[5]
+	mi := &file_instruction_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -452,7 +513,7 @@ func (x *SeriesOfSteps) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SeriesOfSteps.ProtoReflect.Descriptor instead.
 func (*SeriesOfSteps) Descriptor() ([]byte, []int) {
-	return file_instruction_proto_rawDescGZIP(), []int{5}
+	return file_instruction_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *SeriesOfSteps) GetInstructions() []*Instruction {
@@ -482,18 +543,21 @@ const file_instruction_proto_rawDesc = "" +
 	"\x04step\"\x15\n" +
 	"\x13SendMessageBehavior\",\n" +
 	"\x18PushNotificationBehavior\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\"\xba\x02\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url\"\x15\n" +
+	"\x13ResubscribeBehavior\"\xf8\x02\n" +
 	"\tCallAgent\x12\x1c\n" +
 	"\ttransport\x18\x01 \x01(\tR\ttransport\x12$\n" +
 	"\x0eagent_card_uri\x18\x02 \x01(\tR\fagentCardUri\x122\n" +
 	"\vinstruction\x18\x03 \x01(\v2\x10.itk.InstructionR\vinstruction\x12\x1c\n" +
 	"\tstreaming\x18\x04 \x01(\bR\tstreaming\x12=\n" +
 	"\fsend_message\x18\x05 \x01(\v2\x18.itk.SendMessageBehaviorH\x00R\vsendMessage\x12L\n" +
-	"\x11push_notification\x18\x06 \x01(\v2\x1d.itk.PushNotificationBehaviorH\x00R\x10pushNotificationB\n" +
+	"\x11push_notification\x18\x06 \x01(\v2\x1d.itk.PushNotificationBehaviorH\x00R\x10pushNotification\x12<\n" +
+	"\vresubscribe\x18\a \x01(\v2\x18.itk.ResubscribeBehaviorH\x00R\vresubscribeB\n" +
 	"\n" +
-	"\bbehavior\",\n" +
+	"\bbehavior\"I\n" +
 	"\x0eReturnResponse\x12\x1a\n" +
-	"\bresponse\x18\x01 \x01(\tR\bresponse\"\xf2\x01\n" +
+	"\bresponse\x18\x01 \x01(\tR\bresponse\x12\x1b\n" +
+	"\thold_task\x18\x02 \x01(\bR\bholdTask\"\xf2\x01\n" +
 	"\rSeriesOfSteps\x124\n" +
 	"\finstructions\x18\x01 \x03(\v2\x10.itk.InstructionR\finstructions\x12S\n" +
 	"\x12response_generator\x18\x02 \x01(\x0e2$.itk.SeriesOfSteps.ResponseGeneratorR\x11responseGenerator\"V\n" +
@@ -514,30 +578,32 @@ func file_instruction_proto_rawDescGZIP() []byte {
 }
 
 var file_instruction_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_instruction_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_instruction_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_instruction_proto_goTypes = []any{
 	(SeriesOfSteps_ResponseGenerator)(0), // 0: itk.SeriesOfSteps.ResponseGenerator
 	(*Instruction)(nil),                  // 1: itk.Instruction
 	(*SendMessageBehavior)(nil),          // 2: itk.SendMessageBehavior
 	(*PushNotificationBehavior)(nil),     // 3: itk.PushNotificationBehavior
-	(*CallAgent)(nil),                    // 4: itk.CallAgent
-	(*ReturnResponse)(nil),               // 5: itk.ReturnResponse
-	(*SeriesOfSteps)(nil),                // 6: itk.SeriesOfSteps
+	(*ResubscribeBehavior)(nil),          // 4: itk.ResubscribeBehavior
+	(*CallAgent)(nil),                    // 5: itk.CallAgent
+	(*ReturnResponse)(nil),               // 6: itk.ReturnResponse
+	(*SeriesOfSteps)(nil),                // 7: itk.SeriesOfSteps
 }
 var file_instruction_proto_depIdxs = []int32{
-	4, // 0: itk.Instruction.call_agent:type_name -> itk.CallAgent
-	5, // 1: itk.Instruction.return_response:type_name -> itk.ReturnResponse
-	6, // 2: itk.Instruction.steps:type_name -> itk.SeriesOfSteps
+	5, // 0: itk.Instruction.call_agent:type_name -> itk.CallAgent
+	6, // 1: itk.Instruction.return_response:type_name -> itk.ReturnResponse
+	7, // 2: itk.Instruction.steps:type_name -> itk.SeriesOfSteps
 	1, // 3: itk.CallAgent.instruction:type_name -> itk.Instruction
 	2, // 4: itk.CallAgent.send_message:type_name -> itk.SendMessageBehavior
 	3, // 5: itk.CallAgent.push_notification:type_name -> itk.PushNotificationBehavior
-	1, // 6: itk.SeriesOfSteps.instructions:type_name -> itk.Instruction
-	0, // 7: itk.SeriesOfSteps.response_generator:type_name -> itk.SeriesOfSteps.ResponseGenerator
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	4, // 6: itk.CallAgent.resubscribe:type_name -> itk.ResubscribeBehavior
+	1, // 7: itk.SeriesOfSteps.instructions:type_name -> itk.Instruction
+	0, // 8: itk.SeriesOfSteps.response_generator:type_name -> itk.SeriesOfSteps.ResponseGenerator
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_instruction_proto_init() }
@@ -550,9 +616,10 @@ func file_instruction_proto_init() {
 		(*Instruction_ReturnResponse)(nil),
 		(*Instruction_Steps)(nil),
 	}
-	file_instruction_proto_msgTypes[3].OneofWrappers = []any{
+	file_instruction_proto_msgTypes[4].OneofWrappers = []any{
 		(*CallAgent_SendMessage)(nil),
 		(*CallAgent_PushNotification)(nil),
+		(*CallAgent_Resubscribe)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -560,7 +627,7 @@ func file_instruction_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_instruction_proto_rawDesc), len(file_instruction_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

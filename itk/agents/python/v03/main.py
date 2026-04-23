@@ -16,7 +16,8 @@ import uvicorn
 from fastapi import FastAPI
 from pyproto import instruction_pb2
 
-from a2a.client import ClientConfig, ClientFactory
+from a2a.client import Client, ClientConfig, ClientFactory
+from a2a.client.errors import A2AClientJSONRPCError
 from a2a.grpc import a2a_pb2_grpc
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.apps import A2AFastAPIApplication, A2ARESTFastAPIApplication
@@ -42,6 +43,7 @@ from a2a.types import (
     Task,
     TaskState,
     TaskStatus,
+    TaskIdParams,
     TransportProtocol,
 )
 from a2a.utils import new_agent_text_message
@@ -84,6 +86,87 @@ def wrap_instruction_to_request(
         ],
         metadata={'a2a/protocol_version': '0.3'},
     )
+
+
+def _extract_text_from_event(event: Any) -> list[str]:
+    """Extracts text parts from an event's message in v0.3."""
+    message = None
+    if hasattr(event, 'role') and hasattr(event, 'parts'):  # Likely a Message
+        message = event
+    elif isinstance(event, tuple):
+        for item in event:
+            if item is None:
+                continue
+            if hasattr(item, 'role') and hasattr(item, 'parts'):
+                message = item
+                break
+            status = getattr(item, 'status', None) or getattr(
+                getattr(item, 'status_update', None),
+                'status',
+                None,
+            )
+            if status and getattr(status, 'message', None):
+                message = status.message
+                break
+            if getattr(item, 'message', None) and hasattr(
+                item.message, 'parts'
+            ):
+                message = item.message
+                break
+
+    text_parts = []
+    if message:
+        for p in message.parts:
+            p_root = getattr(p, 'root', p)
+            t = getattr(p_root, 'text', None)
+            if t:
+                text_parts.append(t)
+    return text_parts
+
+
+async def _handle_call_agent_with_resubscribe(
+    client: Client, request: Message
+) -> list[str]:
+    """Handles the send-disconnect-resubscribe flow in v0.3."""
+    results = []
+    logger.info('Executing re-subscribe behavior')
+    agen = client.send_message(request)
+    task_id = None
+
+    async for event in agen:
+        logger.info('Event before disconnect: %s', event)
+        if isinstance(event, tuple):
+            task_id = event[0].id
+        elif isinstance(event, Message):
+            pass
+
+        break
+
+    await agen.aclose()
+    logger.info('Disconnected from task %s. Now re-subscribing.', task_id)
+
+    resub_agen = client.resubscribe(TaskIdParams(id=task_id))
+
+    async for event in resub_agen:
+        logger.info('Event after re-subscribe: %s', event)
+        extracted_text = _extract_text_from_event(event)
+        results.extend(extracted_text)
+        logger.info('Extracted text: %s', extracted_text)
+        if any('task-finnished' in t for t in extracted_text):
+            logger.info(
+                'Received task-finnished after re-subscribe, breaking loop.'
+            )
+            break
+
+    logger.info('Canceling task %s after retrieval.', task_id)
+    try:
+        await client.cancel_task(TaskIdParams(id=task_id))
+        logger.info('Task %s cancelled successfully.', task_id)
+    except A2AClientJSONRPCError as e:
+        logger.error('Failed to cancel task %s: %s', task_id, str(e))
+        raise
+
+    return results
 
 
 async def get_client_with_transport(
@@ -138,6 +221,15 @@ async def get_client_with_transport(
         ]
 
     return await ClientFactory.connect(url, client_config=config)
+
+
+def _should_hold(inst: instruction_pb2.Instruction) -> bool:
+    """Recursively checks if any part of the instruction requests holding the task."""
+    if inst.HasField('return_response') and inst.return_response.hold_task:
+        return True
+    if inst.HasField('steps'):
+        return any(_should_hold(step) for step in inst.steps.instructions)
+    return False
 
 
 async def handle_instruction(
@@ -197,42 +289,15 @@ async def _call_agent_func(
             push_notification_url=push_notification_url,
         )
         msg = wrap_instruction_to_request(call_agent_proto.instruction)
-        async for event in client.send_message(msg):
-            logger.info('Event received: %s: %s', type(event), event)
+        if call_agent_proto.HasField('resubscribe'):
+            results = await _handle_call_agent_with_resubscribe(client, msg)
+            for result in results:
+                yield result
+        else:
+            async for event in client.send_message(msg):
+                logger.info('Event received: %s: %s', type(event), event)
 
-            message = None
-            if hasattr(event, 'role') and hasattr(
-                event, 'parts'
-            ):  # Likely a Message
-                message = event
-            elif isinstance(event, tuple):
-                for item in event:
-                    if item is None:
-                        continue
-                    if hasattr(item, 'role') and hasattr(item, 'parts'):
-                        message = item
-                        break
-                    status = getattr(item, 'status', None) or getattr(
-                        getattr(item, 'status_update', None),
-                        'status',
-                        None,
-                    )
-                    if status and getattr(status, 'message', None):
-                        message = status.message
-                        break
-                    if getattr(item, 'message', None) and hasattr(
-                        item.message, 'parts'
-                    ):
-                        message = item.message
-                        break
-
-            if message:
-                text_parts = []
-                for p in message.parts:
-                    p_root = getattr(p, 'root', p)
-                    t = getattr(p_root, 'text', None)
-                    if t:
-                        text_parts.append(t)
+                text_parts = _extract_text_from_event(event)
                 if text_parts:
                     yield '\n'.join(text_parts)
 
@@ -296,6 +361,8 @@ class V03AgentExecutor(AgentExecutor):
             await task_updater.failed(message=new_agent_text_message(error_msg))
             return
 
+        should_hold_task = _should_hold(instruction)
+
         try:
 
             async def call_agent_func_wrapper(
@@ -321,6 +388,47 @@ class V03AgentExecutor(AgentExecutor):
             result = await handle_instruction(
                 instruction, call_agent_func_wrapper
             )
+            response_text = '\n'.join(result)
+            if should_hold_task:
+                logger.info(
+                    'Holding task %s as requested', task_updater.task_id
+                )
+                response_msg = new_agent_text_message(response_text)
+                # First emitted event: the actual response
+                await task_updater.start_work(message=response_msg)
+                await asyncio.sleep(2)
+
+                # Second emitted event: message with text "task-finnished"
+                logger.info(
+                    'Emitting task-finnished for held task %s',
+                    task_updater.task_id,
+                )
+                finnished_msg = new_agent_text_message('task-finnished')
+                await task_updater.update_status(
+                    TaskState.working, message=finnished_msg
+                )
+                await asyncio.sleep(2)
+
+                # Periodically emit events to satisfy resubscribing clients
+                # and keep the queue open.
+                try:
+                    while True:
+                        logger.info(
+                            'Emitting periodic status update for held task %s',
+                            task_updater.task_id,
+                        )
+                        await task_updater.update_status(
+                            TaskState.working, message=finnished_msg
+                        )
+                        await asyncio.sleep(2)
+                except asyncio.CancelledError:
+                    logger.info(
+                        'Task %s cancelled, closing event queue.',
+                        task_updater.task_id,
+                    )
+                    await event_queue.close()
+                    return
+
             response_msg = new_agent_text_message('\n'.join(result))
             await task_updater.complete(message=response_msg)
         except Exception:
@@ -331,13 +439,14 @@ class V03AgentExecutor(AgentExecutor):
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
-        """Implementation of cancel request method required by AgentExecutor interface.
-
-        Args:
-            context: The request context containing the incoming message.
-            event_queue: The event queue to send responses to.
-
-        """
+        """Implementation of cancel request method required by AgentExecutor interface."""
+        logger.info('Cancel requested for task %s', context.task_id)
+        task_updater = TaskUpdater(
+            event_queue,
+            task_id=context.task_id,
+            context_id=context.context_id,
+        )
+        await task_updater.update_status(TaskState.canceled)
 
 
 async def create_grpc_server(

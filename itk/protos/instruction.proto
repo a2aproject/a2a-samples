@@ -17,6 +17,7 @@ message SendMessageBehavior {}
 message PushNotificationBehavior {
   string url = 1;
 }
+message ResubscribeBehavior {}
 
 // gets the agent card from a remote agent, calls it and returns the response
 message CallAgent {
@@ -33,6 +34,7 @@ message CallAgent {
   oneof behavior {
     SendMessageBehavior send_message = 5;
     PushNotificationBehavior push_notification = 6;
+    ResubscribeBehavior resubscribe = 7;
   }
 }
 
@@ -40,6 +42,8 @@ message CallAgent {
 message ReturnResponse {
   // what to return to the calling agent
   string response = 1;
+  // whether to hold the task in WORKING state instead of completing it
+  bool hold_task = 2;
 }
 
 // executes step series and returns response based on response_generator
