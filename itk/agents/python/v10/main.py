@@ -11,10 +11,12 @@ import httpx
 import uvicorn
 
 from fastapi import FastAPI
+from typing import Any
 
 from pyproto import instruction_pb2
 
-from a2a.client import ClientConfig, create_client
+from a2a.client import Client, ClientConfig, create_client
+from a2a.client.errors import A2AClientError
 from a2a.compat.v0_3 import a2a_v0_3_pb2_grpc
 from a2a.compat.v0_3.grpc_handler import CompatGrpcHandler
 from a2a.server.agent_execution import AgentExecutor, RequestContext
@@ -38,15 +40,18 @@ from a2a.types.a2a_pb2 import (
     AgentCapabilities,
     AgentCard,
     AgentInterface,
+    CancelTaskRequest,
     Message,
     Part,
     SendMessageRequest,
+    SubscribeToTaskRequest,
     Task,
     TaskState,
     TaskStatus,
     TaskPushNotificationConfig,
 )
 from a2a.utils import TransportProtocol
+from a2a.utils.errors import TaskNotCancelableError
 from a2a.server.tasks.push_notification_sender import PushNotificationEvent
 
 log_level_str = os.environ.get('ITK_LOG_LEVEL', 'INFO').upper()
@@ -101,6 +106,93 @@ def extract_instruction(
     return None
 
 
+def _extract_text_from_event(event: Any) -> list[str]:
+    """Extracts text parts from an event's message."""
+    if isinstance(event, tuple):
+        results = []
+        for item in event:
+            results.extend(_extract_text_from_event(item))
+        return results
+
+    message = None
+    if hasattr(event, 'HasField'):
+        if event.HasField('message'):
+            message = event.message
+        elif event.HasField('task') and event.task.status.HasField('message'):
+            message = event.task.status.message
+        elif event.HasField(
+            'status_update'
+        ) and event.status_update.status.HasField('message'):
+            message = event.status_update.status.message
+
+    results = []
+    if message:
+        results.extend(part.text for part in message.parts if part.text)
+    return results
+
+
+async def _handle_call_agent_with_resubscribe(
+    client: Client, request: SendMessageRequest
+) -> list[str]:
+    """Handles the send-disconnect-resubscribe flow."""
+    results = []
+    logger.info('Executing re-subscribe behavior')
+    agen = client.send_message(request)
+    task_id = None
+
+    async for event in agen:
+        logger.info('Event before disconnect: %s', event)
+        if event.HasField('task'):
+            task_id = event.task.id
+        elif event.HasField('status_update'):
+            task_id = event.status_update.task_id
+        break
+
+    await agen.aclose()
+    logger.info('Disconnected from task %s. Now re-subscribing.', task_id)
+
+    resub_agen = client.subscribe(SubscribeToTaskRequest(id=task_id))
+
+    task_obj = None
+    finished = False
+    async for event in resub_agen:
+        logger.info('Event after re-subscribe: %s', event)
+        if hasattr(event, 'task'):
+            task_obj = event.task
+        elif hasattr(event, 'HasField') and event.HasField('task'):
+            task_obj = event.task
+
+        extracted_text = _extract_text_from_event(event)
+        for text in extracted_text:
+            processed_text = text.replace('task-finished', '')
+            results.append(processed_text)
+        if any('task-finished' in text for text in extracted_text):
+            logger.info(
+                'Received task-finished after re-subscribe, breaking loop.'
+            )
+            finished = True
+            break
+
+    if not results and task_obj and hasattr(task_obj, 'history'):
+        logger.info('Results empty after loop, reading from history.')
+        for msg in task_obj.history:
+            if msg.role == 'ROLE_AGENT' or msg.role == 'agent':
+                for part in msg.parts:
+                    if part.text:
+                        results.append(part.text.replace('task-finished', ''))
+
+    if not finished:
+        logger.info('Canceling task %s after retrieval.', task_id)
+        try:
+            await client.cancel_task(CancelTaskRequest(id=task_id))
+            logger.info('Task cancelled successfully: %s', task_id)
+        except A2AClientError as e:
+            logger.error('Failed to cancel task %s: %s', task_id, str(e))
+            raise
+
+    return results
+
+
 def wrap_instruction_to_request(inst: instruction_pb2.Instruction) -> Message:
     """Wraps an Instruction proto into an A2A Message."""
     inst_bytes = inst.SerializeToString()
@@ -145,6 +237,9 @@ async def handle_call_agent(
         selected_transport == TransportProtocol.GRPC
     )
 
+    if call.HasField('resubscribe') and not config.streaming:
+        raise ValueError('Re-subscription requires streaming to be enabled')
+
     if call.HasField('push_notification'):
         url = call.push_notification.url
         if not url:
@@ -169,27 +264,15 @@ async def handle_call_agent(
             request = SendMessageRequest(message=nested_msg)
 
             results = []
-            async for event in client.send_message(request):
-                # Event is streaming response and task
-                logger.info('Event: %s', event)
-                stream_resp = event
 
-                message = None
-                if stream_resp.HasField('message'):
-                    message = stream_resp.message
-                elif stream_resp.HasField(
-                    'task'
-                ) and stream_resp.task.status.HasField('message'):
-                    message = stream_resp.task.status.message
-                elif stream_resp.HasField(
-                    'status_update'
-                ) and stream_resp.status_update.status.HasField('message'):
-                    message = stream_resp.status_update.status.message
-
-                if message:
-                    results.extend(
-                        part.text for part in message.parts if part.text
-                    )
+            if call.HasField('resubscribe'):
+                results.extend(
+                    await _handle_call_agent_with_resubscribe(client, request)
+                )
+            else:
+                async for event in client.send_message(request):
+                    logger.info('Event: %s', event)
+                    results.extend(_extract_text_from_event(event))
 
         except Exception as e:
             logger.exception('Failed to call outbound agent')
@@ -198,6 +281,15 @@ async def handle_call_agent(
             ) from e
         else:
             return results
+
+
+def _should_hold(inst: instruction_pb2.Instruction) -> bool:
+    """Recursively checks if any part of the instruction requests holding the task."""
+    if inst.HasField('return_response') and inst.return_response.hold_task:
+        return True
+    if inst.HasField('steps'):
+        return any(_should_hold(step) for step in inst.steps.instructions)
+    return False
 
 
 async def handle_instruction(
@@ -253,23 +345,58 @@ class V10AgentExecutor(AgentExecutor):
             )
             return
 
+        should_hold_task = _should_hold(instruction)
+
         try:
             logger.info('Instruction: %s', instruction)
             results = await handle_instruction(instruction)
+
             response_text = '\n'.join(results)
             logger.info('Response: %s', response_text)
-            await task_updater.update_status(
-                TaskState.TASK_STATE_COMPLETED,
-                message=task_updater.new_agent_message(
-                    [Part(text=response_text)]
-                ),
-            )
-            logger.info('Task %s completed', context.task_id)
+
+            if should_hold_task:
+                logger.info('Holding task %s as requested', context.task_id)
+                # Emitted event: response + task-finished
+                logger.info(
+                    'Emitting response and task-finished for held task %s',
+                    context.task_id,
+                )
+                await task_updater.update_status(
+                    TaskState.TASK_STATE_WORKING,
+                    message=task_updater.new_agent_message(
+                        [Part(text=response_text + '\ntask-finished')]
+                    ),
+                )
+                await asyncio.sleep(2)
+
+                # Continue emitting "task-finished" every 2 seconds
+                try:
+                    while True:
+                        logger.info(
+                            'Emitting periodic status update for held task %s',
+                            context.task_id,
+                        )
+                        await task_updater.update_status(
+                            TaskState.TASK_STATE_WORKING,
+                            message=None,
+                        )
+                        await asyncio.sleep(2)
+                except asyncio.CancelledError:
+                    logger.info('Task %s cancelled', context.task_id)
+                    return
+            else:
+                await task_updater.update_status(
+                    TaskState.TASK_STATE_COMPLETED,
+                    message=task_updater.new_agent_message(
+                        [Part(text=response_text)]
+                    ),
+                )
+                logger.info('Task %s completed', context.task_id)
         except Exception as e:
             logger.exception('Error during instruction handling')
             await task_updater.update_status(
                 TaskState.TASK_STATE_FAILED,
-                message=task_updater.new_agent_message([Part(text=str(e))]),
+                message=None,
             )
 
     async def cancel(

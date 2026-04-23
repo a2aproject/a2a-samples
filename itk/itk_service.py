@@ -47,7 +47,7 @@ class RunTestsResponse(BaseModel):
 @app.get('/health')
 async def health() -> dict[str, str]:
     """Health check endpoint."""
-    return {"status": "ok"}
+    return {'status': 'ok'}
 
 
 @app.post('/run', response_model=RunTestsResponse)

@@ -65,10 +65,57 @@ func (e *V10AgentExecutor) Execute(ctx context.Context, execCtx *a2asrv.Executor
 		}
 
 		response := strings.Join(results, "\n")
-		if !yield(a2a.NewStatusUpdateEvent(execCtx, a2a.TaskStateCompleted, a2a.NewMessage(a2a.MessageRoleAgent, a2a.NewTextPart(response))), nil) {
-			return
+		if shouldHold(instruction) {
+			log.Info(ctx, "Holding task as requested", "taskId", string(execCtx.TaskID))
+			
+			// Emitted event: response + task-finished
+			log.Info(ctx, "Emitting response and task-finished", "taskId", string(execCtx.TaskID))
+			if !yield(a2a.NewStatusUpdateEvent(execCtx, a2a.TaskStateWorking, a2a.NewMessage(a2a.MessageRoleAgent, a2a.NewTextPart(response+"\ntask-finished"))), nil) {
+				return
+			}
+			
+			select {
+			case <-ctx.Done():
+				log.Info(ctx, "Task cancelled during sleep", "taskId", string(execCtx.TaskID))
+				return
+			case <-time.After(2 * time.Second):
+			}
+
+			ticker := time.NewTicker(2 * time.Second)
+			defer ticker.Stop()
+
+			for {
+				select {
+				case <-ctx.Done():
+					log.Info(ctx, "Task cancelled, exiting hold loop", "taskId", string(execCtx.TaskID))
+					return
+				case <-ticker.C:
+					log.Info(ctx, "Emitting periodic status update", "taskId", string(execCtx.TaskID))
+					if !yield(a2a.NewStatusUpdateEvent(execCtx, a2a.TaskStateWorking, nil), nil) {
+						return
+					}
+				}
+			}
+		} else {
+			if !yield(a2a.NewStatusUpdateEvent(execCtx, a2a.TaskStateCompleted, a2a.NewMessage(a2a.MessageRoleAgent, a2a.NewTextPart(response))), nil) {
+				return
+			}
 		}
 	}
+}
+
+func shouldHold(inst *pb.Instruction) bool {
+	if inst.GetReturnResponse() != nil && inst.GetReturnResponse().HoldTask {
+		return true
+	}
+	if inst.GetSteps() != nil {
+		for _, step := range inst.GetSteps().Instructions {
+			if shouldHold(step) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func extractInstruction(msg *a2a.Message) (*pb.Instruction, error) {
@@ -181,7 +228,9 @@ func (e *V10AgentExecutor) handleCallAgent(ctx context.Context, call *pb.CallAge
 	}
 
 	var responses []string
-	if call.Streaming {
+	if call.GetResubscribe() != nil {
+		return e.handleCallAgentWithResubscribe(ctx, client, wrappedMsg, call.AgentCardUri)
+	} else if call.Streaming {
 		events := client.SendStreamingMessage(ctx, &a2a.SendMessageRequest{Message: wrappedMsg})
 		for ev, err := range events {
 			if err != nil {
@@ -205,6 +254,83 @@ func (e *V10AgentExecutor) handleCallAgent(ctx context.Context, call *pb.CallAge
 	return responses, nil
 }
 
+func (e *V10AgentExecutor) handleCallAgentWithResubscribe(ctx context.Context, client *a2aclient.Client, wrappedMsg *a2a.Message, agentCardUri string) ([]string, error) {
+	log.Info(ctx, "Executing re-subscribe behavior in client", "agentCardUri", agentCardUri)
+
+	initCtx, cancelInit := context.WithCancel(ctx)
+	defer cancelInit()
+
+	events := client.SendStreamingMessage(initCtx, &a2a.SendMessageRequest{Message: wrappedMsg})
+	var taskID string
+
+	for ev, err := range events {
+		if err != nil {
+			return nil, fmt.Errorf("initial call failed: %w", err)
+		}
+		switch r := ev.(type) {
+		case *a2a.Task:
+			taskID = string(r.ID)
+		case *a2a.TaskStatusUpdateEvent:
+			taskID = string(r.TaskID)
+		}
+		if taskID != "" {
+			break
+		}
+	}
+
+	cancelInit()
+	log.Info(ctx, "Disconnected from task, now re-subscribing", "taskId", taskID)
+
+	resubEvents := client.SubscribeToTask(ctx, &a2a.SubscribeToTaskRequest{ID: a2a.TaskID(taskID)})
+
+	var taskObj *a2a.Task
+	var responses []string
+	for ev, err := range resubEvents {
+		if err != nil {
+			return nil, fmt.Errorf("resubscribe failed: %w", err)
+		}
+		if r, ok := ev.(*a2a.Task); ok {
+			taskObj = r
+		}
+		resps := extractResponses(ctx, ev)
+		if len(resps) > 0 {
+			for _, r := range resps {
+				t := r
+				t = strings.ReplaceAll(t, "task-finished", "")
+				responses = append(responses, t)
+				
+				if strings.Contains(r, "task-finished") {
+					log.Info(ctx, "Received task-finished after re-subscribe, breaking loop.")
+					goto EndLoop
+				}
+			}
+		}
+	}
+EndLoop:
+
+	if len(responses) == 0 && taskObj != nil {
+		log.Info(ctx, "Responses empty after loop, reading from history.")
+		for _, msg := range taskObj.History {
+			if msg.Role == "ROLE_AGENT" || msg.Role == "agent" {
+				for _, part := range msg.Parts {
+					if t := part.Text(); t != "" {
+						t = strings.ReplaceAll(t, "task-finished", "")
+						responses = append(responses, t)
+					}
+				}
+			}
+		}
+	}
+
+	log.Info(ctx, "Canceling task after retrieval", "taskId", taskID)
+	_, err := client.CancelTask(ctx, &a2a.CancelTaskRequest{ID: a2a.TaskID(taskID)})
+	if err != nil {
+		return nil, fmt.Errorf("failed to cancel task after retrieval: %w", err)
+	}
+
+	return responses, nil
+}
+
 func extractResponses(ctx context.Context, result any) []string {
 	var responses []string
 	log.Write(ctx, slog.LevelDebug, "Extracting responses", "type", fmt.Sprintf("%T", result))
@@ -223,15 +349,7 @@ func extractResponses(ctx context.Context, result any) []string {
 				}
 			}
 		}
-		for _, msg := range r.History {
-			if msg.Role == a2a.MessageRoleAgent {
-				for _, part := range msg.Parts {
-					if t := part.Text(); t != "" {
-						responses = append(responses, t)
-					}
-				}
-			}
-		}
+
 	case *a2a.TaskStatusUpdateEvent:
 		if r.Status.Message != nil {
 			for _, part := range r.Status.Message.Parts {

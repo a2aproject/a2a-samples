@@ -216,6 +216,8 @@ def _traversal_to_instruction(
     current_inst.return_response.response = (
         f'{_END_OF_TRAVERSAL_TOKEN}:{transport}'
     )
+    hold_task = behavior == 'resubscribe'
+    current_inst.return_response.hold_task = hold_task
     trace_tokens = []
 
     for i in range(len(circuit) - 2, -1, -1):
@@ -231,6 +233,7 @@ def _traversal_to_instruction(
         trace_tokens.append(trace_token)
         trace = hop.steps.instructions.add()
         trace.return_response.response = trace_token
+        trace.return_response.hold_task = hold_task
 
         call_step = hop.steps.instructions.add()
 
@@ -255,6 +258,10 @@ def _traversal_to_instruction(
         elif behavior == 'send_message':
             call_step.call_agent.send_message.CopyFrom(
                 instruction_pb2.SendMessageBehavior()
+            )
+        elif behavior == 'resubscribe':
+            call_step.call_agent.resubscribe.CopyFrom(
+                instruction_pb2.ResubscribeBehavior()
             )
 
         current_inst = hop
