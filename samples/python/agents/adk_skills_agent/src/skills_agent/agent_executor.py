@@ -27,13 +27,14 @@ class CurrencyAgentExecutor(AgentExecutor):
     ) -> None:
         """Executes the agent task based on the provided context."""
         context_id = context.context_id
+        user_id = _resolve_user_id(context)
 
         query = context.get_user_input()
         content = types.Content(
             role='user', parts=[types.Part.from_text(text=query)]
         )
 
-        await self.ensure_session(context_id)  # type: ignore
+        await self.ensure_session(user_id, context_id)  # type: ignore
 
         task = context.current_task
         if not task:
@@ -44,7 +45,7 @@ class CurrencyAgentExecutor(AgentExecutor):
 
         try:
             async for event in self._runner.run_async(
-                user_id=context_id, session_id=context_id, new_message=content
+                user_id=user_id, session_id=context_id, new_message=content
             ):  # type: ignore
                 if event.is_final_response():
                     await self._process_final_response(event, updater, task)
@@ -127,17 +128,17 @@ class CurrencyAgentExecutor(AgentExecutor):
             metadata=metadata,
         )
 
-    async def ensure_session(self, context_id: str) -> None:
-        """Ensures that a session exists for the given context ID."""
+    async def ensure_session(self, user_id: str, context_id: str) -> None:
+        """Ensures that a session exists for the given user and context ID."""
         session = await self._runner.session_service.get_session(
             app_name=self._runner.app_name,
-            user_id=context_id,
+            user_id=user_id,
             session_id=context_id,
         )
         if session is None:
             await self._runner.session_service.create_session(
                 app_name=self._runner.app_name,
-                user_id=context_id,
+                user_id=user_id,
                 session_id=context_id,
             )
 
@@ -152,3 +153,16 @@ class CurrencyAgentExecutor(AgentExecutor):
 
         """
         raise NotImplementedError('Cancellation is not supported')
+
+
+def _resolve_user_id(context: RequestContext) -> str:
+    """Resolves a stable user id from the request's call context.
+
+    Falls back to ``'a2a_user'`` when the request is not authenticated.
+    The A2A ``context_id`` must never be used as the ADK ``user_id``: it is
+    client-supplied and a malicious caller that learns another user's
+    ``context_id`` could otherwise hijack their ADK session state.
+    """
+    if context.call_context and context.call_context.user.is_authenticated:
+        return context.call_context.user.user_name
+    return 'a2a_user'
