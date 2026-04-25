@@ -11,7 +11,7 @@ Three principles from the Blueprint, mapped directly to A2A mechanics:
 |---|---|
 | **Explicit approval before destructive actions** (P8) | `TASK_STATE_INPUT_REQUIRED` — agent pauses, surfaces confirmation request, resumes on user response |
 | **Perceptible background work** (P5) | `TaskStatusUpdateEvent` streaming — intermediate `working` events emitted at each execution step |
-| **Mid-task steering — cancellation** (P7) | `cancel()` handler + approval-gate flow that honours any non-confirm response |
+| **Mid-task steering — cancellation** (P7) | `cancel()` handler + approval-gate flow that honors any non-confirm response |
 
 These are the exact three principles the OpenClaw inbox incident violated
 ([full teardown](https://aidesignblueprint.com/en/principles)).

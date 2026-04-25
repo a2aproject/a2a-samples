@@ -121,7 +121,7 @@ class GovernedFileAgent(AgentExecutor):
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
-        """Mid-task steering: honour operator-level cancellation (Blueprint P7)."""
+        """Mid-task steering: honor operator-level cancellation (Blueprint P7)."""
         task = context.current_task or new_task_from_user_message(
             context.message
         )

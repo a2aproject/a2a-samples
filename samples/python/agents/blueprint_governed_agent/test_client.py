@@ -118,7 +118,7 @@ async def test_mid_task_steering(
     state = task['status']['state']
     assert state == 'TASK_STATE_CANCELED', (  # noqa: S101
         f'Expected TASK_STATE_CANCELED, got {state!r}. '
-        "Agent must honour steering — user said 'abort', not 'confirm'."
+        "Agent must honor steering — user said 'abort', not 'confirm'."
     )
     print(f'PASS  (state={state!r})')
 
