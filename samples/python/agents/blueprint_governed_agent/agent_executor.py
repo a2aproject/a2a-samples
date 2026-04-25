@@ -51,7 +51,7 @@ class GovernedFileAgent(AgentExecutor):
             return  # Pause — wait for user response.
 
         # ── Resume: check confirmation (Blueprint P7) ──
-        if "confirm" not in user_input.lower():
+        if user_input.lower() != "confirm":
             await event_queue.enqueue_event(
                 TaskStatusUpdateEvent(
                     task_id=context.task_id,

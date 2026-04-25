@@ -19,7 +19,7 @@ These are the exact three principles the OpenClaw inbox incident violated
 ## Quick start
 
 ```bash
-cd a2a/
+cd samples/python/agents/blueprint_governed_agent/
 uv run python __main__.py &      # start agent on :9999
 uv run python test_client.py     # run all 3 assertions
 ```
@@ -63,7 +63,7 @@ Agent: [canceled] Action aborted — file was not modified.
 ## Files
 
 ```
-a2a/
+blueprint_governed_agent/
 ├── pyproject.toml      # a2a-sdk==1.0.2, uvicorn, httpx, protobuf==5.29.5
 ├── README.md           # this file
 ├── __main__.py         # AgentCard + Starlette server setup

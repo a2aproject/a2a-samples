@@ -71,4 +71,4 @@ routes: list[Route] = [
 app = Starlette(routes=routes)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=HOST, port=PORT, log_level="warning")
+    uvicorn.run(app, host=HOST, port=PORT, log_level="info")
