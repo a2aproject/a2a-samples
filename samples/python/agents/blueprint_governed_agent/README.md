@@ -8,7 +8,7 @@ A minimal Python agent built with `a2a-sdk==1.0.2` that demonstrates how to enfo
 Three principles from the Blueprint, mapped directly to A2A mechanics:
 
 | Blueprint Principle | A2A Primitive |
-|---|---|
+| --- | --- |
 | **Explicit approval before destructive actions** (P8) | `TASK_STATE_INPUT_REQUIRED` — agent pauses, surfaces confirmation request, resumes on user response |
 | **Perceptible background work** (P5) | `TaskStatusUpdateEvent` streaming — intermediate `working` events emitted at each execution step |
 | **Mid-task steering — cancellation** (P7) | `cancel()` handler + approval-gate flow that honors any non-confirm response |
@@ -25,7 +25,7 @@ uv run python test_client.py     # run all 3 assertions
 ```
 
 Expected output:
-```
+```text
 AI Design Blueprint — A2A governance validation
 
 Connecting to agent at http://127.0.0.1:9999 ...
@@ -40,7 +40,7 @@ All 3 assertions passed.
 
 ## Agent flow
 
-```
+```text
 User: "delete /tmp/test.txt"
   ↓
 Agent: [task: working] Resetting state...
@@ -62,7 +62,7 @@ Agent: [canceled] Action aborted — file was not modified.
 
 ## Files
 
-```
+```text
 blueprint_governed_agent/
 ├── pyproject.toml      # a2a-sdk==1.0.2, uvicorn, httpx, protobuf==5.29.5
 ├── README.md           # this file
