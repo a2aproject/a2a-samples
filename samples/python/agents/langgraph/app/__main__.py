@@ -4,12 +4,13 @@ import sys
 
 import click
 import uvicorn
+
+from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.routes import (
     create_agent_card_routes,
     create_jsonrpc_routes,
     create_rest_routes,
 )
-from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
@@ -18,10 +19,11 @@ from a2a.types import (
     AgentSkill,
 )
 from dotenv import load_dotenv
+from starlette.applications import Starlette
 
 from app.agent import CurrencyAgent
 from app.agent_executor import CurrencyAgentExecutor
-from starlette.applications import Starlette
+
 
 load_dotenv()
 

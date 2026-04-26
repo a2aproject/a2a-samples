@@ -71,7 +71,7 @@ sequenceDiagram
    
    If you're using OpenAI or any compatible API (e.g., local LLM via Ollama, LM Studio, etc.):
 
-   echo "API_KEY=your_api_key_here" > .env  (not neccessary if have no api key)
+   echo "API_KEY=your_api_key_here" > .env  (not necessary if have no api key)
    echo "TOOL_LLM_URL=your_llm_url" > .env
    echo "TOOL_LLM_NAME=your_llm_name" > .env
 
