@@ -60,6 +60,15 @@ def main(host, port):
             output_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
             examples=['What is exchange rate between USD and GBP?'],
         )
+        extended_skill = AgentSkill(
+            id='convert_currency_extended',
+            name='Advanced Currency Exchange Rates Tool',
+            description='Extended currency conversion with historical rates and advanced analytics, only for authenticated users.',
+            tags=['currency conversion', 'currency exchange', 'historical', 'analytics'],
+            input_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
+            output_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
+            examples=['What was the USD to EUR rate last month?'],
+        )
         agent_card = AgentCard(
             name='Currency Agent',
             description='Helps with exchange rates for currencies',
@@ -79,13 +88,32 @@ def main(host, port):
             capabilities=capabilities,
             skills=[skill],
         )
-
+        extended_agent_card = AgentCard(
+            name='Currency Agent - Extended Edition',
+            description='Full-featured currency agent with advanced capabilities for authenticated users.',
+            supported_interfaces=[
+                AgentInterface(
+                    protocol_binding='JSONRPC',
+                    url=f'http://{host}:{port}/api/v1/jsonrpc/',
+                ),
+                AgentInterface(
+                    protocol_binding='HTTP+JSON',
+                    url=f'http://{host}:{port}/api/v1/rest/',
+                ),
+            ],
+            version='1.0.0',
+            default_input_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
+            default_output_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
+            capabilities=capabilities,
+            skills=[skill, extended_skill],
+        )
 
         # --8<-- [start:DefaultRequestHandler]
         request_handler = DefaultRequestHandler(
             agent_executor=CurrencyAgentExecutor(),
             task_store=InMemoryTaskStore(),
             agent_card=agent_card,
+            extended_agent_card=extended_agent_card,
         )
         routes = []
         # A2A Agent Card routes

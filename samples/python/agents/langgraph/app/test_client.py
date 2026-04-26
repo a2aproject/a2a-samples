@@ -8,6 +8,7 @@ from a2a.types.a2a_pb2 import (
     SendMessageRequest,
 )
 from a2a.utils.constants import AGENT_CARD_WELL_KNOWN_PATH
+from a2a.utils.errors import ExtendedAgentCardNotConfiguredError
 
 
 async def main() -> None:
@@ -96,11 +97,14 @@ async def main() -> None:
 
         print('\n--- Extended Card Call ---')
         if public_card.capabilities.extended_agent_card:
-            extended_card = await client.get_extended_agent_card(
-                GetExtendedAgentCardRequest()
-            )
-            print('\nSuccessfully fetched authenticated extended agent card:')
-            display_agent_card(extended_card)
+            try:
+                extended_card = await client.get_extended_agent_card(
+                    GetExtendedAgentCardRequest()
+                )
+                print('\nSuccessfully fetched authenticated extended agent card:')
+                display_agent_card(extended_card)
+            except ExtendedAgentCardNotConfiguredError:
+                print('Extended agent card is not configured on the server.')
 
         await client.close()
 
