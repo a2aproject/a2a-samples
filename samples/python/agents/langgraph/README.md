@@ -44,7 +44,7 @@ sequenceDiagram
 
 - **Multi-turn Conversations**: Agent can request additional information when needed
 - **Real-time Streaming**: Provides status updates during processing
-- **Push Notifications**: Support for webhook-based notifications
+- **Extended Agent Card**: Authenticated users receive an enhanced card with additional skills
 - **Conversational Memory**: Maintains context across interactions
 - **Currency Exchange Tool**: Integrates with Frankfurter API for real-time rates
 
@@ -129,8 +129,8 @@ Agent can also be built using a container file.
 - **LangGraph ReAct Agent**: Uses the ReAct pattern for reasoning and tool usage
 - **Streaming Support**: Provides incremental updates during processing
 - **Checkpoint Memory**: Maintains conversation state between turns
-- **Push Notification System**: Webhook-based updates with JWK authentication
-- **A2A Protocol Integration**: Full compliance with A2A specifications
+- **Extended Agent Card**: Authenticated endpoint serving an enhanced card with additional skills for privileged clients
+- **A2A Protocol Integration**: Full compliance with A2A specifications, exposing both JSONRPC (`/api/v1/jsonrpc/`) and REST (`/api/v1/rest/`) interfaces
 
 ## Limitations
 
@@ -145,7 +145,7 @@ Agent can also be built using a container file.
 Request:
 
 ```
-POST http://localhost:10000
+POST http://localhost:10000/api/v1/jsonrpc/
 Content-Type: application/json
 
 {
@@ -243,7 +243,7 @@ Response:
 Request - Seq 1:
 
 ```
-POST http://localhost:10000
+POST http://localhost:10000/api/v1/jsonrpc/
 Content-Type: application/json
 
 {
@@ -314,7 +314,7 @@ Response - Seq 2:
 Request - Seq 3:
 
 ```
-POST http://localhost:10000
+POST http://localhost:10000/api/v1/jsonrpc/
 Content-Type: application/json
 
 {
@@ -474,6 +474,20 @@ data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"ar
 data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","final":true,"kind":"status-update","status":{"state":"completed"},"taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}
 ```
 
+**Extended agent card**
+
+Authenticated clients can retrieve an enhanced agent card that includes additional skills (e.g., historical rates, analytics). The public card advertises `extended_agent_card: true` as a capability signal.
+
+Using the A2A Python SDK:
+
+```python
+from a2a.types.a2a_pb2 import GetExtendedAgentCardRequest
+
+extended_card = await client.get_extended_agent_card(GetExtendedAgentCardRequest())
+```
+
+The extended card exposes an additional skill (`convert_currency_extended`) not visible to unauthenticated clients.
+
 ## Learn More
 
 - [A2A Protocol Documentation](https://a2a-protocol.org/)
@@ -485,6 +499,13 @@ data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"co
 ## Disclaimer
 Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
 
-All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+All data received from an external agent—including but not limited to its
+AgentCard, messages, artifacts, and task statuses—should be handled as untrusted
+input. For example, a malicious agent could provide an AgentCard containing
+crafted data in its fields (e.g., description, name, skills.description). If
+this data is used without sanitization to construct prompts for a Large Language
+Model (LLM), it could expose your application to prompt injection attacks.
+Failure to properly validate and sanitize this data before use can introduce
+security vulnerabilities into your application.
 
 Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
