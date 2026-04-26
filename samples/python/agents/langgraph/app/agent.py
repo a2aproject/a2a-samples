@@ -1,8 +1,12 @@
-from collections.abc import AsyncIterable
 import os
+
+from collections.abc import AsyncIterable
 from typing import Any, Literal
 
 import httpx
+
+from langchain.agents import create_agent
+from langchain.agents.structured_output import ToolStrategy
 from langchain_core.messages import AIMessage, ToolMessage
 from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -10,8 +14,6 @@ from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from pydantic import BaseModel
 
-from langchain.agents import create_agent
-from langchain.agents.structured_output import ToolStrategy
 
 memory = MemorySaver()
 
@@ -44,11 +46,12 @@ def get_exchange_rate(
         data = response.json()
         if 'rates' not in data:
             return {'error': 'Invalid API response format.'}
-        return data
     except httpx.HTTPError as e:
         return {'error': f'API request failed: {e}'}
     except ValueError:
         return {'error': 'Invalid JSON response from API.'}
+
+    return data
 
 
 class ResponseFormat(BaseModel):
@@ -72,8 +75,8 @@ class CurrencyAgent:
         'Set response status to completed if the request is complete.'
     )
 
-    def __init__(self):
-        model_source = os.getenv('model_source', 'google')
+    def __init__(self) -> None:
+        model_source = os.getenv('MODEL_SOURCE', 'google')
         if model_source == 'google':
             self.model = ChatGoogleGenerativeAI(model='gemini-2.0-flash')
         else:
@@ -93,7 +96,8 @@ class CurrencyAgent:
             response_format=ToolStrategy(ResponseFormat),
         )
 
-    async def stream(self, query, context_id) -> AsyncIterable[dict[str, Any]]:
+    async def stream(self, query: str, context_id: str) -> AsyncIterable[dict[str, Any]]:
+        """Stream agent responses for the given query."""
         inputs = {'messages': [('user', query)]}
         config = {'configurable': {'thread_id': context_id}}
 
@@ -118,7 +122,8 @@ class CurrencyAgent:
 
         yield self.get_agent_response(config)
 
-    def get_agent_response(self, config):
+    def get_agent_response(self, config: dict[str, Any]) -> dict[str, Any]:
+        """Return the final structured response from the agent's current state."""
         current_state = self.graph.get_state(config)
         structured_response = current_state.values.get('structured_response')
         if structured_response and isinstance(

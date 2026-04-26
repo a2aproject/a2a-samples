@@ -35,26 +35,31 @@ class MissingAPIKeyError(Exception):
     """Exception for missing API key."""
 
 
+def _validate_api_keys() -> None:
+    """Raise MissingAPIKeyError if required environment variables are absent."""
+    if os.getenv('MODEL_SOURCE', 'google') == 'google':
+        if not os.getenv('GOOGLE_API_KEY'):
+            raise MissingAPIKeyError(
+                'GOOGLE_API_KEY environment variable not set.'
+            )
+    else:
+        if not os.getenv('TOOL_LLM_URL'):
+            raise MissingAPIKeyError(
+                'TOOL_LLM_URL environment variable not set.'
+            )
+        if not os.getenv('TOOL_LLM_NAME'):
+            raise MissingAPIKeyError(
+                'TOOL_LLM_NAME environment not variable not set.'
+            )
+
+
 @click.command()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=10000)
-def main(host, port):
+def main(host: str, port: int) -> None:
     """Starts the Currency Agent server."""
     try:
-        if os.getenv('model_source', 'google') == 'google':
-            if not os.getenv('GOOGLE_API_KEY'):
-                raise MissingAPIKeyError(
-                    'GOOGLE_API_KEY environment variable not set.'
-                )
-        else:
-            if not os.getenv('TOOL_LLM_URL'):
-                raise MissingAPIKeyError(
-                    'TOOL_LLM_URL environment variable not set.'
-                )
-            if not os.getenv('TOOL_LLM_NAME'):
-                raise MissingAPIKeyError(
-                    'TOOL_LLM_NAME environment not variable not set.'
-                )
+        _validate_api_keys()
 
         capabilities = AgentCapabilities(
             streaming=True, extended_agent_card=True
@@ -144,11 +149,11 @@ def main(host, port):
         uvicorn.run(server, host=host, port=port)
         # --8<-- [end:DefaultRequestHandler]
 
-    except MissingAPIKeyError as e:
-        logger.error(f'Error: {e}')
+    except MissingAPIKeyError:
+        logger.exception('Error')
         sys.exit(1)
-    except Exception as e:
-        logger.error(f'An error occurred during server startup: {e}')
+    except Exception:
+        logger.exception('An error occurred during server startup')
         sys.exit(1)
 
 

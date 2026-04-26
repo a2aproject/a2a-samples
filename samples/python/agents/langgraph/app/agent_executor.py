@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class CurrencyAgentExecutor(AgentExecutor):
     """Currency Conversion AgentExecutor Example."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.agent = CurrencyAgent()
 
     async def execute(
@@ -32,6 +32,7 @@ class CurrencyAgentExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ) -> None:
+        """Execute the agent for the given request context."""
         error = self._validate_request(context)
         if error:
             raise InvalidParamsError
@@ -85,7 +86,7 @@ class CurrencyAgentExecutor(AgentExecutor):
                     break
 
         except Exception as e:
-            logger.error(f'An error occurred while streaming the response: {e}')
+            logger.exception('An error occurred while streaming the response')
             raise InternalError from e
 
     def _validate_request(self, context: RequestContext) -> bool:
@@ -94,4 +95,5 @@ class CurrencyAgentExecutor(AgentExecutor):
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
+        """Cancel is not supported."""
         raise UnsupportedOperationError
