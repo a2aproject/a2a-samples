@@ -103,7 +103,7 @@ Agent can also be built using a container file.
   cd samples/python/agents/langgraph
   ```
 
-2. Build the container file
+1. Build the container file
 
     ```bash
     podman build . -t langgraph-a2a-server
@@ -112,17 +112,18 @@ Agent can also be built using a container file.
 > [!Tip]  
 > Podman is a drop-in replacement for `docker` which can also be used in these commands.
 
-3. Run your container
+1. Run your container
 
     ```bash
     podman run -p 10000:10000 -e GOOGLE_API_KEY=your_api_key_here langgraph-a2a-server
     ```
 
-4. Run A2A client (follow step 5 from the section above)
+2. Run A2A client (follow step 5 from the section above)
 
 > [!Important]
-> * **Access URL:** You must access the A2A client through the URL `0.0.0.0:10000`. Using `localhost` will not work.
-> * **Hostname Override:** If you're deploying to an environment where the hostname is defined differently outside the container, use the `HOST_OVERRIDE` environment variable to set the expected hostname on the Agent Card. This ensures proper communication with your client application.
+>
+> - **Access URL:** You must access the A2A client through the URL `0.0.0.0:10000`. Using `localhost` will not work.
+> - **Hostname Override:** If you're deploying to an environment where the hostname is defined differently outside the container, use the `HOST_OVERRIDE` environment variable to set the expected hostname on the Agent Card. This ensures proper communication with your client application.
 
 ## Technical Implementation
 
@@ -144,7 +145,7 @@ Agent can also be built using a container file.
 
 Request:
 
-```
+```http
 POST http://localhost:10000/api/v1/jsonrpc/
 Content-Type: application/json
 
@@ -170,7 +171,7 @@ Content-Type: application/json
 
 Response:
 
-```
+```json
 {
     "id": "12113c25-b752-473f-977e-c9ad33cf4f56",
     "jsonrpc": "2.0",
@@ -242,7 +243,7 @@ Response:
 
 Request - Seq 1:
 
-```
+```http
 POST http://localhost:10000/api/v1/jsonrpc/
 Content-Type: application/json
 
@@ -268,7 +269,7 @@ Content-Type: application/json
 
 Response - Seq 2:
 
-```
+```json
 {
     "id": "27be771b-708f-43b8-8366-968966d07ec0",
     "jsonrpc": "2.0",
@@ -313,7 +314,7 @@ Response - Seq 2:
 
 Request - Seq 3:
 
-```
+```http
 POST http://localhost:10000/api/v1/jsonrpc/
 Content-Type: application/json
 
@@ -341,7 +342,7 @@ Content-Type: application/json
 
 Response - Seq 4:
 
-```
+```json
 {
     "id": "b88d818d-1192-42be-b4eb-3ee6b96a7e35",
     "jsonrpc": "2.0",
@@ -439,7 +440,7 @@ Response - Seq 4:
 
 Request:
 
-```
+```json
 {
     "id": "6d12d159-ec67-46e6-8d43-18480ce7f6ca",
     "jsonrpc": "2.0",
@@ -462,7 +463,7 @@ Request:
 
 Response:
 
-```
+```text
 data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","history":[{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","kind":"message","messageId":"2f9538ef0984471aa0d5179ce3c67a28","parts":[{"kind":"text","text":"how much is 10 USD in INR?"}],"role":"user","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}],"id":"423a2569-f272-4d75-a4d1-cdc6682188e5","kind":"task","status":{"state":"submitted"}}}
 
 data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","final":false,"kind":"status-update","status":{"message":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","kind":"message","messageId":"1854a825-c64f-4f30-96f2-c8aa558b83f9","parts":[{"kind":"text","text":"Looking up the exchange rates..."}],"role":"agent","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"},"state":"working"},"taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}
@@ -495,8 +496,8 @@ The extended card exposes an additional skill (`convert_currency_extended`) not 
 - [Frankfurter API](https://www.frankfurter.app/docs/)
 - [Google Gemini API](https://ai.google.dev/gemini-api)
 
-
 ## Disclaimer
+
 Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
 
 All data received from an external agent—including but not limited to its
