@@ -1,18 +1,16 @@
-import os
-
 from collections.abc import AsyncIterable
+import os
 from typing import Any, Literal
 
 import httpx
-
 from langchain_core.messages import AIMessage, ToolMessage
 from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
 
+from langchain.agents import create_agent
 
 memory = MemorySaver()
 
@@ -22,7 +20,7 @@ def get_exchange_rate(
     currency_from: str = 'USD',
     currency_to: str = 'EUR',
     currency_date: str = 'latest',
-):
+) -> dict:
     """Use this to get current exchange rate.
 
     Args:
@@ -37,7 +35,7 @@ def get_exchange_rate(
     """
     try:
         response = httpx.get(
-            f'https://api.frankfurter.app/{currency_date}',
+            f'https://api.frankfurter.dev/v1/{currency_date}',
             params={'from': currency_from, 'to': currency_to},
         )
         response.raise_for_status()
@@ -89,7 +87,7 @@ class CurrencyAgent:
             )
         self.tools = [get_exchange_rate]
 
-        self.graph = create_react_agent(
+        self.graph = create_agent(
             self.model,
             tools=self.tools,
             checkpointer=memory,
