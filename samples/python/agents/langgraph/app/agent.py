@@ -96,7 +96,9 @@ class CurrencyAgent:
             response_format=ToolStrategy(ResponseFormat),
         )
 
-    async def stream(self, query: str, context_id: str) -> AsyncIterable[dict[str, Any]]:
+    async def stream(
+        self, query: str, context_id: str
+    ) -> AsyncIterable[dict[str, Any]]:
         """Stream agent responses for the given query."""
         inputs = {'messages': [('user', query)]}
         config = {'configurable': {'thread_id': context_id}}
