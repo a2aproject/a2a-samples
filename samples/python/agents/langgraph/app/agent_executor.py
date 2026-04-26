@@ -37,7 +37,9 @@ class CurrencyAgentExecutor(AgentExecutor):
             raise InvalidParamsError
 
         query = context.get_user_input()
-        task = context.current_task or new_task_from_user_message(context.message)
+        task = context.current_task or new_task_from_user_message(
+            context.message
+        )
         await event_queue.enqueue_event(task)
         try:
             async for item in self.agent.stream(query, task.context_id):

@@ -38,7 +38,9 @@ async def main() -> None:
         client = await create_client(agent=public_card, client_config=config)
         print('\nNon-streaming Client initialized.')
 
-        message = new_text_message('how much is 10 USD in INR?', role=Role.ROLE_USER)
+        message = new_text_message(
+            'how much is 10 USD in INR?', role=Role.ROLE_USER
+        )
         request = SendMessageRequest(message=message)
 
         print('Response:')
@@ -101,7 +103,9 @@ async def main() -> None:
                 extended_card = await client.get_extended_agent_card(
                     GetExtendedAgentCardRequest()
                 )
-                print('\nSuccessfully fetched authenticated extended agent card:')
+                print(
+                    '\nSuccessfully fetched authenticated extended agent card:'
+                )
                 display_agent_card(extended_card)
             except ExtendedAgentCardNotConfiguredError:
                 print('Extended agent card is not configured on the server.')
