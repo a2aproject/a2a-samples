@@ -5,7 +5,7 @@ import sys
 import click
 import httpx
 import uvicorn
-
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes, create_rest_routes
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import (
@@ -16,13 +16,14 @@ from a2a.server.tasks import (
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
+    AgentInterface,
     AgentSkill,
 )
 from dotenv import load_dotenv
 
 from app.agent import CurrencyAgent
 from app.agent_executor import CurrencyAgentExecutor
-
+from starlette.applications import Starlette
 
 load_dotenv()
 
@@ -55,18 +56,25 @@ def main(host, port):
                     'TOOL_LLM_NAME environment not variable not set.'
                 )
 
-        capabilities = AgentCapabilities(streaming=True, push_notifications=True)
+        capabilities = AgentCapabilities(streaming=True, push_notifications=True, extended_agent_card=True)
         skill = AgentSkill(
             id='convert_currency',
             name='Currency Exchange Rates Tool',
             description='Helps with exchange values between various currencies',
             tags=['currency conversion', 'currency exchange'],
+            input_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
+            output_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
             examples=['What is exchange rate between USD and GBP?'],
         )
         agent_card = AgentCard(
             name='Currency Agent',
             description='Helps with exchange rates for currencies',
-            url=f'http://{host}:{port}/',
+            supported_interfaces=[
+                AgentInterface(
+                    protocol_binding='JSONRPC',
+                    url=f'http://{host}:{port}/api/v1/jsonrpc/',
+                ),
+            ],
             version='1.0.0',
             default_input_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
             default_output_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
@@ -86,9 +94,14 @@ def main(host, port):
             push_config_store=push_config_store,
             push_sender= push_sender
         )
-        server = A2AStarletteApplication(
-            agent_card=agent_card, http_handler=request_handler
-        )
+        routes = []
+        # A2A Agent Card routes
+        routes.extend(create_agent_card_routes(agent_card))
+        # JSON-RPC routes
+        routes.extend(create_jsonrpc_routes(request_handler, rpc_url='/api/v1/jsonrpc/'))
+        routes.extend(create_rest_routes(request_handler, path_prefix='/api/v1/rest/'))
+
+        server = Starlette(routes=routes)
 
         uvicorn.run(server.build(), host=host, port=port)
         # --8<-- [end:DefaultRequestHandler]
