@@ -6,7 +6,6 @@ import click
 import httpx
 import uvicorn
 from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes, create_rest_routes
-from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import (
     BasePushNotificationSender,
@@ -74,6 +73,10 @@ def main(host, port):
                     protocol_binding='JSONRPC',
                     url=f'http://{host}:{port}/api/v1/jsonrpc/',
                 ),
+                AgentInterface(
+                    protocol_binding='HTTP+JSON',
+                    url=f'http://{host}:{port}/api/v1/rest/',
+                ),
             ],
             version='1.0.0',
             default_input_modes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
@@ -91,8 +94,9 @@ def main(host, port):
         request_handler = DefaultRequestHandler(
             agent_executor=CurrencyAgentExecutor(),
             task_store=InMemoryTaskStore(),
+            agent_card=agent_card,
             push_config_store=push_config_store,
-            push_sender= push_sender
+            push_sender=push_sender,
         )
         routes = []
         # A2A Agent Card routes
@@ -103,7 +107,7 @@ def main(host, port):
 
         server = Starlette(routes=routes)
 
-        uvicorn.run(server.build(), host=host, port=port)
+        uvicorn.run(server, host=host, port=port)
         # --8<-- [end:DefaultRequestHandler]
 
     except MissingAPIKeyError as e:
