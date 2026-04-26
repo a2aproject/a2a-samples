@@ -3,15 +3,10 @@ import os
 import sys
 
 import click
-import httpx
 import uvicorn
 from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes, create_rest_routes
 from a2a.server.request_handlers import DefaultRequestHandler
-from a2a.server.tasks import (
-    BasePushNotificationSender,
-    InMemoryPushNotificationConfigStore,
-    InMemoryTaskStore,
-)
+from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
@@ -55,7 +50,7 @@ def main(host, port):
                     'TOOL_LLM_NAME environment not variable not set.'
                 )
 
-        capabilities = AgentCapabilities(streaming=True, push_notifications=True, extended_agent_card=True)
+        capabilities = AgentCapabilities(streaming=True, extended_agent_card=True)
         skill = AgentSkill(
             id='convert_currency',
             name='Currency Exchange Rates Tool',
@@ -87,16 +82,10 @@ def main(host, port):
 
 
         # --8<-- [start:DefaultRequestHandler]
-        httpx_client = httpx.AsyncClient()
-        push_config_store = InMemoryPushNotificationConfigStore()
-        push_sender = BasePushNotificationSender(httpx_client=httpx_client,
-                        config_store=push_config_store)
         request_handler = DefaultRequestHandler(
             agent_executor=CurrencyAgentExecutor(),
             task_store=InMemoryTaskStore(),
             agent_card=agent_card,
-            push_config_store=push_config_store,
-            push_sender=push_sender,
         )
         routes = []
         # A2A Agent Card routes
