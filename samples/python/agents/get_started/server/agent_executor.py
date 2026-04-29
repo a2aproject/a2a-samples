@@ -15,15 +15,12 @@
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
 from a2a.server.tasks import TaskUpdater
+# from a2a.helpers import  get_message_text
 from a2a.types import (
     Part,
     Task,
     TaskState,
     UnsupportedOperationError,
-)
-from a2a.utils import (
-    new_agent_text_message,
-    new_task,
 )
 
 # Loading from agent.py
@@ -34,12 +31,13 @@ class WeatherReportingPoetExecutor(AgentExecutor):
     """Poet's interface to A2A Clients."""
 
     def __init__(self) -> None:
+        # task queue
+        self.running_tasks: set[str] = set()
+        # AI Agent
         self.agent = WeatherReportingPoet()
 
     async def execute(
-        self,
-        context: RequestContext,
-        event_queue: EventQueue,
+        self, context: RequestContext, event_queue: EventQueue
     ) -> None:
         """
         To execute the agent's logic for a given request context.
@@ -79,6 +77,18 @@ class WeatherReportingPoetExecutor(AgentExecutor):
             break
 
     async def cancel(
-        self, request: RequestContext, event_queue: EventQueue
-    ) -> Task | None:
-        raise UnsupportedOperationError("Error: Streaming Operation not supported")
+        self, context: RequestContext, event_queue: EventQueue
+    ) -> None:
+        task_id = context.task_id
+
+        # check and remove task
+        if task_id in self.running_tasks:
+            self.running_tasks.remove(task_id)
+
+        # update the tasks queue
+        updater = TaskUpdater(
+            event_queue=event_queue,
+            task_id=task_id or '',
+            context_id=context.context_id or '',
+        )
+        await updater.cancel()

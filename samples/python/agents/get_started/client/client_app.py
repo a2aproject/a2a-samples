@@ -26,7 +26,7 @@ from a2a.client.helpers import create_text_message_object
 SERVER_URL = "http://localhost:9999/"
 
 
-async def get_agent_card():
+async def get_agent_card() -> types.AgentCard:
     """Get the agent card from A2A Server"""
     async with httpx.AsyncClient() as httpx_client:
         # Initialize A2ACardResolver
@@ -59,6 +59,7 @@ async def show_agent_card():
         sprint(f"\t Skill - Description: {each.description}")
         sprint(f"\t Skill - Examples: {each.examples}")
     print("#" * 45)
+    print(agent_card)
 
 
 async def send_message(text_query: str):
@@ -67,6 +68,22 @@ async def send_message(text_query: str):
     print("########################################")
     agent_card = await get_agent_card()
     client_factory = ClientFactory(config=ClientConfig(streaming=False))
+    #
+    # from a2a.client import create_text_client, TextClient
+
+    # text_client = await create_text_client(agent=SERVER_URL)
+    #
+    # text_client = await create_text_client(
+    #     agent=SERVER_URL, client_config=ClientConfig(streaming=False, supported_protocol_bindings="JSONRPC"))
+    #
+    # import pdb
+    # pdb.set_trace()
+    #
+    # text_response = await text_client.send_text_message("Hi who are you and what are your skills?")
+    # print(text_response)
+    #
+
+    #
     client = client_factory.create(agent_card)
 
     print("To exit use `exit` or `quit`.")
