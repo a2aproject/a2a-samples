@@ -25,7 +25,6 @@ from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.tool_context import ToolContext
 from google.genai import types
 from remote_agent_connection import RemoteAgentConnections, TaskUpdateCallback
-from timestamp_ext import TimestampExtension
 
 
 class HostAgent:
@@ -43,7 +42,6 @@ class HostAgent:
     ):
         self.task_callback = task_callback
         self.httpx_client = http_client
-        self.timestamp_extension = TimestampExtension()
         config = ClientConfig(
             httpx_client=self.httpx_client,
             supported_transports=[
@@ -51,22 +49,20 @@ class HostAgent:
                 TransportProtocol.http_json,
             ],
         )
-        client_factory = ClientFactory(config)
-        client_factory = self.timestamp_extension.wrap_client_factory(
-            client_factory
-        )
-        self.client_factory = client_factory
+        self.client_factory = ClientFactory(config)
         self.remote_agent_connections: dict[str, RemoteAgentConnections] = {}
         self.cards: dict[str, AgentCard] = {}
         self.agents: str = ''
         loop = asyncio.get_running_loop()
-        loop.create_task(
+        # Held to keep a strong reference for the lifetime of the host agent.
+        self._init_task = loop.create_task(
             self.init_remote_agent_addresses(remote_agent_addresses)
         )
 
     async def init_remote_agent_addresses(
         self, remote_agent_addresses: list[str]
-    ):
+    ) -> None:
+        """Resolve and register agent cards for each remote agent address."""
         async with asyncio.TaskGroup() as task_group:
             for address in remote_agent_addresses:
                 task_group.create_task(self.retrieve_card(address))
@@ -74,26 +70,27 @@ class HostAgent:
         # Once completed the self.agents string is set and the remote
         # connections are established.
 
-    async def retrieve_card(self, address: str):
+    async def retrieve_card(self, address: str) -> None:
+        """Fetch an agent card from `address` and register it."""
         card_resolver = A2ACardResolver(self.httpx_client, address)
         card = await card_resolver.get_agent_card()
         self.register_agent_card(card)
 
-    def register_agent_card(self, card: AgentCard):
+    def register_agent_card(self, card: AgentCard) -> None:
+        """Register a remote agent card for delegation."""
         remote_connection = RemoteAgentConnections(self.client_factory, card)
         self.remote_agent_connections[card.name] = remote_connection
         self.cards[card.name] = card
-        agent_info = []
-        for ra in self.list_remote_agents():
-            agent_info.append(json.dumps(ra))
+        agent_info = [json.dumps(ra) for ra in self.list_remote_agents()]
         self.agents = '\n'.join(agent_info)
 
     def create_agent(self) -> Agent:
-        LITELLM_MODEL = os.getenv(
+        """Build the underlying ADK agent for the host."""
+        litellm_model = os.getenv(
             'LITELLM_MODEL', 'gemini/gemini-2.0-flash-001'
         )
         return Agent(
-            model=LiteLlm(model=LITELLM_MODEL),
+            model=LiteLlm(model=litellm_model),
             name='host_agent',
             instruction=self.root_instruction,
             before_model_callback=self.before_model_callback,
@@ -108,6 +105,7 @@ class HostAgent:
         )
 
     def root_instruction(self, context: ReadonlyContext) -> str:
+        """Render the root instruction prompt for the host agent."""
         current_agent = self.check_state(context)
         return f"""You are an expert delegator that can delegate the user request to the
 appropriate remote agents.
@@ -130,7 +128,8 @@ Agents:
 Current agent: {current_agent['active_agent']}
 """
 
-    def check_state(self, context: ReadonlyContext):
+    def check_state(self, context: ReadonlyContext) -> dict[str, str]:
+        """Return the currently active agent for the session, if any."""
         state = context.state
         if (
             'context_id' in state
@@ -142,27 +141,28 @@ Current agent: {current_agent['active_agent']}
         return {'active_agent': 'None'}
 
     def before_model_callback(
-        self, callback_context: CallbackContext, llm_request
-    ):
+        self,
+        callback_context: CallbackContext,
+        llm_request: object,
+    ) -> None:
+        """Mark the session as active before the first model call."""
         state = callback_context.state
         if 'session_active' not in state or not state['session_active']:
             state['session_active'] = True
 
-    def list_remote_agents(self):
+    def list_remote_agents(self) -> list[dict[str, str]]:
         """List the available remote agents you can use to delegate the task."""
         if not self.remote_agent_connections:
             return []
 
-        remote_agent_info = []
-        for card in self.cards.values():
-            remote_agent_info.append(
-                {'name': card.name, 'description': card.description}
-            )
-        return remote_agent_info
+        return [
+            {'name': card.name, 'description': card.description}
+            for card in self.cards.values()
+        ]
 
     async def send_message(
         self, agent_name: str, message: str, tool_context: ToolContext
-    ):
+    ) -> list:
         """Sends a task either streaming (if supported) or non-streaming.
 
         This will send a message to the remote agent named agent_name.
@@ -223,31 +223,24 @@ Current agent: {current_agent['active_agent']}
         response = []
         if task.status.message:
             # Assume the information is in the task message.
-            if ts := self.timestamp_extension.get_timestamp(
-                task.status.message
-            ):
-                response.append(f'[at {ts.astimezone().isoformat()}]')
             response.extend(
                 await convert_parts(task.status.message.parts, tool_context)
             )
         if task.artifacts:
             for artifact in task.artifacts:
-                if ts := self.timestamp_extension.get_timestamp(artifact):
-                    response.append(f'[at {ts.astimezone().isoformat()}]')
                 response.extend(
                     await convert_parts(artifact.parts, tool_context)
                 )
         return response
 
 
-async def convert_parts(parts: list[Part], tool_context: ToolContext):
-    rval = []
-    for p in parts:
-        rval.append(await convert_part(p, tool_context))
-    return rval
+async def convert_parts(parts: list[Part], tool_context: ToolContext) -> list:
+    """Convert a list of A2A Parts into ADK-friendly representations."""
+    return [await convert_part(p, tool_context) for p in parts]
 
 
-async def convert_part(part: Part, tool_context: ToolContext):
+async def convert_part(part: Part, tool_context: ToolContext) -> object:
+    """Convert a single A2A Part into an ADK-friendly representation."""
     if part.root.kind == 'text':
         return part.root.text
     if part.root.kind == 'data':

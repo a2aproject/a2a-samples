@@ -1,7 +1,10 @@
 import uvicorn
 
-from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import (
+    create_agent_card_routes,
+    create_jsonrpc_routes,
+)
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
@@ -12,6 +15,7 @@ from a2a.types import (
 from agent_executor import (
     HelloWorldAgentExecutor,  # type: ignore[import-untyped]
 )
+from starlette.applications import Starlette
 
 
 if __name__ == '__main__':
@@ -38,17 +42,16 @@ if __name__ == '__main__':
     public_agent_card = AgentCard(
         name='Hello World Agent',
         description='Just a hello world agent',
-        icon_url='http://localhost:9999/',
-        version='1.0.0',
-        default_input_modes=['text'],
-        default_output_modes=['text'],
+        version='0.0.1',
+        default_input_modes=['text/plain'],
+        default_output_modes=['text/plain'],
         capabilities=AgentCapabilities(
             streaming=True, extended_agent_card=True
         ),
         supported_interfaces=[
             AgentInterface(
                 protocol_binding='JSONRPC',
-                url='http://localhost:9999',
+                url='http://127.0.0.1:9999',
             )
         ],
         skills=[skill],  # Only the basic skill for the public card
@@ -57,20 +60,19 @@ if __name__ == '__main__':
 
     # This will be the authenticated extended agent card
     # It includes the additional 'extended_skill'
-    specific_extended_agent_card = AgentCard(
+    extended_agent_card = AgentCard(
         name='Hello World Agent - Extended Edition',
         description='The full-featured hello world agent for authenticated users.',
-        icon_url='http://localhost:9999/',
-        version='1.0.1',
-        default_input_modes=['text'],
-        default_output_modes=['text'],
+        version='0.0.2',
+        default_input_modes=['text/plain'],
+        default_output_modes=['text/plain'],
         capabilities=AgentCapabilities(
             streaming=True, extended_agent_card=True
         ),
         supported_interfaces=[
             AgentInterface(
                 protocol_binding='JSONRPC',
-                url='http://localhost:9999',
+                url='http://127.0.0.1:9999',
             )
         ],
         skills=[
@@ -82,12 +84,14 @@ if __name__ == '__main__':
     request_handler = DefaultRequestHandler(
         agent_executor=HelloWorldAgentExecutor(),
         task_store=InMemoryTaskStore(),
-    )
-
-    server = A2AStarletteApplication(
         agent_card=public_agent_card,
-        http_handler=request_handler,
-        extended_agent_card=specific_extended_agent_card,
+        extended_agent_card=extended_agent_card,
     )
 
-    uvicorn.run(server.build(), host='127.0.0.1', port=9999)
+    routes = []
+    routes.extend(create_agent_card_routes(public_agent_card))
+    routes.extend(create_jsonrpc_routes(request_handler, '/'))
+
+    app = Starlette(routes=routes)
+
+    uvicorn.run(app, host='127.0.0.1', port=9999)
