@@ -23,6 +23,11 @@ ENV PATH=$PATH:/usr/local/go/bin
 ENV NODE_VERSION=v20.11.1
 RUN curl -L https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz | tar -xJ -C /usr/local --strip-components=1
 
+# Install .NET SDK 8.0
+RUN curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0 --install-dir /usr/local/dotnet
+ENV PATH=$PATH:/usr/local/dotnet
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+
 # Set the working directory
 WORKDIR /app
 
