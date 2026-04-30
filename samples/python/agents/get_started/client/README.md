@@ -23,9 +23,9 @@ This directory contains a simple, interactive Python client that communicates wi
 
 ### `client_app.py`
 A terminal-based client application demonstrating how to interact with an A2A-enabled server.
-*   **Agent Discovery:** Uses `A2ACardResolver` to dynamically fetch the server's `AgentCard` and verify its capabilities.
-*   **Interactive Session:** Establishes a communication channel using `create_client` and sends queries to the server.
-*   **Response Handling:** Asynchronously receives and displays the poetic weather updates streamed from the agent.
+* **Agent Discovery:** Uses `A2ACardResolver` to dynamically fetch the server's `AgentCard` and verify its capabilities.
+* **Interactive Session:** Establishes a communication channel using `create_client` and sends queries to the server.
+* **Response Handling:** Asynchronously receives and displays the poetic weather updates streamed from the agent.
 
 ## 🚀 Running the Client
 

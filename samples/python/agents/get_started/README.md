@@ -22,11 +22,11 @@ DEMO: Using a simple A2A client(pure python), we will send queries and receive m
 
 ## ✨ Features
 
-*   **Poetic Weather Reports:** Delivers weather forecasts as haikus or poems, making them engaging and memorable.
-*   **Factual Accuracy:** Utilizes Google Search to fetch up-to-date and reliable weather information.
-*   **A2A Protocol:** Implements Agent-to-Agent communication standards for seamless integration.
-*   **Interactive Client:** A command-line interface for real-time interaction with the agent.
-*   **Modular Design:** Separated server, client, and agent components for clarity and maintainability.
+* **Poetic Weather Reports:** Delivers weather forecasts as haikus or poems, making them engaging and memorable.
+* **Factual Accuracy:** Utilizes Google Search to fetch up-to-date and reliable weather information.
+* **A2A Protocol:** Implements Agent-to-Agent communication standards for seamless integration.
+* **Interactive Client:** A command-line interface for real-time interaction with the agent.
+* **Modular Design:** Separated server, client, and agent components for clarity and maintainability.
 
 ## 📐 Architecture & Interaction Flow
 
@@ -69,12 +69,12 @@ sequenceDiagram
 
 ## 🚀 Technologies Used
 
-*   Python 3.x
-*   Google ADK (Agent Developer Kit)
-*   Google Gen-AI SDK
-*   `httpx` (for HTTP requests)
-*   `asyncio` (for asynchronous operations)
-*   `uvicorn` (for running the ASGI server)
+* Python 3.x
+* Google ADK (Agent Developer Kit)
+* Google Gen-AI SDK
+* `httpx` (for HTTP requests)
+* `asyncio` (for asynchronous operations)
+* `uvicorn` (for running the ASGI server)
 
 ### Important Clarification on A2A Implementation
 
@@ -92,11 +92,11 @@ This example showcases Agent-to-Agent (A2A) communication using the Google ADK a
     python -m venv venv
     ```
 3.  **Activate the virtual environment:**
-    *   On macOS/Linux:
+    * On macOS/Linux:
         ```bash
         source venv/bin/activate
         ```
-    *   On Windows:
+    * On Windows:
         ```bash
         venv\Scripts\activate
         ```
@@ -141,32 +141,83 @@ make run_agent
 
 After running `make run_client`, you will see the agent's card details and then be prompted for input.
 
-### Example Interaction:
+### Example Interaction
 
+First start the server:
+
+```text
+$ make run_server
+cd server && python app.py
+INFO:     Started server process [60138]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9999 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58052 - "GET /.well-known/agent-card.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58054 - "GET /.well-known/agent-card.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58056 - "POST / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58148 - "POST / HTTP/1.1" 200 OK
 ```
+
+Then start the client:
+
+```text
+$ make run_client
+cd client && python client_app.py
+====================================================
+                     AgentCard                      
+====================================================
+--- General ---
+Name        : Weather Reporting Poet
+Description : Weather reporting Poet
+Version     : 1.0.0
+
+--- Interfaces ---
+  [0] http://localhost:9999  (JSONRPC)
+
+--- Capabilities ---
+Streaming           : True
+Push notifications  : False
+Extended agent card : True
+
+--- I/O Modes ---
+Input  : text
+Output : text
+
+--- Skills ---
+----------------------------------------------------
+  ID          : weather_reporting_poet
+  Name        : Weather Reporting Poet
+  Description : Poet for latest weather updates
+  Tags        : poet, weather
+  Example     : How is the weather in Warsaw, Poland
+  Example     : How is the weather in Hyderabad, India
+====================================================
 ########################################
 #### Weather Reporting Poet via A2A ####
 ########################################
-Agent Card - Name: Weather Reporting Poet
-Agent Card - Capabilities: {'streaming': True, 'extended_agent_card': True}
-Agent Card - Description: Weather reporting Poet
-Agent Card - Skills:
-    Skill - Id: weather_reporting_poet
-    Skill - Name: Weather Reporting Poet
-    Skill - Description: Poet for latest weather updates
-    Skill - Examples: ['How is the weather in Warsaw, Poland', 'How is the weather in Hyderabad, India']
-########################################
-user> How is the Weather in Poland, Warsaw?
-################################
-#### Weather Reporting Poet ####
-################################
 To exit use `exit` or `quit`.
+User> How is the Weather in Poland, Warsaw?
+Model> The weather in Warsaw, Poland is currently cloudy with a temperature of 53°F (12°C) and a 10% chance of rain.
+
+Here's a poetic look at the forecast for the next few hours:
+
+Clouds drift in the sky,
+A gentle breeze will softly sigh,
+Temperatures hold,
+As evening stories unfold.
 ---
-model> Warsaw skies today,
-Partly sunny, then light rain,
-Cool breeze, eight degrees.
+User> How is the weather in India - Hyderabad ?
+Model> The weather in Hyderabad, India for the next 4-6 hours is expected to be mostly clear with temperatures ranging from 30°C to 32°C. The wind will be around 14.4 km/h.
+
+Here's a little weather poem for you:
+
+Clear skies above,
+A gentle breeze does blow,
+Hyderabad nights,
+Peaceful, soft, and low.
 ---
-user>
+User> exit
+#############################################
 ```
 
 You can then type your own weather queries at the `user>` prompt. To exit, type `exit` or `quit`.

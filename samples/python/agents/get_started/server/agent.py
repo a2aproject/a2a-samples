@@ -85,12 +85,14 @@ class WeatherReportingPoet:
             user_messages=query,
             quiet=True,
         )
-        text_response = []
-        # Accumulate text parts from the response events
-        for event in response:
-            for part in event.content.parts:
-                text_response.extend(part.text)
-        return ''.join(text_response)
+        return ''.join(
+            [
+                part.text
+                for event in response
+                for part in event.content.parts
+                if part.text
+            ]
+        )
 
     async def stream(
         self, query: str, session_id: str

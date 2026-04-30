@@ -25,20 +25,20 @@ The server is structured into three core Python modules, each with specific resp
 
 ### 1. `agent.py`
 Defines the underlying LLM agent using the Google ADK.
-*   **Core Logic:** Uses `gemini-2.5-flash-lite` to generate poetic weather forecasts.
-*   **Tools:** Integrates `google_search` to ensure factual accuracy by retrieving real-time weather data.
-*   **Execution:** Provides both synchronous (`run`) and asynchronous streaming (`stream`) execution methods.
+* **Core Logic:** Uses `gemini-2.5-flash-lite` to generate poetic weather forecasts.
+* **Tools:** Integrates `google_search` to ensure factual accuracy by retrieving real-time weather data.
+* **Execution:** Provides both synchronous (`run`) and asynchronous streaming (`stream`) execution methods.
 
 ### 2. `agent_executor.py`
 Acts as the bridge between the core agent logic and the A2A server protocol.
-*   **A2A Integration:** Implements the `AgentExecutor` interface.
-*   **Task Management:** Handles A2A `Task` lifecycles, translating agent streaming events into A2A `TaskStatusUpdateEvent` objects.
+* **A2A Integration:** Implements the `AgentExecutor` interface.
+* **Task Management:** Handles A2A `Task` lifecycles, translating agent streaming events into A2A `TaskStatusUpdateEvent` objects.
 
 ### 3. `app.py`
 The entry point for running the A2A agent server.
-*   **Framework:** Built on top of Starlette and Uvicorn.
-*   **Configuration:** Defines the public `AgentCard` and `AgentSkill`, advertising the agent's capabilities (e.g., streaming) to A2A clients.
-*   **Routing:** Sets up JSON-RPC endpoints for A2A communication and a basic `/health` check.
+* **Framework:** Built on top of Starlette and Uvicorn.
+* **Configuration:** Defines the public `AgentCard` and `AgentSkill`, advertising the agent's capabilities (e.g., streaming) to A2A clients.
+* **Routing:** Sets up JSON-RPC endpoints for A2A communication and a basic `/health` check.
 
 ## 🚀 Running the Server
 
