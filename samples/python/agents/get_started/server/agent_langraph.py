@@ -93,8 +93,11 @@ if __name__ == '__main__':
     print('To exit use `exit` or `quit`.\n---')
     query = 'How is the weather in Warsaw, Poland today?'
     print(f'user> {query}')
-    while query not in ['exit', 'quit']:
-        if query:
-            response = asyncio.run(poet.run(query, 'mock_session'))
-            print(f'model> {response}\n---')
-        query = input('user> ').strip()
+    response = asyncio.run(poet.run(query, 'mock_session'))
+    # TODO: Make it interactive after testing is completed.
+    # while query not in ['exit', 'quit']:
+    #     if query:
+    #         response = asyncio.run(poet.run(query, 'mock_session'))
+    #         print(f'model> {response}\n---')
+    #     query = input('user> ').strip()
+    print(response)
