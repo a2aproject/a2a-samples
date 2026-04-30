@@ -15,7 +15,11 @@
 """Module defining the A2A AgentExecutor for the Weather Reporting Poet."""
 
 from a2a import types
-from a2a.helpers import new_task_from_user_message, new_text_message
+from a2a.helpers import (
+    new_task_from_user_message,
+    new_text_artifact_update_event,
+    new_text_status_update_event,
+)
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
 
@@ -32,9 +36,7 @@ class WeatherReportingPoetExecutor(AgentExecutor):
 
     def __init__(self) -> None:
         """Initializes the executor with a task tracker and the core agent."""
-        # Track currently running tasks
         self.running_tasks: set[str] = set()
-        # The core AI Agent instance
         self.agent = WeatherReportingPoet()
 
     async def execute(
@@ -46,56 +48,58 @@ class WeatherReportingPoetExecutor(AgentExecutor):
             context: The request context containing user message and task info.
             event_queue: The queue to send A2A events back to the client.
         """
-        # Extract the user's query from the context
         query = context.get_user_input()
 
-        # Manage the A2A Task construct
         task = None
         if not context.current_task:
-            # Create a new task if none exists for this request
             task = new_task_from_user_message(context.message)
             await event_queue.enqueue_event(task)
         else:
-            # Refer to the existing task
             task = context.current_task
 
-        # Send a TaskStatusUpdateEvent indicating the agent has started working
-        _task_update = types.a2a_pb2.TaskStatusUpdateEvent(
-            task_id=task.id,
-            context_id=context.context_id,
-            status=types.TaskStatus(
+        # Send intermediate status update
+        await event_queue.enqueue_event(
+            new_text_status_update_event(
+                task_id=task.id,
+                context_id=context.context_id,
                 state=types.TaskState.TASK_STATE_WORKING,
-                message=new_text_message('START'),
-            ),
+                text='START',
+            )
         )
-        await event_queue.enqueue_event(_task_update)
 
         print(f'User> {query}')
 
-        # Stream the response from the core agent and forward to event queue
+        # Stream response from the core agent
         async for finished, text in self.agent.stream(query, task.id):
             if not finished:
-                # Send intermediate status updates
-                _task_update = types.a2a_pb2.TaskStatusUpdateEvent(
-                    task_id=task.id,
-                    context_id=context.context_id,
-                    status=types.TaskStatus(
+                await event_queue.enqueue_event(
+                    new_text_status_update_event(
+                        task_id=task.id,
+                        context_id=context.context_id,
                         state=types.TaskState.TASK_STATE_WORKING,
-                        message=new_text_message(f'User: {query}'),
-                    ),
+                        text=f'User: {query}',
+                    )
                 )
-                await event_queue.enqueue_event(_task_update)
             else:
-                # Send final completed status with the full generated text
-                _task_update = types.a2a_pb2.TaskStatusUpdateEvent(
-                    task_id=task.id,
-                    context_id=context.context_id,
-                    status=types.TaskStatus(
-                        state=types.TaskState.TASK_STATE_COMPLETED,
-                        message=new_text_message(f'Response: {text}'),
-                    ),
+                # Enqueue the actual generated text as a result artifact
+                await event_queue.enqueue_event(
+                    new_text_artifact_update_event(
+                        task_id=task.id,
+                        context_id=context.context_id,
+                        name='result',
+                        text=text,
+                        last_chunk=True,
+                    )
                 )
-                await event_queue.enqueue_event(_task_update)
+                # Finalize the task status
+                await event_queue.enqueue_event(
+                    new_text_status_update_event(
+                        task_id=task.id,
+                        context_id=context.context_id,
+                        state=types.TaskState.TASK_STATE_COMPLETED,
+                        text='Response completed.',
+                    )
+                )
                 print(f'Model> {text}')
                 break
 
@@ -104,4 +108,5 @@ class WeatherReportingPoetExecutor(AgentExecutor):
     ) -> None:
         """Cancels the execution of a running task."""
         raise Exception('cancel not supported')
+
 
