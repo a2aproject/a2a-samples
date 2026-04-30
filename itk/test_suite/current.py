@@ -99,7 +99,23 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
         ]
         return popen_with_logs(args, current_dir)
 
+    csproj_files = list(current_dir.glob('*.csproj'))
+    if csproj_files:
+        # Check local or system dotnet
+        args = [  # noqa: S607
+            'dotnet',
+            'run',
+            '--project',
+            str(csproj_files[0]),
+            '--',
+            '--httpPort',
+            str(http_port),
+            '--grpcPort',
+            str(grpc_port),
+        ]
+        return popen_with_logs(args, current_dir)
+
     raise RuntimeError(
         f'Could not determine agent type in {current_dir}. '
-        'Neither main.go, main.py nor package.json found.'
+        'Neither main.go, main.py, package.json nor .csproj found.'
     )
