@@ -12,48 +12,54 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Module defining the A2A AgentExecutor for the Weather Reporting Poet."""
+
 from a2a import types
 from a2a.helpers import new_task_from_user_message, new_text_message
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
 
-# Loading from agent.py
+# Import the core agent logic
 from agent import WeatherReportingPoet
 
 
 class WeatherReportingPoetExecutor(AgentExecutor):
-    """Poet's interface to A2A Clients."""
+    """Poet's interface to A2A Clients.
+
+    This class handles incoming A2A requests, manages task state,
+    and interacts with the underlying WeatherReportingPoet agent.
+    """
 
     def __init__(self) -> None:
-        # task queue
+        """Initializes the executor with a task tracker and the core agent."""
+        # Track currently running tasks
         self.running_tasks: set[str] = set()
-        # AI Agent
+        # The core AI Agent instance
         self.agent = WeatherReportingPoet()
 
     async def execute(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
-        """To execute the agent's logic for a given request context.
+        """Executes the agent's logic for a given A2A request context.
+
+        Args:
+            context: The request context containing user message and task info.
+            event_queue: The queue to send A2A events back to the client.
         """
-        # Collect users request
+        # Extract the user's query from the context
         query = context.get_user_input()
 
-        ## Task
-        # Look for current task (Tasks mentioned here is an A2A data construct)
-        # If this request does not have current task, create a new one and use it.
+        # Manage the A2A Task construct
         task = None
         if not context.current_task:
-            task = new_task_from_user_message(context.message)  # Create task
-            await event_queue.enqueue_event(
-                task
-            )  # Add task to A2A's Event Queue
+            # Create a new task if none exists for this request
+            task = new_task_from_user_message(context.message)
+            await event_queue.enqueue_event(task)
         else:
-            task = context.current_task  # Refer to existing queue
+            # Refer to the existing task
+            task = context.current_task
 
-        ## Event Queue
-        # Acts as a buffer the agent's asynchronous execution and the server's response handling
-        # updater = TaskUpdater(event_queue, task.id, task.context_id)
-        # 3. Update task status as working
+        # Send a TaskStatusUpdateEvent indicating the agent has started working
         _task_update = types.a2a_pb2.TaskStatusUpdateEvent(
             task_id=task.id,
             context_id=context.context_id,
@@ -64,10 +70,12 @@ class WeatherReportingPoetExecutor(AgentExecutor):
         )
         await event_queue.enqueue_event(_task_update)
 
-        # invoke the agent
         print(f'User> {query}')
+
+        # Stream the response from the core agent and forward to event queue
         async for finished, text in self.agent.stream(query, task.id):
             if not finished:
+                # Send intermediate status updates
                 _task_update = types.a2a_pb2.TaskStatusUpdateEvent(
                     task_id=task.id,
                     context_id=context.context_id,
@@ -78,6 +86,7 @@ class WeatherReportingPoetExecutor(AgentExecutor):
                 )
                 await event_queue.enqueue_event(_task_update)
             else:
+                # Send final completed status with the full generated text
                 _task_update = types.a2a_pb2.TaskStatusUpdateEvent(
                     task_id=task.id,
                     context_id=context.context_id,
@@ -93,4 +102,6 @@ class WeatherReportingPoetExecutor(AgentExecutor):
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
+        """Cancels the execution of a running task."""
         raise Exception('cancel not supported')
+

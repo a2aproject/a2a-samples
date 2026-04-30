@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Module defining the Weather Reporting Poet agent using Google ADK."""
+
 from collections.abc import AsyncIterable
 
 from google.adk import Runner
@@ -24,6 +26,11 @@ from google.genai import types
 
 
 def create_agent() -> LlmAgent:
+    """Creates and configures the core LLM agent for weather reporting.
+
+    Returns:
+        LlmAgent: An instance of the configured agent.
+    """
     return LlmAgent(
         model='gemini-2.5-flash-lite',
         name='poet_weather_report',
@@ -40,13 +47,19 @@ def create_agent() -> LlmAgent:
 
 
 class WeatherReportingPoet:
-    """An agent that report weather updates in a haiku or poem format."""
+    """An agent that reports weather updates in a haiku or poem format.
+
+    This class wraps the Google ADK Runner to provide both synchronous
+    and streaming interfaces for generating poetic weather reports.
+    """
 
     SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
 
     def __init__(self) -> None:
+        """Initializes the WeatherReportingPoet with necessary ADK services."""
         self._agent = create_agent()
         self._user_id = 'weather_reporting_poet'
+        # Initialize the ADK Runner with in-memory services for state management
         self._runner = Runner(
             app_name=self._agent.name,
             agent=self._agent,
@@ -56,7 +69,16 @@ class WeatherReportingPoet:
         )
 
     async def run(self, query: str, session_id: str) -> str | list[str]:
-        """Run the agent with the given query."""
+        """Runs the agent synchronously with the given query.
+
+        Args:
+            query: The user's weather query.
+            session_id: Unique identifier for the conversation session.
+
+        Returns:
+            A string containing the poetic weather report.
+        """
+        # Execute the agent using the debug runner
         response = await self._runner.run_debug(
             user_id=self._user_id,
             session_id=session_id,
@@ -64,6 +86,7 @@ class WeatherReportingPoet:
             quiet=True,
         )
         text_response = []
+        # Accumulate text parts from the response events
         for event in response:
             for part in event.content.parts:
                 text_response.append(part.text)
@@ -72,7 +95,17 @@ class WeatherReportingPoet:
     async def stream(
         self, query: str, session_id: str
     ) -> AsyncIterable[tuple[bool, str]]:
-        """Stream the response to the query."""
+        """Streams the agent's response to the query.
+
+        Args:
+            query: The user's weather query.
+            session_id: Unique identifier for the conversation session.
+
+        Yields:
+            A tuple where the first element is a boolean (True if final)
+            and the second is the response text chunk.
+        """
+        # Retrieve or create the session
         session = await self._runner.session_service.get_session(
             app_name=self._agent.name,
             user_id=self._user_id,
@@ -88,6 +121,8 @@ class WeatherReportingPoet:
                 state={},
                 session_id=session_id,
             )
+
+        # Stream the response using the async runner
         async for event in self._runner.run_async(
             user_id=self._user_id, session_id=session.id, new_message=content
         ):
@@ -117,12 +152,4 @@ if __name__ == '__main__':
             print(f'model> {response}')
             print('---')
         query = input('user> ').strip()
-    # Example output:
-    #     (.venv) $ python run.py
-    #
-    #      ### Created new session: debug_session_id
-    #
-    #     User > How is the weather in Warsaw, Poland today?
-    #     haiku_generator > Warsaw skies today,
-    #     Partly sunny, then light rain,
-    #     Cool breeze, eight degrees.
+

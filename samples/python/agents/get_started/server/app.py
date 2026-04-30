@@ -12,7 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Module defining the Starlette application and A2A server configuration."""
+
 import uvicorn
+from starlette.applications import Starlette
+from starlette.responses import JSONResponse
+from starlette.routing import Route
 
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
@@ -26,11 +31,8 @@ from a2a.types import (
 from agent_executor import (
     WeatherReportingPoetExecutor,  # type: ignore[import-untyped]
 )
-from starlette.applications import Starlette
-from starlette.responses import JSONResponse
-from starlette.routing import Route
 
-
+# Define the skill that this agent specializes in
 skill = AgentSkill(
     id='weather_reporting_poet',
     name='Weather Reporting Poet',
@@ -42,7 +44,7 @@ skill = AgentSkill(
     ],
 )
 
-# This will be the public-facing agent card
+# Define the public-facing Agent Card
 agent_card = AgentCard(
     name='Weather Reporting Poet',
     description='Weather reporting Poet',
@@ -59,6 +61,7 @@ agent_card = AgentCard(
     skills=[skill],
 )
 
+# Set up the default A2A request handler with necessary components
 request_handler = DefaultRequestHandler(
     agent_card=agent_card,
     agent_executor=WeatherReportingPoetExecutor(),
@@ -66,16 +69,21 @@ request_handler = DefaultRequestHandler(
 )
 
 
-async def health_check(request):
+async def health_check(request) -> JSONResponse:
+    """Simple health check endpoint."""
     return JSONResponse({'message': 'ok!'})
 
 
+# Build the Starlette routes
 app_routes = []
 app_routes.extend(create_agent_card_routes(agent_card=agent_card))
 app_routes.extend(
     create_jsonrpc_routes(request_handler=request_handler, rpc_url='/')
 )
 app_routes.append(Route('/health', endpoint=health_check))
+
 if __name__ == '__main__':
+    # Initialize and start the Starlette application
     server = Starlette(routes=app_routes, debug=True)
     uvicorn.run(server, host='127.0.0.1', port=9999)
+
