@@ -26,6 +26,7 @@ from a2a.helpers import (
     new_text_message,
 )
 
+
 # The server is assumed to be running locally on port 9999
 SERVER_URL = 'http://localhost:9999/'
 
@@ -42,9 +43,7 @@ async def get_agent_card() -> types.AgentCard:
             httpx_client=httpx_client,
             base_url=SERVER_URL,
         )
-        agent_card = await resolver.get_agent_card()
-
-    return agent_card
+        return await resolver.get_agent_card()
 
 
 async def show_agent_card() -> None:
@@ -53,7 +52,7 @@ async def show_agent_card() -> None:
     display_agent_card(agent_card)
 
 
-async def send_message(text_query: str) -> None:
+async def start_interactive_chat(text_query: str) -> None:
     """Starts an interactive session with the A2A server using a text query.
 
     Args:
@@ -93,7 +92,6 @@ if __name__ == '__main__':
         # Display agent capabilities first
         asyncio.run(show_agent_card())
         # Start the interactive chat with a default query
-        asyncio.run(send_message('How is the Weather in Poland, Warsaw?'))
+        asyncio.run(start_interactive_chat('How is the Weather in Poland, Warsaw?'))
     except KeyboardInterrupt:
         print('\nExiting client due to user interruption.')
-

@@ -25,7 +25,7 @@ from google.adk.tools import google_search
 from google.genai import types
 
 
-def create_agent() -> LlmAgent:
+def create_weather_poet_agent() -> LlmAgent:
     """Creates and configures the core LLM agent for weather reporting.
 
     Returns:
@@ -57,7 +57,7 @@ class WeatherReportingPoet:
 
     def __init__(self) -> None:
         """Initializes the WeatherReportingPoet with necessary ADK services."""
-        self._agent = create_agent()
+        self._agent = create_weather_poet_agent()
         self._user_id = 'weather_reporting_poet'
         # Initialize the ADK Runner with in-memory services for state management
         self._runner = Runner(
@@ -89,7 +89,7 @@ class WeatherReportingPoet:
         # Accumulate text parts from the response events
         for event in response:
             for part in event.content.parts:
-                text_response.append(part.text)
+                text_response.extend(part.text)
         return ''.join(text_response)
 
     async def stream(

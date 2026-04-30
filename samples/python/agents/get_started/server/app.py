@@ -15,9 +15,6 @@
 """Module defining the Starlette application and A2A server configuration."""
 
 import uvicorn
-from starlette.applications import Starlette
-from starlette.responses import JSONResponse
-from starlette.routing import Route
 
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
@@ -31,9 +28,13 @@ from a2a.types import (
 from agent_executor import (
     WeatherReportingPoetExecutor,  # type: ignore[import-untyped]
 )
+from starlette.applications import Starlette
+from starlette.responses import JSONResponse
+from starlette.routing import Route
+
 
 # Define the skill that this agent specializes in
-skill = AgentSkill(
+weather_poet_skill = AgentSkill(
     id='weather_reporting_poet',
     name='Weather Reporting Poet',
     description='Poet for latest weather updates',
@@ -45,7 +46,7 @@ skill = AgentSkill(
 )
 
 # Define the public-facing Agent Card
-agent_card = AgentCard(
+weather_poet_agent_card = AgentCard(
     name='Weather Reporting Poet',
     description='Weather reporting Poet',
     version='1.0.0',
@@ -58,27 +59,27 @@ agent_card = AgentCard(
             url='http://localhost:9999',
         )
     ],
-    skills=[skill],
+    skills=[weather_poet_skill],
 )
 
 # Set up the default A2A request handler with necessary components
-request_handler = DefaultRequestHandler(
-    agent_card=agent_card,
+a2a_request_handler = DefaultRequestHandler(
+    agent_card=weather_poet_agent_card,
     agent_executor=WeatherReportingPoetExecutor(),
     task_store=InMemoryTaskStore(),
 )
 
 
-async def health_check(request) -> JSONResponse:
+async def health_check(request) -> JSONResponse:  # noqa: ANN001
     """Simple health check endpoint."""
     return JSONResponse({'message': 'ok!'})
 
 
 # Build the Starlette routes
 app_routes = []
-app_routes.extend(create_agent_card_routes(agent_card=agent_card))
+app_routes.extend(create_agent_card_routes(agent_card=weather_poet_agent_card))
 app_routes.extend(
-    create_jsonrpc_routes(request_handler=request_handler, rpc_url='/')
+    create_jsonrpc_routes(request_handler=a2a_request_handler, rpc_url='/')
 )
 app_routes.append(Route('/health', endpoint=health_check))
 
