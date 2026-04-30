@@ -13,17 +13,21 @@
 # limitations under the License.
 
 import asyncio
-import httpx
 import time
-import uuid
+
+import httpx
 
 from a2a import types
-from a2a.client import A2ACardResolver, ClientConfig, ClientFactory
-from a2a.utils.message import get_message_text
-from a2a.client.helpers import create_text_message_object
+from a2a.client import A2ACardResolver, ClientConfig, create_client
+from a2a.helpers import (
+    display_agent_card,
+    get_stream_response_text,
+    new_text_message,
+)
+
 
 # Assuming the server is running at http://localhost:9999 and exposes an /invoke endpoint
-SERVER_URL = "http://localhost:9999/"
+SERVER_URL = 'http://localhost:9999/'
 
 
 async def get_agent_card() -> types.AgentCard:
@@ -34,7 +38,8 @@ async def get_agent_card() -> types.AgentCard:
             httpx_client=httpx_client,
             base_url=SERVER_URL,
         )
-        agent_card: types.AgentCard = await resolver.get_agent_card()
+        agent_card = await resolver.get_agent_card()
+
     return agent_card
 
 
@@ -46,76 +51,43 @@ def sprint(text: str):
 
 async def show_agent_card():
     """Show the agent card in the terminal"""
-    print("#" * 45)
     agent_card = await get_agent_card()
-    sprint(f"Agent Card - Name: {agent_card.name}")
-    sprint(f"Agent Card - Capabilities: {agent_card.capabilities}")
-    sprint(f"Agent Card - Description: {agent_card.description}")
-    sprint(f"Agent Card - Skills: ")
-    for i, each in enumerate(agent_card.skills):
-        sprint(f"Agent Card - Skills[{i + 1}]:")
-        sprint(f"\t Skill - Id: {each.id}")
-        sprint(f"\t Skill - Name: {each.name}")
-        sprint(f"\t Skill - Description: {each.description}")
-        sprint(f"\t Skill - Examples: {each.examples}")
-    print("#" * 45)
-    print(agent_card)
+    display_agent_card(agent_card)
 
 
 async def send_message(text_query: str):
-    print("########################################")
-    print("#### Weather Reporting Poet via A2A ####")
-    print("########################################")
+    print('########################################')
+    print('#### Weather Reporting Poet via A2A ####')
+    print('########################################')
     agent_card = await get_agent_card()
-    client_factory = ClientFactory(config=ClientConfig(streaming=False))
-    #
-    # from a2a.client import create_text_client, TextClient
+    client_config = ClientConfig(streaming=False)
+    client = await create_client(agent=agent_card, client_config=client_config)
 
-    # text_client = await create_text_client(agent=SERVER_URL)
-    #
-    # text_client = await create_text_client(
-    #     agent=SERVER_URL, client_config=ClientConfig(streaming=False, supported_protocol_bindings="JSONRPC"))
-    #
-    # import pdb
-    # pdb.set_trace()
-    #
-    # text_response = await text_client.send_text_message("Hi who are you and what are your skills?")
-    # print(text_response)
-    #
-
-    #
-    client = client_factory.create(agent_card)
-
-    print("To exit use `exit` or `quit`.")
-    print(f"user> {text_query}")
-    while text_query not in ["exit", "quit"]:
+    print('To exit use `exit` or `quit`.')
+    print(f'User> {text_query}')
+    while text_query not in ['exit', 'quit']:
         if text_query:
-            # create a client message object
-            parts = [types.Part(text=text_query)]
-            message = types.Message(
-                role=types.Role.ROLE_USER,
-                parts=parts,
-                message_id=str(uuid.uuid4()),  # Unique ID
+            message = new_text_message(
+                text=text_query, role=types.Role.ROLE_USER
             )
             request = types.SendMessageRequest(message=message)
-            # Alternatively, you can do the following to create a request object:
-            # from a2a.client.helpers import create_text_message_object
-            # request = types.SendMessageRequest(message=create_text_message_object(content=query))
 
             # Sending a message to the server & listening for responses
-            response = client.send_message(request=request)
-            async for response_chunk, task in response:
-                text_response = get_message_text(task.artifacts[0])
-                print(f"model> {text_response}")
-        text_query = input("user> ").strip()
-    print("#" * 45)
+            async for response_chunk in client.send_message(request=request):
+                text = get_stream_response_text(response_chunk)
+                import pdb
+
+                pdb.set_trace()
+                print(f'Model> {text}\n---')
+        text_query = await asyncio.to_thread(input, 'User> ')
+    print('#' * 45)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     # Ensure the event loop is properly managed
     try:
         asyncio.run(show_agent_card())
-        asyncio.run(send_message("How is the Weather in Poland, Warsaw?"))
+        asyncio.run(send_message('How is the Weather in Poland, Warsaw?'))
         # asyncio.run(WeatherClient().run_interactive_terminal())
     except KeyboardInterrupt:
-        print("Exiting client due to user interruption.")
+        print('Exiting client due to user interruption.')

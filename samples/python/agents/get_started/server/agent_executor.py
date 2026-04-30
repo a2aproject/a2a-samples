@@ -12,16 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from a2a import types
+from a2a.helpers import new_task_from_user_message, new_text_message
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
-from a2a.server.tasks import TaskUpdater
-# from a2a.helpers import  get_message_text
-from a2a.types import (
-    Part,
-    Task,
-    TaskState,
-    UnsupportedOperationError,
-)
 
 # Loading from agent.py
 from agent import WeatherReportingPoet
@@ -39,8 +33,7 @@ class WeatherReportingPoetExecutor(AgentExecutor):
     async def execute(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
-        """
-        To execute the agent's logic for a given request context.
+        """To execute the agent's logic for a given request context.
         """
         # Collect users request
         query = context.get_user_input()
@@ -50,45 +43,54 @@ class WeatherReportingPoetExecutor(AgentExecutor):
         # If this request does not have current task, create a new one and use it.
         task = None
         if not context.current_task:
-            task = new_task(context.message)  # Create task
-            await event_queue.enqueue_event(task)  # Add task to A2A's Event Queue
+            task = new_task_from_user_message(context.message)  # Create task
+            await event_queue.enqueue_event(
+                task
+            )  # Add task to A2A's Event Queue
         else:
             task = context.current_task  # Refer to existing queue
 
         ## Event Queue
         # Acts as a buffer the agent's asynchronous execution and the server's response handling
-        updater = TaskUpdater(event_queue, task.id, task.context_id)
+        # updater = TaskUpdater(event_queue, task.id, task.context_id)
+        # 3. Update task status as working
+        _task_update = types.a2a_pb2.TaskStatusUpdateEvent(
+            task_id=task.id,
+            context_id=context.context_id,
+            status=types.TaskStatus(
+                state=types.TaskState.TASK_STATE_WORKING,
+                message=new_text_message('START'),
+            ),
+        )
+        await event_queue.enqueue_event(_task_update)
 
-        # invoke the underlying agent, using streaming results. The streams
-        # now are update events.
-        async for finished, text in self.agent.stream(query, task.context_id):
+        # invoke the agent
+        print(f'User> {query}')
+        async for finished, text in self.agent.stream(query, task.id):
             if not finished:
-                await updater.update_status(
-                    TaskState.working,
-                    new_agent_text_message(text, task.context_id, task.id),
+                _task_update = types.a2a_pb2.TaskStatusUpdateEvent(
+                    task_id=task.id,
+                    context_id=context.context_id,
+                    status=types.TaskStatus(
+                        state=types.TaskState.TASK_STATE_WORKING,
+                        message=new_text_message(f'User: {query}'),
+                    ),
                 )
-                continue
-            # Emit the appropriate events
-            await updater.add_artifact(
-                [Part(text=text)],
-                name="response",
-            )
-            await updater.complete()
-            break
+                await event_queue.enqueue_event(_task_update)
+            else:
+                _task_update = types.a2a_pb2.TaskStatusUpdateEvent(
+                    task_id=task.id,
+                    context_id=context.context_id,
+                    status=types.TaskStatus(
+                        state=types.TaskState.TASK_STATE_COMPLETED,
+                        message=new_text_message(f'Response: {text}'),
+                    ),
+                )
+                await event_queue.enqueue_event(_task_update)
+                print(f'Model> {text}')
+                break
 
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
-        task_id = context.task_id
-
-        # check and remove task
-        if task_id in self.running_tasks:
-            self.running_tasks.remove(task_id)
-
-        # update the tasks queue
-        updater = TaskUpdater(
-            event_queue=event_queue,
-            task_id=task_id or '',
-            context_id=context.context_id or '',
-        )
-        await updater.cancel()
+        raise Exception('cancel not supported')

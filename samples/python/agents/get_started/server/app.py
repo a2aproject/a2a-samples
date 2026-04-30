@@ -14,8 +14,8 @@
 
 import uvicorn
 
-from a2a.server import routes as a2a_routes
 from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
@@ -26,47 +26,56 @@ from a2a.types import (
 from agent_executor import (
     WeatherReportingPoetExecutor,  # type: ignore[import-untyped]
 )
-from fastapi import FastAPI
+from starlette.applications import Starlette
+from starlette.responses import JSONResponse
+from starlette.routing import Route
 
 
-if __name__ == "__main__":
-    skill = AgentSkill(
-        id="weather_reporting_poet",
-        name="Weather Reporting Poet",
-        description="Poet for latest weather updates",
-        tags=["poet", "weather"],
-        examples=[
-            "How is the weather in Warsaw, Poland",
-            "How is the weather in Hyderabad, India",
-        ],
-    )
+skill = AgentSkill(
+    id='weather_reporting_poet',
+    name='Weather Reporting Poet',
+    description='Poet for latest weather updates',
+    tags=['poet', 'weather'],
+    examples=[
+        'How is the weather in Warsaw, Poland',
+        'How is the weather in Hyderabad, India',
+    ],
+)
 
-    # This will be the public-facing agent card
-    public_agent_card = AgentCard(
-        name="Weather Reporting Poet",
-        description="Weather reporting Poet",
-        # icon_url="http://localhost:9999/",
-        version="1.0.0",
-        default_input_modes=["text"],
-        default_output_modes=["text"],
-        capabilities=AgentCapabilities(streaming=True, extended_agent_card=True),
-        supported_interfaces=[
-            AgentInterface(
-                protocol_binding="JSONRPC",
-                url="http://localhost:9999",
-            )
-        ],
-        skills=[skill],  # Only the basic skill for the public card
-    )
+# This will be the public-facing agent card
+agent_card = AgentCard(
+    name='Weather Reporting Poet',
+    description='Weather reporting Poet',
+    version='1.0.0',
+    default_input_modes=['text'],
+    default_output_modes=['text'],
+    capabilities=AgentCapabilities(streaming=True, extended_agent_card=True),
+    supported_interfaces=[
+        AgentInterface(
+            protocol_binding='JSONRPC',
+            url='http://localhost:9999',
+        )
+    ],
+    skills=[skill],
+)
 
-    request_handler = DefaultRequestHandler(
-        agent_executor=WeatherReportingPoetExecutor(),
-        task_store=InMemoryTaskStore(),  # Storage for User Tasks
-    )
+request_handler = DefaultRequestHandler(
+    agent_card=agent_card,
+    agent_executor=WeatherReportingPoetExecutor(),
+    task_store=InMemoryTaskStore(),
+)
 
-    server = A2AStarletteApplication(
-        agent_card=public_agent_card,
-        http_handler=request_handler,
-    )
 
-    uvicorn.run(server.build(), host="127.0.0.1", port=9999)
+async def health_check(request):
+    return JSONResponse({'message': 'ok!'})
+
+
+app_routes = []
+app_routes.extend(create_agent_card_routes(agent_card=agent_card))
+app_routes.extend(
+    create_jsonrpc_routes(request_handler=request_handler, rpc_url='/')
+)
+app_routes.append(Route('/health', endpoint=health_check))
+if __name__ == '__main__':
+    server = Starlette(routes=app_routes, debug=True)
+    uvicorn.run(server, host='127.0.0.1', port=9999)
