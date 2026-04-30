@@ -28,14 +28,53 @@ DEMO: Using a simple A2A client(pure python), we will send queries and receive m
 *   **Interactive Client:** A command-line interface for real-time interaction with the agent.
 *   **Modular Design:** Separated server, client, and agent components for clarity and maintainability.
 
+## 📐 Architecture & Interaction Flow
+
+Here is how the A2A Client and Weather Poet Server interoperate:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Client as client_app.py
+    participant Resolver as A2ACardResolver
+    participant Server as app.py (Server)
+    participant Executor as WeatherReportingPoetExecutor
+    participant Agent as WeatherReportingPoet
+
+    Client->>Resolver: Request Agent Capabilities
+    Resolver->>Server: Fetch / (AgentCard)
+    Server-->>Resolver: Return AgentCard & Skills
+    Client->>Client: Initialize create_client()
+    
+    Note over Client,Server: Interactive Chat Begins
+    
+    User->>Client: Input: "How is the Weather in Poland?"
+    Client->>Server: start_interactive_chat (JSON-RPC)
+    Server->>Executor: execute(RequestContext)
+    
+    Executor->>Server: Enqueue Task & WORKING Status
+    Server-->>Client: Stream Status Updates
+    
+    Executor->>Agent: stream(query)
+    Agent->>Agent: Run Gemini + Google Search
+    Agent-->>Executor: Return Poetic Forecast
+    
+    Executor->>Server: Enqueue result Artifact & COMPLETED Status
+    Server-->>Client: Stream Final Response Chunks
+    
+    Client->>Client: get_stream_response_text()
+    Client->>User: Print Poetic Forecast to Terminal
+```
+
 ## 🚀 Technologies Used
 
 *   Python 3.x
 *   Google ADK (Agent Developer Kit)
+*   Google Gen-AI SDK
 *   `httpx` (for HTTP requests)
 *   `asyncio` (for asynchronous operations)
 *   `uvicorn` (for running the ASGI server)
-*   Google Generative AI
 
 ### Important Clarification on A2A Implementation
 
