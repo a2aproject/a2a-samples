@@ -85,19 +85,34 @@ class WeatherReportingPoet:
         yield (True, result)
 
 
-if __name__ == '__main__':
+async def main() -> None:
+    """Runs test queries for the LangGraph weather poet."""
     poet = WeatherReportingPoet()
     print('################################')
     print('#### LangGraph Weather Poet ####')
     print('################################')
     print('To exit use `exit` or `quit`.\n---')
+
     query = 'How is the weather in Warsaw, Poland today?'
     print(f'user> {query}')
-    response = asyncio.run(poet.run(query, 'mock_session'))
-    # TODO: Make it interactive after testing is completed.
-    # while query not in ['exit', 'quit']:
-    #     if query:
-    #         response = asyncio.run(poet.run(query, 'mock_session'))
-    #         print(f'model> {response}\n---')
-    #     query = input('user> ').strip()
-    print(response)
+    response = await poet.run(query, 'mock_session')
+    print(f'model> {response}\n---')
+
+    query = 'How is the weather in Berlin, Germany today?'
+    print(f'user> {query}')
+    response = await poet.run(query, 'mock_session')
+    print(f'model> {response}\n---')
+
+    query = 'How is the weather in Paris, France today?'
+    print(f'user> {query}')
+    response = await poet.run(query, 'mock_session')
+    print(f'model> {response}\n---')
+
+    query = 'How is the weather in Madrid, Spain today?'
+    print(f'user> {query}')
+    response = await poet.run(query, 'mock_session')
+    print(f'model> {response}\n---')
+
+
+if __name__ == '__main__':
+    asyncio.run(main())

@@ -28,7 +28,7 @@ class WeatherReportingPoet:
 
     def __init__(self) -> None:
         self._user_id = 'weather_reporting_poet'
-        self._model = LLM(model='gemini/gemini-2.5-flash-lite')
+        self._model = LLM(model='gemini/gemini-2.0-flash')
 
         self._agent = Agent(
             role='Weather Reporting Agent',
@@ -74,16 +74,35 @@ class WeatherReportingPoet:
         yield (True, response)
 
 
-if __name__ == '__main__':
+async def main() -> None:
+    """Runs test queries for the CrewAI weather poet."""
     poet = WeatherReportingPoet()
     print('################################')
     print('#### CrewAI Weather Poet    ####')
     print('################################')
     print('To exit use `exit` or `quit`.\n---')
+
     query = 'How is the weather in Warsaw, Poland today?'
     print(f'user> {query}')
-    while query not in ['exit', 'quit']:
-        if query:
-            response = asyncio.run(poet.run(query, 'mock_session'))
-            print(f'model> {response}\n---')
-        query = input('user> ').strip()
+    response = await poet.run(query, 'mock_session')
+    print(f'model> {response}\n---')
+
+    query = 'How is the weather in Berlin, Germany today?'
+    print(f'user> {query}')
+    response = await poet.run(query, 'mock_session')
+    print(f'model> {response}\n---')
+
+    query = 'How is the weather in Paris, France today?'
+    print(f'user> {query}')
+    response = await poet.run(query, 'mock_session')
+    print(f'model> {response}\n---')
+
+    query = 'How is the weather in Madrid, Spain today?'
+    print(f'user> {query}')
+    response = await poet.run(query, 'mock_session')
+    print(f'model> {response}\n---')
+
+
+if __name__ == '__main__':
+    asyncio.run(main())
+
