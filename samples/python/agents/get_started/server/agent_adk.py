@@ -14,6 +14,8 @@
 
 """Module defining the Weather Reporting Poet agent using Google ADK."""
 
+import asyncio
+
 from collections.abc import AsyncIterable
 
 from google.adk import Runner
@@ -111,4 +113,4 @@ async def main() -> None:
         if query:
             response = await poet.run(query, 'mock_session')
             print(f'model> {response}\n---')
-        query = input('user> ').strip()
+        query = (await asyncio.to_thread(input, 'user> ')).strip()

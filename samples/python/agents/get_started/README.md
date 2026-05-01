@@ -82,16 +82,16 @@ This example showcases Agent-to-Agent (A2A) communication using the Google ADK a
 
 ## 🛠 Setup and Installation
 
-1.  **Clone the repository:**
+1. **Clone the repository:**
     ```bash
     git clone https://github.com/a2aproject/a2a-samples.git
     cd a2a-samples/samples/python/agents/get_started
     ```
-2.  **Create a virtual environment:**
+2. **Create a virtual environment:**
     ```bash
     python -m venv venv
     ```
-3.  **Activate the virtual environment:**
+3. **Activate the virtual environment:**
     * On macOS/Linux:
         ```bash
         source venv/bin/activate
@@ -100,7 +100,7 @@ This example showcases Agent-to-Agent (A2A) communication using the Google ADK a
         ```bash
         venv\Scripts\activate
         ```
-4.  **Install dependencies:**
+4. **Install dependencies:**
     ```bash
     pip install -r requirements.txt
     ```
