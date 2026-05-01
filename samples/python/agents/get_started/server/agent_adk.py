@@ -14,8 +14,6 @@
 
 """Module defining the Weather Reporting Poet agent using Google ADK."""
 
-import asyncio
-
 from collections.abc import AsyncIterable
 
 from google.adk import Runner
@@ -100,7 +98,8 @@ class WeatherReportingPoet:
             )
 
 
-if __name__ == '__main__':
+async def main() -> None:
+    """Runs test queries for the ADK weather poet."""
     poet = WeatherReportingPoet()
     print('################################')
     print('#### Weather Reporting Poet ####')
@@ -110,6 +109,6 @@ if __name__ == '__main__':
     print(f'user> {query}')
     while query not in ['exit', 'quit']:
         if query:
-            response = asyncio.run(poet.run(query, 'mock_session'))
+            response = await poet.run(query, 'mock_session')
             print(f'model> {response}\n---')
-        query = input('user> ').strip()
+        query = input('user> ').strip()  # noqa: ASYNC250

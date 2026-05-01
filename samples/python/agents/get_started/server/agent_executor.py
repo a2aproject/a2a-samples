@@ -24,7 +24,7 @@ from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
 
 # Import the core agent logic
-from agent import WeatherReportingPoet
+from agent_adk import WeatherReportingPoet
 
 
 class WeatherReportingPoetExecutor(AgentExecutor):
