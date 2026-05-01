@@ -165,7 +165,7 @@ async function fetchAndDisplayAgentCard() {
     colorize("dim", `Attempting to fetch agent card from agent at: ${serverUrl}`)
   );
   try {
-    const cardUrl = `${serverUrl}/.well-known/agent-card.json`;
+    const cardUrl = new URL(".well-known/agent-card.json", serverUrl.endsWith("/") ? serverUrl : serverUrl + "/").toString();
     client = await A2AClient.fromCardUrl(cardUrl);
     const card: AgentCard = await client.getAgentCard();
     agentName = card.name || "Agent"; // Update global agent name
