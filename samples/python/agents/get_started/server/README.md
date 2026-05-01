@@ -21,24 +21,24 @@ This directory contains the server-side implementation of the Weather Reporting 
 
 ## 📁 Component Overview
 
-The server is structured into three core Python modules, each with specific responsibilities:
+The server is structured into modular Python modules, each with specific responsibilities:
 
-### 1. `agent.py`
-Defines the underlying LLM agent using the Google ADK.
-* **Core Logic:** Uses `gemini-2.5-flash-lite` to generate poetic weather forecasts.
-* **Tools:** Integrates `google_search` to ensure factual accuracy by retrieving real-time weather data.
-* **Execution:** Provides both synchronous (`run`) and asynchronous streaming (`stream`) execution methods.
+### 1. `a2a_server.py`
+The entry point for running the A2A agent server.
+* **Framework:** Built on top of Starlette and Uvicorn.
+* **Configuration:** Defines the public `AgentCard` and `AgentSkill`, advertising the agent's capabilities to A2A clients.
+* **Routing:** Sets up JSON-RPC endpoints for A2A communication and a basic `/health` check.
 
-### 2. `agent_executor.py`
+### 2. `a2a_executor.py`
 Acts as the bridge between the core agent logic and the A2A server protocol.
 * **A2A Integration:** Implements the `AgentExecutor` interface.
 * **Task Management:** Handles A2A `Task` lifecycles, translating agent streaming events into A2A `TaskStatusUpdateEvent` objects.
 
-### 3. `app.py`
-The entry point for running the A2A agent server.
-* **Framework:** Built on top of Starlette and Uvicorn.
-* **Configuration:** Defines the public `AgentCard` and `AgentSkill`, advertising the agent's capabilities (e.g., streaming) to A2A clients.
-* **Routing:** Sets up JSON-RPC endpoints for A2A communication and a basic `/health` check.
+### 3. `agent.py`
+Interactive multi-framework CLI gateway for testing the underlying agent personalities directly.
+
+### 4. `agent_adk.py`, `agent_crewai.py`, `agent_langraph.py`
+Framework-specific implementations of the Weather Poet agent.
 
 ## 🚀 Running the Server
 
@@ -51,7 +51,7 @@ make run_server
 Or run it directly from this directory:
 
 ```bash
-python app.py
+python a2a_server.py
 ```
 
 The server will be available at `http://localhost:9999`.

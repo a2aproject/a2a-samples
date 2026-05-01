@@ -36,15 +36,15 @@ Here is how the A2A Client and Weather Poet Server interoperate:
 sequenceDiagram
     autonumber
     actor User
-    participant Client as client_app.py
+    participant Client as a2a_client.py
     participant Resolver as A2ACardResolver
-    participant Server as app.py (Server)
+    participant Server as a2a_server.py (Server)
     participant Executor as WeatherReportingPoetExecutor
     participant Agent as WeatherReportingPoet
 
     Client->>Resolver: Request Agent Capabilities
     Resolver->>Server: Fetch / (AgentCard)
-    Server-->>Resolver: Return AgentCard & Skills
+    Resolver-->>Client: Return AgentCard & Skills
     Client->>Client: Initialize create_client()
     
     Note over Client,Server: Interactive Chat Begins
@@ -147,7 +147,7 @@ First start the server:
 
 ```text
 $ make run_server
-cd server && python app.py
+cd server && python a2a_server.py
 INFO:     Started server process [60138]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
@@ -158,11 +158,11 @@ INFO:     127.0.0.1:58056 - "POST / HTTP/1.1" 200 OK
 INFO:     127.0.0.1:58148 - "POST / HTTP/1.1" 200 OK
 ```
 
-Then start the client:
+First start the client:
 
 ```text
 $ make run_client
-cd client && python client_app.py
+cd client && python a2a_client.py
 ====================================================
                      AgentCard                      
 ====================================================
@@ -217,7 +217,7 @@ Hyderabad nights,
 Peaceful, soft, and low.
 ---
 User> exit
-#############################################
+###################################################################
 ```
 
 You can then type your own weather queries at the `user>` prompt. To exit, type `exit` or `quit`.

@@ -108,5 +108,3 @@ class WeatherReportingPoetExecutor(AgentExecutor):
     ) -> None:
         """Cancels the execution of a running task."""
         raise Exception('cancel not supported')
-
-

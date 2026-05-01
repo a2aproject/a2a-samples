@@ -111,4 +111,4 @@ async def main() -> None:
         if query:
             response = await poet.run(query, 'mock_session')
             print(f'model> {response}\n---')
-        query = input('user> ').strip()  # noqa: ASYNC250
+        query = input('user> ').strip()

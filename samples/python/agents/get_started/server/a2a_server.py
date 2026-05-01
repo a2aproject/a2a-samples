@@ -25,8 +25,8 @@ from a2a.types import (
     AgentInterface,
     AgentSkill,
 )
-from agent_executor import (
-    WeatherReportingPoetExecutor,  # type: ignore[import-untyped]
+from a2a_executor import (
+    WeatherReportingPoetExecutor,
 )
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
@@ -87,4 +87,3 @@ if __name__ == '__main__':
     # Initialize and start the Starlette application
     server = Starlette(routes=app_routes, debug=True)
     uvicorn.run(server, host='127.0.0.1', port=9999)
-

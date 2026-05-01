@@ -25,10 +25,10 @@ run_agent: ## Run python (Google-ADK) agent that will connect and chat with the 
 	cd server && python agent.py
 
 run_server: ## Run python a2a server
-	cd server && python app.py
+	cd server && python a2a_server.py
 
-run_client: ## Prints the Application Version
-	cd client && python client_app.py
+run_client: ## Run python a2a client
+	cd client && python a2a_client.py
 
 # With CrewAI
 

@@ -92,6 +92,8 @@ if __name__ == '__main__':
         # Display agent capabilities first
         asyncio.run(show_agent_card())
         # Start the interactive chat with a default query
-        asyncio.run(start_interactive_chat('How is the Weather in Poland, Warsaw?'))
+        asyncio.run(
+            start_interactive_chat('How is the Weather in Poland, Warsaw?')
+        )
     except KeyboardInterrupt:
         print('\nExiting client due to user interruption.')

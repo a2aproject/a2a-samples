@@ -21,7 +21,7 @@ This directory contains a simple, interactive Python client that communicates wi
 
 ## 📁 Component Overview
 
-### `client_app.py`
+### `a2a_client.py`
 A terminal-based client application demonstrating how to interact with an A2A-enabled server.
 * **Agent Discovery:** Uses `A2ACardResolver` to dynamically fetch the server's `AgentCard` and verify its capabilities.
 * **Interactive Session:** Establishes a communication channel using `create_client` and sends queries to the server.
@@ -38,7 +38,7 @@ make run_client
 Or run it directly from this directory:
 
 ```bash
-python client_app.py
+python a2a_client.py
 ```
 
 Upon execution, the client will display the agent's advertised skills and start an interactive prompt pre-loaded with a query for the weather in Warsaw, Poland.
