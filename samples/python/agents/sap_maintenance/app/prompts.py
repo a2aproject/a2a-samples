@@ -1,5 +1,4 @@
-"""
-Centralized prompt definitions for the SAP Maintenance Order Agent.
+"""Centralized prompt definitions for the SAP Maintenance Order Agent.
 
 Organized by PEOS node:
 - PLANNER: Goal decomposition and execution planning
@@ -154,8 +153,8 @@ Return RAW JSON ONLY — no code fences, start with { end with }:
 
 
 __all__ = [
-    "PLANNER_SYSTEM_PROMPT",
-    "PLANNER_USER_TEMPLATE",
-    "OBSERVER_PROMPT",
-    "SYNTHESISER_PROMPT",
+    'OBSERVER_PROMPT',
+    'PLANNER_SYSTEM_PROMPT',
+    'PLANNER_USER_TEMPLATE',
+    'SYNTHESISER_PROMPT',
 ]

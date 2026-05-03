@@ -6,17 +6,21 @@ Security goal: protect write actions while keeping read insights frictionless.
 from __future__ import annotations
 
 import os
+
 from dataclasses import dataclass
 
-from .agent_config import ENABLE_WRITE_ACTIONS, TOOL_POLICY_MODE
+from app.agent_config import ENABLE_WRITE_ACTIONS, TOOL_POLICY_MODE
 
-WRITE_TOOLS = {"set_orders_to_teco", "reset_orders_teco"}
+
+WRITE_TOOLS = {'set_orders_to_teco', 'reset_orders_teco'}
 
 
 @dataclass
 class PolicyDecision:
+    """Result of a tool policy evaluation."""
+
     allowed: bool
-    reason: str = ""
+    reason: str = ''
 
 
 class ToolPolicyEngine:
@@ -28,18 +32,28 @@ class ToolPolicyEngine:
     - strict: writes only when ENABLE_WRITE_ACTIONS=true
     """
 
-    def __init__(self):
-        self.mode = os.getenv("TOOL_POLICY_MODE", TOOL_POLICY_MODE).strip().lower()
+    def __init__(self) -> None:
+        self.mode = (
+            os.getenv('TOOL_POLICY_MODE', TOOL_POLICY_MODE).strip().lower()
+        )
         self.enable_writes = (
-            os.getenv("ENABLE_WRITE_ACTIONS", "true" if ENABLE_WRITE_ACTIONS else "false")
-            .strip().lower() == "true"
+            os.getenv(
+                'ENABLE_WRITE_ACTIONS',
+                'true' if ENABLE_WRITE_ACTIONS else 'false',
+            )
+            .strip()
+            .lower()
+            == 'true'
         )
 
     def evaluate(self, tool_name: str) -> PolicyDecision:
+        """Evaluate whether the given tool is allowed under the current policy."""
         if tool_name not in WRITE_TOOLS:
-            return PolicyDecision(True, "read tool allowed")
-        if self.mode == "read_only":
-            return PolicyDecision(False, "write actions disabled (read_only mode)")
-        if self.mode == "strict" and not self.enable_writes:
-            return PolicyDecision(False, "write actions disabled by policy")
-        return PolicyDecision(True, "write tool allowed")
+            return PolicyDecision(True, 'read tool allowed')
+        if self.mode == 'read_only':
+            return PolicyDecision(
+                False, 'write actions disabled (read_only mode)'
+            )
+        if self.mode == 'strict' and not self.enable_writes:
+            return PolicyDecision(False, 'write actions disabled by policy')
+        return PolicyDecision(True, 'write tool allowed')
