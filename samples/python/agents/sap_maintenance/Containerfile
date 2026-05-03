@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/python-312
+FROM registry.access.redhat.com/ubi8/python-312:1-18
 
 # Set work directory
 WORKDIR /opt/app-root
@@ -8,24 +8,22 @@ COPY . /opt/app-root
 
 USER root
 
-# Install system build dependencies and UV package manager
-RUN dnf -y update && dnf install -y gcc gcc-c++ \
- && pip install uv
+# hadolint ignore=DL3013,DL3041
+RUN dnf -y update \
+    && dnf install -y gcc gcc-c++ \
+    && dnf clean all \
+    && pip install --no-cache-dir uv==0.7.2
 
 # Set environment variables for uv
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy
 
-# Install dependencies using uv sync
+# Install dependencies and project, then fix permissions
 RUN --mount=type=cache,target=/.cache/uv \
-    uv sync --frozen --no-install-project --no-dev
-
-# Install the project
-RUN --mount=type=cache,target=/.cache/uv \
-    uv sync --frozen --no-dev
-
-# Allow non-root user to access app-root
-RUN chgrp -R root /opt/app-root/ && chmod -R g+rwx /opt/app-root/
+    uv sync --frozen --no-install-project --no-dev \
+    && uv sync --frozen --no-dev \
+    && chgrp -R root /opt/app-root/ \
+    && chmod -R g+rwx /opt/app-root/
 
 # Expose default port
 EXPOSE 10020
@@ -33,4 +31,4 @@ EXPOSE 10020
 USER 1001
 
 # Run the agent
-CMD uv run app --host 0.0.0.0
+CMD ["uv", "run", "app", "--host", "0.0.0.0"]

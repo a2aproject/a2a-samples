@@ -13,7 +13,7 @@ data through 11 OData tools. The A2A protocol enables standardized interaction w
 the agent, allowing clients to send natural language queries about maintenance
 orders, equipment, costs, and confirmations.
 
-```
+```text
 User ──► A2A Server ──► Planner ──► Executor (loop) ──► Observer ──► Synthesiser ──► Response
                            │            │
                            │       Tool Calls (11 SAP OData tools)
@@ -119,7 +119,7 @@ User ──► A2A Server ──► Planner ──► Executor (loop) ──► 
 ## SAP OData Tools
 
 | Tool | SAP API | Description |
-|------|---------|-------------|
+| ------ | --------- | ------------- |
 | `search_maintenance_orders` | `API_MAINTENANCEORDER` | Search with 12+ filter dimensions |
 | `get_maintenance_order` | `API_MAINTENANCEORDER` | Full order detail with operations |
 | `get_work_order_cost_table` | `API_MAINTENANCEORDER` | Cost breakdown by category |
@@ -140,7 +140,7 @@ Mock data is included — no SAP system required to run the sample.
 The agent uses four specialized stages instead of one monolithic LLM call:
 
 | Stage | Role | Token Impact |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | **Planner** | Classifies intent, selects tools, creates execution plan | Low (3-turn window) |
 | **Executor** | Runs tool calls in a retry loop (max 10 iterations) | Variable |
 | **Observer** | Validates completeness, decides retry vs. proceed | Low |

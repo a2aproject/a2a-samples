@@ -1,5 +1,7 @@
 """Tests for the SAP Maintenance Order Agent."""
 
+# ruff: noqa: S101, PLR2004
+
 import json
 
 from app.tool_policy import WRITE_TOOLS, ToolPolicyEngine
