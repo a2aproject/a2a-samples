@@ -45,6 +45,9 @@ Demonstrates an adversarial multi-agent system with competing attacker and defen
 * [**Content Planner Agent**](/samples/python/agents/content_planner/README.md)  
 Sample agent that creates a detailed content outline given a high-level description of the content that's needed by using Google Search and the Google ADK.
 
+* [**SAP Maintenance Order Agent**](/samples/python/agents/sap_maintenance/README.md)  
+Analyzes SAP S/4HANA maintenance orders using the PEOS (Planner→Executor→Observer→Synthesiser) architecture with LangGraph. Showcases dynamic tool binding, HITL write safety, and 11 SAP OData tools with mock data included.
+
 ## Other ADK Samples
 
 The following samples showing ADK/A2A integration are available in the [adk-python](https://github.com/google/adk-python/tree/main/contributing/samples) repository.
