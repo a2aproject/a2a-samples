@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git=1:2.39.5-0+deb12u3 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Go 1.24.13
-ENV GO_VERSION=1.24.13
+# Install Go 1.25.0
+ENV GO_VERSION=1.25.0
 RUN curl -L https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz | tar -C /usr/local -xz
 ENV PATH=$PATH:/usr/local/go/bin
 
