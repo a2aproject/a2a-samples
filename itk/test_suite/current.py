@@ -115,7 +115,21 @@ def spawn_agent(http_port: int, grpc_port: int) -> subprocess.Popen:
         ]
         return popen_with_logs(args, current_dir)
 
+    if (current_dir / 'pom.xml').exists():
+        # Synchronously build and install 'itk' sibling SDK dependencies to the local maven repo
+        compile_args = ['mvn', '-pl', 'itk', '-am', 'install', '-DskipTests', '-Dmaven.javadoc.skip=true']  # noqa: S607
+        subprocess.run(compile_args, cwd=current_dir.parent, check=True)
+
+        # Asynchronously spawn the 'itk' mock agent directly within its module directory
+        args = [  # noqa: S607
+            'mvn',
+            'exec:java',
+            '-Dexec.mainClass=org.a2aproject.sdk.itk.Main',
+            f'-Dexec.args=--httpPort {http_port} --grpcPort {grpc_port}',
+        ]
+        return popen_with_logs(args, current_dir)
+
     raise RuntimeError(
         f'Could not determine agent type in {current_dir}. '
-        'Neither main.go, main.py, package.json nor .csproj found.'
+        'Neither main.go, main.py, package.json, .csproj nor pom.xml found.'
     )
