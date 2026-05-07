@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:4.0.2-3 \
     psmisc=23.6-1 \
     git=1:2.39.5-0+deb12u3 \
+    openjdk-17-jdk-headless \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Go 1.25.0
@@ -27,6 +28,11 @@ RUN curl -L https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x
 RUN curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 8.0 --install-dir /usr/local/dotnet
 ENV PATH=$PATH:/usr/local/dotnet
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+
+# Install Maven 3.9.9 (to satisfy protobuf-maven-plugin 3.9.6+ requirement)
+ENV MAVEN_VERSION=3.9.9
+RUN curl -sSL https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz | tar -xz -C /usr/local
+ENV PATH=$PATH:/usr/local/apache-maven-${MAVEN_VERSION}/bin
 
 # Set the working directory
 WORKDIR /app
