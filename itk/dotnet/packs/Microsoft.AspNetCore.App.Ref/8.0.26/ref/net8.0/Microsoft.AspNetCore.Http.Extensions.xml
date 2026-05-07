@@ -1,0 +1,1328 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Http.Extensions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Http.EndpointDescriptionAttribute">
+            <summary>
+            Specifies a description for the endpoint in <see cref="P:Microsoft.AspNetCore.Http.Endpoint.Metadata"/>.
+            </summary>
+            <remarks>
+            The OpenAPI specification supports a description attribute on operations and parameters that
+            can be used to annotate endpoints with detailed, multiline descriptors of their behavior.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.EndpointDescriptionAttribute.#ctor(System.String)">
+            <summary>
+            Initializes an instance of the <see cref="T:Microsoft.AspNetCore.Http.EndpointDescriptionAttribute"/>.
+            </summary>
+            <param name="description">The description associated with the endpoint or parameter.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.EndpointDescriptionAttribute.Description">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.EndpointDescriptionAttribute.ToString">
+            <inheritdoc/>>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.EndpointSummaryAttribute">
+            <summary>
+            Specifies a summary in <see cref="P:Microsoft.AspNetCore.Http.Endpoint.Metadata"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.EndpointSummaryAttribute.#ctor(System.String)">
+            <summary>
+            Initializes an instance of the <see cref="T:Microsoft.AspNetCore.Http.EndpointSummaryAttribute"/>.
+            </summary>
+            <param name="summary">The summary associated with the endpoint or parameter.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.EndpointSummaryAttribute.Summary">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.EndpointSummaryAttribute.ToString">
+            <inheritdoc/>>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HeaderDictionaryTypeExtensions">
+            <summary>
+            Extension methods for accessing strongly typed HTTP request and response
+            headers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionaryTypeExtensions.GetTypedHeaders(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Gets strongly typed HTTP request headers.
+            </summary>
+            <param name="request">The <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.Headers.RequestHeaders"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionaryTypeExtensions.GetTypedHeaders(Microsoft.AspNetCore.Http.HttpResponse)">
+            <summary>
+            Gets strongly typed HTTP response headers.
+            </summary>
+            <param name="response">The <see cref="T:Microsoft.AspNetCore.Http.HttpResponse"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.Headers.ResponseHeaders"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionaryTypeExtensions.AppendList``1(Microsoft.AspNetCore.Http.IHeaderDictionary,System.String,System.Collections.Generic.IList{``0})">
+            <summary>
+            Appends a sequence of values to <see cref="T:Microsoft.AspNetCore.Http.IHeaderDictionary"/>.
+            </summary>
+            <typeparam name="T">The type of header value.</typeparam>
+            <param name="Headers">The <see cref="T:Microsoft.AspNetCore.Http.IHeaderDictionary"/>.</param>
+            <param name="name">The header name.</param>
+            <param name="values">The values to append.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HttpContextServerVariableExtensions">
+            <summary>
+            Extensions for reading HTTP server variables.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpContextServerVariableExtensions.GetServerVariable(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>
+            Gets the value of a server variable for the current request.
+            </summary>
+            <param name="context">The http context for the request.</param>
+            <param name="variableName">The name of the variable.</param>
+            <returns>
+            <c>null</c> if the server does not support the <see cref="T:Microsoft.AspNetCore.Http.Features.IServerVariablesFeature"/> feature.
+            May return null or empty if the variable does not exist or is not set.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions">
+            <summary>
+            Extension methods to read the request body as JSON.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync``1(Microsoft.AspNetCore.Http.HttpRequest,System.Threading.CancellationToken)">
+            <summary>
+            Read JSON from the request and deserialize to the specified type.
+            If the request's content-type is not a known JSON type then an error will be thrown.
+            </summary>
+            <typeparam name="TValue">The type of object to read.</typeparam>
+            <param name="request">The request to read from.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync``1(Microsoft.AspNetCore.Http.HttpRequest,System.Text.Json.JsonSerializerOptions,System.Threading.CancellationToken)">
+            <summary>
+            Read JSON from the request and deserialize to the specified type.
+            If the request's content-type is not a known JSON type then an error will be thrown.
+            </summary>
+            <typeparam name="TValue">The type of object to read.</typeparam>
+            <param name="request">The request to read from.</param>
+            <param name="options">The serializer options to use when deserializing the content.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync``1(Microsoft.AspNetCore.Http.HttpRequest,System.Text.Json.Serialization.Metadata.JsonTypeInfo{``0},System.Threading.CancellationToken)">
+            <summary>
+            Read JSON from the request and deserialize to the specified type.
+            If the request's content-type is not a known JSON type then an error will be thrown.
+            </summary>
+            <param name="request">The request to read from.</param>
+            <param name="jsonTypeInfo">Metadata about the type to convert.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The deserialized value.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync(Microsoft.AspNetCore.Http.HttpRequest,System.Text.Json.Serialization.Metadata.JsonTypeInfo,System.Threading.CancellationToken)">
+            <summary>
+            Read JSON from the request and deserialize to object type.
+            If the request's content-type is not a known JSON type then an error will be thrown.
+            </summary>
+            <param name="request">The request to read from.</param>
+            <param name="jsonTypeInfo">Metadata about the type to convert.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The deserialized value.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync(Microsoft.AspNetCore.Http.HttpRequest,System.Type,System.Threading.CancellationToken)">
+            <summary>
+            Read JSON from the request and deserialize to the specified type.
+            If the request's content-type is not a known JSON type then an error will be thrown.
+            </summary>
+            <param name="request">The request to read from.</param>
+            <param name="type">The type of object to read.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync(Microsoft.AspNetCore.Http.HttpRequest,System.Type,System.Text.Json.JsonSerializerOptions,System.Threading.CancellationToken)">
+            <summary>
+            Read JSON from the request and deserialize to the specified type.
+            If the request's content-type is not a known JSON type then an error will be thrown.
+            </summary>
+            <param name="request">The request to read from.</param>
+            <param name="type">The type of object to read.</param>
+            <param name="options">The serializer options use when deserializing the content.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync(Microsoft.AspNetCore.Http.HttpRequest,System.Type,System.Text.Json.Serialization.JsonSerializerContext,System.Threading.CancellationToken)">
+            <summary>
+            Read JSON from the request and deserialize to the specified type.
+            If the request's content-type is not a known JSON type then an error will be thrown.
+            </summary>
+            <param name="request">The request to read from.</param>
+            <param name="type">The type of object to read.</param>
+            <param name="context">A metadata provider for serializable types.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The deserialized value.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.HasJsonContentType(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Checks the Content-Type header for JSON types.
+            </summary>
+            <returns>true if the Content-Type header represents a JSON content type; otherwise, false.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Extensions.HttpRequestMultipartExtensions">
+            <summary>
+            Extension methods for working with multipart form requests.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.HttpRequestMultipartExtensions.GetMultipartBoundary(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Gets the multipart boundary from the <c>Content-Type</c> header.
+            </summary>
+            <param name="request">The <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/>.</param>
+            <returns>The multipart boundary.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Extensions.QueryBuilder">
+            <summary>
+            Allows constructing a query string.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Extensions.QueryBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Extensions.QueryBuilder"/>.
+            </summary>
+            <param name="parameters">The parameters to initialize the instance with.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,Microsoft.Extensions.Primitives.StringValues}})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Extensions.QueryBuilder"/>.
+            </summary>
+            <param name="parameters">The parameters to initialize the instance with.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.Add(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Adds a query string token to the instance.
+            </summary>
+            <param name="key">The query key.</param>
+            <param name="values">The sequence of query values.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.Add(System.String,System.String)">
+            <summary>
+            Adds a query string token to the instance.
+            </summary>
+            <param name="key">The query key.</param>
+            <param name="value">The query value.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.ToQueryString">
+            <summary>
+            Constructs a <see cref="T:Microsoft.AspNetCore.Http.QueryString"/> from this <see cref="T:Microsoft.AspNetCore.Http.Extensions.QueryBuilder"/>.
+            </summary>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.QueryString"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.QueryBuilder.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Extensions.StreamCopyOperation">
+            <summary>
+            Provides APIs to copy a range of bytes from a source <see cref="T:System.IO.Stream"/> to a destination <see cref="T:System.IO.Stream"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.StreamCopyOperation.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>Asynchronously reads the given number of bytes from the source stream and writes them to another stream.</summary>
+            <returns>A task that represents the asynchronous copy operation.</returns>
+            <param name="source">The stream from which the contents will be copied.</param>
+            <param name="destination">The stream to which the contents of the current stream will be copied.</param>
+            <param name="count">The count of bytes to be copied.</param>
+            <param name="cancel">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.StreamCopyOperation.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Nullable{System.Int64},System.Int32,System.Threading.CancellationToken)">
+            <summary>Asynchronously reads the given number of bytes from the source stream and writes them to another stream, using a specified buffer size.</summary>
+            <returns>A task that represents the asynchronous copy operation.</returns>
+            <param name="source">The stream from which the contents will be copied.</param>
+            <param name="destination">The stream to which the contents of the current stream will be copied.</param>
+            <param name="count">The count of bytes to be copied.</param>
+            <param name="bufferSize">The size, in bytes, of the buffer. This value must be greater than zero. The default size is 4096.</param>
+            <param name="cancel">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Extensions.UriHelper">
+            <summary>
+            A helper class for constructing encoded Uris for use in headers and other Uris.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.BuildRelative(Microsoft.AspNetCore.Http.PathString,Microsoft.AspNetCore.Http.PathString,Microsoft.AspNetCore.Http.QueryString,Microsoft.AspNetCore.Http.FragmentString)">
+            <summary>
+            Combines the given URI components into a string that is properly encoded for use in HTTP headers.
+            </summary>
+            <param name="pathBase">The first portion of the request path associated with application root.</param>
+            <param name="path">The portion of the request path that identifies the requested resource.</param>
+            <param name="query">The query, if any.</param>
+            <param name="fragment">The fragment, if any.</param>
+            <returns>The combined URI components, properly encoded for use in HTTP headers.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.BuildAbsolute(System.String,Microsoft.AspNetCore.Http.HostString,Microsoft.AspNetCore.Http.PathString,Microsoft.AspNetCore.Http.PathString,Microsoft.AspNetCore.Http.QueryString,Microsoft.AspNetCore.Http.FragmentString)">
+            <summary>
+            Combines the given URI components into a string that is properly encoded for use in HTTP headers.
+            Note that unicode in the HostString will be encoded as punycode.
+            </summary>
+            <param name="scheme">http, https, etc.</param>
+            <param name="host">The host portion of the uri normally included in the Host header. This may include the port.</param>
+            <param name="pathBase">The first portion of the request path associated with application root.</param>
+            <param name="path">The portion of the request path that identifies the requested resource.</param>
+            <param name="query">The query, if any.</param>
+            <param name="fragment">The fragment, if any.</param>
+            <returns>The combined URI components, properly encoded for use in HTTP headers.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.FromAbsolute(System.String,System.String@,Microsoft.AspNetCore.Http.HostString@,Microsoft.AspNetCore.Http.PathString@,Microsoft.AspNetCore.Http.QueryString@,Microsoft.AspNetCore.Http.FragmentString@)">
+            <summary>
+            Separates the given absolute URI string into components. Assumes no PathBase.
+            </summary>
+            <param name="uri">A string representation of the uri.</param>
+            <param name="scheme">http, https, etc.</param>
+            <param name="host">The host portion of the uri normally included in the Host header. This may include the port.</param>
+            <param name="path">The portion of the request path that identifies the requested resource.</param>
+            <param name="query">The query, if any.</param>
+            <param name="fragment">The fragment, if any.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.Encode(System.Uri)">
+            <summary>
+            Generates a string from the given absolute or relative Uri that is appropriately encoded for use in
+            HTTP headers. Note that a unicode host name will be encoded as punycode.
+            </summary>
+            <param name="uri">The Uri to encode.</param>
+            <returns>The encoded string version of <paramref name="uri"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.GetEncodedUrl(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Returns the combined components of the request URL in a fully escaped form suitable for use in HTTP headers
+            and other HTTP operations.
+            </summary>
+            <param name="request">The request to assemble the uri pieces from.</param>
+            <returns>The encoded string version of the URL from <paramref name="request"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.GetEncodedPathAndQuery(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Returns the relative URI.
+            </summary>
+            <param name="request">The request to assemble the uri pieces from.</param>
+            <returns>The path and query off of <paramref name="request"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.GetDisplayUrl(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Returns the combined components of the request URL in a fully un-escaped form (except for the QueryString)
+            suitable only for display. This format should not be used in HTTP headers or other HTTP operations.
+            </summary>
+            <param name="request">The request to assemble the uri pieces from.</param>
+            <returns>The combined components of the request URL in a fully un-escaped form (except for the QueryString)
+            suitable only for display.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.CopyTextToBuffer(System.Span{System.Char},System.Int32,System.ReadOnlySpan{System.Char})">
+            <summary>
+            Copies the specified <paramref name="text"/> to the specified <paramref name="buffer"/> starting at the specified <paramref name="index"/>.
+            </summary>
+            <param name="buffer">The buffer to copy text to.</param>
+            <param name="index">The buffer start index.</param>
+            <param name="text">The text to copy.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.InitializeAbsoluteUriString(System.Span{System.Char},System.ValueTuple{System.String,System.String,System.String,System.String,System.String,System.String})">
+            <summary>
+            Initializes the URI <see cref="T:System.String"/> for <see cref="M:Microsoft.AspNetCore.Http.Extensions.UriHelper.BuildAbsolute(System.String,Microsoft.AspNetCore.Http.HostString,Microsoft.AspNetCore.Http.PathString,Microsoft.AspNetCore.Http.PathString,Microsoft.AspNetCore.Http.QueryString,Microsoft.AspNetCore.Http.FragmentString)"/>.
+            </summary>
+            <param name="buffer">The URI <see cref="T:System.String"/>'s <see cref="T:System.Char"/> buffer.</param>
+            <param name="uriParts">The URI parts.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions">
+            <summary>
+            Provides extension methods for writing a JSON serialized value to the HTTP response.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync``1(Microsoft.AspNetCore.Http.HttpResponse,``0,System.Threading.CancellationToken)">
+            <summary>
+            Write the specified value as JSON to the response body. The response content-type will be set to
+            <c>application/json; charset=utf-8</c>.
+            </summary>
+            <typeparam name="TValue">The type of object to write.</typeparam>
+            <param name="response">The response to write JSON to.</param>
+            <param name="value">The value to write as JSON.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync``1(Microsoft.AspNetCore.Http.HttpResponse,``0,System.Text.Json.JsonSerializerOptions,System.Threading.CancellationToken)">
+            <summary>
+            Write the specified value as JSON to the response body. The response content-type will be set to
+            <c>application/json; charset=utf-8</c>.
+            </summary>
+            <typeparam name="TValue">The type of object to write.</typeparam>
+            <param name="response">The response to write JSON to.</param>
+            <param name="value">The value to write as JSON.</param>
+            <param name="options">The serializer options to use when serializing the value.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync``1(Microsoft.AspNetCore.Http.HttpResponse,``0,System.Text.Json.JsonSerializerOptions,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Write the specified value as JSON to the response body. The response content-type will be set to
+            the specified content-type.
+            </summary>
+            <typeparam name="TValue">The type of object to write.</typeparam>
+            <param name="response">The response to write JSON to.</param>
+            <param name="value">The value to write as JSON.</param>
+            <param name="options">The serializer options to use when serializing the value.</param>
+            <param name="contentType">The content-type to set on the response.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync``1(Microsoft.AspNetCore.Http.HttpResponse,``0,System.Text.Json.Serialization.Metadata.JsonTypeInfo{``0},System.String,System.Threading.CancellationToken)">
+            <summary>
+            Write the specified value as JSON to the response body. The response content-type will be set to
+            the specified content-type.
+            </summary>
+            <typeparam name="TValue">The type of object to write.</typeparam>
+            <param name="response">The response to write JSON to.</param>
+            <param name="value">The value to write as JSON.</param>
+            <param name="jsonTypeInfo">Metadata about the type to convert.</param>
+            <param name="contentType">The content-type to set on the response.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync(Microsoft.AspNetCore.Http.HttpResponse,System.Object,System.Text.Json.Serialization.Metadata.JsonTypeInfo,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Write the specified value as JSON to the response body. The response content-type will be set to
+            the specified content-type.
+            </summary>
+            <param name="response">The response to write JSON to.</param>
+            <param name="value">The value to write as JSON.</param>
+            <param name="jsonTypeInfo">Metadata about the type to convert.</param>
+            <param name="contentType">The content-type to set on the response.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync(Microsoft.AspNetCore.Http.HttpResponse,System.Object,System.Type,System.Threading.CancellationToken)">
+            <summary>
+            Write the specified value as JSON to the response body. The response content-type will be set to
+            <c>application/json; charset=utf-8</c>.
+            </summary>
+            <param name="response">The response to write JSON to.</param>
+            <param name="value">The value to write as JSON.</param>
+            <param name="type">The type of object to write.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync(Microsoft.AspNetCore.Http.HttpResponse,System.Object,System.Type,System.Text.Json.JsonSerializerOptions,System.Threading.CancellationToken)">
+            <summary>
+            Write the specified value as JSON to the response body. The response content-type will be set to
+            <c>application/json; charset=utf-8</c>.
+            </summary>
+            <param name="response">The response to write JSON to.</param>
+            <param name="value">The value to write as JSON.</param>
+            <param name="type">The type of object to write.</param>
+            <param name="options">The serializer options to use when serializing the value.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync(Microsoft.AspNetCore.Http.HttpResponse,System.Object,System.Type,System.Text.Json.JsonSerializerOptions,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Write the specified value as JSON to the response body. The response content-type will be set to
+            the specified content-type.
+            </summary>
+            <param name="response">The response to write JSON to.</param>
+            <param name="value">The value to write as JSON.</param>
+            <param name="type">The type of object to write.</param>
+            <param name="options">The serializer options to use when serializing the value.</param>
+            <param name="contentType">The content-type to set on the response.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync(Microsoft.AspNetCore.Http.HttpResponse,System.Object,System.Type,System.Text.Json.Serialization.JsonSerializerContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Write the specified value as JSON to the response body. The response content-type will be set to
+            the specified content-type.
+            </summary>
+            <param name="response">The response to write JSON to.</param>
+            <param name="value">The value to write as JSON.</param>
+            <param name="type">The type of object to write.</param>
+            <param name="context">A metadata provider for serializable types.</param>
+            <param name="contentType">The content-type to set on the response.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to cancel the operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Json.JsonOptions">
+            <summary>
+            Options to configure JSON serialization settings for <see cref="T:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions"/>
+            and <see cref="T:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Json.JsonOptions.SerializerOptions">
+            <summary>
+            Gets the <see cref="T:System.Text.Json.JsonSerializerOptions"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.HttpValidationProblemDetails">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.ProblemDetails">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.IDictionaryStringObject">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.IDictionaryStringStringArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.JsonElement">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.Int32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.NullableInt32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.Object">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.StringArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ProblemDetailsJsonContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.ProblemDetailsJsonOptionsSetup">
+             <summary>
+             Adds the ProblemDetailsJsonContext to the current JsonSerializerOptions.
+            
+             This allows for consistent serialization behavior for ProblemDetails regardless if
+             the default reflection-based serializer is used or not. And makes it trim/NativeAOT compatible.
+             </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.ProblemDetailsOptions">
+            <summary>
+            Options for controlling the behavior of <see cref="M:Microsoft.AspNetCore.Http.IProblemDetailsService.WriteAsync(Microsoft.AspNetCore.Http.ProblemDetailsContext)"/>
+            and similar methods.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ProblemDetailsOptions.CustomizeProblemDetails">
+            <summary>
+            The operation that customizes the current <see cref="T:Microsoft.AspNetCore.Mvc.ProblemDetails"/> instance.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.RequestDelegateFactory">
+            <summary>
+            Creates <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> implementations from <see cref="T:System.Delegate"/> request handlers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.InferMetadata(System.Reflection.MethodInfo,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)">
+            <summary>
+            Returns metadata inferred automatically for the <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> created by <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions,Microsoft.AspNetCore.Http.RequestDelegateMetadataResult)"/>.
+            This includes metadata inferred by <see cref="T:Microsoft.AspNetCore.Http.Metadata.IEndpointMetadataProvider"/> and <see cref="T:Microsoft.AspNetCore.Http.Metadata.IEndpointParameterMetadataProvider"/> implemented by parameter and return types to the <paramref name="methodInfo"/>.
+            </summary>
+            <param name="methodInfo">The <see cref="T:System.Reflection.MethodInfo"/> for the route handler to be passed to <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions,Microsoft.AspNetCore.Http.RequestDelegateMetadataResult)"/>.</param>
+            <param name="options">The options that will be used when calling <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions,Microsoft.AspNetCore.Http.RequestDelegateMetadataResult)"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegateMetadataResult"/> to be passed to <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions,Microsoft.AspNetCore.Http.RequestDelegateMetadataResult)"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> implementation for <paramref name="handler"/>.
+            </summary>
+            <param name="handler">A request handler with any number of custom parameters that often produces a response with its return value.</param>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions"/> used to configure the behavior of the handler.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegateResult"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions,Microsoft.AspNetCore.Http.RequestDelegateMetadataResult)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> implementation for <paramref name="handler"/>.
+            </summary>
+            <param name="handler">A request handler with any number of custom parameters that often produces a response with its return value.</param>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions"/> used to configure the behavior of the handler.</param>
+            <param name="metadataResult">
+            The result returned from <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.InferMetadata(System.Reflection.MethodInfo,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)"/> if that was used to inferring metadata before creating the final RequestDelegate.
+            If <see langword="null"/>, this call to <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions,Microsoft.AspNetCore.Http.RequestDelegateMetadataResult)"/> method will infer the metadata that
+            <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.InferMetadata(System.Reflection.MethodInfo,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)"/> would have inferred for the same <see cref="P:System.Delegate.Method"/> and populate <see cref="P:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions.EndpointBuilder"/>
+            with that metadata. Otherwise, this metadata inference will be skipped as this step has already been done.
+            </param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegateResult"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Reflection.MethodInfo,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Object},Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> implementation for <paramref name="methodInfo"/>.
+            </summary>
+            <param name="methodInfo">A request handler with any number of custom parameters that often produces a response with its return value.</param>
+            <param name="targetFactory">Creates the <see langword="this"/> for the non-static method.</param>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions"/> used to configure the behavior of the handler.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Reflection.MethodInfo,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Object},Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions,Microsoft.AspNetCore.Http.RequestDelegateMetadataResult)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> implementation for <paramref name="methodInfo"/>.
+            </summary>
+            <param name="methodInfo">A request handler with any number of custom parameters that often produces a response with its return value.</param>
+            <param name="targetFactory">Creates the <see langword="this"/> for the non-static method.</param>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions"/> used to configure the behavior of the handler.</param>
+            <param name="metadataResult">
+            The result returned from <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.InferMetadata(System.Reflection.MethodInfo,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)"/> if that was used to inferring metadata before creating the final RequestDelegate.
+            If <see langword="null"/>, this call to <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions,Microsoft.AspNetCore.Http.RequestDelegateMetadataResult)"/> method will infer the metadata that
+            <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.InferMetadata(System.Reflection.MethodInfo,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)"/> would have inferred for the same <see cref="P:System.Delegate.Method"/> and populate <see cref="P:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions.EndpointBuilder"/>
+            with that metadata. Otherwise, this metadata inference will be skipped as this step has already been done.
+            </param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions">
+            <summary>
+            Options for controlling the behavior of the <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate" /> when created using <see cref="T:Microsoft.AspNetCore.Http.RequestDelegateFactory" />.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions.ServiceProvider">
+            <summary>
+            The <see cref="T:System.IServiceProvider"/> instance used to access application services.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions.RouteParameterNames">
+            <summary>
+            The list of route parameter names that are specified for this handler.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions.ThrowOnBadRequest">
+            <summary>
+            Controls whether the <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> should throw a <see cref="T:Microsoft.AspNetCore.Http.BadHttpRequestException"/> in addition to
+            writing a <see cref="F:Microsoft.Extensions.Logging.LogLevel.Debug"/> log when handling invalid requests.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions.DisableInferBodyFromParameters">
+            <summary>
+            Prevent the <see cref="T:Microsoft.AspNetCore.Http.RequestDelegateFactory" /> from inferring a parameter should be bound from the request body without an attribute that implements <see cref="T:Microsoft.AspNetCore.Http.Metadata.IFromBodyMetadata"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions.EndpointBuilder">
+            <summary>
+            The mutable <see cref="T:Microsoft.AspNetCore.Builder.EndpointBuilder"/> used to assist in the creation of the <see cref="P:Microsoft.AspNetCore.Http.RequestDelegateResult.RequestDelegate"/>.
+            This is primarily used to run <see cref="P:Microsoft.AspNetCore.Builder.EndpointBuilder.FilterFactories"/> and populate inferred <see cref="P:Microsoft.AspNetCore.Builder.EndpointBuilder.Metadata"/>.
+            The <see cref="P:Microsoft.AspNetCore.Builder.EndpointBuilder.RequestDelegate"/> must be <see langword="null"/>. After the call to <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)"/>,
+            <see cref="P:Microsoft.AspNetCore.Builder.EndpointBuilder.RequestDelegate"/> will be the same as <see cref="P:Microsoft.AspNetCore.Http.RequestDelegateResult.RequestDelegate"/>.
+            </summary>
+            <remarks>
+            Any metadata already in <see cref="P:Microsoft.AspNetCore.Builder.EndpointBuilder.Metadata"/> will be included in <see cref="P:Microsoft.AspNetCore.Http.RequestDelegateResult.EndpointMetadata" /> <b>before</b>
+            most metadata inferred during creation of the <see cref="P:Microsoft.AspNetCore.Http.RequestDelegateResult.RequestDelegate"/> and <b>before</b> any metadata provided by types in
+            the delegate signature that implement <see cref="T:Microsoft.AspNetCore.Http.Metadata.IEndpointMetadataProvider" /> or <see cref="T:Microsoft.AspNetCore.Http.Metadata.IEndpointParameterMetadataProvider" />. The exception to this general rule is the
+            <see cref="T:Microsoft.AspNetCore.Http.Metadata.IAcceptsMetadata"/> that <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)"/> infers automatically
+            without any custom metadata providers which instead is inserted at the start to give it lower precedence. Custom metadata providers can choose to
+            insert their metadata at the start to give lower precedence, but this is unusual.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.RequestDelegateMetadataResult">
+            <summary>
+            The metadata inferred by <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.InferMetadata(System.Reflection.MethodInfo,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions)"/>.
+            <see cref="P:Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions.EndpointBuilder"/> will be automatically populated with this metadata if provided.
+            If this is passed to <see cref="M:Microsoft.AspNetCore.Http.RequestDelegateFactory.Create(System.Delegate,Microsoft.AspNetCore.Http.RequestDelegateFactoryOptions,Microsoft.AspNetCore.Http.RequestDelegateMetadataResult)"/>,
+            it will not repeat metadata inference. Any metadata that would be inferred should already be stored in the EndpointBuilder.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.RequestDelegateMetadataResult.EndpointMetadata">
+            <summary>
+            Gets endpoint metadata inferred from creating the <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate" />. If a non-null
+            RequestDelegateFactoryOptions.EndpointMetadata list was passed in, this will be the same instance.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Headers.RequestHeaders">
+            <summary>
+            Strongly typed HTTP request headers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.RequestHeaders.#ctor(Microsoft.AspNetCore.Http.IHeaderDictionary)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Headers.RequestHeaders"/>.
+            </summary>
+            <param name="headers">The request headers.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Headers">
+            <summary>
+            Gets the backing request header dictionary.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Accept">
+            <summary>
+            Gets or sets the <c>Accept</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.AcceptCharset">
+            <summary>
+            Gets or sets the <c>Accept-Charset</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.AcceptEncoding">
+            <summary>
+            Gets or sets the <c>Accept-Encoding</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.AcceptLanguage">
+            <summary>
+            Gets or sets the <c>Accept-Language</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.CacheControl">
+            <summary>
+            Gets or sets the <c>Cache-Control</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.ContentDisposition">
+            <summary>
+            Gets or sets the <c>Content-Disposition</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.ContentLength">
+            <summary>
+            Gets or sets the <c>Content-Length</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.ContentRange">
+            <summary>
+            Gets or sets the <c>Content-Range</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.ContentType">
+            <summary>
+            Gets or sets the <c>Content-Type</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Cookie">
+            <summary>
+            Gets or sets the <c>Cookie</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Date">
+            <summary>
+            Gets or sets the <c>Date</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Expires">
+            <summary>
+            Gets or sets the <c>Expires</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Host">
+            <summary>
+            Gets or sets the <c>Host</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.IfMatch">
+            <summary>
+            Gets or sets the <c>If-Match</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.IfModifiedSince">
+            <summary>
+            Gets or sets the <c>If-Modified-Since</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.IfNoneMatch">
+            <summary>
+            Gets or sets the <c>If-None-Match</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.IfRange">
+            <summary>
+            Gets or sets the <c>If-Range</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.IfUnmodifiedSince">
+            <summary>
+            Gets or sets the <c>If-Unmodified-Since</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.LastModified">
+            <summary>
+            Gets or sets the <c>Last-Modified</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Range">
+            <summary>
+            Gets or sets the <c>Range</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Referer">
+            <summary>
+            Gets or sets the <c>Referer</c> header for an HTTP request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Get``1(System.String)">
+            <summary>
+            Gets the value of header with <paramref name="name"/>.
+            </summary>
+            <remarks><typeparamref name="T"/> must contain a TryParse method with the signature <c>public static bool TryParse(string, out T)</c>.</remarks>
+            <typeparam name="T">The type of the header.
+            The given type must have a static TryParse method.</typeparam>
+            <param name="name">The name of the header to retrieve.</param>
+            <returns>The value of the header.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.RequestHeaders.GetList``1(System.String)">
+            <summary>
+            Gets the values of header with <paramref name="name"/>.
+            </summary>
+            <remarks><typeparamref name="T"/> must contain a TryParseList method with the signature <c>public static bool TryParseList(IList&lt;string&gt;, out IList&lt;T&gt;)</c>.</remarks>
+            <typeparam name="T">The type of the header.
+            The given type must have a static TryParseList method.</typeparam>
+            <param name="name">The name of the header to retrieve.</param>
+            <returns>List of values of the header.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Set(System.String,System.Object)">
+            <summary>
+            Sets the header value.
+            </summary>
+            <param name="name">The header name.</param>
+            <param name="value">The header value.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.RequestHeaders.SetList``1(System.String,System.Collections.Generic.IList{``0})">
+            <summary>
+            Sets the specified header and it's values.
+            </summary>
+            <typeparam name="T">The type of the value.</typeparam>
+            <param name="name">The header name.</param>
+            <param name="values">The sequence of header values.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.RequestHeaders.Append(System.String,System.Object)">
+            <summary>
+            Appends the header name and value.
+            </summary>
+            <param name="name">The header name.</param>
+            <param name="value">The header value.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.RequestHeaders.AppendList``1(System.String,System.Collections.Generic.IList{``0})">
+            <summary>
+            Appends the header name and it's values.
+            </summary>
+            <param name="name">The header name.</param>
+            <param name="values">The header values.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Headers.ResponseHeaders">
+            <summary>
+            Strongly typed HTTP response headers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.#ctor(Microsoft.AspNetCore.Http.IHeaderDictionary)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Headers.ResponseHeaders"/>.
+            </summary>
+            <param name="headers">The request headers.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.Headers">
+            <summary>
+            Gets the backing response header dictionary.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.CacheControl">
+            <summary>
+            Gets or sets the <c>Cache-Control</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.ContentDisposition">
+            <summary>
+            Gets or sets the <c>Content-Disposition</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.ContentLength">
+            <summary>
+            Gets or sets the <c>Content-Length</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.ContentRange">
+            <summary>
+            Gets or sets the <c>Content-Range</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.ContentType">
+            <summary>
+            Gets or sets the <c>Content-Type</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.Date">
+            <summary>
+            Gets or sets the <c>Date</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.ETag">
+            <summary>
+            Gets or sets the <c>ETag</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.Expires">
+            <summary>
+            Gets or sets the <c>Expires</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.LastModified">
+            <summary>
+            Gets or sets the <c>Last-Modified</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.Location">
+            <summary>
+            Gets or sets the <c>Location</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.SetCookie">
+            <summary>
+            Gets or sets the <c>Set-Cookie</c> header for an HTTP response.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.Get``1(System.String)">
+            <summary>
+            Gets the value of header with <paramref name="name"/>.
+            </summary>
+            <remarks><typeparamref name="T"/> must contain a TryParse method with the signature <c>public static bool TryParse(string, out T)</c>.</remarks>
+            <typeparam name="T">The type of the header.
+            The given type must have a static TryParse method.</typeparam>
+            <param name="name">The name of the header to retrieve.</param>
+            <returns>The value of the header.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.GetList``1(System.String)">
+            <summary>
+            Gets the values of header with <paramref name="name"/>.
+            </summary>
+            <remarks><typeparamref name="T"/> must contain a TryParseList method with the signature <c>public static bool TryParseList(IList&lt;string&gt;, out IList&lt;T&gt;)</c>.</remarks>
+            <typeparam name="T">The type of the header.
+            The given type must have a static TryParseList method.</typeparam>
+            <param name="name">The name of the header to retrieve.</param>
+            <returns>List of values of the header.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.Set(System.String,System.Object)">
+            <summary>
+            Sets the header value.
+            </summary>
+            <param name="name">The header name.</param>
+            <param name="value">The header value.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.SetList``1(System.String,System.Collections.Generic.IList{``0})">
+            <summary>
+            Sets the specified header and it's values.
+            </summary>
+            <typeparam name="T">The type of the value.</typeparam>
+            <param name="name">The header name.</param>
+            <param name="values">The sequence of header values.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.Append(System.String,System.Object)">
+            <summary>
+            Appends the header name and value.
+            </summary>
+            <param name="name">The header name.</param>
+            <param name="value">The header value.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Headers.ResponseHeaders.AppendList``1(System.String,System.Collections.Generic.IList{``0})">
+            <summary>
+            Appends the header name and it's values.
+            </summary>
+            <param name="name">The header name.</param>
+            <param name="values">The header values.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.ResponseExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.AspNetCore.Http.HttpResponse"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ResponseExtensions.Clear(Microsoft.AspNetCore.Http.HttpResponse)">
+            <summary>
+            Clears the HTTP response.
+            <para>
+            This invocation resets the response headers, response status code, and response body.
+            </para>
+            </summary>
+            <param name="response">The <see cref="T:Microsoft.AspNetCore.Http.HttpResponse"/> to clear.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ResponseExtensions.Redirect(Microsoft.AspNetCore.Http.HttpResponse,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Returns a redirect response (HTTP 301, HTTP 302, HTTP 307 or HTTP 308) to the client.
+            </summary>
+            <param name="response">The <see cref="T:Microsoft.AspNetCore.Http.HttpResponse"/> to redirect.</param>
+            <param name="location">The URL to redirect the client to. This must be properly encoded for use in http headers where only ASCII characters are allowed.</param>
+            <param name="permanent"><c>True</c> if the redirect is permanent (301 or 308), otherwise <c>false</c> (302 or 307).</param>
+            <param name="preserveMethod"><c>True</c> if the redirect needs to reuse the method and body (308 or 307), otherwise <c>false</c> (301 or 302).</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.SendFileResponseExtensions">
+            <summary>
+            Provides extensions for HttpResponse exposing the SendFile extension.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SendFileResponseExtensions.SendFileAsync(Microsoft.AspNetCore.Http.HttpResponse,Microsoft.Extensions.FileProviders.IFileInfo,System.Threading.CancellationToken)">
+            <summary>
+            Sends the given file using the SendFile extension.
+            </summary>
+            <param name="response"></param>
+            <param name="file">The file.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SendFileResponseExtensions.SendFileAsync(Microsoft.AspNetCore.Http.HttpResponse,Microsoft.Extensions.FileProviders.IFileInfo,System.Int64,System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Sends the given file using the SendFile extension.
+            </summary>
+            <param name="response"></param>
+            <param name="file">The file.</param>
+            <param name="offset">The offset in the file.</param>
+            <param name="count">The number of bytes to send, or null to send the remainder of the file.</param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SendFileResponseExtensions.SendFileAsync(Microsoft.AspNetCore.Http.HttpResponse,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Sends the given file using the SendFile extension.
+            </summary>
+            <param name="response"></param>
+            <param name="fileName">The full path to the file.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SendFileResponseExtensions.SendFileAsync(Microsoft.AspNetCore.Http.HttpResponse,System.String,System.Int64,System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Sends the given file using the SendFile extension.
+            </summary>
+            <param name="response"></param>
+            <param name="fileName">The full path to the file.</param>
+            <param name="offset">The offset in the file.</param>
+            <param name="count">The number of bytes to send, or null to send the remainder of the file.</param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.SessionExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SessionExtensions.SetInt32(Microsoft.AspNetCore.Http.ISession,System.String,System.Int32)">
+            <summary>
+            Sets an int value in the <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.
+            </summary>
+            <param name="session">The <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.</param>
+            <param name="key">The key to assign.</param>
+            <param name="value">The value to assign.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SessionExtensions.GetInt32(Microsoft.AspNetCore.Http.ISession,System.String)">
+            <summary>
+            Gets an int value from <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.
+            </summary>
+            <param name="session">The <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.</param>
+            <param name="key">The key to read.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SessionExtensions.SetString(Microsoft.AspNetCore.Http.ISession,System.String,System.String)">
+            <summary>
+            Sets a <see cref="T:System.String"/> value in the <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.
+            </summary>
+            <param name="session">The <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.</param>
+            <param name="key">The key to assign.</param>
+            <param name="value">The value to assign.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SessionExtensions.GetString(Microsoft.AspNetCore.Http.ISession,System.String)">
+            <summary>
+            Gets a string value from <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.
+            </summary>
+            <param name="session">The <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.</param>
+            <param name="key">The key to read.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SessionExtensions.Get(Microsoft.AspNetCore.Http.ISession,System.String)">
+            <summary>
+            Gets a byte-array value from <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.
+            </summary>
+            <param name="session">The <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.</param>
+            <param name="key">The key to read.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.TagsAttribute">
+            <summary>
+            Specifies a collection of tags in <see cref="P:Microsoft.AspNetCore.Http.Endpoint.Metadata"/>.
+            </summary>
+            <remarks>
+            The OpenAPI specification supports a tags classification to categorize operations
+            into related groups. These tags are typically included in the generated specification
+            and are typically used to group operations by tags in the UI.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.TagsAttribute.#ctor(System.String[])">
+            <summary>
+            Initializes an instance of the <see cref="T:Microsoft.AspNetCore.Http.TagsAttribute"/>.
+            </summary>
+            <param name="tags">The tags associated with the endpoint.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.TagsAttribute.Tags">
+            <summary>
+            Gets the collection of tags associated with the endpoint.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.TagsAttribute.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.PropertyAsParameterInfo.Flatten(System.Reflection.ParameterInfo[],Microsoft.AspNetCore.Http.ParameterBindingMethodCache)">
+            <summary>
+            Unwraps all parameters that contains <see cref="T:Microsoft.AspNetCore.Http.AsParametersAttribute"/> and
+            creates a flat list merging the current parameters, not including the
+            parameters that contain a <see cref="T:Microsoft.AspNetCore.Http.AsParametersAttribute"/>, and all additional
+            parameters detected.
+            </summary>
+            <param name="parameters">List of parameters to be flattened.</param>
+            <param name="cache">An instance of the method cache class.</param>
+            <returns>Flat list of parameters.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamCopyOperationInternal.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>Asynchronously reads the given number of bytes from the source stream and writes them to another stream.</summary>
+            <returns>A task that represents the asynchronous copy operation.</returns>
+            <param name="source">The stream from which the contents will be copied.</param>
+            <param name="destination">The stream to which the contents of the current stream will be copied.</param>
+            <param name="count">The count of bytes to be copied.</param>
+            <param name="cancel">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamCopyOperationInternal.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Nullable{System.Int64},System.Int32,System.Threading.CancellationToken)">
+            <summary>Asynchronously reads the given number of bytes from the source stream and writes them to another stream, using a specified buffer size.</summary>
+            <returns>A task that represents the asynchronous copy operation.</returns>
+            <param name="source">The stream from which the contents will be copied.</param>
+            <param name="destination">The stream to which the contents of the current stream will be copied.</param>
+            <param name="count">The count of bytes to be copied.</param>
+            <param name="bufferSize">The size, in bytes, of the buffer. This value must be greater than zero. The default size is 4096.</param>
+            <param name="cancel">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.FormMapping.Metadata.FormDataMetadataFactory.Log.__ConstructorParameterStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.FormMapping.Metadata.FormDataMetadataFactory.Log.__MatchingConstructorParameterFoundStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.FormMapping.Metadata.FormDataMetadataFactory.Log.__CustomParameterNameMetadataStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.DictionaryUnparsableKey">
+            <summary>The value '{0}' is not a valid key for '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.FormatDictionaryUnparsableKey(System.Object,System.Object)">
+            <summary>The value '{0}' is not a valid key for '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.EnumMappingError">
+            <summary>The value '{0}' is not valid for '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.FormatEnumMappingError(System.Object,System.Object)">
+            <summary>The value '{0}' is not valid for '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.MappingExceptionMessage">
+            <summary>An error occurred while trying to map a value from form data. For more details, see the 'Error' property and the 'InnerException' property.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.MaxCollectionSizeReached">
+            <summary>The number of elements in the {0} exceeded the maximum number of '{1}' elements allowed.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.FormatMaxCollectionSizeReached(System.Object,System.Object)">
+            <summary>The number of elements in the {0} exceeded the maximum number of '{1}' elements allowed.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.ParsableMappingError">
+            <summary>The value '{0}' is not valid for '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.FormatParsableMappingError(System.Object,System.Object)">
+            <summary>The value '{0}' is not valid for '{1}'.</summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.HttpJsonServiceExtensions">
+            <summary>
+            Extension methods to configure JSON serialization behavior.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpJsonServiceExtensions.ConfigureHttpJsonOptions(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Http.Json.JsonOptions})">
+            <summary>
+            Configures options used for reading and writing JSON when using
+            <see cref="O:Microsoft.AspNetCore.Http.HttpRequestJsonExtensions.ReadFromJsonAsync" />
+            and <see cref="O:Microsoft.AspNetCore.Http.HttpResponseJsonExtensions.WriteAsJsonAsync" />.
+            <see cref="T:Microsoft.AspNetCore.Http.Json.JsonOptions"/> uses default values from <c>JsonSerializerDefaults.Web</c>.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to configure options on.</param>
+            <param name="configureOptions">The <see cref="T:System.Action`1"/> to configure the
+            <see cref="T:Microsoft.AspNetCore.Http.Json.JsonOptions"/>, uses default values from <c>JsonSerializerDefaults.Web</c>.</param>
+            <returns>The modified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ProblemDetailsServiceCollectionExtensions">
+            <summary>
+            Contains extension methods to <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ProblemDetailsServiceCollectionExtensions.AddProblemDetails(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds services required for creation of <see cref="T:Microsoft.AspNetCore.Mvc.ProblemDetails"/> for failed requests.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ProblemDetailsServiceCollectionExtensions.AddProblemDetails(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Http.ProblemDetailsOptions})">
+            <summary>
+            Adds services required for creation of <see cref="T:Microsoft.AspNetCore.Mvc.ProblemDetails"/> for failed requests.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <param name="configure">The <see cref="T:Microsoft.AspNetCore.Http.ProblemDetailsOptions"/> to configure the services with.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.ObjectMethodExecutor.Execute(System.Object,System.Object[])">
+            <summary>
+            Executes the configured method on <paramref name="target"/>. This can be used whether or not
+            the configured method is asynchronous.
+            </summary>
+            <remarks>
+            Even if the target method is asynchronous, it's desirable to invoke it using Execute rather than
+            ExecuteAsync if you know at compile time what the return type is, because then you can directly
+            "await" that value (via a cast), and then the generated code will be able to reference the
+            resulting awaitable as a value-typed variable. If you use ExecuteAsync instead, the generated
+            code will have to treat the resulting awaitable as a boxed object, because it doesn't know at
+            compile time what type it would be.
+            </remarks>
+            <param name="target">The object whose method is to be executed.</param>
+            <param name="parameters">Parameters to pass to the method.</param>
+            <returns>The method return value.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.ObjectMethodExecutor.ExecuteAsync(System.Object,System.Object[])">
+             <summary>
+             Executes the configured method on <paramref name="target"/>. This can only be used if the configured
+             method is asynchronous.
+             </summary>
+             <remarks>
+             If you don't know at compile time the type of the method's returned awaitable, you can use ExecuteAsync,
+             which supplies an awaitable-of-object. This always works, but can incur several extra heap allocations
+             as compared with using Execute and then using "await" on the result value typecasted to the known
+             awaitable type. The possible extra heap allocations are for:
+            
+             1. The custom awaitable (though usually there's a heap allocation for this anyway, since normally
+                it's a reference type, and you normally create a new instance per call).
+             2. The custom awaiter (whether or not it's a value type, since if it's not, you need a new instance
+                of it, and if it is, it will have to be boxed so the calling code can reference it as an object).
+             3. The async result value, if it's a value type (it has to be boxed as an object, since the calling
+                code doesn't know what type it's going to be).
+             </remarks>
+             <param name="target">The object whose method is to be executed.</param>
+             <param name="parameters">Parameters to pass to the method.</param>
+             <returns>An object that you can "await" to get the method return value.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Internal.ObjectMethodExecutorAwaitable">
+            <summary>
+            Provides a common awaitable structure that <see cref="M:Microsoft.Extensions.Internal.ObjectMethodExecutor.ExecuteAsync(System.Object,System.Object[])"/> can
+            return, regardless of whether the underlying value is a System.Task, an FSharpAsync, or an
+            application-defined custom awaitable.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Internal.ObjectMethodExecutorFSharpSupport">
+            <summary>
+            Helper for detecting whether a given type is FSharpAsync`1, and if so, supplying
+            an <see cref="T:System.Linq.Expressions.Expression"/> for mapping instances of that type to a C# awaitable.
+            </summary>
+            <remarks>
+            The main design goal here is to avoid taking a compile-time dependency on
+            FSharp.Core.dll, because non-F# applications wouldn't use it. So all the references
+            to FSharp types have to be constructed dynamically at runtime.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.TypeNameHelper.GetTypeDisplayName(System.Type,System.Boolean,System.Boolean,System.Boolean,System.Char)">
+            <summary>
+            Pretty print a type name.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/>.</param>
+            <param name="fullName"><c>true</c> to print a fully qualified name.</param>
+            <param name="includeGenericParameterNames"><c>true</c> to include generic parameter names.</param>
+            <param name="includeGenericParameters"><c>true</c> to include generic parameters.</param>
+            <param name="nestedTypeDelimiter">Character to use as a delimiter in nested type names</param>
+            <returns>The pretty printed type name.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Internal.ClosedGenericMatcher">
+            <summary>
+            Helper related to generic interface definitions and implementing classes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.ClosedGenericMatcher.ExtractGenericInterface(System.Type,System.Type)">
+            <summary>
+            Determine whether <paramref name="queryType"/> is or implements a closed generic <see cref="T:System.Type"/>
+            created from <paramref name="interfaceType"/>.
+            </summary>
+            <param name="queryType">The <see cref="T:System.Type"/> of interest.</param>
+            <param name="interfaceType">The open generic <see cref="T:System.Type"/> to match. Usually an interface.</param>
+            <returns>
+            The closed generic <see cref="T:System.Type"/> created from <paramref name="interfaceType"/> that
+            <paramref name="queryType"/> is or implements. <c>null</c> if the two <see cref="T:System.Type"/>s have no such
+            relationship.
+            </returns>
+            <remarks>
+            This method will return <paramref name="queryType"/> if <paramref name="interfaceType"/> is
+            <c>typeof(KeyValuePair{,})</c>, and <paramref name="queryType"/> is
+            <c>typeof(KeyValuePair{string, object})</c>.
+            </remarks>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.GetPinnableReference">
+            <summary>
+            Get a pinnable reference to the builder.
+            Does not ensure there is a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/>
+            This overload is pattern matched in the C# 7.3+ compiler so you can omit
+            the explicit method call, and write eg "fixed (char* c = builder)"
+            </summary>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.GetPinnableReference(System.Boolean)">
+            <summary>
+            Get a pinnable reference to the builder.
+            </summary>
+            <param name="terminate">Ensures that the builder has a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/></param>
+        </member>
+        <member name="P:System.Text.ValueStringBuilder.RawChars">
+            <summary>Returns the underlying storage of the builder.</summary>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.AsSpan(System.Boolean)">
+            <summary>
+            Returns a span around the contents of the builder.
+            </summary>
+            <param name="terminate">Ensures that the builder has a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/></param>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.Grow(System.Int32)">
+            <summary>
+            Resize the internal buffer either by doubling current buffer size or
+            by adding <paramref name="additionalCapacityBeyondPos"/> to
+            <see cref="F:System.Text.ValueStringBuilder._pos"/> whichever is greater.
+            </summary>
+            <param name="additionalCapacityBeyondPos">
+            Number of chars requested beyond current position.
+            </param>
+        </member>
+    </members>
+</doc>

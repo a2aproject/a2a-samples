@@ -1,0 +1,878 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Components.Endpoints</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.Infrastructure.ComponentEndpointConventionBuilderHelper">
+            <summary>
+            This type is not recommended for use outside of the Blazor framework.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.Infrastructure.ComponentEndpointConventionBuilderHelper.AddRenderMode(Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder,Microsoft.AspNetCore.Components.IComponentRenderMode)">
+            <summary>
+            This method is not recommended for use outside of the Blazor framework.
+            </summary>
+            <param name="builder"></param>
+            <param name="renderMode"></param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.Infrastructure.RenderModeEndpointProvider">
+            <summary>
+            A provider that can register endpoints to support a specific <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.Infrastructure.RenderModeEndpointProvider.Supports(Microsoft.AspNetCore.Components.IComponentRenderMode)">
+            <summary>
+            Determines whether this <see cref="T:Microsoft.AspNetCore.Components.Endpoints.Infrastructure.RenderModeEndpointProvider"/> supports the specified <paramref name="renderMode"/>.
+            </summary>
+            <param name="renderMode">The <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/>.</param>
+            <returns><c>true</c> if the <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/> is supported; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.Infrastructure.RenderModeEndpointProvider.GetEndpointBuilders(Microsoft.AspNetCore.Components.IComponentRenderMode,Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Gets the endpoints for the specified <paramref name="renderMode"/>.
+            </summary>
+            <param name="renderMode">The <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/>.</param>
+            <param name="applicationBuilder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> used to configure non endpoint aware endpoints.</param>
+            <returns>The list of endpoints this provider is registering.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.ComponentTypeMetadata">
+            <summary>
+            Metadata that represents the component associated with an endpoint.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.ComponentTypeMetadata.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Components.Endpoints.ComponentTypeMetadata"/>.
+            </summary>
+            <param name="componentType">The component type.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.ComponentTypeMetadata.Type">
+            <summary>
+            Gets the component type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.RazorComponentDataSourceOptions">
+            <summary>
+            Options associated with the endpoints defined by the components in the
+            given <see cref="M:Microsoft.AspNetCore.Builder.RazorComponentsEndpointRouteBuilderExtensions.MapRazorComponents``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>
+            invocation.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.RootComponentMetadata">
+            <summary>
+            Metadata that represents the root component associated with an endpoint.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.RootComponentMetadata.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Components.Endpoints.RootComponentMetadata"/>.
+            </summary>
+            <param name="rootComponentType">The component type.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.RootComponentMetadata.Type">
+            <summary>
+            Gets the component type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.IComponentPrerenderer">
+            <summary>
+            A service that can prerender Razor Components as HTML.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.IComponentPrerenderer.PrerenderComponentAsync(Microsoft.AspNetCore.Http.HttpContext,System.Type,Microsoft.AspNetCore.Components.IComponentRenderMode,Microsoft.AspNetCore.Components.ParameterView)">
+            <summary>
+            Prerenders a Razor Component as HTML.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <param name="componentType">The type of component to prerender. This must implement <see cref="T:Microsoft.AspNetCore.Components.IComponent"/>.</param>
+            <param name="renderMode">The mode in which to prerender the component.</param>
+            <param name="parameters">Parameters for the component.</param>
+            <returns>A task that completes with the prerendered content.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.IComponentPrerenderer.PrerenderPersistedStateAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Components.PersistedStateSerializationMode)">
+            <summary>
+            Prepares a serialized representation of any component state that is persistible within the current request.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <param name="serializationMode">The <see cref="T:Microsoft.AspNetCore.Components.PersistedStateSerializationMode"/>.</param>
+            <returns>A task that completes with the prerendered state content.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.IComponentPrerenderer.Dispatcher">
+            <summary>
+            Gets a <see cref="P:Microsoft.AspNetCore.Components.Endpoints.IComponentPrerenderer.Dispatcher"/> that should be used for calls to <see cref="M:Microsoft.AspNetCore.Components.Endpoints.IComponentPrerenderer.PrerenderComponentAsync(Microsoft.AspNetCore.Http.HttpContext,System.Type,Microsoft.AspNetCore.Components.IComponentRenderMode,Microsoft.AspNetCore.Components.ParameterView)"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.RazorComponentsServiceOptions">
+            <summary>
+            Provides options for configuring server-side rendering of Razor Components.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.RazorComponentsServiceOptions.DetailedErrors">
+            <summary>
+            Gets or sets a value that determines whether to include detailed information on errors.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.RazorComponentsServiceOptions.MaxFormMappingCollectionSize">
+            <summary>
+            Gets or sets the maximum number of elements allowed in a form collection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.RazorComponentsServiceOptions.MaxFormMappingRecursionDepth">
+            <summary>
+            Gets or sets the maximum depth allowed when recursively mapping form data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.RazorComponentsServiceOptions.MaxFormMappingErrorCount">
+            <summary>
+            Gets or sets the maximum number of errors allowed when mapping form data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.RazorComponentsServiceOptions.MaxFormMappingKeySize">
+            <summary>
+            Gets or sets the maximum size of the buffer used to read form data keys.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.RazorComponentsServiceOptions.TemporaryRedirectionUrlValidityDuration">
+            <summary>
+            Gets or sets the lifetime of data protection validity for temporary redirection URLs
+            emitted by Blazor server-side rendering. These are only used transiently so the lifetime
+            only needs to be long enough for a client to receive the URL and begin navigation to it.
+            However, it should also be long enough to allow for clock skew across servers.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.FormMapping.Metadata.FormDataMetadataFactory.Log.__ConstructorParameterStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.FormMapping.Metadata.FormDataMetadataFactory.Log.__MatchingConstructorParameterFoundStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.FormMapping.Metadata.FormDataMetadataFactory.Log.__CustomParameterNameMetadataStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.DictionaryUnparsableKey">
+            <summary>The value '{0}' is not a valid key for '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.FormatDictionaryUnparsableKey(System.Object,System.Object)">
+            <summary>The value '{0}' is not a valid key for '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.EnumMappingError">
+            <summary>The value '{0}' is not valid for '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.FormatEnumMappingError(System.Object,System.Object)">
+            <summary>The value '{0}' is not valid for '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.MappingExceptionMessage">
+            <summary>An error occurred while trying to map a value from form data. For more details, see the 'Error' property and the 'InnerException' property.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.MaxCollectionSizeReached">
+            <summary>The number of elements in the {0} exceeded the maximum number of '{1}' elements allowed.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.FormatMaxCollectionSizeReached(System.Object,System.Object)">
+            <summary>The number of elements in the {0} exceeded the maximum number of '{1}' elements allowed.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.ParsableMappingError">
+            <summary>The value '{0}' is not valid for '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.FormMapping.FormDataResources.FormatParsableMappingError(System.Object,System.Object)">
+            <summary>The value '{0}' is not valid for '{1}'.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.IRazorComponentEndpointInvoker">
+            <summary>
+            Invokes a Razor component endpoint to render the given root component and populates the
+            <see cref="T:Microsoft.AspNetCore.Components.Routing.IRoutingStateProvider"/> with the given metadata (if any) to render a given
+            page.
+            </summary>
+            <remarks>
+            Razor component endpoints provide the root component via the <see cref="T:Microsoft.AspNetCore.Components.Endpoints.RootComponentMetadata"/>
+            metadata in the endpoint.
+            The page component is provided via the <see cref="T:Microsoft.AspNetCore.Components.Endpoints.ComponentTypeMetadata"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.IRazorComponentEndpointInvoker.Render(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the Razor component endpoint.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> for the current request.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that completes when the endpoint has been invoked and the component
+            has been rendered into the response.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.RazorComponentEndpointHost">
+             <summary>
+             Internal component type that acts as a root component when executing a Razor Component endpoint. It takes
+             care of rendering the component inside its hierarchy of layouts (via LayoutView) as well as converting
+             any information we want into component parameters. We could also use this to supply other data from the
+             original HttpContext as component parameters, e.g., for model binding.
+            
+             It happens to be almost the same as RouteView except it doesn't supply any query parameters. We can
+             resolve that at the same time we implement support for form posts.
+             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.EndpointComponentState.UpdateApplication(System.Type[])">
+            <summary>
+            MetadataUpdateHandler event. This is invoked by the hot reload host via reflection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.EndpointHtmlRenderer">
+             <summary>
+             A <see cref="T:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer"/> subclass which is also the implementation of the
+             <see cref="T:Microsoft.AspNetCore.Components.Endpoints.IComponentPrerenderer"/> DI service. This is the underlying mechanism shared by:
+            
+             * Html.RenderComponentAsync (the earliest prerendering mechanism - a Razor HTML helper)
+             * ComponentTagHelper (the primary prerendering mechanism before .NET 8)
+             * RazorComponentResult and RazorComponentEndpoint (the primary prerendering mechanisms since .NET 8)
+            
+             EndpointHtmlRenderer wraps the underlying <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRenderer"/> mechanism, annotating the
+             output with prerendering markers so the content can later switch into interactive mode when used with
+             blazor.*.js. It also deals with initializing the standard component DI services once per request.
+             </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Endpoints.SSRRenderModeBoundary">
+            <summary>
+            A component that describes a location in prerendered output where client-side code
+            should insert an interactive component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.Resources.FailedToInferComponentPersistenceMode">
+            <summary>The persistence mode could not be determined based on the rendered components. Specify a value.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.Resources.TypeMustDeriveFromType">
+            <summary>The type '{0}' must derive from '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.Resources.FormatTypeMustDeriveFromType(System.Object,System.Object)">
+            <summary>The type '{0}' must derive from '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.Resources.UnableToFindServices">
+            <summary>Unable to find the required services. Please add all the required services by calling '{0}.{1}' in the application startup code.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.Resources.FormatUnableToFindServices(System.Object,System.Object)">
+            <summary>Unable to find the required services. Please add all the required services by calling '{0}.{1}' in the application startup code.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Endpoints.Resources.UnsupportedRenderMode">
+            <summary>Unsupported RenderMode '{0}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Endpoints.Resources.FormatUnsupportedRenderMode(System.Object)">
+            <summary>Unsupported RenderMode '{0}'.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Infrastructure.RazorComponentApplicationAttribute">
+            <summary>
+            Indicates how to collect the components that are part of a razor components
+            application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Infrastructure.RazorComponentApplicationAttribute.GetBuilder">
+            <summary>
+            Creates a builder that can be used to customize the definition of the application.
+            For example, to add or remove pages, change routes, etc.
+            </summary>
+            <returns>
+            The <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/> associated with the application definition.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.PersistedStateSerializationMode">
+            <summary>
+            Specifies the mode to use when serializing component persistent state.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Components.PersistedStateSerializationMode.Infer">
+            <summary>
+            Indicates that the serialization mode should be inferred from the current request context.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Components.PersistedStateSerializationMode.Server">
+            <summary>
+            Indicates that the state should be persisted so that execution may resume on Server.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Components.PersistedStateSerializationMode.WebAssembly">
+            <summary>
+            Indicates that the state should be persisted so that execution may resume on WebAssembly.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Discovery.AssemblyComponentLibraryDescriptor">
+            <summary>
+            Represents an assembly along with the components and pages included in it.
+            </summary>
+            <remarks>
+            This API is meant to be consumed in a source generation context.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.AssemblyComponentLibraryDescriptor.#ctor(System.String,System.Collections.Generic.IReadOnlyList{Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder},System.Collections.Generic.IReadOnlyList{Microsoft.AspNetCore.Components.Discovery.ComponentBuilder})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Components.Discovery.AssemblyComponentLibraryDescriptor"/>.</summary>
+            <param name="name">The assembly name.</param>
+            <param name="pages">The list of pages in the assembly.</param>
+            <param name="components">The list of components in the assembly.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.AssemblyComponentLibraryDescriptor.AssemblyName">
+            <summary>
+            Gets the name of the assembly.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.AssemblyComponentLibraryDescriptor.Pages">
+            <summary>
+            Gets the pages in the assembly.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.AssemblyComponentLibraryDescriptor.Components">
+            <summary>
+            Gets the components in the assembly.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder">
+            <summary>
+            Builder used to configure a razor component application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder.Build">
+            <summary>
+            Builds the component application definition.
+            </summary>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.Discovery.RazorComponentApplication"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder.HasAssembly(System.String)">
+            <summary>
+            Indicates whether the current <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/> instance
+            has the given <paramref name="assemblyName"/>.
+            </summary>
+            <param name="assemblyName">The name of the assembly to check.</param>
+            <returns><c>true</c> when present; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder.AddAssembly(System.Reflection.Assembly)">
+            <summary>
+            Scans the given assembly for pages and adds them to the current set of pages.
+            </summary>
+            <param name="assembly">The <see cref="T:System.Reflection.Assembly"/> to scan for pages.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder.RemoveAssembly(System.Reflection.Assembly)">
+            <summary>
+            Removes all the discovered pages that are part of the given assembly.
+            </summary>
+            <param name="assembly">The <see cref="T:System.Reflection.Assembly"/> to remove.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder.AddLibrary(Microsoft.AspNetCore.Components.Discovery.AssemblyComponentLibraryDescriptor)">
+            <summary>
+            Adds a given assembly and associated pages and components to the build.
+            </summary>
+            <param name="libraryBuilder">The assembly with the pages and components.</param>
+            <exception cref="T:System.InvalidOperationException">When the assembly has already been added
+            to this component application builder.
+            </exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder.Combine(Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder)">
+            <summary>
+            Combines the two <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/> instances.
+            </summary>
+            <param name="other">The <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/> to merge.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder.Exclude(Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder)">
+            <summary>
+            Excludes the assemblies and other definitions in <paramref name="builder"/> from the
+            current <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/>.
+            </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder.RemoveLibrary(System.String)">
+            <summary>
+            Removes the given <paramref name="assembly"/> and the associated definitions from
+            the current <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/>.
+            </summary>
+            <param name="assembly">The assembly name.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder.GetBuilder``1">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/> for the given <typeparamref name="TComponent"/>.
+            </summary>
+            <typeparam name="TComponent">A component inside the assembly.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Discovery.ComponentBuilder">
+            <summary>
+            Represents a discovered component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.ComponentBuilder.AssemblyName">
+            <summary>
+            Gets or sets the assembly name where this component comes from.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.ComponentBuilder.ComponentType">
+            <summary>
+            Gets or sets the component type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.ComponentBuilder.RenderMode">
+            <summary>
+            Gets or sets the render mode for the component.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentBuilder.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentBuilder.Equals(Microsoft.AspNetCore.Components.Discovery.ComponentBuilder)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentBuilder.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Discovery.ComponentCollectionBuilder">
+            <summary>
+            Represents the list of components defined in a <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/>
+            before the configuration has finalized.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Discovery.ComponentInfo">
+            <summary>
+            Metadata captured for a component during discovery.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.ComponentInfo.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentInfo"/>.
+            </summary>
+            <param name="componentType">The component <see cref="T:System.Type"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.ComponentInfo.ComponentType">
+            <summary>
+            Gets the component <see cref="T:System.Type"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.ComponentInfo.RenderMode">
+            <summary>
+            Gets the component <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Discovery.PageCollectionBuilder">
+            <summary>
+            Represents the list of pages in a <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder">
+            <summary>
+            A razor component page <see cref="T:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder.AssemblyName">
+            <summary>
+            Gets or sets the assembly name where this component comes from.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder.RouteTemplates">
+            <summary>
+            Gets or sets the route templates for this page component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder.PageType">
+            <summary>
+            Gets or sets the page type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder.HasSource(System.String)">
+            <summary>
+            Compares the given <paramref name="source"/> against the source for this <see cref="T:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder"/>.
+            </summary>
+            <param name="source">The source to compare against.</param>
+            <returns><c>true</c> when it has the same source; false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder.Equals(Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.PageComponentBuilder.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Discovery.PageComponentInfo">
+            <summary>
+            The definition for a page, including the type and the associated routes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Discovery.PageComponentInfo.#ctor(System.String,System.Type,System.String,System.Collections.Generic.IReadOnlyList{System.Object})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Components.Discovery.PageComponentInfo"/>.
+            </summary>
+            <param name="displayName">The name for the page. Used for logging and debug purposes across the system.</param>
+            <param name="type">The page <see cref="T:System.Type"/>.</param>
+            <param name="route">The see list of routes for the page.</param>
+            <param name="metadata">The page metadata.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.PageComponentInfo.DisplayName">
+            <summary>
+            Gets the page display name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.PageComponentInfo.Type">
+            <summary>
+            Gets the page type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.PageComponentInfo.Route">
+            <summary>
+            Gets the routes for the page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.PageComponentInfo.Metadata">
+            <summary>
+            Gets the metadata for the page.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Discovery.RazorComponentApplication">
+            <summary>
+            The definition of a component based application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.RazorComponentApplication.Pages">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.AspNetCore.Components.Discovery.PageComponentInfo"/> associated with the application.
+            </summary>
+            <returns>The list of pages.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Discovery.RazorComponentApplication.Components">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentInfo"/> associated with the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.DefaultAntiforgeryStateProvider.GetAntiforgeryToken">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.DefaultAntiforgeryStateProvider.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder">
+            <summary>
+            Builds conventions that will be used for customization of <see cref="T:Microsoft.AspNetCore.Builder.EndpointBuilder"/> instances.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder.ApplicationBuilder">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Components.Discovery.ComponentApplicationBuilder"/> that is used to build the endpoints.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder.Add(System.Action{Microsoft.AspNetCore.Builder.EndpointBuilder})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder.Finally(System.Action{Microsoft.AspNetCore.Builder.EndpointBuilder})">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilderExtensions">
+            <summary>
+            Configures which assemblies are part of the given Razor Component Application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilderExtensions.AddAdditionalAssemblies(Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder,System.Reflection.Assembly[])">
+            <summary>
+            Adds the given additional assemblies to the component application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder"/>.</param>"/>
+            <param name="assemblies">The <see cref="T:System.Reflection.Assembly"/> instances to add.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder"/>.</returns>
+            <remarks>
+            The provided assemblies will be scanned for pages that will be mapped as endpoints.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RazorComponentsEndpointRouteBuilderExtensions">
+            <summary>
+            Extensions to <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> for razor component applications.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RazorComponentsEndpointRouteBuilderExtensions.MapRazorComponents``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)">
+            <summary>
+            Maps the page components defined in the specified <typeparamref name="TRootComponent"/> to the given assembly
+            and renders the component specified by <typeparamref name="TRootComponent"/> when the route matches.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder"/> that can be used to further configure the API.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Http.IResult"/> that renders a Razor Component.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult.#ctor(System.Type)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult"/>.
+            </summary>
+            <param name="componentType">The type of the component to render. This must implement <see cref="T:Microsoft.AspNetCore.Components.IComponent"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult.#ctor(System.Type,System.Object)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult"/>.
+            </summary>
+            <param name="componentType">The type of the component to render. This must implement <see cref="T:Microsoft.AspNetCore.Components.IComponent"/>.</param>
+            <param name="parameters">Parameters for the component.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult.#ctor(System.Type,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult"/>.
+            </summary>
+            <param name="componentType">The type of the component to render. This must implement <see cref="T:Microsoft.AspNetCore.Components.IComponent"/>.</param>
+            <param name="parameters">Parameters for the component.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult.ComponentType">
+            <summary>
+            Gets the component type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult.ContentType">
+            <summary>
+            Gets or sets the Content-Type header for the response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult.StatusCode">
+            <summary>
+            Gets or sets the HTTP status code.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult.Parameters">
+            <summary>
+            Gets the parameters for the component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult.PreventStreamingRendering">
+             <summary>
+             Gets or sets a flag to indicate whether streaming rendering should be prevented. If true, the renderer will
+             wait for the component hierarchy to complete asynchronous tasks such as loading before supplying the HTML response.
+             If false, streaming rendering will be determined by the components being rendered.
+            
+             The default value is false.
+             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult.ExecuteAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Processes this result in the given <paramref name="httpContext" />.
+            </summary>
+            <param name="httpContext">An <see cref="T:Microsoft.AspNetCore.Http.HttpContext" /> associated with the current request.</param >
+            <returns >A <see cref="T:System.Threading.Tasks.Task" /> which will complete when execution is completed.</returns >
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult`1">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Http.IResult"/> that renders a Razor Component.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult`1.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult`1.#ctor(System.Object)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult"/>.
+            </summary>
+            <param name="parameters">Parameters for the component.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult`1.#ctor(System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Http.HttpResults.RazorComponentResult"/>.
+            </summary>
+            <param name="parameters">Parameters for the component.</param>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Internal.LinkerFlags.JsonSerialized">
+            <summary>
+            Flags for a member that is JSON (de)serialized.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Internal.LinkerFlags.Component">
+            <summary>
+            Flags for a component
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Internal.LinkerFlags.JSInvokable">
+            <summary>
+            Flags for a JSInvokable type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.IRazorComponentsBuilder">
+            <summary>
+            A builder that can be used to configure Razor Components.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.DependencyInjection.IRazorComponentsBuilder.Services">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.RazorComponentsServiceCollectionExtensions">
+            <summary>
+            Provides methods for registering services required for server-side rendering of Razor Components.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.RazorComponentsServiceCollectionExtensions.AddRazorComponents(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Components.Endpoints.RazorComponentsServiceOptions})">
+            <summary>
+            Registers services required for server-side rendering of Razor Components.
+            </summary>
+            <param name="services">The service collection.</param>
+            <param name="configure">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.AspNetCore.Components.Endpoints.RazorComponentsServiceOptions"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IRazorComponentsBuilder"/> that can be used to further configure the Razor component services.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Internal.ClosedGenericMatcher">
+            <summary>
+            Helper related to generic interface definitions and implementing classes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.ClosedGenericMatcher.ExtractGenericInterface(System.Type,System.Type)">
+            <summary>
+            Determine whether <paramref name="queryType"/> is or implements a closed generic <see cref="T:System.Type"/>
+            created from <paramref name="interfaceType"/>.
+            </summary>
+            <param name="queryType">The <see cref="T:System.Type"/> of interest.</param>
+            <param name="interfaceType">The open generic <see cref="T:System.Type"/> to match. Usually an interface.</param>
+            <returns>
+            The closed generic <see cref="T:System.Type"/> created from <paramref name="interfaceType"/> that
+            <paramref name="queryType"/> is or implements. <c>null</c> if the two <see cref="T:System.Type"/>s have no such
+            relationship.
+            </returns>
+            <remarks>
+            This method will return <paramref name="queryType"/> if <paramref name="interfaceType"/> is
+            <c>typeof(KeyValuePair{,})</c>, and <paramref name="queryType"/> is
+            <c>typeof(KeyValuePair{string, object})</c>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.#ctor(System.Reflection.PropertyInfo)">
+            <summary>
+            Initializes a fast <see cref="T:Microsoft.Extensions.Internal.PropertyHelper"/>.
+            This constructor does not cache the helper. For caching, use <see cref="M:Microsoft.Extensions.Internal.PropertyHelper.GetProperties(System.Type)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.PropertyHelper.Property">
+            <summary>
+            Gets the backing <see cref="T:System.Reflection.PropertyInfo"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.PropertyHelper.Name">
+            <summary>
+            Gets (or sets in derived types) the property name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.PropertyHelper.ValueGetter">
+            <summary>
+            Gets the property value getter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.PropertyHelper.ValueSetter">
+            <summary>
+            Gets the property value setter.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetValue(System.Object)">
+            <summary>
+            Returns the property value for the specified <paramref name="instance"/>.
+            </summary>
+            <param name="instance">The object whose property value will be returned.</param>
+            <returns>The property value.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.SetValue(System.Object,System.Object)">
+            <summary>
+            Sets the property value for the specified <paramref name="instance" />.
+            </summary>
+            <param name="instance">The object whose property value will be set.</param>
+            <param name="value">The property value.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetProperties(System.Type)">
+            <summary>
+            Creates and caches fast property helpers that expose getters for every public get property on the
+            specified type.
+            </summary>
+            <param name="type">The type to extract property accessors for.</param>
+            <returns>A cached array of all public properties of the specified type.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetVisibleProperties(System.Type)">
+            <summary>
+            <para>
+            Creates and caches fast property helpers that expose getters for every non-hidden get property
+            on the specified type.
+            </para>
+            <para>
+            <see cref="M:GetVisibleProperties"/> excludes properties defined on base types that have been
+            hidden by definitions using the <c>new</c> keyword.
+            </para>
+            </summary>
+            <param name="type">The type to extract property accessors for.</param>
+            <returns>
+            A cached array of all public properties of the specified type.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.MakeFastPropertyGetter(System.Reflection.PropertyInfo)">
+            <summary>
+            Creates a single fast property getter. The result is not cached.
+            </summary>
+            <param name="propertyInfo">propertyInfo to extract the getter for.</param>
+            <returns>a fast getter.</returns>
+            <remarks>
+            This method is more memory efficient than a dynamically compiled lambda, and about the
+            same speed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.MakeNullSafeFastPropertyGetter(System.Reflection.PropertyInfo)">
+            <summary>
+            Creates a single fast property getter which is safe for a null input object. The result is not cached.
+            </summary>
+            <param name="propertyInfo">propertyInfo to extract the getter for.</param>
+            <returns>a fast getter.</returns>
+            <remarks>
+            This method is more memory efficient than a dynamically compiled lambda, and about the
+            same speed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.MakeFastPropertySetter(System.Reflection.PropertyInfo)">
+            <summary>
+            Creates a single fast property setter for reference types. The result is not cached.
+            </summary>
+            <param name="propertyInfo">propertyInfo to extract the setter for.</param>
+            <returns>a fast getter.</returns>
+            <remarks>
+            This method is more memory efficient than a dynamically compiled lambda, and about the
+            same speed. This only works for reference types.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.ObjectToDictionary(System.Object)">
+             <summary>
+             Given an object, adds each instance property with a public get method as a key and its
+             associated value to a dictionary.
+            
+             If the object is already an <see cref="T:System.Collections.Generic.IDictionary`2"/> instance, then a copy
+             is returned.
+             </summary>
+             <remarks>
+             The implementation of PropertyHelper will cache the property accessors per-type. This is
+             faster when the same type is used multiple times with ObjectToDictionary.
+             </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetVisibleProperties(System.Type,System.Collections.Concurrent.ConcurrentDictionary{System.Type,Microsoft.Extensions.Internal.PropertyHelper[]},System.Collections.Concurrent.ConcurrentDictionary{System.Type,Microsoft.Extensions.Internal.PropertyHelper[]})">
+            <summary>
+            <para>
+            Creates and caches fast property helpers that expose getters for every non-hidden get property
+            on the specified type.
+            </para>
+            <para>
+            <see cref="M:GetVisibleProperties"/> excludes properties defined on base types that have been
+            hidden by definitions using the <c>new</c> keyword.
+            </para>
+            </summary>
+            <param name="type">The type to extract property accessors for.</param>
+            <param name="allPropertiesCache">The cache to store results in. Use <see cref="F:Microsoft.Extensions.Internal.PropertyHelper.PropertiesCache"/> to use the default cache. Use <see langword="null"/> to avoid caching.</param>
+            <param name="visiblePropertiesCache">The cache to store results in. Use <see cref="F:Microsoft.Extensions.Internal.PropertyHelper.VisiblePropertiesCache"/> if the calling type does not have its own independent cache. Use <see langword="null"/> to avoid caching.</param>
+            <returns>
+            A cached array of all public properties of the specified type.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetProperties(System.Type,System.Collections.Concurrent.ConcurrentDictionary{System.Type,Microsoft.Extensions.Internal.PropertyHelper[]})">
+            <summary>
+            Creates and caches fast property helpers that expose getters for every public get property on the
+            specified type.
+            </summary>
+            <param name="type">The type to extract property accessors for.</param>
+            <param name="cache">The cache to store results in. Use <see cref="F:Microsoft.Extensions.Internal.PropertyHelper.PropertiesCache"/> to use the default cache. Use <see langword="null"/> to avoid caching.</param>
+            <returns>A cached array of all public properties of the specified type.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.MetadataUpdateHandler.ClearCache(System.Type[])">
+            <summary>
+            Invoked as part of <see cref="T:System.Reflection.Metadata.MetadataUpdateHandlerAttribute" /> contract for hot reload.
+            </summary>
+        </member>
+    </members>
+</doc>

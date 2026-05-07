@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Microsoft.Managed.Core.targets"/>
+
+  <Target Name="CoreCompile"
+          Inputs="$(MSBuildAllProjects);
+                  @(Compile);
+                  @(_CoreCompileResourceInputs);
+                  $(ApplicationIcon);
+                  $(KeyOriginatorFile);
+                  @(ReferencePathWithRefAssemblies);
+                  @(CompiledLicenseFile);
+                  @(LinkResource);
+                  @(EmbeddedDocumentation);
+                  $(Win32Resource);
+                  $(Win32Manifest);
+                  @(CustomAdditionalCompileInputs);
+                  $(ResolvedCodeAnalysisRuleSet);
+                  @(AdditionalFiles);
+                  @(EmbeddedFiles);
+                  @(Analyzer);
+                  @(EditorConfigFiles);
+                  $(SourceLink)"
+          Outputs="@(DocFileItem);
+                   @(IntermediateAssembly);
+                   @(IntermediateRefAssembly);
+                   @(_DebugSymbolsIntermediatePath);
+                   $(NonExistentFile);
+                   @(CustomAdditionalCompileOutputs)"
+          Returns="@(VbcCommandLineArgs)"
+          DependsOnTargets="$(CoreCompileDependsOn);_BeforeVBCSCoreCompile">
+    <PropertyGroup>
+      <_NoWarnings Condition="'$(WarningLevel)' == '0'">true</_NoWarnings>
+      <_NoWarnings Condition="'$(WarningLevel)' == '1'">false</_NoWarnings>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <!-- If we are targeting winmdobj we want to specifically the pdbFile property since we do not want it to collide with the output of winmdexp-->
+      <PdbFile Condition="'$(PdbFile)' == '' AND '$(OutputType)' == 'winmdobj' AND '$(DebugSymbols)' == 'true'">$(IntermediateOutputPath)$(TargetName).compile.pdb</PdbFile>
+    </PropertyGroup>
+
+    <!-- Condition is to filter out the _CoreCompileResourceInputs so that it doesn't pass in culture resources to the compiler -->
+    <Vbc Condition="'%(_CoreCompileResourceInputs.WithCulture)' != 'true'"
+         AdditionalLibPaths="$(AdditionalLibPaths)"
+         AddModules="@(AddModules)"
+         AdditionalFiles="@(AdditionalFiles)"
+         AnalyzerConfigFiles="@(EditorConfigFiles)"
+         Analyzers="@(Analyzer)"
+         BaseAddress="$(BaseAddress)"
+         ChecksumAlgorithm="$(ChecksumAlgorithm)"
+         CodeAnalysisRuleSet="$(ResolvedCodeAnalysisRuleSet)"
+         CodePage="$(CodePage)"
+         DebugType="$(DebugType)"
+         DefineConstants="$(FinalDefineConstants)"
+         DelaySign="$(DelaySign)"
+         DisableSdkPath="$(DisableSdkPath)"
+         DisabledWarnings="$(NoWarn)"
+         DocumentationFile="@(DocFileItem)"
+         EmbedAllSources="$(EmbedAllSources)"
+         EmbeddedFiles="@(EmbeddedFiles)"
+         EmitDebugInformation="$(DebugSymbols)"
+         EnvironmentVariables="$(VbcEnvironment)"
+         ErrorLog="$(ErrorLog)"
+         ErrorReport="$(ErrorReport)"
+         Features="$(Features)"
+         FileAlignment="$(FileAlignment)"
+         GenerateDocumentation="$(GenerateDocumentation)"
+         GeneratedFilesOutputPath="$(CompilerGeneratedFilesOutputPath)"
+         HighEntropyVA="$(HighEntropyVA)"
+         Imports="@(Import)"
+         Instrument="$(Instrument)"
+         KeyContainer="$(KeyContainerName)"
+         KeyFile="$(KeyOriginatorFile)"
+         LangVersion="$(LangVersion)"
+         LinkResources="@(LinkResource)"
+         MainEntryPoint="$(StartupObject)"
+         ModuleAssemblyName="$(ModuleAssemblyName)"
+         NoConfig="true"
+         NoStandardLib="$(NoCompilerStandardLib)"
+         NoVBRuntimeReference="$(NoVBRuntimeReference)"
+         NoWarnings="$(_NoWarnings)"
+         NoWin32Manifest="$(NoWin32Manifest)"
+         Optimize="$(Optimize)"
+         Deterministic="$(Deterministic)"
+         PublicSign="$(PublicSign)"
+         OptionCompare="$(OptionCompare)"
+         OptionExplicit="$(OptionExplicit)"
+         OptionInfer="$(OptionInfer)"
+         OptionStrict="$(OptionStrict)"
+         OptionStrictType="$(OptionStrictType)"
+         OutputAssembly="@(IntermediateAssembly)"
+         OutputRefAssembly="@(IntermediateRefAssembly)"
+         PdbFile="$(PdbFile)"
+         Platform="$(PlatformTarget)"
+         Prefer32Bit="$(Prefer32Bit)"
+         PreferredUILang="$(PreferredUILang)"
+         ProjectName="$(MSBuildProjectName)"
+         ProvideCommandLineArgs="$(ProvideCommandLineArgs)"
+         References="@(ReferencePathWithRefAssemblies)"
+         RefOnly="$(ProduceOnlyReferenceAssembly)"
+         RemoveIntegerChecks="$(RemoveIntegerChecks)"
+         ReportAnalyzer="$(ReportAnalyzer)"
+         ReportIVTs="$(ReportIVTs)"
+         Resources="@(_CoreCompileResourceInputs);@(CompiledLicenseFile)"
+         ResponseFiles="$(CompilerResponseFile)"
+         RootNamespace="$(RootNamespace)"
+         RuntimeMetadataVersion="$(RuntimeMetadataVersion)"
+         SdkPath="$(FrameworkPathOverride)"
+         SharedCompilationId="$(SharedCompilationId)"
+         SkipAnalyzers="$(_SkipAnalyzers)"
+         SkipCompilerExecution="$(SkipCompilerExecution)"
+         Sources="@(Compile)"
+         SubsystemVersion="$(SubsystemVersion)"
+         TargetCompactFramework="$(TargetCompactFramework)"
+         TargetType="$(OutputType)"
+         TargetFramework="$(TargetFramework)"
+         ToolExe="$(VbcToolExe)"
+         ToolPath="$(VbcToolPath)"
+         TreatWarningsAsErrors="$(TreatWarningsAsErrors)"
+         UseHostCompilerIfAvailable="$(UseHostCompilerIfAvailable)"
+         UseSharedCompilation="$(UseSharedCompilation)"
+         Utf8Output="$(Utf8Output)"
+         VBRuntimePath="$(VBRuntimePath)"
+         Verbosity="$(VbcVerbosity)"
+         VsSessionGuid="$(VsSessionGuid)"
+         WarningsAsErrors="$(WarningsAsErrors)"
+         WarningsNotAsErrors="$(WarningsNotAsErrors)"
+         Win32Icon="$(ApplicationIcon)"
+         Win32Manifest="$(Win32Manifest)"
+         Win32Resource="$(Win32Resource)"
+         VBRuntime="$(VBRuntime)"
+         PathMap="$(PathMap)"
+         SourceLink="$(SourceLink)">
+      <Output TaskParameter="CommandLineArgs" ItemName="VbcCommandLineArgs" />
+    </Vbc>
+    <ItemGroup>
+      <_CoreCompileResourceInputs Remove="@(_CoreCompileResourceInputs)" />
+    </ItemGroup>
+
+    <CallTarget Targets="$(TargetsTriggeredByCompilation)" Condition="'$(TargetsTriggeredByCompilation)' != ''" />
+  </Target>
+
+  <!-- When we load a project in Visual Studio, the project system first does an evaluation pass of the
+       project, and hands the resulting list of <Compile> items to the language service. It then does an
+       execution pass executing CoreCompile passing SkipCompilerExecution=true and ProvideCommandLineArgs=true,
+       that resulting command line string is where we get our compiler switches. The execution pass is much
+       slower than the evaluation pass, so there's a window of time where we have a list of files, but not
+       any options yet.
+
+       Because there's a gap, that means there's a time where we are parsing source files with the default
+       parse options. We'll then have to reparse them a second time which isn't great. It also means any
+       cache lookups we do won't have the right options either, so the cache lookups might miss.
+
+       To help this, we'll have properties for the evaluation pass which is an "approximation" of the
+       options that would come out of CoreCompile, but only the ones that are required to be specified
+       and we don't expect them to change after evaluation phase or those that matter for parsing.
+
+       It's acceptable for the options that affect parsing to be imperfect: once the execution pass is complete we'll use those options instead,
+       so any behaviors here that don't match the real command line generation will only be temporary, and
+       probably won't be any worse than having no options at all. -->
+  <PropertyGroup>
+    <CommandLineArgsForDesignTimeEvaluation>-langversion:$(LangVersion)</CommandLineArgsForDesignTimeEvaluation>
+    <CommandLineArgsForDesignTimeEvaluation Condition="'$(ChecksumAlgorithm)' != ''">$(CommandLineArgsForDesignTimeEvaluation) -checksumalgorithm:$(ChecksumAlgorithm)</CommandLineArgsForDesignTimeEvaluation>
+    <CommandLineArgsForDesignTimeEvaluation Condition="'$(FinalDefineConstants)' != ''">$(CommandLineArgsForDesignTimeEvaluation) -define:$(FinalDefineConstants)</CommandLineArgsForDesignTimeEvaluation>
+  </PropertyGroup>
+</Project>

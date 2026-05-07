@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Diagnostics.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.CompilationFailure">
+            <summary>
+            Describes a failure compiling a specific file.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.CompilationFailure.#ctor(System.String,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Diagnostics.DiagnosticMessage})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Diagnostics.CompilationFailure"/>.
+            </summary>
+            <param name="sourceFilePath">Path for the file that produced the compilation failure.</param>
+            <param name="sourceFileContent">Contents of the file being compiled.</param>
+            <param name="compiledContent">For templated languages (such as Asp.Net Core Razor), the generated content.
+            </param>
+            <param name="messages">One or or more <see cref="T:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage"/> instances.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.CompilationFailure.#ctor(System.String,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Diagnostics.DiagnosticMessage},System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Diagnostics.CompilationFailure"/>.
+            </summary>
+            <param name="sourceFilePath">Path for the file that produced the compilation failure.</param>
+            <param name="sourceFileContent">Contents of the file being compiled.</param>
+            <param name="compiledContent">For templated languages (such as Asp.Net Core Razor), the generated content.
+            </param>
+            <param name="messages">One or or more <see cref="T:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage"/> instances.</param>
+            <param name="failureSummary">Summary message or instructions to fix the failure.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.CompilationFailure.SourceFilePath">
+            <summary>
+            Path of the file that produced the compilation failure.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.CompilationFailure.SourceFileContent">
+            <summary>
+            Contents of the file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.CompilationFailure.CompiledContent">
+            <summary>
+            Contents being compiled.
+            </summary>
+            <remarks>
+            For templated files, the <see cref="P:Microsoft.AspNetCore.Diagnostics.CompilationFailure.SourceFileContent"/> represents the original content and
+            <see cref="P:Microsoft.AspNetCore.Diagnostics.CompilationFailure.CompiledContent"/> represents the transformed content. This property can be null if
+            the exception is encountered during transformation.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.CompilationFailure.Messages">
+            <summary>
+            Gets a sequence of <see cref="T:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage"/> produced as a result of compilation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.CompilationFailure.FailureSummary">
+            <summary>
+            Summary message or instructions to fix the failure.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage">
+            <summary>
+            A single diagnostic message.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage.#ctor(System.String,System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage"/>.
+            </summary>
+            <param name="message">The error message.</param>
+            <param name="formattedMessage">The formatted error message.</param>
+            <param name="filePath">The path of the file that produced the message.</param>
+            <param name="startLine">The one-based line index for the start of the compilation error.</param>
+            <param name="startColumn">The zero-based column index for the start of the compilation error.</param>
+            <param name="endLine">The one-based line index for the end of the compilation error.</param>
+            <param name="endColumn">The zero-based column index for the end of the compilation error.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage.SourceFilePath">
+            <summary>
+            Path of the file that produced the message.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage.Message">
+            <summary>
+            Gets the error message.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage.StartLine">
+            <summary>
+            Gets the one-based line index for the start of the compilation error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage.StartColumn">
+            <summary>
+            Gets the zero-based column index for the start of the compilation error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage.EndLine">
+            <summary>
+            Gets the one-based line index for the end of the compilation error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage.EndColumn">
+            <summary>
+            Gets the zero-based column index for the end of the compilation error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.DiagnosticMessage.FormattedMessage">
+            <summary>
+            Gets the formatted error message.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.ErrorContext">
+            <summary>
+            Provides context about the error currently being handled by the DeveloperExceptionPageMiddleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.ErrorContext.#ctor(Microsoft.AspNetCore.Http.HttpContext,System.Exception)">
+            <summary>
+            Initializes the ErrorContext with the specified <see cref="P:Microsoft.AspNetCore.Diagnostics.ErrorContext.HttpContext"/> and <see cref="P:Microsoft.AspNetCore.Diagnostics.ErrorContext.Exception"/>.
+            </summary>
+            <param name="httpContext"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ErrorContext.HttpContext">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Diagnostics.ErrorContext.HttpContext"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ErrorContext.Exception">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Diagnostics.ErrorContext.Exception"/> thrown during request processing.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.ICompilationException">
+            <summary>
+            Specifies the contract for an exception representing compilation failure.
+            </summary>
+            <remarks>
+            This interface is implemented on exceptions thrown during compilation to enable consumers
+            to read compilation-related data out of the exception
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ICompilationException.CompilationFailures">
+            <summary>
+            Gets a sequence of <see cref="T:Microsoft.AspNetCore.Diagnostics.CompilationFailure"/> with compilation failures.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.IDeveloperPageExceptionFilter">
+            <summary>
+            Provides an extensibility point for changing the behavior of the DeveloperExceptionPageMiddleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.IDeveloperPageExceptionFilter.HandleExceptionAsync(Microsoft.AspNetCore.Diagnostics.ErrorContext,System.Func{Microsoft.AspNetCore.Diagnostics.ErrorContext,System.Threading.Tasks.Task})">
+            <summary>
+            An exception handling method that is used to either format the exception or delegate to the next handler in the chain.
+            </summary>
+            <param name="errorContext">The error context.</param>
+            <param name="next">The next filter in the pipeline.</param>
+            <returns>A task the completes when the handler is done executing.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature">
+            <summary>
+            Represents a feature containing the error of the original request to be examined by an exception handler.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature.Error">
+            <summary>
+            The error encountered during the original request
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature.Path">
+            <summary>
+            The portion of the request path that identifies the requested resource. The value
+            is un-escaped.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature.Endpoint">
+            <summary>
+            Gets the selected <see cref="T:Microsoft.AspNetCore.Http.Endpoint"/> for the original request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature.RouteValues">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Routing.RouteValueDictionary"/> associated with the original request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature">
+            <summary>
+            Represents an exception handler with the original path of the request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature.Path">
+            <summary>
+            The portion of the request path that identifies the requested resource. The value
+            is un-escaped.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.IStatusCodePagesFeature">
+            <summary>
+            Represents the Status code pages feature.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IStatusCodePagesFeature.Enabled">
+            <summary>
+            Indicates if the status code middleware will handle responses.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.IStatusCodeReExecuteFeature">
+            <summary>
+            Represents a feature containing the path details of the original request. This feature is provided by the
+            StatusCodePagesMiddleware when it re-execute the request pipeline with an alternative path to generate the
+            response body.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IStatusCodeReExecuteFeature.OriginalPathBase">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.PathBase"/> of the original request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IStatusCodeReExecuteFeature.OriginalPath">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Path"/> of the original request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IStatusCodeReExecuteFeature.OriginalQueryString">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.QueryString"/> of the original request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IStatusCodeReExecuteFeature.OriginalStatusCode">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Http.HttpResponse.StatusCode"/> of the original response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IStatusCodeReExecuteFeature.Endpoint">
+            <summary>
+            Gets the selected <see cref="T:Microsoft.AspNetCore.Http.Endpoint"/> for the original request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.IStatusCodeReExecuteFeature.RouteValues">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Routing.RouteValueDictionary"/> associated with the original request.
+            </summary>
+        </member>
+    </members>
+</doc>

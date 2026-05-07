@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Net.WebProxy</name>
+  </assembly>
+  <members>
+    <member name="T:System.Net.IWebProxyScript">
+      <summary>Provides the base interface to load and execute scripts for automatic proxy detection.</summary>
+    </member>
+    <member name="M:System.Net.IWebProxyScript.Close">
+      <summary>Closes a script.</summary>
+    </member>
+    <member name="M:System.Net.IWebProxyScript.Load(System.Uri,System.String,System.Type)">
+      <summary>Loads a script.</summary>
+      <param name="scriptLocation">Internal only.</param>
+      <param name="script">Internal only.</param>
+      <param name="helperType">Internal only.</param>
+      <returns>A <see cref="T:System.Boolean" /> indicating whether the script was successfully loaded.</returns>
+    </member>
+    <member name="M:System.Net.IWebProxyScript.Run(System.String,System.String)">
+      <summary>Runs a script.</summary>
+      <param name="url">Internal only.</param>
+      <param name="host">Internal only.</param>
+      <returns>A <see cref="T:System.String" />.  
+  
+ An internal-only value returned.</returns>
+    </member>
+    <member name="T:System.Net.WebProxy">
+      <summary>Contains HTTP proxy settings for the <see cref="T:System.Net.Http.HttpClient" /> class.</summary>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor">
+      <summary>Initializes an empty instance of the <see cref="T:System.Net.WebProxy" /> class.</summary>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Initializes an instance of the <see cref="T:System.Net.WebProxy" /> class using previously serialized content.</summary>
+      <param name="serializationInfo">The serialization data.</param>
+      <param name="streamingContext">The context for the serialized data.</param>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.WebProxy" /> class with the specified URI.</summary>
+      <param name="Address">The URI of the proxy server.</param>
+      <exception cref="T:System.UriFormatException">
+        <paramref name="Address" /> is an invalid URI.</exception>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.String,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.WebProxy" /> class with the specified URI and bypass setting.</summary>
+      <param name="Address">The URI of the proxy server.</param>
+      <param name="BypassOnLocal">
+        <see langword="true" /> to bypass the proxy for local addresses; otherwise, <see langword="false" />.</param>
+      <exception cref="T:System.UriFormatException">
+        <paramref name="Address" /> is an invalid URI.</exception>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.String,System.Boolean,System.String[])">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.WebProxy" /> class with the specified URI, bypass setting, and list of URIs to bypass.</summary>
+      <param name="Address">The URI of the proxy server.</param>
+      <param name="BypassOnLocal">
+        <see langword="true" /> to bypass the proxy for local addresses; otherwise, <see langword="false" />.</param>
+      <param name="BypassList">An array of regular expression strings that contain the URIs of the servers to bypass.</param>
+      <exception cref="T:System.UriFormatException">
+        <paramref name="Address" /> is an invalid URI.</exception>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.String,System.Boolean,System.String[],System.Net.ICredentials)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.WebProxy" /> class with the specified URI, bypass setting, list of URIs to bypass, and credentials.</summary>
+      <param name="Address">The URI of the proxy server.</param>
+      <param name="BypassOnLocal">
+        <see langword="true" /> to bypass the proxy for local addresses; otherwise, <see langword="false" />.</param>
+      <param name="BypassList">An array of regular expression strings that contains the URIs of the servers to bypass.</param>
+      <param name="Credentials">An <see cref="T:System.Net.ICredentials" /> instance to submit to the proxy server for authentication.</param>
+      <exception cref="T:System.UriFormatException">
+        <paramref name="Address" /> is an invalid URI.</exception>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.String,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.WebProxy" /> class with the specified host and port number.</summary>
+      <param name="Host">The name of the proxy host.</param>
+      <param name="Port">The port number on <paramref name="Host" /> to use.</param>
+      <exception cref="T:System.UriFormatException">The URI formed by combining <paramref name="Host" /> and <paramref name="Port" /> is not a valid URI.</exception>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.Uri)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.WebProxy" /> class from the specified <see cref="T:System.Uri" /> instance.</summary>
+      <param name="Address">A <see cref="T:System.Uri" /> instance that contains the address of the proxy server.</param>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.Uri,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.WebProxy" /> class with the <see cref="T:System.Uri" /> instance and bypass setting.</summary>
+      <param name="Address">A <see cref="T:System.Uri" /> instance that contains the address of the proxy server.</param>
+      <param name="BypassOnLocal">
+        <see langword="true" /> to bypass the proxy for local addresses; otherwise, <see langword="false" />.</param>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.Uri,System.Boolean,System.String[])">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.WebProxy" /> class with the specified <see cref="T:System.Uri" /> instance, bypass setting, and list of URIs to bypass.</summary>
+      <param name="Address">A <see cref="T:System.Uri" /> instance that contains the address of the proxy server.</param>
+      <param name="BypassOnLocal">
+        <see langword="true" /> to bypass the proxy for local addresses; otherwise, <see langword="false" />.</param>
+      <param name="BypassList">An array of regular expression strings that contains the URIs of the servers to bypass.</param>
+    </member>
+    <member name="M:System.Net.WebProxy.#ctor(System.Uri,System.Boolean,System.String[],System.Net.ICredentials)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.WebProxy" /> class with the specified <see cref="T:System.Uri" /> instance, bypass setting, list of URIs to bypass, and credentials.</summary>
+      <param name="Address">A <see cref="T:System.Uri" /> instance that contains the address of the proxy server.</param>
+      <param name="BypassOnLocal">
+        <see langword="true" /> to bypass the proxy for local addresses; otherwise, <see langword="false" />.</param>
+      <param name="BypassList">An array of regular expression strings that contains the URIs of the servers to bypass.</param>
+      <param name="Credentials">An <see cref="T:System.Net.ICredentials" /> instance to submit to the proxy server for authentication.</param>
+    </member>
+    <member name="M:System.Net.WebProxy.GetDefaultProxy">
+      <summary>Reads the Internet Explorer nondynamic proxy settings.</summary>
+      <exception cref="T:System.PlatformNotSupportedException">On .NET Core.</exception>
+      <returns>A <see cref="T:System.Net.WebProxy" /> instance that contains the nondynamic proxy settings from Internet Explorer 5.5 and later.</returns>
+    </member>
+    <member name="M:System.Net.WebProxy.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data that is needed to serialize the target object.</summary>
+      <param name="serializationInfo">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+      <param name="streamingContext">A <see cref="T:System.Runtime.Serialization.StreamingContext" /> that specifies the destination for this serialization.</param>
+    </member>
+    <member name="M:System.Net.WebProxy.GetProxy(System.Uri)">
+      <summary>Returns the proxied URI for a request.</summary>
+      <param name="destination">The <see cref="T:System.Uri" /> instance of the requested Internet resource.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="destination" /> parameter is <see langword="null" />.</exception>
+      <returns>The <see cref="T:System.Uri" /> instance of the Internet resource, if the resource is on the bypass list; otherwise, the <see cref="T:System.Uri" /> instance of the proxy.</returns>
+    </member>
+    <member name="M:System.Net.WebProxy.IsBypassed(System.Uri)">
+      <summary>Indicates whether to use the proxy server for the specified host.</summary>
+      <param name="host">The <see cref="T:System.Uri" /> instance of the host to check for proxy use.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="host" /> parameter is <see langword="null" />.</exception>
+      <returns>
+        <see langword="true" /> if the proxy server should not be used for <paramref name="host" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Net.WebProxy.System#Runtime#Serialization#ISerializable#GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Creates the serialization data and context that are used by the system to serialize a <see cref="T:System.Net.WebProxy" /> object.</summary>
+      <param name="serializationInfo">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> object to populate with data.</param>
+      <param name="streamingContext">A <see cref="T:System.Runtime.Serialization.StreamingContext" /> structure that indicates the destination for this serialization.</param>
+    </member>
+    <member name="P:System.Net.WebProxy.Address">
+      <summary>Gets or sets the address of the proxy server.</summary>
+      <returns>A <see cref="T:System.Uri" /> instance that contains the address of the proxy server.</returns>
+    </member>
+    <member name="P:System.Net.WebProxy.BypassArrayList">
+      <summary>Gets a list of addresses that do not use the proxy server.</summary>
+      <returns>An <see cref="T:System.Collections.ArrayList" /> that contains a list of <see cref="P:System.Net.WebProxy.BypassList" /> arrays that represents URIs that do not use the proxy server when accessed.</returns>
+    </member>
+    <member name="P:System.Net.WebProxy.BypassList">
+      <summary>Gets or sets an array of addresses that do not use the proxy server.</summary>
+      <returns>An array that contains a list of regular expressions that describe URIs that do not use the proxy server when accessed.</returns>
+    </member>
+    <member name="P:System.Net.WebProxy.BypassProxyOnLocal">
+      <summary>Gets or sets a value that indicates whether to bypass the proxy server for local addresses.</summary>
+      <returns>
+        <see langword="true" /> to bypass the proxy server for local addresses; otherwise, <see langword="false" />. The default value is <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Net.WebProxy.Credentials">
+      <summary>Gets or sets the credentials to submit to the proxy server for authentication.</summary>
+      <exception cref="T:System.InvalidOperationException">You attempted to set this property when the <see cref="P:System.Net.WebProxy.UseDefaultCredentials" /> property was set to <see langword="true" />.</exception>
+      <returns>An <see cref="T:System.Net.ICredentials" /> instance that contains the credentials to submit to the proxy server for authentication.</returns>
+    </member>
+    <member name="P:System.Net.WebProxy.UseDefaultCredentials">
+      <summary>Gets or sets a <see cref="T:System.Boolean" /> value that controls whether the <see cref="P:System.Net.CredentialCache.DefaultCredentials" /> are sent with requests.</summary>
+      <exception cref="T:System.InvalidOperationException">You attempted to set this property when the <see cref="P:System.Net.WebProxy.Credentials" /> property contains credentials other than the default credentials.</exception>
+      <returns>
+        <see langword="true" /> if the default credentials are used; otherwise, <see langword="false" />. The default value is <see langword="false" />.</returns>
+    </member>
+  </members>
+</doc>

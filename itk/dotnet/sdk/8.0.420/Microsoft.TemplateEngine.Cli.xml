@@ -1,0 +1,2878 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.TemplateEngine.Cli</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.TemplateEngine.Cli.ChoiceTemplateParameter">
+            <summary>
+            The class combines information from <see cref="T:Microsoft.TemplateEngine.Abstractions.ITemplateParameter"/> and <see cref="T:Microsoft.TemplateEngine.Cli.HostSpecificTemplateData"/> for choice parameter.
+            Other parameters are implemented in base class <see cref="T:Microsoft.TemplateEngine.Cli.CliTemplateParameter"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.ChoiceTemplateParameter.GetCustomFirstColumnText(Microsoft.TemplateEngine.Cli.Commands.TemplateOption)">
+            <summary>
+            Customization for first column of help, required to shorten the value in case choice parameter has too many choices.
+            Otherwise the first column of help is getting too wide.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.ChoiceTemplateParameter.GetParseChoiceArgument(Microsoft.TemplateEngine.Cli.ChoiceTemplateParameter)">
+            <summary>
+            Custom parse method for template option.
+            It is mainly required to process default if no option value cases.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.CliEnvironment.NewLine">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.CliEnvironment.ConsoleBufferWidth">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliEnvironment.ExpandEnvironmentVariables(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliEnvironment.GetEnvironmentVariable(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliEnvironment.GetEnvironmentVariables">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.CliTemplateInfo">
+            <summary>
+            <see cref="T:Microsoft.TemplateEngine.Abstractions.ITemplateInfo"/> + <see cref="T:Microsoft.TemplateEngine.Cli.HostSpecificTemplateData"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliTemplateInfo.GetManagedTemplatePackageAsync(Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager,System.Threading.CancellationToken)">
+            <summary>
+            Gets the <b>managed</b> template package which contain the template, <see langword="null"/> otherwise.
+            </summary>
+            <remarks>
+            The method might throw exceptions if <see cref="M:Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager.GetTemplatePackageAsync(Microsoft.TemplateEngine.Abstractions.ITemplateInfo,System.Threading.CancellationToken)"/> call throws.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliTemplateInfo.GetTemplatePackageAsync(Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager,System.Threading.CancellationToken)">
+            <summary>
+            Gets the template package which contains the template.
+            </summary>
+            <remarks>
+            The method might throw exceptions if <see cref="M:Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager.GetTemplatePackageAsync(Microsoft.TemplateEngine.Abstractions.ITemplateInfo,System.Threading.CancellationToken)"/> call throws.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.CliTemplateParameter">
+            <summary>
+            The class combines information from<see cref="T:Microsoft.TemplateEngine.Abstractions.ITemplateParameter"/> and <see cref="T:Microsoft.TemplateEngine.Cli.HostSpecificTemplateData"/>.
+            Choice parameters are implemented in separate class <see cref="T:Microsoft.TemplateEngine.Cli.ChoiceTemplateParameter"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliTemplateParameter.#ctor(System.String,Microsoft.TemplateEngine.Cli.ParameterType,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Unit test constructor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliTemplateParameter.#ctor(Microsoft.TemplateEngine.Cli.CliTemplateParameter)">
+            <summary>
+            Copy constructor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliTemplateParameter.GetOption(System.Collections.Generic.IReadOnlySet{System.String})">
+            <summary>
+            Creates <see cref="T:System.CommandLine.CliOption"/> for template parameter.
+            </summary>
+            <param name="aliases">aliases to be used for option.</param>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliTemplateParameter.GetCustomFirstColumnText(Microsoft.TemplateEngine.Cli.Commands.TemplateOption)">
+            <summary>
+            Returns a function to display option usage.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliTemplateParameter.GetCustomSecondColumnText">
+            <summary>
+            Returns a function to display option description.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.CliTemplateParameter.GetName(System.Collections.Generic.IReadOnlySet{System.String})">
+            <summary>
+            Returns the longest alias without prefix.
+            This is how System.CommandLine used to choose Name from aliases before Name and Aliases separation.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.AliasAssignmentCoordinator">
+            <summary>
+            This class is doing assignments of aliases to template options based on their settings and other options already defined in the command.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.BaseCommand`1.CheckTemplatesWithSubCommandName(`0,Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager,System.Threading.CancellationToken)">
+            <summary>
+            Checks if the template with same short name as used command alias exists, and if so prints the example on how to run the template using dotnet new create.
+            </summary>
+            <remarks>
+            This method uses <see cref="M:Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager.GetTemplatesAsync(System.Threading.CancellationToken)"/>, however this should not take long as templates normally at least once
+            are queried before and results are cached.
+            Alternatively we can think of caching template groups early in <see cref="T:Microsoft.TemplateEngine.Cli.Commands.BaseCommand`1"/> later on.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.BaseCommand`1.SetupTabularOutputOptions(Microsoft.TemplateEngine.Cli.Commands.ITabularOutputCommand)">
+            <summary>
+            Adds the tabular output settings options for the command from <paramref name="command"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.BaseFilterableArgs.AppliedFilters">
+            <summary>
+            Gets list of <see cref="T:Microsoft.TemplateEngine.Cli.Commands.FilterOptionDefinition"/> parsed from command.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.BaseFilterableArgs.GetFilterValue(Microsoft.TemplateEngine.Cli.Commands.FilterOptionDefinition)">
+            <summary>
+            Gets value for filter <paramref name="filter"/>.
+            </summary>
+            <param name="filter"></param>
+            <returns>value of the filter.</returns>
+            <exception cref="T:System.ArgumentException">when <paramref name="filter"/> is not among <see cref="P:Microsoft.TemplateEngine.Cli.Commands.BaseFilterableArgs.AppliedFilters"/>.</exception>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.BaseFilterableArgs.GetFilterToken(Microsoft.TemplateEngine.Cli.Commands.FilterOptionDefinition)">
+            <summary>
+            Gets token name used for filter <paramref name="filter"/>.
+            </summary>
+            <param name="filter"></param>
+            <returns>Token or null when token cannot be evaluated.</returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.InstantiateCommand.CollectOptionsToShow(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Cli.Commands.TemplateCommand},System.CommandLine.Help.HelpContext)">
+            <summary>
+            Ensure <paramref name="templates"/> are sorted in priority order
+            The highest priority should come first.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.InstantiateCommand.InvalidOptionsListToString(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Cli.Commands.InvalidTemplateOptionResult},System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Cli.Commands.TemplateResult})">
+            <summary>
+            Provides the error string to use for the invalid parameters collection.
+            </summary>
+            <param name="invalidParameterList">the invalid parameters collection to prepare output for.</param>
+            <param name="templates">the templates to use to get more information about parameters. Optional - if not provided the possible value for the parameters won't be included to the output.</param>
+            <returns>the error string for the output.</returns>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.InvalidTemplateOptionResult">
+            <summary>
+            The class represents the information about the invalid template option used when executing the command.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.InvalidTemplateOptionResult.Kind">
+            <summary>
+            Defines the possible reason for the parameter to be invalid.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.Commands.InvalidTemplateOptionResult.Kind.InvalidName">
+            <summary>
+            The name is invalid.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.Commands.InvalidTemplateOptionResult.Kind.InvalidValue">
+            <summary>
+            The value is invalid.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.InvalidTemplateOptionResult.ErrorKind">
+            <summary>
+            The reason why the parameter is invalid.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.InvalidTemplateOptionResult.CorrectErrorMessageForChoice(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Cli.Commands.TemplateResult})">
+            <summary>
+            Corrects the error message for choice parameter. It should include possible choice values from other templates in the group (passed via <paramref name="templates"/>).
+            </summary>
+            <param name="templates"></param>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.InvalidTemplateOptionResult.GetValidValuesForChoiceParameter(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Cli.Commands.TemplateResult},Microsoft.TemplateEngine.Cli.CliTemplateParameter)">
+            <summary>
+            Gets the list of valid choices for <paramref name="parameter"/>.
+            </summary>
+            <returns>the dictionary of valid choices and descriptions.</returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.TemplateCommand.#ctor(Microsoft.TemplateEngine.Cli.Commands.BaseCommand,Microsoft.TemplateEngine.Abstractions.IEngineEnvironmentSettings,Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager,Microsoft.TemplateEngine.Cli.TemplateGroup,Microsoft.TemplateEngine.Cli.CliTemplateInfo,System.Boolean)">
+            <summary>
+            Create command for instantiation of specific template.
+            </summary>
+            <exception cref="T:Microsoft.TemplateEngine.Cli.Commands.InvalidTemplateParametersException">when <paramref name="template"/> has invalid template parameters.</exception>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.TemplateOptionResult">
+            <summary>
+            The class represents the information about the template option used when executing the command.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.TemplateOptionResult.InputFormat">
+            <summary>
+            the alias used in CLI for parameter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.TemplateOptionResult.SpecifiedValue">
+            <summary>
+            The value specified for the parameter in CLI.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.TemplateResult">
+            <summary>
+            The class represents validity of certain template in context of the command being executed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.Extensions.HasErrorFor(System.CommandLine.ParseResult,System.CommandLine.CliOption,System.CommandLine.Parsing.ParseError@)">
+            <summary>
+            Checks if <paramref name="parseResult"/> contains an error for <paramref name="option"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.Extensions.FromAmongCaseInsensitive(System.CommandLine.CliOption{System.String},System.String[],System.String)">
+            <summary>
+            Case insensitive version for <see cref="M:System.CommandLine.CliOption`1.AcceptOnlyFromAmong(System.String[])"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.Extensions.GetAllowedTemplatesAsync(Microsoft.TemplateEngine.Cli.TemplateGroup,Microsoft.TemplateEngine.Edge.TemplateConstraintManager,System.Threading.CancellationToken)">
+            <summary>
+            Gets the list of allowed templates from <paramref name="templateGroup"/> as the result of constraints evaluation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.Extensions.IsTemplateAllowed(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Abstractions.Constraints.TemplateConstraintResult})">
+            <summary>
+            Returns true if the execution is allowed based on <paramref name="constraintResult"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.FilterOptionDefinition">
+            <summary>
+            Defines supported dotnet new command filter option
+            Filter options can be used along with other dotnet new subcommands to filter the required items for the action, for example for list subcommand filters can limit the templates to be shown.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.FilterOptionDefinition.OptionFactory">
+            <summary>
+            A predicate that creates instance of option.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.TemplateFilterOptionDefinition">
+            <summary>
+            Defines supported dotnet new command filter option applicable to the template.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.TemplateFilterOptionDefinition.TemplateMatchFilter">
+            <summary>
+            A predicate that returns the template match filter for the filter option.
+            Template match filter should return the MatchInfo for the given template based on filter value.
+            </summary>
+            <remarks>
+            Common template match filters are defined in Microsoft.TemplateEngine.Utils.WellKnonwnSearchFilter class.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.TemplateFilterOptionDefinition.MismatchCriteria">
+            <summary>
+            A predicate that returns if the filter option caused a mismatch in <see cref="T:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult"/> in case of partial match.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.TemplateFilterOptionDefinition.MatchInfoName">
+            <summary>
+            A <see cref="T:Microsoft.TemplateEngine.Abstractions.TemplateFiltering.MatchInfo"/> name used in match dispositions.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.PackageFilterOptionDefinition">
+            <summary>
+            Defines supported dotnet new command filter option applicable to the package.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.PackageFilterOptionDefinition.PackageMatchFilter">
+            <summary>
+            A predicate that returns the package match filter for the filter option
+            Package match filter should if package is a match based on filter value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.GlobalArgs.GetNewCommandFromParseResult(System.CommandLine.ParseResult)">
+            <summary>
+            Gets root <see cref="T:Microsoft.TemplateEngine.Cli.Commands.NewCommand"/> from <paramref name="parseResult"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.HelpStrings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Hint_AmbiguousLanguage">
+            <summary>
+              Looks up a localized string similar to Re-run the command specifying the language to use with --language option..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Hint_AmbiguousType">
+            <summary>
+              Looks up a localized string similar to Re-run the command specifying the type to use with --type option..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Hint_HelpForOtherLanguages">
+            <summary>
+              Looks up a localized string similar to To see help for other template languages ({0}), use --language option:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Hint_HelpForOtherTypes">
+            <summary>
+              Looks up a localized string similar to To see help for other template types ({0}), use --type option:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Info_TemplateThirdPartyNotice">
+            <summary>
+              Looks up a localized string similar to This template contains technologies from parties other than Microsoft, see {0} for details..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.RowHeader_AllowMultiValue">
+            <summary>
+              Looks up a localized string similar to Multiple values are allowed: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.RowHeader_DefaultIfOptionWithoutValue">
+            <summary>
+              Looks up a localized string similar to Default if option is provided without a value: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.RowHeader_DefaultValue">
+            <summary>
+              Looks up a localized string similar to Default: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.RowHeader_Description">
+            <summary>
+              Looks up a localized string similar to Description: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.RowHeader_TemplateAuthor">
+            <summary>
+              Looks up a localized string similar to Author: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.RowHeader_Type">
+            <summary>
+              Looks up a localized string similar to Type: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.SectionHeader_TemplateSpecificOptions">
+            <summary>
+              Looks up a localized string similar to Template options:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.TableHeader_AmbiguousTemplatesList">
+            <summary>
+              Looks up a localized string similar to Unable to resolve the template, these templates matched your input:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Text_ChoiceArgumentHelpName">
+            <summary>
+              Looks up a localized string similar to choice.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Text_Disabled">
+            <summary>
+              Looks up a localized string similar to Enabled: *false*.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Text_EnabledCondition">
+            <summary>
+              Looks up a localized string similar to Enabled if: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Text_NoTemplateOptions">
+            <summary>
+              Looks up a localized string similar to (No options).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Text_Required">
+            <summary>
+              Looks up a localized string similar to Required: *true*.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Text_RequiredCondition">
+            <summary>
+              Looks up a localized string similar to Required if: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.HelpStrings.Text_UsageTemplateOptionsPart">
+            <summary>
+              Looks up a localized string similar to [template options].
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.ICommandArgs.RootCommand">
+            <summary>
+            Gets the topmost parent <see cref="T:Microsoft.TemplateEngine.Cli.Commands.NewCommand"/>.
+            It might not be the root command in command defintion, however it is the topmost parent command known by this assembly.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.ICommandArgs.Command">
+            <summary>
+            Gets the executing <see cref="T:System.CommandLine.CliCommand"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.ICommandArgs.ParseResult">
+            <summary>
+            Gets the <see cref="T:System.CommandLine.ParseResult"/> for the command to be executed.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.ICustomHelp">
+            <summary>
+            If <see cref="T:System.CommandLine.CliCommand"/> implements this interface, it can create custom help
+            that should be used when building the parser.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Commands.ICustomHelp.CustomHelpLayout">
+            <summary>
+            Returns custom help layout for the command.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Alias_Description">
+            <summary>
+              Looks up a localized string similar to Creates or displays defined aliases..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_AliasAdd_Description">
+            <summary>
+              Looks up a localized string similar to Creates an alias for instantiate command with a certain set of arguments..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_AliasShow_Description">
+            <summary>
+              Looks up a localized string similar to Displays defined aliases..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Details_Description">
+            <summary>
+              Looks up a localized string similar to 
+                 Provides the details for specified template package.
+                 The command checks if the package is installed locally, if it was not found, it searches the configured NuGet feeds..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Install_Argument_Package">
+             <summary>
+               Looks up a localized string similar to NuGet package ID or path to folder or NuGet package to install. 
+            To install the NuGet package of certain version, use &lt;package ID&gt;::&lt;version&gt;.
+            .
+             </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Install_Description">
+            <summary>
+              Looks up a localized string similar to Installs a template package..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Instantiate_Argument_ShortName">
+            <summary>
+              Looks up a localized string similar to A short name of the template to create..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Instantiate_Argument_TemplateOptions">
+            <summary>
+              Looks up a localized string similar to Template specific options to use..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Instantiate_Description">
+            <summary>
+              Looks up a localized string similar to Instantiates a template with given short name. An alias of &apos;dotnet new &lt;template name&gt;&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Legacy_Update_Check_Description">
+            <summary>
+              Looks up a localized string similar to Checks the currently installed template packages for updates..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_List_Argument_Name">
+            <summary>
+              Looks up a localized string similar to If specified, only the templates matching the name will be shown..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_List_Description">
+            <summary>
+              Looks up a localized string similar to Lists templates containing the specified template name. If no name is specified, lists all templates..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_New_Description">
+            <summary>
+              Looks up a localized string similar to Template Instantiation Commands for .NET CLI..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Search_Argument_Name">
+            <summary>
+              Looks up a localized string similar to If specified, only the templates matching the name will be shown..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Search_Description">
+            <summary>
+              Looks up a localized string similar to Searches for the templates on NuGet.org..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Uninstall_Argument_Package">
+             <summary>
+               Looks up a localized string similar to NuGet package ID (without version) or path to folder to uninstall. 
+            If command is specified without the argument, it lists all the template packages installed..
+             </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Uninstall_Description">
+            <summary>
+              Looks up a localized string similar to Uninstalls a template package..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Update_Description">
+            <summary>
+              Looks up a localized string similar to Checks the currently installed template packages for update, and install the updates..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Command_Update_Option_CheckOnly">
+            <summary>
+              Looks up a localized string similar to Only checks for updates and display the template packages to be updated without applying update..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.ListCommand_Option_IgnoreConstraints">
+            <summary>
+              Looks up a localized string similar to Disables checking if the template meets the constraints to be run..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_AddSource">
+            <summary>
+              Looks up a localized string similar to Specifies a NuGet source to use..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_AuthorFilter">
+            <summary>
+              Looks up a localized string similar to Filters the templates based on the template author..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_BaselineFilter">
+            <summary>
+              Looks up a localized string similar to Filters the templates based on baseline defined in the template..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Columns">
+            <summary>
+              Looks up a localized string similar to Specifies the columns to display in the output. .
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_ColumnsAll">
+            <summary>
+              Looks up a localized string similar to Displays all columns in the output..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Debug_Attach">
+            <summary>
+              Looks up a localized string similar to Allows to pause execution in order to attach to the process for debug purposes..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Debug_CustomSettings">
+            <summary>
+              Looks up a localized string similar to Sets custom settings location..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Debug_RebuildCache">
+            <summary>
+              Looks up a localized string similar to If specified, removes the template cache prior to command execution..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Debug_Reinit">
+            <summary>
+              Looks up a localized string similar to If specified, resets the settings prior to command execution..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Debug_ShowConfig">
+            <summary>
+              Looks up a localized string similar to If specified, shows the template engine config prior to command execution..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Debug_VirtualSettings">
+            <summary>
+              Looks up a localized string similar to If specified, the settings will be not preserved on file system..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Install_Force">
+            <summary>
+              Looks up a localized string similar to Allows installing template packages from the specified sources even if they would override a template package from another source..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Interactive">
+            <summary>
+              Looks up a localized string similar to Allows the command to stop and wait for user input or action (for example to complete authentication)..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_LanguageFilter">
+            <summary>
+              Looks up a localized string similar to Filters templates based on language..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_Output">
+            <summary>
+              Looks up a localized string similar to Location to place the generated output..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_PackageFilter">
+            <summary>
+              Looks up a localized string similar to Filters the templates based on NuGet package ID..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_ProjectPath">
+            <summary>
+              Looks up a localized string similar to The project that should be used for context evaluation..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_TagFilter">
+            <summary>
+              Looks up a localized string similar to Filters the templates based on the tag..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.Option_TypeFilter">
+            <summary>
+              Looks up a localized string similar to Filters templates based on available types. Predefined values are &quot;project&quot; and &quot;item&quot;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.TemplateCommand_Option_AllowScripts">
+            <summary>
+              Looks up a localized string similar to Specifies if post action scripts should run..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.TemplateCommand_Option_Baseline">
+            <summary>
+              Looks up a localized string similar to Specifies the baseline to instantiate..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.TemplateCommand_Option_DryRun">
+            <summary>
+              Looks up a localized string similar to Displays a summary of what would happen if the given command line were run if it would result in a template creation..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.TemplateCommand_Option_Force">
+            <summary>
+              Looks up a localized string similar to Forces content to be generated even if it would change existing files..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.TemplateCommand_Option_Language">
+            <summary>
+              Looks up a localized string similar to Specifies the template language to instantiate..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.TemplateCommand_Option_Name">
+            <summary>
+              Looks up a localized string similar to The name for the output being created. If no name is specified, the name of the output directory is used..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.TemplateCommand_Option_NoUpdateCheck">
+            <summary>
+              Looks up a localized string similar to Disables checking for the template package updates when instantiating a template..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.Commands.SymbolStrings.TemplateCommand_Option_Type">
+            <summary>
+              Looks up a localized string similar to Specifies the template type to instantiate..
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.CombinedChoiceTemplateParameter">
+            <summary>
+            This class implements combining choice parameters from different template
+            This may happen for help in template group with different choices in templates.
+            Used for displaying help.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Extensions.GetDefaultLanguage(Microsoft.TemplateEngine.Abstractions.IEngineEnvironmentSettings)">
+            <summary>
+            Gets default language configured for the host.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Extensions.IsHiddenByHostFile(Microsoft.TemplateEngine.Abstractions.ITemplateInfo,Microsoft.TemplateEngine.Cli.IHostSpecificDataLoader)">
+            <summary>
+            Checks if the template is hidden by host specific template settings.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Extensions.GetDisplayName(Microsoft.TemplateEngine.Abstractions.ITemplateInfo,System.Boolean)">
+            <summary>
+            Gets display name for the template:
+            Template Name (short-name)
+            Template Name (short-name) Language
+            Template Name (short-name) Language (identity: identity).
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.Extensions.ToDisplayString(Microsoft.TemplateEngine.Abstractions.Constraints.TemplateConstraintResult)">
+            <summary>
+            Gets display string for constraint evaluation result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.ICliTemplateEngineHost.IsCustomOutputPath">
+            <summary>
+            True when output path was specified additionally (i.e. no fallback to default(current directory)).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.ICliTemplateEngineHost.OutputPath">
+            <summary>
+            Gets the output path for execution results.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.IReporterExtensions.WriteCommand(Microsoft.DotNet.Cli.Utils.IReporter,System.String,System.Int32)">
+            <summary>
+            Writes string formatted as command example. For now, just indentation is applied.
+            The extension forces the same format for all command examples.
+            </summary>
+            <param name="reporter"></param>
+            <param name="command"></param>
+            <param name="indentLevel"></param>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.IReporterExtensions.WriteCommandOutput(Microsoft.DotNet.Cli.Utils.IReporter,System.Diagnostics.Process)">
+            <summary>
+            Writes formatted command output from <paramref name="process"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.IReporterExtensions.WriteStdOut(Microsoft.DotNet.Cli.Utils.IReporter,System.String)">
+            <summary>
+            Writes string <paramref name="output"/> formatted as standard output.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.IReporterExtensions.WriteStdErr(Microsoft.DotNet.Cli.Utils.IReporter,System.String)">
+            <summary>
+            Writes string <paramref name="output"/> formatted as standard error.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.IReporterExtensions.Indent(System.String,System.Int32)">
+            <summary>
+            Indents string, use this method to unify indents in the output.
+            </summary>
+            <param name="s">string to indent.</param>
+            <param name="level">indent level.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.IReporterExtensions.IndentLines(System.String,System.Int32)">
+            <summary>
+            Indent all lines in the string, use this method to unify indents in the output.
+            </summary>
+            <param name="s">string to indent.</param>
+            <param name="level">indent level.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.IReporterExtensions.Indent(System.Text.StringBuilder,System.Int32)">
+            <summary>
+            Indents stringbuilder, use this method to unify indents in the output.
+            </summary>
+            <param name="s">string to indent.</param>
+            <param name="level">indent level.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.LocalizableStrings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ActionWouldHaveBeenTakenAutomatically">
+            <summary>
+              Looks up a localized string similar to Action would have been taken automatically:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasAssignmentCoordinator_Error_LongAlias">
+            <summary>
+              Looks up a localized string similar to Failed to assign long option alias for parameter &apos;{0}&apos;, tried: &apos;{1}&apos;; &apos;{2}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasAssignmentCoordinator_Error_NameShouldNotHaveColon">
+            <summary>
+              Looks up a localized string similar to Parameter name &apos;{0}&apos; contains colon, which is forbidden..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasAssignmentCoordinator_Error_ShortAlias">
+            <summary>
+              Looks up a localized string similar to Failed to assign short option alias for parameter &apos;{0}&apos;, tried: &apos;{1}&apos;; &apos;{2}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasCannotBeShortName">
+            <summary>
+              Looks up a localized string similar to Alias &apos;{0}&apos; is a template short name, and therefore cannot be aliased..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasCommandAfterExpansion">
+            <summary>
+              Looks up a localized string similar to After expanding aliases, the command is:
+               dotnet {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasCreated">
+            <summary>
+              Looks up a localized string similar to Successfully created alias named &apos;{0}&apos; with value &apos;{1}&apos;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasCycleError">
+            <summary>
+              Looks up a localized string similar to Alias not created. It would have created an alias cycle, resulting in infinite expansion..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasExpandedCommandParseError">
+            <summary>
+              Looks up a localized string similar to Command is invalid after expanding aliases..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasExpansionError">
+            <summary>
+              Looks up a localized string similar to Error expanding aliases on input params..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasName">
+            <summary>
+              Looks up a localized string similar to Alias Name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasNameContainsInvalidCharacters">
+            <summary>
+              Looks up a localized string similar to Alias names can only contain letters, numbers, underscores, and periods..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasNotCreatedInvalidInput">
+            <summary>
+              Looks up a localized string similar to Alias not created. The input was invalid..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasRemoved">
+            <summary>
+              Looks up a localized string similar to Successfully removed alias named &apos;{0}&apos; whose value was &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasRemoveNonExistentFailed">
+            <summary>
+              Looks up a localized string similar to Unable to remove alias &apos;{0}&apos;. It did not exist..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasShowAllAliasesHeader">
+            <summary>
+              Looks up a localized string similar to All Aliases:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasShowErrorUnknownAlias">
+             <summary>
+               Looks up a localized string similar to Unknown alias name &apos;{0}&apos;.
+            Run &apos;dotnet {1} --show-aliases&apos; with no args to show all aliases..
+             </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasUpdated">
+            <summary>
+              Looks up a localized string similar to Successfully updated alias named &apos;{0}&apos; to value &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasValue">
+            <summary>
+              Looks up a localized string similar to Alias Value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AliasValueFirstArgError">
+            <summary>
+              Looks up a localized string similar to First argument of an alias value must begin with a letter or digit..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AllowScriptsNoChoice">
+            <summary>
+              Looks up a localized string similar to Do not allow scripts to run.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AllowScriptsPromptChoice">
+            <summary>
+              Looks up a localized string similar to Ask before running each script.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AllowScriptsYesChoice">
+            <summary>
+              Looks up a localized string similar to Allow scripts to run.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AmbiguousParameterDetail">
+            <summary>
+              Looks up a localized string similar to The value &apos;{1}&apos; is ambiguous for option {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AmbiguousTemplateGroupListHint">
+            <summary>
+              Looks up a localized string similar to Re-run the command using the template&apos;s exact short name..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AmbiguousTemplatesHeader">
+            <summary>
+              Looks up a localized string similar to Unable to resolve the template, the following installed templates are conflicting:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AmbiguousTemplatesMultiplePackagesHint">
+            <summary>
+              Looks up a localized string similar to Uninstall the template packages containing the templates to keep only one template from the list or add the template options which differentiate the template to run..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.AmbiguousTemplatesSamePackageHint">
+            <summary>
+              Looks up a localized string similar to The package {0} is not correct, uninstall it and report the issue to the package author..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ArgsFileNotFound">
+            <summary>
+              Looks up a localized string similar to The specified extra args file does not exist: {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ArgsFileWrongFormat">
+            <summary>
+              Looks up a localized string similar to Extra args file {0} is not formatted properly..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Assembly">
+            <summary>
+              Looks up a localized string similar to Assembly.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Authoring_AmbiguousBestPrecedence">
+            <summary>
+              Looks up a localized string similar to Equal highest precedence values among the best template matches prevented unambiguously choosing a template to invoke..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Authoring_AmbiguousChoiceParameterValue">
+            <summary>
+              Looks up a localized string similar to An ambiguous choice parameter value prevented unambiguously choosing a template to invoke..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.BaseCommand_ExitCodeHelp">
+            <summary>
+              Looks up a localized string similar to For details on the exit code, refer to https://aka.ms/templating-exit-codes#{0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Change">
+            <summary>
+              Looks up a localized string similar to Change.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CliTemplateSearchCoordinator_Error_NoSources">
+            <summary>
+              Looks up a localized string similar to No remoted sources defined to search for the templates..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CliTemplateSearchCoordinator_Error_NoTemplateName">
+            <summary>
+              Looks up a localized string similar to Search failed: not enough information specified for search..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CliTemplateSearchCoordinator_Error_NotFound">
+            <summary>
+              Looks up a localized string similar to Template &apos;{0}&apos; was not found..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CliTemplateSearchCoordinator_Error_SearchFailure">
+            <summary>
+              Looks up a localized string similar to Search failed: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CliTemplateSearchCoordinator_Error_TemplateNameIsTooShort">
+            <summary>
+              Looks up a localized string similar to Search failed: template name is too short, minimum 2 characters are required..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CliTemplateSearchCoordinator_Info_InstallHelp">
+            <summary>
+              Looks up a localized string similar to To use the template, run the following command to install the package:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CliTemplateSearchCoordinator_Info_MatchesFromSource">
+            <summary>
+              Looks up a localized string similar to Matches from template source: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CliTemplateSearchCoordinator_Info_SearchHelp">
+            <summary>
+              Looks up a localized string similar to To search for templates, specify partial template name or use one of the supported filters: {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CliTemplateSearchCoordinator_Info_SearchInProgress">
+            <summary>
+              Looks up a localized string similar to Searching for the templates....
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameAuthor">
+            <summary>
+              Looks up a localized string similar to Author.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameCurrentVersion">
+            <summary>
+              Looks up a localized string similar to Current.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameIdentity">
+            <summary>
+              Looks up a localized string similar to Identity.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameLanguage">
+            <summary>
+              Looks up a localized string similar to Language.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameLatestVersion">
+            <summary>
+              Looks up a localized string similar to Latest.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNamePackage">
+            <summary>
+              Looks up a localized string similar to Package.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNamePackageNameAndOwners">
+            <summary>
+              Looks up a localized string similar to Package Name / Owners.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNamePrecedence">
+            <summary>
+              Looks up a localized string similar to Precedence.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNamesAreNotSupported">
+            <summary>
+              Looks up a localized string similar to The column {0} is/are not supported, the supported columns are: {1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameShortName">
+            <summary>
+              Looks up a localized string similar to Short Name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameTags">
+            <summary>
+              Looks up a localized string similar to Tags.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameTemplateName">
+            <summary>
+              Looks up a localized string similar to Template Name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameTotalDownloads">
+            <summary>
+              Looks up a localized string similar to Downloads.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameTrusted">
+            <summary>
+              Looks up a localized string similar to Trusted.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ColumnNameType">
+            <summary>
+              Looks up a localized string similar to Type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CommandFailed">
+            <summary>
+              Looks up a localized string similar to Command failed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CommandOutput">
+            <summary>
+              Looks up a localized string similar to Output from command:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Commands_TemplateShortNameCommandConflict_Info">
+            <summary>
+              Looks up a localized string similar to To instantiate the template with short name &apos;{0}&apos;, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Commands_Validator_WrongArgumentValue">
+            <summary>
+              Looks up a localized string similar to Argument(s) {0} are not recognized. Must be one of: {1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Commands_Validator_WrongTokens">
+            <summary>
+              Looks up a localized string similar to Unrecognized command or argument(s): {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Commands_Warning_DeprecatedCommand">
+            <summary>
+              Looks up a localized string similar to Warning: use of &apos;{0}&apos; is deprecated. Use &apos;{1}&apos; instead..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Commands_Warning_DeprecatedCommand_Info">
+            <summary>
+              Looks up a localized string similar to For more information, run: .
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CommandSucceeded">
+            <summary>
+              Looks up a localized string similar to Command succeeded..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ConfiguredValue">
+            <summary>
+              Looks up a localized string similar to Configured Value: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Create">
+            <summary>
+              Looks up a localized string similar to Create.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CreateFailed">
+             <summary>
+               Looks up a localized string similar to Template &quot;{0}&quot; could not be created.
+            {1}.
+             </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CreateSuccessful">
+            <summary>
+              Looks up a localized string similar to The template &quot;{0}&quot; was created successfully..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.CurrentConfiguration">
+            <summary>
+              Looks up a localized string similar to Current configuration:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Delete">
+            <summary>
+              Looks up a localized string similar to Delete.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DestructiveChangesNotification">
+            <summary>
+              Looks up a localized string similar to Creating this template will make changes to existing files:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Argument_PackageIdentifier">
+            <summary>
+              Looks up a localized string similar to Package identifier.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_NoNuGetSources">
+            <summary>
+              Looks up a localized string similar to No NuGet sources are defined or enabled.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Option_Version">
+            <summary>
+              Looks up a localized string similar to Specifies a concrete version for displaying details. If not specified the last is taken..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_Authors">
+            <summary>
+              Looks up a localized string similar to Authors.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_Description">
+            <summary>
+              Looks up a localized string similar to Details.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_Languages">
+            <summary>
+              Looks up a localized string similar to Languages.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_License">
+            <summary>
+              Looks up a localized string similar to License.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_LicenseExpression">
+            <summary>
+              Looks up a localized string similar to License Expression.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_LicenseMetadata">
+            <summary>
+              Looks up a localized string similar to License Metadata.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_LicenseUrl">
+            <summary>
+              Looks up a localized string similar to License Url.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_Owners">
+            <summary>
+              Looks up a localized string similar to Owners.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_PrefixReserved">
+            <summary>
+              Looks up a localized string similar to Reserved.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_RepoUrl">
+            <summary>
+              Looks up a localized string similar to Repository Url.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_ShortNames">
+            <summary>
+              Looks up a localized string similar to Short Names.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_SourceFeed">
+            <summary>
+              Looks up a localized string similar to Source Feed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_Tags">
+            <summary>
+              Looks up a localized string similar to Tags.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_Templates">
+            <summary>
+              Looks up a localized string similar to Templates.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_Property_Version">
+            <summary>
+              Looks up a localized string similar to Package version.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_UnableToLoadResorce">
+            <summary>
+              Looks up a localized string similar to Could not parse NuGet source &apos;{0}&apos;, so it was discarded.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DetailsCommand_UnableToLoadResorces">
+            <summary>
+              Looks up a localized string similar to Failed to load NuGet sources configured for the folder {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.DisplaysHelp">
+            <summary>
+              Looks up a localized string similar to Displays help for this command..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Exception_InvalidTemplateParameters_MessageHeader">
+            <summary>
+              Looks up a localized string similar to Template {0} ({1}) is malformed. The following template parameters are invalid:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ExtraArgsCommandAfterExpansion">
+            <summary>
+              Looks up a localized string similar to After expanding the extra args files, the command is:
+               dotnet {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.FileActionsWouldHaveBeenTaken">
+            <summary>
+              Looks up a localized string similar to File actions would have been taken:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generators">
+            <summary>
+              Looks up a localized string similar to Generators.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_CommandHints_List">
+            <summary>
+              Looks up a localized string similar to To list installed templates, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_CommandHints_List_Template">
+            <summary>
+              Looks up a localized string similar to To list installed templates similar to &apos;{0}&apos;, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_CommandHints_Search">
+            <summary>
+              Looks up a localized string similar to To search for the templates on NuGet.org, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_Details">
+            <summary>
+              Looks up a localized string similar to Details: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_Empty">
+            <summary>
+              Looks up a localized string similar to (empty).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_ExampleHeader">
+            <summary>
+              Looks up a localized string similar to Example:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_ExamplesHeader">
+            <summary>
+              Looks up a localized string similar to Examples:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_Info_NoMatchingTemplatePackage">
+            <summary>
+              Looks up a localized string similar to 
+                 No template packages found matching: {0}.
+                 
+                 To list installed template packages, run:
+                   dotnet new uninstall
+                 To search for the template packages on NuGet.org, run:
+                   dotnet new search --package {0}
+               .
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_Info_NoMatchingTemplates">
+            <summary>
+              Looks up a localized string similar to No templates found matching: {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Generic_NoCallbackError">
+            <summary>
+              Looks up a localized string similar to No callback is configured. Running post action is not possible..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.GenericError">
+            <summary>
+              Looks up a localized string similar to Error: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.GenericWarning">
+            <summary>
+              Looks up a localized string similar to Warning: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.HostSpecificDataLoader_Warning_FailedToRead">
+            <summary>
+              Looks up a localized string similar to Failed to load dotnet CLI host data for template {0} from cache..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.HostSpecificDataLoader_Warning_FailedToReadFromFile">
+            <summary>
+              Looks up a localized string similar to Failed to load dotnet CLI host data for template {0} from {1}. The host data will be ignored..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InstantiateCommand_Info_NoMatchingTemplatesSubCommands">
+            <summary>
+              Looks up a localized string similar to No templates or subcommands found matching: &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InstantiateCommand_Info_TypoCorrection_Subcommands">
+            <summary>
+              Looks up a localized string similar to Did you mean one of the following subcommands?.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InstantiateCommand_Info_TypoCorrection_Templates">
+            <summary>
+              Looks up a localized string similar to Did you mean one of the following templates?.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InstantiateCommand_Warning_FailedToGetTemplatePackageForTemplate">
+            <summary>
+              Looks up a localized string similar to Failed to get information about template packages for the template with identity &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InstantiateCommand_Warning_FailedToGetTemplatePackageForTemplateGroup">
+            <summary>
+              Looks up a localized string similar to Failed to get information about template packages for template group &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InvalidCommandOptions">
+            <summary>
+              Looks up a localized string similar to Error: Invalid option(s):.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InvalidNameParameter">
+            <summary>
+              Looks up a localized string similar to Name cannot contain any of the following characters {0} or character codes {1}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InvalidParameterDefault">
+            <summary>
+              Looks up a localized string similar to The default value &apos;{1}&apos; is not a valid value for {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InvalidParameterDetail">
+            <summary>
+              Looks up a localized string similar to &apos;{1}&apos; is not a valid value for {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InvalidParameterNameDetail">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; is not a valid option.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InvalidParameterTemplateHint">
+            <summary>
+              Looks up a localized string similar to For more information, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.InvalidSyntax">
+            <summary>
+              Looks up a localized string similar to Invalid command syntax: use &apos;{0}&apos; instead..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.MissingRequiredParameter">
+            <summary>
+              Looks up a localized string similar to Missing mandatory option(s) for the template &apos;{1}&apos;: {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.MountPointFactories">
+            <summary>
+              Looks up a localized string similar to Mount Point Factories.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.NoItems">
+            <summary>
+              Looks up a localized string similar to (No Items).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.NoParameters">
+            <summary>
+              Looks up a localized string similar to     (No Parameters).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.NoTemplatesFound">
+            <summary>
+              Looks up a localized string similar to No templates installed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.OperationCancelled">
+            <summary>
+              Looks up a localized string similar to The operation was cancelled..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.OptionalWorkloadsSyncFailed">
+            <summary>
+              Looks up a localized string similar to Error during synchronization with the Optional SDK Workloads..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Options">
+            <summary>
+              Looks up a localized string similar to Options:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Overwrite">
+            <summary>
+              Looks up a localized string similar to Overwrite.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseChoiceTemplateOption_Error_InvalidArgument">
+            <summary>
+              Looks up a localized string similar to Cannot parse argument &apos;{0}&apos; for option &apos;{1}&apos; as expected type &apos;{2}&apos;: {3}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseChoiceTemplateOption_Error_InvalidDefaultIfNoOptionValue">
+            <summary>
+              Looks up a localized string similar to Cannot parse default if option without value &apos;{0}&apos; for option &apos;{1}&apos; as expected type &apos;{2}&apos;: {3}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseChoiceTemplateOption_Error_InvalidDefaultValue">
+            <summary>
+              Looks up a localized string similar to Cannot parse default value &apos;{0}&apos; for option &apos;{1}&apos; as expected type &apos;{2}&apos;: {3}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseChoiceTemplateOption_ErrorText_InvalidChoiceValue">
+            <summary>
+              Looks up a localized string similar to value &apos;{0}&apos; is not allowed, allowed values are: {1}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseChoiceTemplateOption_ErrorText_NoChoicesDefined">
+            <summary>
+              Looks up a localized string similar to no choices are defined for parameter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseTemplateOption_Error_InvalidArgument">
+            <summary>
+              Looks up a localized string similar to Cannot parse argument &apos;{0}&apos; for option &apos;{1}&apos; as expected type &apos;{2}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseTemplateOption_Error_InvalidCount">
+            <summary>
+              Looks up a localized string similar to Using more than 1 argument is not allowed for &apos;{0}&apos;, used: {1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseTemplateOption_Error_InvalidDefaultIfNoOptionValue">
+            <summary>
+              Looks up a localized string similar to Cannot parse default if option without value &apos;{0}&apos; for option &apos;{1}&apos; as expected type &apos;{2}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseTemplateOption_Error_InvalidDefaultValue">
+            <summary>
+              Looks up a localized string similar to Cannot parse default value &apos;{0}&apos; for option &apos;{1}&apos; as expected type {2}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseTemplateOption_Error_MissingDefaultIfNoOptionValue">
+            <summary>
+              Looks up a localized string similar to Required argument missing for option: &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ParseTemplateOption_Error_MissingDefaultValue">
+            <summary>
+              Looks up a localized string similar to Default value for argument missing for option: &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PartialTemplateMatchSwitchesNotValidForAllMatches">
+            <summary>
+              Looks up a localized string similar to Some partially matched templates may not support these input switches:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PossibleValuesHeader">
+            <summary>
+              Looks up a localized string similar to The possible values are:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostAction_ModifyJson_Error_ArgumentNotConfigured">
+            <summary>
+              Looks up a localized string similar to Post action argument &apos;{0}&apos; is mandatory, but not configured..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostAction_ModifyJson_Error_MultipleJsonFiles">
+            <summary>
+              Looks up a localized string similar to More than one file found that matches &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostAction_ModifyJson_Error_NoJsonFile">
+            <summary>
+              Looks up a localized string similar to Unable to find the json file in the solution.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostAction_ModifyJson_Error_ParentPropertyPathInvalid">
+            <summary>
+              Looks up a localized string similar to Parent property path &apos;{0}&apos; could not be traversed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostAction_ModifyJson_Succeeded">
+            <summary>
+              Looks up a localized string similar to Successfully modified {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostAction_ProcessStartProcessor_Error_ConfigMissingExecutable">
+            <summary>
+              Looks up a localized string similar to Failed to run the command: argument &apos;executable&apos; is missing in post action configuration..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostActionCommand">
+            <summary>
+              Looks up a localized string similar to Actual command: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostActionDescription">
+            <summary>
+              Looks up a localized string similar to Description: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostActionDispatcher_Error_NotSupported">
+            <summary>
+              Looks up a localized string similar to The post action {0} is not supported..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostActionDispatcher_Error_RunScriptNotAllowed">
+            <summary>
+              Looks up a localized string similar to Execution of &apos;Run script&apos; post action is not allowed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostActionFailedInstructionHeader">
+            <summary>
+              Looks up a localized string similar to Post action failed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostActionInstructions">
+            <summary>
+              Looks up a localized string similar to Manual instructions: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostActionInvalidInputRePrompt">
+            <summary>
+              Looks up a localized string similar to Invalid input &quot;{0}&quot;. Please enter one of [{1}(yes)|{2}(no)]..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostActionPromptHeader">
+            <summary>
+              Looks up a localized string similar to Template is configured to run the following action:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.PostActionPromptRequest">
+            <summary>
+              Looks up a localized string similar to Do you want to run this action [{0}(yes)|{1}(no)]?.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ProcessingPostActions">
+            <summary>
+              Looks up a localized string similar to Processing post-creation actions....
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.RerunCommandAndPassForceToCreateAnyway">
+            <summary>
+              Looks up a localized string similar to To create the template anyway, run the command with &apos;{0}&apos; option:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.RunHelpForInformationAboutAcceptedParameters">
+            <summary>
+              Looks up a localized string similar to For usage information, run: .
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.RunningCommand">
+            <summary>
+              Looks up a localized string similar to Running command &apos;{0}&apos;....
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.SettingsReadError">
+            <summary>
+              Looks up a localized string similar to Error reading the installed configuration, file may be corrupted. If this problem persists, try resetting with the `--debug:reinit&apos; flag.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ShowsAllTemplates">
+            <summary>
+              Looks up a localized string similar to Shows all templates..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.SingleTemplateGroupPartialMatchSwitchesNotValidForAllMatches">
+            <summary>
+              Looks up a localized string similar to The following option(s) or their value(s) are not valid in combination with other supplied options or their values:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateCommand_DisplayConstraintResults_Error">
+            <summary>
+              Looks up a localized string similar to Failed to instatiate template &apos;{0}&apos;, the following constraints are not met:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateCommand_DisplayConstraintResults_Hint">
+            <summary>
+              Looks up a localized string similar to To run the template anyway, use &apos;{0}&apos; option:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateCommand_DisplayConstraintResults_Hint_TemplateNotUsable">
+            <summary>
+              Looks up a localized string similar to The template might not be usable..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateCommand_DisplayConstraintResults_Warning">
+            <summary>
+              Looks up a localized string similar to Warning: the following constraints for the template &apos;{0}&apos; are not met:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateCreator_Error_TemplateNotFound">
+            <summary>
+              Looks up a localized string similar to Unable to locate the specified template content, the template package might be removed or corrupted..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateCreator_Hint_Install">
+            <summary>
+              Looks up a localized string similar to To install the template package, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateCreator_Hint_RebuildCache">
+            <summary>
+              Looks up a localized string similar to To rescan installed template packages, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateCreator_Hint_Uninstall">
+            <summary>
+              Looks up a localized string similar to To uninstall the template package, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateInformationCoordinator_DotnetNew_Description">
+            <summary>
+              Looks up a localized string similar to The &apos;{0}&apos; command creates a .NET project based on a template..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateInformationCoordinator_DotnetNew_DisplayOptionsHint">
+            <summary>
+              Looks up a localized string similar to Display template options with:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateInformationCoordinator_DotnetNew_ExampleHeader">
+            <summary>
+              Looks up a localized string similar to An example would be:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateInformationCoordinator_DotnetNew_ListTemplatesHint">
+            <summary>
+              Looks up a localized string similar to Display all installed templates with:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateInformationCoordinator_DotnetNew_SearchTemplatesHint">
+            <summary>
+              Looks up a localized string similar to Display templates available on NuGet.org with:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateInformationCoordinator_DotnetNew_TemplatesHeader">
+            <summary>
+              Looks up a localized string similar to Common templates are:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateListCoordinator_Error_FailedConstraints">
+            <summary>
+              Looks up a localized string similar to {0} template(s) are hidden because their constraints are not satisfied. To show them, use the &apos;{1}&apos; option..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateOptions_Error_AllowedValuesForOptionList">
+            <summary>
+              Looks up a localized string similar to Allowed values for &apos;{0}&apos; option are: {1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_BuiltInCheck_Info_BuiltInPackageAvailable">
+            <summary>
+              Looks up a localized string similar to An update for template package &apos;{0}&apos; is available in the &apos;{1}&apos; provider..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_BuiltInCheck_Info_UninstallPackage">
+            <summary>
+              Looks up a localized string similar to To use built-in template package, uninstall manually installed template package using:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Download_Error_VulnerablePackage">
+            <summary>
+              Looks up a localized string similar to Failed to install {0}, due to detected vulnerabilities:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Download_VulnerablePackage">
+            <summary>
+              Looks up a localized string similar to Installed package has the following vulnerabilities:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Error_PackageForTemplateNotFound">
+            <summary>
+              Looks up a localized string similar to Could not find the template package containing template &apos;{0}&apos;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Error_PackageNameContainsTemplates">
+            <summary>
+              Looks up a localized string similar to {0} (contains {1} templates).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Error_PackageNotFound">
+            <summary>
+              Looks up a localized string similar to The template package &apos;{0}&apos; is not found..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Error_TemplateIncludedToPackages">
+            <summary>
+              Looks up a localized string similar to The template &apos;{0}&apos; is included to the packages:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Install_ConstraintsNotice">
+            <summary>
+              Looks up a localized string similar to The following templates might not work because their constraints are not met:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Install_Error_FoundNoPackagesToInstall">
+            <summary>
+              Looks up a localized string similar to Found no template packages to install..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Install_Error_SameInstallRequests">
+            <summary>
+              Looks up a localized string similar to The command is attempting to install the template package &apos;{0}&apos; twice, check the arguments and retry..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Install_Error_VulnerablePackageTip">
+            <summary>
+              Looks up a localized string similar to In order to install this package, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Install_Info_OverrideNotice">
+            <summary>
+              Looks up a localized string similar to Installing the template package(s) will override the available template package(s)..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Install_Info_PackageIsAvailable">
+            <summary>
+              Looks up a localized string similar to The following template package(s) are already available:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Install_Info_PackagesToBeInstalled">
+            <summary>
+              Looks up a localized string similar to The following template packages will be installed:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Install_Info_UseForceToOverride">
+            <summary>
+              Looks up a localized string similar to To install the template package(s) anyway, apply &apos;{0}&apos; option:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Error_AlreadyInstalled">
+            <summary>
+              Looks up a localized string similar to {0} is already installed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Error_AlreadyInstalled_Hint">
+            <summary>
+              Looks up a localized string similar to To reinstall the same version of the template package, use &apos;{0}&apos; option:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Error_DownloadFailed">
+            <summary>
+              Looks up a localized string similar to {0} could not be installed, download failed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Error_GenericError">
+            <summary>
+              Looks up a localized string similar to {0} could not be installed..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Error_InvalidNuGetFeeds">
+            <summary>
+              Looks up a localized string similar to {0} could not be installed, no NuGet feeds are configured or they are invalid..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Error_InvalidPackage">
+            <summary>
+              Looks up a localized string similar to Failed to install {0}, failed to uninstall previous version of the template package..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Error_PackageNotFound">
+            <summary>
+              Looks up a localized string similar to {0} could not be installed, the package does not exist..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Error_UninstallFailed">
+            <summary>
+              Looks up a localized string similar to Failed to install {0}, the template package is invalid..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Error_UnsupportedRequest">
+            <summary>
+              Looks up a localized string similar to {0} is not supported..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Info_Success">
+            <summary>
+              Looks up a localized string similar to Success: {0} installed the following templates:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_lnstall_Warning_No_Templates_In_Package">
+            <summary>
+              Looks up a localized string similar to No templates were found in the package {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Uninstall_Error_GenericError">
+            <summary>
+              Looks up a localized string similar to Failed to uninstall {0}, reason: {1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Uninstall_Error_ListPackagesHeader">
+            <summary>
+              Looks up a localized string similar to To list installed template packages use:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Uninstall_Error_UninstallCommandHeader">
+            <summary>
+              Looks up a localized string similar to To uninstall the template package use:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Uninstall_Info_DetailsHeader">
+            <summary>
+              Looks up a localized string similar to Details:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Uninstall_Info_InstalledItems">
+            <summary>
+              Looks up a localized string similar to Currently installed items:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Uninstall_Info_Success">
+            <summary>
+              Looks up a localized string similar to Success: {0} was uninstalled..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Uninstall_Info_UninstallCommandHint">
+            <summary>
+              Looks up a localized string similar to Uninstall Command:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Error_GenericError">
+            <summary>
+              Looks up a localized string similar to Failed to check update for {0}: {1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Error_InvalidNuGetFeeds">
+            <summary>
+              Looks up a localized string similar to Failed to check update for {0}: no NuGet feeds are configured or they are invalid..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Error_PackageNotFound">
+            <summary>
+              Looks up a localized string similar to Failed to check update for {0}: the package is not available in configured NuGet feeds..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Error_PackageNotSupported">
+            <summary>
+              Looks up a localized string similar to Failed to check update for {0}: the package is not supported..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Error_VulnerablePackage">
+            <summary>
+              Looks up a localized string similar to The package {0} was not updated due to detected vulnerabilities:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Error_VulnerablePackageTip">
+            <summary>
+              Looks up a localized string similar to In order to update this package, run:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Info_AllPackagesAreUpToDate">
+            <summary>
+              Looks up a localized string similar to All template packages are up-to-date..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Info_PackagesToBeUpdated">
+            <summary>
+              Looks up a localized string similar to The following template packages will be updated:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Info_UpdateAllCommandHeader">
+            <summary>
+              Looks up a localized string similar to To update all the packages use:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Info_UpdateAvailable">
+            <summary>
+              Looks up a localized string similar to An update for template package &apos;{0}&apos; is available..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Info_UpdateAvailablePackages">
+            <summary>
+              Looks up a localized string similar to An update for template packages is available:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Update_Info_UpdateSingleCommandHeader">
+            <summary>
+              Looks up a localized string similar to To update the package use:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_UpdateCheck_Error_VulnerablePackage">
+            <summary>
+              Looks up a localized string similar to The package {0} contains vulnerabilities:.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_Verbose_NuGetCredentialServiceError">
+            <summary>
+              Looks up a localized string similar to Failed to initialize NuGet credential service, details: {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_VulnerabilitySeverity_Critical">
+            <summary>
+              Looks up a localized string similar to Critical.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_VulnerabilitySeverity_High">
+            <summary>
+              Looks up a localized string similar to High.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_VulnerabilitySeverity_Low">
+            <summary>
+              Looks up a localized string similar to Low.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatePackageCoordinator_VulnerabilitySeverity_Moderate">
+            <summary>
+              Looks up a localized string similar to Moderate.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplateResolver_Warning_FailedToReparseTemplate">
+            <summary>
+              Looks up a localized string similar to [Warning]: Failed to parse input for template {0}, it will be skipped from further processing..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Templates">
+            <summary>
+              Looks up a localized string similar to Templates.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatesFoundMatchingInputParameters">
+            <summary>
+              Looks up a localized string similar to These templates matched your input: {0}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.TemplatesNotValidGivenTheSpecifiedFilter">
+            <summary>
+              Looks up a localized string similar to {0} template(s) partially matched, but failed on {1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.ThirdPartyNotices">
+            <summary>
+              Looks up a localized string similar to This template contains technologies from parties other than Microsoft, see {0} for details..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Type">
+            <summary>
+              Looks up a localized string similar to Type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.UnableToSetPermissions">
+            <summary>
+              Looks up a localized string similar to Unable to apply permissions {0} to &quot;{1}&quot;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.UnexpectedResult">
+            <summary>
+              Looks up a localized string similar to Template generation ended with unexpected result: &apos;{0}&apos;. Details: {1}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.UnknownChangeKind">
+            <summary>
+              Looks up a localized string similar to Unknown Change.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.LocalizableStrings.Version">
+            <summary>
+              Looks up a localized string similar to Version:.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.NewCommandStatus">
+             <summary>
+             Exit codes based on
+              * https://tldp.org/LDP/abs/html/exitcodes.html
+              * https://github.com/openbsd/src/blob/master/include/sysexits.h.
+             Further documentation: https://aka.ms/templating-exit-codes.
+             Future exit codes should be allocated in a range of 107 - 113. If not sufficient, a range of 79 - 99 may be used as well.
+            
+             127 is not explicitly used here - it is injected from sdk:
+                https://github.com/dotnet/sdk/blob/main/src/Cli/dotnet/Parser.cs#L148.
+             </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.Success">
+            <summary>
+            The template was instantiated successfully.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.Unexpected">
+            <summary>
+            Unexpected internal software issue. The result received from template engine core is not expected.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.CannotCreateOutputFile">
+            <summary>
+            Can't create output file. The operation was cancelled due to detection of an attempt to perform destructive changes to existing files.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.CreateFailed">
+            <summary>
+            Instantiation Failed - Processing issues.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.TemplateIssueDetected">
+            <summary>
+            Invalid template or template package.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.MissingRequiredOption">
+            <summary>
+            Missing required option(s) and/or argument(s) for the command.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.NotFound">
+            <summary>
+            The template or the template package was not found.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.Cancelled">
+            <summary>
+            The operation was cancelled.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.PostActionFailed">
+            <summary>
+            Instantiation Failed - Post action failed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.InstallFailed">
+            <summary>
+            Installation/Uninstallation Failed - Processing issues.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.InvalidOption">
+            <summary>
+            Unrecognized option(s) and/or argument(s) for a command.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.NuGetUtils.GetNuGetPackageInfo(Microsoft.TemplateEngine.Abstractions.IEngineEnvironmentSettings,System.String)">
+            <summary>
+            Gets ID and version of NuGet package.
+            </summary>
+            <param name="engineEnvironmentSettings">environment settings.</param>
+            <param name="packageLocation">file path to NuGet package.</param>
+            <returns>ID and version of NuGet package; or default in case path is not a valid NuGet package.</returns>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.PostActionExecutionStatus">
+            <summary>
+            Indicates post action execution status.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.PostActionExecutionStatus.Success">
+            <summary>
+            All post actions executed successfully.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.PostActionExecutionStatus.Failure">
+            <summary>
+            One or more post actions failed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.PostActionExecutionStatus.Cancelled">
+            <summary>
+            User has cancelled post action execution.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.PostActionDispatcher.#ctor(Microsoft.TemplateEngine.Abstractions.IEngineEnvironmentSettings,System.Func{System.String})">
+            <summary>
+            Creates the instance.
+            </summary>
+            <param name="environment">template engine environment settings.</param>
+            <param name="inputGetter">the predicate to get user input whether to run the post action.</param>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.PostActionDispatcher.Process(Microsoft.TemplateEngine.Edge.Template.ITemplateCreationResult,System.Boolean,Microsoft.TemplateEngine.Cli.AllowRunScripts)">
+            <summary>
+            Process post actions based on <paramref name="creationResult"/>.
+            </summary>
+            <param name="creationResult">the result of template creation or dry run.</param>
+            <param name="isDryRun">true if dry run should be done, false if post actions should be performed.</param>
+            <param name="canRunScripts">indicates if run script post action is allowed to be run.</param>
+            <returns>
+            <see cref="T:Microsoft.TemplateEngine.Cli.PostActionExecutionStatus"/> containing result of post action execution.<br />
+            Note that if <see cref="P:Microsoft.TemplateEngine.Abstractions.IPostAction.ContinueOnError"/> is set to true, the result will be <see cref="F:Microsoft.TemplateEngine.Cli.PostActionExecutionStatus.Success"/> even if the post action fails.
+            If the user cancelled post action with <see cref="P:Microsoft.TemplateEngine.Abstractions.IPostAction.ContinueOnError"/> set to true, the result will be <see cref="F:Microsoft.TemplateEngine.Cli.PostActionExecutionStatus.Cancelled"></see> anyway.<br />
+            Note that <see cref="T:Microsoft.TemplateEngine.Cli.PostActionExecutionStatus"/> is a flags enum, and can contain multiple status if multiple post actions failed with different reason.
+            </returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.PostActionProcessors.AddJsonPropertyPostActionProcessor.JsonContentParameters.CreateFromPostAction(Microsoft.TemplateEngine.Abstractions.IPostAction)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.TemplateEngine.Cli.PostActionProcessors.AddJsonPropertyPostActionProcessor.JsonContentParameters"/> based on the configured arguments in the Post Action.
+            </summary>
+            <param name="action"></param>
+            <returns>A <see cref="T:Microsoft.TemplateEngine.Cli.PostActionProcessors.AddJsonPropertyPostActionProcessor.JsonContentParameters"/> instance, or null if no instance could be created.</returns>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.PostActionProcessors.IPostActionProcessor">
+            <summary>
+            The interface defining the post action processor supported by dotnet CLI.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.PostActionProcessors.IPostActionProcessor.Process(Microsoft.TemplateEngine.Abstractions.IEngineEnvironmentSettings,Microsoft.TemplateEngine.Abstractions.IPostAction,Microsoft.TemplateEngine.Abstractions.ICreationEffects,Microsoft.TemplateEngine.Abstractions.ICreationResult,System.String)">
+            <summary>
+            Processes the post action.
+            </summary>
+            <param name="environment">template engine environment settings.</param>
+            <param name="action">the post action to process as returned by generator.</param>
+            <param name="creationEffects">the results of the template dry run.</param>
+            <param name="templateCreationResult">the results of the template instantiation.</param>
+            <param name="outputBasePath">the output directory the template was instantiated to.</param>
+            <returns>true if the post action is executed successfully, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.PostActionProcessors.PostActionProcessorBase.GetTargetForSource(Microsoft.TemplateEngine.Abstractions.ICreationEffects2,System.String,System.String)">
+            <summary>
+            Gets absolute normalized path for a target matching <paramref name="sourcePathGlob"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TabularOutput.TemplateGroupDisplay.DisplayTemplateList(Microsoft.TemplateEngine.Abstractions.IEngineEnvironmentSettings,System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Cli.TemplateGroup},Microsoft.TemplateEngine.Cli.TabularOutput.TabularOutputSettings,Microsoft.DotNet.Cli.Utils.IReporter,System.String)">
+             <summary>
+             Displays the list of templates in a table, one row per template group.
+            
+             The columns displayed are as follows:
+             Except where noted, the values are taken from the highest-precedence template in the group. The info could vary among the templates in the group, but shouldn't.
+             (There is no check that the info doesn't vary.)
+             - Template Name
+             - Short Name: displays the all available short names for the group.
+             - Language: All languages supported by any template in the group are displayed, with the default language in brackets, e.g.: [C#]
+             - Tags
+             The columns can be configured via the command args, see <see cref="T:Microsoft.TemplateEngine.Cli.Commands.ITabularOutputArgs"/>/>.
+             </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TabularOutput.TemplateGroupDisplay.DisplayTemplateList(Microsoft.TemplateEngine.Abstractions.IEngineEnvironmentSettings,System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Abstractions.ITemplateInfo},Microsoft.TemplateEngine.Cli.TabularOutput.TabularOutputSettings,Microsoft.DotNet.Cli.Utils.IReporter,System.String)">
+             <summary>
+             Displays the list of templates in a table, one row per template group.
+            
+             The columns displayed are as follows:
+             Except where noted, the values are taken from the highest-precedence template in the group. The info could vary among the templates in the group, but shouldn't.
+             (There is no check that the info doesn't vary.)
+             - Template Name
+             - Short Name: displays the all available short names for the group.
+             - Language: All languages supported by any template in the group are displayed, with the default language in brackets, e.g.: [C#]
+             - Tags
+             The columns can be configured via the command args, see <see cref="T:Microsoft.TemplateEngine.Cli.Commands.ITabularOutputArgs"/>/>.
+             </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TabularOutput.TemplateGroupDisplay.GetLanguagesToDisplay(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Abstractions.ITemplateInfo},System.String,System.String,Microsoft.TemplateEngine.Abstractions.IEnvironment)">
+            <summary>
+            Displays the template languages.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TabularOutput.TemplateGroupDisplay.GetAuthorsToDisplay(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Abstractions.ITemplateInfo},Microsoft.TemplateEngine.Abstractions.IEnvironment)">
+            <summary>
+            Displays the template authors.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TabularOutput.TemplateGroupDisplay.GetTemplateGroupsForListDisplay(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Abstractions.ITemplateInfo},System.String,System.String,Microsoft.TemplateEngine.Abstractions.IEnvironment)">
+            <summary>
+            Generates the list of template groups for table display.
+            Except where noted, the values are taken from the highest-precedence template in the group. The info could vary among the templates in the group, but shouldn't. (There is no check that the info doesn't vary.)
+            - Template Name
+            - Short Name: displays the first short name from the highest precedence template in the group.
+            - Language: All languages supported by any template in the group are displayed, with the default language in brackets, e.g.: [C#]
+            - Tags
+            - Author
+            - Type.
+            </summary>
+            <param name="templateList">list of templates to be displayed.</param>
+            <param name="language">language from the command input.</param>
+            <param name="defaultLanguage">default language.</param>
+            <param name="environment"><see cref="T:Microsoft.TemplateEngine.Abstractions.IEnvironment"/> settings to use.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TabularOutput.TemplateGroupDisplay.GetClassificationsToDisplay(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Abstractions.ITemplateInfo},Microsoft.TemplateEngine.Abstractions.IEnvironment)">
+            <summary>
+            Displays the template tags.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TabularOutput.TemplateGroupDisplay.GetTemplateGroupsForListDisplay(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Cli.TemplateGroup},System.String,System.String,Microsoft.TemplateEngine.Abstractions.IEnvironment)">
+            <summary>
+            Generates the list of template groups for table display.
+            Except where noted, the values are taken from the highest-precedence template in the group. The info could vary among the templates in the group, but shouldn't. (There is no check that the info doesn't vary.)
+            - Template Name
+            - Short Name: displays the first short name from the highest precedence template in the group.
+            - Language: All languages supported by any template in the group are displayed, with the default language in brackets, e.g.: [C#]
+            - Tags
+            - Author
+            - Type.
+            </summary>
+            <param name="templateGroupList">list of template groups to be displayed.</param>
+            <param name="language">language from the command input.</param>
+            <param name="defaultLanguage">default language.</param>
+            <param name="environment"><see cref="T:Microsoft.TemplateEngine.Abstractions.IEnvironment"/> settings to use.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TabularOutput.TemplateGroupTableRow">
+            <summary>
+            Represents a table row for template group display.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TelemetryHelper.PrepareHashedChoiceValue(Microsoft.TemplateEngine.Abstractions.ITemplateInfo,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String},System.String)">
+            <summary>
+             Checks if the <paramref name="parameterValues"/> contains a valid value for choice parameter name <paramref name="parameterName"/>.
+             If so, returns hashed value of parameter value, otherwise <see langword="null"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TemplateGroup">
+            <summary>
+            The class represents template group. Templates in single group:<br/>
+            - should same group identity
+            - should have different template identity <br/>
+            - same short name (however different short names are also supported) <br/>
+            - the templates may have different languages and types <br/>
+            - the templates should have different precedence value in case same language is used <br/>
+            - the templates in the group may have different parameters and different choices for parameter symbols defined<br/>
+            In case the template does not have group identity defined it represents separate template group with single template.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateGroup.#ctor(System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Cli.CliTemplateInfo})">
+            <summary>
+            Constructor of TemplateGroup.
+            </summary>
+            <param name="templates">the templates of the template group.</param>
+            <exception cref="T:System.ArgumentNullException">when <paramref name="templates"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">when <paramref name="templates"/> is empty or don't have same <see cref="P:Microsoft.TemplateEngine.Abstractions.ITemplateMetadata.GroupIdentity"/> defined.</exception>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.GroupIdentity">
+            <summary>
+            Group identity of template group. The value can be null if the template does not have group identity set.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.ShortNames">
+            <summary>
+            Returns the list of short names defined for templates in the group.
+            In theory, template group templates can have different short names but they are treated equally.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.Languages">
+            <summary>
+            Returns the list of languages defined for templates in the group.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.Types">
+            <summary>
+            Returns the list of types defined for templates in the group.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.Baselines">
+            <summary>
+            Returns the list of baselines defined for templates in the group.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.Name">
+            <summary>
+            Returns the full name of template group
+            Template group name is the name of highest precedence template in the group.
+            If multiple templates have the maximum precedence, the name of first one is returned.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.Description">
+            <summary>
+            Returns the description of template group.
+            Template group description is the description of the template in the group with the highest precedence.
+            If multiple templates have the maximum precedence, the description of the first one is returned.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.Authors">
+            <summary>
+            Returns the authors of template group.
+            If different templates have different authors, lists all of them.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.HasGroupIdentity">
+            <summary>
+            Returns true when <see cref="P:Microsoft.TemplateEngine.Cli.TemplateGroup.GroupIdentity"/> is not <c>null</c> or empty.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.HasSingleTemplate">
+            <summary>
+            Returns true when the template group has single template.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateGroup.Templates">
+            <summary>
+            Returns the list of templates in the group.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateGroup.GetManagedTemplatePackagesAsync(Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager,System.Threading.CancellationToken)">
+            <summary>
+            Gets the list of <b>managed</b> template packages which contain templates of template group.
+            </summary>
+            <remarks>
+            The method might throw exceptions if <see cref="M:Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager.GetTemplatePackageAsync(Microsoft.TemplateEngine.Abstractions.ITemplateInfo,System.Threading.CancellationToken)"/> call throws.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateGroup.GetTemplatePackagesAsync(Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager,System.Threading.CancellationToken)">
+            <summary>
+            Gets the list of template packages which contain templates of template group.
+            </summary>
+            <remarks>
+            The method might throw exceptions if <see cref="M:Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager.GetTemplatePackageAsync(Microsoft.TemplateEngine.Abstractions.ITemplateInfo,System.Threading.CancellationToken)"/> call throws.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateListCoordinator.DisplayTemplateGroupListAsync(Microsoft.TemplateEngine.Cli.Commands.ListCommandArgs,System.Threading.CancellationToken)">
+            <summary>
+            Handles template list display (dotnet new3 --list).
+            </summary>
+            <param name="args">user command input.</param>
+            <param name="cancellationToken">cancellation token.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateListCoordinator.DisplayCommandDescriptionAsync(Microsoft.TemplateEngine.Cli.Commands.GlobalArgs,System.Threading.CancellationToken)">
+            <summary>
+            Handles display for dotnet new command without parameters.
+            </summary>
+            <param name="args">command arguments.</param>
+            <param name="cancellationToken">cancellation token.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateListCoordinator.GetCuratedListAsync(System.Threading.CancellationToken)">
+            <summary>
+            Displays curated list of templates for dotnet new command.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TemplatePackageCoordinator">
+            <summary>
+            The class is responsible for template package manipulation flows: install template packages (-i, --install), check for update (--update-check), apply updates (--update-apply), uninstall template packages (-u, --uninstall).
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplatePackageCoordinator.CheckUpdateForTemplate(Microsoft.TemplateEngine.Cli.Commands.TemplateCommandArgs,System.Threading.CancellationToken)">
+            <summary>
+            Checks if there is an update for the package containing the template to execute.
+            </summary>
+            <param name="args">template command arguments.</param>
+            <param name="cancellationToken"></param>
+            <returns>Task for checking the update or null when check for update is not possible.</returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplatePackageCoordinator.EnterInstallFlowAsync(Microsoft.TemplateEngine.Cli.Commands.InstallCommandArgs,System.Threading.CancellationToken)">
+            <summary>
+            Install the template package(s) flow (--install, -i).
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplatePackageCoordinator.EnterUpdateFlowAsync(Microsoft.TemplateEngine.Cli.Commands.UpdateCommandArgs,System.Threading.CancellationToken)">
+            <summary>
+            Update the template package(s) flow (--update-check and --update-apply).
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplatePackageCoordinator.EnterUninstallFlowAsync(Microsoft.TemplateEngine.Cli.Commands.UninstallCommandArgs,System.Threading.CancellationToken)">
+            <summary>
+            Uninstall the template package(s) flow (--uninstall, -u).
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplatePackageCoordinator.DisplayTemplatePackageMetadata(System.String,System.String,System.Boolean,System.Collections.Generic.IReadOnlyList{System.String},Microsoft.TemplateEngine.Cli.NuGet.NugetApiManager,System.Threading.CancellationToken)">
+            <summary>
+            Searches and displays a package metadata.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TemplatePackageDisplay">
+            <summary>
+            The class is responsible for displaying template package manipulation results to console.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateResolution.CliFilters.ExactShortNameTemplateGroupFilter(System.String)">
+            <summary>
+            Filters <see cref="T:Microsoft.TemplateEngine.Cli.TemplateGroup"/> by short name.
+            The fields to be compared are <see cref="P:Microsoft.TemplateEngine.Cli.TemplateGroup.ShortNames"/> and they should exactly match user input.
+            </summary>
+            <param name="name">the name to match with group short names.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateResolution.CliFilters.NameTemplateGroupFilter(System.String)">
+            <summary>
+            Filters <see cref="T:Microsoft.TemplateEngine.Cli.TemplateGroup"/> by name.
+            The fields to be compared are <see cref="P:Microsoft.TemplateEngine.Cli.TemplateGroup.Name"/> and <see cref="P:Microsoft.TemplateEngine.Cli.TemplateGroup.ShortNames"/>.
+            </summary>
+            <param name="name">the name to match with template group name or short name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateResolution.CliFilters.LanguageGroupFilter(System.String,System.String)">
+            <summary>
+            Filters <see cref="T:Microsoft.TemplateEngine.Cli.TemplateGroup"/> by language.
+            </summary>
+            <param name="language">the language from command input.</param>
+            <param name="defaultLanguage">the default language.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TemplateResolution.ListTemplateResolver">
+            <summary>
+            Resolves the templates to be used for 'dotnet new &lt;name part&gt; --list'.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.ParameterMatchInfo.MismatchKind.InvalidName">
+            <summary>
+            The parameter name is not defined in <see cref="P:Microsoft.TemplateEngine.Abstractions.ITemplateMetadata.ParameterDefinitions"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.ParameterMatchInfo.MismatchKind.InvalidValue">
+            <summary>
+             The parameter value is different format that is supported by <see cref="P:Microsoft.TemplateEngine.Abstractions.ITemplateMetadata.ParameterDefinitions"/> parameter.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo">
+            <summary>
+            Represents template group matched to command input done by the user.
+            The template group is filtered by three groups of filters:
+             - group-based filters (short name/name and language at the moment)
+             - template info filters (type, baseline, tags)
+             - template option filters based on parameters defined in template.json.
+             The filters are executed in order above. If the filter provides no matched, the next groups of filters won't be executed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.GroupInfo">
+            <summary>
+            Returns information about the template group (without match information).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.IsGroupMatch">
+            <summary>
+            True when the group matches group filters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.IsGroupAndTemplateInfoMatch">
+            <summary>
+            True when the group matches group and template info filters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.IsGroupAndTemplateInfoAndParametersMatch">
+            <summary>
+            True when the group matches group, template info, and template options filters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.GroupMatchInfos">
+            <summary>
+            Returns the list of <see cref="T:Microsoft.TemplateEngine.Abstractions.TemplateFiltering.MatchInfo"/> for the group-based filters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplateMatchInfos">
+            <summary>
+            Returns the list of <see cref="T:Microsoft.TemplateEngine.Abstractions.TemplateFiltering.ITemplateMatchInfo"></see> for all templates in the group.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplateMatchInfosWithMatchingInfo">
+            <summary>
+            Returns the list of <see cref="T:Microsoft.TemplateEngine.Abstractions.TemplateFiltering.ITemplateMatchInfo"></see> for all templates that matches template info filters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplateMatchInfosWithMatchingParameters">
+            <summary>
+            Returns the list of <see cref="T:Microsoft.TemplateEngine.Abstractions.TemplateFiltering.ITemplateMatchInfo"></see> for all templates that matches template info filters and template options filters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplateMatchInfosWithMatchingParametersForPreferredLanguage">
+            <summary>
+            Returns the list of <see cref="T:Microsoft.TemplateEngine.Abstractions.TemplateFiltering.ITemplateMatchInfo"></see> for all templates of preferred language that matches template info filters, template options filters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplatesWithMatchingInfo">
+            <summary>
+            Returns the list of <see cref="T:Microsoft.TemplateEngine.Abstractions.ITemplateInfo"></see> for all templates that matches template info filters.
+            Same as <see cref="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplateMatchInfosWithMatchingInfo"/>, but returns <see cref="T:Microsoft.TemplateEngine.Abstractions.ITemplateInfo"/> without match information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplatesWithMatchingParameters">
+            <summary>
+            Returns the list of <see cref="T:Microsoft.TemplateEngine.Abstractions.ITemplateInfo"></see> for all templates that matches template info filters and template options filters.
+            Same as <see cref="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplateMatchInfosWithMatchingParameters"/>, but returns <see cref="T:Microsoft.TemplateEngine.Abstractions.ITemplateInfo"/> without match information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplatesWithMatchingParametersForPreferredLanguage">
+            <summary>
+            Returns the list of <see cref="T:Microsoft.TemplateEngine.Abstractions.ITemplateInfo"></see> for all templates of preferred language that matches template info filters, template options filters.
+            Same as <see cref="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.TemplateMatchInfosWithMatchingParametersForPreferredLanguage"/>, but returns <see cref="T:Microsoft.TemplateEngine.Abstractions.ITemplateInfo"/> without match information.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.ApplyFilters(Microsoft.TemplateEngine.Cli.TemplateGroup,System.Collections.Generic.IEnumerable{System.Func{Microsoft.TemplateEngine.Cli.TemplateGroup,Microsoft.TemplateEngine.Abstractions.TemplateFiltering.MatchInfo}},System.Collections.Generic.IEnumerable{System.Func{Microsoft.TemplateEngine.Abstractions.ITemplateInfo,Microsoft.TemplateEngine.Abstractions.TemplateFiltering.MatchInfo}},System.Func{Microsoft.TemplateEngine.Abstractions.ITemplateInfo,System.Collections.Generic.IEnumerable{Microsoft.TemplateEngine.Abstractions.TemplateFiltering.MatchInfo}})">
+            <summary>
+            Applies filters to template group.
+            </summary>
+            <param name="group">The template group to apply filters to.</param>
+            <param name="groupFilters">The group-based filters.</param>
+            <param name="templateInfoFilters">The template info filters.</param>
+            <param name="templateParametersFilter">The template parameters filters.</param>
+            <returns><see cref="T:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo"/> with match information for the filters applied.</returns>
+            <remarks>
+            Note that filters are applied in the order: group-based filters, template info filters and template parameters filters.
+            If the filter group results in mismatch, the following filter groups won't be applied.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.GetTemplateToInvoke">
+            <summary>
+            Returns the template to be invoked based on the command input or <see langword="null"/> if template to invoke cannot be resolved.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.GetValidValuesForChoiceParameter(System.String)">
+            <summary>
+            Gets the list of valid choices for <paramref name="parameter"/>.
+            </summary>
+            <param name="parameter">parameter canonical name.</param>
+            <returns>the dictionary of valid choices and descriptions.</returns>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateGroupMatchInfo.GetHighestPrecedenceTemplates">
+            <summary>
+            Gets the highest precedence templates in the group.
+            The templates should match all filter groups: group-based, template-info and template parameters filters.
+            The templates are filtered by preferred language.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult">
+            <summary>
+            The class represents the template resolution result done by <see cref="T:Microsoft.TemplateEngine.Cli.TemplateResolution.BaseTemplateResolver"/> based on command input.
+            Before template is resolved all installed templates are grouped by template group ID. Templates in single group:<br/>
+            - should have different template identity <br/>
+            - same short name (however different short names are also supported) <br/>
+            - the templates may have different languages and types <br/>
+            - the templates should have different precedence value in case same language is used <br/>
+            - the templates in the group may have different parameters and different choices for parameter symbols defined.<br/>
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status">
+            <summary>
+            <see cref="T:System.Enum"/> defines possible statuses for resolving template to invoke.<br />
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status.NotEvaluated">
+            <summary>
+            the status is not evaluated yet.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status.NoMatch">
+            <summary>
+            no matched template groups were resolved.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status.SingleMatch">
+            <summary>
+            single template group and single template to use in the group is resolved.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status.AmbiguousTemplateGroupChoice">
+            <summary>
+            multiple template groups were resolved; not possible to determine the group to use.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status.AmbiguousTemplateChoice">
+            <summary>
+            single template group was resolved, but there is an ambiguous choice for template inside the group and the templates are of same language. Usually means that the installed templates are conflicting and the conflict should be resolved by uninistalling some of templates.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status.AmbiguousLanguageChoice">
+            <summary>
+            single template group was resolved, but there is an ambiguous choice for template inside the group with templates having different languages and the language was not selected by user and no default language match.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status.InvalidParameter">
+            <summary>
+            single template group was resolved, but parameters or choice parameter values provided are invalid for all templates in the group.
+            </summary>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroupStatus">
+            <summary>
+            <see cref="T:System.Enum"/> defines possible statuses for unambiguous template group resolution.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroupStatus.NotEvaluated">
+            <summary>
+            the status is not evaluated yet.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroupStatus.NoMatch">
+            <summary>
+            no matched template groups were resolved.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroupStatus.SingleMatch">
+            <summary>
+            single template group is resolved.
+            </summary>
+        </member>
+        <member name="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroupStatus.Ambiguous">
+            <summary>
+            multiple template groups were resolved; not possible to determining the group to use.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.ResolutionStatus">
+            <summary>
+            Returns status of template resolution. <br />
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateToInvoke">
+            <summary>
+            Returns the template to invoke and parameters to be used or <see langword="null"/> if the template to invoke cannot be determined.
+            Has value only when <see cref="T:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status" /> is <see cref="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.Status.SingleMatch"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroups">
+            <summary>
+            Returns template groups that matches command input based on group filters applied (template info and template parameter filters are not considered in the match).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroupsWithMatchingTemplateInfo">
+            <summary>
+            Returns template groups that matches command input based on group filters and template info filters applied (template parameters matches are not considered in the match).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroupsWithMatchingTemplateInfoAndParameters">
+            <summary>
+            Returns template groups that matches command input based on group filters, template info filters and template parameters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.GroupResolutionStatus">
+            <summary>
+            Returns status of  template group resolution.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.UnambiguousTemplateGroup">
+            <summary>
+            Returns unambiguous template group resolved; <c>null</c> if group cannot be resolved based on command input
+            Has value only when <see cref="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.GroupResolutionStatus" /> is <see cref="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroupStatus.SingleMatch"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.UnambiguousTemplateGroupMatchInfo">
+            <summary>
+            Returns unambiguous template group resolved; <c>null</c> if group cannot be resolved based on command input
+            Has value only when <see cref="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.GroupResolutionStatus" /> is <see cref="F:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.TemplateGroupStatus.SingleMatch"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.HasLanguageMismatch">
+            <summary>
+            Returns true when at least one template has mismatch in language.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.HasTypeMismatch">
+            <summary>
+            Returns true when at least one template has mismatch in context (type).
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.HasBaselineMismatch">
+            <summary>
+            Returns true when at least one template has mismatch in baseline.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.HasAuthorMismatch">
+            <summary>
+            Returns true when at least one template has mismatch in author.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.HasClassificationMismatch">
+            <summary>
+            Returns true when at least one template has mismatch in tags.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.HasTemplateGroupWithTemplateInfoMatches">
+            <summary>
+            Returns true when at least one template group has template that matches filters. Template parameters matches are not considered.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.ContraintsMismatchGroupCount">
+            <summary>
+            Returns count of groups that would be a match but failed on constraints.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.ListFilterMismatchGroupCount">
+            <summary>
+            Returns count of groups that would be a match but failed on filters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.TemplateEngine.Cli.TemplateResolution.TemplateResolutionResult.HasTemplateGroupMatches">
+            <summary>
+            Returns true when there is at least one template group that matches group filters. Template info filters and parameters matches are not considered.
+            </summary>
+        </member>
+        <member name="M:Microsoft.TemplateEngine.Cli.TemplateSearch.CliTemplateSearchCoordinator.SearchForTemplateMatchesAsync(Microsoft.TemplateEngine.Abstractions.IEngineEnvironmentSettings,Microsoft.TemplateEngine.Edge.Settings.TemplatePackageManager,Microsoft.TemplateEngine.Cli.Commands.SearchCommandArgs,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Executes searching for the templates in configured remote sources.
+            Performs validation for the commands, search for the templates in configured remote source, displays the results in table format.
+            </summary>
+            <param name="environmentSettings">environment settings.</param>
+            <param name="templatePackageManager"></param>
+            <param name="commandArgs">new command data.</param>
+            <param name="defaultLanguage">default language for the host.</param>
+            <param name="cancellationToken"></param>
+            <returns><see cref="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.Success"/> when the templates were found and displayed;
+            <see cref="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.MissingRequiredOption"/> when the command validation fails;
+            <see cref="F:Microsoft.TemplateEngine.Cli.NewCommandStatus.NotFound"/> when no templates found based on the filter criteria.
+            </returns>
+        </member>
+        <member name="T:Microsoft.TemplateEngine.Cli.TemplateSearch.CliTemplateSearchCoordinator.SearchResultTableRow">
+            <summary>
+            Represents a table row for the template with the package information.
+            </summary>
+        </member>
+        <member name="T:Wcwidth.Unicode">
+            <summary>
+            Represents a Unicode version.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_4_1_0">
+            <summary>
+            Unicode version 4.1.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_5_0_0">
+            <summary>
+            Unicode version 5.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_5_1_0">
+            <summary>
+            Unicode version 5.1.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_5_2_0">
+            <summary>
+            Unicode version 5.2.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_6_0_0">
+            <summary>
+            Unicode version 6.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_6_1_0">
+            <summary>
+            Unicode version 6.1.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_6_2_0">
+            <summary>
+            Unicode version 6.2.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_6_3_0">
+            <summary>
+            Unicode version 6.3.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_7_0_0">
+            <summary>
+            Unicode version 7.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_8_0_0">
+            <summary>
+            Unicode version 8.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_9_0_0">
+            <summary>
+            Unicode version 9.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_10_0_0">
+            <summary>
+            Unicode version 10.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_11_0_0">
+            <summary>
+            Unicode version 11.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_12_0_0">
+            <summary>
+            Unicode version 12.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_12_1_0">
+            <summary>
+            Unicode version 12.1.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_13_0_0">
+            <summary>
+            Unicode version 13.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_14_0_0">
+            <summary>
+            Unicode version 14.0.0.
+            </summary>
+        </member>
+        <member name="F:Wcwidth.Unicode.Version_15_0_0">
+            <summary>
+            Unicode version 15.0.0.
+            </summary>
+        </member>
+        <member name="T:Wcwidth.UnicodeCalculator">
+            <summary>
+            A utility for calculating the width of Unicode characters.
+            </summary>
+        </member>
+        <member name="M:Wcwidth.UnicodeCalculator.GetWidth(System.Int32,System.Nullable{Wcwidth.Unicode})">
+            <summary>
+            Gets the width of a Unicode code point.
+            </summary>
+            <param name="value">The Unicode code point to calculate the width of.</param>
+            <param name="version">The Unicode version to use.</param>
+            <returns>The width of the character (-1, 0, 1, 2).</returns>
+        </member>
+        <member name="M:Wcwidth.UnicodeCalculator.GetWidth(System.Text.Rune,System.Nullable{Wcwidth.Unicode})">
+            <summary>
+            Gets the width of a Unicode scalar.
+            </summary>
+            <param name="value">The Unicode scalar to calculate the width of.</param>
+            <param name="version">The Unicode version to use.</param>
+            <returns>The width of the character (-1, 0, 1, 2).</returns>
+        </member>
+        <member name="M:Wcwidth.UnicodeCalculator.GetWidth(System.Char,System.Nullable{Wcwidth.Unicode})">
+            <summary>
+            Gets the width of a UTF-16 code unit.
+            </summary>
+            <param name="value">The UTF-16 code unit to calculate the width of.</param>
+            <param name="version">The Unicode version to use.</param>
+            <returns>The width of the character (-1, 0, 1, 2).</returns>
+        </member>
+    </members>
+</doc>

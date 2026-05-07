@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.ObjectPool</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.ObjectPool.DefaultObjectPool`1">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/>.
+            </summary>
+            <typeparam name="T">The type to pool objects for.</typeparam>
+            <remarks>This implementation keeps a cache of retained objects. This means that if objects are returned when the pool has already reached "maximumRetained" objects they will be available to be Garbage Collected.</remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.DefaultObjectPool`1.#ctor(Microsoft.Extensions.ObjectPool.IPooledObjectPolicy{`0})">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Extensions.ObjectPool.DefaultObjectPool`1"/>.
+            </summary>
+            <param name="policy">The pooling policy to use.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.DefaultObjectPool`1.#ctor(Microsoft.Extensions.ObjectPool.IPooledObjectPolicy{`0},System.Int32)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Extensions.ObjectPool.DefaultObjectPool`1"/>.
+            </summary>
+            <param name="policy">The pooling policy to use.</param>
+            <param name="maximumRetained">The maximum number of objects to retain in the pool.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.DefaultObjectPool`1.Get">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.DefaultObjectPool`1.Return(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.DefaultObjectPool`1.ReturnCore(`0)">
+            <summary>
+            Returns an object to the pool.
+            </summary>
+            <returns>true if the object was returned to the pool</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.DefaultObjectPoolProvider">
+            <summary>
+            The default <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPoolProvider"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ObjectPool.DefaultObjectPoolProvider.MaximumRetained">
+            <summary>
+            The maximum number of objects to retain in the pool.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.DefaultObjectPoolProvider.Create``1(Microsoft.Extensions.ObjectPool.IPooledObjectPolicy{``0})">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.DefaultPooledObjectPolicy`1">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.Extensions.ObjectPool.PooledObjectPolicy`1"/>.
+            </summary>
+            <typeparam name="T">The type of object which is being pooled.</typeparam>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.DefaultPooledObjectPolicy`1.Create">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.DefaultPooledObjectPolicy`1.Return(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.IPooledObjectPolicy`1">
+            <summary>
+            Represents a policy for managing pooled objects.
+            </summary>
+            <typeparam name="T">The type of object which is being pooled.</typeparam>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.IPooledObjectPolicy`1.Create">
+            <summary>
+            Create a <typeparamref name="T"/>.
+            </summary>
+            <returns>The <typeparamref name="T"/> which was created.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.IPooledObjectPolicy`1.Return(`0)">
+            <summary>
+            Runs some processing when an object was returned to the pool. Can be used to reset the state of an object and indicate if the object should be returned to the pool.
+            </summary>
+            <param name="obj">The object to return to the pool.</param>
+            <returns><see langword="true" /> if the object should be returned to the pool. <see langword="false" /> if it's not possible/desirable for the pool to keep the object.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.IResettable">
+            <summary>
+            Defines a method to reset an object to its initial state.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.IResettable.TryReset">
+            <summary>
+            Reset the object to a neutral state, semantically similar to when the object was first constructed.
+            </summary>
+            <returns><see langword="true" /> if the object was able to reset itself, otherwise <see langword="false" />.</returns>
+            <remarks>
+            In general, this method is not expected to be thread-safe.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPool`1">
+            <summary>
+            An <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/> implementation that detects leaks in the use of the object pool.
+            <para>
+            A leak is produced if an object is leased from the pool but not returned before it is finalized.
+            An error is only produced in <c>Debug</c> builds.
+            This type is only recommended to be used for diagnostic builds.
+            </para>
+            </summary>
+            <typeparam name="T">The type of object which is being pooled.</typeparam>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPool`1.#ctor(Microsoft.Extensions.ObjectPool.ObjectPool{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPool`1"/>.
+            </summary>
+            <param name="inner">The <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/> instance to track leaks in.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPool`1.Get">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPool`1.Return(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPoolProvider">
+            <summary>
+            An <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPoolProvider"/> that produces instances of
+            <see cref="T:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPool`1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPoolProvider.#ctor(Microsoft.Extensions.ObjectPool.ObjectPoolProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPoolProvider"/>.
+            </summary>
+            <param name="inner">The <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPoolProvider"/> to wrap.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.LeakTrackingObjectPoolProvider.Create``1(Microsoft.Extensions.ObjectPool.IPooledObjectPolicy{``0})">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.ObjectPool`1">
+            <summary>
+            A pool of objects.
+            </summary>
+            <typeparam name="T">The type of objects to pool.</typeparam>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.ObjectPool`1.Get">
+            <summary>
+            Gets an object from the pool if one is available, otherwise creates one.
+            </summary>
+            <returns>A <typeparamref name="T"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.ObjectPool`1.Return(`0)">
+            <summary>
+            Return an object to the pool.
+            </summary>
+            <param name="obj">The object to add to the pool.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.ObjectPool">
+            <summary>
+            Methods for creating <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.ObjectPool.Create``1(Microsoft.Extensions.ObjectPool.IPooledObjectPolicy{``0})">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.ObjectPoolProvider">
+            <summary>
+            A provider of <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.ObjectPoolProvider.Create``1">
+            <summary>
+            Creates an <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool"/>.
+            </summary>
+            <typeparam name="T">The type to create a pool for.</typeparam>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.ObjectPoolProvider.Create``1(Microsoft.Extensions.ObjectPool.IPooledObjectPolicy{``0})">
+            <summary>
+            Creates an <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool"/> with the given <see cref="T:Microsoft.Extensions.ObjectPool.IPooledObjectPolicy`1"/>.
+            </summary>
+            <typeparam name="T">The type to create a pool for.</typeparam>
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.ObjectPoolProviderExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPoolProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.ObjectPoolProviderExtensions.CreateStringBuilderPool(Microsoft.Extensions.ObjectPool.ObjectPoolProvider)">
+            <summary>
+            Creates an <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/> that pools <see cref="T:System.Text.StringBuilder"/> instances.
+            </summary>
+            <param name="provider">The <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPoolProvider"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.ObjectPoolProviderExtensions.CreateStringBuilderPool(Microsoft.Extensions.ObjectPool.ObjectPoolProvider,System.Int32,System.Int32)">
+            <summary>
+            Creates an <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/> that pools <see cref="T:System.Text.StringBuilder"/> instances.
+            </summary>
+            <param name="provider">The <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPoolProvider"/>.</param>
+            <param name="initialCapacity">The initial capacity to initialize <see cref="T:System.Text.StringBuilder"/> instances with.</param>
+            <param name="maximumRetainedCapacity">The maximum value for <see cref="P:System.Text.StringBuilder.Capacity"/> that is allowed to be
+            retained, when an instance is returned.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.PooledObjectPolicy`1">
+            <summary>
+            A base type for <see cref="T:Microsoft.Extensions.ObjectPool.IPooledObjectPolicy`1"/>.
+            </summary>
+            <typeparam name="T">The type of object which is being pooled.</typeparam>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.PooledObjectPolicy`1.Create">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.PooledObjectPolicy`1.Return(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.ObjectPool.StringBuilderPooledObjectPolicy">
+            <summary>
+            A policy for pooling <see cref="T:System.Text.StringBuilder"/> instances.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ObjectPool.StringBuilderPooledObjectPolicy.InitialCapacity">
+            <summary>
+            Gets or sets the initial capacity of pooled <see cref="T:System.Text.StringBuilder"/> instances.
+            </summary>
+            <value>Defaults to <c>100</c>.</value>
+        </member>
+        <member name="P:Microsoft.Extensions.ObjectPool.StringBuilderPooledObjectPolicy.MaximumRetainedCapacity">
+            <summary>
+            Gets or sets the maximum value for <see cref="P:System.Text.StringBuilder.Capacity"/> that is allowed to be
+            retained, when <see cref="M:Microsoft.Extensions.ObjectPool.StringBuilderPooledObjectPolicy.Return(System.Text.StringBuilder)"/> is invoked.
+            </summary>
+            <value>Defaults to <c>4096</c>.</value>
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.StringBuilderPooledObjectPolicy.Create">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.ObjectPool.StringBuilderPooledObjectPolicy.Return(System.Text.StringBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+    </members>
+</doc>

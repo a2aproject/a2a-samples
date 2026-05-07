@@ -1,0 +1,2595 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Components.Web</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Components.BindInputElementAttribute">
+            <summary>
+            Configures options for binding subtypes of an HTML <c>input</c> element.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.BindInputElementAttribute.#ctor(System.String,System.String,System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.BindInputElementAttribute"/>.
+            </summary>
+            <param name="type">The value of the element's <c>type</c> attribute.</param>
+            <param name="suffix">The suffix value.</param>
+            <param name="valueAttribute">The name of the value attribute to be bound.</param>
+            <param name="changeAttribute">The name of an attribute that will register an associated change event.</param>
+            <param name="isInvariantCulture">
+            Determines whether binding will use <see cref="P:System.Globalization.CultureInfo.InvariantCulture" /> or <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/>.
+            </param>
+            <param name="format">
+            An optional format to use when converting values.
+            </param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.BindInputElementAttribute.Type">
+            <summary>
+            Gets the value of the element's <c>type</c> attribute.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.BindInputElementAttribute.Suffix">
+            <summary>
+            Gets the suffix value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.BindInputElementAttribute.ValueAttribute">
+            <summary>
+            Gets the name of the value attribute to be bound.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.BindInputElementAttribute.ChangeAttribute">
+            <summary>
+            Gets the name of an attribute that will register an associated change event.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.BindInputElementAttribute.IsInvariantCulture">
+            <summary>
+            Gets a value that determines whether binding will use <see cref="P:System.Globalization.CultureInfo.InvariantCulture" /> or
+            <see cref="P:System.Globalization.CultureInfo.CurrentCulture"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.BindInputElementAttribute.Format">
+            <summary>
+            Gets an optional format to use when converting values.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.ElementReferenceExtensions">
+            <summary>
+            Static class that adds extension methods to <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.ElementReferenceExtensions.FocusAsync(Microsoft.AspNetCore.Components.ElementReference)">
+            <summary>
+            Gives focus to an element given its <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            </summary>
+            <param name="elementReference">A reference to the element to focus.</param>
+            <returns>The <see cref="T:System.Threading.Tasks.ValueTask"/> representing the asynchronous focus operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.ElementReferenceExtensions.FocusAsync(Microsoft.AspNetCore.Components.ElementReference,System.Boolean)">
+            <summary>
+            Gives focus to an element given its <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            </summary>
+            <param name="elementReference">A reference to the element to focus.</param>
+            <param name="preventScroll">
+            <para>
+                A <see cref="T:System.Boolean" /> value indicating whether or not the browser should scroll the document to bring the newly-focused element into view.
+                A value of false for preventScroll (the default) means that the browser will scroll the element into view after focusing it.
+                If preventScroll is set to true, no scrolling will occur.
+            </para>
+            </param>
+            <returns>The <see cref="T:System.Threading.Tasks.ValueTask"/> representing the asynchronous focus operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.AntiforgeryRequestToken">
+            <summary>
+            The antiforgery token included in the request form data.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.AntiforgeryRequestToken.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Components.Forms.AntiforgeryRequestToken"/>.
+            </summary>
+            <param name="value">The antiforgery token value.</param>
+            <param name="formFieldName">The form field name for the antiforgery token.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.AntiforgeryRequestToken.Value">
+            <summary>
+            Gets the antiforgery token value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.AntiforgeryRequestToken.FormFieldName">
+            <summary>
+            Gets the form field name for the antiforgery token.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.AntiforgeryStateProvider">
+            <summary>
+            Provides access to the antiforgery token associated with the current session.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.AntiforgeryStateProvider.GetAntiforgeryToken">
+            <summary>
+            Gets the current <see cref="T:Microsoft.AspNetCore.Components.Forms.AntiforgeryRequestToken"/> if available.
+            </summary>
+            <returns>The current <see cref="T:Microsoft.AspNetCore.Components.Forms.AntiforgeryRequestToken"/> if available.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.AntiforgeryToken">
+            <summary>
+            Component that renders an antiforgery token as a hidden field.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.EditContextFieldClassExtensions">
+            <summary>
+            Provides extension methods to describe the state of <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>
+            fields as CSS class names.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.EditContextFieldClassExtensions.FieldCssClass``1(Microsoft.AspNetCore.Components.Forms.EditContext,System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets a string that indicates the status of the specified field as a CSS class. This will include
+            some combination of "modified", "valid", or "invalid", depending on the status of the field.
+            </summary>
+            <param name="editContext">The <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.</param>
+            <param name="accessor">An identifier for the field.</param>
+            <returns>A string that indicates the status of the field.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.EditContextFieldClassExtensions.FieldCssClass(Microsoft.AspNetCore.Components.Forms.EditContext,Microsoft.AspNetCore.Components.Forms.FieldIdentifier@)">
+            <summary>
+            Gets a string that indicates the status of the specified field as a CSS class.
+            </summary>
+            <param name="editContext">The <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.</param>
+            <param name="fieldIdentifier">An identifier for the field.</param>
+            <returns>A string that indicates the status of the field.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.EditContextFieldClassExtensions.SetFieldCssClassProvider(Microsoft.AspNetCore.Components.Forms.EditContext,Microsoft.AspNetCore.Components.Forms.FieldCssClassProvider)">
+            <summary>
+            Associates the supplied <see cref="T:Microsoft.AspNetCore.Components.Forms.FieldCssClassProvider"/> with the supplied <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.
+            This customizes the field CSS class names used within the <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.
+            </summary>
+            <param name="editContext">The <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.</param>
+            <param name="fieldCssClassProvider">The <see cref="T:Microsoft.AspNetCore.Components.Forms.FieldCssClassProvider"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.EditForm">
+            <summary>
+            Renders a form element that cascades an <see cref="P:Microsoft.AspNetCore.Components.Forms.EditForm.EditContext"/> to descendants.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.EditForm.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Forms.EditForm"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.EditForm.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be applied to the created <c>form</c> element.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.EditForm.EditContext">
+            <summary>
+            Supplies the edit context explicitly. If using this parameter, do not
+            also supply <see cref="P:Microsoft.AspNetCore.Components.Forms.EditForm.Model"/>, since the model value will be taken
+            from the <see cref="P:Microsoft.AspNetCore.Components.Forms.EditContext.Model"/> property.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.EditForm.Enhance">
+             <summary>
+             If enabled, form submission is performed without fully reloading the page. This is
+             equivalent to adding <code>data-enhance</code> to the form.
+            
+             This flag is only relevant in server-side rendering (SSR) scenarios. For interactive
+             rendering, the flag has no effect since there is no full-page reload on submit anyway.
+             </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.EditForm.Model">
+            <summary>
+            Specifies the top-level model object for the form. An edit context will
+            be constructed for this model. If using this parameter, do not also supply
+            a value for <see cref="P:Microsoft.AspNetCore.Components.Forms.EditForm.EditContext"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.EditForm.ChildContent">
+            <summary>
+            Specifies the content to be rendered inside this <see cref="T:Microsoft.AspNetCore.Components.Forms.EditForm"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.EditForm.OnSubmit">
+             <summary>
+             A callback that will be invoked when the form is submitted.
+            
+             If using this parameter, you are responsible for triggering any validation
+             manually, e.g., by calling <see cref="M:Microsoft.AspNetCore.Components.Forms.EditContext.Validate"/>.
+             </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.EditForm.OnValidSubmit">
+            <summary>
+            A callback that will be invoked when the form is submitted and the
+            <see cref="P:Microsoft.AspNetCore.Components.Forms.EditForm.EditContext"/> is determined to be valid.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.EditForm.OnInvalidSubmit">
+            <summary>
+            A callback that will be invoked when the form is submitted and the
+            <see cref="P:Microsoft.AspNetCore.Components.Forms.EditForm.EditContext"/> is determined to be invalid.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.EditForm.FormName">
+            <summary>
+            Gets or sets the form handler name. This is required for posting it to a server-side endpoint.
+            It is not used during interactive rendering.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.EditForm.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.EditForm.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.Editor`1">
+            <summary>
+            A component used for editing a value of type <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Editor`1.Value">
+            <summary>
+            The value for the component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Editor`1.ValueExpression">
+            <summary>
+            An expression that represents the value for the component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Editor`1.ValueChanged">
+            <summary>
+            A callback that gets invoked when the value changes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.Editor`1.NameFor(System.Linq.Expressions.LambdaExpression)">
+            <summary>
+            Returns the name for the specified <paramref name="expression"/> in the current context.
+            </summary>
+            <param name="expression">The expression to use to compute the name.</param>
+            <returns>The name for the specified <paramref name="expression"/> in the current context.</returns>
+            <remarks>The provided <paramref name="expression"/> must be a member expression with <see cref="P:Microsoft.AspNetCore.Components.Forms.Editor`1.Value"/> as it source.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.Editor`1.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.FieldCssClassProvider">
+            <summary>
+            Supplies CSS class names for form fields to represent their validation state or other
+            state information from an <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.FieldCssClassProvider.GetFieldCssClass(Microsoft.AspNetCore.Components.Forms.EditContext,Microsoft.AspNetCore.Components.Forms.FieldIdentifier@)">
+            <summary>
+            Gets a string that indicates the status of the specified field as a CSS class.
+            </summary>
+            <param name="editContext">The <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.</param>
+            <param name="fieldIdentifier">The <see cref="T:Microsoft.AspNetCore.Components.Forms.FieldIdentifier"/>.</param>
+            <returns>A CSS class name string.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputBase`1">
+            <summary>
+            A base class for form input components. This base class automatically
+            integrates with an <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>, which must be supplied
+            as a cascading parameter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be applied to the created element.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.Value">
+            <summary>
+            Gets or sets the value of the input. This should be used with two-way binding.
+            </summary>
+            <example>
+            @bind-Value="model.PropertyName"
+            </example>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.ValueChanged">
+            <summary>
+            Gets or sets a callback that updates the bound value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.ValueExpression">
+            <summary>
+            Gets or sets an expression that identifies the bound value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.DisplayName">
+            <summary>
+            Gets or sets the display name for this field.
+            <para>This value is used when generating error messages when the input value fails to parse correctly.</para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.EditContext">
+            <summary>
+            Gets the associated <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.
+            This property is uninitialized if the input does not have a parent <see cref="T:Microsoft.AspNetCore.Components.Forms.EditForm"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.FieldIdentifier">
+            <summary>
+            Gets the <see cref="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.FieldIdentifier"/> for the bound value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.CurrentValue">
+            <summary>
+            Gets or sets the current value of the input.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.CurrentValueAsString">
+            <summary>
+            Gets or sets the current value of the input, represented as a string.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputBase`1.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Forms.InputBase`1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputBase`1.FormatValueAsString(`0)">
+            <summary>
+            Formats the value as a string. Derived classes can override this to determine the formatting used for <see cref="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.CurrentValueAsString"/>.
+            </summary>
+            <param name="value">The value to format.</param>
+            <returns>A string representation of the value.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputBase`1.TryParseValueFromString(System.String,`0@,System.String@)">
+            <summary>
+            Parses a string to create an instance of <typeparamref name="TValue"/>. Derived classes can override this to change how
+            <see cref="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.CurrentValueAsString"/> interprets incoming values.
+            </summary>
+            <param name="value">The string value to be parsed.</param>
+            <param name="result">An instance of <typeparamref name="TValue"/>.</param>
+            <param name="validationErrorMessage">If the value could not be parsed, provides a validation error message.</param>
+            <returns>True if the value could be parsed; otherwise false.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.CssClass">
+            <summary>
+            Gets a CSS class string that combines the <c>class</c> attribute and and a string indicating
+            the status of the field being edited (a combination of "modified", "valid", and "invalid").
+            Derived components should typically use this value for the primary HTML element's 'class' attribute.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputBase`1.NameAttributeValue">
+            <summary>
+            Gets the value to be used for the input's "name" attribute.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputBase`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputBase`1.ConvertToDictionary(System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object},System.Collections.Generic.Dictionary{System.String,System.Object}@)">
+            <summary>
+            Returns a dictionary with the same values as the specified <paramref name="source"/>.
+            </summary>
+            <returns>true, if a new dictionary with copied values was created. false - otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputBase`1.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputCheckbox">
+            <summary>
+            An input component for editing <see cref="T:System.Boolean"/> values.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputCheckbox.Element">
+            <summary>
+            Gets or sets the associated <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            <para>
+            May be <see langword="null"/> if accessed before the component is rendered.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputCheckbox.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputCheckbox.TryParseValueFromString(System.String,System.Boolean@,System.String@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputDate`1">
+            <summary>
+            An input component for editing date values.
+            The supported types for the date value are:
+            <list type="bullet">
+            <item><see cref="T:System.DateTime"/></item>
+            <item><see cref="T:System.DateTimeOffset"/></item>
+            <item><see cref="T:System.DateOnly"/></item>
+            <item><see cref="T:System.TimeOnly"/></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputDate`1.Type">
+            <summary>
+            Gets or sets the type of HTML input to be rendered.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputDate`1.ParsingErrorMessage">
+            <summary>
+            Gets or sets the error message used when displaying an a parsing error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputDate`1.Element">
+            <summary>
+            Gets or sets the associated <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            <para>
+            May be <see langword="null"/> if accessed before the component is rendered.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputDate`1.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Forms.InputDate`1"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputDate`1.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputDate`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputDate`1.FormatValueAsString(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputDate`1.TryParseValueFromString(System.String,`0@,System.String@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputDateType">
+            <summary>
+            Represents the type of HTML input to be rendered by a <see cref="T:Microsoft.AspNetCore.Components.Forms.InputDate`1"/> component.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Components.Forms.InputDateType.Date">
+            <summary>
+            Lets the user enter a date.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Components.Forms.InputDateType.DateTimeLocal">
+            <summary>
+            Lets the user enter both a date and a time.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Components.Forms.InputDateType.Month">
+            <summary>
+            Lets the user enter a month and a year.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Components.Forms.InputDateType.Time">
+            <summary>
+            Lets the user enter a time.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputFile">
+            <summary>
+            A component that wraps the HTML file input element and supplies a <see cref="T:System.IO.Stream"/> for each file's contents.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputFile.OnChange">
+            <summary>
+            Gets or sets the event callback that will be invoked when the collection of selected files changes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputFile.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be applied to the input element.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputFile.Element">
+            <summary>
+            Gets or sets the associated <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            <para>
+            May be <see langword="null"/> if accessed before the component is rendered.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputFile.OnAfterRenderAsync(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputFile.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.BrowserFileExtensions">
+            <summary>
+            Contains helper methods for <see cref="T:Microsoft.AspNetCore.Components.Forms.IBrowserFile"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.BrowserFileExtensions.RequestImageFileAsync(Microsoft.AspNetCore.Components.Forms.IBrowserFile,System.String,System.Int32,System.Int32)">
+            <summary>
+            Attempts to convert the current image file to a new one of the specified file type and maximum file dimensions.
+            <para>
+            Caution: there is no guarantee that the file will be converted, or will even be a valid image file at all, either
+            before or after conversion. The conversion is requested within the browser before it is transferred to .NET
+            code, so the resulting data should be treated as untrusted.
+            </para>
+            </summary>
+            <remarks>
+            The image will be scaled to fit the specified dimensions while preserving the original aspect ratio.
+            </remarks>
+            <param name="browserFile">The <see cref="T:Microsoft.AspNetCore.Components.Forms.IBrowserFile"/> to convert to a new image file.</param>
+            <param name="format">The new image format.</param>
+            <param name="maxWidth">The maximum image width.</param>
+            <param name="maxHeight">The maximum image height</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> representing the completion of the operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.IBrowserFile">
+            <summary>
+            Represents the data of a file selected from an <see cref="T:Microsoft.AspNetCore.Components.Forms.InputFile"/> component.
+            <para>
+            Note: Metadata is provided by the client and is untrusted.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.IBrowserFile.Name">
+            <summary>
+            Gets the name of the file as specified by the browser.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.IBrowserFile.LastModified">
+            <summary>
+            Gets the last modified date as specified by the browser.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.IBrowserFile.Size">
+            <summary>
+            Gets the size of the file in bytes as specified by the browser.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.IBrowserFile.ContentType">
+            <summary>
+            Gets the MIME type of the file as specified by the browser.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.IBrowserFile.OpenReadStream(System.Int64,System.Threading.CancellationToken)">
+            <summary>
+            Opens the stream for reading the uploaded file.
+            </summary>
+            <param name="maxAllowedSize">
+            The maximum number of bytes that can be supplied by the Stream. Defaults to 500 KB.
+            <para>
+            Calling <see cref="M:Microsoft.AspNetCore.Components.Forms.IBrowserFile.OpenReadStream(System.Int64,System.Threading.CancellationToken)"/>
+            will throw if the file's size, as specified by <see cref="P:Microsoft.AspNetCore.Components.Forms.IBrowserFile.Size"/> is larger than
+            <paramref name="maxAllowedSize"/>. By default, if the user supplies a file larger than 500 KB, this method will throw an exception.
+            </para>
+            <para>
+            It is valuable to choose a size limit that corresponds to your use case. If you allow excessively large files, this
+            may result in excessive consumption of memory or disk/database space, depending on what your code does
+            with the supplied <see cref="T:System.IO.Stream"/>.
+            </para>
+            <para>
+            For Blazor Server in particular, beware of reading the entire stream into a memory buffer unless you have
+            passed a suitably low size limit, since you will be consuming that memory on the server.
+            </para>
+            </param>
+            <param name="cancellationToken">A cancellation token to signal the cancellation of streaming file data.</param>
+            <exception cref="T:System.IO.IOException">Thrown if the file's length exceeds the <paramref name="maxAllowedSize"/> value.</exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs">
+            <summary>
+            Supplies information about an <see cref="P:Microsoft.AspNetCore.Components.Forms.InputFile.OnChange"/> event being raised.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs.#ctor(System.Collections.Generic.IReadOnlyList{Microsoft.AspNetCore.Components.Forms.IBrowserFile})">
+            <summary>
+            Constructs a new <see cref="T:Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs"/> instance.
+            </summary>
+            <param name="files">The list of <see cref="T:Microsoft.AspNetCore.Components.Forms.IBrowserFile"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs.FileCount">
+            <summary>
+            Gets the number of supplied files.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs.File">
+            <summary>
+            Gets the supplied file. Note that if the input accepts multiple files, then instead of
+            reading this property, you should call <see cref="M:Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs.GetMultipleFiles(System.Int32)"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs.GetMultipleFiles(System.Int32)">
+            <summary>
+            Gets the file entries list. This method should be used for inputs that accept multiple
+            files. If the input accepts only a single file, then use the <see cref="P:Microsoft.AspNetCore.Components.Forms.InputFileChangeEventArgs.File"/> property
+            instead.
+            </summary>
+            <param name="maximumFileCount">The maximum number of files to accept. If the number of files exceeds this value, this method will throw an exception.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.RemoteBrowserFileStreamOptions">
+            <summary>
+            Repesents configurable options for <see cref="T:Microsoft.AspNetCore.Components.Forms.BrowserFileStream"/> with Blazor Server.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.RemoteBrowserFileStreamOptions.MaxSegmentSize">
+            <summary>
+            Gets or sets the maximum segment size for file data sent over a SignalR circuit.
+            The default value is 20K.
+            <para>
+            This only has an effect when using Blazor Server.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.RemoteBrowserFileStreamOptions.MaxBufferSize">
+            <summary>
+            Gets or sets the maximum internal buffer size for unread data sent over a SignalR circuit.
+            <para>
+            This only has an effect when using Blazor Server.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.RemoteBrowserFileStreamOptions.SegmentFetchTimeout">
+            <summary>
+            Gets or sets the time limit for fetching a segment of file data.
+            <para>
+            This only has an effect when using Blazor Server.
+            </para>
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputNumber`1">
+            <summary>
+            An input component for editing numeric values.
+            Supported numeric types are <see cref="T:System.Int32"/>, <see cref="T:System.Int64"/>, <see cref="T:System.Int16"/>, <see cref="T:System.Single"/>, <see cref="T:System.Double"/>, <see cref="T:System.Decimal"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputNumber`1.ParsingErrorMessage">
+            <summary>
+            Gets or sets the error message used when displaying an a parsing error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputNumber`1.Element">
+            <summary>
+            Gets or sets the associated <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            <para>
+            May be <see langword="null"/> if accessed before the component is rendered.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputNumber`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputNumber`1.TryParseValueFromString(System.String,`0@,System.String@)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputNumber`1.FormatValueAsString(`0)">
+            <summary>
+            Formats the value as a string. Derived classes can override this to determine the formatting used for <c>CurrentValueAsString</c>.
+            </summary>
+            <param name="value">The value to format.</param>
+            <returns>A string representation of the value.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputRadio`1">
+            <summary>
+            An input component used for selecting a value from a group of choices.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputRadio`1.Context">
+            <summary>
+            Gets context for this <see cref="T:Microsoft.AspNetCore.Components.Forms.InputRadio`1"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputRadio`1.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be applied to the input element.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputRadio`1.Value">
+            <summary>
+            Gets or sets the value of this input.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputRadio`1.Name">
+            <summary>
+            Gets or sets the name of the parent input radio group.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputRadio`1.Element">
+            <summary>
+            Gets or sets the associated <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            <para>
+            May be <see langword="null"/> if accessed before the component is rendered.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputRadio`1.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputRadio`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputRadioContext">
+            <summary>
+            Describes context for an <see cref="T:Microsoft.AspNetCore.Components.Forms.InputRadio`1"/> component.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputRadioContext.FindContextInAncestors(System.String)">
+            <summary>
+            Finds an <see cref="T:Microsoft.AspNetCore.Components.Forms.InputRadioContext"/> in the context's ancestors with the matching <paramref name="groupName"/>.
+            </summary>
+            <param name="groupName">The group name of the ancestor <see cref="T:Microsoft.AspNetCore.Components.Forms.InputRadioContext"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.Forms.InputRadioContext"/>, or <c>null</c> if none was found.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputRadioGroup`1">
+            <summary>
+            Groups child <see cref="T:Microsoft.AspNetCore.Components.Forms.InputRadio`1"/> components.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputRadioGroup`1.ChildContent">
+            <summary>
+            Gets or sets the child content to be rendering inside the <see cref="T:Microsoft.AspNetCore.Components.Forms.InputRadioGroup`1"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputRadioGroup`1.Name">
+            <summary>
+            Gets or sets the name of the group.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputRadioGroup`1.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputRadioGroup`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputRadioGroup`1.TryParseValueFromString(System.String,`0@,System.String@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputSelect`1">
+            <summary>
+            A dropdown selection component.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputSelect`1.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Forms.InputSelect`1"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputSelect`1.ChildContent">
+            <summary>
+            Gets or sets the child content to be rendering inside the select element.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputSelect`1.Element">
+            <summary>
+            Gets or sets the <c>select</c> <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            <para>
+            May be <see langword="null"/> if accessed before the component is rendered.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputSelect`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputSelect`1.TryParseValueFromString(System.String,`0@,System.String@)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputSelect`1.FormatValueAsString(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputText">
+            <summary>
+            An input component for editing <see cref="T:System.String"/> values.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputText.Element">
+            <summary>
+            Gets or sets the associated <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            <para>
+            May be <see langword="null"/> if accessed before the component is rendered.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputText.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputText.TryParseValueFromString(System.String,System.String@,System.String@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.InputTextArea">
+            <summary>
+            A multiline input component for editing <see cref="T:System.String"/> values.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.InputTextArea.Element">
+            <summary>
+            Gets or sets the associated <see cref="T:Microsoft.AspNetCore.Components.ElementReference"/>.
+            <para>
+            May be <see langword="null"/> if accessed before the component is rendered.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputTextArea.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.InputTextArea.TryParseValueFromString(System.String,System.String@,System.String@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingError">
+            <summary>
+            An error that occurred during the form mapping process.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingError.#ctor(System.String,System.Collections.Generic.List{System.FormattableString},System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingError"/>.
+            </summary>
+            <param name="path">The path from the root of the mapping operation to the property or element that failed to map.</param>
+            <param name="errorMessages">The error messages associated with the mapping error.</param>
+            <param name="attemptedValue">The attempted value that failed to map.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingError.Container">
+            <summary>
+            Gets or sets the instance that contains the property or element that failed to map.
+            </summary>
+            <remarks>
+            For object models, this is the instance of the object that contains the property that failed to map.
+            For collection models, this is the collection instance that contains the element that failed to map.
+            For dictionaries, this is the dictionary instance that contains the element that failed to map.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingError.Name">
+            <summary>
+            Gets or sets the name of the property or element that failed to map.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingError.Path">
+            <summary>
+            Gets or sets the full path from the model root to the property or element that failed to map.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingError.ErrorMessages">
+            <summary>
+            Gets the list of error messages associated with the mapping errors for this field.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingError.AttemptedValue">
+            <summary>
+            Gets the attempted value that failed to map (if any).
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingValidator">
+            <summary>
+            Exposes validation messages for a given <see cref="T:Microsoft.AspNetCore.Components.Forms.FormMappingContext"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingValidator.OnInitialized">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.Mapping.FormMappingValidator.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext">
+            <summary>
+            A context that tracks information about mapping a single value from form data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext.AcceptMappingScopeName">
+            <summary>
+            Gets the name of <see cref="T:Microsoft.AspNetCore.Components.Forms.FormMappingScope"/> that is allowed to supply data in this context.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext.AcceptFormName">
+            <summary>
+            If set, indicates that the mapping should only receive values if the incoming form matches this name. If null, the mapping should receive data from any form in the mapping scope.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext.ParameterName">
+            <summary>
+            Gets the name of the parameter to map data to.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext.ValueType">
+            <summary>
+            Gets the <see cref="T:System.Type"/> of the value to map.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext.OnError">
+            <summary>
+            Gets the callback to invoke when an error occurs.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext.MapErrorToContainer">
+            <summary>
+            Maps a set of errors to a concrete containing instance.
+            </summary>
+            <remarks>
+            For example, maps errors for a given property in a class to the class instance.
+            This is required so that validation can work without the need of the full identifier.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext.Result">
+            <summary>
+            Gets the result of the mapping operation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext.SetResult(System.Object)">
+            <summary>
+            Sets the result of the mapping operation.
+            </summary>
+            <param name="result">The result of the mapping operation.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if the result has already been set.</exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.Mapping.IFormValueMapper">
+            <summary>
+            Maps form data values to a model.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.Mapping.IFormValueMapper.CanMap(System.Type,System.String,System.String)">
+            <summary>
+            Determines whether the specified value type can be mapped.
+            </summary>
+            <param name="valueType">The <see cref="T:System.Type"/> for the value to map.</param>
+            <param name="scopeName">The name of the current <see cref="T:Microsoft.AspNetCore.Components.Forms.FormMappingScope"/>.</param>
+            <param name="formName">The form name, if values should only be provided for that form, or null to allow values from any form within the scope.</param>
+            <returns><c>true</c> if the value type can be mapped; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.Mapping.IFormValueMapper.Map(Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext)">
+            <summary>
+            Maps the form value with the specified name to a value of the specified type.
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Components.Forms.Mapping.FormValueMappingContext"/>.</param>
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.Mapping.SupplyParameterFromFormServiceCollectionExtensions">
+            <summary>
+            Extension methods for configuring <see cref="T:Microsoft.AspNetCore.Components.SupplyParameterFromFormAttribute"/> within an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.Mapping.SupplyParameterFromFormServiceCollectionExtensions.AddSupplyValueFromFormProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds support for <see cref="T:Microsoft.AspNetCore.Components.SupplyParameterFromFormAttribute"/> within the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.FormMappingContext">
+            <summary>
+            The context associated with a given form mapping operation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.FormMappingContext.MappingScopeName">
+            <summary>
+            The mapping scope name.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.FormMappingContext.GetErrors(System.String)">
+            <summary>
+            Retrieves the list of errors for a given model key.
+            </summary>
+            <param name="key">The key used to identify the specific part of the model.</param>
+            <returns>The list of errors associated with that part of the model if any.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.FormMappingContext.GetErrors(System.String,System.String)">
+            <summary>
+            Retrieves the list of errors for a given model key.
+            </summary>
+            <param name="key">The key used to identify the specific part of the model.</param>
+            <param name="formName">Form name for a form under this context.</param>
+            <returns>The list of errors associated with that part of the model if any.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.FormMappingContext.GetAllErrors">
+            <summary>
+            Retrieves all the errors for the model.
+            </summary>
+            <returns>The list of errors associated with the model if any.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.FormMappingContext.GetAllErrors(System.String)">
+            <summary>
+            Retrieves all the errors for the model.
+            </summary>
+            <param name="formName">Form name for a form under this context.</param>
+            <returns>The list of errors associated with the model if any.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.FormMappingContext.GetAttemptedValue(System.String)">
+            <summary>
+            Retrieves the attempted value that failed to map for a given model key.
+            </summary>
+            <param name="key">The key used to identify the specific part of the model.</param>
+            <returns>The attempted value associated with that part of the model if any.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.FormMappingContext.GetAttemptedValue(System.String,System.String)">
+            <summary>
+            Retrieves the attempted value that failed to map for a given model key.
+            </summary>
+            <param name="formName">Form name for a form under this context.</param>
+            <param name="key">The key used to identify the specific part of the model.</param>
+            <returns>The attempted value associated with that part of the model if any.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.FormMappingScope">
+            <summary>
+            Defines the mapping scope for data received from form posts.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.FormMappingScope.Name">
+            <summary>
+            The mapping scope name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.FormMappingScope.ChildContent">
+            <summary>
+            Specifies the content to be rendered inside this <see cref="T:Microsoft.AspNetCore.Components.Forms.FormMappingScope"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.ValidationMessage`1">
+            <summary>
+            Displays a list of validation messages for a specified field within a cascaded <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.ValidationMessage`1.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be applied to the created <c>div</c> element.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.ValidationMessage`1.For">
+            <summary>
+            Specifies the field for which validation messages should be displayed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.ValidationMessage`1.#ctor">
+            <summary>`
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Forms.ValidationMessage`1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.ValidationMessage`1.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.ValidationMessage`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.ValidationMessage`1.Dispose(System.Boolean)">
+            <summary>
+            Called to dispose this instance.
+            </summary>
+            <param name="disposing"><see langword="true"/> if called within <see cref="M:System.IDisposable.Dispose"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Forms.ValidationSummary">
+            <summary>
+            Displays a list of validation messages from a cascaded <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.ValidationSummary.Model">
+            <summary>
+            Gets or sets the model to produce the list of validation messages for.
+            When specified, this lists all errors that are associated with the model instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Forms.ValidationSummary.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be applied to the created <c>ul</c> element.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.ValidationSummary.#ctor">
+            <summary>`
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Forms.ValidationSummary"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.ValidationSummary.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.ValidationSummary.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.ValidationSummary.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.DefaultAntiforgeryStateProvider.GetAntiforgeryToken">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.DefaultAntiforgeryStateProvider.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.HeadContent">
+            <summary>
+            Provides content to <see cref="T:Microsoft.AspNetCore.Components.Web.HeadOutlet"/> components.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.HeadContent.ChildContent">
+            <summary>
+            Gets or sets the content to be rendered in <see cref="T:Microsoft.AspNetCore.Components.Web.HeadOutlet"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HeadContent.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.HeadOutlet">
+            <summary>
+            Renders content provided by <see cref="T:Microsoft.AspNetCore.Components.Web.HeadContent"/> components.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HeadOutlet.OnAfterRenderAsync(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HeadOutlet.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.PageTitle">
+            <summary>
+            Enables rendering an HTML <c>&lt;title&gt;</c> to a <see cref="T:Microsoft.AspNetCore.Components.Web.HeadOutlet"/> component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.PageTitle.ChildContent">
+            <summary>
+            Gets or sets the content to be rendered as the document title.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.PageTitle.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.HtmlRenderer">
+            <summary>
+            Provides a mechanism for rendering components non-interactively as HTML markup.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.#ctor(System.IServiceProvider,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRenderer"/>.
+            </summary>
+            <param name="services">The services to use when rendering components.</param>
+            <param name="loggerFactory">The logger factory to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.DisposeAsync">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.HtmlRenderer.Dispatcher">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Components.Dispatcher" /> associated with this instance. Any calls to
+            <see cref="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.RenderComponentAsync``1"/> or <see cref="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.BeginRenderingComponent``1"/>
+            must be performed using this <see cref="T:Microsoft.AspNetCore.Components.Dispatcher" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.BeginRenderingComponent``1">
+            <summary>
+            Adds an instance of the specified component and instructs it to render. The resulting content represents the
+            initial synchronous rendering output, which may later change. To wait for the component hierarchy to complete
+            any asynchronous operations such as loading, await <see cref="P:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent.QuiescenceTask"/> before
+            reading content from the <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/>.
+            </summary>
+            <typeparam name="TComponent">The component type.</typeparam>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> instance representing the render output.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.BeginRenderingComponent``1(Microsoft.AspNetCore.Components.ParameterView)">
+            <summary>
+            Adds an instance of the specified component and instructs it to render. The resulting content represents the
+            initial synchronous rendering output, which may later change. To wait for the component hierarchy to complete
+            any asynchronous operations such as loading, await <see cref="P:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent.QuiescenceTask"/> before
+            reading content from the <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/>.
+            </summary>
+            <typeparam name="TComponent">The component type.</typeparam>
+            <param name="parameters">Parameters for the component.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> instance representing the render output.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.BeginRenderingComponent(System.Type)">
+            <summary>
+            Adds an instance of the specified component and instructs it to render. The resulting content represents the
+            initial synchronous rendering output, which may later change. To wait for the component hierarchy to complete
+            any asynchronous operations such as loading, await <see cref="P:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent.QuiescenceTask"/> before
+            reading content from the <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/>.
+            </summary>
+            <param name="componentType">The component type. This must implement <see cref="T:Microsoft.AspNetCore.Components.IComponent"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> instance representing the render output.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.BeginRenderingComponent(System.Type,Microsoft.AspNetCore.Components.ParameterView)">
+            <summary>
+            Adds an instance of the specified component and instructs it to render. The resulting content represents the
+            initial synchronous rendering output, which may later change. To wait for the component hierarchy to complete
+            any asynchronous operations such as loading, await <see cref="P:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent.QuiescenceTask"/> before
+            reading content from the <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/>.
+            </summary>
+            <param name="componentType">The component type. This must implement <see cref="T:Microsoft.AspNetCore.Components.IComponent"/>.</param>
+            <param name="parameters">Parameters for the component.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> instance representing the render output.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.RenderComponentAsync``1">
+            <summary>
+            Adds an instance of the specified component and instructs it to render, waiting
+            for the component hierarchy to complete asynchronous tasks such as loading.
+            </summary>
+            <typeparam name="TComponent">The component type.</typeparam>
+            <returns>A task that completes with <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> once the component hierarchy has completed any asynchronous tasks such as loading.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.RenderComponentAsync(System.Type)">
+            <summary>
+            Adds an instance of the specified component and instructs it to render, waiting
+            for the component hierarchy to complete asynchronous tasks such as loading.
+            </summary>
+            <param name="componentType">The component type. This must implement <see cref="T:Microsoft.AspNetCore.Components.IComponent"/>.</param>
+            <returns>A task that completes with <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> once the component hierarchy has completed any asynchronous tasks such as loading.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.RenderComponentAsync``1(Microsoft.AspNetCore.Components.ParameterView)">
+            <summary>
+            Adds an instance of the specified component and instructs it to render, waiting
+            for the component hierarchy to complete asynchronous tasks such as loading.
+            </summary>
+            <typeparam name="TComponent">The component type.</typeparam>
+            <param name="parameters">Parameters for the component.</param>
+            <returns>A task that completes with <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> once the component hierarchy has completed any asynchronous tasks such as loading.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRenderer.RenderComponentAsync(System.Type,Microsoft.AspNetCore.Components.ParameterView)">
+            <summary>
+            Adds an instance of the specified component and instructs it to render, waiting
+            for the component hierarchy to complete asynchronous tasks such as loading.
+            </summary>
+            <param name="componentType">The component type. This must implement <see cref="T:Microsoft.AspNetCore.Components.IComponent"/>.</param>
+            <param name="parameters">Parameters for the component.</param>
+            <returns>A task that completes with <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> once the component hierarchy has completed any asynchronous tasks such as loading.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent">
+            <summary>
+            Represents the output of rendering a root component as HTML. The content can change if the component instance re-renders.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent.QuiescenceTask">
+            <summary>
+            Gets a <see cref="T:System.Threading.Tasks.Task"/> that completes when the component hierarchy has completed asynchronous tasks such as loading.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent.ToHtmlString">
+            <summary>
+            Returns an HTML string representation of the component's latest output.
+            </summary>
+            <returns>An HTML string representation of the component's latest output.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent.WriteHtmlTo(System.IO.TextWriter)">
+            <summary>
+            Writes the component's latest output as HTML to the specified writer.
+            </summary>
+            <param name="output">The output destination.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration">
+            <summary>
+            Configures options for allowing JavaScript to add root components dynamically.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration.JSComponents">
+            <summary>
+            Gets the store of configuration options that allow JavaScript to add root components dynamically.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.JSComponentConfigurationExtensions">
+            <summary>
+            Extension methods for working on an <see cref="T:Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.JSComponentConfigurationExtensions.RegisterForJavaScript``1(Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration,System.String)">
+            <summary>
+            Marks the specified component type as allowed for instantiation from JavaScript.
+            </summary>
+            <typeparam name="TComponent">The component type.</typeparam>
+            <param name="configuration">The <see cref="T:Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration"/>.</param>
+            <param name="identifier">A unique identifier for the component type that will be used by JavaScript code.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.JSComponentConfigurationExtensions.RegisterForJavaScript``1(Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration,System.String,System.String)">
+            <summary>
+            Marks the specified component type as allowed for instantiation from JavaScript.
+            </summary>
+            <typeparam name="TComponent">The component type.</typeparam>
+            <param name="configuration">The <see cref="T:Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration"/>.</param>
+            <param name="identifier">A unique identifier for the component type that will be used by JavaScript code.</param>
+            <param name="javaScriptInitializer">Specifies an optional identifier for a JavaScript function that will be called to register the custom element.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.JSComponentConfigurationExtensions.RegisterForJavaScript(Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration,System.Type,System.String)">
+            <summary>
+            Marks the specified component type as allowed for instantiation from JavaScript.
+            </summary>
+            <param name="configuration">The <see cref="T:Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration"/>.</param>
+            <param name="componentType">The component type.</param>
+            <param name="identifier">A unique identifier for the component type that will be used by JavaScript code.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.JSComponentConfigurationExtensions.RegisterForJavaScript(Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Marks the specified component type as allowed for instantiation from JavaScript.
+            </summary>
+            <param name="configuration">The <see cref="T:Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration"/>.</param>
+            <param name="componentType">The component type.</param>
+            <param name="identifier">A unique identifier for the component type that will be used by JavaScript code.</param>
+            <param name="javaScriptInitializer">Specifies an optional identifier for a JavaScript function that will be called to register the custom element.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.JSComponentConfigurationStore">
+            <summary>
+            Specifies options for use when enabling JS component support.
+            This type is not normally used directly from application code. In most cases, applications should
+            call methods on the <see cref="T:Microsoft.AspNetCore.Components.Web.IJSComponentConfiguration" /> on their application host builder.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.Infrastructure.JSComponentInterop">
+            <summary>
+            Provides JavaScript-callable interop methods that can add, update, or remove dynamic
+            root components. This is intended for framework use only and should not be called
+            directly from application code.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Infrastructure.JSComponentInterop.#ctor(Microsoft.AspNetCore.Components.Web.JSComponentConfigurationStore)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Web.Infrastructure.JSComponentInterop" />. This is only intended
+            for use from framework code and should not be used directly from application code.
+            </summary>
+            <param name="configuration">The <see cref="T:Microsoft.AspNetCore.Components.Web.JSComponentConfigurationStore" /></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Infrastructure.JSComponentInterop.AddRootComponent(System.String,System.String)">
+            <summary>
+            For framework use only.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Infrastructure.JSComponentInterop.SetRootComponentParameters(System.Int32,System.Int32,System.Text.Json.JsonElement,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            For framework use only.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Infrastructure.JSComponentInterop.RemoveRootComponent(System.Int32)">
+            <summary>
+            For framework use only.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.InteractiveAutoRenderMode">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/> indicating that the component should be interactive, with its hosting platform determined automatically based on a policy.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.InteractiveAutoRenderMode.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Web.InteractiveAutoRenderMode"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.InteractiveAutoRenderMode.#ctor(System.Boolean)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Web.InteractiveAutoRenderMode"/>
+            </summary>
+            <param name="prerender">A flag indicating whether the component should first prerender on the server. The default value is true.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.InteractiveAutoRenderMode.Prerender">
+            <summary>
+            A flag indicating whether the component should first prerender on the server. The default value is true.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.InteractiveServerRenderMode">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/> indicating that the component should be rendered interactively on the server using Blazor Server hosting.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.InteractiveServerRenderMode.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Web.InteractiveServerRenderMode"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.InteractiveServerRenderMode.#ctor(System.Boolean)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Web.InteractiveServerRenderMode"/>
+            </summary>
+            <param name="prerender">A flag indicating whether the component should first prerender on the server. The default value is true.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.InteractiveServerRenderMode.Prerender">
+            <summary>
+            A flag indicating whether the component should first prerender on the server. The default value is true.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.InteractiveWebAssemblyRenderMode">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/> indicating that the component should be rendered interactively on the client using WebAssembly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.InteractiveWebAssemblyRenderMode.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Web.InteractiveWebAssemblyRenderMode"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.InteractiveWebAssemblyRenderMode.#ctor(System.Boolean)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Web.InteractiveWebAssemblyRenderMode"/>
+            </summary>
+            <param name="prerender">A flag indicating whether the component should first prerender on the server. The default value is true.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.InteractiveWebAssemblyRenderMode.Prerender">
+            <summary>
+            A flag indicating whether the component should first prerender on the server. The default value is true.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.RenderMode">
+            <summary>
+            Provides pre-constructed <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/> instances that may be used during rendering.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer">
+            <summary>
+            Gets an <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/> that represents rendering interactively on the server via Blazor Server hosting
+            with server-side prerendering.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveWebAssembly">
+            <summary>
+            Gets an <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/> that represents rendering interactively on the client via Blazor WebAssembly hosting
+            with server-side prerendering.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveAuto">
+            <summary>
+            Gets an <see cref="T:Microsoft.AspNetCore.Components.IComponentRenderMode"/> that means the render mode will be determined automatically based on a policy.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderDelegate`1">
+            <summary>
+            A function that provides items to a virtualized source.
+            </summary>
+            <typeparam name="TItem">The type of the context for each item in the list.</typeparam>
+            <param name="request">The <see cref="T:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderRequest"/> defining the request details.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> whose result is a <see cref="T:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderResult`1"/> upon successful completion.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderRequest">
+            <summary>
+            Represents a request to an <see cref="T:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderDelegate`1"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderRequest.StartIndex">
+            <summary>
+            The start index of the data segment requested.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderRequest.Count">
+            <summary>
+            The requested number of items to be provided. The actual number of provided items does not need to match
+            this value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderRequest.CancellationToken">
+            <summary>
+            The <see cref="T:System.Threading.CancellationToken"/> used to relay cancellation of the request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderRequest.#ctor(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Constructs a new <see cref="T:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderRequest"/> instance.
+            </summary>
+            <param name="startIndex">The start index of the data segment requested.</param>
+            <param name="count">The requested number of items to be provided.</param>
+            <param name="cancellationToken">
+            The <see cref="T:System.Threading.CancellationToken"/> used to relay cancellation of the request.
+            </param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderResult`1">
+            <summary>
+            Represents the result of a <see cref="T:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderDelegate`1"/>.
+            </summary>
+            <typeparam name="TItem">The type of the context for each item in the list.</typeparam>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderResult`1.Items">
+            <summary>
+            The items to provide.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderResult`1.TotalItemCount">
+            <summary>
+            The total item count in the source generating the items provided.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderResult`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Int32)">
+            <summary>
+            Instantiates a new <see cref="T:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderResult`1"/> instance.
+            </summary>
+            <param name="items">The items to provide.</param>
+            <param name="totalItemCount">The total item count in the source generating the items provided.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.Virtualization.PlaceholderContext">
+            <summary>
+            Contains context for a placeholder in a virtualized list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.PlaceholderContext.Index">
+            <summary>
+            The item index of the placeholder.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.PlaceholderContext.Size">
+            <summary>
+            The size of the placeholder in pixels.
+            <para>
+            For virtualized components with vertical scrolling, this would be the height of the placeholder in pixels.
+            For virtualized components with horizontal scrolling, this would be the width of the placeholder in pixels.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Virtualization.PlaceholderContext.#ctor(System.Int32,System.Single)">
+            <summary>
+            Constructs a new <see cref="T:Microsoft.AspNetCore.Components.Web.Virtualization.PlaceholderContext"/> instance.
+            </summary>
+            <param name="index">The item index of the placeholder.</param>
+            <param name="size">The size of the placeholder in pixels.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1">
+            <summary>
+            Provides functionality for rendering a virtualized list of items.
+            </summary>
+            <typeparam name="TItem">The <c>context</c> type for the items being rendered.</typeparam>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.ChildContent">
+            <summary>
+            Gets or sets the item template for the list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.ItemContent">
+            <summary>
+            Gets or sets the item template for the list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.Placeholder">
+            <summary>
+            Gets or sets the template for items that have not yet been loaded in memory.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.EmptyContent">
+            <summary>
+            Gets or sets the content to show when <see cref="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.Items"/> is empty
+            or when the <see cref="P:Microsoft.AspNetCore.Components.Web.Virtualization.ItemsProviderResult`1.TotalItemCount"/> is zero.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.ItemSize">
+            <summary>
+            Gets the size of each item in pixels. Defaults to 50px.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.ItemsProvider">
+            <summary>
+            Gets or sets the function providing items to the list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.Items">
+            <summary>
+            Gets or sets the fixed item source.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.OverscanCount">
+            <summary>
+            Gets or sets a value that determines how many additional items will be rendered
+            before and after the visible region. This help to reduce the frequency of rendering
+            during scrolling. However, higher values mean that more elements will be present
+            in the page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.SpacerElement">
+             <summary>
+             Gets or sets the tag name of the HTML element that will be used as the virtualization spacer.
+             One such element will be rendered before the visible items, and one more after them, using
+             an explicit "height" style to control the scroll range.
+            
+             The default value is "div". If you are placing the <see cref="T:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1"/> instance inside
+             an element that requires a specific child tag name, consider setting that here. For example when
+             rendering inside a "tbody", consider setting <see cref="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.SpacerElement"/> to the value "tr".
+             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.RefreshDataAsync">
+            <summary>
+            Instructs the component to re-request data from its <see cref="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.ItemsProvider"/>.
+            This is useful if external data may have changed. There is no need to call this
+            when using <see cref="P:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.Items"/>.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the completion of the operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.OnAfterRenderAsync(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize`1.DisposeAsync">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.BindAttributes">
+            <summary>
+            Infrastructure for the discovery of <c>bind</c> attributes for markup elements.
+            </summary>
+            <remarks>
+            To extend the set of <c>bind</c> attributes, define a public class named
+            <c>BindAttributes</c> and annotate it with the appropriate attributes.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.ClipboardEventArgs">
+            <summary>
+            Supplies information about an clipboard event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ClipboardEventArgs.Type">
+            <summary>
+            Gets or sets the type of the event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.DataTransfer">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Components.Web.DataTransfer"/> object is used to hold the data that is being dragged during a drag and drop operation.
+            It may hold one or more <see cref="T:Microsoft.AspNetCore.Components.Web.DataTransferItem"/>, each of one or more data types.
+            For more information about drag and drop, see HTML Drag and Drop API.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.DataTransfer.DropEffect">
+            <summary>
+            Gets the type of drag-and-drop operation currently selected or sets the operation to a new type.
+            The value must be none, copy, link or move.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.DataTransfer.EffectAllowed">
+            <summary>
+            Provides all of the types of operations that are possible.
+            Must be one of none, copy, copyLink, copyMove, link, linkMove, move, all or uninitialized.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.DataTransfer.Files">
+            <summary>
+            Contains a list of all the local files available on the data transfer.
+            If the drag operation doesn't involve dragging files, this property is an empty list.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.DataTransfer.Items">
+            <summary>
+            Gives a <see cref="T:Microsoft.AspNetCore.Components.Web.DataTransferItem"/> array which is a list of all of the drag data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.DataTransfer.Types">
+            <summary>
+            An array of <see cref="T:System.String"/> giving the formats that were set in the dragstart event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.DataTransferItem">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Components.Web.DataTransferItem"/> object represents one drag data item.
+            During a drag operation, each drag event has a dataTransfer property which contains a list of drag data items.
+            Each item in the list is a <see cref="T:Microsoft.AspNetCore.Components.Web.DataTransferItem"/> object.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.DataTransferItem.Kind">
+            <summary>
+            The kind of drag data item, string or file
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.DataTransferItem.Type">
+            <summary>
+            The drag data item's type, typically a MIME type
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.DragEventArgs">
+            <summary>
+            Supplies information about an drag event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.DragEventArgs.DataTransfer">
+            <summary>
+            The data that underlies a drag-and-drop operation, known as the drag data store.
+            See <see cref="P:Microsoft.AspNetCore.Components.Web.DragEventArgs.DataTransfer"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.ErrorBoundary">
+            <summary>
+            Captures errors thrown from its child content.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.ErrorBoundary.OnErrorAsync(System.Exception)">
+            <summary>
+            Invoked by the base class when an error is being handled. The default implementation
+            logs the error.
+            </summary>
+            <param name="exception">The <see cref="T:System.Exception"/> being handled.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.ErrorBoundary.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.ErrorEventArgs">
+            <summary>
+            Supplies information about an error event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ErrorEventArgs.Message">
+            <summary>
+            Gets a a human-readable error message describing the problem.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ErrorEventArgs.Filename">
+            <summary>
+            Gets the name of the script file in which the error occurred.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ErrorEventArgs.Lineno">
+            <summary>
+            Gets the line number of the script file on which the error occurred.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ErrorEventArgs.Colno">
+            <summary>
+            Gets the column number of the script file on which the error occurred.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ErrorEventArgs.Type">
+            <summary>
+            Gets or sets the type of the event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.EventHandlers">
+            <summary>
+            Holds <see cref="T:System.EventHandler"/> attributes to configure the mappings between event names and
+            event argument types.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.FocusEventArgs">
+            <summary>
+            Supplies information about a focus event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.FocusEventArgs.Type">
+            <summary>
+            Gets or sets the type of the event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.IErrorBoundaryLogger">
+            <summary>
+            Logs exception information for a <see cref="T:Microsoft.AspNetCore.Components.Web.ErrorBoundary"/> component.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.IErrorBoundaryLogger.LogErrorAsync(System.Exception)">
+            <summary>
+            Logs the supplied <paramref name="exception"/>.
+            </summary>
+            <param name="exception">The <see cref="T:System.Exception"/> to log.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> representing the completion of the operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs">
+            <summary>
+            Supplies information about a keyboard event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs.Key">
+            <summary>
+            The key value of the key represented by the event.
+            If the value has a printed representation, this attribute's value is the same as the char attribute.
+            Otherwise, it's one of the key value strings specified in 'Key values'.
+            If the key can't be identified, this is the string "Unidentified"
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs.Code">
+            <summary>
+            Holds a string that identifies the physical key being pressed.
+            The value is not affected by the current keyboard layout or modifier state, so a particular key will always return the same value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs.Location">
+            <summary>
+            The location of the key on the device.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs.Repeat">
+            <summary>
+            true if a key has been depressed long enough to trigger key repetition, otherwise false.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs.CtrlKey">
+            <summary>
+            true if the control key was down when the event was fired. false otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs.ShiftKey">
+            <summary>
+            true if the shift key was down when the event was fired. false otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs.AltKey">
+            <summary>
+            true if the alt key was down when the event was fired. false otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs.MetaKey">
+            <summary>
+            true if the meta key was down when the event was fired. false otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.KeyboardEventArgs.Type">
+            <summary>
+            Gets or sets the type of the event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.MouseEventArgs">
+            <summary>
+            Supplies information about a mouse event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.Detail">
+            <summary>
+            A count of consecutive clicks that happened in a short amount of time, incremented by one.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.ScreenX">
+            <summary>
+            The X coordinate of the mouse pointer in global (screen) coordinates.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.ScreenY">
+            <summary>
+            The Y coordinate of the mouse pointer in global (screen) coordinates.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.ClientX">
+            <summary>
+            The X coordinate of the mouse pointer in local (DOM content) coordinates.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.ClientY">
+            <summary>
+            The Y coordinate of the mouse pointer in local (DOM content) coordinates.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.OffsetX">
+            <summary>
+            The X coordinate of the mouse pointer in relative (Target Element) coordinates.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.OffsetY">
+            <summary>
+            The Y coordinate of the mouse pointer in relative (Target Element) coordinates.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.PageX">
+            <summary>
+            The X coordinate of the mouse pointer relative to the whole document.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.PageY">
+            <summary>
+            The Y coordinate of the mouse pointer relative to the whole document.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.MovementX">
+            <summary>
+            The X coordinate of the mouse pointer relative to the position of the last mousemove event.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.MovementY">
+            <summary>
+            The Y coordinate of the mouse pointer relative to the position of the last mousemove event.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.Button">
+            <summary>
+            The button number that was pressed when the mouse event was fired:
+            Left button=0,
+            middle button=1 (if present),
+            right button=2.
+            For mice configured for left handed use in which the button actions are reversed the values are instead read from right to left.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.Buttons">
+            <summary>
+            The buttons being pressed when the mouse event was fired:
+            Left button=1,
+            Right button=2,
+            Middle (wheel) button=4,
+            4th button (typically, "Browser Back" button)=8,
+            5th button (typically, "Browser Forward" button)=16.
+            If two or more buttons are pressed, returns the logical sum of the values.
+            E.g., if Left button and Right button are pressed, returns 3 (=1 | 2).
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.CtrlKey">
+            <summary>
+            <c>true</c> if the control key was down when the event was fired. <c>false</c> otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.ShiftKey">
+            <summary>
+            <c>true</c> if the shift key was down when the event was fired. <c>false</c> otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.AltKey">
+            <summary>
+            <c>true</c> if the alt key was down when the event was fired. <c>false</c> otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.MetaKey">
+            <summary>
+            <c>true</c> if the meta key was down when the event was fired. <c>false</c> otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.MouseEventArgs.Type">
+            <summary>
+            Gets or sets the type of the event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.PointerEventArgs">
+            <summary>
+            Supplies information about a pointer event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.PointerEventArgs.PointerId">
+            <summary>
+            A unique identifier for the pointer causing the event.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.PointerEventArgs.Width">
+            <summary>
+            The width (magnitude on the X axis), in CSS pixels, of the contact geometry of the pointer.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.PointerEventArgs.Height">
+            <summary>
+            The height (magnitude on the Y axis), in CSS pixels, of the contact geometry of the pointer.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.PointerEventArgs.Pressure">
+            <summary>
+            The normalized pressure of the pointer input in the range of 0 to 1,
+            where 0 and 1 represent the minimum and maximum pressure the hardware is capable of detecting, respectively.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.PointerEventArgs.TiltX">
+            <summary>
+            The plane angle (in degrees, in the range of -90 to 90) between the Y-Z plane
+            and the plane containing both the transducer (e.g. pen stylus) axis and the Y axis.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.PointerEventArgs.TiltY">
+            <summary>
+            The plane angle (in degrees, in the range of -90 to 90) between the X-Z plane
+            and the plane containing both the transducer (e.g. pen stylus) axis and the X axis.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.PointerEventArgs.PointerType">
+            <summary>
+            Indicates the device type that caused the event.
+            Must be one of the strings mouse, pen or touch, or an empty string.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.PointerEventArgs.IsPrimary">
+            <summary>
+            Indicates if the pointer represents the primary pointer of this pointer type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.ProgressEventArgs">
+            <summary>
+            Supplies information about a progress event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ProgressEventArgs.LengthComputable">
+            <summary>
+            Whether or not the total size of the transfer is known.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ProgressEventArgs.Loaded">
+            <summary>
+            The number of bytes transferred since the beginning of the operation.
+            This doesn't include headers and other overhead, but only the content itself.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ProgressEventArgs.Total">
+            <summary>
+            The total number of bytes of content that will be transferred during the operation.
+            If the total size is unknown, this value is zero.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.ProgressEventArgs.Type">
+            <summary>
+            Gets or sets the type of the event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.TouchEventArgs">
+            <summary>
+            Supplies information about a touch event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchEventArgs.Detail">
+            <summary>
+            A count of consecutive clicks that happened in a short amount of time, incremented by one.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchEventArgs.Touches">
+            <summary>
+            A list of <see cref="T:Microsoft.AspNetCore.Components.Web.TouchPoint"/> for every point of contact currently touching the surface.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchEventArgs.TargetTouches">
+            <summary>
+            A list of <see cref="T:Microsoft.AspNetCore.Components.Web.TouchPoint"/> for every point of contact that is touching the surface and started on the element that is the target of the current event.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchEventArgs.ChangedTouches">
+            <summary>
+            A list of Touches for every point of contact which contributed to the event.
+            For the touchstart event this must be a list of the touch points that just became active with the current event.
+            For the touchmove event this must be a list of the touch points that have moved since the last event.
+            For the touchend and touchcancel events this must be a list of the touch points that have just been removed from the surface.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchEventArgs.CtrlKey">
+            <summary>
+            true if the control key was down when the event was fired. false otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchEventArgs.ShiftKey">
+            <summary>
+            true if the shift key was down when the event was fired. false otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchEventArgs.AltKey">
+            <summary>
+            true if the alt key was down when the event was fired. false otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchEventArgs.MetaKey">
+            <summary>
+            true if the meta key was down when the event was fired. false otherwise.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchEventArgs.Type">
+            <summary>
+            Gets or sets the type of the event.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.TouchPoint">
+            <summary>
+            Represents a single contact point on a touch-sensitive device.
+            The contact point is commonly a finger or stylus and the device may be a touchscreen or trackpad.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchPoint.Identifier">
+            <summary>
+            A unique identifier for this Touch object.
+            A given touch point (say, by a finger) will have the same identifier for the duration of its movement around the surface.
+            This lets you ensure that you're tracking the same touch all the time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchPoint.ScreenX">
+            <summary>
+            The X coordinate of the touch point relative to the left edge of the screen.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchPoint.ScreenY">
+            <summary>
+            The Y coordinate of the touch point relative to the top edge of the screen.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchPoint.ClientX">
+            <summary>
+            The X coordinate of the touch point relative to the left edge of the browser viewport, not including any scroll offset.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchPoint.ClientY">
+            <summary>
+            The Y coordinate of the touch point relative to the top edge of the browser viewport, not including any scroll offset.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchPoint.PageX">
+            <summary>
+            The X coordinate of the touch point relative to the left edge of the document.
+            Unlike <see cref="P:Microsoft.AspNetCore.Components.Web.TouchPoint.ClientX"/>, this value includes the horizontal scroll offset, if any.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.TouchPoint.PageY">
+            <summary>
+            The Y coordinate of the touch point relative to the top of the document.
+            Unlike <see cref="P:Microsoft.AspNetCore.Components.Web.TouchPoint.ClientY"/>, this value includes the vertical scroll offset, if any.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/> and <see cref="T:System.EventArgs"/> types.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.ClipboardEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.ClipboardEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.DragEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.DragEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.ErrorEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.ErrorEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.FocusEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.FocusEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.KeyboardEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.KeyboardEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.MouseEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.MouseEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.PointerEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.PointerEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.ProgressEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.ProgressEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.TouchEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.TouchEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Action{Microsoft.AspNetCore.Components.Web.WheelEventArgs})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebEventCallbackFactoryEventArgsExtensions.Create(Microsoft.AspNetCore.Components.EventCallbackFactory,System.Object,System.Func{Microsoft.AspNetCore.Components.Web.WheelEventArgs,System.Threading.Tasks.Task})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/> for the provided <paramref name="receiver"/> and
+            <paramref name="callback"/>.
+            </summary>
+            <param name="factory">The <see cref="T:Microsoft.AspNetCore.Components.EventCallbackFactory"/>.</param>
+            <param name="receiver">The event receiver.</param>
+            <param name="callback">The event callback.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Components.EventCallback"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.WebRenderTreeBuilderExtensions">
+            <summary>
+            Provides methods for building a collection of <see cref="T:Microsoft.AspNetCore.Components.RenderTree.RenderTreeFrame"/> entries.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebRenderTreeBuilderExtensions.AddEventPreventDefaultAttribute(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder,System.Int32,System.String,System.Boolean)">
+            <summary>
+            Appends a frame representing an instruction to prevent the default action
+            for a specified event.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder"/>.</param>
+            <param name="sequence">An integer that represents the position of the instruction in the source code.</param>
+            <param name="eventName">The name of the event to be affected.</param>
+            <param name="value">True if the default action is to be prevented, otherwise false.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Web.WebRenderTreeBuilderExtensions.AddEventStopPropagationAttribute(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder,System.Int32,System.String,System.Boolean)">
+            <summary>
+            Appends a frame representing an instruction to stop the specified event from
+            propagating beyond the current element.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder"/>.</param>
+            <param name="sequence">An integer that represents the position of the instruction in the source code.</param>
+            <param name="eventName">The name of the event to be affected.</param>
+            <param name="value">True if propagation should be stopped here, otherwise false.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Web.WheelEventArgs">
+            <summary>
+            Supplies information about a mouse wheel event that is being raised.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.WheelEventArgs.DeltaX">
+            <summary>
+            The horizontal scroll amount.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.WheelEventArgs.DeltaY">
+            <summary>
+            The vertical scroll amount.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.WheelEventArgs.DeltaZ">
+            <summary>
+            The scroll amount for the z-axis.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Web.WheelEventArgs.DeltaMode">
+            <summary>
+            The unit of the delta values scroll amount.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Components.RenderTree.Renderer"/> subclass that is intended for static HTML rendering. Application
+            developers should not normally use this class directly. Instead, use
+            <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRenderer"/> for a more convenient API.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer.#ctor(System.IServiceProvider,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer"/>.
+            </summary>
+            <param name="serviceProvider">The <see cref="T:System.IServiceProvider"/> to be used when initializing components.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer.Dispatcher">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer.BeginRenderingComponent(System.Type,Microsoft.AspNetCore.Components.ParameterView)">
+            <summary>
+            Adds a root component of the specified type and begins rendering it.
+            </summary>
+            <param name="componentType">The component type. This must implement <see cref="T:Microsoft.AspNetCore.Components.IComponent"/>.</param>
+            <param name="initialParameters">Parameters for the component.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> that can be used to obtain the rendered HTML.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer.BeginRenderingComponent(Microsoft.AspNetCore.Components.IComponent,Microsoft.AspNetCore.Components.ParameterView)">
+            <summary>
+            Adds a root component and begins rendering it.
+            </summary>
+            <param name="component">The root component instance to be added and rendered. This must not already be associated with any renderer.</param>
+            <param name="initialParameters">Parameters for the component.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Components.Web.HtmlRendering.HtmlRootComponent"/> that can be used to obtain the rendered HTML.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer.HandleException(System.Exception)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer.UpdateDisplayAsync(Microsoft.AspNetCore.Components.RenderTree.RenderBatch@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer.WriteComponentHtml(System.Int32,System.IO.TextWriter)">
+            <summary>
+            Renders the specified component as HTML to the output.
+            </summary>
+            <param name="componentId">The ID of the component whose current HTML state is to be rendered.</param>
+            <param name="output">The output destination.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer.RenderChildComponent(System.IO.TextWriter,Microsoft.AspNetCore.Components.RenderTree.RenderTreeFrame@)">
+            <summary>
+            Renders the specified component frame as HTML to the output.
+            </summary>
+            <param name="output">The output destination.</param>
+            <param name="componentFrame">The <see cref="T:Microsoft.AspNetCore.Components.RenderTree.RenderTreeFrame"/> representing the component to be rendered.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.HtmlRendering.Infrastructure.StaticHtmlRenderer.TryCreateScopeQualifiedEventName(System.Int32,System.String,System.String@)">
+            <summary>
+            Creates the fully scope-qualified name for a named event, if the component is within
+            a <see cref="T:Microsoft.AspNetCore.Components.Forms.FormMappingContext"/> (whether or not that mapping context is named).
+            </summary>
+            <param name="componentId">The ID of the component that defines a named event.</param>
+            <param name="assignedEventName">The name assigned to the named event.</param>
+            <param name="scopeQualifiedEventName">The scope-qualified event name.</param>
+            <returns>A flag to indicate whether a value could be produced.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Routing.FocusOnNavigate">
+            <summary>
+            After navigating from one page to another, sets focus to an element
+            matching a CSS selector. This can be used to build an accessible
+            navigation system compatible with screen readers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Routing.FocusOnNavigate.RouteData">
+            <summary>
+            Gets or sets the route data. This can be obtained from an enclosing
+            <see cref="T:Microsoft.AspNetCore.Components.Routing.Router"/> component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Routing.FocusOnNavigate.Selector">
+            <summary>
+            Gets or sets a CSS selector describing the element to be focused after
+            navigation between pages.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Routing.FocusOnNavigate.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Routing.FocusOnNavigate.OnAfterRenderAsync(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Routing.NavigationLock">
+            <summary>
+            A component that can be used to intercept navigation events. 
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Routing.NavigationLock.OnBeforeInternalNavigation">
+            <summary>
+            Gets or sets a callback to be invoked when an internal navigation event occurs.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Routing.NavigationLock.ConfirmExternalNavigation">
+            <summary>
+            Gets or sets whether a browser dialog should prompt the user to either confirm or cancel
+            external navigations.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Routing.NavLink">
+            <summary>
+            A component that renders an anchor tag, automatically toggling its 'active'
+            class based on whether its 'href' matches the current URI.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Routing.NavLink.ActiveClass">
+            <summary>
+            Gets or sets the CSS class name applied to the NavLink when the
+            current route matches the NavLink href.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Routing.NavLink.AdditionalAttributes">
+            <summary>
+            Gets or sets a collection of additional attributes that will be added to the generated
+            <c>a</c> element.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Routing.NavLink.CssClass">
+            <summary>
+            Gets or sets the computed CSS class based on whether or not the link is active.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Routing.NavLink.ChildContent">
+            <summary>
+            Gets or sets the child content of the component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Routing.NavLink.Match">
+            <summary>
+            Gets or sets a value representing the URL matching behavior.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Routing.NavLink.OnInitialized">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Routing.NavLink.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Routing.NavLink.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Routing.NavLink.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Routing.NavLinkMatch">
+            <summary>
+            Modifies the URL matching behavior for a <see cref="T:Microsoft.AspNetCore.Components.Routing.NavLink"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Components.Routing.NavLinkMatch.Prefix">
+            <summary>
+            Specifies that the <see cref="T:Microsoft.AspNetCore.Components.Routing.NavLink"/> should be active when it matches any prefix
+            of the current URL.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Components.Routing.NavLinkMatch.All">
+            <summary>
+            Specifies that the <see cref="T:Microsoft.AspNetCore.Components.Routing.NavLink"/> should be active when it matches the entire
+            current URL.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.SupplyParameterFromFormAttribute">
+            <summary>
+            Indicates that the value of the associated property should be supplied from
+            the form data for the form with the specified name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.SupplyParameterFromFormAttribute.Name">
+            <summary>
+            Gets or sets the name of the form value. If not specified, the property name will be used.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.SupplyParameterFromFormAttribute.FormName">
+            <summary>
+            Gets or sets the name of the form that provides this value. If not specified,
+            the value will be mapped from any incoming form post within the current form
+            mapping scope. If specified, the value will only be mapped from a form with
+            the specified name in the current mapping scope.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.SupplyParameterFromFormAttribute.SingleDelivery">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.WebElementReferenceContext">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Components.ElementReferenceContext"/> for a web element.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.WebElementReferenceContext.#ctor(Microsoft.JSInterop.IJSRuntime)">
+            <summary>
+            Initialize a new instance of <see cref="T:Microsoft.AspNetCore.Components.WebElementReferenceContext"/>.
+            </summary>
+            <param name="jsRuntime">The <see cref="T:Microsoft.JSInterop.IJSRuntime"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.RenderTree.WebEventDescriptor">
+            <summary>
+            Types in the Microsoft.AspNetCore.Components.RenderTree are not recommended for use outside
+            of the Blazor framework. These types will change in a future release.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.RenderTree.WebEventDescriptor.EventHandlerId">
+            <summary>
+            For framework use only.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.RenderTree.WebEventDescriptor.EventName">
+            <summary>
+            For framework use only.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.RenderTree.WebEventDescriptor.EventFieldInfo">
+            <summary>
+            For framework use only.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.RenderTree.WebRenderer">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Components.RenderTree.Renderer"/> that attaches its components to a browser DOM.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.RenderTree.WebRenderer.#ctor(System.IServiceProvider,Microsoft.Extensions.Logging.ILoggerFactory,System.Text.Json.JsonSerializerOptions,Microsoft.AspNetCore.Components.Web.Infrastructure.JSComponentInterop)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.RenderTree.WebRenderer"/>.
+            </summary>
+            <param name="serviceProvider">The <see cref="T:System.IServiceProvider"/> to be used when initializing components.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+            <param name="jsonOptions">The <see cref="T:System.Text.Json.JsonSerializerOptions"/>.</param>
+            <param name="jsComponentInterop">The <see cref="T:Microsoft.AspNetCore.Components.Web.Infrastructure.JSComponentInterop"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.RenderTree.WebRenderer.RendererId">
+            <summary>
+            Gets the identifier for the renderer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.RenderTree.WebRenderer.GetWebRendererId">
+            <summary>
+            Allocates an identifier for the renderer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.RenderTree.WebRenderer.AddRootComponent(System.Type,System.String)">
+            <summary>
+            Instantiates a root component and attaches it to the browser within the specified element.
+            </summary>
+            <param name="componentType">The type of the component.</param>
+            <param name="domElementSelector">A CSS selector that uniquely identifies a DOM element.</param>
+            <returns>The new component ID.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.RenderTree.WebRenderer.AttachRootComponentToBrowser(System.Int32,System.String)">
+            <summary>
+            Called by the framework to give a location for the specified root component in the browser DOM.
+            </summary>
+            <param name="componentId">The component ID.</param>
+            <param name="domElementSelector">A CSS selector that uniquely identifies a DOM element.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.RenderTree.WebRenderer.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.RenderTree.WebRenderer.WebRendererInteropMethods">
+            <summary>
+            A collection of JS invokable methods that the JS-side code can use when it needs to
+            make calls in the context of a particular renderer. This object is never exposed to
+            .NET code so is only reachable via JS.
+            </summary>
+        </member>
+    </members>
+</doc>

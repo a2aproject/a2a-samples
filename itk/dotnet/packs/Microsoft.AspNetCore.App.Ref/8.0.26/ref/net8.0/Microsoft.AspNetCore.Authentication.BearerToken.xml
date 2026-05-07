@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Authentication.BearerToken</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Authentication.BearerToken.AccessTokenResponse">
+            <summary>
+            The JSON data transfer object for the bearer token response typically found in "/login" and "/refresh" responses.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.AccessTokenResponse.TokenType">
+            <summary>
+            The value is always "Bearer" which indicates this response provides a "Bearer" token
+            in the form of an opaque <see cref="P:Microsoft.AspNetCore.Authentication.BearerToken.AccessTokenResponse.AccessToken"/>.
+            </summary>
+            <remarks>
+            This is serialized as "tokenType": "Bearer" using <see cref="F:System.Text.Json.JsonSerializerDefaults.Web"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.AccessTokenResponse.AccessToken">
+            <summary>
+            The opaque bearer token to send as part of the Authorization request header.
+            </summary>
+            <remarks>
+            This is serialized as "accessToken": "{AccessToken}" using <see cref="F:System.Text.Json.JsonSerializerDefaults.Web"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.AccessTokenResponse.ExpiresIn">
+            <summary>
+            The number of seconds before the <see cref="P:Microsoft.AspNetCore.Authentication.BearerToken.AccessTokenResponse.AccessToken"/> expires.
+            </summary>
+            <remarks>
+            This is serialized as "expiresIn": "{ExpiresInSeconds}" using <see cref="F:System.Text.Json.JsonSerializerDefaults.Web"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.AccessTokenResponse.RefreshToken">
+            <summary>
+            If set, this provides the ability to get a new access_token after it expires using a refresh endpoint.
+            </summary>
+            <remarks>
+            This is serialized as "refreshToken": "{RefreshToken}" using using <see cref="F:System.Text.Json.JsonSerializerDefaults.Web"/>.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenDefaults">
+            <summary>
+            Default values used by bearer token authentication.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenDefaults.AuthenticationScheme">
+            <summary>
+            Default value for AuthenticationScheme property in the <see cref="T:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenEvents">
+            <summary>
+            Specifies events which the bearer token handler invokes to enable developer control over the authentication process.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenEvents.OnMessageReceived">
+            <summary>
+            Invoked when a protocol message is first received.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenEvents.MessageReceivedAsync(Microsoft.AspNetCore.Authentication.BearerToken.MessageReceivedContext)">
+            <summary>
+            Invoked when a protocol message is first received.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Authentication.BearerToken.MessageReceivedContext"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenJsonSerializerContext.AccessTokenResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenJsonSerializerContext.Int64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenJsonSerializerContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenJsonSerializerContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenJsonSerializerContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenJsonSerializerContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenJsonSerializerContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenJsonSerializerContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions">
+            <summary>
+            Contains the options used to authenticate using opaque bearer tokens.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions.#ctor">
+            <summary>
+            Constructs the options used to authenticate using opaque bearer tokens.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions.BearerTokenExpiration">
+            <summary>
+            Controls how much time the bearer token will remain valid from the point it is created.
+            The expiration information is stored in the protected token. Because of that, an expired token will be rejected
+            even if it is passed to the server after the client should have purged it.
+            </summary>
+            <remarks>
+            Defaults to 1 hour.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions.RefreshTokenExpiration">
+            <summary>
+            Controls how much time the refresh token will remain valid from the point it is created.
+            The expiration information is stored in the protected token.
+            </summary>
+            <remarks>
+            Defaults to 14 days.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions.BearerTokenProtector">
+            <summary>
+            If set, the <see cref="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions.BearerTokenProtector"/> is used to protect and unprotect the identity and other properties which are stored in the
+            bearer token. If not provided, one will be created using <see cref="T:Microsoft.AspNetCore.Authentication.TicketDataFormat"/> and the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>
+            from the application <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions.RefreshTokenProtector">
+            <summary>
+            If set, the <see cref="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions.RefreshTokenProtector"/> is used to protect and unprotect the identity and other properties which are stored in the
+            refresh token. If not provided, one will be created using <see cref="T:Microsoft.AspNetCore.Authentication.TicketDataFormat"/> and the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>
+            from the application <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions.Events">
+            <summary>
+            The object provided by the application to process events raised by the bearer token authentication handler.
+            The application may implement the interface fully, or it may create an instance of <see cref="T:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenEvents"/>
+            and assign delegates only to the events it wants to process.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.BearerToken.MessageReceivedContext">
+            <summary>
+            A context for <see cref="P:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenEvents.OnMessageReceived"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.BearerToken.MessageReceivedContext.#ctor(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Authentication.AuthenticationScheme,Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Authentication.BearerToken.MessageReceivedContext"/>.
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.BearerToken.MessageReceivedContext.Token">
+            <summary>
+            Bearer Token. This will give the application an opportunity to retrieve a token from an alternative location.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.BearerTokenExtensions">
+            <summary>
+            Extension methods to configure the bearer token authentication.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.BearerTokenExtensions.AddBearerToken(Microsoft.AspNetCore.Authentication.AuthenticationBuilder)">
+            <summary>
+            Adds bearer token authentication. The default scheme is specified by <see cref="F:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenDefaults.AuthenticationScheme"/>.
+            <para>
+            Bearer tokens can be obtained by calling <see cref="M:Microsoft.AspNetCore.Authentication.AuthenticationHttpContextExtensions.SignInAsync(Microsoft.AspNetCore.Http.HttpContext,System.String,System.Security.Claims.ClaimsPrincipal)" />.
+            </para>
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/>.</param>
+            <returns>A reference to <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.BearerTokenExtensions.AddBearerToken(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.String)">
+            <summary>
+            Adds bearer token authentication.
+            <para>
+            Bearer tokens can be obtained by calling <see cref="M:Microsoft.AspNetCore.Authentication.AuthenticationHttpContextExtensions.SignInAsync(Microsoft.AspNetCore.Http.HttpContext,System.String,System.Security.Claims.ClaimsPrincipal)" />.
+            </para>
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/>.</param>
+            <param name="authenticationScheme">The authentication scheme.</param>
+            <returns>A reference to <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.BearerTokenExtensions.AddBearerToken(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.Action{Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions})">
+            <summary>
+            Adds bearer token authentication. The default scheme is specified by <see cref="F:Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenDefaults.AuthenticationScheme"/>.
+            <para>
+            Bearer tokens can be obtained by calling <see cref="M:Microsoft.AspNetCore.Authentication.AuthenticationHttpContextExtensions.SignInAsync(Microsoft.AspNetCore.Http.HttpContext,System.String,System.Security.Claims.ClaimsPrincipal)" />.
+            </para>
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/>.</param>
+            <param name="configure">Action used to configure the bearer token authentication options.</param>
+            <returns>A reference to <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.BearerTokenExtensions.AddBearerToken(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.String,System.Action{Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions})">
+            <summary>
+            Adds bearer token authentication.
+            <para>
+            Bearer tokens can be obtained by calling <see cref="M:Microsoft.AspNetCore.Authentication.AuthenticationHttpContextExtensions.SignInAsync(Microsoft.AspNetCore.Http.HttpContext,System.String,System.Security.Claims.ClaimsPrincipal)" />.
+            </para>
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/>.</param>
+            <param name="authenticationScheme">The authentication scheme.</param>
+            <param name="configure">Action used to configure the bearer token authentication options.</param>
+            <returns>A reference to <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+    </members>
+</doc>

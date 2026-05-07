@@ -1,0 +1,2143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Formats.Asn1</name>
+  </assembly>
+  <members>
+    <member name="T:System.Formats.Asn1.Asn1Tag">
+      <summary>This type represents an ASN.1 tag, as described in ITU-T Recommendation X.680.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.Boolean">
+      <summary>Represents the universal class tag for a Boolean value.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.ConstructedBitString">
+      <summary>Represents the universal class tag for a Bit String value under a constructed encoding.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.ConstructedOctetString">
+      <summary>Represents the universal class tag for a Octet String value under a constructed encoding.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.Enumerated">
+      <summary>Represents the universal class tag for an Enumerated value.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.GeneralizedTime">
+      <summary>Represents the universal class tag for a GeneralizedTime value.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.Integer">
+      <summary>Represents the universal class tag for an Integer value.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.Null">
+      <summary>Represents the universal class tag for a <see langword="null" /> value.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.ObjectIdentifier">
+      <summary>Represents the universal class tag for an Object Identifier value.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.PrimitiveBitString">
+      <summary>Represents the universal class tag for a Bit String value under a primitive encoding.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.PrimitiveOctetString">
+      <summary>Represents the universal class tag for an Octet String value under a primitive encoding.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.Sequence">
+      <summary>Represents the universal class tag for a Sequence value (always a constructed encoding).</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.SetOf">
+      <summary>Represents the universal class tag for a SetOf value (always a constructed encoding).</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.Asn1Tag.UtcTime">
+      <summary>Represents the universal class tag for a UtcTime value.</summary>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.#ctor(System.Formats.Asn1.TagClass,System.Int32,System.Boolean)">
+      <summary>Create an <see cref="T:System.Formats.Asn1.Asn1Tag" /> for a specified value within a specified tag class.</summary>
+      <param name="tagClass">The tag class for this tag.</param>
+      <param name="tagValue">The numeric value for this tag.</param>
+      <param name="isConstructed">
+        <see langword="true" /> for a constructed tag, <see langword="false" /> for a primitive tag.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="tagClass" /> is not a known value.
+             -or- 
+               <paramref name="tagValue" /> is negative.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.#ctor(System.Formats.Asn1.UniversalTagNumber,System.Boolean)">
+      <summary>Create an <see cref="T:System.Formats.Asn1.Asn1Tag" /> for a tag from the UNIVERSAL class.</summary>
+      <param name="universalTagNumber">One of the enumeration values that specifies the semantic type for this tag.</param>
+      <param name="isConstructed">
+        <see langword="true" /> for a constructed tag, <see langword="false" /> for a primitive tag.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="universalTagNumber" /> is not a known value.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.AsConstructed">
+      <summary>Produces a tag with the same <see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> and <see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> values, but whose <see cref="P:System.Formats.Asn1.Asn1Tag.IsConstructed" /> is <see langword="true" />.</summary>
+      <returns>A tag with the same <see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> and <see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> values, but whose <see cref="P:System.Formats.Asn1.Asn1Tag.IsConstructed" /> is <see langword="true" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.AsPrimitive">
+      <summary>Produces a tag with the same <see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> and <see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> values, but whose <see cref="P:System.Formats.Asn1.Asn1Tag.IsConstructed" /> is <see langword="false" />.</summary>
+      <returns>A tag with the same <see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> and <see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> values, but whose <see cref="P:System.Formats.Asn1.Asn1Tag.IsConstructed" /> is <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.CalculateEncodedSize">
+      <summary>Reports the number of bytes required for the BER-encoding of this tag.</summary>
+      <returns>The number of bytes required for the BER-encoding of this tag.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.Decode(System.ReadOnlySpan{System.Byte},System.Int32@)">
+      <summary>Reads a BER-encoded tag which starts at <paramref name="source" />.</summary>
+      <param name="source">The read only byte sequence whose beginning is a BER-encoded tag.</param>
+      <param name="bytesConsumed">When this method returns, contains the number of bytes that contributed to the encoded tag. This parameter is treated as uninitialized.</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The provided data does not decode to a tag.</exception>
+      <returns>The decoded tag.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.Encode(System.Span{System.Byte})">
+      <summary>Writes the BER-encoded form of this tag to <paramref name="destination" />.</summary>
+      <param name="destination">The start of where the encoded tag should be written.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="destination" />.<see cref="P:System.Span`1.Length" /> &lt; <see cref="M:System.Formats.Asn1.Asn1Tag.CalculateEncodedSize" />.</exception>
+      <returns>The number of bytes written to <paramref name="destination" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.Equals(System.Formats.Asn1.Asn1Tag)">
+      <summary>Tests if <paramref name="other" /> has the same encoding as this tag.</summary>
+      <param name="other">Tag to test for equality.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="other" /> has the same values for <see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" />, <see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" />, and <see cref="P:System.Formats.Asn1.Asn1Tag.IsConstructed" />; <see langword="false" /> otherwise.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.Equals(System.Object)">
+      <summary>Tests if <paramref name="obj" /> is an <see cref="T:System.Formats.Asn1.Asn1Tag" /> with the same encoding as this tag.</summary>
+      <param name="obj">Object to test for value equality.</param>
+      <returns>
+        <see langword="false" /> if <paramref name="obj" /> is not an <see cref="T:System.Formats.Asn1.Asn1Tag" />, <see cref="M:System.Formats.Asn1.Asn1Tag.Equals(System.Formats.Asn1.Asn1Tag)" /> otherwise.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.GetHashCode">
+      <summary>Returns the hash code for this instance.</summary>
+      <returns>A 32-bit signed integer hash code.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.HasSameClassAndValue(System.Formats.Asn1.Asn1Tag)">
+      <summary>Tests if <paramref name="other" /> has the same <see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> and <see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> values as this tag, and does not compare <see cref="P:System.Formats.Asn1.Asn1Tag.IsConstructed" />.</summary>
+      <param name="other">Tag to test for concept equality.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="other" /> has the same <see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> and <see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> as this tag, <see langword="false" /> otherwise.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.op_Equality(System.Formats.Asn1.Asn1Tag,System.Formats.Asn1.Asn1Tag)">
+      <summary>Tests if two <see cref="T:System.Formats.Asn1.Asn1Tag" /> values have the same BER encoding.</summary>
+      <param name="left">The first value to compare.</param>
+      <param name="right">The second value to compare.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="left" /> and <paramref name="right" /> have the same BER encoding, <see langword="false" /> otherwise.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.op_Inequality(System.Formats.Asn1.Asn1Tag,System.Formats.Asn1.Asn1Tag)">
+      <summary>Tests if two <see cref="T:System.Formats.Asn1.Asn1Tag" /> values have a different BER encoding.</summary>
+      <param name="left">The first value to compare.</param>
+      <param name="right">The second value to compare.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="left" /> and <paramref name="right" /> have a different BER encoding, <see langword="false" /> otherwise.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.ToString">
+      <summary>Provides a text representation of this tag suitable for debugging.</summary>
+      <returns>A text representation of this tag suitable for debugging.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.TryDecode(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.Asn1Tag@,System.Int32@)">
+      <summary>Attempts to read a BER-encoded tag which starts at <paramref name="source" />.</summary>
+      <param name="source">The read only byte sequence whose beginning is a BER-encoded tag.</param>
+      <param name="tag">The decoded tag.</param>
+      <param name="bytesConsumed">When this method returns, contains the number of bytes that contributed to the encoded tag, 0 on failure. This parameter is treated as uninitialized.</param>
+      <returns>
+        <see langword="true" /> if a tag was correctly decoded; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.Asn1Tag.TryEncode(System.Span{System.Byte},System.Int32@)">
+      <summary>Attempts to write the BER-encoded form of this tag to <paramref name="destination" />.</summary>
+      <param name="destination">The start of where the encoded tag should be written.</param>
+      <param name="bytesWritten">Receives the value from <see cref="M:System.Formats.Asn1.Asn1Tag.CalculateEncodedSize" /> on success, 0 on failure.</param>
+      <returns>
+        <see langword="false" /> if <paramref name="destination" />.<see cref="P:System.Span`1.Length" /> &lt; <see cref="M:System.Formats.Asn1.Asn1Tag.CalculateEncodedSize" />(), <see langword="true" /> otherwise.</returns>
+    </member>
+    <member name="P:System.Formats.Asn1.Asn1Tag.IsConstructed">
+      <summary>Indicates if the tag represents a constructed encoding (<see langword="true" />), or a primitive encoding (<see langword="false" />).</summary>
+    </member>
+    <member name="P:System.Formats.Asn1.Asn1Tag.TagClass">
+      <summary>The tag class to which this tag belongs.</summary>
+    </member>
+    <member name="P:System.Formats.Asn1.Asn1Tag.TagValue">
+      <summary>The numeric value for this tag.</summary>
+    </member>
+    <member name="T:System.Formats.Asn1.AsnContentException">
+      <summary>The exception that is thrown when an encoded ASN.1 value cannot be successfully decoded.</summary>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnContentException.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Formats.Asn1.AsnContentException" /> class, using the default message.</summary>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnContentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Initializes a new instance of the <see cref="T:System.Formats.Asn1.AsnContentException" /> class with serialized data.</summary>
+      <param name="info">The object that holds the serialized object data.</param>
+      <param name="context">The contextual information about the source or destination.</param>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnContentException.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Formats.Asn1.AsnContentException" /> class, using the provided message.</summary>
+      <param name="message">The error message that explains the reason for the exception.</param>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnContentException.#ctor(System.String,System.Exception)">
+      <summary>Initializes a new instance of the <see cref="T:System.Formats.Asn1.AsnContentException" /> class, using the provided message and exception that is the cause of this exception.</summary>
+      <param name="message">The error message that explains the reason for the exception.</param>
+      <param name="inner">The exception that is the cause of the current exception.</param>
+    </member>
+    <member name="T:System.Formats.Asn1.AsnDecoder">
+      <summary>Provides stateless methods for decoding BER-encoded, CER-encoded, and DER-encoded ASN.1 data.</summary>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadBitString(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a Bit String value from <paramref name="source" /> with a specified tag under the specified encoding rules, returning the contents in a new array.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="unusedBitCount">On success, receives the number of bits in the last byte which were reported as "unused" by the writer.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>An array containing the contents of the Bit String value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadBoolean(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a Boolean value from <paramref name="source" /> with a specified tag under the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 1).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadCharacterString(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Formats.Asn1.UniversalTagNumber,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as character string with the specified tag and encoding type, returning the decoded string.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="encodingType">One of the enumeration values which represents the value type to process.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the universal tag that is appropriate to the requested encoding type.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.
+
+-or-
+
+<paramref name="encodingType" /> is not a known character string type.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The string did not successfully decode.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not the same as <paramref name="encodingType" />.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadEncodedValue(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Int32@,System.Int32@)">
+      <summary>Locates the contents range for the encoded value at the beginning of the <paramref name="source" /> buffer using the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="contentOffset">When this method returns, the offset of the content payload relative to the start of <paramref name="source" />.
+              This parameter is treated as uninitialized.</param>
+      <param name="contentLength">When this method returns, the number of bytes in the content payload (which may be 0).
+              This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+              This parameter is treated as uninitialized.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">
+        <paramref name="source" /> does not represent a value encoded under the specified encoding rules.</exception>
+      <returns>The tag identifying the content.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadEnumeratedBytes(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads an Enumerated value from <paramref name="source" /> with a specified tag under the specified encoding rules, returning the contents as a slice of the buffer.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 10).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The slice of the buffer containing the bytes of the Enumerated value, in signed big-endian form.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadEnumeratedValue(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Type,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads an Enumerated from <paramref name="source" /> with a specified tag under the specified encoding rules, converting it to the non-[<see cref="T:System.FlagsAttribute" />] enum specified by <paramref name="enumType" />.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="enumType">Type object representing the destination type.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 10).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The encoded value is too big to fit in a <paramref name="enumType" /> value.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="enumType" /> is not an enum type.
+
+-or-
+
+<paramref name="enumType" /> was declared with <see cref="T:System.FlagsAttribute" />.
+
+-or-
+
+<paramref name="enumType" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="enumType" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="enumType" /> is <see langword="null" />.</exception>
+      <returns>The Enumerated value converted to a <paramref name="enumType" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadEnumeratedValue``1(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads an Enumerated from <paramref name="source" /> with a specified tag under the specified encoding rules, converting it to the non-[<see cref="T:System.FlagsAttribute" />] enum specified by <typeparamref name="TEnum" />.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 10).</param>
+      <typeparam name="TEnum">Destination enum type.</typeparam>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The encoded value is too big to fit in a <paramref name="enumType" /> value.</exception>
+      <exception cref="T:System.ArgumentException">
+        <typeparamref name="TEnum" /> is not an enum type.
+
+-or-
+
+<typeparamref name="TEnum" /> was declared with <see cref="T:System.FlagsAttribute" />.
+
+-or-
+
+<paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The Enumerated value converted to a <typeparamref name="TEnum" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadGeneralizedTime(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a GeneralizedTime value from <paramref name="source" /> with a specified tag under the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 24).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadInteger(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads an Integer value from <paramref name="source" /> with a specified tag under the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded numeric value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadIntegerBytes(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads an Integer value from <paramref name="source" /> with a specified tag under the specified encoding rules, returning the contents as a slice of the buffer.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The slice of the buffer containing the bytes of the Integer value, in signed big-endian form.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadNamedBitList(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a NamedBitList from <paramref name="source" /> with a specified tag under the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The bits from the encoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadNamedBitListValue(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Type,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a NamedBitList from <paramref name="source" /> with a specified tag under the specified encoding rules, converting it to the [<see cref="T:System.FlagsAttribute" />] enum specified by <paramref name="flagsEnumType" />.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="flagsEnumType">Type object representing the destination type.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The encoded value is too big to fit in a <paramref name="flagsEnumType" /> value.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="flagsEnumType" /> is not an enum type.
+
+-or-
+
+<paramref name="flagsEnumType" /> was not declared with <see cref="T:System.FlagsAttribute" />
+
+-or-
+
+<paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="flagsEnumType" /> is <see langword="null" /></exception>
+      <returns>The NamedBitList value converted to a <paramref name="flagsEnumType" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadNamedBitListValue``1(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a NamedBitList from <paramref name="source" /> with a specified tag under the specified encoding rules, converting it to the [<see cref="T:System.FlagsAttribute" />] enum specified by <typeparamref name="TFlagsEnum" />.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <typeparam name="TFlagsEnum">Destination enum type.</typeparam>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The encoded value is too big to fit in a <paramref name="TFlagsEnum" /> value.</exception>
+      <exception cref="T:System.ArgumentException">
+        <typeparamref name="TFlagsEnum" /> is not an enum type.
+
+-or-
+
+<typeparamref name="TFlagsEnum" /> was not declared with <see cref="T:System.FlagsAttribute" />
+
+-or-
+
+<paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The NamedBitList value converted to a <typeparamref name="TFlagsEnum" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadNull(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a <see langword="null" /> value from <paramref name="source" /> with a specified tag under the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 5).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadObjectIdentifier(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads an Object Identifier value from <paramref name="source" /> with a specified tag under the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 6).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded object identifier, in dotted-decimal notation.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadOctetString(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads an Octet String value from <paramref name="source" /> with a specified tag under the specified encoding rules, returning the contents in a new array.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 4).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>An array containing the contents of the Octet String value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadSequence(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Int32@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a Sequence or Sequence-Of value from <paramref name="source" /> with a specified tag under the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="contentOffset">When this method returns, the offset of the content payload relative to the start of <paramref name="source" />.
+               This parameter is treated as uninitialized.</param>
+      <param name="contentLength">When this method returns, the number of bytes in the content payload (which may be 0).
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 16).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadSetOf(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Int32@,System.Int32@,System.Boolean,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a Set-Of value from <paramref name="source" /> with a specified tag under the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="contentOffset">When this method returns, the offset of the content payload relative to the start of <paramref name="source" />.
+               This parameter is treated as uninitialized.</param>
+      <param name="contentLength">When this method returns, the number of bytes in the content payload (which may be 0).
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="skipSortOrderValidation">
+        <see langword="true" /> to always accept the data in the order it is presented, <see langword="false" /> to verify that the data is sorted correctly when the encoding rules say sorting was required (CER and DER).</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 17).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.ReadUtcTime(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Int32,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a UtcTime value from <paramref name="source" /> with a specified tag under the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="twoDigitYearMax">The largest year to represent with this value.
+               The default value, 2049, represents the 1950-2049 range for X.509 certificates.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 24).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.
+
+-or-
+
+<paramref name="twoDigitYearMax" /> is not in the range [99, 9999].</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadBitString(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Int32@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to copy a Bit String value from <paramref name="source" /> with a specified tag under the specified encoding rules into <paramref name="destination" />.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="destination">The buffer in which to write.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="unusedBitCount">On success, receives the number of bits in the last byte which were reported as "unused" by the writer.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesWritten">When this method returns, the total number of bytes written to <paramref name="destination" />.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.
+
+-or-
+
+<paramref name="destination" /> overlaps <paramref name="source" />.</exception>
+      <returns>
+        <see langword="true" /> if <paramref name="destination" /> is large enough to receive the value of the Bit String; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadCharacterString(System.ReadOnlySpan{System.Byte},System.Span{System.Char},System.Formats.Asn1.AsnEncodingRules,System.Formats.Asn1.UniversalTagNumber,System.Int32@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads a character string value from <paramref name="source" /> with a specified tag under the specified encoding rules, copying the decoded string into a provided destination buffer.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="destination">The buffer in which to write.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="encodingType">One of the enumeration values which represents the value type to process.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="charsWritten">When this method returns, the number of chars written to <paramref name="destination" />.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the universal tag that is appropriate to the requested encoding type.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.
+
+-or-
+
+<paramref name="encodingType" /> is not a known character string type.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The string did not successfully decode.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not the same as <paramref name="encodingType" />.</exception>
+      <returns>
+        <see langword="true" /> and advances the reader if <paramref name="destination" /> had sufficient length to receive the value, otherwise <see langword="false" /> and the reader does not advance.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadCharacterStringBytes(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Formats.Asn1.Asn1Tag,System.Int32@,System.Int32@)">
+      <summary>Attempts to read a character string value from <paramref name="source" /> with a specified tag under the specified encoding rules, copying the unprocessed bytes into the provided destination buffer.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="destination">The buffer in which to write.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="expectedTag">The tag to check for before reading.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesWritten">On success, receives the number of bytes written to <paramref name="destination" />.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not a character string tag type.
+
+-or-
+
+<paramref name="destination" /> overlaps <paramref name="source" />.</exception>
+      <returns>
+        <see langword="true" /> if <paramref name="destination" /> is large enough to receive the value of the unprocessed character string; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadEncodedValue(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Formats.Asn1.Asn1Tag@,System.Int32@,System.Int32@,System.Int32@)">
+      <summary>Attempts locate the contents range for the encoded value at the beginning of the <paramref name="source" /> buffer using the specified encoding rules.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="tag">When this method returns, the tag identifying the content.
+              This parameter is treated as uninitialized.</param>
+      <param name="contentOffset">When this method returns, the offset of the content payload relative to the start of <paramref name="source" />.
+              This parameter is treated as uninitialized.</param>
+      <param name="contentLength">When this method returns, the number of bytes in the content payload (which may be 0).
+              This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+              This parameter is treated as uninitialized.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <returns>
+        <see langword="true" /> if <paramref name="source" /> represents a valid structural encoding for the specified encoding rules; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadInt32(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to read an Integer value from <paramref name="source" /> with a specified tag under the specified encoding rules as a signed 32-bit value.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="value">On success, receives the interpreted numeric value.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> if the Integer represents value is between <see cref="F:System.Int32.MinValue">Int32.MinValue</see> and <see cref="F:System.Int32.MaxValue">Int32.MaxValue</see>, inclusive; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadInt64(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int64@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to read an Integer value from <paramref name="source" /> with a specified tag under the specified encoding rules as a signed 64-bit value.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="value">On success, receives the interpreted numeric value.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> if the Integer represents value is between <see cref="F:System.Int64.MinValue">Int64.MinValue</see> and <see cref="F:System.Int64.MaxValue">Int64.MaxValue</see>, inclusive; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadOctetString(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to get an Octet String value from <paramref name="source" /> with a specified tag under the specified encoding rules, copying the value into the provided destination buffer.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="destination">The buffer in which to write.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesWritten">When this method returns, the total number of bytes written to <paramref name="destination" />.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 4).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.
+
+-or-
+
+<paramref name="destination" /> overlaps <paramref name="source" />.</exception>
+      <returns>
+        <see langword="true" /> if <paramref name="destination" /> is large enough to receive the value of the Octet String; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadPrimitiveBitString(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Int32@,System.ReadOnlySpan{System.Byte}@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to get a Bit String value from <paramref name="source" /> with a specified tag under the specified encoding rules, if the value is contained in a single (primitive) encoding.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="unusedBitCount">On success, receives the number of bits in the last byte which were reported as "unused" by the writer.
+               This parameter is treated as uninitialized.</param>
+      <param name="value">On success, receives a slice of the input buffer that corresponds to the value of the Bit String.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> if the Bit String value has a primitive encoding and all of the bits reported as unused are set to 0; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadPrimitiveCharacterStringBytes(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Formats.Asn1.Asn1Tag,System.ReadOnlySpan{System.Byte}@,System.Int32@)">
+      <summary>Attempts to get an unprocessed character string value from <paramref name="source" /> with a specified tag under the specified encoding rules, if the value is contained in a single (primitive) encoding.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="expectedTag">The tag to check for before reading.</param>
+      <param name="value">On success, receives a slice of the input buffer that corresponds to the value of the Bit String.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not a character string tag type.</exception>
+      <returns>
+        <see langword="true" /> if the character string value has a primitive encoding; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadPrimitiveOctetString(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.ReadOnlySpan{System.Byte}@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to get an Octet String value from <paramref name="source" /> with a specified tag under the specified encoding rules, if the value is contained in a single (primitive) encoding.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="value">On success, receives a slice of the input buffer that corresponds to the value of the Octet String.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 4).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> if the Octet String value has a primitive encoding; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadUInt32(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.UInt32@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to read an Integer value from <paramref name="source" /> with a specified tag under the specified encoding rules as an unsigned 32-bit value.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="value">On success, receives the interpreted numeric value.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> if the Integer represents value is between <see cref="F:System.UInt32.MinValue">UInt32.MinValue</see> and <see cref="F:System.UInt32.MaxValue">UInt32.MaxValue</see>, inclusive; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnDecoder.TryReadUInt64(System.ReadOnlySpan{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.UInt64@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to read an Integer value from <paramref name="source" /> with a specified tag under the specified encoding rules as an unsigned 64-bit value.</summary>
+      <param name="source">The buffer containing encoded data.</param>
+      <param name="ruleSet">The encoding constraints to use when interpreting the data.</param>
+      <param name="value">On success, receives the interpreted numeric value.
+               This parameter is treated as uninitialized.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes for the encoded value.
+               This parameter is treated as uninitialized.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> if the Integer represents value is between <see cref="F:System.UInt64.MinValue">UInt64.MinValue</see> and <see cref="F:System.UInt64.MaxValue">UInt64.MaxValue</see>, inclusive; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="T:System.Formats.Asn1.AsnEncodingRules">
+      <summary>The encoding ruleset for an <see cref="T:System.Formats.Asn1.AsnReader" /> or <see cref="T:System.Formats.Asn1.AsnWriter" />.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.AsnEncodingRules.BER">
+      <summary>ITU-T X.690 Basic Encoding Rules.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.AsnEncodingRules.CER">
+      <summary>ITU-T X.690 Canonical Encoding Rules.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.AsnEncodingRules.DER">
+      <summary>ITU-T X.690 Distinguished Encoding Rules.</summary>
+    </member>
+    <member name="T:System.Formats.Asn1.AsnReader">
+      <summary>A stateful, forward-only reader for BER-, CER-, or DER-encoded ASN.1 data.</summary>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.#ctor(System.ReadOnlyMemory{System.Byte},System.Formats.Asn1.AsnEncodingRules,System.Formats.Asn1.AsnReaderOptions)">
+      <summary>Construct an <see cref="T:System.Formats.Asn1.AsnReader" /> over <paramref name="data" /> with a given ruleset.</summary>
+      <param name="data">The data to read.</param>
+      <param name="ruleSet">The encoding constraints for the reader.</param>
+      <param name="options">Additional options for the reader.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.Clone">
+      <summary>Clones the current reader.</summary>
+      <returns>A clone of the current reader.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.PeekContentBytes">
+      <summary>Get a <see cref="T:System.ReadOnlyMemory`1" /> view of the content octets (bytes) of the next encoded value without advancing the reader.</summary>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The reader is positioned at a point where the tag or length is invalid under the current encoding rules.</exception>
+      <returns>The bytes of the contents octets of the next encoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.PeekEncodedValue">
+      <summary>Get a <see cref="T:System.ReadOnlyMemory`1" /> view of the next encoded value without advancing the reader. For indefinite length encodings this includes the End of Contents marker.</summary>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The reader is positioned at a point where the tag or length is invalid under the current encoding rules.</exception>
+      <returns>The bytes of the next encoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.PeekTag">
+      <summary>Read the encoded tag at the next data position, without advancing the reader.</summary>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">A tag could not be decoded at the reader's current position.</exception>
+      <returns>The decoded tag value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadBitString(System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a BIT STRING with a specified tag, returning the value in a byte array.</summary>
+      <param name="unusedBitCount">On success, receives the number of bits in the last byte which were reported as "unused" by the writer.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 1).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>A copy of the value in a newly allocated, precisely sized, array.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadBoolean(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a Boolean with a specified tag.</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 1).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadCharacterString(System.Formats.Asn1.UniversalTagNumber,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as character string with the specified tag and encoding type, returning the decoded value as a string.</summary>
+      <param name="encodingType">One of the enumeration values representing the value type to process.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the universal tag that is appropriate to the requested encoding type.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="encodingType" /> is not a known character string type.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The string did not successfully decode.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not the same as <paramref name="encodingType" />.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadEncodedValue">
+      <summary>Get a <see cref="T:System.ReadOnlyMemory`1" /> view of the next encoded value, and advance the reader past it. For an indefinite length encoding this includes the End of Contents marker.</summary>
+      <returns>A <see cref="T:System.ReadOnlyMemory`1" /> view of the next encoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadEnumeratedBytes(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a Enumerated with a specified tag, returning the contents as a <see cref="T:System.ReadOnlyMemory`1" /> over the original data.</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 10).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The bytes of the Enumerated value, in signed big-endian form.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadEnumeratedValue(System.Type,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as an Enumerated with a specified tag, converting it to the non-[<see cref="T:System.FlagsAttribute" />] enum specified by <paramref name="enumType" />.</summary>
+      <param name="enumType">Type object representing the destination type.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 10).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The encoded value is too big to fit in a <paramref name="enumType" /> value.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="enumType" /> is not an enum type.
+
+-or-
+
+<paramref name="enumType" /> was declared with <see cref="T:System.FlagsAttribute" />.
+
+-or-
+
+<paramref name="enumType" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="enumType" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="enumType" /> is <see langword="null" />.</exception>
+      <returns>The Enumerated value converted to a <paramref name="enumType" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadEnumeratedValue``1(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as an Enumerated with a specified tag, converting it to the non-[<see cref="T:System.FlagsAttribute" />] enum specified by <typeparamref name="TEnum" />.</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 10).</param>
+      <typeparam name="TEnum">Destination enum type.</typeparam>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The encoded value is too big to fit in a <paramref name="TEnum" /> value.</exception>
+      <exception cref="T:System.ArgumentException">
+        <typeparamref name="TEnum" /> is not an enum type.
+
+-or-
+
+<typeparamref name="TEnum" /> was declared with <see cref="T:System.FlagsAttribute" />.
+
+-or-
+
+<paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The Enumerated value converted to a <typeparamref name="TEnum" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadGeneralizedTime(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a GeneralizedTime with a specified tag.</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 24).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadInteger(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as an Integer with a specified tag.</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadIntegerBytes(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a Integer with a specified tag, returning the contents as a <see cref="T:System.ReadOnlyMemory`1" /> over the original data.</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The bytes of the Integer value, in signed big-endian form.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadNamedBitList(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a NamedBitList with a specified tag.</summary>
+      <param name="expectedTag">The tag to check for before reading.</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The bits from the encoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadNamedBitListValue(System.Type,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a NamedBitList with a specified tag, converting it to the [<see cref="T:System.FlagsAttribute" />] enum specified by <paramref name="flagsEnumType" />.</summary>
+      <param name="flagsEnumType">Type object representing the destination type.</param>
+      <param name="expectedTag">The tag to check for before reading.</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The encoded value is too big to fit in a <paramref name="flagsEnumType" /> value.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="flagsEnumType" /> is not an enum type.
+
+-or-
+
+<paramref name="flagsEnumType" /> was not declared with <see cref="T:System.FlagsAttribute" />
+
+-or-
+
+<paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="flagsEnumType" /> is <see langword="null" /></exception>
+      <returns>The NamedBitList value converted to a <paramref name="flagsEnumType" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadNamedBitListValue``1(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a NamedBitList with a specified tag, converting it to the [<see cref="T:System.FlagsAttribute" />] enum specified by <typeparamref name="TFlagsEnum" />.</summary>
+      <param name="expectedTag">The tag to check for before reading.</param>
+      <typeparam name="TFlagsEnum">Destination enum type.</typeparam>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The encoded value is too big to fit in a <paramref name="TFlagsEnum" /> value.</exception>
+      <exception cref="T:System.ArgumentException">
+        <typeparamref name="TFlagsEnum" /> is not an enum type.
+
+-or-
+
+<typeparamref name="TFlagsEnum" /> was not declared with <see cref="T:System.FlagsAttribute" />
+
+-or-
+
+<paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The NamedBitList value converted to a <typeparamref name="TFlagsEnum" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadNull(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a NULL with a specified tag.</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 5).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadObjectIdentifier(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as an OBJECT IDENTIFIER with a specified tag, returning the value in a dotted decimal format string.</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 6).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The object identifier value in a dotted decimal format string.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadOctetString(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as an OCTET STRING with tag UNIVERSAL 4, returning the value in a byte array.</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 4).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>A copy of the value in a newly allocated, precisely sized, array.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a SEQUENCE or SEQUENCE-OF with the specified tag and returns the result as a new reader positioned at the first value in the sequence (or with <see cref="P:System.Formats.Asn1.AsnReader.HasData" /> == <see langword="false" />).</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 16).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>A new reader positioned at the first value in the sequence (or with <see cref="P:System.Formats.Asn1.AsnReader.HasData" /> == <see langword="false" />).</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadSetOf(System.Boolean,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a SET-OF with the specified tag and returns the result as a new reader positioned at the first value in the set-of (or with <see cref="P:System.Formats.Asn1.AsnReader.HasData" /> == <see langword="false" />).</summary>
+      <param name="skipSortOrderValidation">
+        <see langword="true" /> to always accept the data in the order it is presented, <see langword="false" /> to verify that the data is sorted correctly when the encoding rules say sorting was required (CER and DER).</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 17).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>A new reader positioned at the first value in the set-of (or with <see cref="P:System.Formats.Asn1.AsnReader.HasData" /> == <see langword="false" />).</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a SET-OF with the specified tag and returns the result as a new reader positioned at the first value in the set-of (or with <see cref="P:System.Formats.Asn1.AsnReader.HasData" /> == <see langword="false" />), using the <see cref="P:System.Formats.Asn1.AsnReaderOptions.SkipSetSortOrderVerification" /> value from the constructor (default <see langword="false" />).</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 17).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>A new reader positioned at the first value in the set-of (or with <see cref="P:System.Formats.Asn1.AsnReader.HasData" /> == <see langword="false" />).</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadUtcTime(System.Int32,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a UTCTime with a specified tag.</summary>
+      <param name="twoDigitYearMax">The largest year to represent with this value.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 23).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ReadUtcTime(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a UTCTime with a specified tag using the <see cref="P:System.Formats.Asn1.AsnReaderOptions.UtcTimeTwoDigitYearMax" /> value from options passed to the constructor (with a default of 2049).</summary>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 23).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>The decoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.ThrowIfNotEmpty">
+      <summary>Throws a standardized <see cref="T:System.Formats.Asn1.AsnContentException" /> if the reader has remaining data, performs no function if <see cref="P:System.Formats.Asn1.AsnReader.HasData" /> returns <see langword="false" />.</summary>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadBitString(System.Span{System.Byte},System.Int32@,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a BIT STRING with a specified tag, copying the value into a provided destination buffer.</summary>
+      <param name="destination">The buffer in which to write.</param>
+      <param name="unusedBitCount">On success, receives the number of bits in the last byte which were reported as "unused" by the writer.</param>
+      <param name="bytesWritten">On success, receives the number of bytes written to <paramref name="destination" />.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 1).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> and advances the reader if <paramref name="destination" /> had sufficient length to receive the value, otherwise <see langword="false" /> and the reader does not advance.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadCharacterString(System.Span{System.Char},System.Formats.Asn1.UniversalTagNumber,System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as character string with the specified tag and encoding type, copying the decoded value into a provided destination buffer.</summary>
+      <param name="destination">The buffer in which to write.</param>
+      <param name="encodingType">One of the enumeration values representing the value type to process.</param>
+      <param name="charsWritten">On success, receives the number of chars written to <paramref name="destination" />.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the universal tag that is appropriate to the requested encoding type.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="encodingType" /> is not a known character string type.</exception>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.
+
+-or-
+
+The string did not successfully decode.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not the same as <paramref name="encodingType" />.</exception>
+      <returns>
+        <see langword="true" /> and advances the reader if <paramref name="destination" /> had sufficient length to receive the value, otherwise <see langword="false" /> and the reader does not advance.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadCharacterStringBytes(System.Span{System.Byte},System.Formats.Asn1.Asn1Tag,System.Int32@)">
+      <summary>Reads the next value as character string with the specified tag, copying the unprocessed bytes into a provided destination buffer.</summary>
+      <param name="destination">The buffer in which to write.</param>
+      <param name="expectedTag">The tag to check for before reading.</param>
+      <param name="bytesWritten">On success, receives the number of bytes written to <paramref name="destination" />.</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not a character string tag type.</exception>
+      <returns>
+        <see langword="true" /> and advances the reader if <paramref name="destination" /> had sufficient length to receive the value, otherwise <see langword="false" /> and the reader does not advance.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadInt32(System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to read the next value as an Integer with a specified tag, as a signed 32-bit value.</summary>
+      <param name="value">On success, receives the decoded value.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="false" /> and does not advance the reader if the value is not between <see cref="F:System.Int32.MinValue">Int32.MinValue</see> and <see cref="F:System.Int32.MaxValue">Int32.MaxValue</see>, inclusive; otherwise <see langword="true" /> is returned and the reader advances.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadInt64(System.Int64@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to read the next value as an Integer with a specified tag, as a signed 64-bit value.</summary>
+      <param name="value">On success, receives the decoded value.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="false" /> and does not advance the reader if the value is not between <see cref="F:System.Int64.MinValue">Int64.MinValue</see> and <see cref="F:System.Int64.MaxValue">Int64.MaxValue</see>, inclusive; otherwise <see langword="true" /> is returned and the reader advances.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadOctetString(System.Span{System.Byte},System.Int32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as an OCTET STRING with a specified tag, copying the value into a provided destination buffer.</summary>
+      <param name="destination">The buffer in which to write.</param>
+      <param name="bytesWritten">On success, receives the number of bytes written to <paramref name="destination" />.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 4).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> and advances the reader if <paramref name="destination" /> had sufficient length to receive the value, otherwise <see langword="false" /> and the reader does not advance.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadPrimitiveBitString(System.Int32@,System.ReadOnlyMemory{System.Byte}@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Reads the next value as a BIT STRING with a specified tag, returning the contents as a <see cref="T:System.ReadOnlyMemory`1" /> over the original data.</summary>
+      <param name="unusedBitCount">On success, receives the number of bits in the last byte which were reported as "unused" by the writer.</param>
+      <param name="value">On success, receives a <see cref="T:System.ReadOnlyMemory`1" /> over the original data corresponding to the value of the BIT STRING.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 1).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> and advances the reader if the BIT STRING value had a primitive encoding, <see langword="false" /> and does not advance the reader if it had a constructed encoding.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadPrimitiveCharacterStringBytes(System.Formats.Asn1.Asn1Tag,System.ReadOnlyMemory{System.Byte}@)">
+      <summary>Reads the next value as a character with a specified tag, returning the contents as an unprocessed <see cref="T:System.ReadOnlyMemory`1" /> over the original data.</summary>
+      <param name="expectedTag">The tag to check for before reading.</param>
+      <param name="contents">On success, receives a <see cref="T:System.ReadOnlyMemory`1" /> over the original data corresponding to the value of the character string.</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not a character string tag type.</exception>
+      <returns>
+        <see langword="true" /> and advances the reader if the character string value had a primitive encoding, <see langword="false" /> and does not advance the reader if it had a constructed encoding.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadPrimitiveOctetString(System.ReadOnlyMemory{System.Byte}@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to read the next value as an OCTET STRING with a specified tag, returning the contents as a <see cref="T:System.ReadOnlyMemory`1" /> over the original data.</summary>
+      <param name="contents">On success, receives a <see cref="T:System.ReadOnlyMemory`1" /> over the original data corresponding to the value of the OCTET STRING.</param>
+      <param name="expectedTag">The tag to check for before reading.</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="true" /> and advances the reader if the OCTET STRING value had a primitive encoding, <see langword="false" /> and does not advance the reader if it had a constructed encoding.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadUInt32(System.UInt32@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to read the next value as an Integer with a specified tag, as an unsigned 32-bit value.</summary>
+      <param name="value">On success, receives the decoded value.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="false" /> and does not advance the reader if the value is not between <see cref="F:System.UInt32.MinValue">UInt32.MinValue</see> and <see cref="F:System.UInt32.MaxValue">UInt32.MaxValue</see>, inclusive; otherwise <see langword="true" /> is returned and the reader advances.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnReader.TryReadUInt64(System.UInt64@,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Attempts to read the next value as an Integer with a specified tag, as an unsigned 64-bit value.</summary>
+      <param name="value">On success, receives the decoded value.</param>
+      <param name="expectedTag">The tag to check for before reading, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.Formats.Asn1.AsnContentException">The next value does not have the correct tag.
+
+-or-
+
+The length encoding is not valid under the current encoding rules.
+
+-or-
+
+The contents are not valid under the current encoding rules.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="expectedTag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>
+        <see langword="false" /> and does not advance the reader if the value is not between <see cref="F:System.UInt64.MinValue">UInt64.MinValue</see> and <see cref="F:System.UInt64.MaxValue">UInt64.MaxValue</see>, inclusive; otherwise <see langword="true" /> is returned and the reader advances.</returns>
+    </member>
+    <member name="P:System.Formats.Asn1.AsnReader.HasData">
+      <summary>Gets an indication of whether the reader has remaining data available to process.</summary>
+      <returns>
+        <see langword="true" /> if there is more data available for the reader to process; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Formats.Asn1.AsnReader.RuleSet">
+      <summary>Gets the encoding rules in use by this reader.</summary>
+      <returns>The encoding rules in use by this reader.</returns>
+    </member>
+    <member name="T:System.Formats.Asn1.AsnReaderOptions">
+      <summary>Specifies options that modify the behavior of an <see cref="T:System.Formats.Asn1.AsnReader" />.</summary>
+    </member>
+    <member name="P:System.Formats.Asn1.AsnReaderOptions.SkipSetSortOrderVerification">
+      <summary>Gets or sets a value that indicates whether the reader should bypass sort ordering on a Set or Set-Of value.</summary>
+      <returns>
+        <see langword="true" /> if the reader should not validate that a Set or Set-Of value is sorted correctly for the current encoding rules; otherwise <see langword="false" />.
+              The default is <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Formats.Asn1.AsnReaderOptions.UtcTimeTwoDigitYearMax">
+      <summary>Gets or sets the largest year to represent with a UtcTime value.</summary>
+      <returns>The largest year to represent with a UtcTime value. The default is 2049.</returns>
+    </member>
+    <member name="T:System.Formats.Asn1.AsnWriter">
+      <summary>A writer for BER-, CER-, and DER-encoded ASN.1 data.</summary>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.#ctor(System.Formats.Asn1.AsnEncodingRules)">
+      <summary>Create a new <see cref="T:System.Formats.Asn1.AsnWriter" /> with a given set of encoding rules.</summary>
+      <param name="ruleSet">The encoding constraints for the writer.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.#ctor(System.Formats.Asn1.AsnEncodingRules,System.Int32)">
+      <summary>Initializes a new instance of <see cref="T:System.Formats.Asn1.AsnWriter" /> with a given set of encoding rules and an initial capacity.</summary>
+      <param name="ruleSet">The encoding constraints for the writer.</param>
+      <param name="initialCapacity">The minimum capacity with which to initialize the underlying buffer.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ruleSet" /> is not defined.
+
+-or-
+
+<paramref name="initialCapacity" /> is a negative number.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.CopyTo(System.Formats.Asn1.AsnWriter)">
+      <summary>Copy the value of this writer into another.</summary>
+      <param name="destination">The writer to receive the value.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="destination" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">A <see cref="M:System.Formats.Asn1.AsnWriter.PushSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PushSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> has not been closed via <see cref="M:System.Formats.Asn1.AsnWriter.PopSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PopSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" />.
+             -or- 
+               This writer is empty.
+             -or- 
+               This writer represents more than one top-level value.
+             -or- 
+               This writer's value is encoded in a manner that is not compatible with the ruleset for the destination writer.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.Encode">
+      <summary>Return a new array containing the encoded value.</summary>
+      <exception cref="T:System.InvalidOperationException">A <see cref="M:System.Formats.Asn1.AsnWriter.PushSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PushSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> has not been closed via <see cref="M:System.Formats.Asn1.AsnWriter.PopSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PopSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" />.</exception>
+      <returns>A precisely-sized array containing the encoded value.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.Encode(System.Span{System.Byte})">
+      <summary>Writes the encoded representation of the data to <paramref name="destination" />.</summary>
+      <param name="destination">The buffer in which to write.</param>
+      <exception cref="T:System.InvalidOperationException">A <see cref="M:System.Formats.Asn1.AsnWriter.PushSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PushSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> has not been closed via <see cref="M:System.Formats.Asn1.AsnWriter.PopSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PopSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" />.</exception>
+      <returns>The number of bytes written to <paramref name="destination" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.EncodedValueEquals(System.Formats.Asn1.AsnWriter)">
+      <summary>Determines if <see cref="M:System.Formats.Asn1.AsnWriter.Encode" /> would produce an output identical to <paramref name="other" />.</summary>
+      <param name="other">The instance to compare encoded values against.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="other" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">A <see cref="M:System.Formats.Asn1.AsnWriter.PushSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PushSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> has not been closed via <see cref="M:System.Formats.Asn1.AsnWriter.PopSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PopSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" />.</exception>
+      <returns>
+        <see langword="true" /> if the pending encoded data is identical to <paramref name="other" />, <see langword="false" /> otherwise.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.EncodedValueEquals(System.ReadOnlySpan{System.Byte})">
+      <summary>Determines if <see cref="M:System.Formats.Asn1.AsnWriter.Encode" /> would produce an output identical to <paramref name="other" />.</summary>
+      <param name="other">The encoded value to compare against.</param>
+      <exception cref="T:System.InvalidOperationException">A <see cref="M:System.Formats.Asn1.AsnWriter.PushSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PushSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> has not been closed via <see cref="M:System.Formats.Asn1.AsnWriter.PopSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PopSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" />.</exception>
+      <returns>
+        <see langword="true" /> if the pending encoded data is identical to <paramref name="other" />, <see langword="false" /> otherwise.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.GetEncodedLength">
+      <summary>Gets the number of bytes that would be written by <see cref="M:System.Formats.Asn1.AsnWriter.TryEncode(System.Span{System.Byte},System.Int32@)" />.</summary>
+      <exception cref="T:System.InvalidOperationException">
+        <see cref="M:System.Formats.Asn1.AsnWriter.PushSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" />, <see cref="M:System.Formats.Asn1.AsnWriter.PushSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" />, or <see cref="M:System.Formats.Asn1.AsnWriter.PushOctetString(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> was called without the corresponding Pop method.</exception>
+      <returns>The number of bytes that would be written by <see cref="M:System.Formats.Asn1.AsnWriter.TryEncode(System.Span{System.Byte},System.Int32@)" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.PopOctetString(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Indicate that the open Octet String with the tag UNIVERSAL 4 is closed, returning the writer to the parent context.</summary>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 4).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.InvalidOperationException">the writer is not currently positioned within an Octet String with the specified tag.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.PopSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Indicate that the open Sequence with the specified tag is closed, returning the writer to the parent context.</summary>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 16).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.InvalidOperationException">the writer is not currently positioned within a Sequence with the specified tag.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.PopSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Indicate that the open Set-Of with the specified tag is closed, returning the writer to the parent context.</summary>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 17).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.InvalidOperationException">the writer is not currently positioned within a Set-Of with the specified tag.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.PushOctetString(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Begin writing an Octet String value with a specified tag.</summary>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 4).</param>
+      <returns>A disposable value which will automatically call <see cref="M:System.Formats.Asn1.AsnWriter.PopOctetString(System.Nullable{System.Formats.Asn1.Asn1Tag})" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.PushSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Begin writing a Sequence with a specified tag.</summary>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 16).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>A disposable value which will automatically call <see cref="M:System.Formats.Asn1.AsnWriter.PopSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.PushSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Begin writing a Set-Of with a specified tag.</summary>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 17).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <returns>A disposable value which will automatically call <see cref="M:System.Formats.Asn1.AsnWriter.PopSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" />.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.Reset">
+      <summary>Reset the writer to have no data, without releasing resources.</summary>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.TryEncode(System.Span{System.Byte},System.Int32@)">
+      <summary>Attempts to write the encoded representation of the data to <paramref name="destination" />.</summary>
+      <param name="destination">The buffer in which to write.</param>
+      <param name="bytesWritten">On success, receives the number of bytes written to <paramref name="destination" />.</param>
+      <exception cref="T:System.InvalidOperationException">A <see cref="M:System.Formats.Asn1.AsnWriter.PushSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PushSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> has not been closed via <see cref="M:System.Formats.Asn1.AsnWriter.PopSequence(System.Nullable{System.Formats.Asn1.Asn1Tag})" /> or <see cref="M:System.Formats.Asn1.AsnWriter.PopSetOf(System.Nullable{System.Formats.Asn1.Asn1Tag})" />.</exception>
+      <returns>
+        <see langword="true" /> if the encode succeeded, <see langword="false" /> if <paramref name="destination" /> is too small.</returns>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteBitString(System.ReadOnlySpan{System.Byte},System.Int32,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write a Bit String value with a specified tag.</summary>
+      <param name="value">The value to write.</param>
+      <param name="unusedBitCount">The number of trailing bits which are not semantic.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.
+             -or- 
+               <paramref name="value" /> has length 0 and <paramref name="unusedBitCount" /> is not 0 
+               -or- 
+               <paramref name="value" /> is not empty and any of the bits identified by <paramref name="unusedBitCount" /> is set.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="unusedBitCount" /> is not in the range [0,7].</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteBoolean(System.Boolean,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write a Boolean value with a specified tag.</summary>
+      <param name="value">The value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 1).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteCharacterString(System.Formats.Asn1.UniversalTagNumber,System.ReadOnlySpan{System.Char},System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write the provided string using the specified encoding type using the specified tag corresponding to the encoding type.</summary>
+      <param name="encodingType">One of the enumeration values representing the encoding to use.</param>
+      <param name="str">The string to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the universal tag that is appropriate to the requested encoding type.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="encodingType" /> is not a restricted character string encoding type.
+             -or- 
+               <paramref name="encodingType" /> is a restricted character string encoding type that is not currently supported by this method.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteCharacterString(System.Formats.Asn1.UniversalTagNumber,System.String,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write the provided string using the specified encoding type using the specified tag corresponding to the encoding type.</summary>
+      <param name="encodingType">One of the enumeration values representing the encoding to use.</param>
+      <param name="value">The string to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the universal tag that is appropriate to the requested encoding type.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="value" /> is <see langword="null" /></exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="encodingType" /> is not a restricted character string encoding type.
+             -or- 
+               <paramref name="encodingType" /> is a restricted character string encoding type that is not currently supported by this method.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteEncodedValue(System.ReadOnlySpan{System.Byte})">
+      <summary>Write a single value which has already been encoded.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="value" /> could not be read under the current encoding rules.
+             -or- 
+               <paramref name="value" /> has data beyond the end of the first value.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteEnumeratedValue(System.Enum,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write a non-[<see cref="T:System.FlagsAttribute" />] enum value as an Enumerated with tag UNIVERSAL 10.</summary>
+      <param name="value">The boxed enumeration value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 10).</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="value" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.
+             -or- 
+               <paramref name="value" /> is not a boxed enum value.
+             -or- 
+               the unboxed type of <paramref name="value" /> is declared [<see cref="T:System.FlagsAttribute" />].</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteEnumeratedValue``1(``0,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write a non-[<see cref="T:System.FlagsAttribute" />] enum value as an Enumerated with tag UNIVERSAL 10.</summary>
+      <param name="value">The boxed enumeration value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 10).</param>
+      <typeparam name="TEnum">The non-[<see cref="T:System.FlagsAttribute" />] enumeration type to write.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="value" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.
+             -or- 
+               <typeparamref name="TEnum" /> is not an enum.
+             -or- 
+               <typeparamref name="TEnum" /> is declared [<see cref="T:System.FlagsAttribute" />].</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteGeneralizedTime(System.DateTimeOffset,System.Boolean,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write the provided <see cref="T:System.DateTimeOffset" /> as a GeneralizedTime with a specified UNIVERSAL 24, optionally excluding the fractional seconds.</summary>
+      <param name="value">The value to write.</param>
+      <param name="omitFractionalSeconds">
+        <see langword="true" /> to treat the fractional seconds in <paramref name="value" /> as 0 even if a non-zero value is present.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 24).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteInteger(System.Int64,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write an Integer value with a specified tag.</summary>
+      <param name="value">The value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteInteger(System.Numerics.BigInteger,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write an Integer value with a specified tag.</summary>
+      <param name="value">The value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteInteger(System.ReadOnlySpan{System.Byte},System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write an Integer value with a specified tag.</summary>
+      <param name="value">The integer value to write, in signed big-endian byte order.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.ArgumentException">the 9 most significant bits are all set.
+             -or- 
+               the 9 most significant bits are all unset.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteInteger(System.UInt64,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write an Integer value with a specified tag.</summary>
+      <param name="value">The value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteIntegerUnsigned(System.ReadOnlySpan{System.Byte},System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write an Integer value with a specified tag.</summary>
+      <param name="value">The integer value to write, in unsigned big-endian byte order.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 2).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.ArgumentException">the 9 most significant bits are all unset.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteNamedBitList(System.Collections.BitArray,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write a bit array value as a NamedBitList with a specified tag.</summary>
+      <param name="value">The bits to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="value" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteNamedBitList(System.Enum,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write a [<see cref="T:System.FlagsAttribute" />] enum value as a NamedBitList with a specified tag.</summary>
+      <param name="value">The boxed enumeration value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.
+             -or- 
+               <paramref name="value" /> is not a boxed enum value.
+             -or- 
+               the unboxed type of <paramref name="value" /> is not declared [<see cref="T:System.FlagsAttribute" />].</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="value" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteNamedBitList``1(``0,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write a [<see cref="T:System.FlagsAttribute" />] enum value as a NamedBitList with a specified tag.</summary>
+      <param name="value">The enumeration value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 3).</param>
+      <typeparam name="TEnum">The [<see cref="T:System.FlagsAttribute" />] enumeration type to write.</typeparam>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.
+             -or- 
+               <typeparamref name="TEnum" /> is not an enum value.
+             -or- 
+               <typeparamref name="TEnum" /> is not declared [<see cref="T:System.FlagsAttribute" />].</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteNull(System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write NULL with a specified tag.</summary>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 5).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteObjectIdentifier(System.ReadOnlySpan{System.Char},System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write an Object Identifier with a specified tag.</summary>
+      <param name="oidValue">The object identifier to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 6).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.
+             -or- 
+               <paramref name="oidValue" /> is not a valid dotted decimal object identifier.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteObjectIdentifier(System.String,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write an Object Identifier with a specified tag.</summary>
+      <param name="oidValue">The object identifier to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 6).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.
+             -or- 
+               <paramref name="oidValue" /> is not a valid dotted decimal object identifier.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="oidValue" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteOctetString(System.ReadOnlySpan{System.Byte},System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write an Octet String value with a specified tag.</summary>
+      <param name="value">The value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 4).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteUtcTime(System.DateTimeOffset,System.Int32,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write the provided value as a UTCTime with a specified tag, provided the year is in the allowed range.</summary>
+      <param name="value">The value to write.</param>
+      <param name="twoDigitYearMax">The maximum valid year for <paramref name="value" />, after conversion to UTC.
+              For the X.509 Time.utcTime range of 1950-2049, pass <c>2049</c>.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 23).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="value" />.<see cref="P:System.DateTimeOffset.Year" /> (after conversion to UTC) is not in the range (<paramref name="twoDigitYearMax" /> - 100, <paramref name="twoDigitYearMax" />].</exception>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.WriteUtcTime(System.DateTimeOffset,System.Nullable{System.Formats.Asn1.Asn1Tag})">
+      <summary>Write the provided value as a UTCTime with a specified tag, accepting the two-digit year as valid in context.</summary>
+      <param name="value">The value to write.</param>
+      <param name="tag">The tag to write, or <see langword="null" /> for the default tag (Universal 23).</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagClass" /> is <see cref="F:System.Formats.Asn1.TagClass.Universal" />, but <paramref name="tag" />.<see cref="P:System.Formats.Asn1.Asn1Tag.TagValue" /> is not correct for the method.</exception>
+    </member>
+    <member name="P:System.Formats.Asn1.AsnWriter.RuleSet">
+      <summary>Gets the encoding rules in use by this writer.</summary>
+      <returns>The encoding rules in use by this writer.</returns>
+    </member>
+    <member name="T:System.Formats.Asn1.AsnWriter.Scope">
+      <summary>Provides an <see cref="T:System.IDisposable" /> target for safely closing an opened tag by using a lexical scope as a logical scope.</summary>
+    </member>
+    <member name="M:System.Formats.Asn1.AsnWriter.Scope.Dispose">
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member name="T:System.Formats.Asn1.TagClass">
+      <summary>The tag class for a particular ASN.1 tag.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.TagClass.Application">
+      <summary>The Application tag class.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.TagClass.ContextSpecific">
+      <summary>The Context-Specific tag class.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.TagClass.Private">
+      <summary>The Private tag class.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.TagClass.Universal">
+      <summary>The Universal tag class.</summary>
+    </member>
+    <member name="T:System.Formats.Asn1.UniversalTagNumber">
+      <summary>Tag assignments for the UNIVERSAL class in ITU-T X.680.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.BitString">
+      <summary>The universal class tag value for Bit String.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.BMPString">
+      <summary>The universal class tag value for BMPString.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Boolean">
+      <summary>The universal class tag value for Boolean.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Date">
+      <summary>The universal class tag value for Date.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.DateTime">
+      <summary>The universal class tag value for Date-Time.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Duration">
+      <summary>The universal class tag value for Duration.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Embedded">
+      <summary>The universal class tag value for Embedded-PDV.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.EndOfContents">
+      <summary>The reserved identifier for the End-of-Contents marker in an indefinite length encoding.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Enumerated">
+      <summary>The universal class tag value for Enumerated.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.External">
+      <summary>The universal class tag value for External.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.GeneralizedTime">
+      <summary>The universal class tag value for GeneralizedTime.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.GeneralString">
+      <summary>The universal class tag value for GeneralString.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.GraphicString">
+      <summary>The universal class tag value for GraphicString.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.IA5String">
+      <summary>The universal class tag value for IA5String.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.InstanceOf">
+      <summary>The universal class tag value for Instance-Of.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Integer">
+      <summary>The universal class tag value for Integer.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.ISO646String">
+      <summary>The universal class tag value for ISO646String (VisibleString).</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Null">
+      <summary>The universal class tag value for Null.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.NumericString">
+      <summary>The universal class tag value for NumericString.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.ObjectDescriptor">
+      <summary>The universal class tag value for Object Descriptor.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.ObjectIdentifier">
+      <summary>The universal class tag value for Object Identifier.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.ObjectIdentifierIRI">
+      <summary>The universal class tag value for Object Identifier Internationalized Resource Identifier (IRI).</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.OctetString">
+      <summary>The universal class tag value for Octet String.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.PrintableString">
+      <summary>The universal class tag value for PrintableString.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Real">
+      <summary>The universal class tag value for Real.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.RelativeObjectIdentifier">
+      <summary>The universal class tag value for Relative Object Identifier.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.RelativeObjectIdentifierIRI">
+      <summary>The universal class tag value for Relative Object Identifier Internationalized Resource Identifier (IRI).</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Sequence">
+      <summary>The universal class tag value for Sequence.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.SequenceOf">
+      <summary>The universal class tag value for Sequence-Of.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Set">
+      <summary>The universal class tag value for Set.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.SetOf">
+      <summary>The universal class tag value for Set-Of.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.T61String">
+      <summary>The universal class tag value for T61String (TeletexString).</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.TeletexString">
+      <summary>The universal class tag value for TeletexString (T61String).</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.Time">
+      <summary>The universal class tag value for Time.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.TimeOfDay">
+      <summary>The universal class tag value for Time-Of-Day.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.UniversalString">
+      <summary>The universal class tag value for UniversalString.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.UnrestrictedCharacterString">
+      <summary>The universal class tag value for an unrestricted character string.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.UtcTime">
+      <summary>The universal class tag value for UTCTime.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.UTF8String">
+      <summary>The universal class tag value for UTF8String.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.VideotexString">
+      <summary>The universal class tag value for VideotexString.</summary>
+    </member>
+    <member name="F:System.Formats.Asn1.UniversalTagNumber.VisibleString">
+      <summary>The universal class tag value for VisibleString (ISO646String).</summary>
+    </member>
+  </members>
+</doc>

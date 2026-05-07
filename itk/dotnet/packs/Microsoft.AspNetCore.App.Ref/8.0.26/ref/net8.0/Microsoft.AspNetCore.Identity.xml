@@ -1,0 +1,1332 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Identity</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Identity.AspNetRoleManager`1">
+            <summary>
+            Provides the APIs for managing roles in a persistence store.
+            </summary>
+            <typeparam name="TRole">The type encapsulating a role.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.AspNetRoleManager`1.#ctor(Microsoft.AspNetCore.Identity.IRoleStore{`0},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IRoleValidator{`0}},Microsoft.AspNetCore.Identity.ILookupNormalizer,Microsoft.AspNetCore.Identity.IdentityErrorDescriber,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.RoleManager{`0}},Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Constructs a new instance of <see cref="T:Microsoft.AspNetCore.Identity.RoleManager`1"/>.
+            </summary>
+            <param name="store">The persistence store the manager will operate over.</param>
+            <param name="roleValidators">A collection of validators for roles.</param>
+            <param name="keyNormalizer">The normalizer to use when normalizing role names to keys.</param>
+            <param name="errors">The <see cref="T:Microsoft.AspNetCore.Identity.IdentityErrorDescriber"/> used to provider error messages.</param>
+            <param name="logger">The logger used to log messages, warnings and errors.</param>
+            <param name="contextAccessor">The accessor used to access the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.AspNetRoleManager`1.CancellationToken">
+            <summary>
+            The cancellation token associated with the current HttpContext.RequestAborted or CancellationToken.None if unavailable.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.AspNetUserManager`1">
+            <summary>
+            Provides the APIs for managing user in a persistence store.
+            </summary>
+            <typeparam name="TUser">The type encapsulating a user.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.AspNetUserManager`1.#ctor(Microsoft.AspNetCore.Identity.IUserStore{`0},Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.IdentityOptions},Microsoft.AspNetCore.Identity.IPasswordHasher{`0},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IUserValidator{`0}},System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Identity.IPasswordValidator{`0}},Microsoft.AspNetCore.Identity.ILookupNormalizer,Microsoft.AspNetCore.Identity.IdentityErrorDescriber,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.UserManager{`0}})">
+            <summary>
+            Constructs a new instance of <see cref="T:Microsoft.AspNetCore.Identity.AspNetUserManager`1"/>.
+            </summary>
+            <param name="store">The persistence store the manager will operate over.</param>
+            <param name="optionsAccessor">The accessor used to access the <see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions"/>.</param>
+            <param name="passwordHasher">The password hashing implementation to use when saving passwords.</param>
+            <param name="userValidators">A collection of <see cref="T:Microsoft.AspNetCore.Identity.IUserValidator`1"/> to validate users against.</param>
+            <param name="passwordValidators">A collection of <see cref="T:Microsoft.AspNetCore.Identity.IPasswordValidator`1"/> to validate passwords against.</param>
+            <param name="keyNormalizer">The <see cref="T:Microsoft.AspNetCore.Identity.ILookupNormalizer"/> to use when generating index keys for users.</param>
+            <param name="errors">The <see cref="T:Microsoft.AspNetCore.Identity.IdentityErrorDescriber"/> used to provider error messages.</param>
+            <param name="services">The <see cref="T:System.IServiceProvider"/> used to resolve services.</param>
+            <param name="logger">The logger used to log messages, warnings and errors.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.AspNetUserManager`1.CancellationToken">
+            <summary>
+            The cancellation token associated with the current HttpContext.RequestAborted or CancellationToken.None if unavailable.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.DataProtectionTokenProviderOptions">
+            <summary>
+            Contains options for the <see cref="T:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.DataProtectionTokenProviderOptions.Name">
+            <summary>
+            Gets or sets the name of the <see cref="T:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1"/>. Defaults to DataProtectorTokenProvider.
+            </summary>
+            <value>
+            The name of the <see cref="T:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1"/>.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.DataProtectionTokenProviderOptions.TokenLifespan">
+            <summary>
+            Gets or sets the amount of time a generated token remains valid. Defaults to 1 day.
+            </summary>
+            <value>
+            The amount of time a generated token remains valid.
+            </value>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1">
+            <summary>
+            Provides protection and validation of identity tokens.
+            </summary>
+            <typeparam name="TUser">The type used to represent a user.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1.#ctor(Microsoft.AspNetCore.DataProtection.IDataProtectionProvider,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.DataProtectionTokenProviderOptions},Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.DataProtectorTokenProvider{`0}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1"/> class.
+            </summary>
+            <param name="dataProtectionProvider">The system data protection provider.</param>
+            <param name="options">The configured <see cref="T:Microsoft.AspNetCore.Identity.DataProtectionTokenProviderOptions"/>.</param>
+            <param name="logger">The logger used to log messages, warnings and errors.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1.Options">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Identity.DataProtectionTokenProviderOptions"/> for this instance.
+            </summary>
+            <value>
+            The <see cref="T:Microsoft.AspNetCore.Identity.DataProtectionTokenProviderOptions"/> for this instance.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1.Protector">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> for this instance.
+            </summary>
+            <value>
+            The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> for this instance.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1.Name">
+            <summary>
+            Gets the name of this instance.
+            </summary>
+            <value>
+            The name of this instance.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1.Logger">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Logging.ILogger"/> used to log messages from the provider.
+            </summary>
+            <value>
+            The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> used to log messages from the provider.
+            </value>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1.GenerateAsync(System.String,Microsoft.AspNetCore.Identity.UserManager{`0},`0)">
+            <summary>
+            Generates a protected token for the specified <paramref name="user"/> as an asynchronous operation.
+            </summary>
+            <param name="purpose">The purpose the token will be used for.</param>
+            <param name="manager">The <see cref="T:Microsoft.AspNetCore.Identity.UserManager`1"/> to retrieve user properties from.</param>
+            <param name="user">The <typeparamref name="TUser"/> the token will be generated from.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task`1"/> representing the generated token.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1.ValidateAsync(System.String,System.String,Microsoft.AspNetCore.Identity.UserManager{`0},`0)">
+            <summary>
+            Validates the protected <paramref name="token"/> for the specified <paramref name="user"/> and <paramref name="purpose"/> as an asynchronous operation.
+            </summary>
+            <param name="purpose">The purpose the token was be used for.</param>
+            <param name="token">The token to validate.</param>
+            <param name="manager">The <see cref="T:Microsoft.AspNetCore.Identity.UserManager`1"/> to retrieve user properties from.</param>
+            <param name="user">The <typeparamref name="TUser"/> the token was generated for.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> that represents the result of the asynchronous validation,
+            containing true if the token is valid, otherwise false.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1.CanGenerateTwoFactorTokenAsync(Microsoft.AspNetCore.Identity.UserManager{`0},`0)">
+            <summary>
+            Returns a <see cref="T:System.Boolean"/> indicating whether a token generated by this instance
+            can be used as a Two Factor Authentication token as an asynchronous operation.
+            </summary>
+            <param name="manager">The <see cref="T:Microsoft.AspNetCore.Identity.UserManager`1"/> to retrieve user properties from.</param>
+            <param name="user">The <typeparamref name="TUser"/> the token was generated for.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> that represents the result of the asynchronous query,
+            containing true if a token generated by this instance can be used as a Two Factor Authentication token, otherwise false.
+            </returns>
+            <remarks>This method will always return false for instances of <see cref="T:Microsoft.AspNetCore.Identity.DataProtectorTokenProvider`1"/>.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.StreamExtensions">
+            <summary>
+            Utility extensions to streams
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.ForgotPasswordRequest">
+            <summary>
+            The response type for the "/forgotPassword" endpoint added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.ForgotPasswordRequest.Email">
+            <summary>
+            The email address to send the reset password code to if a user with that confirmed email address already exists.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.Boolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.NullableBoolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.ForgotPasswordRequest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.InfoRequest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.InfoResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.LoginRequest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.RefreshRequest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.RegisterRequest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.ResendConfirmationEmailRequest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.ResetPasswordRequest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.TwoFactorRequest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.TwoFactorResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.Int32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.StringArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.Data.IdentityEndpointsJsonSerializerContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.InfoRequest">
+            <summary>
+            The request type for the "/manage/info" endpoint added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            All properties are optional. No modifications will be made to the user if all the properties are omitted from the request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.InfoRequest.NewEmail">
+            <summary>
+            The optional new email address for the authenticated user. This will replace the old email address if there was one. The email will not be updated until it is confirmed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.InfoRequest.NewPassword">
+            <summary>
+            The optional new password for the authenticated user. If a new password is provided, the <see cref="P:Microsoft.AspNetCore.Identity.Data.InfoRequest.OldPassword"/> is required.
+            If the user forgot the old password, use the "/forgotPassword" endpoint instead.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.InfoRequest.OldPassword">
+            <summary>
+            The old password for the authenticated user. This is only required if a <see cref="P:Microsoft.AspNetCore.Identity.Data.InfoRequest.NewPassword"/> is provided.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.InfoResponse">
+            <summary>
+            The response type for the "/manage/info" endpoints added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.InfoResponse.Email">
+            <summary>
+            The email address associated with the authenticated user.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.InfoResponse.IsEmailConfirmed">
+            <summary>
+            Indicates whether or not the <see cref="P:Microsoft.AspNetCore.Identity.Data.InfoResponse.Email"/> has been confirmed yet.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.LoginRequest">
+            <summary>
+            The request type for the "/login" endpoint added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.LoginRequest.Email">
+            <summary>
+            The user's email address which acts as a user name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.LoginRequest.Password">
+            <summary>
+            The user's password.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.LoginRequest.TwoFactorCode">
+            <summary>
+            The optional two-factor authenticator code. This may be required for users who have enabled two-factor authentication.
+            This is not required if a <see cref="P:Microsoft.AspNetCore.Identity.Data.LoginRequest.TwoFactorRecoveryCode"/> is sent.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.LoginRequest.TwoFactorRecoveryCode">
+            <summary>
+            An optional two-factor recovery code from <see cref="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.RecoveryCodes"/>.
+            This is required for users who have enabled two-factor authentication but lost access to their <see cref="P:Microsoft.AspNetCore.Identity.Data.LoginRequest.TwoFactorCode"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.RefreshRequest">
+            <summary>
+            The request type for the "/refresh" endpoint added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.RefreshRequest.RefreshToken">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Authentication.BearerToken.AccessTokenResponse.RefreshToken"/> from the last "/login" or "/refresh" response used to get a new <see cref="T:Microsoft.AspNetCore.Authentication.BearerToken.AccessTokenResponse"/>
+            with an extended expiration.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.RegisterRequest">
+            <summary>
+            The request type for the "/register" endpoint added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.RegisterRequest.Email">
+            <summary>
+            The user's email address which acts as a user name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.RegisterRequest.Password">
+            <summary>
+            The user's password.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.ResendConfirmationEmailRequest">
+            <summary>
+            The response type for the "/resendConfirmationEmail" endpoint added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.ResendConfirmationEmailRequest.Email">
+            <summary>
+            The email address to resend the confirmation email to if a user with that email exists.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.ResetPasswordRequest">
+            <summary>
+            The response type for the "/resetPassword" endpoint added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            The "/resetPassword" endpoint requires the "/forgotPassword" endpoint to be called first to get the <see cref="P:Microsoft.AspNetCore.Identity.Data.ResetPasswordRequest.ResetCode"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.ResetPasswordRequest.Email">
+            <summary>
+            The email address for the user requesting a password reset. This should match <see cref="P:Microsoft.AspNetCore.Identity.Data.ForgotPasswordRequest.Email"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.ResetPasswordRequest.ResetCode">
+            <summary>
+            The code sent to the user's email to reset the password. To get the reset code, first make a "/forgotPassword" request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.ResetPasswordRequest.NewPassword">
+            <summary>
+            The new password the user with the given <see cref="P:Microsoft.AspNetCore.Identity.Data.ResetPasswordRequest.Email"/> should login with. This will replace the previous password.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.TwoFactorRequest">
+            <summary>
+            The request type for the "/manage/2fa" endpoint added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorRequest.Enable">
+            <summary>
+            An optional <see cref="T:System.Boolean"/> to enable or disable the two-factor login requirement for the authenticated user. If null or unset,
+            the current two-factor login requirement for the user will remain unchanged.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorRequest.TwoFactorCode">
+            <summary>
+            The two-factor code derived from the <see cref="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.SharedKey"/>. This is only required if <see cref="P:Microsoft.AspNetCore.Identity.Data.TwoFactorRequest.Enable"/> is set to <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorRequest.ResetSharedKey">
+            <summary>
+            An optional <see cref="T:System.Boolean"/> to reset the <see cref="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.SharedKey"/> to a new random value if <see langword="true"/>.
+            This automatically disables the two-factor login requirement for the authenticated user until it is re-enabled by a later request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorRequest.ResetRecoveryCodes">
+            <summary>
+            An optional <see cref="T:System.Boolean"/> to reset the <see cref="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.RecoveryCodes"/> to new random values if <see langword="true"/>.
+            <see cref="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.RecoveryCodes"/> will be empty unless they are reset or two-factor was enabled for the first time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorRequest.ForgetMachine">
+            <summary>
+            An optional <see cref="T:System.Boolean"/> to clear the cookie "remember me flag" if present. This has no impact on non-cookie authentication schemes.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse">
+            <summary>
+            The response type for the "/manage/2fa" endpoint added by <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.SharedKey">
+            <summary>
+            The shared key generally for TOTP authenticator apps that is usually presented to the user as a QR code.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.RecoveryCodesLeft">
+            <summary>
+            The number of unused <see cref="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.RecoveryCodes"/> remaining.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.RecoveryCodes">
+            <summary>
+            The recovery codes to use if the <see cref="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.SharedKey"/> is lost. This will be omitted from the response unless
+            <see cref="P:Microsoft.AspNetCore.Identity.Data.TwoFactorRequest.ResetRecoveryCodes"/> was set or two-factor was enabled for the first time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.IsTwoFactorEnabled">
+            <summary>
+            Whether or not two-factor login is required for the current authenticated user.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Data.TwoFactorResponse.IsMachineRemembered">
+            <summary>
+            Whether or not the current client has been remembered by two-factor authentication cookies. This is always <see langword="false"/> for non-cookie authentication schemes.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.ExternalLoginInfo">
+            <summary>
+            Represents login information, source and externally source principal for a user record
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.ExternalLoginInfo.#ctor(System.Security.Claims.ClaimsPrincipal,System.String,System.String,System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Identity.ExternalLoginInfo"/>
+            </summary>
+            <param name="principal">The <see cref="T:System.Security.Claims.ClaimsPrincipal"/> to associate with this login.</param>
+            <param name="loginProvider">The provider associated with this login information.</param>
+            <param name="providerKey">The unique identifier for this user provided by the login provider.</param>
+            <param name="displayName">The display name for the login provider.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.ExternalLoginInfo.Principal">
+            <summary>
+            Gets or sets the <see cref="T:System.Security.Claims.ClaimsPrincipal"/> associated with this login.
+            </summary>
+            <value>The <see cref="T:System.Security.Claims.ClaimsPrincipal"/> associated with this login.</value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.ExternalLoginInfo.AuthenticationTokens">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationToken"/>s associated with this login.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.ExternalLoginInfo.AuthenticationProperties">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/> associated with this login.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.IdentityBuilderExtensions">
+            <summary>
+            Helper functions for configuring identity services.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityBuilderExtensions.AddDefaultTokenProviders(Microsoft.AspNetCore.Identity.IdentityBuilder)">
+            <summary>
+            Adds the default token providers used to generate tokens for reset passwords, change email
+            and change telephone number operations, and for two factor authentication token generation.
+            </summary>
+            <param name="builder">The current <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/> instance.</param>
+            <returns>The current <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/> instance.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityBuilderExtensions.AddSignInManager(Microsoft.AspNetCore.Identity.IdentityBuilder)">
+            <summary>
+            Adds a <see cref="T:Microsoft.AspNetCore.Identity.SignInManager`1"/> for the <see cref="P:Microsoft.AspNetCore.Identity.IdentityBuilder.UserType"/>.
+            </summary>
+            <param name="builder">The current <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/> instance.</param>
+            <returns>The current <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/> instance.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityBuilderExtensions.AddSignInManager``1(Microsoft.AspNetCore.Identity.IdentityBuilder)">
+            <summary>
+            Adds a <see cref="T:Microsoft.AspNetCore.Identity.SignInManager`1"/> for the <see cref="P:Microsoft.AspNetCore.Identity.IdentityBuilder.UserType"/>.
+            </summary>
+            <typeparam name="TSignInManager">The type of the sign in manager to add.</typeparam>
+            <param name="builder">The current <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/> instance.</param>
+            <returns>The current <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/> instance.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityBuilderExtensions.AddApiEndpoints(Microsoft.AspNetCore.Identity.IdentityBuilder)">
+            <summary>
+            Adds configuration and services needed to support <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>
+            but does not configure authentication. Call <see cref="M:Microsoft.Extensions.DependencyInjection.BearerTokenExtensions.AddBearerToken(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.Action{Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions})"/> and/or
+            <see cref="M:Microsoft.AspNetCore.Identity.IdentityCookieAuthenticationBuilderExtensions.AddIdentityCookies(Microsoft.AspNetCore.Authentication.AuthenticationBuilder)"/> to configure authentication separately.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.IdentityConstants">
+            <summary>
+            Represents all the options you can use to configure the cookies middleware used by the identity system.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme">
+            <summary>
+            The scheme used to identify application authentication cookies.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Identity.IdentityConstants.BearerScheme">
+            <summary>
+            The scheme used to identify bearer authentication tokens.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Identity.IdentityConstants.BearerAndApplicationScheme">
+            <summary>
+            The scheme used to identify combination of <see cref="F:Microsoft.AspNetCore.Identity.IdentityConstants.BearerScheme"/> and <see cref="F:Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Identity.IdentityConstants.ExternalScheme">
+            <summary>
+            The scheme used to identify external authentication cookies.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Identity.IdentityConstants.TwoFactorRememberMeScheme">
+            <summary>
+            The scheme used to identify Two Factor authentication cookies for saving the Remember Me state.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Identity.IdentityConstants.TwoFactorUserIdScheme">
+            <summary>
+            The scheme used to identify Two Factor authentication cookies for round tripping user identities.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.IdentityCookiesBuilder">
+            <summary>
+            Used to configure identity cookie options.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.IdentityCookiesBuilder.ApplicationCookie">
+            <summary>
+            Used to configure the application cookie.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.IdentityCookiesBuilder.ExternalCookie">
+            <summary>
+            Used to configure the external cookie.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.IdentityCookiesBuilder.TwoFactorRememberMeCookie">
+            <summary>
+            Used to configure the two factor remember me cookie.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.IdentityCookiesBuilder.TwoFactorUserIdCookie">
+            <summary>
+            Used to configure the two factor user id cookie.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.IdentityCookieAuthenticationBuilderExtensions">
+            <summary>
+            Helper functions for configuring identity services.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityCookieAuthenticationBuilderExtensions.AddIdentityCookies(Microsoft.AspNetCore.Authentication.AuthenticationBuilder)">
+            <summary>
+            Adds cookie authentication.
+            </summary>
+            <param name="builder">The current <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> instance.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Identity.IdentityCookiesBuilder"/> which can be used to configure the identity cookies.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityCookieAuthenticationBuilderExtensions.AddIdentityCookies(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.Action{Microsoft.AspNetCore.Identity.IdentityCookiesBuilder})">
+            <summary>
+            Adds the cookie authentication needed for sign in manager.
+            </summary>
+            <param name="builder">The current <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> instance.</param>
+            <param name="configureCookies">Action used to configure the cookies.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Identity.IdentityCookiesBuilder"/> which can be used to configure the identity cookies.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityCookieAuthenticationBuilderExtensions.AddApplicationCookie(Microsoft.AspNetCore.Authentication.AuthenticationBuilder)">
+            <summary>
+            Adds the identity application cookie.
+            </summary>
+            <param name="builder">The current <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/> which can be used to configure the cookie authentication.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityCookieAuthenticationBuilderExtensions.AddExternalCookie(Microsoft.AspNetCore.Authentication.AuthenticationBuilder)">
+            <summary>
+            Adds the identity cookie used for external logins.
+            </summary>
+            <param name="builder">The current <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/> which can be used to configure the cookie authentication.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityCookieAuthenticationBuilderExtensions.AddTwoFactorRememberMeCookie(Microsoft.AspNetCore.Authentication.AuthenticationBuilder)">
+            <summary>
+            Adds the identity cookie used for two factor remember me.
+            </summary>
+            <param name="builder">The current <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/> which can be used to configure the cookie authentication.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IdentityCookieAuthenticationBuilderExtensions.AddTwoFactorUserIdCookie(Microsoft.AspNetCore.Authentication.AuthenticationBuilder)">
+            <summary>
+            Adds the identity cookie used for two factor logins.
+            </summary>
+            <param name="builder">The current <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/> which can be used to configure the cookie authentication.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.UI.Services.IEmailSender">
+            <summary>
+            This API supports the ASP.NET Core Identity infrastructure and is not intended to be used as a general purpose
+            email abstraction. It should be implemented by the application so the Identity infrastructure can send confirmation and password reset emails.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.UI.Services.IEmailSender.SendEmailAsync(System.String,System.String,System.String)">
+            <summary>
+            This API supports the ASP.NET Core Identity infrastructure and is not intended to be used as a general purpose
+            email abstraction. It should be implemented by the application so the Identity infrastructure can send confirmation and apassword reset emails.
+            </summary>
+            <param name="email">The recipient's email address.</param>
+            <param name="subject">The subject of the email.</param>
+            <param name="htmlMessage">The body of the email which may contain HTML tags. Do not double encode this.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.UI.Services.NoOpEmailSender">
+            <summary>
+            The default <see cref="T:Microsoft.AspNetCore.Identity.UI.Services.IEmailSender"/> that does nothing in <see cref="M:Microsoft.AspNetCore.Identity.UI.Services.NoOpEmailSender.SendEmailAsync(System.String,System.String,System.String)"/>.
+            It is used to detect that the <see cref="T:Microsoft.AspNetCore.Identity.UI.Services.IEmailSender" /> has been customized. If not, Identity UI provides a development
+            experience where the email confirmation link is rendered by the UI immediately rather than sent via an email.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.UI.Services.NoOpEmailSender.SendEmailAsync(System.String,System.String,System.String)">
+            <summary>
+            This method does nothing other return <see cref="P:System.Threading.Tasks.Task.CompletedTask"/>. It should be replaced by a custom implementation
+            in production.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.IEmailSender`1">
+            <summary>
+            This API supports the ASP.NET Core Identity infrastructure and is not intended to be used as a general purpose
+            email abstraction. It should be implemented by the application so the Identity infrastructure can send confirmation and password reset emails.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IEmailSender`1.SendConfirmationLinkAsync(`0,System.String,System.String)">
+            <summary>
+            This API supports the ASP.NET Core Identity infrastructure and is not intended to be used as a general purpose
+            email abstraction. It should be implemented by the application so the Identity infrastructure can send confirmation emails.
+            </summary>
+            <param name="user">The user that is attempting to confirm their email.</param>
+            <param name="email">The recipient's email address.</param>
+            <param name="confirmationLink">The link to follow to confirm a user's email. Do not double encode this.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IEmailSender`1.SendPasswordResetLinkAsync(`0,System.String,System.String)">
+            <summary>
+            This API supports the ASP.NET Core Identity infrastructure and is not intended to be used as a general purpose
+            email abstraction. It should be implemented by the application so the Identity infrastructure can send password reset emails.
+            </summary>
+            <param name="user">The user that is attempting to reset their password.</param>
+            <param name="email">The recipient's email address.</param>
+            <param name="resetLink">The link to follow to reset the user password. Do not double encode this.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.IEmailSender`1.SendPasswordResetCodeAsync(`0,System.String,System.String)">
+            <summary>
+            This API supports the ASP.NET Core Identity infrastructure and is not intended to be used as a general purpose
+            email abstraction. It should be implemented by the application so the Identity infrastructure can send password reset emails.
+            </summary>
+            <param name="user">The user that is attempting to reset their password.</param>
+            <param name="email">The recipient's email address.</param>
+            <param name="resetCode">The code to use to reset the user password. Do not double encode this.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.ISecurityStampValidator">
+            <summary>
+            Provides an abstraction for a validating a security stamp of an incoming identity, and regenerating or rejecting the
+            identity based on the validation result.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.ISecurityStampValidator.ValidateAsync(Microsoft.AspNetCore.Authentication.Cookies.CookieValidatePrincipalContext)">
+            <summary>
+            Validates a security stamp of an identity as an asynchronous operation, and rebuilds the identity if the validation succeeds, otherwise rejects
+            the identity.
+            </summary>
+            <param name="context">The context containing the <see cref="T:System.Security.Claims.ClaimsPrincipal"/>
+            and <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/> to validate.</param>
+            <returns>The <see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous validation operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.ITwoFactorSecurityStampValidator">
+            <summary>
+            Used to validate the two factor remember client cookie security stamp.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.SecurityStampRefreshingPrincipalContext">
+            <summary>
+            Used to pass information during the SecurityStamp validation event.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampRefreshingPrincipalContext.CurrentPrincipal">
+            <summary>
+            The principal contained in the current cookie.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampRefreshingPrincipalContext.NewPrincipal">
+            <summary>
+            The new principal which should replace the current.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.SecurityStampValidator`1">
+            <summary>
+            Provides default implementation of validation functions for security stamps.
+            </summary>
+            <typeparam name="TUser">The type encapsulating a user.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.SecurityStampValidatorOptions},Microsoft.AspNetCore.Identity.SignInManager{`0},Microsoft.AspNetCore.Authentication.ISystemClock,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Identity.SecurityStampValidator`1"/>.
+            </summary>
+            <param name="options">Used to access the <see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions"/>.</param>
+            <param name="signInManager">The <see cref="T:Microsoft.AspNetCore.Identity.SignInManager`1"/>.</param>
+            <param name="clock">The system clock.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.SecurityStampValidatorOptions},Microsoft.AspNetCore.Identity.SignInManager{`0},Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Identity.SecurityStampValidator`1"/>.
+            </summary>
+            <param name="options">Used to access the <see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions"/>.</param>
+            <param name="signInManager">The <see cref="T:Microsoft.AspNetCore.Identity.SignInManager`1"/>.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.SignInManager">
+            <summary>
+            The SignInManager.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.Options">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Identity.SecurityStampValidatorOptions"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.Clock">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Authentication.ISystemClock"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.TimeProvider">
+            <summary>
+            The <see cref="T:System.TimeProvider"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.Logger">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Logging.ILogger"/> used to log messages.
+            </summary>
+            <value>
+            The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> used to log messages.
+            </value>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.SecurityStampVerified(`0,Microsoft.AspNetCore.Authentication.Cookies.CookieValidatePrincipalContext)">
+            <summary>
+            Called when the security stamp has been verified.
+            </summary>
+            <param name="user">The user who has been verified.</param>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Authentication.Cookies.CookieValidatePrincipalContext"/>.</param>
+            <returns>A task.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.VerifySecurityStamp(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Verifies the principal's security stamp, returns the matching user if successful
+            </summary>
+            <param name="principal">The principal to verify.</param>
+            <returns>The verified user or null if verification fails.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SecurityStampValidator`1.ValidateAsync(Microsoft.AspNetCore.Authentication.Cookies.CookieValidatePrincipalContext)">
+            <summary>
+            Validates a security stamp of an identity as an asynchronous operation, and rebuilds the identity if the validation succeeds, otherwise rejects
+            the identity.
+            </summary>
+            <param name="context">The context containing the <see cref="T:System.Security.Claims.ClaimsPrincipal"/>
+            and <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/> to validate.</param>
+            <returns>The <see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous validation operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.SecurityStampValidator">
+            <summary>
+            Static helper class used to configure a CookieAuthenticationNotifications to validate a cookie against a user's security
+            stamp.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SecurityStampValidator.ValidatePrincipalAsync(Microsoft.AspNetCore.Authentication.Cookies.CookieValidatePrincipalContext)">
+            <summary>
+            Validates a principal against a user's stored security stamp.
+            </summary>
+            <param name="context">The context containing the <see cref="T:System.Security.Claims.ClaimsPrincipal"/>
+            and <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/> to validate.</param>
+            <returns>The <see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous validation operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SecurityStampValidator.ValidateAsync``1(Microsoft.AspNetCore.Authentication.Cookies.CookieValidatePrincipalContext)">
+            <summary>
+            Used to validate the <see cref="F:Microsoft.AspNetCore.Identity.IdentityConstants.TwoFactorUserIdScheme"/> and
+            <see cref="F:Microsoft.AspNetCore.Identity.IdentityConstants.TwoFactorRememberMeScheme"/> cookies against the user's
+            stored security stamp.
+            </summary>
+            <param name="context">The context containing the <see cref="T:System.Security.Claims.ClaimsPrincipal"/>
+            and <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/> to validate.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.SecurityStampValidatorOptions">
+            <summary>
+            Options for <see cref="T:Microsoft.AspNetCore.Identity.ISecurityStampValidator"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampValidatorOptions.ValidationInterval">
+            <summary>
+            Gets or sets the <see cref="T:System.TimeSpan"/> after which security stamps are re-validated. Defaults to 30 minutes.
+            </summary>
+            <value>
+            The <see cref="T:System.TimeSpan"/> after which security stamps are re-validated.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampValidatorOptions.OnRefreshingPrincipal">
+            <summary>
+            Invoked when the default security stamp validator replaces the user's ClaimsPrincipal in the cookie.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SecurityStampValidatorOptions.TimeProvider">
+            <summary>
+            Gives control over the timestamps for testing purposes.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.SignInManager`1">
+            <summary>
+            Provides the APIs for user sign in.
+            </summary>
+            <typeparam name="TUser">The type encapsulating a user.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.#ctor(Microsoft.AspNetCore.Identity.UserManager{`0},Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory{`0},Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.IdentityOptions},Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Identity.SignInManager{`0}},Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider,Microsoft.AspNetCore.Identity.IUserConfirmation{`0})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Identity.SignInManager`1"/>.
+            </summary>
+            <param name="userManager">An instance of <see cref="P:Microsoft.AspNetCore.Identity.SignInManager`1.UserManager"/> used to retrieve users from and persist users.</param>
+            <param name="contextAccessor">The accessor used to access the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <param name="claimsFactory">The factory to use to create claims principals for a user.</param>
+            <param name="optionsAccessor">The accessor used to access the <see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions"/>.</param>
+            <param name="logger">The logger used to log messages, warnings and errors.</param>
+            <param name="schemes">The scheme provider that is used enumerate the authentication schemes.</param>
+            <param name="confirmation">The <see cref="T:Microsoft.AspNetCore.Identity.IUserConfirmation`1"/> used check whether a user account is confirmed.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SignInManager`1.Logger">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Logging.ILogger"/> used to log messages from the manager.
+            </summary>
+            <value>
+            The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> used to log messages from the manager.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SignInManager`1.UserManager">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Identity.UserManager`1"/> used.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SignInManager`1.ClaimsFactory">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Identity.IUserClaimsPrincipalFactory`1"/> used.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SignInManager`1.Options">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions"/> used.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SignInManager`1.AuthenticationScheme">
+            <summary>
+            The authentication scheme to sign in with. Defaults to <see cref="F:Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.SignInManager`1.Context">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> used.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.CreateUserPrincipalAsync(`0)">
+            <summary>
+            Creates a <see cref="T:System.Security.Claims.ClaimsPrincipal"/> for the specified <paramref name="user"/>, as an asynchronous operation.
+            </summary>
+            <param name="user">The user to create a <see cref="T:System.Security.Claims.ClaimsPrincipal"/> for.</param>
+            <returns>The task object representing the asynchronous operation, containing the ClaimsPrincipal for the specified user.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.IsSignedIn(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Returns true if the principal has an identity with the application cookie identity
+            </summary>
+            <param name="principal">The <see cref="T:System.Security.Claims.ClaimsPrincipal"/> instance.</param>
+            <returns>True if the user is logged in with identity.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.CanSignInAsync(`0)">
+            <summary>
+            Returns a flag indicating whether the specified user can sign in.
+            </summary>
+            <param name="user">The user whose sign-in status should be returned.</param>
+            <returns>
+            The task object representing the asynchronous operation, containing a flag that is true
+            if the specified user can sign-in, otherwise false.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.RefreshSignInAsync(`0)">
+            <summary>
+            Signs in the specified <paramref name="user"/>, whilst preserving the existing
+            AuthenticationProperties of the current signed-in user like rememberMe, as an asynchronous operation.
+            </summary>
+            <param name="user">The user to sign-in.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.SignInAsync(`0,System.Boolean,System.String)">
+            <summary>
+            Signs in the specified <paramref name="user"/>.
+            </summary>
+            <param name="user">The user to sign-in.</param>
+            <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+            <param name="authenticationMethod">Name of the method used to authenticate the user.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.SignInAsync(`0,Microsoft.AspNetCore.Authentication.AuthenticationProperties,System.String)">
+            <summary>
+            Signs in the specified <paramref name="user"/>.
+            </summary>
+            <param name="user">The user to sign-in.</param>
+            <param name="authenticationProperties">Properties applied to the login and authentication cookie.</param>
+            <param name="authenticationMethod">Name of the method used to authenticate the user.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.SignInWithClaimsAsync(`0,System.Boolean,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+            <summary>
+            Signs in the specified <paramref name="user"/>.
+            </summary>
+            <param name="user">The user to sign-in.</param>
+            <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+            <param name="additionalClaims">Additional claims that will be stored in the cookie.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.SignInWithClaimsAsync(`0,Microsoft.AspNetCore.Authentication.AuthenticationProperties,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+            <summary>
+            Signs in the specified <paramref name="user"/>.
+            </summary>
+            <param name="user">The user to sign-in.</param>
+            <param name="authenticationProperties">Properties applied to the login and authentication cookie.</param>
+            <param name="additionalClaims">Additional claims that will be stored in the cookie.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.SignOutAsync">
+            <summary>
+            Signs the current user out of the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.ValidateSecurityStampAsync(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Validates the security stamp for the specified <paramref name="principal"/> against
+            the persisted stamp for the current user, as an asynchronous operation.
+            </summary>
+            <param name="principal">The principal whose stamp should be validated.</param>
+            <returns>The task object representing the asynchronous operation. The task will contain the <typeparamref name="TUser"/>
+            if the stamp matches the persisted value, otherwise it will return null.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.ValidateTwoFactorSecurityStampAsync(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Validates the security stamp for the specified <paramref name="principal"/> from one of
+            the two factor principals (remember client or user id) against
+            the persisted stamp for the current user, as an asynchronous operation.
+            </summary>
+            <param name="principal">The principal whose stamp should be validated.</param>
+            <returns>The task object representing the asynchronous operation. The task will contain the <typeparamref name="TUser"/>
+            if the stamp matches the persisted value, otherwise it will return null.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.ValidateSecurityStampAsync(`0,System.String)">
+            <summary>
+            Validates the security stamp for the specified <paramref name="user"/>.  If no user is specified, or if the store
+            does not support security stamps, validation is considered successful.
+            </summary>
+            <param name="user">The user whose stamp should be validated.</param>
+            <param name="securityStamp">The expected security stamp value.</param>
+            <returns>The result of the validation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.PasswordSignInAsync(`0,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Attempts to sign in the specified <paramref name="user"/> and <paramref name="password"/> combination
+            as an asynchronous operation.
+            </summary>
+            <param name="user">The user to sign in.</param>
+            <param name="password">The password to attempt to sign in with.</param>
+            <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+            <param name="lockoutOnFailure">Flag indicating if the user account should be locked if the sign in fails.</param>
+            <returns>The task object representing the asynchronous operation containing the <see name="SignInResult"/>
+            for the sign-in attempt.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.PasswordSignInAsync(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Attempts to sign in the specified <paramref name="userName"/> and <paramref name="password"/> combination
+            as an asynchronous operation.
+            </summary>
+            <param name="userName">The user name to sign in.</param>
+            <param name="password">The password to attempt to sign in with.</param>
+            <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+            <param name="lockoutOnFailure">Flag indicating if the user account should be locked if the sign in fails.</param>
+            <returns>The task object representing the asynchronous operation containing the <see name="SignInResult"/>
+            for the sign-in attempt.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.CheckPasswordSignInAsync(`0,System.String,System.Boolean)">
+            <summary>
+            Attempts a password sign in for a user.
+            </summary>
+            <param name="user">The user to sign in.</param>
+            <param name="password">The password to attempt to sign in with.</param>
+            <param name="lockoutOnFailure">Flag indicating if the user account should be locked if the sign in fails.</param>
+            <returns>The task object representing the asynchronous operation containing the <see name="SignInResult"/>
+            for the sign-in attempt.</returns>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.IsTwoFactorClientRememberedAsync(`0)">
+            <summary>
+            Returns a flag indicating if the current client browser has been remembered by two factor authentication
+            for the user attempting to login, as an asynchronous operation.
+            </summary>
+            <param name="user">The user attempting to login.</param>
+            <returns>
+            The task object representing the asynchronous operation containing true if the browser has been remembered
+            for the current user.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.RememberTwoFactorClientAsync(`0)">
+            <summary>
+            Sets a flag on the browser to indicate the user has selected "Remember this browser" for two factor authentication purposes,
+            as an asynchronous operation.
+            </summary>
+            <param name="user">The user who choose "remember this browser".</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.ForgetTwoFactorClientAsync">
+            <summary>
+            Clears the "Remember this browser flag" from the current browser, as an asynchronous operation.
+            </summary>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.TwoFactorRecoveryCodeSignInAsync(System.String)">
+            <summary>
+            Signs in the user without two factor authentication using a two factor recovery code.
+            </summary>
+            <param name="recoveryCode">The two factor recovery code.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.TwoFactorAuthenticatorSignInAsync(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Validates the sign in code from an authenticator app and creates and signs in the user, as an asynchronous operation.
+            </summary>
+            <param name="code">The two factor authentication code to validate.</param>
+            <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+            <param name="rememberClient">Flag indicating whether the current browser should be remember, suppressing all further
+            two factor authentication prompts.</param>
+            <returns>The task object representing the asynchronous operation containing the <see name="SignInResult"/>
+            for the sign-in attempt.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.TwoFactorSignInAsync(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Validates the two factor sign in code and creates and signs in the user, as an asynchronous operation.
+            </summary>
+            <param name="provider">The two factor authentication provider to validate the code against.</param>
+            <param name="code">The two factor authentication code to validate.</param>
+            <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+            <param name="rememberClient">Flag indicating whether the current browser should be remember, suppressing all further
+            two factor authentication prompts.</param>
+            <returns>The task object representing the asynchronous operation containing the <see name="SignInResult"/>
+            for the sign-in attempt.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.GetTwoFactorAuthenticationUserAsync">
+            <summary>
+            Gets the <typeparamref name="TUser"/> for the current two factor authentication login, as an asynchronous operation.
+            </summary>
+            <returns>The task object representing the asynchronous operation containing the <typeparamref name="TUser"/>
+            for the sign-in attempt.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.ExternalLoginSignInAsync(System.String,System.String,System.Boolean)">
+            <summary>
+            Signs in a user via a previously registered third party login, as an asynchronous operation.
+            </summary>
+            <param name="loginProvider">The login provider to use.</param>
+            <param name="providerKey">The unique provider identifier for the user.</param>
+            <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+            <returns>The task object representing the asynchronous operation containing the <see name="SignInResult"/>
+            for the sign-in attempt.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.ExternalLoginSignInAsync(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Signs in a user via a previously registered third party login, as an asynchronous operation.
+            </summary>
+            <param name="loginProvider">The login provider to use.</param>
+            <param name="providerKey">The unique provider identifier for the user.</param>
+            <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+            <param name="bypassTwoFactor">Flag indicating whether to bypass two factor authentication.</param>
+            <returns>The task object representing the asynchronous operation containing the <see name="SignInResult"/>
+            for the sign-in attempt.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.GetExternalAuthenticationSchemesAsync">
+            <summary>
+            Gets a collection of <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationScheme"/>s for the known external login providers.
+            </summary>
+            <returns>A collection of <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationScheme"/>s for the known external login providers.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.GetExternalLoginInfoAsync(System.String)">
+            <summary>
+            Gets the external login information for the current login, as an asynchronous operation.
+            </summary>
+            <param name="expectedXsrf">Flag indication whether a Cross Site Request Forgery token was expected in the current request.</param>
+            <returns>The task object representing the asynchronous operation containing the <see name="ExternalLoginInfo"/>
+            for the sign-in attempt.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.UpdateExternalAuthenticationTokensAsync(Microsoft.AspNetCore.Identity.ExternalLoginInfo)">
+            <summary>
+            Stores any authentication tokens found in the external authentication cookie into the associated user.
+            </summary>
+            <param name="externalLogin">The information from the external login provider.</param>
+            <returns>The <see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous operation, containing the <see cref="T:Microsoft.AspNetCore.Identity.IdentityResult"/> of the operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.ConfigureExternalAuthenticationProperties(System.String,System.String,System.String)">
+            <summary>
+            Configures the redirect URL and user identifier for the specified external login <paramref name="provider"/>.
+            </summary>
+            <param name="provider">The provider to configure.</param>
+            <param name="redirectUrl">The external login URL users should be redirected to during the login flow.</param>
+            <param name="userId">The current user's identifier, which will be used to provide CSRF protection.</param>
+            <returns>A configured <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.StoreTwoFactorInfo(System.String,System.String)">
+            <summary>
+            Creates a claims principal for the specified 2fa information.
+            </summary>
+            <param name="userId">The user whose is logging in via 2fa.</param>
+            <param name="loginProvider">The 2fa provider.</param>
+            <returns>A <see cref="T:System.Security.Claims.ClaimsPrincipal"/> containing the user 2fa information.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.IsTwoFactorEnabledAsync(`0)">
+            <summary>
+            Check if the <paramref name="user"/> has two factor enabled.
+            </summary>
+            <param name="user"></param>
+            <returns>
+            The task object representing the asynchronous operation containing true if the user has two factor enabled.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.SignInOrTwoFactorAsync(`0,System.Boolean,System.String,System.Boolean)">
+            <summary>
+            Signs in the specified <paramref name="user"/> if <paramref name="bypassTwoFactor"/> is set to false.
+            Otherwise stores the <paramref name="user"/> for use after a two factor check.
+            </summary>
+            <param name="user"></param>
+            <param name="isPersistent">Flag indicating whether the sign-in cookie should persist after the browser is closed.</param>
+            <param name="loginProvider">The login provider to use. Default is null</param>
+            <param name="bypassTwoFactor">Flag indicating whether to bypass two factor authentication. Default is false</param>
+            <returns>Returns a <see cref="T:Microsoft.AspNetCore.Identity.SignInResult"/></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.IsLockedOut(`0)">
+            <summary>
+            Used to determine if a user is considered locked out.
+            </summary>
+            <param name="user">The user.</param>
+            <returns>Whether a user is considered locked out.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.LockedOut(`0)">
+            <summary>
+            Returns a locked out SignInResult.
+            </summary>
+            <param name="user">The user.</param>
+            <returns>A locked out SignInResult</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.PreSignInCheck(`0)">
+            <summary>
+            Used to ensure that a user is allowed to sign in.
+            </summary>
+            <param name="user">The user</param>
+            <returns>Null if the user should be allowed to sign in, otherwise the SignInResult why they should be denied.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.SignInManager`1.ResetLockout(`0)">
+            <summary>
+            Used to reset a user's lockout count.
+            </summary>
+            <param name="user">The user</param>
+            <returns>The <see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous operation, containing the <see cref="T:Microsoft.AspNetCore.Identity.IdentityResult"/> of the operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Identity.TwoFactorSecurityStampValidator`1">
+            <summary>
+            Responsible for validation of two factor identity cookie security stamp.
+            </summary>
+            <typeparam name="TUser">The type encapsulating a user.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.TwoFactorSecurityStampValidator`1.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.SecurityStampValidatorOptions},Microsoft.AspNetCore.Identity.SignInManager{`0},Microsoft.AspNetCore.Authentication.ISystemClock,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Identity.SecurityStampValidator`1"/>.
+            </summary>
+            <param name="options">Used to access the <see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions"/>.</param>
+            <param name="signInManager">The <see cref="T:Microsoft.AspNetCore.Identity.SignInManager`1"/>.</param>
+            <param name="clock">The system clock.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.TwoFactorSecurityStampValidator`1.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Identity.SecurityStampValidatorOptions},Microsoft.AspNetCore.Identity.SignInManager{`0},Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Identity.SecurityStampValidator`1"/>.
+            </summary>
+            <param name="options">Used to access the <see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions"/>.</param>
+            <param name="signInManager">The <see cref="T:Microsoft.AspNetCore.Identity.SignInManager`1"/>.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.TwoFactorSecurityStampValidator`1.VerifySecurityStamp(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Verifies the principal's security stamp, returns the matching user if successful
+            </summary>
+            <param name="principal">The principal to verify.</param>
+            <returns>The verified user or null if verification fails.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.TwoFactorSecurityStampValidator`1.SecurityStampVerified(`0,Microsoft.AspNetCore.Authentication.Cookies.CookieValidatePrincipalContext)">
+            <summary>
+            Called when the security stamp has been verified.
+            </summary>
+            <param name="user">The user who has been verified.</param>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Authentication.Cookies.CookieValidatePrincipalContext"/>.</param>
+            <returns>A task.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Resources.InvalidManagerType">
+            <summary>Type {0} must derive from {1}&lt;{2}&gt;.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Identity.Resources.FormatInvalidManagerType(System.Object,System.Object,System.Object)">
+            <summary>Type {0} must derive from {1}&lt;{2}&gt;.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Resources.InvalidPasswordHasherCompatibilityMode">
+            <summary>The provided PasswordHasherCompatibilityMode is invalid.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Identity.Resources.InvalidPasswordHasherIterationCount">
+            <summary>The iteration count must be a positive integer.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add identity endpoints.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)">
+            <summary>
+            Add endpoints for registering, logging in, and logging out using ASP.NET Core Identity.
+            </summary>
+            <typeparam name="TUser">The type describing the user. This should match the generic parameter in <see cref="T:Microsoft.AspNetCore.Identity.UserManager`1"/>.</typeparam>
+            <param name="endpoints">
+            The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the identity endpoints to.
+            Call <see cref="M:Microsoft.AspNetCore.Builder.EndpointRouteBuilderExtensions.MapGroup(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String)"/> to add a prefix to all the endpoints.
+            </param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Builder.IEndpointConventionBuilder"/> to further customize the added endpoints.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.TimeProviderClock">
+            <summary>
+            Provides access to the normal system clock with precision in seconds.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions">
+            <summary>
+            Contains extension methods to <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for configuring identity services.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions.AddIdentity``2(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds the default identity system configuration for the specified User and Role types.
+            </summary>
+            <typeparam name="TUser">The type representing a User in the system.</typeparam>
+            <typeparam name="TRole">The type representing a Role in the system.</typeparam>
+            <param name="services">The services available in the application.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/> for creating and configuring the identity system.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions.AddIdentity``2(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Identity.IdentityOptions})">
+            <summary>
+            Adds and configures the identity system for the specified User and Role types.
+            </summary>
+            <typeparam name="TUser">The type representing a User in the system.</typeparam>
+            <typeparam name="TRole">The type representing a Role in the system.</typeparam>
+            <param name="services">The services available in the application.</param>
+            <param name="setupAction">An action to configure the <see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/> for creating and configuring the identity system.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions.AddIdentityApiEndpoints``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds a set of common identity services to the application to support <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>
+            and configures authentication to support identity bearer tokens and cookies.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions.AddIdentityApiEndpoints``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Identity.IdentityOptions})">
+            <summary>
+            Adds a set of common identity services to the application to support <see cref="M:Microsoft.AspNetCore.Routing.IdentityApiEndpointRouteBuilderExtensions.MapIdentityApi``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)"/>
+            and configures authentication to support identity bearer tokens and cookies.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <param name="configure">Configures the <see cref="T:Microsoft.AspNetCore.Identity.IdentityOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Identity.IdentityBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions.ConfigureApplicationCookie(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions})">
+            <summary>
+            Configures the application cookie.
+            </summary>
+            <param name="services">The services available in the application.</param>
+            <param name="configure">An action to configure the <see cref="T:Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions"/>.</param>
+            <returns>The services.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions.ConfigureExternalCookie(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions})">
+            <summary>
+            Configure the external cookie.
+            </summary>
+            <param name="services">The services available in the application.</param>
+            <param name="configure">An action to configure the <see cref="T:Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions"/>.</param>
+            <returns>The services.</returns>
+        </member>
+    </members>
+</doc>

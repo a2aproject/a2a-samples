@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Xml.XPath.XDocument</name>
+  </assembly>
+  <members>
+    <member name="T:System.Xml.XPath.Extensions">
+      <summary>This class contains the LINQ to XML extension methods that enable you to evaluate XPath expressions.</summary>
+    </member>
+    <member name="M:System.Xml.XPath.Extensions.CreateNavigator(System.Xml.Linq.XNode)">
+      <summary>Creates an <see cref="T:System.Xml.XPath.XPathNavigator" /> for an <see cref="T:System.Xml.Linq.XNode" />.</summary>
+      <param name="node">An <see cref="T:System.Xml.Linq.XNode" /> that can process XPath queries.</param>
+      <returns>An <see cref="T:System.Xml.XPath.XPathNavigator" /> that can process XPath queries.</returns>
+    </member>
+    <member name="M:System.Xml.XPath.Extensions.CreateNavigator(System.Xml.Linq.XNode,System.Xml.XmlNameTable)">
+      <summary>Creates an <see cref="T:System.Xml.XPath.XPathNavigator" /> for an <see cref="T:System.Xml.Linq.XNode" />. The <see cref="T:System.Xml.XmlNameTable" /> enables more efficient XPath expression processing.</summary>
+      <param name="node">An <see cref="T:System.Xml.Linq.XNode" /> that can process an XPath query.</param>
+      <param name="nameTable">A <see cref="T:System.Xml.XmlNameTable" /> to be used by <see cref="T:System.Xml.XPath.XPathNavigator" />.</param>
+      <returns>An <see cref="T:System.Xml.XPath.XPathNavigator" /> that can process XPath queries.</returns>
+    </member>
+    <member name="M:System.Xml.XPath.Extensions.XPathEvaluate(System.Xml.Linq.XNode,System.String)">
+      <summary>Evaluates an XPath expression.</summary>
+      <param name="node">The <see cref="T:System.Xml.Linq.XNode" /> on which to evaluate the XPath expression.</param>
+      <param name="expression">A <see cref="T:System.String" /> that contains an XPath expression.</param>
+      <returns>An object that can contain a <see langword="bool" />, a <see langword="double" />, a <see langword="string" />, or an <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
+    </member>
+    <member name="M:System.Xml.XPath.Extensions.XPathEvaluate(System.Xml.Linq.XNode,System.String,System.Xml.IXmlNamespaceResolver)">
+      <summary>Evaluates an XPath expression, resolving namespace prefixes using the specified <see cref="T:System.Xml.IXmlNamespaceResolver" />.</summary>
+      <param name="node">The <see cref="T:System.Xml.Linq.XNode" /> on which to evaluate the XPath expression.</param>
+      <param name="expression">A <see cref="T:System.String" /> that contains an XPath expression.</param>
+      <param name="resolver">A <see cref="T:System.Xml.IXmlNamespaceResolver" /> for the namespace prefixes in the XPath expression.</param>
+      <returns>An object that contains the result of evaluating the expression. The object can be a <see langword="bool" />, a <see langword="double" />, a <see langword="string" />, or an <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
+    </member>
+    <member name="M:System.Xml.XPath.Extensions.XPathSelectElement(System.Xml.Linq.XNode,System.String)">
+      <summary>Selects an <see cref="T:System.Xml.Linq.XElement" /> using a XPath expression.</summary>
+      <param name="node">The <see cref="T:System.Xml.Linq.XNode" /> on which to evaluate the XPath expression.</param>
+      <param name="expression">A <see cref="T:System.String" /> that contains an XPath expression.</param>
+      <returns>An <see cref="T:System.Xml.Linq.XElement" />, or null.</returns>
+    </member>
+    <member name="M:System.Xml.XPath.Extensions.XPathSelectElement(System.Xml.Linq.XNode,System.String,System.Xml.IXmlNamespaceResolver)">
+      <summary>Selects an <see cref="T:System.Xml.Linq.XElement" /> using a XPath expression, resolving namespace prefixes using the specified <see cref="T:System.Xml.IXmlNamespaceResolver" />.</summary>
+      <param name="node">The <see cref="T:System.Xml.Linq.XNode" /> on which to evaluate the XPath expression.</param>
+      <param name="expression">A <see cref="T:System.String" /> that contains an XPath expression.</param>
+      <param name="resolver">An <see cref="T:System.Xml.IXmlNamespaceResolver" /> for the namespace prefixes in the XPath expression.</param>
+      <returns>An <see cref="T:System.Xml.Linq.XElement" />, or null.</returns>
+    </member>
+    <member name="M:System.Xml.XPath.Extensions.XPathSelectElements(System.Xml.Linq.XNode,System.String)">
+      <summary>Selects a collection of elements using an XPath expression.</summary>
+      <param name="node">The <see cref="T:System.Xml.Linq.XNode" /> on which to evaluate the XPath expression.</param>
+      <param name="expression">A <see cref="T:System.String" /> that contains an XPath expression.</param>
+      <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> of <see cref="T:System.Xml.Linq.XElement" /> that contains the selected elements.</returns>
+    </member>
+    <member name="M:System.Xml.XPath.Extensions.XPathSelectElements(System.Xml.Linq.XNode,System.String,System.Xml.IXmlNamespaceResolver)">
+      <summary>Selects a collection of elements using an XPath expression, resolving namespace prefixes using the specified <see cref="T:System.Xml.IXmlNamespaceResolver" />.</summary>
+      <param name="node">The <see cref="T:System.Xml.Linq.XNode" /> on which to evaluate the XPath expression.</param>
+      <param name="expression">A <see cref="T:System.String" /> that contains an XPath expression.</param>
+      <param name="resolver">A <see cref="T:System.Xml.IXmlNamespaceResolver" /> for the namespace prefixes in the XPath expression.</param>
+      <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> of <see cref="T:System.Xml.Linq.XElement" /> that contains the selected elements.</returns>
+    </member>
+    <member name="T:System.Xml.XPath.XDocumentExtensions">
+      <summary>Extends the <see cref="T:System.Xml.Linq.XDocument" /> class by providing a method for navigating and editing an XML node.</summary>
+    </member>
+    <member name="M:System.Xml.XPath.XDocumentExtensions.ToXPathNavigable(System.Xml.Linq.XNode)">
+      <summary>Returns an accessor that allows you to navigate and edit the specified <see cref="T:System.Xml.Linq.XNode" />.</summary>
+      <param name="node">The XML node to navigate.</param>
+      <returns>An interface that provides an accessor to the <see cref="T:System.Xml.XPath.XPathNavigator" /> class.</returns>
+    </member>
+  </members>
+</doc>

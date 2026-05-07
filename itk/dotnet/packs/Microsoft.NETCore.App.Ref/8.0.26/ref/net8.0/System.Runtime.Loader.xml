@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Runtime.Loader</name>
+  </assembly>
+  <members>
+    <member name="T:System.Reflection.Metadata.AssemblyExtensions" />
+    <member name="M:System.Reflection.Metadata.AssemblyExtensions.TryGetRawMetadata(System.Reflection.Assembly,System.Byte*@,System.Int32@)">
+      <summary>Retrieves the metadata section of the assembly, for use with <see cref="T:System.Reflection.Metadata.MetadataReader" />.</summary>
+      <param name="assembly">The assembly from which to retrieve the metadata.</param>
+      <param name="blob">When this method returns, contains the pointer to the metadata section blob.</param>
+      <param name="length">When this method returns, contains the length of the metadata section blob.</param>
+      <returns>
+        <see langword="true" /> if the metadata is retrieved successfully; <see langword="false" /> upon failure. The metadata might not be available for some assemblies, such as <see cref="T:System.Reflection.Emit.AssemblyBuilder" /> and AOT images.</returns>
+    </member>
+    <member name="T:System.Reflection.Metadata.MetadataUpdateHandlerAttribute">
+      <summary>Indicates that a type that should receive notifications of metadata updates.</summary>
+    </member>
+    <member name="M:System.Reflection.Metadata.MetadataUpdateHandlerAttribute.#ctor(System.Type)">
+      <summary>Initializes the attribute.</summary>
+      <param name="handlerType">A type that handles metadata updates and that should be notified when any occur.</param>
+    </member>
+    <member name="P:System.Reflection.Metadata.MetadataUpdateHandlerAttribute.HandlerType">
+      <summary>Gets the type that handles metadata updates and that should be notified when any occur.</summary>
+    </member>
+    <member name="T:System.Reflection.Metadata.MetadataUpdater" />
+    <member name="M:System.Reflection.Metadata.MetadataUpdater.ApplyUpdate(System.Reflection.Assembly,System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+      <summary>Updates the specified assembly using the provided metadata, IL, and PDB deltas.</summary>
+      <param name="assembly">The assembly to update.</param>
+      <param name="metadataDelta">The metadata changes to be applied.</param>
+      <param name="ilDelta">The IL changes to be applied.</param>
+      <param name="pdbDelta">The PDB changes to be applied.</param>
+      <exception cref="T:System.ArgumentException">The assembly argument is not a runtime assembly.</exception>
+      <exception cref="T:System.ArgumentNullException">The assembly argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The assembly is not editable.</exception>
+      <exception cref="T:System.NotSupportedException">The update could not be applied.</exception>
+    </member>
+    <member name="P:System.Reflection.Metadata.MetadataUpdater.IsSupported">
+      <summary>Gets a value that indicates whether the assembly update is enabled and available.</summary>
+      <returns>
+        <see langword="true" /> if the assembly update is enabled and available; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.CreateNewOnMetadataUpdateAttribute">
+      <summary>Indicates a type should be replaced rather than updated when applying metadata updates.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.CreateNewOnMetadataUpdateAttribute.#ctor">
+      <summary>Creates a new <see cref="T:System.Runtime.CompilerServices.CreateNewOnMetadataUpdateAttribute" /> instance.</summary>
+    </member>
+    <member name="T:System.Runtime.CompilerServices.MetadataUpdateOriginalTypeAttribute">
+      <summary>Emitted by the compiler when a type that's marked with <see cref="T:System.Runtime.CompilerServices.CreateNewOnMetadataUpdateAttribute" /> is updated during a hot reload session.</summary>
+    </member>
+    <member name="M:System.Runtime.CompilerServices.MetadataUpdateOriginalTypeAttribute.#ctor(System.Type)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.CompilerServices.MetadataUpdateOriginalTypeAttribute" /> class.</summary>
+      <param name="originalType">The original type that was updated.</param>
+    </member>
+    <member name="P:System.Runtime.CompilerServices.MetadataUpdateOriginalTypeAttribute.OriginalType">
+      <summary>Gets the original version of the type that this attribtue is attached to.</summary>
+    </member>
+    <member name="T:System.Runtime.Loader.AssemblyDependencyResolver">
+      <summary>Allows a program to resolve assemblies and native libraries to paths based on the dependencies of a given assembly.</summary>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyDependencyResolver.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Loader.AssemblyDependencyResolver" /> class with a path to a component's assembly.</summary>
+      <param name="componentAssemblyPath">The path to the component or plugin's managed entry point.</param>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyDependencyResolver.ResolveAssemblyToPath(System.Reflection.AssemblyName)">
+      <summary>Resolves a path to an assembly with the given assembly name based on the component's dependencies.</summary>
+      <param name="assemblyName">The assembly name to resolve.</param>
+      <returns>The path to an assembly with the given name from the component's deps.json file, or <see langword="null" /> if the assembly does not exist in the deps.json file or is not on disk in the location specified by the deps.json file.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyDependencyResolver.ResolveUnmanagedDllToPath(System.String)">
+      <summary>Resolves a path to a native library with the given name based on the component's dependencies.</summary>
+      <param name="unmanagedDllName">The name of the native library to resolve.</param>
+      <returns>The path to a native library with the given name from the component's deps.json file and the current runtime identifier, or <see langword="null" /> if the assembly does not exist in the deps.json file or is not on disk  in the location specified by the deps.json file.</returns>
+    </member>
+    <member name="T:System.Runtime.Loader.AssemblyLoadContext">
+      <summary>Represents the runtime's concept of a scope for assembly loading.</summary>
+    </member>
+    <member name="E:System.Runtime.Loader.AssemblyLoadContext.Resolving">
+      <summary>Occurs when the resolution of an assembly fails when attempting to load into this assembly load context.</summary>
+    </member>
+    <member name="E:System.Runtime.Loader.AssemblyLoadContext.ResolvingUnmanagedDll">
+      <summary>Occurs when the resolution of a native library fails.</summary>
+    </member>
+    <member name="E:System.Runtime.Loader.AssemblyLoadContext.Unloading">
+      <summary>Occurs when the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> is unloaded.</summary>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> class.</summary>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.#ctor(System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> class with a value that indicates whether unloading is enabled.</summary>
+      <param name="isCollectible">
+        <see langword="true" /> to enable <see cref="M:System.Runtime.Loader.AssemblyLoadContext.Unload" />; otherwise, <see langword="false" />. The default value is <see langword="false" /> because there is a performance cost associated with enabling unloading.</param>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.#ctor(System.String,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> class with a name and a value that indicates whether unloading is enabled.</summary>
+      <param name="name">The value for <see cref="P:System.Runtime.Loader.AssemblyLoadContext.Name" /> in the new instance. Its value can be <see langword="null" />.</param>
+      <param name="isCollectible">
+        <see langword="true" /> to enable <see cref="M:System.Runtime.Loader.AssemblyLoadContext.Unload" />; otherwise, <see langword="false" />. The default value is <see langword="false" /> because there is a performance cost associated with enabling unloading.</param>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.EnterContextualReflection">
+      <summary>Sets <see cref="P:System.Runtime.Loader.AssemblyLoadContext.CurrentContextualReflectionContext" /> to <see langword="this" /><see cref="T:System.Runtime.Loader.AssemblyLoadContext" />.</summary>
+      <returns>An object to restore the previous value of <see cref="P:System.Runtime.Loader.AssemblyLoadContext.CurrentContextualReflectionContext" />. It is intended to be used as an <see cref="T:System.IDisposable" /> in a <see langword="using" /> block.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.EnterContextualReflection(System.Reflection.Assembly)">
+      <summary>Sets <see cref="P:System.Runtime.Loader.AssemblyLoadContext.CurrentContextualReflectionContext" /> to the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> which loaded the assembly.</summary>
+      <param name="activating">The assembly that is used to determine the requested <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> instance.</param>
+      <returns>An object to restore the previous value of <see cref="P:System.Runtime.Loader.AssemblyLoadContext.CurrentContextualReflectionContext" />. It is intended to be used as an <see cref="T:System.IDisposable" /> in a <see langword="using" /> block.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.Finalize">
+      <summary>Allows the object to try to free resources and perform other cleanup operations before it's reclaimed by garbage collection.</summary>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.GetAssemblyName(System.String)">
+      <summary>Gets an <see cref="T:System.Reflection.AssemblyName" /> for an assembly path.</summary>
+      <param name="assemblyPath">The path to the assembly.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="assemblyPath" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.FileNotFoundException">The assembly cannot be found.</exception>
+      <exception cref="T:System.BadImageFormatException">The assembly is not a valid assembly.</exception>
+      <returns>An object that contains the fully parsed assembly name for the assembly at <paramref name="assemblyPath" />.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(System.Reflection.Assembly)">
+      <summary>Gets the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> containing the specified <see cref="T:System.Reflection.Assembly" />.</summary>
+      <param name="assembly">An assembly.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="assembly" /> is <see langword="null" />.</exception>
+      <returns>The assembly load context containing the <paramref name="assembly" />. If the <paramref name="assembly" /> is not provided by the runtime, this method returns null.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.Load(System.Reflection.AssemblyName)">
+      <summary>When overridden in a derived class, allows an assembly to be resolved based on its <see cref="T:System.Reflection.AssemblyName" />.</summary>
+      <param name="assemblyName">The object that describes the assembly to be resolved.</param>
+      <returns>The resolved assembly, or <see langword="null" />.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyName(System.Reflection.AssemblyName)">
+      <summary>Resolves and loads an assembly given its <see cref="T:System.Reflection.AssemblyName" />.</summary>
+      <param name="assemblyName">The object that describes the assembly to load.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="assemblyName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.FileNotFoundException">
+        <paramref name="assemblyName" /> is not found.</exception>
+      <exception cref="T:System.BadImageFormatException">
+        <paramref name="assemblyName" /> is not a valid assembly.</exception>
+      <exception cref="T:System.IO.FileLoadException">An assembly or module was loaded which did not match the <paramref name="assemblyName" />.</exception>
+      <returns>The loaded assembly, or throws.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.LoadFromAssemblyPath(System.String)">
+      <summary>Loads the contents of an assembly file on the specified path.</summary>
+      <param name="assemblyPath">The fully qualified path of the file to load.</param>
+      <exception cref="T:System.ArgumentException">The <paramref name="assemblyPath" /> argument is not an absolute path.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="assemblyPath" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.FileLoadException">A file that was found could not be loaded.</exception>
+      <exception cref="T:System.IO.FileNotFoundException">The <paramref name="assemblyPath" /> argument is an empty string ("") or does not exist.</exception>
+      <exception cref="T:System.BadImageFormatException">The  <paramref name="assemblyPath" /> argument is not a valid assembly.</exception>
+      <returns>The loaded assembly.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.LoadFromNativeImagePath(System.String,System.String)">
+      <summary>Loads the contents of the native image of a managed assembly file on the specified path.</summary>
+      <param name="nativeImagePath">The fully qualified path of the file to load.</param>
+      <param name="assemblyPath">The fully qualified path of the IL version of the file to load, or <see langword="null" />.</param>
+      <exception cref="T:System.ArgumentException">The <paramref name="nativeImagePath" /> argument is not an absolute path.</exception>
+      <exception cref="T:System.ArgumentException">The <paramref name="assemblyPath" /> argument is not an absolute path.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="nativeImagePath" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.FileLoadException">A file that was found could not be loaded.</exception>
+      <exception cref="T:System.IO.FileNotFoundException">The <paramref name="nativeImagePath" /> argument is an empty string ("") or does not exist.</exception>
+      <exception cref="T:System.BadImageFormatException">The <paramref name="assemblyPath" /> argument is not a valid assembly.</exception>
+      <returns>The loaded assembly.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.LoadFromStream(System.IO.Stream)">
+      <summary>Loads the assembly with a common object file format (COFF)-based image containing a managed assembly.</summary>
+      <param name="assembly">A byte array that is a COFF-based image containing a managed assembly.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="assembly" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.BadImageFormatException">
+        <paramref name="assembly" /> is not a valid assembly.</exception>
+      <returns>The loaded assembly.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.LoadFromStream(System.IO.Stream,System.IO.Stream)">
+      <summary>Loads the assembly with a common object file format (COFF)-based image containing a managed assembly, optionally including symbols for the assembly.</summary>
+      <param name="assembly">A byte array that is a COFF-based image containing a managed assembly.</param>
+      <param name="assemblySymbols">A byte array that contains the raw bytes representing the symbols for the assembly.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="assembly" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.BadImageFormatException">
+        <paramref name="assembly" /> is not a valid assembly.</exception>
+      <returns>The loaded assembly.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.LoadUnmanagedDll(System.String)">
+      <summary>Allows derived class to load an unmanaged library by name.</summary>
+      <param name="unmanagedDllName">Name of the unmanaged library. Typically this is the filename without its path or extensions.</param>
+      <returns>A handle to the loaded library, or <see cref="F:System.IntPtr.Zero" />.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.LoadUnmanagedDllFromPath(System.String)">
+      <summary>Loads an unmanaged library from the specified path.</summary>
+      <param name="unmanagedDllPath">The path to the unmanaged library.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="unmanagedDllPath" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">The <paramref name="unmanagedDllPath" /> argument is empty or not an absolute path.</exception>
+      <exception cref="T:System.DllNotFoundException">The library can't be found.</exception>
+      <exception cref="T:System.BadImageFormatException">The library is not valid.</exception>
+      <returns>The OS handle for the loaded native library.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.SetProfileOptimizationRoot(System.String)">
+      <summary>Sets the root path where the optimization profiles for this load context are stored.</summary>
+      <param name="directoryPath">The full path to the directory where the optimization profiles are stored.</param>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.StartProfileOptimization(System.String)">
+      <summary>Starts the profile optimization for the specified profile.</summary>
+      <param name="profile">The name of the optimization profile.</param>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.ToString">
+      <summary>Returns the string representation of this load context.</summary>
+      <returns>The string representation of this load context.</returns>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.Unload">
+      <summary>Initiates an unload of this <see cref="T:System.Runtime.Loader.AssemblyLoadContext" />.</summary>
+      <exception cref="T:System.InvalidOperationException">Unloading is not allowed.</exception>
+    </member>
+    <member name="P:System.Runtime.Loader.AssemblyLoadContext.All">
+      <summary>Returns a collection of all <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> instances.</summary>
+      <returns>A collection of all <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> instances.</returns>
+    </member>
+    <member name="P:System.Runtime.Loader.AssemblyLoadContext.Assemblies">
+      <summary>Returns a collection of the <see cref="T:System.Reflection.Assembly" /> instances loaded in the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" />.</summary>
+      <returns>A collection of the <see cref="T:System.Reflection.Assembly" /> instances loaded in the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" />.</returns>
+    </member>
+    <member name="P:System.Runtime.Loader.AssemblyLoadContext.CurrentContextualReflectionContext">
+      <summary>Gets the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> set by the most recent call to <see cref="M:System.Runtime.Loader.AssemblyLoadContext.EnterContextualReflection" />.</summary>
+      <returns>The <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> set by the most recent call to <see cref="M:System.Runtime.Loader.AssemblyLoadContext.EnterContextualReflection" />. This value can be <see langword="null" />. The value is stored in an <see cref="T:System.Threading.AsyncLocal`1" />, so the value is unique per asynchronous context.</returns>
+    </member>
+    <member name="P:System.Runtime.Loader.AssemblyLoadContext.Default">
+      <summary>Gets the default <see cref="T:System.Runtime.Loader.AssemblyLoadContext" />. The default context contains the main application assembly and its static dependencies.</summary>
+      <returns>The default assembly load context.</returns>
+    </member>
+    <member name="P:System.Runtime.Loader.AssemblyLoadContext.IsCollectible">
+      <summary>Gets a value that indicates whether this <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> is collectible.</summary>
+      <returns>
+        <see langword="true" /> if this <see cref="T:System.Runtime.Loader.AssemblyLoadContext" /> is collectible; otherwise, <see langword="false" />. If a value is not specified in the constructor, the value is <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Runtime.Loader.AssemblyLoadContext.Name">
+      <summary>Get the name of the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" />.</summary>
+      <returns>The name of the <see cref="T:System.Runtime.Loader.AssemblyLoadContext" />. Its value can be <see langword="null" />.</returns>
+    </member>
+    <member name="T:System.Runtime.Loader.AssemblyLoadContext.ContextualReflectionScope">
+      <summary>Provides a return type used exclusively for <see cref="M:System.Runtime.Loader.AssemblyLoadContext.EnterContextualReflection" />. It is intended to be used as an <see cref="T:System.IDisposable" /> in a <see langword="using" /> block.</summary>
+    </member>
+    <member name="M:System.Runtime.Loader.AssemblyLoadContext.ContextualReflectionScope.Dispose">
+      <summary>Sets <see cref="P:System.Runtime.Loader.AssemblyLoadContext.CurrentContextualReflectionContext" /> to the value preceding the call to <see cref="M:System.Runtime.Loader.AssemblyLoadContext.EnterContextualReflection" /> which returned this instance.</summary>
+    </member>
+  </members>
+</doc>

@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.WebSockets</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.WebSockets.ExtendedWebSocketAcceptContext">
+            <summary>
+            Extends the <see cref="T:Microsoft.AspNetCore.Http.WebSocketAcceptContext"/> class with additional properties.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebSockets.ExtendedWebSocketAcceptContext.SubProtocol">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebSockets.ExtendedWebSocketAcceptContext.ReceiveBufferSize">
+            <summary>
+            This property is obsolete and has no effect.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebSockets.ExtendedWebSocketAcceptContext.KeepAliveInterval">
+            <summary>
+            The interval to send pong frames. This is a heart-beat that keeps the connection alive.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebSockets.HandshakeHelpers.IsRequestKeyValid(System.String)">
+            <summary>
+            Validates the Sec-WebSocket-Key request header
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebSockets.ServerWebSocket">
+            <summary>
+            Used in ASP.NET Core to wrap a WebSocket with its associated HttpContext so that when the WebSocket is aborted
+            the underlying HttpContext is aborted. All other methods are delegated to the underlying WebSocket.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.WebSockets.WebSocketDeflateConstants.MaxExtensionLength">
+            <summary>
+            The maximum length that this extension can have, assuming that we're not using extra white space.
+            <para />
+            "permessage-deflate; client_max_window_bits=15; client_no_context_takeover; server_max_window_bits=15; server_no_context_takeover"
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebSockets.WebSocketMiddleware">
+            <summary>
+            Enables accepting WebSocket requests by adding a <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpWebSocketFeature"/>
+            to the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> if the request is a valid WebSocket request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebSockets.WebSocketMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.WebSocketOptions},Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new instance of the <see cref="T:Microsoft.AspNetCore.WebSockets.WebSocketMiddleware"/>.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+            <param name="options">The configuration options.</param>
+            <param name="loggerFactory">An <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> instance used to create loggers.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebSockets.WebSocketMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Processes a request to determine if it is a WebSocket request, and if so,
+            sets the <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpWebSocketFeature"/> on the <see cref="P:Microsoft.AspNetCore.Http.HttpContext.Features"/>.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> representing the request.</param>
+            <returns>The <see cref="T:System.Threading.Tasks.Task"/> that represents the completion of the middleware pipeline.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebSockets.WebSocketsDependencyInjectionExtensions">
+            <summary>
+            Extension method for <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add WebSockets configuration.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebSockets.WebSocketsDependencyInjectionExtensions.AddWebSockets(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Builder.WebSocketOptions})">
+            <summary>
+            Extension method for <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add WebSockets configuration.
+            </summary>
+            <param name="services">The service collection to add WebSockets specific configuration to.</param>
+            <param name="configure">The configuration callback to setup <see cref="T:Microsoft.AspNetCore.Builder.WebSocketOptions"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.WebSocketMiddlewareExtensions">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" /> extension methods to add and configure <see cref="T:Microsoft.AspNetCore.WebSockets.WebSocketMiddleware" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebSocketMiddlewareExtensions.UseWebSockets(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds the <see cref="T:Microsoft.AspNetCore.WebSockets.WebSocketMiddleware" /> to the request pipeline.
+            </summary>
+            <param name="app">
+            The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" /> to configure.
+            </param>
+            <returns>
+            The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" />.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebSocketMiddlewareExtensions.UseWebSockets(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.WebSocketOptions)">
+            <summary>
+            Adds the <see cref="T:Microsoft.AspNetCore.WebSockets.WebSocketMiddleware" /> to the request pipeline.
+            </summary>
+            <param name="app">
+            The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" /> to configure.
+            </param>
+            <param name="options">
+            The <see cref="T:Microsoft.AspNetCore.Builder.WebSocketOptions" /> to be used for the <see cref="T:Microsoft.AspNetCore.WebSockets.WebSocketMiddleware" />.
+            </param>
+            <returns>
+            The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" />.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.WebSocketOptions">
+            <summary>
+            Configuration options for the WebSocketMiddleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebSocketOptions.#ctor">
+            <summary>
+            Constructs the <see cref="T:Microsoft.AspNetCore.Builder.WebSocketOptions"/> class with default values.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebSocketOptions.KeepAliveInterval">
+            <summary>
+            Gets or sets the frequency at which to send Ping/Pong keep-alive control frames.
+            The default is two minutes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebSocketOptions.ReceiveBufferSize">
+            <summary>
+            Gets or sets the size of the protocol buffer used to receive and parse frames.
+            The default is 4kb.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebSocketOptions.AllowedOrigins">
+            <summary>
+            Set the Origin header values allowed for WebSocket requests to prevent Cross-Site WebSocket Hijacking.
+            By default all Origins are allowed.
+            </summary>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.GetPinnableReference">
+            <summary>
+            Get a pinnable reference to the builder.
+            Does not ensure there is a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/>
+            This overload is pattern matched in the C# 7.3+ compiler so you can omit
+            the explicit method call, and write eg "fixed (char* c = builder)"
+            </summary>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.GetPinnableReference(System.Boolean)">
+            <summary>
+            Get a pinnable reference to the builder.
+            </summary>
+            <param name="terminate">Ensures that the builder has a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/></param>
+        </member>
+        <member name="P:System.Text.ValueStringBuilder.RawChars">
+            <summary>Returns the underlying storage of the builder.</summary>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.AsSpan(System.Boolean)">
+            <summary>
+            Returns a span around the contents of the builder.
+            </summary>
+            <param name="terminate">Ensures that the builder has a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/></param>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.Grow(System.Int32)">
+            <summary>
+            Resize the internal buffer either by doubling current buffer size or
+            by adding <paramref name="additionalCapacityBeyondPos"/> to
+            <see cref="F:System.Text.ValueStringBuilder._pos"/> whichever is greater.
+            </summary>
+            <param name="additionalCapacityBeyondPos">
+            Number of chars requested beyond current position.
+            </param>
+        </member>
+    </members>
+</doc>

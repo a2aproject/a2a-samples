@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.FileProviders.Embedded</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.FileProviders.EmbeddedFileProvider">
+            <summary>
+            Looks up files using embedded resources in the specified assembly.
+            This file provider is case sensitive.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.#ctor(System.Reflection.Assembly)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.FileProviders.EmbeddedFileProvider" /> class using the specified
+            assembly with the base namespace defaulting to the assembly name.
+            </summary>
+            <param name="assembly">The assembly that contains the embedded resources.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.#ctor(System.Reflection.Assembly,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.FileProviders.EmbeddedFileProvider" /> class using the specified
+            assembly and base namespace.
+            </summary>
+            <param name="assembly">The assembly that contains the embedded resources.</param>
+            <param name="baseNamespace">The base namespace that contains the embedded resources.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.GetFileInfo(System.String)">
+            <summary>
+            Locates a file at the given path.
+            </summary>
+            <param name="subpath">The path that identifies the file. </param>
+            <returns>
+            The file information. Caller must check Exists property. A <see cref="T:Microsoft.Extensions.FileProviders.NotFoundFileInfo" /> if the file could
+            not be found.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.GetDirectoryContents(System.String)">
+            <summary>
+            Enumerate a directory at the given path, if any.
+            This file provider uses a flat directory structure. Everything under the base namespace is considered to be one
+            directory.
+            </summary>
+            <param name="subpath">The path that identifies the directory</param>
+            <returns>
+            Contents of the directory. Caller must check Exists property. A <see cref="T:Microsoft.Extensions.FileProviders.NotFoundDirectoryContents" /> if no
+            resources were found that match <paramref name="subpath" />
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.Watch(System.String)">
+            <summary>
+            Embedded files do not change.
+            </summary>
+            <param name="pattern">This parameter is ignored</param>
+            <returns>A <see cref="T:Microsoft.Extensions.FileProviders.NullChangeToken" /></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.IsValidEverettIdFirstChar(System.Char)">
+            <summary>
+            Is the character a valid first Everett identifier character?
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.IsValidEverettIdChar(System.Char)">
+            <summary>
+            Is the character a valid Everett identifier character?
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.MakeValidEverettSubFolderIdentifier(System.Text.StringBuilder,System.String)">
+            <summary>
+            Make a folder subname into an Everett-compatible identifier 
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.MakeValidEverettFolderIdentifier(System.Text.StringBuilder,System.String)">
+            <summary>
+            Make a folder name into an Everett-compatible identifier
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.EmbeddedFileProvider.MakeValidEverettIdentifier(System.String)">
+            <summary>
+            This method is provided for compatibility with Everett which used to convert parts of resource names into
+            valid identifiers
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo">
+            <summary>
+            Represents a file embedded in an assembly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo.#ctor(System.Reflection.Assembly,System.String,System.String,System.DateTimeOffset)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.FileProviders.EmbeddedFileProvider"/> for an assembly using <paramref name="resourcePath"/> as the base
+            </summary>
+            <param name="assembly">The assembly that contains the embedded resource</param>
+            <param name="resourcePath">The path to the embedded resource</param>
+            <param name="name">An arbitrary name for this instance</param>
+            <param name="lastModified">The <see cref="T:System.DateTimeOffset" /> to use for <see cref="P:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo.LastModified" /></param>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo.Exists">
+            <summary>
+            Always true.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo.Length">
+            <summary>
+            The length, in bytes, of the embedded resource
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo.PhysicalPath">
+            <summary>
+            Always null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo.Name">
+            <summary>
+            The name of embedded file
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo.LastModified">
+            <summary>
+            The time, in UTC, when the <see cref="T:Microsoft.Extensions.FileProviders.EmbeddedFileProvider"/> was created
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo.IsDirectory">
+            <summary>
+            Always false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Embedded.EmbeddedResourceFileInfo.CreateReadStream">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider">
+            <summary>
+            An embedded file provider that uses a manifest compiled in the assembly to
+            reconstruct the original paths of the embedded files when they were embedded
+            into the assembly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider.#ctor(System.Reflection.Assembly)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider"/>.
+            </summary>
+            <param name="assembly">The assembly containing the embedded files.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider.#ctor(System.Reflection.Assembly,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider"/>.
+            </summary>
+            <param name="assembly">The assembly containing the embedded files.</param>
+            <param name="root">The relative path from the root of the manifest to use as root for the provider.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider.#ctor(System.Reflection.Assembly,System.String,System.DateTimeOffset)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider"/>.
+            </summary>
+            <param name="assembly">The assembly containing the embedded files.</param>
+            <param name="root">The relative path from the root of the manifest to use as root for the provider.</param>
+            <param name="lastModified">The LastModified date to use on the <see cref="T:Microsoft.Extensions.FileProviders.IFileInfo"/> instances
+            returned by this <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider.#ctor(System.Reflection.Assembly,System.String,System.String,System.DateTimeOffset)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider"/>.
+            </summary>
+            <param name="assembly">The assembly containing the embedded files.</param>
+            <param name="root">The relative path from the root of the manifest to use as root for the provider.</param>
+            <param name="manifestName">The name of the embedded resource containing the manifest.</param>
+            <param name="lastModified">The LastModified date to use on the <see cref="T:Microsoft.Extensions.FileProviders.IFileInfo"/> instances
+            returned by this <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/>.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider.Assembly">
+            <summary>
+            Gets the <see cref="P:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider.Assembly"/> for this provider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider.GetDirectoryContents(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider.GetFileInfo(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.ManifestEmbeddedFileProvider.Watch(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,1624 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Http.Features</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Http.Features.Authentication.IHttpAuthenticationFeature">
+            <summary>
+            The HTTP authentication feature.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.Authentication.IHttpAuthenticationFeature.User">
+            <summary>
+            Gets or sets the <see cref="T:System.Security.Claims.ClaimsPrincipal"/> associated with the HTTP request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.HttpsCompressionMode">
+            <summary>
+            Use to dynamically control response compression for HTTPS requests.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.HttpsCompressionMode.Default">
+            <summary>
+            No value has been specified, use the configured defaults.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.HttpsCompressionMode.DoNotCompress">
+            <summary>
+            Opts out of compression over HTTPS. Enabling compression on HTTPS requests for remotely manipulable content
+            may expose security problems.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.HttpsCompressionMode.Compress">
+            <summary>
+            Opts into compression over HTTPS. Enabling compression on HTTPS requests for remotely manipulable content
+            may expose security problems.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IBadRequestExceptionFeature">
+            <summary>
+            Provides information about rejected HTTP requests.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IBadRequestExceptionFeature.Error">
+            <summary>
+            Synchronously retrieves the exception associated with the rejected HTTP request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IFormFeature">
+            <summary>
+            Allows reading the request body as a HTTP form.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IFormFeature.HasFormContentType">
+            <summary>
+            Indicates if the request has a supported form content-type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IFormFeature.Form">
+            <summary>
+            Gets or sets the parsed form.
+            <para>
+            This API will return a non-null value if the
+            request body was read using <see cref="M:Microsoft.AspNetCore.Http.Features.IFormFeature.ReadFormAsync(System.Threading.CancellationToken)"/> or <see cref="M:Microsoft.AspNetCore.Http.Features.IFormFeature.ReadForm"/>, or
+            if a value was explicitly assigned.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IFormFeature.ReadForm">
+            <summary>
+            Parses the request body as a form.
+            <para>
+            If the request body has not been previously read, this API performs a synchronous (blocking) read
+            on the HTTP input stream which may be unsupported or can adversely affect application performance.
+            Consider using <see cref="M:Microsoft.AspNetCore.Http.Features.IFormFeature.ReadFormAsync(System.Threading.CancellationToken)"/> instead.
+            </para>
+            </summary>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.IFormCollection"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IFormFeature.ReadFormAsync(System.Threading.CancellationToken)">
+            <summary>
+            Parses the request body as a form.
+            </summary>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpBodyControlFeature">
+            <summary>
+            Controls the IO behavior for the <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.Body"/> and <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.Body"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpBodyControlFeature.AllowSynchronousIO">
+            <summary>
+            Gets or sets a value that controls whether synchronous IO is allowed for the <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.Body"/> and <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.Body"/>
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpConnectionFeature">
+            <summary>
+            Information regarding the TCP/IP connection carrying the request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpConnectionFeature.ConnectionId">
+            <summary>
+            Gets or sets the unique identifier for the connection the request was received on. This is primarily for diagnostic purposes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpConnectionFeature.RemoteIpAddress">
+            <summary>
+            Gets or sets the IPAddress of the client making the request. Note this may be for a proxy rather than the end user.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpConnectionFeature.LocalIpAddress">
+            <summary>
+            Gets or sets the local IPAddress on which the request was received.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpConnectionFeature.RemotePort">
+            <summary>
+            Gets or sets the remote port of the client making the request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpConnectionFeature.LocalPort">
+            <summary>
+            Gets or sets the local port on which the request was received.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpExtendedConnectFeature">
+            <summary>
+            Used with protocols that require the Extended CONNECT handshake such as HTTP/2 WebSockets and WebTransport.
+            https://www.rfc-editor.org/rfc/rfc8441#section-4
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpExtendedConnectFeature.IsExtendedConnect">
+            <summary>
+            Indicates if the current request is a Extended CONNECT request that can be transitioned to an opaque connection via AcceptAsync.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpExtendedConnectFeature.Protocol">
+            <summary>
+            The <c>:protocol</c> header included in the request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpExtendedConnectFeature.AcceptAsync">
+            <summary>
+            Send the response headers with a 200 status code and transition to opaque streaming.
+            </summary>
+            <returns>An opaque bidirectional stream.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature">
+            <summary>
+            Feature to inspect and modify the maximum request body size for a single request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature.IsReadOnly">
+            <summary>
+            Indicates whether <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature.MaxRequestBodySize"/> is read-only.
+            If true, this could mean that the request body has already been read from
+            or that <see cref="M:Microsoft.AspNetCore.Http.Features.IHttpUpgradeFeature.UpgradeAsync"/> was called.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature.MaxRequestBodySize">
+            <summary>
+            The maximum allowed size of the current request body in bytes.
+            When set to null, the maximum request body size is unlimited.
+            This cannot be modified after the reading the request body has started.
+            This limit does not affect upgraded connections which are always unlimited.
+            </summary>
+            <remarks>
+            Defaults to the server's global max request body size limit.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpMetricsTagsFeature">
+            <summary>
+            Provides access to tags added to the metrics HTTP request counter. This feature isn't set if the counter isn't enabled.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpMetricsTagsFeature.Tags">
+            <summary>
+            Gets the tag collection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpRequestBodyDetectionFeature">
+            <summary>
+            Used to indicate if the request can have a body.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestBodyDetectionFeature.CanHaveBody">
+            <summary>
+            Indicates if the request can have a body.
+            </summary>
+            <remarks>
+            This returns true when:
+            <list type="bullet">
+            <item><description>
+            It's an HTTP/1.x request with a non-zero Content-Length or a 'Transfer-Encoding: chunked' header.
+            </description></item>
+            <item><description>
+            It's an HTTP/2 request that did not set the END_STREAM flag on the initial headers frame.
+            </description></item>
+            </list>
+            The final request body length may still be zero for the chunked or HTTP/2 scenarios.
+            <para>
+            This returns false when:
+            <list type="bullet">
+            <item><description>
+            It's an HTTP/1.x request with no Content-Length or 'Transfer-Encoding: chunked' header, or the Content-Length is 0.
+            </description></item>
+            <item><description>
+            It's an HTTP/1.x request with Connection: Upgrade (e.g. WebSockets). There is no HTTP request body for these requests and
+            no data should be received until after the upgrade.
+            </description></item>
+            <item><description>
+            It's an HTTP/2 request that set END_STREAM on the initial headers frame.
+            </description></item>
+            </list>
+            </para>
+            When false, the request body should never return data.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature">
+            <summary>
+            Contains the details of a given request. These properties should all be mutable.
+            None of these properties should ever be set to null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.Protocol">
+            <summary>
+            Gets or set the HTTP-version as defined in RFC 7230. E.g. "HTTP/1.1"
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.Scheme">
+            <summary>
+            Gets or set the request uri scheme. E.g. "http" or "https".
+            <para>
+            Note this value is not included in the original request,
+            it is inferred by checking if the transport used a TLS
+            connection or not.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.Method">
+            <summary>
+            Gets or sets the request method as defined in RFC 7230. E.g. "GET", "HEAD", "POST", etc..
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.PathBase">
+            <summary>
+            Gets or sets the first portion of the request path associated with application root.
+            <para>
+            The value is un-escaped. The value may be <see cref="F:System.String.Empty"/>.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.Path">
+            <summary>
+            Gets or sets the portion of the request path that identifies the requested resource.
+            <para>
+            The value may be <see cref="F:System.String.Empty"/> if <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.PathBase"/> contains the full path,
+            or for 'OPTIONS *' requests.
+            The path is fully decoded by the server except for '%2F', which would decode to '/' and
+            change the meaning of the path segments. '%2F' can only be replaced after splitting the path into segments.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.QueryString">
+            <summary>
+            Gets or sets the query portion of the request-target as defined in RFC 7230. The value
+            may be <see cref="F:System.String.Empty" />. If not empty then the leading '?' will be included. The value
+            is in its original form, without un-escaping.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.RawTarget">
+            <summary>
+            Gets or sets the request target as it was sent in the HTTP request.
+            <para>
+            This property contains the raw path and full query, as well as other request targets
+            such as * for OPTIONS requests (<see href="https://tools.ietf.org/html/rfc7230#section-5.3"/>).
+            </para>
+            </summary>
+            <remarks>
+            This property is not used internally for routing or authorization decisions. It has not
+            been UrlDecoded and care should be taken in its use.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.Headers">
+            <summary>
+            Gets or sets headers included in the request, aggregated by header name.
+            <para>
+            The values are not split or merged across header lines. E.g. The following headers:
+            <list type="bullet">
+            <item><description>HeaderA: value1, value2</description></item>
+            <item><description>HeaderA: value3</description></item>
+            </list>
+            Result in Headers["HeaderA"] = { "value1, value2", "value3" }
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature.Body">
+            <summary>
+            Gets or sets a <see cref="T:System.IO.Stream"/> representing the request body, if any.
+            <para>
+            <see cref="F:System.IO.Stream.Null"/> may be used to represent an empty request body.
+            </para>
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpRequestIdentifierFeature">
+            <summary>
+            Feature to uniquely identify a request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestIdentifierFeature.TraceIdentifier">
+            <summary>
+            Gets or sets a value to uniquely identify a request.
+            This can be used for logging and diagnostics.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpRequestLifetimeFeature">
+            <summary>
+            Provides access to the HTTP request lifetime operations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestLifetimeFeature.RequestAborted">
+            <summary>
+            A <see cref="T:System.Threading.CancellationToken"/> that fires if the request is aborted and
+            the application should cease processing. The token will not fire if the request
+            completes successfully.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpRequestLifetimeFeature.Abort">
+            <summary>
+            Forcefully aborts the request if it has not already completed. This will result in
+            RequestAborted being triggered.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpRequestTrailersFeature">
+            <summary>
+            This feature exposes HTTP request trailer headers, either for HTTP/1.1 chunked bodies or HTTP/2 trailing headers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestTrailersFeature.Available">
+            <summary>
+            Indicates if the <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpRequestTrailersFeature.Trailers"/> are available yet. They may not be available until the
+            request body is fully read.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpRequestTrailersFeature.Trailers">
+            <summary>
+            The trailing headers received. This will throw <see cref="T:System.InvalidOperationException"/> if <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpRequestTrailersFeature.Available"/>
+            returns false. They may not be available until the request body is fully read. If there are no trailers this will
+            return an empty collection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpResetFeature">
+            <summary>
+            Used to send reset messages for protocols that support them such as HTTP/2 or HTTP/3.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpResetFeature.Reset(System.Int32)">
+            <summary>
+            Send a reset message with the given error code. The request will be considered aborted.
+            </summary>
+            <param name="errorCode">The error code to send in the reset message.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature">
+            <summary>
+            An aggregate of the different ways to interact with the response body.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.Stream">
+            <summary>
+            The <see cref="T:System.IO.Stream"/> for writing the response body.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.Writer">
+            <summary>
+            A <see cref="T:System.IO.Pipelines.PipeWriter"/> representing the response body, if any.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.DisableBuffering">
+            <summary>
+            Opts out of write buffering for the response.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(System.Threading.CancellationToken)">
+            <summary>
+            Starts the response by calling OnStarting() and making headers unmodifiable.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.SendFileAsync(System.String,System.Int64,System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Sends the requested file in the response body. A response may include multiple writes.
+            </summary>
+            <param name="path">The full disk path to the file.</param>
+            <param name="offset">The offset in the file to start at.</param>
+            <param name="count">The number of bytes to send, or null to send the remainder of the file.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to abort the transmission.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.CompleteAsync">
+            <summary>
+            Flush any remaining response headers, data, or trailers.
+            This may throw if the response is in an invalid state such as a Content-Length mismatch.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature">
+            <summary>
+            Represents the fields and state of an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.StatusCode">
+            <summary>
+            Gets or sets the status-code as defined in RFC 7230.
+            </summary>
+            <value>Defaults to <c>200</c>.</value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.ReasonPhrase">
+            <summary>
+            Gets or sets the reason-phrase as defined in RFC 7230. Note this field is no longer supported by HTTP/2.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.Headers">
+            <summary>
+            Gets or sets the response headers to send. Headers with multiple values will be emitted as multiple headers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.Body">
+            <summary>
+            Gets or sets the <see cref="T:System.IO.Stream"/> for writing the response body.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.HasStarted">
+            <summary>
+            Gets a value that indicates if the response has started.
+            <para>
+            If <see langword="true"/>, the <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.StatusCode"/>,
+            <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.ReasonPhrase"/>, and <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.Headers"/> are now immutable, and
+            <see cref="M:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.OnStarting(System.Func{System.Object,System.Threading.Tasks.Task},System.Object)"/> should no longer be called.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.OnStarting(System.Func{System.Object,System.Threading.Tasks.Task},System.Object)">
+            <summary>
+            Registers a callback to be invoked just before the response starts.
+            <para>
+            This is the last chance to modify the <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.Headers"/>, <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.StatusCode"/>, or
+            <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.ReasonPhrase"/>.
+            </para>
+            </summary>
+            <param name="callback">The callback to invoke when starting the response.</param>
+            <param name="state">The state to pass into the callback.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.OnCompleted(System.Func{System.Object,System.Threading.Tasks.Task},System.Object)">
+            <summary>
+            Registers a callback to be invoked after a response has fully completed. This is
+            intended for resource cleanup.
+            </summary>
+            <param name="callback">The callback to invoke after the response has completed.</param>
+            <param name="state">The state to pass into the callback.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpResponseTrailersFeature">
+            <summary>
+            Provides access to response trailers.
+            <para>
+            Response trailers allow for additional headers to be sent at the end of an HTTP/1.1 (chunked) or HTTP/2 response.
+            For more details, see <see href="https://tools.ietf.org/html/rfc7230#section-4.1.2">RFC7230</see>.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpResponseTrailersFeature.Trailers">
+            <summary>
+            Gets or sets the trailer headers.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpsCompressionFeature">
+            <summary>
+            Configures response compression behavior for HTTPS on a per-request basis.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpsCompressionFeature.Mode">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Http.Features.HttpsCompressionMode"/> to use.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpUpgradeFeature">
+            <summary>
+            Provides access to server upgrade features.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpUpgradeFeature.IsUpgradableRequest">
+            <summary>
+            Indicates if the server can upgrade this request to an opaque, bidirectional stream.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpUpgradeFeature.UpgradeAsync">
+            <summary>
+            Attempt to upgrade the request to an opaque, bidirectional stream. The response status code
+            and headers need to be set before this is invoked. Check <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpUpgradeFeature.IsUpgradableRequest"/>
+            before invoking.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpWebSocketFeature">
+            <summary>
+            Provides access to server websocket features.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpWebSocketFeature.IsWebSocketRequest">
+            <summary>
+            Indicates if this is a WebSocket upgrade request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpWebSocketFeature.AcceptAsync(Microsoft.AspNetCore.Http.WebSocketAcceptContext)">
+            <summary>
+            Attempts to upgrade the request to a <see cref="T:System.Net.WebSockets.WebSocket"/>. Check <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpWebSocketFeature.IsWebSocketRequest"/>
+            before invoking this.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.WebSocketAcceptContext"/>.</param>
+            <returns>A <see cref="T:System.Net.WebSockets.WebSocket"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpWebTransportFeature">
+            <summary>
+            API for accepting and retrieving WebTransport sessions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpWebTransportFeature.IsWebTransportRequest">
+            <summary>
+            Indicates if this request is a WebTransport request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IHttpWebTransportFeature.AcceptAsync(System.Threading.CancellationToken)">
+            <summary>
+            Accept the session request and allow streams to start being used.
+            </summary>
+            <param name="cancellationToken">The cancellation token to cancel waiting for the session.</param>
+            <returns>An instance of a WebTransportSession which will be used to control the connection.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IItemsFeature">
+            <summary>
+            Provides a key/value collection that can be used to share data within the scope of this request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IItemsFeature.Items">
+            <summary>
+            Gets or sets a a key/value collection that can be used to share data within the scope of this request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IQueryFeature">
+            <summary>
+            Provides access to the <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection"/> associated with the HTTP request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IQueryFeature.Query">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IRequestBodyPipeFeature">
+            <summary>
+            Represents the HTTP request body as a <see cref="T:System.IO.Pipelines.PipeReader"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IRequestBodyPipeFeature.Reader">
+            <summary>
+            Gets a <see cref="T:System.IO.Pipelines.PipeReader"/> representing the request body, if any.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IRequestCookiesFeature">
+            <summary>
+            Provides access to request cookie collection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IRequestCookiesFeature.Cookies">
+            <summary>
+            Gets or sets the request cookies.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IResponseCookiesFeature">
+            <summary>
+            A helper for creating the response Set-Cookie header.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IResponseCookiesFeature.Cookies">
+            <summary>
+            Gets the wrapper for the response Set-Cookie header.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IServerVariablesFeature">
+            <summary>
+            This feature provides access to request server variables set.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IServerVariablesFeature.Item(System.String)">
+            <summary>
+            Gets or sets the value of a server variable for the current request.
+            </summary>
+            <param name="variableName">The variable name</param>
+            <returns>May return null or empty if the variable does not exist or is not set.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IServiceProvidersFeature">
+            <summary>
+            Provides acccess to the request-scoped <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IServiceProvidersFeature.RequestServices">
+            <summary>
+            Gets or sets the <see cref="T:System.IServiceProvider"/> scoped to the current request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.ISessionFeature">
+            <summary>
+            Provides access to the <see cref="T:Microsoft.AspNetCore.Http.ISession"/> for the current request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.ISessionFeature.Session">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Http.ISession"/> for the current request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.ITlsConnectionFeature">
+            <summary>
+            Provides access to TLS features associated with the current HTTP connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.ITlsConnectionFeature.ClientCertificate">
+            <summary>
+            Synchronously retrieves the client certificate, if any.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.ITlsConnectionFeature.GetClientCertificateAsync(System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously retrieves the client certificate, if any.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.ITlsTokenBindingFeature">
+            <summary>
+            Provides information regarding TLS token binding parameters.
+            </summary>
+            <remarks>
+            TLS token bindings help mitigate the risk of impersonation by an attacker in the
+            event an authenticated client's bearer tokens are somehow exfiltrated from the
+            client's machine. See <see href="https://datatracker.ietf.org/doc/draft-popov-token-binding/"/>
+            for more information.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.ITlsTokenBindingFeature.GetProvidedTokenBindingId">
+            <summary>
+            Gets the 'provided' token binding identifier associated with the request.
+            </summary>
+            <returns>The token binding identifier, or null if the client did not
+            supply a 'provided' token binding or valid proof of possession of the
+            associated private key. The caller should treat this identifier as an
+            opaque blob and should not try to parse it.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.ITlsTokenBindingFeature.GetReferredTokenBindingId">
+            <summary>
+            Gets the 'referred' token binding identifier associated with the request.
+            </summary>
+            <returns>The token binding identifier, or null if the client did not
+            supply a 'referred' token binding or valid proof of possession of the
+            associated private key. The caller should treat this identifier as an
+            opaque blob and should not try to parse it.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.ITrackingConsentFeature">
+            <summary>
+            Used to query, grant, and withdraw user consent regarding the storage of user
+            information related to site activity and functionality.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.ITrackingConsentFeature.IsConsentNeeded">
+            <summary>
+            Indicates if consent is required for the given request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.ITrackingConsentFeature.HasConsent">
+            <summary>
+            Indicates if consent was given.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.ITrackingConsentFeature.CanTrack">
+            <summary>
+            Indicates either if consent has been given or if consent is not required.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.ITrackingConsentFeature.GrantConsent">
+            <summary>
+            Grants consent for this request. If the response has not yet started then
+            this will also grant consent for future requests.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.ITrackingConsentFeature.WithdrawConsent">
+            <summary>
+            Withdraws consent for this request. If the response has not yet started then
+            this will also withdraw consent for future requests.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.ITrackingConsentFeature.CreateConsentCookie">
+            <summary>
+            Creates a consent cookie for use when granting consent from a javascript client.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IWebTransportSession">
+            <summary>
+            Controls the session and streams of a WebTransport session.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IWebTransportSession.SessionId">
+            <summary>
+            The id of the WebTransport session.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IWebTransportSession.Abort(System.Int32)">
+            <summary>
+            Abruptly close the WebTransport session and stop all the streams.
+            </summary>
+            <param name="errorCode">HTTP error code that corresponds to the reason for causing the abort.</param>
+            <remarks>Error codes are described here: https://www.rfc-editor.org/rfc/rfc9114.html#name-http-3-error-codes</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IWebTransportSession.AcceptStreamAsync(System.Threading.CancellationToken)">
+            <summary>
+            Returns the next incoming stream in the order the server received it. The stream can be either bidirectional or unidirectional.
+            </summary>
+            <remarks>To use WebTransport, you must first enable the <c>Microsoft.AspNetCore.Server.Kestrel.Experimental.WebTransportAndH3Datagrams</c> AppContextSwitch</remarks>
+            <param name="cancellationToken">The cancellation token used to cancel the operation.</param>
+            <returns>The unidirectional or bidirectional stream that is next in the queue, or <c>null</c> if the session has ended.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IWebTransportSession.OpenUnidirectionalStreamAsync(System.Threading.CancellationToken)">
+            <summary>
+            Opens a new unidirectional output stream.
+            </summary>
+            <param name="cancellationToken">The cancellation token used to cancel the operation.</param>
+            <returns>The unidirectional stream that was opened.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.CookieOptions">
+            <summary>
+            Options used to create a new cookie.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.CookieOptions.#ctor">
+            <summary>
+            Creates a default cookie with a path of '/'.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.CookieOptions.#ctor(Microsoft.AspNetCore.Http.CookieOptions)">
+            <summary>
+            Creates a copy of the given <see cref="T:Microsoft.AspNetCore.Http.CookieOptions"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.CookieOptions.Domain">
+            <summary>
+            Gets or sets the domain to associate the cookie with.
+            </summary>
+            <returns>The domain to associate the cookie with.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.CookieOptions.Path">
+            <summary>
+            Gets or sets the cookie path.
+            </summary>
+            <returns>The cookie path.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.CookieOptions.Expires">
+            <summary>
+            Gets or sets the expiration date and time for the cookie.
+            </summary>
+            <returns>The expiration date and time for the cookie.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.CookieOptions.Secure">
+            <summary>
+            Gets or sets a value that indicates whether to transmit the cookie using Secure Sockets Layer (SSL)--that is, over HTTPS only.
+            </summary>
+            <returns>true to transmit the cookie only over an SSL connection (HTTPS); otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.CookieOptions.SameSite">
+            <summary>
+            Gets or sets the value for the SameSite attribute of the cookie. The default value is <see cref="F:Microsoft.AspNetCore.Http.SameSiteMode.Unspecified"/>
+            </summary>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.SameSiteMode"/> representing the enforcement mode of the cookie.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.CookieOptions.HttpOnly">
+            <summary>
+            Gets or sets a value that indicates whether a cookie is inaccessible by client-side script.
+            </summary>
+            <returns>true if a cookie must not be accessible by client-side script; otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.CookieOptions.MaxAge">
+            <summary>
+            Gets or sets the max-age for the cookie.
+            </summary>
+            <returns>The max-age date and time for the cookie.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.CookieOptions.IsEssential">
+            <summary>
+            Indicates if this cookie is essential for the application to function correctly. If true then
+            consent policy checks may be bypassed. The default value is false.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.CookieOptions.Extensions">
+            <summary>
+            Gets a collection of additional values to append to the cookie.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.CookieOptions.CreateCookieHeader(System.String,System.String)">
+            <summary>
+            Creates a <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/> using the current options.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.IFormCollection">
+            <summary>
+            Represents the parsed form values sent with the HttpRequest.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormCollection.Count">
+            <summary>
+                Gets the number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" />.
+            </summary>
+            <returns>
+                The number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" />.
+            </returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormCollection.Keys">
+            <summary>
+                Gets an <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the
+                <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" />.
+            </summary>
+            <returns>
+                An <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the object
+                that implements <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" />.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IFormCollection.ContainsKey(System.String)">
+            <summary>
+                Determines whether the <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" /> contains an element
+                with the specified key.
+            </summary>
+            <param name="key">
+            The key to locate in the <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" />.
+            </param>
+            <returns>
+                true if the <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" /> contains an element with
+                the key; otherwise, false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                key is null.
+            </exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IFormCollection.TryGetValue(System.String,Microsoft.Extensions.Primitives.StringValues@)">
+            <summary>
+               Gets the value associated with the specified key.
+            </summary>
+            <param name="key">
+                The key of the value to get.
+            </param>
+            <param name="value">
+                The key of the value to get.
+                When this method returns, the value associated with the specified key, if the
+                key is found; otherwise, the default value for the type of the value parameter.
+                This parameter is passed uninitialized.
+            </param>
+            <returns>
+               true if the object that implements <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" /> contains
+                an element with the specified key; otherwise, false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                key is null.
+            </exception>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormCollection.Item(System.String)">
+            <summary>
+                Gets the value with the specified key.
+            </summary>
+            <param name="key">
+                The key of the value to get.
+            </param>
+            <returns>
+                The element with the specified key, or <c>StringValues.Empty</c> if the key is not present.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                key is null.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                incorrect content-type.
+            </exception>
+            <remarks>
+                <para>
+                <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" /> has a different indexer contract than
+                <see cref="T:System.Collections.Generic.IDictionary`2" />, as it will return <c>StringValues.Empty</c> for missing entries
+                rather than throwing an Exception.
+                </para>
+                <para>
+                This indexer can only be used on POST requests. Otherwise an exception of type
+                <see cref="T:System.InvalidOperationException" /> is thrown.
+                </para>
+                <para>
+                Invoking this property could result in thread exhaustion since it's wrapping an asynchronous implementation.
+                The <c>HttpRequest.ReadFormAsync(CancellationToken)</c> method can get the form without blocking.
+                For more information, see <see href="https://aka.ms/aspnet/forms-async" />.
+                </para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormCollection.Files">
+            <summary>
+            The file collection sent with the request.
+            </summary>
+            <returns>The files included with the request.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.IFormFile">
+            <summary>
+            Represents a file sent with the HttpRequest.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormFile.ContentType">
+            <summary>
+            Gets the raw Content-Type header of the uploaded file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormFile.ContentDisposition">
+            <summary>
+            Gets the raw Content-Disposition header of the uploaded file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormFile.Headers">
+            <summary>
+            Gets the header dictionary of the uploaded file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormFile.Length">
+            <summary>
+            Gets the file length in bytes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormFile.Name">
+            <summary>
+            Gets the form field name from the Content-Disposition header.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormFile.FileName">
+            <summary>
+            Gets the file name from the Content-Disposition header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IFormFile.OpenReadStream">
+            <summary>
+            Opens the request stream for reading the uploaded file.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IFormFile.CopyTo(System.IO.Stream)">
+            <summary>
+            Copies the contents of the uploaded file to the <paramref name="target"/> stream.
+            </summary>
+            <param name="target">The stream to copy the file contents to.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IFormFile.CopyToAsync(System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously copies the contents of the uploaded file to the <paramref name="target"/> stream.
+            </summary>
+            <param name="target">The stream to copy the file contents to.</param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.IFormFileCollection">
+            <summary>
+            Represents the collection of files sent with the HttpRequest.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IFormFileCollection.Item(System.String)">
+            <summary>
+            Gets the first file with the specified name.
+            </summary>
+            <param name="name">The name of the file to get.</param>
+            <returns>
+            The requested file, or null if it is not present.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IFormFileCollection.GetFile(System.String)">
+            <summary>
+            Gets the first file with the specified name.
+            </summary>
+            <param name="name">The name of the file to get.</param>
+            <returns>
+            The requested file, or null if it is not present.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IFormFileCollection.GetFiles(System.String)">
+            <summary>
+                Gets an <see cref="T:System.Collections.Generic.IReadOnlyList`1" /> containing the files of the
+                <see cref="T:Microsoft.AspNetCore.Http.IFormFileCollection" /> with the specified name.
+            </summary>
+            <param name="name">The name of the files to get.</param>
+            <returns>
+                An <see cref="T:System.Collections.Generic.IReadOnlyList`1" /> containing the files of the object
+                that implements <see cref="T:Microsoft.AspNetCore.Http.IFormFileCollection" />.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.IHeaderDictionary">
+            <summary>
+            Represents HttpRequest and HttpResponse headers
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Item(System.String)">
+            <summary>
+            IHeaderDictionary has a different indexer contract than IDictionary, where it will return StringValues.Empty for missing entries.
+            </summary>
+            <param name="key"></param>
+            <returns>The stored value, or StringValues.Empty if the key is not present.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentLength">
+            <summary>
+            Strongly typed access to the Content-Length header. Implementations must keep this in sync with the string representation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Accept">
+            <summary>Gets or sets the <c>Accept</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AcceptCharset">
+            <summary>Gets or sets the <c>Accept-Charset</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AcceptEncoding">
+            <summary>Gets or sets the <c>Accept-Encoding</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AcceptLanguage">
+            <summary>Gets or sets the <c>Accept-Language</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AcceptRanges">
+            <summary>Gets or sets the <c>Accept-Ranges</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AccessControlAllowCredentials">
+            <summary>Gets or sets the <c>Access-Control-Allow-Credentials</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AccessControlAllowHeaders">
+            <summary>Gets or sets the <c>Access-Control-Allow-Headers</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AccessControlAllowMethods">
+            <summary>Gets or sets the <c>Access-Control-Allow-Methods</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AccessControlAllowOrigin">
+            <summary>Gets or sets the <c>Access-Control-Allow-Origin</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AccessControlExposeHeaders">
+            <summary>Gets or sets the <c>Access-Control-Expose-Headers</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AccessControlMaxAge">
+            <summary>Gets or sets the <c>Access-Control-Max-Age</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AccessControlRequestHeaders">
+            <summary>Gets or sets the <c>Access-Control-Request-Headers</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AccessControlRequestMethod">
+            <summary>Gets or sets the <c>Access-Control-Request-Method</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Age">
+            <summary>Gets or sets the <c>Age</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Allow">
+            <summary>Gets or sets the <c>Allow</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.AltSvc">
+            <summary>Gets or sets the <c>Alt-Svc</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Authorization">
+            <summary>Gets or sets the <c>Authorization</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Baggage">
+            <summary>Gets or sets the <c>baggage</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.CacheControl">
+            <summary>Gets or sets the <c>Cache-Control</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Connection">
+            <summary>Gets or sets the <c>Connection</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentDisposition">
+            <summary>Gets or sets the <c>Content-Disposition</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentEncoding">
+            <summary>Gets or sets the <c>Content-Encoding</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentLanguage">
+            <summary>Gets or sets the <c>Content-Language</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentLocation">
+            <summary>Gets or sets the <c>Content-Location</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentMD5">
+            <summary>Gets or sets the <c>Content-MD5</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentRange">
+            <summary>Gets or sets the <c>Content-Range</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentSecurityPolicy">
+            <summary>Gets or sets the <c>Content-Security-Policy</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentSecurityPolicyReportOnly">
+            <summary>Gets or sets the <c>Content-Security-Policy-Report-Only</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ContentType">
+            <summary>Gets or sets the <c>Content-Type</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.CorrelationContext">
+            <summary>Gets or sets the <c>Correlation-Context</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Cookie">
+            <summary>Gets or sets the <c>Cookie</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Date">
+            <summary>Gets or sets the <c>Date</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ETag">
+            <summary>Gets or sets the <c>ETag</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Expires">
+            <summary>Gets or sets the <c>Expires</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Expect">
+            <summary>Gets or sets the <c>Expect</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.From">
+            <summary>Gets or sets the <c>From</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.GrpcAcceptEncoding">
+            <summary>Gets or sets the <c>Grpc-Accept-Encoding</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.GrpcEncoding">
+            <summary>Gets or sets the <c>Grpc-Encoding</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.GrpcMessage">
+            <summary>Gets or sets the <c>Grpc-Message</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.GrpcStatus">
+            <summary>Gets or sets the <c>Grpc-Status</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.GrpcTimeout">
+            <summary>Gets or sets the <c>Grpc-Timeout</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Host">
+            <summary>Gets or sets the <c>Host</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.KeepAlive">
+            <summary>Gets or sets the <c>Keep-Alive</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.IfMatch">
+            <summary>Gets or sets the <c>If-Match</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.IfModifiedSince">
+            <summary>Gets or sets the <c>If-Modified-Since</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.IfNoneMatch">
+            <summary>Gets or sets the <c>If-None-Match</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.IfRange">
+            <summary>Gets or sets the <c>If-Range</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.IfUnmodifiedSince">
+            <summary>Gets or sets the <c>If-Unmodified-Since</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.LastModified">
+            <summary>Gets or sets the <c>Last-Modified</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Link">
+            <summary>Gets or sets the <c>Link</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Location">
+            <summary>Gets or sets the <c>Location</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.MaxForwards">
+            <summary>Gets or sets the <c>Max-Forwards</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Origin">
+            <summary>Gets or sets the <c>Origin</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Pragma">
+            <summary>Gets or sets the <c>Pragma</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ProxyAuthenticate">
+            <summary>Gets or sets the <c>Proxy-Authenticate</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ProxyAuthorization">
+            <summary>Gets or sets the <c>Proxy-Authorization</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.ProxyConnection">
+            <summary>Gets or sets the <c>Proxy-Connection</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Range">
+            <summary>Gets or sets the <c>Range</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Referer">
+            <summary>Gets or sets the <c>Referer</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.RetryAfter">
+            <summary>Gets or sets the <c>Retry-After</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.RequestId">
+            <summary>Gets or sets the <c>Request-Id</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.SecWebSocketAccept">
+            <summary>Gets or sets the <c>Sec-WebSocket-Accept</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.SecWebSocketKey">
+            <summary>Gets or sets the <c>Sec-WebSocket-Key</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.SecWebSocketProtocol">
+            <summary>Gets or sets the <c>Sec-WebSocket-Protocol</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.SecWebSocketVersion">
+            <summary>Gets or sets the <c>Sec-WebSocket-Version</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.SecWebSocketExtensions">
+            <summary>Gets or sets the <c>Sec-WebSocket-Extensions</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Server">
+            <summary>Gets or sets the <c>Server</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.SetCookie">
+            <summary>Gets or sets the <c>Set-Cookie</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.StrictTransportSecurity">
+            <summary>Gets or sets the <c>Strict-Transport-Security</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.TE">
+            <summary>Gets or sets the <c>TE</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Trailer">
+            <summary>Gets or sets the <c>Trailer</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.TransferEncoding">
+            <summary>Gets or sets the <c>Transfer-Encoding</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Translate">
+            <summary>Gets or sets the <c>Translate</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.TraceParent">
+            <summary>Gets or sets the <c>traceparent</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.TraceState">
+            <summary>Gets or sets the <c>tracestate</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Upgrade">
+            <summary>Gets or sets the <c>Upgrade</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.UpgradeInsecureRequests">
+            <summary>Gets or sets the <c>Upgrade-Insecure-Requests</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.UserAgent">
+            <summary>Gets or sets the <c>User-Agent</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Vary">
+            <summary>Gets or sets the <c>Vary</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Via">
+            <summary>Gets or sets the <c>Via</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.Warning">
+            <summary>Gets or sets the <c>Warning</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.WebSocketSubProtocols">
+            <summary>Gets or sets the <c>Sec-WebSocket-Protocol</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.WWWAuthenticate">
+            <summary>Gets or sets the <c>WWW-Authenticate</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.XContentTypeOptions">
+            <summary>Gets or sets the <c>X-Content-Type-Options</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.XFrameOptions">
+            <summary>Gets or sets the <c>X-Frame-Options</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.XPoweredBy">
+            <summary>Gets or sets the <c>X-Powered-By</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.XRequestedWith">
+            <summary>Gets or sets the <c>X-Requested-With</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.XUACompatible">
+            <summary>Gets or sets the <c>X-UA-Compatible</c> HTTP header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IHeaderDictionary.XXSSProtection">
+            <summary>Gets or sets the <c>X-XSS-Protection</c> HTTP header.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.IQueryCollection">
+            <summary>
+                Represents the HttpRequest query string collection
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IQueryCollection.Count">
+            <summary>
+                Gets the number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection" />.
+            </summary>
+            <returns>
+                The number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection" />.
+            </returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IQueryCollection.Keys">
+            <summary>
+                Gets an <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the
+                <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection" />.
+            </summary>
+            <returns>
+                An <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the object
+                that implements <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection" />.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IQueryCollection.ContainsKey(System.String)">
+            <summary>
+                Determines whether the <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection" /> contains an element
+                with the specified key.
+            </summary>
+            <param name="key">
+            The key to locate in the <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection" />.
+            </param>
+            <returns>
+                true if the <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection" /> contains an element with
+                the key; otherwise, false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                key is null.
+            </exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IQueryCollection.TryGetValue(System.String,Microsoft.Extensions.Primitives.StringValues@)">
+            <summary>
+               Gets the value associated with the specified key.
+            </summary>
+            <param name="key">
+                The key of the value to get.
+            </param>
+            <param name="value">
+                The key of the value to get.
+                When this method returns, the value associated with the specified key, if the
+                key is found; otherwise, the default value for the type of the value parameter.
+                This parameter is passed uninitialized.
+            </param>
+            <returns>
+               true if the object that implements <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection" /> contains
+                an element with the specified key; otherwise, false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                key is null.
+            </exception>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IQueryCollection.Item(System.String)">
+            <summary>
+                Gets the value with the specified key.
+            </summary>
+            <param name="key">
+                The key of the value to get.
+            </param>
+            <returns>
+                The element with the specified key, or <c>StringValues.Empty</c> if the key is not present.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                key is null.
+            </exception>
+            <remarks>
+                <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection" /> has a different indexer contract than
+                <see cref="T:System.Collections.Generic.IDictionary`2" />, as it will return <c>StringValues.Empty</c> for missing entries
+                rather than throwing an Exception.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.IRequestCookieCollection">
+            <summary>
+            Represents the HttpRequest cookie collection
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IRequestCookieCollection.Count">
+            <summary>
+                Gets the number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection" />.
+            </summary>
+            <returns>
+                The number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection" />.
+            </returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IRequestCookieCollection.Keys">
+            <summary>
+                Gets an <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the
+                <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection" />.
+            </summary>
+            <returns>
+                An <see cref="T:System.Collections.Generic.ICollection`1" /> containing the keys of the object
+                that implements <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection" />.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IRequestCookieCollection.ContainsKey(System.String)">
+            <summary>
+                Determines whether the <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection" /> contains an element
+                with the specified key.
+            </summary>
+            <param name="key">
+            The key to locate in the <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection" />.
+            </param>
+            <returns>
+                true if the <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection" /> contains an element with
+                the key; otherwise, false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                key is null.
+            </exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IRequestCookieCollection.TryGetValue(System.String,System.String@)">
+            <summary>
+               Gets the value associated with the specified key.
+            </summary>
+            <param name="key">
+                The key of the value to get.
+            </param>
+            <param name="value">
+                The key of the value to get.
+                When this method returns, the value associated with the specified key, if the
+                key is found; otherwise, the default value for the type of the value parameter.
+                This parameter is passed uninitialized.
+            </param>
+            <returns>
+               true if the object that implements <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection" /> contains
+                an element with the specified key; otherwise, false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                key is null.
+            </exception>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.IRequestCookieCollection.Item(System.String)">
+            <summary>
+                Gets the value with the specified key.
+            </summary>
+            <param name="key">
+                The key of the value to get.
+            </param>
+            <returns>
+                The element with the specified key, or <c>null</c> if the key is not present.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                key is null.
+            </exception>
+            <remarks>
+                <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection" /> has a different indexer contract than
+                <see cref="T:System.Collections.Generic.IDictionary`2" />, as it will return <c>null</c> for missing entries
+                rather than throwing an Exception.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.IResponseCookies">
+            <summary>
+            A wrapper for the response Set-Cookie header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IResponseCookies.Append(System.String,System.String)">
+            <summary>
+            Add a new cookie and value.
+            </summary>
+            <param name="key">Name of the new cookie.</param>
+            <param name="value">Value of the new cookie.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IResponseCookies.Append(System.String,System.String,Microsoft.AspNetCore.Http.CookieOptions)">
+            <summary>
+            Add a new cookie.
+            </summary>
+            <param name="key">Name of the new cookie.</param>
+            <param name="value">Value of the new cookie.</param>
+            <param name="options"><see cref="T:Microsoft.AspNetCore.Http.CookieOptions"/> included in the new cookie setting.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IResponseCookies.Append(System.ReadOnlySpan{System.Collections.Generic.KeyValuePair{System.String,System.String}},Microsoft.AspNetCore.Http.CookieOptions)">
+            <summary>
+            Add elements of specified collection as cookies.
+            </summary>
+            <param name="keyValuePairs">Key value pair collections whose elements will be added as cookies.</param>
+            <param name="options"><see cref="T:Microsoft.AspNetCore.Http.CookieOptions"/> included in new cookie settings.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IResponseCookies.Delete(System.String)">
+            <summary>
+            Sets an expired cookie.
+            </summary>
+            <param name="key">Name of the cookie to expire.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.IResponseCookies.Delete(System.String,Microsoft.AspNetCore.Http.CookieOptions)">
+            <summary>
+            Sets an expired cookie.
+            </summary>
+            <param name="key">Name of the cookie to expire.</param>
+            <param name="options">
+            <see cref="T:Microsoft.AspNetCore.Http.CookieOptions"/> used to discriminate the particular cookie to expire. The
+            <see cref="P:Microsoft.AspNetCore.Http.CookieOptions.Domain"/> and <see cref="P:Microsoft.AspNetCore.Http.CookieOptions.Path"/> values are especially important.
+            </param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.ISession">
+            <summary>
+            Stores user data while the user browses a web application. Session state uses a store maintained by the application
+            to persist data across requests from a client. The session data is backed by a cache and considered ephemeral data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ISession.IsAvailable">
+            <summary>
+            Indicates whether the current session loaded successfully. Accessing this property before the session is loaded will cause it to be loaded inline.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ISession.Id">
+            <summary>
+            A unique identifier for the current session. This is not the same as the session cookie
+            since the cookie lifetime may not be the same as the session entry lifetime in the data store.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.ISession.Keys">
+            <summary>
+            Enumerates all the keys, if any.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ISession.LoadAsync(System.Threading.CancellationToken)">
+            <summary>
+            Load the session from the data store. This may throw if the data store is unavailable.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ISession.CommitAsync(System.Threading.CancellationToken)">
+            <summary>
+            Store the session in the data store. This may throw if the data store is unavailable.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ISession.TryGetValue(System.String,System.Byte[]@)">
+            <summary>
+            Retrieve the value of the given key, if present.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <returns>The retrieved value.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ISession.Set(System.String,System.Byte[])">
+            <summary>
+            Set the given key and value in the current session. This will throw if the session
+            was not established prior to sending the response.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ISession.Remove(System.String)">
+            <summary>
+            Remove the given key from the session if present.
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ISession.Clear">
+            <summary>
+            Remove all entries from the current session, if any.
+            The session cookie is not removed.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.SameSiteMode">
+            <summary>
+            Used to set the SameSite field on response cookies to indicate if those cookies should be included by the client on future "same-site" or "cross-site" requests.
+            RFC Draft: <see href="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-4.1.1"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.SameSiteMode.Unspecified">
+            <summary>No SameSite field will be set, the client should follow its default cookie policy.</summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.SameSiteMode.None">
+            <summary>Indicates the client should disable same-site restrictions.</summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.SameSiteMode.Lax">
+            <summary>Indicates the client should send the cookie with "same-site" requests, and with "cross-site" top-level navigations.</summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.SameSiteMode.Strict">
+            <summary>Indicates the client should only send the cookie with "same-site" requests.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.WebSocketAcceptContext">
+            <summary>
+            A context for negotiating a websocket upgrade.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.WebSocketAcceptContext.SubProtocol">
+            <summary>
+            Gets or sets the subprotocol being negotiated.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.WebSocketAcceptContext.KeepAliveInterval">
+            <summary>
+            The interval to send pong frames. This is a heart-beat that keeps the connection alive.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.WebSocketAcceptContext.DangerousEnableCompression">
+            <summary>
+            Enables support for the 'permessage-deflate' WebSocket extension.<para />
+            Be aware that enabling compression over encrypted connections makes the application subject to CRIME/BREACH type attacks.
+            It is strongly advised to turn off compression when sending data containing secrets by
+            specifying <see cref="F:System.Net.WebSockets.WebSocketMessageFlags.DisableCompression"/> when sending such messages.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.WebSocketAcceptContext.DisableServerContextTakeover">
+            <summary>
+            Disables server context takeover when using compression.
+            This setting reduces the memory overhead of compression at the cost of a potentially worse compression ratio.
+            </summary>
+            <remarks>
+            This property does nothing when <see cref="P:Microsoft.AspNetCore.Http.WebSocketAcceptContext.DangerousEnableCompression"/> is false,
+            or when the client does not use compression.
+            </remarks>
+            <value>
+            false
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.WebSocketAcceptContext.ServerMaxWindowBits">
+            <summary>
+            Sets the maximum base-2 logarithm of the LZ77 sliding window size that can be used for compression.
+            This setting reduces the memory overhead of compression at the cost of a potentially worse compression ratio.
+            </summary>
+            <remarks>
+            This property does nothing when <see cref="P:Microsoft.AspNetCore.Http.WebSocketAcceptContext.DangerousEnableCompression"/> is false,
+            or when the client does not use compression.
+            Valid values are 9 through 15.
+            </remarks>
+            <value>
+            15
+            </value>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.IAntiforgeryValidationFeature">
+            <summary>
+            Used to set the result of anti-forgery token validation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.IAntiforgeryValidationFeature.IsValid">
+            <summary>
+            Gets a value that determines if the anti-forgery token on the request is valid.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.IAntiforgeryValidationFeature.Error">
+            <summary>
+            Gets the <see cref="T:System.Exception"/> that occurred when validating the anti-forgery token.
+            </summary>
+        </member>
+    </members>
+</doc>

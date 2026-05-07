@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.SignalR.Protocols.Json</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.SignalR.JsonHubProtocolOptions">
+            <summary>
+            Options used to configure a <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol"/> instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.JsonHubProtocolOptions.PayloadSerializerOptions">
+            <summary>
+            Gets or sets the settings used to serialize invocation arguments and return values.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol">
+            <summary>
+            Implements the SignalR Hub Protocol using System.Text.Json.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol._payloadSerializerOptions">
+            <summary>
+            Gets the serializer used to serialize invocation arguments and return values.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.SignalR.JsonHubProtocolOptions})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol"/> class.
+            </summary>
+            <param name="options">The options used to initialize the protocol.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.Version">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.TransferFormat">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.IsVersionSupported(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.TryParseMessage(System.Buffers.ReadOnlySequence{System.Byte}@,Microsoft.AspNetCore.SignalR.IInvocationBinder,Microsoft.AspNetCore.SignalR.Protocol.HubMessage@)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.WriteMessage(Microsoft.AspNetCore.SignalR.Protocol.HubMessage,System.Buffers.IBufferWriter{System.Byte})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.JsonHubProtocol.GetMessageBytes(Microsoft.AspNetCore.SignalR.Protocol.HubMessage)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.JsonProtocolDependencyInjectionExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.AspNetCore.SignalR.ISignalRBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.JsonProtocolDependencyInjectionExtensions.AddJsonProtocol``1(``0)">
+            <summary>
+            Enables the JSON protocol for SignalR.
+            </summary>
+            <remarks>
+            This has no effect if the JSON protocol has already been enabled.
+            </remarks>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.SignalR.ISignalRBuilder"/> representing the SignalR server to add JSON protocol support to.</param>
+            <returns>The value of <paramref name="builder"/></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.JsonProtocolDependencyInjectionExtensions.AddJsonProtocol``1(``0,System.Action{Microsoft.AspNetCore.SignalR.JsonHubProtocolOptions})">
+            <summary>
+            Enables the JSON protocol for SignalR and allows options for the JSON protocol to be configured.
+            </summary>
+            <remarks>
+            Any options configured here will be applied, even if the JSON protocol has already been registered with the server.
+            </remarks>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.SignalR.ISignalRBuilder"/> representing the SignalR server to add JSON protocol support to.</param>
+            <param name="configure">A delegate that can be used to configure the <see cref="T:Microsoft.AspNetCore.SignalR.JsonHubProtocolOptions"/></param>
+            <returns>The value of <paramref name="builder"/></returns>
+        </member>
+    </members>
+</doc>

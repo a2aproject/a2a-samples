@@ -1,0 +1,1250 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Server.HttpSys</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.AuthenticationManager">
+            <summary>
+            Exposes the Http.Sys authentication configurations.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.AuthenticationManager.Schemes">
+            <summary>
+            When attaching to an existing queue this setting must match the one used to create the queue.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.AuthenticationManager.AllowAnonymous">
+            <summary>
+            Indicates if anonymous requests will be surfaced to the application or challenged by the server.
+            The default value is true.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.AuthenticationManager.AutomaticAuthentication">
+            <summary>
+            If true the server should set HttpContext.User. If false the server will only provide an
+            identity when explicitly requested by the AuthenticationScheme. The default is true.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.AuthenticationManager.AuthenticationDisplayName">
+            <summary>
+            Sets the display name shown to users on login pages. The default is null.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.AuthenticationSchemes">
+            <summary>
+            Specifies protocols for authentication.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.AuthenticationSchemes.None">
+            <summary>
+            No authentication is enabled. This should only be used when HttpSysOptions.Authentication.AllowAnonymous is enabled (see <see cref="P:Microsoft.AspNetCore.Server.HttpSys.AuthenticationManager.AllowAnonymous"/>).
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.AuthenticationSchemes.Basic">
+            <summary>
+            Specifies basic authentication.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.AuthenticationSchemes.NTLM">
+            <summary>
+            Specifies NTLM authentication.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.AuthenticationSchemes.Negotiate">
+            <summary>
+            Negotiates with the client to determine the authentication scheme. If both client and server support Kerberos, it is used;
+            otherwise, NTLM is used.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.AuthenticationSchemes.Kerberos">
+            <summary>
+            Specifies Kerberos authentication.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.ClientCertificateMethod">
+            <summary>
+            Describes the client certificate negotiation method for HTTPS connections.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.ClientCertificateMethod.NoCertificate">
+            <summary>
+            A client certificate will not be populated on the request.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.ClientCertificateMethod.AllowCertificate">
+            <summary>
+            A client certificate will be populated if already present at the start of a request.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.ClientCertificateMethod.AllowRenegotation">
+            <summary>
+            The TLS session can be renegotiated to request a client certificate.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.DelegationRule">
+            <summary>
+            Rule that maintains a handle to the Request Queue and UrlPrefix to
+            delegate to.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.DelegationRule.QueueName">
+            <summary>
+            The name of the Http.Sys request queue
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.DelegationRule.UrlPrefix">
+            <summary>
+            The URL of the Http.Sys Url Prefix
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.DelegationRule.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.Helpers.GetChunkHeader(System.Int32)">
+            <summary>
+            A private utility routine to convert an integer to a chunk header,
+            which is an ASCII hex number followed by a CRLF.The header is returned
+            as a byte array.
+            Generates a right-aligned hex string and returns the start offset.
+            </summary>
+            <param name="size">Chunk size to be encoded</param>
+            <returns>A byte array with the header in int.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.Http503VerbosityLevel">
+            <summary>
+            Enum declaring the allowed values for the verbosity level when http.sys reject requests due to throttling.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.Http503VerbosityLevel.Basic">
+            <summary>
+            A 503 response is not sent; the connection is reset. This is the default HTTP Server API behavior.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.Http503VerbosityLevel.Limited">
+            <summary>
+            The HTTP Server API sends a 503 response with a "Service Unavailable" reason phrase.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.Http503VerbosityLevel.Full">
+            <summary>
+            The HTTP Server API sends a 503 response with a detailed reason phrase.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.HttpSysDefaults">
+            <summary>
+            Constants for HttpSys.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysDefaults.AuthenticationScheme">
+            <summary>
+            The name of the authentication scheme used.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.HttpSysException">
+            <summary>
+            Exception thrown by HttpSys when an error occurs
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysException.ErrorCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.HttpSysListener">
+            <summary>
+            An HTTP server wrapping the Http.Sys APIs that accepts requests.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.HttpSysListener.Start">
+            <summary>
+            Start accepting incoming requests.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.HttpSysListener.Dispose">
+            <summary>
+            Stop the server and clean up.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.HttpSysListener.AcceptAsync(Microsoft.AspNetCore.Server.HttpSys.AsyncAcceptContext)">
+            <summary>
+            Accept a request from the incoming request queue.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions">
+            <summary>
+            Contains the options used by HttpSys.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.#ctor">
+            <summary>
+            Initializes a new <see cref="T:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.RequestQueueName">
+            <summary>
+            The name of the Http.Sys request queue
+            The default is `null` (Anonymous queue).
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.RequestQueueMode">
+            <summary>
+            This indicates whether the server is responsible for creating and configuring the request queue, or if it should attach to an existing queue.
+            Most existing configuration options do not apply when attaching to an existing queue.
+            The default is `RequestQueueMode.Create`.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.ClientCertificateMethod">
+            <summary>
+            Indicates how client certificates should be populated. The default is to allow a certificate without renegotiation.
+            This does not change the netsh 'clientcertnegotiation' binding option which will need to be enabled for
+            ClientCertificateMethod.AllowCertificate to resolve a certificate.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.MaxAccepts">
+            <summary>
+            The maximum number of concurrent accepts.
+            The default is 5 times the number of processors as returned by <see cref="P:System.Environment.ProcessorCount" />.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.EnableResponseCaching">
+            <summary>
+            Attempt kernel-mode caching for responses with eligible headers.
+            The response may not include Set-Cookie, Vary, or Pragma headers.
+            It must include a Cache-Control header that's public and either a shared-max-age or max-age value, or an Expires header.
+            The default is `true`.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.UrlPrefixes">
+            <summary>
+            The url prefixes to register with Http.Sys. These may be modified at any time prior to disposing
+            the listener.
+            When attached to an existing queue the prefixes are only used to compute PathBase for requests.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.Authentication">
+            <summary>
+            Http.Sys authentication settings. These may be modified at any time prior to disposing
+            the listener.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.Timeouts">
+            <summary>
+            Exposes the Http.Sys timeout configurations.  These may also be configured in the registry.
+            These may be modified at any time prior to disposing the listener.
+            These settings do not apply when attaching to an existing queue.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.ThrowWriteExceptions">
+            <summary>
+            Gets or Sets if response body writes that fail due to client disconnects should throw exceptions or
+            complete normally.
+            The default is `false` (complete normally).
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.EnableKernelResponseBuffering">
+            <summary>
+            Enable buffering of response data in the Kernel. The default value is <code>false</code>.
+            It should be used by an application doing synchronous I/O or by an application doing asynchronous I/O with
+            no more than one outstanding write at a time, and can significantly improve throughput over high-latency connections.
+            Applications that use asynchronous I/O and that may have more than one send outstanding at a time should not use this flag.
+            Enabling this can results in higher CPU and memory usage by Http.Sys.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.MaxConnections">
+            <summary>
+            Gets or sets the maximum number of concurrent connections to accept. Set `-1` for infinite.
+            Set to `null` to use the registry's machine-wide setting.
+            The default value is `null` (machine-wide setting).
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.RequestQueueLimit">
+            <summary>
+            Gets or sets the maximum number of requests that will be queued up in Http.Sys.
+            This settings does not apply when attaching to an existing queue.
+            The default is 1000.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.MaxRequestBodySize">
+            <summary>
+            Gets or sets the maximum allowed size of any request body in bytes.
+            When set to null, the maximum request body size is unlimited.
+            This limit has no effect on upgraded connections which are always unlimited.
+            This can be overridden per-request via <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature"/>.
+            The default is set to 30,000,000 bytes, which is approximately 28.6MB.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.AllowSynchronousIO">
+            <summary>
+            Control whether synchronous input/output is allowed for the HttpContext.Request.Body and HttpContext.Response.Body.
+            The default is `false`.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.Http503Verbosity">
+            <summary>
+            Gets or sets a value that controls how http.sys reacts when rejecting requests due to throttling conditions - like when the request
+            queue limit is reached. The default in http.sys is "Basic" which means http.sys is just resetting the TCP connection. IIS uses Limited
+            as its default behavior which will result in sending back a 503 - Service Unavailable back to the client.
+            This settings does not apply when attaching to an existing queue.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.UnsafePreferInlineScheduling">
+            <summary>
+            Inline request processing instead of dispatching to the threadpool.
+            </summary>
+            <remarks>
+            Enabling this setting will run application code on the IO thread to reduce request processing latency.
+            However, this will limit parallel request processing to <see cref="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.MaxAccepts"/>. This setting can make
+            overall throughput worse if requests take long to process.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.UseLatin1RequestHeaders">
+            <summary>
+            Configures request headers to use <see cref="P:System.Text.Encoding.Latin1"/> encoding.
+            </summary>
+            <remarks>
+            Defaults to <c>false</c>, in which case <see cref="P:System.Text.Encoding.UTF8"/> will be used. />.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.TlsClientHelloBytesCallback">
+            <summary>
+            A callback to be invoked to get the TLS client hello bytes.
+            Null by default.
+            </summary>
+            <remarks>
+            Works only if <c>HTTP_SERVICE_CONFIG_SSL_FLAG_ENABLE_CACHE_CLIENT_HELLO</c> flag is set on http.sys service configuration.
+            See <see href="https://learn.microsoft.com/windows/win32/api/http/nf-http-httpsetserviceconfiguration"/>
+            and <see href="https://learn.microsoft.com/windows/win32/api/http/ne-http-http_service_config_id"/>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType">
+            <summary>
+            Defines the types of request processing timestamps exposed via the Http.Sys HTTP_REQUEST_TIMING_INFO extensibility point.
+            </summary>
+            <remarks>
+            Use <see cref="T:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestTimingFeature"/> to access these timestamps.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.ConnectionStart">
+            <summary>
+            Time the connection started.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.DataStart">
+            <summary>
+            Time the first HTTP byte is received.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsCertificateLoadStart">
+            <summary>
+            Time TLS certificate loading starts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsCertificateLoadEnd">
+            <summary>
+            Time TLS certificate loading ends.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsHandshakeLeg1Start">
+            <summary>
+            Time TLS leg one handshake starts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsHandshakeLeg1End">
+            <summary>
+            Time TLS leg one handshake ends.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsHandshakeLeg2Start">
+            <summary>
+            Time TLS leg two handshake starts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsHandshakeLeg2End">
+            <summary>
+            Time TLS leg two handshake ends.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsAttributesQueryStart">
+            <summary>
+            Time TLS attribute query starts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsAttributesQueryEnd">
+            <summary>
+            Time TLS attribute query ends.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsClientCertQueryStart">
+            <summary>
+            Time TLS client cert query starts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.TlsClientCertQueryEnd">
+            <summary>
+            Time TLS client cert query ends.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.Http2StreamStart">
+            <summary>
+            Time HTTP2 streaming starts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.Http2HeaderDecodeStart">
+            <summary>
+            Time HTTP2 header decoding starts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.Http2HeaderDecodeEnd">
+            <summary>
+            Time HTTP2 header decoding ends.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestHeaderParseStart">
+            <summary>
+            Time HTTP header parsing starts.
+            </summary>
+            <remarks>
+            For most requests, this is a good timestamp to use as a per request starting timestamp.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestHeaderParseEnd">
+            <summary>
+            Time HTTP header parsing ends.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestRoutingStart">
+            <summary>
+            Time Http.Sys starts to determine which request queue to route the request to.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestRoutingEnd">
+            <summary>
+            Time Http.Sys has determined which request queue to route the request to.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestQueuedForInspection">
+            <summary>
+            Time the request is queued for inspection.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestDeliveredForInspection">
+            <summary>
+            Time the request is delivered for inspection.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestReturnedAfterInspection">
+            <summary>
+            Time the request has finished being inspected.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestQueuedForDelegation">
+            <summary>
+            Time the request is queued for delegation.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestDeliveredForDelegation">
+            <summary>
+            Time the request is delivered for delegation.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestReturnedAfterDelegation">
+            <summary>
+            Time the request was delegated.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestQueuedForIO">
+            <summary>
+            Time the request was queued to the final request queue for processing.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.RequestDeliveredForIO">
+            <summary>
+            Time the request was delivered to the final request queue for processing.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.Http3StreamStart">
+            <summary>
+            Time HTTP3 streaming starts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.Http3HeaderDecodeStart">
+            <summary>
+            Time HTTP3 header decoding starts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType.Http3HeaderDecodeEnd">
+            <summary>
+            Time HTTP3 header decoding ends.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestDelegationFeature">
+            <summary>
+            Interface for delegating requests to other Http.Sys request queues.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestDelegationFeature.CanDelegate">
+            <summary>
+            Indicates if the server can delegate this request to another HttpSys request queue.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestDelegationFeature.DelegateRequest(Microsoft.AspNetCore.Server.HttpSys.DelegationRule)">
+            <summary>
+            Attempt to delegate the request to another Http.Sys request queue. The request body
+            must not be read nor the response started before this is invoked. Check <see cref="P:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestDelegationFeature.CanDelegate"/>
+            before invoking.
+            </summary>
+            <param name="destination">The rule maintaining the handle to the destination queue.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestInfoFeature">
+            <summary>
+            This exposes the Http.Sys HTTP_REQUEST_INFO extensibility point as opaque data for the caller to interperate.
+            <see href="https://learn.microsoft.com/en-us/windows/win32/api/http/ns-http-http_request_v2"/>,
+            <see href="https://learn.microsoft.com/en-us/windows/win32/api/http/ns-http-http_request_info"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestInfoFeature.RequestInfo">
+            <summary>
+            A collection of the HTTP_REQUEST_INFO for the current request. The integer represents the identifying
+            HTTP_REQUEST_INFO_TYPE enum value. The Memory is opaque bytes that need to be interperted in the format
+            specified by the enum value.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestPropertyFeature">
+            <summary>
+            Provides API to read HTTP_REQUEST_PROPERTY value from the HTTP.SYS request.
+            <see href="https://learn.microsoft.com/windows/win32/api/http/ne-http-http_request_property"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestPropertyFeature.TryGetTlsClientHello(System.Byte[],System.Int32@)">
+            <summary>
+            Reads the TLS client hello from HTTP.SYS
+            </summary>
+            <param name="tlsClientHelloBytesDestination">Where the raw bytes of the TLS Client Hello message are written.</param>
+            <param name="bytesReturned">
+            Returns the number of bytes written to <paramref name="tlsClientHelloBytesDestination"/>.
+            Or can return the size of the buffer needed if <paramref name="tlsClientHelloBytesDestination"/> wasn't large enough.
+            </param>
+            <remarks>
+            Works only if <c>HTTP_SERVICE_CONFIG_SSL_FLAG_ENABLE_CACHE_CLIENT_HELLO</c> flag is set on http.sys service configuration.
+            See <see href="https://learn.microsoft.com/windows/win32/api/http/nf-http-httpsetserviceconfiguration"/>
+            and <see href="https://learn.microsoft.com/windows/win32/api/http/ne-http-http_service_config_id"/>
+            <br/><br/>
+            If you don't want to guess the required <paramref name="tlsClientHelloBytesDestination"/> size before first invocation,
+            you should first call with <paramref name="tlsClientHelloBytesDestination"/> set to empty size, so that you can retrieve the required buffer size from <paramref name="bytesReturned"/>,
+            then allocate that amount of memory and retry the query.
+            </remarks>
+            <returns>
+            True, if fetching TLS client hello was successful, false if <paramref name="tlsClientHelloBytesDestination"/> size is not large enough.
+            If unsuccessful for other reason throws an exception.
+            </returns>
+            <exception cref="T:Microsoft.AspNetCore.Server.HttpSys.HttpSysException">Any HttpSys error except for ERROR_INSUFFICIENT_BUFFER or ERROR_MORE_DATA.</exception>
+            <exception cref="T:System.InvalidOperationException">If HttpSys does not support querying the TLS Client Hello.</exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestTimingFeature">
+            <summary>
+            This exposes the Http.Sys HTTP_REQUEST_TIMING_INFO extensibility point which contains request processing timestamp data from Http.Sys.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestTimingFeature.Timestamps">
+            <summary>
+            Gets all Http.Sys timing timestamps
+            </summary>
+            <remarks>
+            These timestamps were obtained using QueryPerformanceCounter <see href="https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter"/> and the timestamp frequency can be obtained via QueryPerformanceFrequency <see href="https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancefrequency"/>.
+            The index of the timing can be cast to <see cref="T:Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType"/> to know what the timing represents.
+            The value may be 0 if the timing is not available for the current request.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestTimingFeature.TryGetTimestamp(Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType,System.Int64@)">
+            <summary>
+            Gets the timestamp for the given timing.
+            </summary>
+            <remarks>
+            These timestamps were obtained using QueryPerformanceCounter <see href="https://learn.microsoft.com/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter"/> and the timestamp frequency can be obtained via QueryPerformanceFrequency <see href="https://learn.microsoft.com/windows/win32/api/profileapi/nf-profileapi-queryperformancefrequency"/>.
+            </remarks>
+            <param name="timestampType">The timestamp type to get.</param>
+            <param name="timestamp">The value of the timestamp if set.</param>
+            <returns>True if the given timing was set (i.e., non-zero).</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.IHttpSysRequestTimingFeature.TryGetElapsedTime(Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType,Microsoft.AspNetCore.Server.HttpSys.HttpSysRequestTimingType,System.TimeSpan@)">
+            <summary>
+            Gets the elapsed time between the two given timings.
+            </summary>
+            <param name="startingTimestampType">The timestamp type marking the beginning of the time period.</param>
+            <param name="endingTimestampType">The timestamp type marking the end of the time period.</param>
+            <param name="elapsed">A <see cref="T:System.TimeSpan"/> for the elapsed time between the starting and ending timestamps.</param>
+            <returns>True if both given timings were set (i.e., non-zero).</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.IServerDelegationFeature">
+            <summary>
+            This exposes the creation of delegation rules on request queues owned by the server.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.IServerDelegationFeature.CreateDelegationRule(System.String,System.String)">
+            <summary>
+            Create a delegation rule on request queue owned by the server.
+            </summary>
+            <param name="queueName">The name of the Http.Sys request queue.</param>
+            <param name="urlPrefix">The URL of the Http.Sys Url Prefix.</param>
+            <returns>
+            Creates a <see cref="T:Microsoft.AspNetCore.Server.HttpSys.DelegationRule"/> that can used to delegate individual requests.
+            </returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.RequestQueue.Created">
+            <summary>
+            True if this instace created the queue instead of attaching to an existing one.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.SafeLibraryHandle">
+            <summary>
+            Represents a handle to a Windows module (DLL).
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.SafeLibraryHandle.DoesProcExist(System.String)">
+            <summary>
+            Returns a value stating whether the library exports a given proc.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.SafeLibraryHandle.GetProcAddress``1(System.String,System.Boolean)">
+            <summary>
+            Gets a delegate pointing to a given export from this library.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.SafeLibraryHandle.Open(System.String)">
+            <summary>
+            Opens a library. If 'filename' is not a fully-qualified path, the default search path is used.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.TokenBindingUtil">
+            <summary>
+            Contains helpers for dealing with TLS token binding.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.TokenBindingUtil.GetProvidedTokenIdFromBindingInfo(Microsoft.AspNetCore.HttpSys.Internal.HttpApiTypes.HTTP_REQUEST_TOKEN_BINDING_INFO*,System.Byte[]@)">
+            <summary>
+            Returns the 'provided' token binding identifier, optionally also returning the
+            'referred' token binding identifier. Returns null on failure.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.RequestContext.Dispose">
+            <summary>
+            Flushes and completes the response.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.RequestContext.Abort">
+            <summary>
+            Forcibly terminate and dispose the request, closing the connection if necessary.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.RequestContext.TryGetTlsClientHelloMessageBytes(System.Span{System.Byte},System.Int32@)">
+            <summary>
+            Attempts to get the client hello message bytes from the http.sys.
+            If successful writes the bytes into <paramref name="destination"/>, and shows how many bytes were written in <paramref name="bytesReturned"/>.
+            If not successful because <paramref name="destination"/> is not large enough, returns false and shows a size of <paramref name="destination"/> required in <paramref name="bytesReturned"/>.
+            If not successful for other reason - throws exception with message/errorCode.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.RequestContext.GetAndInvokeTlsClientHelloMessageBytesCallback(Microsoft.AspNetCore.Http.Features.IFeatureCollection,Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions.TlsClientHelloCallback)">
+            <summary>
+            Attempts to get the client hello message bytes from HTTP.sys and calls the user provided callback.
+            If not successful, will return false.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Response.AuthenticationChallenges">
+            <summary>
+            The authentication challenges that will be added to the response if the status code is 401.
+            This must be a subset of the AuthenticationSchemes enabled on the server.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Response.CacheTtl">
+            <summary>
+            Enable kernel caching for the response with the given timeout. Http.Sys determines if the response
+            can be cached.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Response.HasStarted">
+            <summary>
+            Indicates if the response status, reason, and headers are prepared to send and can
+            no longer be modified. This is caused by the first write or flush to the response body.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.RequestQueueMode">
+            <summary>
+            Used to indicate if this server instance should create a new Http.Sys request queue
+            or attach to an existing one.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.RequestQueueMode.Create">
+            <summary>
+            Create a new queue. This will fail if there's an existing queue with the same name.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.RequestQueueMode.Attach">
+            <summary>
+            Attach to an existing queue with the name given. This will fail if the queue does not already exist.
+            Most configuration options do not apply when attaching to an existing queue.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.HttpSys.RequestQueueMode.CreateOrAttach">
+            <summary>
+            Create a queue with the given name if it does not already exist, otherwise attach to the existing queue.
+            Most configuration options do not apply when attaching to an existing queue.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.TimeoutManager">
+            <summary>
+            Exposes the Http.Sys timeout configurations.  These may also be configured in the registry.
+            These settings do not apply when attaching to an existing queue.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.TimeoutManager.EntityBody">
+             <summary>
+             The time, in seconds, allowed for the request entity body to arrive.  The default timer is 2 minutes.
+            
+             The HTTP Server API turns on this timer when the request has an entity body. The timer expiration is
+             initially set to the configured value. When the HTTP Server API receives additional data indications on the
+             request, it resets the timer to give the connection another interval.
+            
+             Use TimeSpan.Zero to indicate that system defaults should be used.
+             </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.TimeoutManager.DrainEntityBody">
+             <summary>
+             The time, in seconds, allowed for the HTTP Server API to drain the entity body on a Keep-Alive connection.
+             The default timer is 2 minutes.
+            
+             On a Keep-Alive connection, after the application has sent a response for a request and before the request
+             entity body has completely arrived, the HTTP Server API starts draining the remainder of the entity body to
+             reach another potentially pipelined request from the client. If the time to drain the remaining entity body
+             exceeds the allowed period the connection is timed out.
+            
+             Use TimeSpan.Zero to indicate that system defaults should be used.
+             </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.TimeoutManager.RequestQueue">
+             <summary>
+             The time, in seconds, allowed for the request to remain in the request queue before the application picks
+             it up.  The default timer is 2 minutes.
+            
+             Use TimeSpan.Zero to indicate that system defaults should be used.
+             </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.TimeoutManager.IdleConnection">
+             <summary>
+             The time, in seconds, allowed for an idle connection.  The default timer is 2 minutes.
+            
+             This timeout is only enforced after the first request on the connection is routed to the application.
+            
+             Use TimeSpan.Zero to indicate that system defaults should be used.
+             </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.TimeoutManager.HeaderWait">
+             <summary>
+             The time, in seconds, allowed for the HTTP Server API to parse the request header.  The default timer is
+             2 minutes.
+            
+             This timeout is only enforced after the first request on the connection is routed to the application.
+            
+             Use TimeSpan.Zero to indicate that system defaults should be used.
+             </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.TimeoutManager.MinSendBytesPerSecond">
+             <summary>
+             The minimum send rate, in bytes-per-second, for the response. The default response send rate is 150
+             bytes-per-second.
+            
+             Use 0 to indicate that system defaults should be used.
+            
+             To disable this timer set it to UInt32.MaxValue
+             </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix">
+            <summary>
+            A set of URL parameters used to listen for incoming requests.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.Create(System.String,System.String,System.String,System.String)">
+            <summary>
+            http://msdn.microsoft.com/en-us/library/windows/desktop/aa364698(v=vs.85).aspx
+            </summary>
+            <param name="scheme">http or https. Will be normalized to lower case.</param>
+            <param name="host">+, *, IPv4, [IPv6], or a dns name. Http.Sys does not permit punycode (xn--), use Unicode instead.</param>
+            <param name="port">If empty, the default port for the given scheme will be used (80 or 443).</param>
+            <param name="path">Should start and end with a '/', though a missing trailing slash will be added. This value must be un-escaped.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.Create(System.String,System.String,System.Nullable{System.Int32},System.String)">
+            <summary>
+            http://msdn.microsoft.com/en-us/library/windows/desktop/aa364698(v=vs.85).aspx
+            </summary>
+            <param name="scheme">http or https. Will be normalized to lower case.</param>
+            <param name="host">+, *, IPv4, [IPv6], or a dns name. Http.Sys does not permit punycode (xn--), use Unicode instead.</param>
+            <param name="portValue">If empty, the default port for the given scheme will be used (80 or 443).</param>
+            <param name="path">Should start and end with a '/', though a missing trailing slash will be added. This value must be un-escaped.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.Create(System.String)">
+            <summary>
+            http://msdn.microsoft.com/en-us/library/windows/desktop/aa364698(v=vs.85).aspx
+            </summary>
+            <param name="prefix">The string that the <see cref="T:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix"/> will be created from.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.IsHttps">
+            <summary>
+            Gets a value that determines if the prefix's scheme is HTTPS.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.Scheme">
+            <summary>
+            Gets the scheme used by the prefix.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.Host">
+            <summary>
+            Gets the host domain name used by the prefix.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.Port">
+            <summary>
+            Gets a string representation of the port used by the prefix.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.PortValue">
+            <summary>
+            Gets an integer representation of the port used by the prefix.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.Path">
+            <summary>
+            Gets the path component of the prefix.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.FullPrefix">
+            <summary>
+            Gets a string representation of the prefix
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection">
+            <summary>
+            A collection or URL prefixes
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.Count">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.IsReadOnly">
+            <summary>
+            Gets a value that determines if this collection is readOnly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.Add(System.String)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix"/> from the given string, and adds it to this collection.
+            </summary>
+            <param name="prefix">The string representing the <see cref="T:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix"/> to add to this collection.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.Add(Microsoft.AspNetCore.Server.HttpSys.UrlPrefix)">
+            <summary>
+            Adds a <see cref="T:Microsoft.AspNetCore.Server.HttpSys.UrlPrefix"/> to this collection.
+            </summary>
+            <param name="item">The prefix to add to this collection.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.Clear">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.Contains(Microsoft.AspNetCore.Server.HttpSys.UrlPrefix)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.CopyTo(Microsoft.AspNetCore.Server.HttpSys.UrlPrefix[],System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.Remove(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.Remove(Microsoft.AspNetCore.Server.HttpSys.UrlPrefix)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.UrlPrefixCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through this collection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_AccessDenied">
+            <summary>The prefix '{0}' is not registered. Please run the following command as Administrator to register this prefix:
+            netsh http add urlacl url={0} user={1}
+            See "Preregister URL prefixes on the server" on https://go.microsoft.com/fwlink/?linkid=2127065 for more i ...</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.Resources.FormatException_AccessDenied(System.Object,System.Object)">
+            <summary>The prefix '{0}' is not registered. Please run the following command as Administrator to register this prefix:
+            netsh http add urlacl url={0} user={1}
+            See "Preregister URL prefixes on the server" on https://go.microsoft.com/fwlink/?linkid=2127065 for more i ...</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_ArrayTooSmall">
+            <summary>The destination array is too small.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_EndCalledMultipleTimes">
+            <summary>End has already been called.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_InvalidStatusCode">
+            <summary>The status code '{0}' is not supported.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.Resources.FormatException_InvalidStatusCode(System.Object)">
+            <summary>The status code '{0}' is not supported.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_NoSeek">
+            <summary>The stream is not seekable.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_PrefixAlreadyRegistered">
+            <summary>The prefix '{0}' is already registered.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.Resources.FormatException_PrefixAlreadyRegistered(System.Object)">
+            <summary>The prefix '{0}' is already registered.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_ReadOnlyStream">
+            <summary>This stream only supports read operations.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_TooMuchWritten">
+            <summary>More data written than specified in the Content-Length header.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_UnsupportedScheme">
+            <summary>Only the http and https schemes are supported.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_WriteOnlyStream">
+            <summary>This stream only supports write operations.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Exception_WrongIAsyncResult">
+            <summary>The given IAsyncResult does not match this opperation.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.HttpSys.Resources.Warning_ExceptionInOnResponseCompletedAction">
+            <summary>An exception occurred while running an action registered with {0}.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.HttpSys.Resources.FormatWarning_ExceptionInOnResponseCompletedAction(System.Object)">
+            <summary>An exception occurred while running an action registered with {0}.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.StringUtilities.ConcatAsHexSuffix(System.String,System.Char,System.UInt32)">
+            <summary>
+            A faster version of String.Concat(<paramref name="str"/>, <paramref name="separator"/>, <paramref name="number"/>.ToString("X8"))
+            </summary>
+            <param name="str"></param>
+            <param name="separator"></param>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.WebHostBuilderHttpSysExtensions">
+            <summary>
+            Provides extensions method to use Http.sys as the server for the web host.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderHttpSysExtensions.UseHttpSys(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Specify Http.sys as the server to be used by the web host.
+            </summary>
+            <param name="hostBuilder">
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder to configure.
+            </param>
+            <returns>
+            A reference to the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder" /> parameter object.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderHttpSysExtensions.UseHttpSys(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Server.HttpSys.HttpSysOptions})">
+            <summary>
+            Specify Http.sys as the server to be used by the web host.
+            </summary>
+            <param name="hostBuilder">
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder to configure.
+            </param>
+            <param name="options">
+            A callback to configure Http.sys options.
+            </param>
+            <returns>
+            A reference to the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder" /> parameter object.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpSys.Internal.SocketAddress">
+            <devdoc>
+               <para>
+                  This class is used when subclassing EndPoint, and provides indication
+                  on how to format the memory buffers that winsock uses for network addresses.
+               </para>
+            </devdoc>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.SocketAddress.#ctor(System.Net.Sockets.AddressFamily,System.Int32)">
+            <devdoc>
+               <para>[To be supplied.]</para>
+            </devdoc>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpSys.Internal.SocketAddress.Item(System.Int32)">
+            <devdoc>
+               <para>[To be supplied.]</para>
+            </devdoc>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpSys.Internal.NativeRequestContext.PinsReleased">
+            <summary>
+            Shows whether <see cref="M:Microsoft.AspNetCore.HttpSys.Internal.NativeRequestContext.ReleasePins"/> was already invoked on this native request context
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RawUrlHelper.GetPath(System.Span{System.Byte})">
+            <summary>
+            Find the segment of the URI byte array which represents the path.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RawUrlHelper.FindHttpOrHttps(System.Span{System.Byte})">
+            <summary>
+            Compare the beginning portion of the raw URL byte array to https:// and http://
+            </summary>
+            <param name="raw">The byte array represents the raw URI</param>
+            <returns>Length of the matched bytes, 0 if it is not matched.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RequestUriBuilder.Unescape(System.Span{System.Byte})">
+            <summary>
+            Unescape a given path string in place. The given path string  may contain escaped char.
+            </summary>
+            <param name="rawPath">The raw path string to be unescaped</param>
+            <returns>The unescaped path string</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RequestUriBuilder.DecodeCore(System.Int32@,System.Int32@,System.Int32,System.Span{System.Byte})">
+            <summary>
+            Unescape the percent-encodings
+            </summary>
+            <param name="reader">The iterator point to the first % char</param>
+            <param name="writer">The place to write to</param>
+            <param name="end">The end of the buffer</param>
+            <param name="buffer">The byte array</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RequestUriBuilder.UnescapePercentEncoding(System.Int32@,System.Int32,System.ReadOnlySpan{System.Byte})">
+             <summary>
+             Read the percent-encoding and try unescape it.
+            
+             The operation first peek at the character the <paramref name="scan"/>
+             iterator points at. If it is % the <paramref name="scan"/> is then
+             moved on to scan the following to characters. If the two following
+             characters are hexadecimal literals they will be unescaped and the
+             value will be returned.
+            
+             If the first character is not % the <paramref name="scan"/> iterator
+             will be removed beyond the location of % and -1 will be returned.
+            
+             If the following two characters can't be successfully unescaped the
+             <paramref name="scan"/> iterator will be move behind the % and -1
+             will be returned.
+             </summary>
+             <param name="scan">The value to read</param>
+             <param name="end">The end of the buffer</param>
+             <param name="buffer">The byte array</param>
+             <returns>The unescaped byte if success. Otherwise return -1.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RequestUriBuilder.ReadHex(System.Int32@,System.Int32,System.ReadOnlySpan{System.Byte})">
+             <summary>
+             Read the next char and convert it into hexadecimal value.
+            
+             The <paramref name="scan"/> iterator will be moved to the next
+             byte no matter no matter whether the operation successes.
+             </summary>
+             <param name="scan">The value to read</param>
+             <param name="end">The end of the buffer</param>
+             <param name="buffer">The byte array</param>
+             <returns>The hexadecimal value if successes, otherwise -1.</returns>
+        </member>
+        <member name="T:System.Buffers.DiagnosticMemoryPool">
+            <summary>
+            Used to allocate and distribute re-usable blocks of memory.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.DiagnosticMemoryPool.AnySize">
+            <summary>
+            This default value passed in to Rent to use the default value for the pool.
+            </summary>
+        </member>
+        <member name="T:System.Buffers.DiagnosticPoolBlock">
+            <summary>
+            Block tracking object used by the byte buffer memory pool. A slab is a large allocation which is divided into smaller blocks. The
+            individual blocks are then treated as independent array segments.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.DiagnosticPoolBlock._pool">
+            <summary>
+            Back-reference to the memory pool which this block was allocated from. It may only be returned to this pool.
+            </summary>
+        </member>
+        <member name="M:System.Buffers.DiagnosticPoolBlock.#ctor(System.Buffers.DiagnosticMemoryPool,System.Buffers.IMemoryOwner{System.Byte})">
+            <summary>
+            This object cannot be instantiated outside of the static Create method
+            </summary>
+        </member>
+        <member name="T:System.Buffers.MemoryPoolBlock">
+            <summary>
+            Wraps an array allocated in the pinned object heap in a reusable block of managed memory
+            </summary>
+        </member>
+        <member name="P:System.Buffers.MemoryPoolBlock.Pool">
+            <summary>
+            Back-reference to the memory pool which this block was allocated from. It may only be returned to this pool.
+            </summary>
+        </member>
+        <member name="T:System.Buffers.PinnedBlockMemoryPool">
+            <summary>
+            Used to allocate and distribute re-usable blocks of memory.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool._blockSize">
+            <summary>
+            The size of a block. 4096 is chosen because most operating systems use 4k pages.
+            </summary>
+        </member>
+        <member name="P:System.Buffers.PinnedBlockMemoryPool.MaxBufferSize">
+            <summary>
+            Max allocation block size for pooled blocks,
+            larger values can be leased but they will be disposed after use rather than returned to the pool.
+            </summary>
+        </member>
+        <member name="P:System.Buffers.PinnedBlockMemoryPool.BlockSize">
+            <summary>
+            The size of a block. 4096 is chosen because most operating systems use 4k pages.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool._blocks">
+            <summary>
+            Thread-safe collection of blocks which are currently in the pool. A slab will pre-allocate all of the block tracking objects
+            and add them to this collection. When memory is requested it is taken from here first, and when it is returned it is re-added.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool._isDisposed">
+            <summary>
+            This is part of implementing the IDisposable pattern.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool.AnySize">
+            <summary>
+            This default value passed in to Rent to use the default value for the pool.
+            </summary>
+        </member>
+        <member name="M:System.Buffers.PinnedBlockMemoryPool.Return(System.Buffers.MemoryPoolBlock)">
+            <summary>
+            Called to return a block to the pool. Once Return has been called the memory no longer belongs to the caller, and
+            Very Bad Things will happen if the memory is read of modified subsequently. If a caller fails to call Return and the
+            block tracking object is garbage collected, the block tracking object's finalizer will automatically re-create and return
+            a new tracking object into the pool. This will only happen if there is a bug in the server, however it is necessary to avoid
+            leaving "dead zones" in the slab due to lost block tracking objects.
+            </summary>
+            <param name="block">The block to return. It must have been acquired by calling Lease on the same memory pool instance.</param>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm">
+            <summary>
+            Provides support for efficiently using Tasks to implement the APM (Begin/End) pattern.
+            </summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.Begin(System.Threading.Tasks.Task,System.AsyncCallback,System.Object)">
+            <summary>
+            Marshals the Task as an IAsyncResult, using the supplied callback and state
+            to implement the APM pattern.
+            </summary>
+            <param name="task">The Task to be marshaled.</param>
+            <param name="callback">The callback to be invoked upon completion.</param>
+            <param name="state">The state to be stored in the IAsyncResult.</param>
+            <returns>An IAsyncResult to represent the task's asynchronous operation.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End``1(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm.TaskAsyncResult">
+            <summary>Provides a simple IAsyncResult that wraps a Task.</summary>
+            <remarks>
+            We could use the Task as the IAsyncResult if the Task's AsyncState is the same as the object state,
+            but that's very rare, in particular in a situation where someone cares about allocation, and always
+            using TaskAsyncResult simplifies things and enables additional optimizations.
+            </remarks>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task">
+            <summary>The wrapped Task.</summary>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._callback">
+            <summary>Callback to invoke when the wrapped task completes.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.#ctor(System.Threading.Tasks.Task,System.Object,System.AsyncCallback)">
+            <summary>Initializes the IAsyncResult with the Task to wrap and the associated object state.</summary>
+            <param name="task">The Task to wrap.</param>
+            <param name="state">The new AsyncState value.</param>
+            <param name="callback">Callback to invoke when the wrapped task completes.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.InvokeCallback">
+            <summary>Invokes the callback.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncState">
+            <summary>Gets a user-defined object that qualifies or contains information about an asynchronous operation.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.CompletedSynchronously">
+            <summary>Gets a value that indicates whether the asynchronous operation completed synchronously.</summary>
+            <remarks>This is set lazily based on whether the <see cref="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task"/> has completed by the time this object is created.</remarks>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.IsCompleted">
+            <summary>Gets a value that indicates whether the asynchronous operation has completed.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncWaitHandle">
+            <summary>Gets a <see cref="T:System.Threading.WaitHandle"/> that is used to wait for an asynchronous operation to complete.</summary>
+        </member>
+        <member name="T:UnmanagedBufferAllocator">
+            <summary>
+            Allocator that manages blocks of unmanaged memory.
+            </summary>
+        </member>
+        <member name="P:UnmanagedBufferAllocator.DefaultBlockSize">
+            <summary>
+            The default block size for the allocator.
+            </summary>
+            <remarks>
+            This size assumes a common page size and provides an accommodation
+            for the pointer chain used to track allocated blocks.
+            </remarks>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.#ctor(System.Int32)">
+            <summary>
+            Instantiate an <see cref="T:UnmanagedBufferAllocator"/> instance.
+            </summary>
+            <param name="blockSize">The unmanaged memory block size in bytes.</param>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.AllocAsPointer``1(System.Int32)">
+            <summary>
+            Allocate the requested amount of space from the allocator.
+            </summary>
+            <typeparam name="T">The type requested</typeparam>
+            <param name="count">The count in <typeparamref name="T"/> units</param>
+            <returns>A pointer to the reserved memory.</returns>
+            <remarks>
+            The allocated memory is uninitialized.
+            </remarks>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.AllocAsSpan``1(System.Int32)">
+            <summary>
+            Allocate the requested amount of space from the allocator.
+            </summary>
+            <typeparam name="T">The type requested</typeparam>
+            <param name="count">The count in <typeparamref name="T"/> units</param>
+            <returns>A Span to the reserved memory.</returns>
+            <remarks>
+            The allocated memory is uninitialized.
+            </remarks>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.GetHeaderEncodedBytes(System.String,System.Int32@)">
+            <summary>
+            Get pointer to bytes for the supplied string in UTF-8.
+            </summary>
+            <param name="myString">The string</param>
+            <param name="length">The length of the returned byte buffer.</param>
+            <returns>A pointer to the buffer of bytes</returns>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

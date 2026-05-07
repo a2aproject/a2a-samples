@@ -1,0 +1,838 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Threading.Tasks.Parallel</name>
+  </assembly>
+  <members>
+    <member name="T:System.Threading.Tasks.Parallel">
+      <summary>Provides support for parallel loops and regions.</summary>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For(System.Int32,System.Int32,System.Action{System.Int32,System.Threading.Tasks.ParallelLoopState})">
+      <summary>Executes a <see langword="for" /> loop in which iterations may run in parallel and the state of the loop can be monitored and manipulated.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For(System.Int32,System.Int32,System.Action{System.Int32})">
+      <summary>Executes a <see langword="for" /> loop in which iterations may run in parallel.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For(System.Int32,System.Int32,System.Threading.Tasks.ParallelOptions,System.Action{System.Int32,System.Threading.Tasks.ParallelLoopState})">
+      <summary>Executes a <see langword="for" /> loop in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For(System.Int32,System.Int32,System.Threading.Tasks.ParallelOptions,System.Action{System.Int32})">
+      <summary>Executes a <see langword="for" /> loop in which iterations may run in parallel and loop options can be configured.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For(System.Int64,System.Int64,System.Action{System.Int64,System.Threading.Tasks.ParallelLoopState})">
+      <summary>Executes a <see langword="for" /> loop with 64-bit indexes in which iterations may run in parallel and the state of the loop can be monitored and manipulated.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A <see cref="T:System.Threading.Tasks.ParallelLoopResult" /> structure that contains information on what portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For(System.Int64,System.Int64,System.Action{System.Int64})">
+      <summary>Executes a <see langword="for" /> loop with 64-bit indexes in which iterations may run in parallel.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For(System.Int64,System.Int64,System.Threading.Tasks.ParallelOptions,System.Action{System.Int64,System.Threading.Tasks.ParallelLoopState})">
+      <summary>Executes a <see langword="for" /> loop with 64-bit indexes in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For(System.Int64,System.Int64,System.Threading.Tasks.ParallelOptions,System.Action{System.Int64})">
+      <summary>Executes a <see langword="for" /> loop with 64-bit indexes in which iterations may run in parallel and loop options can be configured.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For``1(System.Int32,System.Int32,System.Func{``0},System.Func{System.Int32,System.Threading.Tasks.ParallelLoopState,``0,``0},System.Action{``0})">
+      <summary>Executes a <see langword="for" /> loop with thread-local data in which iterations may run in parallel, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For``1(System.Int32,System.Int32,System.Threading.Tasks.ParallelOptions,System.Func{``0},System.Func{System.Int32,System.Threading.Tasks.ParallelLoopState,``0,``0},System.Action{``0})">
+      <summary>Executes a <see langword="for" /> loop with thread-local data in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For``1(System.Int64,System.Int64,System.Func{``0},System.Func{System.Int64,System.Threading.Tasks.ParallelLoopState,``0,``0},System.Action{``0})">
+      <summary>Executes a <see langword="for" /> loop with 64-bit indexes and thread-local data in which iterations may run in parallel, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.For``1(System.Int64,System.Int64,System.Threading.Tasks.ParallelOptions,System.Func{``0},System.Func{System.Int64,System.Threading.Tasks.ParallelLoopState,``0,``0},System.Action{``0})">
+      <summary>Executes a <see langword="for" /> loop with 64-bit indexes and thread-local data in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each thread.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each thread.</param>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForAsync``1(``0,``0,System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask})">
+      <summary>Executes a for loop in which iterations may run in parallel.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
+      <typeparam name="T" />
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <returns>A task that represents the entire for each operation.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForAsync``1(``0,``0,System.Threading.CancellationToken,System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask})">
+      <summary>Executes a for loop in which iterations may run in parallel.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="cancellationToken">A cancellation token that may be used to cancel the for each operation.</param>
+      <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
+      <typeparam name="T" />
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <returns>A task that represents the entire for each operation.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForAsync``1(``0,``0,System.Threading.Tasks.ParallelOptions,System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask})">
+      <summary>Executes a for loop in which iterations may run in parallel.</summary>
+      <param name="fromInclusive">The start index, inclusive.</param>
+      <param name="toExclusive">The end index, exclusive.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
+      <typeparam name="T" />
+      <exception cref="T:System.ArgumentNullException">The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <returns>A task that represents the entire for each operation.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Concurrent.OrderablePartitioner{``0},System.Action{``0,System.Threading.Tasks.ParallelLoopState,System.Int64})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on a <see cref="T:System.Collections.Concurrent.OrderablePartitioner`1" /> in which iterations may run in parallel and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">The orderable partitioner that contains the original data source.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /> orderable partitioner returns <see langword="false" />.  
+  
+ -or-  
+  
+ The <see cref="P:System.Collections.Concurrent.OrderablePartitioner`1.KeysNormalized" /> property in the source orderable partitioner returns <see langword="false" />.  
+  
+ -or-  
+  
+ Any methods in the source orderable partitioner return <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception thrown from one of the specified delegates.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Concurrent.OrderablePartitioner{``0},System.Threading.Tasks.ParallelOptions,System.Action{``0,System.Threading.Tasks.ParallelLoopState,System.Int64})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on a <see cref="T:System.Collections.Concurrent.OrderablePartitioner`1" /> in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">The orderable partitioner that contains the original data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is  <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /> orderable partitioner returns <see langword="false" />.  
+  
+ -or-  
+  
+ The <see cref="P:System.Collections.Concurrent.OrderablePartitioner`1.KeysNormalized" /> property in the <paramref name="source" /> orderable partitioner returns <see langword="false" />.  
+  
+ -or-  
+  
+ The exception that is thrown when any methods in the <paramref name="source" /> orderable partitioner return <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that is thrown to contain an exception thrown from one of the specified delegates.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Concurrent.Partitioner{``0},System.Action{``0,System.Threading.Tasks.ParallelLoopState})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on a <see cref="T:System.Collections.Concurrent.Partitioner" /> in which iterations may run in parallel, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">The partitioner that contains the original data source.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /> partitioner returns <see langword="false" />.  
+  
+ -or-  
+  
+ A method in the <paramref name="source" /> partitioner returns <see langword="null" />.  
+  
+ -or-  
+  
+ The <see cref="M:System.Collections.Concurrent.Partitioner`1.GetPartitions(System.Int32)" /> method in the <paramref name="source" /> partitioner does not return the correct number of partitions.</exception>
+      <exception cref="T:System.AggregateException">The exception that is thrown to contain an exception thrown from one of the specified delegates.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Concurrent.Partitioner{``0},System.Action{``0})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on a <see cref="T:System.Collections.Concurrent.Partitioner" /> in which iterations may run in parallel.</summary>
+      <param name="source">The partitioner that contains the original data source.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is  <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /> partitioner returns <see langword="false" />.  
+  
+ -or-  
+  
+ The exception that is thrown when any methods in the <paramref name="source" /> partitioner return <see langword="null" />.  
+  
+ -or-  
+  
+ The <see cref="M:System.Collections.Concurrent.Partitioner`1.GetPartitions(System.Int32)" /> method in the <paramref name="source" /> partitioner does not return the correct number of partitions.</exception>
+      <exception cref="T:System.AggregateException">The exception that is thrown to contain an exception thrown from one of the specified delegates.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Concurrent.Partitioner{``0},System.Threading.Tasks.ParallelOptions,System.Action{``0,System.Threading.Tasks.ParallelLoopState})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on a <see cref="T:System.Collections.Concurrent.Partitioner" /> in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">The partitioner that contains the original data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /> partitioner returns <see langword="false" />.  
+  
+ -or-  
+  
+ The exception that is thrown when any methods in the <paramref name="source" /> partitioner return <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that is thrown to contain an exception thrown from one of the specified delegates.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Concurrent.Partitioner{``0},System.Threading.Tasks.ParallelOptions,System.Action{``0})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on a <see cref="T:System.Collections.Concurrent.Partitioner" /> in which iterations may run in parallel and loop options can be configured.</summary>
+      <param name="source">The partitioner that contains the original data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /> partitioner returns <see langword="false" />.  
+  
+ -or-  
+  
+ The exception that is thrown when any methods in the <paramref name="source" /> partitioner return <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that is thrown to contain an exception thrown from one of the specified delegates.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0,System.Threading.Tasks.ParallelLoopState,System.Int64})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation with 64-bit indexes on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0,System.Threading.Tasks.ParallelLoopState})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Threading.Tasks.ParallelOptions,System.Action{``0,System.Threading.Tasks.ParallelLoopState,System.Int64})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation with 64-bit indexes on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Threading.Tasks.ParallelOptions,System.Action{``0,System.Threading.Tasks.ParallelLoopState})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Threading.Tasks.ParallelOptions,System.Action{``0})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel and loop options can be configured.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``2(System.Collections.Concurrent.OrderablePartitioner{``0},System.Func{``1},System.Func{``0,System.Threading.Tasks.ParallelLoopState,System.Int64,``1,``1},System.Action{``1})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation with thread-local data on a <see cref="T:System.Collections.Concurrent.OrderablePartitioner`1" /> in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">The orderable partitioner that contains the original data source.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /><see cref="T:System.Collections.Concurrent.Partitioner" /> returns <see langword="false" /> or the partitioner returns <see langword="null" /> partitions.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``2(System.Collections.Concurrent.OrderablePartitioner{``0},System.Threading.Tasks.ParallelOptions,System.Func{``1},System.Func{``0,System.Threading.Tasks.ParallelLoopState,System.Int64,``1,``1},System.Action{``1})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation with 64-bit indexes and  with thread-local data on a <see cref="T:System.Collections.Concurrent.OrderablePartitioner`1" /> in which iterations may run in parallel , loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">The orderable partitioner that contains the original data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> or <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /><see cref="T:System.Collections.Concurrent.Partitioner" /> returns <see langword="false" /> or the partitioner returns <see langword="null" /> partitions.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``2(System.Collections.Concurrent.Partitioner{``0},System.Func{``1},System.Func{``0,System.Threading.Tasks.ParallelLoopState,``1,``1},System.Action{``1})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation with thread-local data on a <see cref="T:System.Collections.Concurrent.Partitioner" /> in which iterations may run in parallel and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">The partitioner that contains the original data source.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /><see cref="T:System.Collections.Concurrent.Partitioner" /> returns <see langword="false" /> or the partitioner returns <see langword="null" /> partitions.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``2(System.Collections.Concurrent.Partitioner{``0},System.Threading.Tasks.ParallelOptions,System.Func{``1},System.Func{``0,System.Threading.Tasks.ParallelLoopState,``1,``1},System.Action{``1})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation  with thread-local data on a <see cref="T:System.Collections.Concurrent.Partitioner" /> in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">The partitioner that contains the original data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TSource">The type of the elements in <paramref name="source" />.</typeparam>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Collections.Concurrent.Partitioner`1.SupportsDynamicPartitions" /> property in the <paramref name="source" /><see cref="T:System.Collections.Concurrent.Partitioner" /> returns <see langword="false" /> or the partitioner returns <see langword="null" /> partitions.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``2(System.Collections.Generic.IEnumerable{``0},System.Func{``1},System.Func{``0,System.Threading.Tasks.ParallelLoopState,``1,``1},System.Action{``1})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation with thread-local data on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``2(System.Collections.Generic.IEnumerable{``0},System.Func{``1},System.Func{``0,System.Threading.Tasks.ParallelLoopState,System.Int64,``1,``1},System.Action{``1})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation with thread-local data on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``2(System.Collections.Generic.IEnumerable{``0},System.Threading.Tasks.ParallelOptions,System.Func{``1},System.Func{``0,System.Threading.Tasks.ParallelLoopState,``1,``1},System.Action{``1})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation with thread-local data on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEach``2(System.Collections.Generic.IEnumerable{``0},System.Threading.Tasks.ParallelOptions,System.Func{``1},System.Func{``0,System.Threading.Tasks.ParallelLoopState,System.Int64,``1,``1},System.Action{``1})">
+      <summary>Executes a <see langword="foreach" /> (<see langword="For Each" /> in Visual Basic) operation with thread-local data and 64-bit indexes on an <see cref="T:System.Collections.IEnumerable" /> in which iterations may run in parallel, loop options can be configured, and the state of the loop can be monitored and manipulated.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="localInit">The function delegate that returns the initial state of the local data for each task.</param>
+      <param name="body">The delegate that is invoked once per iteration.</param>
+      <param name="localFinally">The delegate that performs a final action on the local state of each task.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <typeparam name="TLocal">The type of the thread-local data.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="source" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="body" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localInit" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="localFinally" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> argument is canceled.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+      <exception cref="T:System.AggregateException">The exception that contains all the individual exceptions thrown on all threads.</exception>
+      <returns>A structure that contains information about which portion of the loop completed.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEachAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask})">
+      <summary>Executes a <c>for-each</c> operation on an <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which iterations may run in parallel.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> or <paramref name="body" /> is <see langword="null" />.</exception>
+      <returns>A task that represents the entire <c>for-each</c> operation.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEachAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.CancellationToken,System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask})">
+      <summary>Executes a <c>for-each</c> operation on an <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which iterations may run in parallel.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="cancellationToken">A cancellation token that may be used to cancel the <c>for-each</c> operation.</param>
+      <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> or <paramref name="body" /> is <see langword="null" />.</exception>
+      <returns>A task that represents the entire <c>for-each</c> operation.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEachAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.Tasks.ParallelOptions,System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask})">
+      <summary>Executes a <c>for-each</c> operation on an <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which iterations may run in parallel.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> or <paramref name="body" /> is <see langword="null" />.</exception>
+      <returns>A task that represents the entire <c>for-each</c> operation.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEachAsync``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask})">
+      <summary>Executes a <c>for-each</c> operation on an <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which iterations may run in parallel.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> or <paramref name="body" /> is <see langword="null" />.</exception>
+      <returns>A task that represents the entire <c>for-each</c> operation.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEachAsync``1(System.Collections.Generic.IEnumerable{``0},System.Threading.CancellationToken,System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask})">
+      <summary>Executes a <c>for-each</c> operation on an <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which iterations may run in parallel.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="cancellationToken">A cancellation token that may be used to cancel the <c>for-each</c> operation.</param>
+      <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> or <paramref name="body" /> is <see langword="null" />.</exception>
+      <returns>A task that represents the entire <c>for-each</c> operation.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.ForEachAsync``1(System.Collections.Generic.IEnumerable{``0},System.Threading.Tasks.ParallelOptions,System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask})">
+      <summary>Executes a <c>for-each</c> operation on an <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which iterations may run in parallel.</summary>
+      <param name="source">An enumerable data source.</param>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
+      <typeparam name="TSource">The type of the data in the source.</typeparam>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> or <paramref name="body" /> is <see langword="null" />.</exception>
+      <returns>A task that represents the entire <c>for-each</c> operation.</returns>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.Invoke(System.Action[])">
+      <summary>Executes each of the provided actions, possibly in parallel.</summary>
+      <param name="actions">An array of <see cref="T:System.Action" /> to execute.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="actions" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that is thrown when any action in the <paramref name="actions" /> array throws an exception.</exception>
+      <exception cref="T:System.ArgumentException">The <paramref name="actions" /> array contains a <see langword="null" /> element.</exception>
+    </member>
+    <member name="M:System.Threading.Tasks.Parallel.Invoke(System.Threading.Tasks.ParallelOptions,System.Action[])">
+      <summary>Executes each of the provided actions, possibly in parallel, unless the operation is cancelled by the user.</summary>
+      <param name="parallelOptions">An object that configures the behavior of this operation.</param>
+      <param name="actions">An array of actions to execute.</param>
+      <exception cref="T:System.OperationCanceledException">The <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> is set.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="actions" /> argument is <see langword="null" />.  
+  
+ -or-  
+  
+ The <paramref name="parallelOptions" /> argument is <see langword="null" />.</exception>
+      <exception cref="T:System.AggregateException">The exception that is thrown when any action in the <paramref name="actions" /> array throws an exception.</exception>
+      <exception cref="T:System.ArgumentException">The <paramref name="actions" /> array contains a <see langword="null" /> element.</exception>
+      <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.Threading.CancellationTokenSource" /> associated with the <see cref="T:System.Threading.CancellationToken" /> in the <paramref name="parallelOptions" /> has been disposed.</exception>
+    </member>
+    <member name="T:System.Threading.Tasks.ParallelLoopResult">
+      <summary>Provides completion status on the execution of a <see cref="T:System.Threading.Tasks.Parallel" /> loop.</summary>
+    </member>
+    <member name="P:System.Threading.Tasks.ParallelLoopResult.IsCompleted">
+      <summary>Gets whether the loop ran to completion, such that all iterations of the loop were executed and the loop didn't receive a request to end prematurely.</summary>
+      <returns>
+        <see langword="true" /> if the loop ran to completion; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Threading.Tasks.ParallelLoopResult.LowestBreakIteration">
+      <summary>Gets the index of the lowest iteration from which <see cref="M:System.Threading.Tasks.ParallelLoopState.Break" /> was called.</summary>
+      <returns>Returns an integer that represents the lowest iteration from which the Break statement was called.</returns>
+    </member>
+    <member name="T:System.Threading.Tasks.ParallelLoopState">
+      <summary>Enables iterations of parallel loops to interact with other iterations. An instance of this class is provided by the <see cref="T:System.Threading.Tasks.Parallel" /> class to each loop; you can not create instances in your code.</summary>
+    </member>
+    <member name="M:System.Threading.Tasks.ParallelLoopState.Break">
+      <summary>Communicates that the <see cref="T:System.Threading.Tasks.Parallel" /> loop should cease execution of iterations beyond the current iteration at the system's earliest convenience.</summary>
+      <exception cref="T:System.InvalidOperationException">The <see cref="M:System.Threading.Tasks.ParallelLoopState.Stop" /> method was previously called. <see cref="M:System.Threading.Tasks.ParallelLoopState.Break" /> and <see cref="M:System.Threading.Tasks.ParallelLoopState.Stop" /> may not be used in combination by iterations of the same loop.</exception>
+    </member>
+    <member name="M:System.Threading.Tasks.ParallelLoopState.Stop">
+      <summary>Communicates that the <see cref="T:System.Threading.Tasks.Parallel" /> loop should cease execution at the system's earliest convenience.</summary>
+      <exception cref="T:System.InvalidOperationException">The <see cref="M:System.Threading.Tasks.ParallelLoopState.Break" /> method was called previously. <see cref="M:System.Threading.Tasks.ParallelLoopState.Break" /> and <see cref="M:System.Threading.Tasks.ParallelLoopState.Stop" /> may not be used in combination by iterations of the same loop.</exception>
+    </member>
+    <member name="P:System.Threading.Tasks.ParallelLoopState.IsExceptional">
+      <summary>Gets whether any iteration of the loop has thrown an exception that went unhandled by that iteration.</summary>
+      <returns>
+        <see langword="true" /> if an unhandled exception was thrown; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Threading.Tasks.ParallelLoopState.IsStopped">
+      <summary>Gets whether any iteration of the loop has called the <see cref="M:System.Threading.Tasks.ParallelLoopState.Stop" /> method.</summary>
+      <returns>
+        <see langword="true" /> if any iteration has stopped the loop by calling the <see cref="M:System.Threading.Tasks.ParallelLoopState.Stop" /> method; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Threading.Tasks.ParallelLoopState.LowestBreakIteration">
+      <summary>Gets the lowest iteration of the loop from which <see cref="M:System.Threading.Tasks.ParallelLoopState.Break" /> was called.</summary>
+      <returns>The lowest iteration from which <see cref="M:System.Threading.Tasks.ParallelLoopState.Break" /> was called. In the case of a <see cref="M:System.Threading.Tasks.Parallel.ForEach``1(System.Collections.Concurrent.Partitioner{``0},System.Action{``0})" /> loop, the value is based on an internally-generated index.</returns>
+    </member>
+    <member name="P:System.Threading.Tasks.ParallelLoopState.ShouldExitCurrentIteration">
+      <summary>Gets whether the current iteration of the loop should exit based on requests made by this or other iterations.</summary>
+      <returns>
+        <see langword="true" /> if the current iteration should exit; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="T:System.Threading.Tasks.ParallelOptions">
+      <summary>Stores options that configure the operation of methods on the <see cref="T:System.Threading.Tasks.Parallel" /> class.</summary>
+    </member>
+    <member name="M:System.Threading.Tasks.ParallelOptions.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.Tasks.ParallelOptions" /> class.</summary>
+    </member>
+    <member name="P:System.Threading.Tasks.ParallelOptions.CancellationToken">
+      <summary>Gets or sets the <see cref="T:System.Threading.CancellationToken" /> associated with this <see cref="T:System.Threading.Tasks.ParallelOptions" /> instance.</summary>
+      <returns>The token that is associated with this instance.</returns>
+    </member>
+    <member name="P:System.Threading.Tasks.ParallelOptions.MaxDegreeOfParallelism">
+      <summary>Gets or sets the maximum number of concurrent tasks enabled by this <see cref="T:System.Threading.Tasks.ParallelOptions" /> instance.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The property is being set to zero or to a value that is less than -1.</exception>
+      <returns>An integer that represents the maximum degree of parallelism.</returns>
+    </member>
+    <member name="P:System.Threading.Tasks.ParallelOptions.TaskScheduler">
+      <summary>Gets or sets the <see cref="T:System.Threading.Tasks.TaskScheduler" /> associated with this <see cref="T:System.Threading.Tasks.ParallelOptions" /> instance. Setting this property to null indicates that the current scheduler should be used.</summary>
+      <returns>The task scheduler that is associated with this instance.</returns>
+    </member>
+  </members>
+</doc>

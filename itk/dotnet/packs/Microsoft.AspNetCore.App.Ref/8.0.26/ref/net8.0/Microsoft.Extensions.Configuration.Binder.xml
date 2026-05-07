@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Configuration.Binder</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Configuration.BinderOptions">
+            <summary>
+            Options class used by the <see cref="T:Microsoft.Extensions.Configuration.ConfigurationBinder"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.BinderOptions.BindNonPublicProperties">
+            <summary>
+            When false (the default), the binder will only attempt to set public properties.
+            If true, the binder will attempt to set all non read-only properties.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.BinderOptions.ErrorOnUnknownConfiguration">
+            <summary>
+            When false (the default), no exceptions are thrown when trying to convert a value or when a configuration
+            key is found for which the provided model object does not have an appropriate property which matches the key's name.
+            When true, an <see cref="T:System.InvalidOperationException"/> is thrown with a description
+            of the error.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.ConfigurationBinder">
+            <summary>
+            Static helper class that allows binding strongly typed objects to configuration values.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get``1(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Attempts to bind the configuration instance to a new instance of type T.
+            If this configuration section has a value, that will be used.
+            Otherwise binding by matching property names against configuration keys recursively.
+            </summary>
+            <typeparam name="T">The type of the new instance to bind.</typeparam>
+            <param name="configuration">The configuration instance to bind.</param>
+            <returns>The new instance of T if successful, default(T) otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get``1(Microsoft.Extensions.Configuration.IConfiguration,System.Action{Microsoft.Extensions.Configuration.BinderOptions})">
+            <summary>
+            Attempts to bind the configuration instance to a new instance of type T.
+            If this configuration section has a value, that will be used.
+            Otherwise binding by matching property names against configuration keys recursively.
+            </summary>
+            <typeparam name="T">The type of the new instance to bind.</typeparam>
+            <param name="configuration">The configuration instance to bind.</param>
+            <param name="configureOptions">Configures the binder options.</param>
+            <returns>The new instance of T if successful, default(T) otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get(Microsoft.Extensions.Configuration.IConfiguration,System.Type)">
+            <summary>
+            Attempts to bind the configuration instance to a new instance of type T.
+            If this configuration section has a value, that will be used.
+            Otherwise binding by matching property names against configuration keys recursively.
+            </summary>
+            <param name="configuration">The configuration instance to bind.</param>
+            <param name="type">The type of the new instance to bind.</param>
+            <returns>The new instance if successful, null otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.Get(Microsoft.Extensions.Configuration.IConfiguration,System.Type,System.Action{Microsoft.Extensions.Configuration.BinderOptions})">
+            <summary>
+            Attempts to bind the configuration instance to a new instance of type T.
+            If this configuration section has a value, that will be used.
+            Otherwise binding by matching property names against configuration keys recursively.
+            </summary>
+            <param name="configuration">The configuration instance to bind.</param>
+            <param name="type">The type of the new instance to bind.</param>
+            <param name="configureOptions">Configures the binder options.</param>
+            <returns>The new instance if successful, null otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.Bind(Microsoft.Extensions.Configuration.IConfiguration,System.String,System.Object)">
+            <summary>
+            Attempts to bind the given object instance to the configuration section specified by the key by matching property names against configuration keys recursively.
+            </summary>
+            <param name="configuration">The configuration instance to bind.</param>
+            <param name="key">The key of the configuration section to bind.</param>
+            <param name="instance">The object to bind.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.Bind(Microsoft.Extensions.Configuration.IConfiguration,System.Object)">
+            <summary>
+            Attempts to bind the given object instance to configuration values by matching property names against configuration keys recursively.
+            </summary>
+            <param name="configuration">The configuration instance to bind.</param>
+            <param name="instance">The object to bind.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.Bind(Microsoft.Extensions.Configuration.IConfiguration,System.Object,System.Action{Microsoft.Extensions.Configuration.BinderOptions})">
+            <summary>
+            Attempts to bind the given object instance to configuration values by matching property names against configuration keys recursively.
+            </summary>
+            <param name="configuration">The configuration instance to bind.</param>
+            <param name="instance">The object to bind.</param>
+            <param name="configureOptions">Configures the binder options.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue``1(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Extracts the value with the specified key and converts it to type T.
+            </summary>
+            <typeparam name="T">The type to convert the value to.</typeparam>
+            <param name="configuration">The configuration.</param>
+            <param name="key">The key of the configuration section's value to convert.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue``1(Microsoft.Extensions.Configuration.IConfiguration,System.String,``0)">
+            <summary>
+            Extracts the value with the specified key and converts it to type T.
+            </summary>
+            <typeparam name="T">The type to convert the value to.</typeparam>
+            <param name="configuration">The configuration.</param>
+            <param name="key">The key of the configuration section's value to convert.</param>
+            <param name="defaultValue">The default value to use if no value is found.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue(Microsoft.Extensions.Configuration.IConfiguration,System.Type,System.String)">
+            <summary>
+            Extracts the value with the specified key and converts it to the specified type.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <param name="type">The type to convert the value to.</param>
+            <param name="key">The key of the configuration section's value to convert.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue(Microsoft.Extensions.Configuration.IConfiguration,System.Type,System.String,System.Object)">
+            <summary>
+            Extracts the value with the specified key and converts it to the specified type.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <param name="type">The type to convert the value to.</param>
+            <param name="key">The key of the configuration section's value to convert.</param>
+            <param name="defaultValue">The default value to use if no value is found.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+        <member name="P:System.SR.Error_CannotActivateAbstractOrInterface">
+            <summary>Cannot create instance of type '{0}' because it is either abstract or an interface.</summary>
+        </member>
+        <member name="P:System.SR.Error_CannotBindToConstructorParameter">
+            <summary>Cannot create instance of type '{0}' because one or more parameters cannot be bound to. Constructor parameters cannot be declared as in, out, or ref. Invalid parameters are: '{1}'</summary>
+        </member>
+        <member name="P:System.SR.Error_ConstructorParametersDoNotMatchProperties">
+            <summary>Cannot create instance of type '{0}' because one or more parameters cannot be bound to. Constructor parameters must have corresponding properties. Fields are not supported. Missing properties are: '{1}'</summary>
+        </member>
+        <member name="P:System.SR.Error_FailedBinding">
+            <summary>Failed to convert configuration value at '{0}' to type '{1}'.</summary>
+        </member>
+        <member name="P:System.SR.Error_FailedToActivate">
+            <summary>Failed to create instance of type '{0}'.</summary>
+        </member>
+        <member name="P:System.SR.Error_GeneralErrorWhenBinding">
+            <summary>'{0}' was set and binding has failed. The likely cause is an invalid configuration value.</summary>
+        </member>
+        <member name="P:System.SR.Error_MissingConfig">
+            <summary>'{0}' was set on the provided {1}, but the following properties were not found on the instance of {2}: {3}</summary>
+        </member>
+        <member name="P:System.SR.Error_MissingPublicInstanceConstructor">
+            <summary>Cannot create instance of type '{0}' because it is missing a public instance constructor.</summary>
+        </member>
+        <member name="P:System.SR.Error_MultipleParameterizedConstructors">
+            <summary>Cannot create instance of type '{0}' because it has multiple public parameterized constructors.</summary>
+        </member>
+        <member name="P:System.SR.Error_ParameterBeingBoundToIsUnnamed">
+            <summary>Cannot create instance of type '{0}' because one or more parameters are unnamed.</summary>
+        </member>
+        <member name="P:System.SR.Error_ParameterHasNoMatchingConfig">
+            <summary>Cannot create instance of type '{0}' because parameter '{1}' has no matching config. Each parameter in the constructor that does not have a default value must have a corresponding config entry.</summary>
+        </member>
+        <member name="P:System.SR.Error_UnsupportedMultidimensionalArray">
+            <summary>Cannot create instance of type '{0}' because multidimensional arrays are not supported.</summary>
+        </member>
+    </members>
+</doc>

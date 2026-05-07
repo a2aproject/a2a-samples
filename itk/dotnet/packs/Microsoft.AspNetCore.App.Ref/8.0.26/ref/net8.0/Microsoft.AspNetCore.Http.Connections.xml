@@ -1,0 +1,507 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Http.Connections</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilder">
+            <summary>
+            Builds conventions that will be used for customization of Connection <see cref="T:Microsoft.AspNetCore.Builder.EndpointBuilder"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilder.Add(System.Action{Microsoft.AspNetCore.Builder.EndpointBuilder})">
+            <summary>
+            Adds the specified convention to the builder. Conventions are used to customize <see cref="T:Microsoft.AspNetCore.Builder.EndpointBuilder"/> instances.
+            </summary>
+            <param name="convention">The convention to add to the builder.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilder.Finally(System.Action{Microsoft.AspNetCore.Builder.EndpointBuilder})">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilderExtensions">
+            <summary>
+            Extension methods on <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> that add routes for <see cref="T:Microsoft.AspNetCore.Connections.ConnectionHandler"/>s.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilderExtensions.MapConnections(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.Action{Microsoft.AspNetCore.Connections.IConnectionBuilder})">
+            <summary>
+            Maps incoming requests with the specified path to the provided connection pipeline.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the route to.</param>
+            <param name="pattern">The route pattern.</param>
+            <param name="configure">A callback to configure the connection.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilder"/> for endpoints associated with the connections.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilderExtensions.MapConnectionHandler``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String)">
+            <summary>
+            Maps incoming requests with the specified path to the provided connection pipeline.
+            </summary>
+            <typeparam name="TConnectionHandler">The <see cref="T:Microsoft.AspNetCore.Connections.ConnectionHandler"/> type.</typeparam>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the route to.</param>
+            <param name="pattern">The route pattern.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilder"/> for endpoints associated with the connections.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilderExtensions.MapConnectionHandler``1(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.Action{Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions})">
+            <summary>
+            Maps incoming requests with the specified path to the provided connection pipeline.
+            </summary>
+            <typeparam name="TConnectionHandler">The <see cref="T:Microsoft.AspNetCore.Connections.ConnectionHandler"/> type.</typeparam>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the route to.</param>
+            <param name="pattern">The route pattern.</param>
+            <param name="configureOptions">A callback to configure dispatcher options.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilder"/> for endpoints associated with the connections.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilderExtensions.MapConnections(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions,System.Action{Microsoft.AspNetCore.Connections.IConnectionBuilder})">
+            <summary>
+            Maps incoming requests with the specified path to the provided connection pipeline.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the route to.</param>
+            <param name="pattern">The route pattern.</param>
+            <param name="options">Options used to configure the connection.</param>
+            <param name="configure">A callback to configure the connection.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Builder.ConnectionEndpointRouteBuilder"/> for endpoints associated with the connections.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.ConnectionOptions">
+            <summary>
+            Options used to change behavior of how connections are handled.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.ConnectionOptions.DisconnectTimeout">
+            <summary>
+            Gets or sets the interval used by the server to timeout idle connections.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.ConnectionOptionsSetup">
+            <summary>
+            Sets up <see cref="T:Microsoft.AspNetCore.Http.Connections.ConnectionOptions"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Connections.ConnectionOptionsSetup.DefaultDisconectTimeout">
+            <summary>
+            Default timeout value for disconnecting idle connections.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.ConnectionOptionsSetup.Configure(Microsoft.AspNetCore.Http.Connections.ConnectionOptions)">
+            <summary>
+            Sets default values for options if they have not been set yet.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Http.Connections.ConnectionOptions"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.Features.IHttpContextFeature">
+            <summary>
+            Feature set on the <see cref="T:Microsoft.AspNetCore.Connections.ConnectionContext"/> that provides access to the underlying <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>
+            associated with the connection if there is one.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.Features.IHttpContextFeature.HttpContext">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the connection if available.
+            </summary>
+            <remarks>
+            Connections can run on top of HTTP transports like WebSockets or Long Polling, or other non-HTTP transports. As a result,
+            this API can sometimes return <see langword="null"/> depending on the configuration of your application.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.Features.IHttpTransportFeature">
+            <summary>
+            Feature set on the <see cref="T:Microsoft.AspNetCore.Connections.ConnectionContext"/> that exposes the <see cref="T:Microsoft.AspNetCore.Http.Connections.HttpTransportType"/>
+            the connection is using.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.Features.IHttpTransportFeature.TransportType">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Http.Connections.HttpTransportType"/> the connection is using.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.HttpConnectionContextExtensions">
+            <summary>
+            Extension method to get the underlying <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> of the connection if there is one.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.HttpConnectionContextExtensions.GetHttpContext(Microsoft.AspNetCore.Connections.ConnectionContext)">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the connection, if there is one.
+            </summary>
+            <param name="connection">The <see cref="T:Microsoft.AspNetCore.Connections.ConnectionContext"/> representing the connection.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the connection, or <see langword="null"/> if the connection is not HTTP-based.</returns>
+            <remarks>
+            SignalR connections can run on top of HTTP transports like WebSockets or Long Polling, or other non-HTTP transports. As a result,
+            this method can sometimes return <see langword="null"/> depending on the configuration of your application.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions">
+            <summary>
+            Options used to configure the HTTP connection dispatcher.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions"/> class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.AuthorizationData">
+            <summary>
+            Gets a collection of <see cref="T:Microsoft.AspNetCore.Authorization.IAuthorizeData"/> used during HTTP connection pipeline.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.Transports">
+            <summary>
+            Gets or sets a bitmask combining one or more <see cref="T:Microsoft.AspNetCore.Http.Connections.HttpTransportType"/> values that specify what transports the server should use to receive HTTP requests.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.WebSockets">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Http.Connections.WebSocketOptions"/> used by the web sockets transport.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.LongPolling">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Http.Connections.LongPollingOptions"/> used by the long polling transport.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.TransportMaxBufferSize">
+            <summary>
+            Gets or sets the maximum buffer size for data read by the application before backpressure is applied.
+            </summary>
+            <remarks>
+            The default value is 65KB.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.ApplicationMaxBufferSize">
+            <summary>
+            Gets or sets the maximum buffer size for data written by the application before backpressure is applied.
+            </summary>
+            <remarks>
+            The default value is 65KB.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.MinimumProtocolVersion">
+            <summary>
+            Gets or sets the minimum protocol verison supported by the server.
+            The default value is 0, the lowest possible protocol version.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.TransportSendTimeout">
+            <summary>
+            Gets or sets the amount of time the transport will wait for a send to complete. If a single send exceeds this timeout
+            the connection is closed.
+            </summary>
+            <remarks>
+            The default timeout is 10 seconds.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.CloseOnAuthenticationExpiration">
+            <summary>
+            Authenticated connections whose token sets the <see cref="P:Microsoft.AspNetCore.Authentication.AuthenticationProperties.ExpiresUtc"/> value will be closed
+            and allowed to reconnect when the token expires.
+            </summary>
+            <remarks>
+            Closed connections will miss messages sent while closed.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions.AllowStatefulReconnects">
+            <summary>
+            Set to allow connections to reconnect with the same <see cref="P:Microsoft.AspNetCore.Connections.BaseConnectionContext.ConnectionId"/>.
+            </summary>
+            <remarks>
+            Client still has to negotiate this option.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.Internal.HttpConnectionContext.#ctor(System.String,System.String,Microsoft.Extensions.Logging.ILogger,Microsoft.AspNetCore.Http.Connections.Internal.MetricsContext,System.IO.Pipelines.IDuplexPipe,System.IO.Pipelines.IDuplexPipe,Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions,System.Boolean)">
+            <summary>
+            Creates the DefaultConnectionContext without Pipes to avoid upfront allocations.
+            The caller is expected to set the <see cref="P:Microsoft.AspNetCore.Http.Connections.Internal.HttpConnectionContext.Transport"/> and <see cref="P:Microsoft.AspNetCore.Http.Connections.Internal.HttpConnectionContext.Application"/> pipes manually.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.Internal.HttpConnectionManager.CreateConnection(Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions,System.Int32,System.Boolean)">
+            <summary>
+            Creates a connection without Pipes setup to allow saving allocations until Pipes are needed.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.Internal.Transports.IHttpTransport.ProcessRequestAsync(Microsoft.AspNetCore.Http.HttpContext,System.Threading.CancellationToken)">
+            <summary>
+            Executes the transport
+            </summary>
+            <param name="context"></param>
+            <param name="token"></param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that completes when the transport has finished processing</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.LongPollingOptions">
+            <summary>
+            Options used to configure the long polling transport.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.LongPollingOptions.PollTimeout">
+            <summary>
+            Gets or sets the poll timeout.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.NegotiateMetadata">
+            <summary>
+            Metadata to identify the /negotiate endpoint for HTTP connections
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.ServerSentEventsMessageFormatter.GetLastSegment(System.Buffers.ReadOnlySequence{System.Byte}@,System.Int64@)">
+            <summary>
+            Gets the last memory segment in a sequence.
+            </summary>
+            <param name="source">Source sequence.</param>
+            <param name="offset">The offset the segment starts at.</param>
+            <returns>The last memory segment in a sequence.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.WebSocketOptions">
+            <summary>
+            Options used by the WebSockets transport to modify the transports behavior.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.WebSocketOptions.CloseTimeout">
+            <summary>
+            Gets or sets the amount of time the WebSocket transport will wait for a graceful close before starting an ungraceful close.
+            </summary>
+            <value>Defaults to 5 seconds</value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.WebSocketOptions.SubProtocolSelector">
+            <summary>
+            Gets or sets a delegate that will be called when a new WebSocket is established to select the value
+            for the 'Sec-WebSocket-Protocol' response header. The delegate will be called with a list of the protocols provided
+            by the client in the 'Sec-WebSocket-Protocol' request header.
+            </summary>
+            <remarks>
+            See RFC 6455 section 1.3 for more details on the WebSocket handshake: <see href="https://tools.ietf.org/html/rfc6455#section-1.3"/>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.MemoryBufferWriter.WrittenBuffers">
+            <summary>
+            Holds the written segments from a MemoryBufferWriter and is no longer attached to a MemoryBufferWriter.
+            You are now responsible for calling Dispose on this type to return the memory to the pool.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.MemoryBufferWriter.CompletedBuffer">
+            <summary>
+            Holds a byte[] from the pool and a size value. Basically a Memory but guaranteed to be backed by an ArrayPool byte[], so that we know we can return it.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
+            <param name="value">The argument to validate as non-zero.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int64,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegativeOrZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
+            <param name="value">The argument to validate as non-zero or non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ConnectionsDependencyInjectionExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ConnectionsDependencyInjectionExtensions.AddConnections(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds required services for ASP.NET Core Connection Handlers to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <returns>The same instance of the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ConnectionsDependencyInjectionExtensions.AddConnections(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Http.Connections.ConnectionOptions})">
+            <summary>
+            Adds required services for ASP.NET Core Connection Handlers to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="options">A callback to configure  <see cref="T:Microsoft.AspNetCore.Http.Connections.ConnectionOptions" /></param>
+            <returns>The same instance of the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for chaining.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Internal.SecurityHelper">
+            <summary>
+            Helper code used when implementing authentication middleware
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.SecurityHelper.MergeUserPrincipal(System.Security.Claims.ClaimsPrincipal,System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Add all ClaimsIdentities from an additional ClaimPrincipal to the ClaimsPrincipal
+            Merges a new claims principal, placing all new identities first, and eliminating
+            any empty unauthenticated identities from context.User
+            </summary>
+            <param name="existingPrincipal">The <see cref="T:System.Security.Claims.ClaimsPrincipal"/> containing existing <see cref="T:System.Security.Claims.ClaimsIdentity"/>.</param>
+            <param name="additionalPrincipal">The <see cref="T:System.Security.Claims.ClaimsPrincipal"/> containing <see cref="T:System.Security.Claims.ClaimsIdentity"/> to be added.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.Internal.WebEncoders">
+            <summary>
+            Contains utility APIs to assist with common encoding and decoding operations.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlDecode(System.String)">
+            <summary>
+            Decodes a base64url-encoded string.
+            </summary>
+            <param name="input">The base64url-encoded input to decode.</param>
+            <returns>The base64url-decoded form of the input.</returns>
+            <remarks>
+            The input must not contain any whitespace or padding characters.
+            Throws <see cref="T:System.FormatException"/> if the input is malformed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlDecode(System.String,System.Int32,System.Int32)">
+            <summary>
+            Decodes a base64url-encoded substring of a given string.
+            </summary>
+            <param name="input">A string containing the base64url-encoded input to decode.</param>
+            <param name="offset">The position in <paramref name="input"/> at which decoding should begin.</param>
+            <param name="count">The number of characters in <paramref name="input"/> to decode.</param>
+            <returns>The base64url-decoded form of the input.</returns>
+            <remarks>
+            The input must not contain any whitespace or padding characters.
+            Throws <see cref="T:System.FormatException"/> if the input is malformed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlDecode(System.String,System.Int32,System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Decodes a base64url-encoded <paramref name="input"/> into a <c>byte[]</c>.
+            </summary>
+            <param name="input">A string containing the base64url-encoded input to decode.</param>
+            <param name="offset">The position in <paramref name="input"/> at which decoding should begin.</param>
+            <param name="buffer">
+            Scratch buffer to hold the <see cref="T:System.Char"/>s to decode. Array must be large enough to hold
+            <paramref name="bufferOffset"/> and <paramref name="count"/> characters as well as Base64 padding
+            characters. Content is not preserved.
+            </param>
+            <param name="bufferOffset">
+            The offset into <paramref name="buffer"/> at which to begin writing the <see cref="T:System.Char"/>s to decode.
+            </param>
+            <param name="count">The number of characters in <paramref name="input"/> to decode.</param>
+            <returns>The base64url-decoded form of the <paramref name="input"/>.</returns>
+            <remarks>
+            The input must not contain any whitespace or padding characters.
+            Throws <see cref="T:System.FormatException"/> if the input is malformed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.GetArraySizeRequiredToDecode(System.Int32)">
+            <summary>
+            Gets the minimum <c>char[]</c> size required for decoding of <paramref name="count"/> characters
+            with the <see cref="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlDecode(System.String,System.Int32,System.Char[],System.Int32,System.Int32)"/> method.
+            </summary>
+            <param name="count">The number of characters to decode.</param>
+            <returns>
+            The minimum <c>char[]</c> size required for decoding  of <paramref name="count"/> characters.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.Byte[])">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <returns>The base64url-encoded form of <paramref name="input"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <param name="offset">The offset into <paramref name="input"/> at which to begin encoding.</param>
+            <param name="count">The number of bytes from <paramref name="input"/> to encode.</param>
+            <returns>The base64url-encoded form of <paramref name="input"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.Byte[],System.Int32,System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <param name="offset">The offset into <paramref name="input"/> at which to begin encoding.</param>
+            <param name="output">
+            Buffer to receive the base64url-encoded form of <paramref name="input"/>. Array must be large enough to
+            hold <paramref name="outputOffset"/> characters and the full base64-encoded form of
+            <paramref name="input"/>, including padding characters.
+            </param>
+            <param name="outputOffset">
+            The offset into <paramref name="output"/> at which to begin writing the base64url-encoded form of
+            <paramref name="input"/>.
+            </param>
+            <param name="count">The number of <c>byte</c>s from <paramref name="input"/> to encode.</param>
+            <returns>
+            The number of characters written to <paramref name="output"/>, less any padding characters.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.GetArraySizeRequiredToEncode(System.Int32)">
+            <summary>
+            Get the minimum output <c>char[]</c> size required for encoding <paramref name="count"/>
+            <see cref="T:System.Byte"/>s with the <see cref="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.Byte[],System.Int32,System.Char[],System.Int32,System.Int32)"/> method.
+            </summary>
+            <param name="count">The number of characters to encode.</param>
+            <returns>
+            The minimum output <c>char[]</c> size required for encoding <paramref name="count"/> <see cref="T:System.Byte"/>s.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <returns>The base64url-encoded form of <paramref name="input"/>.</returns>
+        </member>
+        <member name="F:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.WebEncoders_InvalidCountOffsetOrLength">
+            <summary>
+            Invalid {0}, {1} or {2} length.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.WebEncoders_MalformedInput">
+            <summary>
+            Malformed input: {0} is an invalid input length.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.FormatWebEncoders_InvalidCountOffsetOrLength(System.Object,System.Object,System.Object)">
+            <summary>
+            Invalid {0}, {1} or {2} length.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.FormatWebEncoders_MalformedInput(System.Object)">
+            <summary>
+            Malformed input: {0} is an invalid input length.
+            </summary>
+        </member>
+    </members>
+</doc>

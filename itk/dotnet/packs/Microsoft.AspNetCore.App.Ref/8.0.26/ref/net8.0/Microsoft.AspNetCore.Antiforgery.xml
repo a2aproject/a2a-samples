@@ -1,0 +1,444 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Antiforgery</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Builder.AntiforgeryApplicationBuilderExtensions">
+            <summary>
+            Anti-forgery extension methods for <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.AntiforgeryApplicationBuilderExtensions.UseAntiforgery(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds the anti-forgery middleware to the pipeline.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <returns>The app builder.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions">
+            <summary>
+            Provides programmatic configuration for the antiforgery token system.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions.DefaultCookiePrefix">
+            <summary>
+            The default cookie prefix, which is ".AspNetCore.Antiforgery.".
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions.Cookie">
+            <summary>
+            Determines the settings used to create the antiforgery cookies.
+            </summary>
+            <remarks>
+            <para>
+            If an explicit <see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.Name"/> is not provided, the system will automatically generate a
+            unique name that begins with <see cref="F:Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions.DefaultCookiePrefix"/>.
+            </para>
+            <list type="bullet">
+            <item><description><see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.SameSite"/> defaults to <see cref="F:Microsoft.AspNetCore.Http.SameSiteMode.Strict"/>.</description></item>
+            <item><description><see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.HttpOnly"/> defaults to <c>true</c>.</description></item>
+            <item><description><see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.IsEssential"/> defaults to <c>true</c>. The cookie used by the antiforgery system
+            is part of a security system that is necessary when using cookie-based authentication. It should be
+            considered required for the application to function.</description></item>
+            <item><description><see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.SecurePolicy"/> defaults to <see cref="F:Microsoft.AspNetCore.Http.CookieSecurePolicy.None"/>.</description></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions.FormFieldName">
+            <summary>
+            Specifies the name of the antiforgery token field that is used by the antiforgery system.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions.HeaderName">
+            <summary>
+            Specifies the name of the header value that is used by the antiforgery system. If <c>null</c> then
+            antiforgery validation will only consider form data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions.SuppressXFrameOptionsHeader">
+            <summary>
+            Specifies whether to suppress the generation of X-Frame-Options header
+            which is used to prevent ClickJacking. By default, the X-Frame-Options
+            header is generated with the value SAMEORIGIN. If this setting is 'true',
+            the X-Frame-Options header will not be generated for the response.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet">
+            <summary>
+            The antiforgery token pair (cookie and request token) for a request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Creates the antiforgery token pair (cookie and request token) for a request.
+            </summary>
+            <param name="requestToken">The token that is supplied in the request.</param>
+            <param name="cookieToken">The token that is supplied in the request cookie.</param>
+            <param name="formFieldName">The name of the form field used for the request token.</param>
+            <param name="headerName">The name of the header used for the request token.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet.RequestToken">
+            <summary>
+            Gets the request token.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet.FormFieldName">
+            <summary>
+            Gets the name of the form field used for the request token.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet.HeaderName">
+            <summary>
+            Gets the name of the header used for the request token.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet.CookieToken">
+            <summary>
+            Gets the cookie token.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException">
+            <summary>
+            The <see cref="T:System.Exception"/> that is thrown when the antiforgery token validation fails.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException"/> with the specified
+            exception message.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException"/> with the specified
+            exception message and inner exception.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="innerException">The inner <see cref="T:System.Exception"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.IAntiforgery">
+            <summary>
+            Provides access to the antiforgery system, which provides protection against
+            Cross-site Request Forgery (XSRF, also called CSRF) attacks.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgery.GetAndStoreTokens(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Generates an <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet"/> for this request and stores the cookie token
+            in the response. This operation also sets the "Cache-control" and "Pragma" headers to "no-cache" and
+            the "X-Frame-Options" header to "SAMEORIGIN".
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet" /> with tokens for the response.</returns>
+            <remarks>
+            This method has a side effect:
+            A response cookie is set if there is no valid cookie associated with the request.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgery.GetTokens(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Generates an <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet"/> for this request.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet"/> for this request.</returns>
+            <remarks>
+            Unlike <see cref="M:Microsoft.AspNetCore.Antiforgery.IAntiforgery.GetAndStoreTokens(Microsoft.AspNetCore.Http.HttpContext)"/>, this method has no side effect. The caller
+            is responsible for setting the response cookie and injecting the returned
+            form token as appropriate.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgery.IsRequestValidAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Asynchronously returns a value indicating whether the request passes antiforgery validation. If the
+            request uses a safe HTTP method (GET, HEAD, OPTIONS, TRACE), the antiforgery token is not validated.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> that, when completed, returns <c>true</c> if the request uses a safe HTTP
+            method or contains a valid antiforgery token, otherwise returns <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgery.ValidateRequestAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Validates an antiforgery token that was supplied as part of the request.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that completes when validation has completed.</returns>
+            <exception cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryValidationException">
+            Thrown when the request does not include a valid antiforgery token.
+            </exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgery.SetCookieTokenAndHeader(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Generates and stores an antiforgery cookie token if one is not available or not valid.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.IAntiforgeryAdditionalDataProvider">
+            <summary>
+            Allows providing or validating additional custom data for antiforgery tokens.
+            For example, the developer could use this to supply a nonce when the token is
+            generated, then validate it when the token is validated.
+            </summary>
+            <remarks>
+            The antiforgery system already embeds the client's username within the
+            generated tokens. This interface provides and consumes <em>supplemental</em>
+            data. If an incoming antiforgery token contains supplemental data but no
+            additional data provider is configured, the supplemental data will not be
+            validated.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgeryAdditionalDataProvider.GetAdditionalData(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Provides additional data to be stored for the antiforgery tokens generated
+            during this request.
+            </summary>
+            <param name="context">Information about the current request.</param>
+            <returns>Supplemental data to embed within the antiforgery token.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgeryAdditionalDataProvider.ValidateAdditionalData(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>
+            Validates additional data that was embedded inside an incoming antiforgery
+            token.
+            </summary>
+            <param name="context">Information about the current request.</param>
+            <param name="additionalData">Supplemental data that was embedded within the token.</param>
+            <returns>True if the data is valid; false if the data is invalid.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryFeature">
+            <summary>
+            Used to hold per-request state.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery">
+            <summary>
+            Provides access to the antiforgery system, which provides protection against
+            Cross-site Request Forgery (XSRF, also called CSRF) attacks.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetAndStoreTokens(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.GetTokens(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.IsRequestValidAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.ValidateRequestAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.SetCookieTokenAndHeader(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgery.SetDoNotCacheHeaders(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Sets the 'Cache-Control' header to 'no-cache, no-store' and 'Pragma' header to 'no-cache' overriding any user set value.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryAdditionalDataProvider">
+            <summary>
+            A default <see cref="T:Microsoft.AspNetCore.Antiforgery.IAntiforgeryAdditionalDataProvider"/> implementation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryAdditionalDataProvider.GetAdditionalData(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryAdditionalDataProvider.ValidateAdditionalData(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenGenerator.GenerateCookieToken">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenGenerator.GenerateRequestToken(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Antiforgery.AntiforgeryToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenGenerator.IsCookieTokenValid(Microsoft.AspNetCore.Antiforgery.AntiforgeryToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultAntiforgeryTokenGenerator.TryValidateTokenSet(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Antiforgery.AntiforgeryToken,Microsoft.AspNetCore.Antiforgery.AntiforgeryToken,System.String@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.DefaultClaimUidExtractor">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.AspNetCore.Antiforgery.IClaimUidExtractor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.DefaultClaimUidExtractor.ExtractClaimUid(System.Security.Claims.ClaimsPrincipal)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.IAntiforgeryTokenGenerator">
+            <summary>
+            Generates and validates antiforgery tokens.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgeryTokenGenerator.GenerateCookieToken">
+            <summary>
+            Generates a new random cookie token.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryToken"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgeryTokenGenerator.GenerateRequestToken(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Antiforgery.AntiforgeryToken)">
+            <summary>
+            Generates a request token corresponding to <paramref name="cookieToken"/>.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <param name="cookieToken">A valid cookie token.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryToken"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgeryTokenGenerator.IsCookieTokenValid(Microsoft.AspNetCore.Antiforgery.AntiforgeryToken)">
+            <summary>
+            Attempts to validate a cookie token.
+            </summary>
+            <param name="cookieToken">A valid cookie token.</param>
+            <returns><c>true</c> if the cookie token is valid, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgeryTokenGenerator.TryValidateTokenSet(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Antiforgery.AntiforgeryToken,Microsoft.AspNetCore.Antiforgery.AntiforgeryToken,System.String@)">
+            <summary>
+            Attempts to validate a cookie and request token set for the given <paramref name="httpContext"/>.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <param name="cookieToken">A cookie token.</param>
+            <param name="requestToken">A request token.</param>
+            <param name="message">
+            Will be set to the validation message if the tokens are invalid, otherwise <c>null</c>.
+            </param>
+            <returns><c>true</c> if the tokens are valid, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IAntiforgeryTokenStore.GetRequestTokensAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Gets the cookie and request tokens from the request.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> for the current request.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryTokenSet"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.IClaimUidExtractor">
+            <summary>
+            This interface can extract unique identifers for a <see cref="T:System.Security.Claims.ClaimsPrincipal"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.IClaimUidExtractor.ExtractClaimUid(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Extracts claims identifier.
+            </summary>
+            <param name="claimsPrincipal">The <see cref="T:System.Security.Claims.ClaimsPrincipal"/>.</param>
+            <returns>The claims identifier.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Antiforgery.RequireAntiforgeryTokenAttribute">
+            <summary>
+            An attribute that can be used to indicate whether the antiforgery token must be validated.
+            </summary>
+            <param name="required">A value indicating whether the antiforgery token should be validated.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.RequireAntiforgeryTokenAttribute.#ctor(System.Boolean)">
+            <summary>
+            An attribute that can be used to indicate whether the antiforgery token must be validated.
+            </summary>
+            <param name="required">A value indicating whether the antiforgery token should be validated.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.RequireAntiforgeryTokenAttribute.RequiresValidation">
+            <summary>
+            Gets or sets a value indicating whether the antiforgery token should be validated.
+            </summary>
+            <remarks>
+            Defaults to <see langword="true"/>; <see langword="false"/> indicates that
+            the validation check for the antiforgery token can be avoided.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.AntiforgeryTokenValidator_AuthenticatedUserWithoutUsername">
+            <summary>The provided identity of type '{0}' is marked {1} = {2} but does not have a value for {3}. By default, the antiforgery system requires that all authenticated identities have a unique {3}. If it is not possible to provide a unique {3} for this identity, con ...</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.Resources.FormatAntiforgeryTokenValidator_AuthenticatedUserWithoutUsername(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>The provided identity of type '{0}' is marked {1} = {2} but does not have a value for {3}. By default, the antiforgery system requires that all authenticated identities have a unique {3}. If it is not possible to provide a unique {3} for this identity, con ...</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.AntiforgeryToken_AdditionalDataCheckFailed">
+            <summary>The provided antiforgery token failed a custom data check.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.AntiforgeryToken_ClaimUidMismatch">
+            <summary>The provided antiforgery token was meant for a different claims-based user than the current user.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.AntiforgeryToken_DeserializationFailed">
+            <summary>The antiforgery token could not be decrypted.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.AntiforgeryToken_SecurityTokenMismatch">
+            <summary>The antiforgery cookie token and request token do not match.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.AntiforgeryToken_TokensSwapped">
+            <summary>Validation of the provided antiforgery token failed. The cookie token and the request token were swapped.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.AntiforgeryToken_UnableToReadRequest">
+            <summary>Unable to read the antiforgery request token from the posted form.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.AntiforgeryToken_UsernameMismatch">
+            <summary>The provided antiforgery token was meant for user "{0}", but the current user is "{1}".</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.Resources.FormatAntiforgeryToken_UsernameMismatch(System.Object,System.Object)">
+            <summary>The provided antiforgery token was meant for user "{0}", but the current user is "{1}".</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.Antiforgery_CookieToken_IsInvalid">
+            <summary>The antiforgery cookie token is invalid.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.Antiforgery_CookieToken_MustBeProvided">
+            <summary>The required antiforgery cookie "{0}" is not present.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.Resources.FormatAntiforgery_CookieToken_MustBeProvided(System.Object)">
+            <summary>The required antiforgery cookie "{0}" is not present.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.Antiforgery_CookieToken_MustBeProvided_Generic">
+            <summary>The required antiforgery cookie token must be provided.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.Antiforgery_FormToken_MustBeProvided">
+            <summary>The required antiforgery form field "{0}" is not present.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.Resources.FormatAntiforgery_FormToken_MustBeProvided(System.Object)">
+            <summary>The required antiforgery form field "{0}" is not present.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.Antiforgery_HeaderToken_MustBeProvided">
+            <summary>The required antiforgery header value "{0}" is not present.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.Resources.FormatAntiforgery_HeaderToken_MustBeProvided(System.Object)">
+            <summary>The required antiforgery header value "{0}" is not present.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.Antiforgery_RequestToken_MustBeProvided">
+            <summary>The required antiforgery request token was not provided in either form field "{0}" or header value "{1}".</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.Resources.FormatAntiforgery_RequestToken_MustBeProvided(System.Object,System.Object)">
+            <summary>The required antiforgery request token was not provided in either form field "{0}" or header value "{1}".</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.Antiforgery_RequestToken_MustBeProvided_Generic">
+            <summary>The required antiforgery request token must be provided.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.Antiforgery_RequiresSSL">
+            <summary>The antiforgery system has the configuration value {optionName} = {value}, but the current request is not an SSL request.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Antiforgery.Resources.FormatAntiforgery_RequiresSSL(System.Object,System.Object)">
+            <summary>The antiforgery system has the configuration value {optionName} = {value}, but the current request is not an SSL request.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Antiforgery.Resources.ArgumentCannotBeNullOrEmpty">
+            <summary>Value cannot be null or empty.</summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.AntiforgeryServiceCollectionExtensions">
+            <summary>
+            Extension methods for setting up antiforgery services in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.AntiforgeryServiceCollectionExtensions.AddAntiforgery(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds antiforgery services to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.AntiforgeryServiceCollectionExtensions.AddAntiforgery(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions})">
+            <summary>
+            Adds antiforgery services to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="setupAction">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.AspNetCore.Antiforgery.AntiforgeryOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+    </members>
+</doc>

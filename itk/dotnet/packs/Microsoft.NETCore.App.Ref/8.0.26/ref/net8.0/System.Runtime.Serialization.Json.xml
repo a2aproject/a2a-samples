@@ -1,0 +1,363 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Runtime.Serialization.Json</name>
+  </assembly>
+  <members>
+    <member name="T:System.Runtime.Serialization.DateTimeFormat">
+      <summary>Specifies date-time format options.</summary>
+    </member>
+    <member name="M:System.Runtime.Serialization.DateTimeFormat.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.DateTimeFormat" /> class using the format string.</summary>
+      <param name="formatString">The format string.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.DateTimeFormat.#ctor(System.String,System.IFormatProvider)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.DateTimeFormat" /> class using the format string and format provider.</summary>
+      <param name="formatString">The format sting.</param>
+      <param name="formatProvider">The format provider.</param>
+    </member>
+    <member name="P:System.Runtime.Serialization.DateTimeFormat.DateTimeStyles">
+      <summary>Gets or sets the formatting options that customize string parsing for some date and time parsing methods.</summary>
+      <returns>The formatting options that customize string parsing for some date and time parsing methods.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.DateTimeFormat.FormatProvider">
+      <summary>Gets an object that controls formatting.</summary>
+    </member>
+    <member name="P:System.Runtime.Serialization.DateTimeFormat.FormatString">
+      <summary>Gets the format strings to control the formatting produced when a date or time is represented as a string.</summary>
+      <returns>The format strings to control the formatting produced when a date or time is represented as a string.</returns>
+    </member>
+    <member name="T:System.Runtime.Serialization.EmitTypeInformation">
+      <summary>Specifies how often to emit type information.</summary>
+    </member>
+    <member name="F:System.Runtime.Serialization.EmitTypeInformation.Always">
+      <summary>Always to emit type information.</summary>
+    </member>
+    <member name="F:System.Runtime.Serialization.EmitTypeInformation.AsNeeded">
+      <summary>As needed emit type information.</summary>
+    </member>
+    <member name="F:System.Runtime.Serialization.EmitTypeInformation.Never">
+      <summary>Never to emit type information.</summary>
+    </member>
+    <member name="T:System.Runtime.Serialization.Json.DataContractJsonSerializer">
+      <summary>Serializes objects to the JavaScript Object Notation (JSON) and deserializes JSON data to objects. This class cannot be inherited.</summary>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.#ctor(System.Type)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> class to serialize or deserialize an object of the specified type.</summary>
+      <param name="type">The type of the instances that is serialized or deserialized.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.#ctor(System.Type,System.Collections.Generic.IEnumerable{System.Type})">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> class to serialize or deserialize an object of the specified type, with a collection of known types that may be present in the object graph.</summary>
+      <param name="type">The type of the instances that are serialized or deserialized.</param>
+      <param name="knownTypes">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> of <see cref="T:System.Type" /> that contains the types that may be present in the object graph.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.#ctor(System.Type,System.Runtime.Serialization.Json.DataContractJsonSerializerSettings)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> class to serialize or deserialize an object of the specified type and serializer settings.</summary>
+      <param name="type">The type of the instances that is serialized or deserialized.</param>
+      <param name="settings">The serializer settings for the JSON serializer.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.#ctor(System.Type,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> class to serialize or deserialize an object of a specified type using the XML root element specified by a parameter.</summary>
+      <param name="type">The type of the instances that is serialized or deserialized.</param>
+      <param name="rootName">The name of the XML element that encloses the content to serialize or deserialize.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.#ctor(System.Type,System.String,System.Collections.Generic.IEnumerable{System.Type})">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> class to serialize or deserialize an object of a specified type using the XML root element specified by a parameter, with a collection of known types that may be present in the object graph.</summary>
+      <param name="type">The type of the instances that is serialized or deserialized.</param>
+      <param name="rootName">The name of the XML element that encloses the content to serialize or deserialize. The default is "root".</param>
+      <param name="knownTypes">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> of <see cref="T:System.Type" /> that contains the types that may be present in the object graph.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.#ctor(System.Type,System.Xml.XmlDictionaryString)">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> class to serialize or deserialize an object of a specified type using the XML root element specified by a parameter of type <see cref="T:System.Xml.XmlDictionaryString" />.</summary>
+      <param name="type">The type of the instances that is serialized or deserialized.</param>
+      <param name="rootName">An <see cref="T:System.Xml.XmlDictionaryString" /> that contains the root element name of the content.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.#ctor(System.Type,System.Xml.XmlDictionaryString,System.Collections.Generic.IEnumerable{System.Type})">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> class to serialize or deserialize an object of a specified type using the XML root element specified by a parameter of type <see cref="T:System.Xml.XmlDictionaryString" />, with a collection of known types that may be present in the object graph.</summary>
+      <param name="type">The type of the instances that is serialized or deserialized.</param>
+      <param name="rootName">An <see cref="T:System.Xml.XmlDictionaryString" /> that contains the root element name of the content.</param>
+      <param name="knownTypes">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> of <see cref="T:System.Type" /> that contains the types that may be present in the object graph.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.GetSerializationSurrogateProvider" />
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.IsStartObject(System.Xml.XmlDictionaryReader)">
+      <summary>Gets a value that specifies whether the <see cref="T:System.Xml.XmlDictionaryReader" /> is positioned over an XML element that represents an object the serializer can deserialize from.</summary>
+      <param name="reader">The <see cref="T:System.Xml.XmlDictionaryReader" /> used to read the XML stream mapped from JSON.</param>
+      <returns>
+        <see langword="true" /> if the reader is positioned correctly; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.IsStartObject(System.Xml.XmlReader)">
+      <summary>Determines whether the <see cref="T:System.Xml.XmlReader" /> is positioned on an object that can be deserialized.</summary>
+      <param name="reader">The <see cref="T:System.Xml.XmlReader" /> used to read the XML stream.</param>
+      <returns>
+        <see langword="true" /> if the reader is positioned correctly; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.ReadObject(System.IO.Stream)">
+      <summary>Reads a document stream in the JSON (JavaScript Object Notation) format and returns the deserialized object.</summary>
+      <param name="stream">The <see cref="T:System.IO.Stream" /> to be read.</param>
+      <returns>The deserialized object.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.ReadObject(System.Xml.XmlDictionaryReader)">
+      <summary>Reads the XML document mapped from JSON (JavaScript Object Notation) with an <see cref="T:System.Xml.XmlDictionaryReader" /> and returns the deserialized object.</summary>
+      <param name="reader">An <see cref="T:System.Xml.XmlDictionaryReader" /> used to read the XML document mapped from JSON.</param>
+      <returns>The deserialized object.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.ReadObject(System.Xml.XmlDictionaryReader,System.Boolean)">
+      <summary>Reads the XML document mapped from JSON with an <see cref="T:System.Xml.XmlDictionaryReader" /> and returns the deserialized object; it also enables you to specify whether the serializer should verify that it is positioned on an appropriate element before attempting to deserialize.</summary>
+      <param name="reader">An <see cref="T:System.Xml.XmlDictionaryReader" /> used to read the XML document mapped from JSON.</param>
+      <param name="verifyObjectName">
+        <see langword="true" /> to check whether the enclosing XML element name and namespace correspond to the expected name and namespace; otherwise, <see langword="false" /> to skip the verification. The default is <see langword="true" />.</param>
+      <returns>The deserialized object.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.ReadObject(System.Xml.XmlReader)">
+      <summary>Reads the XML document mapped from JSON (JavaScript Object Notation) with an <see cref="T:System.Xml.XmlReader" /> and returns the deserialized object.</summary>
+      <param name="reader">An <see cref="T:System.Xml.XmlReader" /> used to read the XML document mapped from JSON.</param>
+      <returns>The deserialized object.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.ReadObject(System.Xml.XmlReader,System.Boolean)">
+      <summary>Reads an XML document mapped from JSON with an <see cref="T:System.Xml.XmlReader" /> and returns the deserialized object; it also enables you to specify whether the serializer should verify that it is positioned on an appropriate element before attempting to deserialize.</summary>
+      <param name="reader">An <see cref="T:System.Xml.XmlReader" /> used to read the XML document mapped from JSON.</param>
+      <param name="verifyObjectName">
+        <see langword="true" /> to check whether the enclosing XML element name and namespace correspond to the expected name and namespace; otherwise, <see langword="false" />, which skips the verification. The default is <see langword="true" />.</param>
+      <returns>The deserialized object.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.SetSerializationSurrogateProvider(System.Runtime.Serialization.ISerializationSurrogateProvider)">
+      <param name="provider" />
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.WriteEndObject(System.Xml.XmlDictionaryWriter)">
+      <summary>Writes the closing XML element to an XML document, using an <see cref="T:System.Xml.XmlDictionaryWriter" />, which can be mapped to JavaScript Object Notation (JSON).</summary>
+      <param name="writer">An <see cref="T:System.Xml.XmlDictionaryWriter" /> used to write the XML document to map to JSON.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.WriteEndObject(System.Xml.XmlWriter)">
+      <summary>Writes the closing XML element to an XML document, using an <see cref="T:System.Xml.XmlWriter" />, which can be mapped to JavaScript Object Notation (JSON).</summary>
+      <param name="writer">An <see cref="T:System.Xml.XmlWriter" /> used to write the XML document mapped to JSON.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.WriteObject(System.IO.Stream,System.Object)">
+      <summary>Serializes a specified object to JavaScript Object Notation (JSON) data and writes the resulting JSON to a stream.</summary>
+      <param name="stream">The <see cref="T:System.IO.Stream" /> that is written to.</param>
+      <param name="graph">The object that contains the data to write to the stream.</param>
+      <exception cref="T:System.Runtime.Serialization.InvalidDataContractException">The type being serialized does not conform to data contract rules. For example, the <see cref="T:System.Runtime.Serialization.DataContractAttribute" /> attribute has not been applied to the type.</exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">There is a problem with the instance being written.</exception>
+      <exception cref="T:System.ServiceModel.QuotaExceededException">The maximum number of objects to serialize has been exceeded. Check the <see cref="P:System.Runtime.Serialization.DataContractSerializer.MaxItemsInObjectGraph" /> property.</exception>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.WriteObject(System.Xml.XmlDictionaryWriter,System.Object)">
+      <summary>Serializes an object to XML that may be mapped to JavaScript Object Notation (JSON). Writes all the object data, including the starting XML element, content, and closing element, with an <see cref="T:System.Xml.XmlDictionaryWriter" />.</summary>
+      <param name="writer">The <see cref="T:System.Xml.XmlDictionaryWriter" /> used to write the XML document or stream to map to JSON.</param>
+      <param name="graph">The object that contains the data to write.</param>
+      <exception cref="T:System.Runtime.Serialization.InvalidDataContractException">The type being serialized does not conform to data contract rules. For example, the <see cref="T:System.Runtime.Serialization.DataContractAttribute" /> attribute has not been applied to the type.</exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">There is a problem with the instance being written.</exception>
+      <exception cref="T:System.ServiceModel.QuotaExceededException">The maximum number of objects to serialize has been exceeded. Check the <see cref="P:System.Runtime.Serialization.DataContractSerializer.MaxItemsInObjectGraph" /> property.</exception>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.WriteObject(System.Xml.XmlWriter,System.Object)">
+      <summary>Serializes an object to XML that may be mapped to JavaScript Object Notation (JSON). Writes all the object data, including the starting XML element, content, and closing element, with an <see cref="T:System.Xml.XmlWriter" />.</summary>
+      <param name="writer">The <see cref="T:System.Xml.XmlWriter" /> used to write the XML document to map to JSON.</param>
+      <param name="graph">The object that contains the data to write.</param>
+      <exception cref="T:System.Runtime.Serialization.InvalidDataContractException">The type being serialized does not conform to data contract rules. For example, the <see cref="T:System.Runtime.Serialization.DataContractAttribute" /> attribute has not been applied to the type.</exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">There is a problem with the instance being written.</exception>
+      <exception cref="T:System.ServiceModel.QuotaExceededException">The maximum number of objects to serialize has been exceeded. Check the <see cref="P:System.Runtime.Serialization.DataContractSerializer.MaxItemsInObjectGraph" /> property.</exception>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.WriteObjectContent(System.Xml.XmlDictionaryWriter,System.Object)">
+      <summary>Writes the XML content that can be mapped to JavaScript Object Notation (JSON) using an <see cref="T:System.Xml.XmlDictionaryWriter" />.</summary>
+      <param name="writer">The <see cref="T:System.Xml.XmlDictionaryWriter" /> to write to.</param>
+      <param name="graph">The object to write.</param>
+      <exception cref="T:System.Runtime.Serialization.InvalidDataContractException">The type being serialized does not conform to data contract rules. For example, the <see cref="T:System.Runtime.Serialization.DataContractAttribute" /> attribute has not been applied to the type.</exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">There is a problem with the instance being written.</exception>
+      <exception cref="T:System.ServiceModel.QuotaExceededException">The maximum number of objects to serialize has been exceeded. Check the <see cref="P:System.Runtime.Serialization.DataContractSerializer.MaxItemsInObjectGraph" /> property.</exception>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.WriteObjectContent(System.Xml.XmlWriter,System.Object)">
+      <summary>Writes the XML content that can be mapped to JavaScript Object Notation (JSON) using an <see cref="T:System.Xml.XmlWriter" />.</summary>
+      <param name="writer">The <see cref="T:System.Xml.XmlWriter" /> used to write to.</param>
+      <param name="graph">The object to write.</param>
+      <exception cref="T:System.Runtime.Serialization.InvalidDataContractException">The type being serialized does not conform to data contract rules. For example, the <see cref="T:System.Runtime.Serialization.DataContractAttribute" /> attribute has not been applied to the type.</exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">There is a problem with the instance being written.</exception>
+      <exception cref="T:System.ServiceModel.QuotaExceededException">The maximum number of objects to serialize has been exceeded. Check the <see cref="P:System.Runtime.Serialization.DataContractSerializer.MaxItemsInObjectGraph" /> property.</exception>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.WriteStartObject(System.Xml.XmlDictionaryWriter,System.Object)">
+      <summary>Writes the opening XML element for serializing an object to XML that can be mapped to JavaScript Object Notation (JSON) using an <see cref="T:System.Xml.XmlDictionaryWriter" />.</summary>
+      <param name="writer">The <see cref="T:System.Xml.XmlDictionaryWriter" /> used to write the XML start element.</param>
+      <param name="graph">The object to write.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializer.WriteStartObject(System.Xml.XmlWriter,System.Object)">
+      <summary>Writes the opening XML element for serializing an object to XML that can be mapped to JavaScript Object Notation (JSON) using an <see cref="T:System.Xml.XmlWriter" />.</summary>
+      <param name="writer">The <see cref="T:System.Xml.XmlWriter" /> used to write the XML start element.</param>
+      <param name="graph">The object to write.</param>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializer.DateTimeFormat">
+      <summary>Gets the format of the date and time type items in object graph.</summary>
+      <returns>The format of the date and time type items in object graph.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializer.EmitTypeInformation">
+      <summary>Gets or sets the data contract JSON serializer settings to emit type information.</summary>
+      <returns>The data contract JSON serializer settings to emit type information.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializer.IgnoreExtensionDataObject">
+      <summary>Gets a value that specifies whether unknown data is ignored on deserialization and whether the <see cref="T:System.Runtime.Serialization.IExtensibleDataObject" /> interface is ignored on serialization.</summary>
+      <returns>
+        <see langword="true" /> to ignore unknown data and <see cref="T:System.Runtime.Serialization.IExtensibleDataObject" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializer.KnownTypes">
+      <summary>Gets a collection of types that may be present in the object graph serialized using this instance of the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" />.</summary>
+      <returns>A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the expected types passed in as known types to the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> constructor.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializer.MaxItemsInObjectGraph">
+      <summary>Gets the maximum number of items in an object graph that the serializer serializes or deserializes in one read or write call.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The number of items exceeds the maximum value.</exception>
+      <returns>The maximum number of items to serialize or deserialize.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializer.SerializeReadOnlyTypes">
+      <summary>Gets or sets a value that specifies whether to serialize read only types.</summary>
+      <returns>
+        <see langword="true" /> to serialize read only types; otherwise <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializer.UseSimpleDictionaryFormat">
+      <summary>Gets a value that specifies whether to use a simple dictionary format.</summary>
+      <returns>
+        <see langword="true" /> to use a simple dictionary format; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="T:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings">
+      <summary>Specifies <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializer" /> settings.</summary>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings" /> class.</summary>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings.DateTimeFormat">
+      <summary>Gets or sets a DateTimeFormat that defines the culturally appropriate format of displaying dates and times.</summary>
+      <returns>The DateTimeFormat that defines the culturally appropriate format of displaying dates and times.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings.EmitTypeInformation">
+      <summary>Gets or sets the data contract JSON serializer settings to emit type information.</summary>
+      <returns>The data contract JSON serializer settings to emit type information.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings.IgnoreExtensionDataObject">
+      <summary>Gets or sets a value that specifies whether to ignore data supplied by an extension of the class when the class is being serialized or deserialized.</summary>
+      <returns>
+        <see langword="true" /> to ignore data supplied by an extension of the class when the class is being serialized or deserialized; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings.KnownTypes">
+      <summary>Gets or sets a collection of types that may be present in the object graph serialized using this instance the DataContractJsonSerializerSettings.</summary>
+      <returns>A collection of types that may be present in the object graph serialized using this instance the DataContractJsonSerializerSettings.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings.MaxItemsInObjectGraph">
+      <summary>Gets or sets the maximum number of items in an object graph to serialize or deserialize.</summary>
+      <returns>The maximum number of items in an object graph to serialize or deserialize.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings.RootName">
+      <summary>Gets or sets the root name of the selected object.</summary>
+      <returns>The root name of the selected object.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings.SerializeReadOnlyTypes">
+      <summary>Gets or sets a value that specifies whether to serialize read only types.</summary>
+      <returns>
+        <see langword="true" /> to serialize read only types; otherwise <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Runtime.Serialization.Json.DataContractJsonSerializerSettings.UseSimpleDictionaryFormat">
+      <summary>Gets or sets a value that specifies whether to use a simple dictionary format.</summary>
+      <returns>
+        <see langword="true" /> to use a simple dictionary format; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="T:System.Runtime.Serialization.Json.IXmlJsonReaderInitializer">
+      <summary>Specifies the interface for initializing a JavaScript Object Notation (JSON) reader when reusing them to read from a particular stream or buffer.</summary>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.IXmlJsonReaderInitializer.SetInput(System.Byte[],System.Int32,System.Int32,System.Text.Encoding,System.Xml.XmlDictionaryReaderQuotas,System.Xml.OnXmlDictionaryReaderClose)">
+      <summary>Reinitializes a JavaScript Object Notation (JSON) enabled reader to a specified buffer that contains JSON-encoded data.</summary>
+      <param name="buffer">The input <see cref="T:System.Byte" /> buffer array from which to read.</param>
+      <param name="offset">The starting position from which to read in <paramref name="buffer" />.</param>
+      <param name="count">The number of bytes that can be read from <paramref name="buffer" />.</param>
+      <param name="encoding">The <see cref="T:System.Text.Encoding" /> used by the reader.</param>
+      <param name="quotas">The <see cref="T:System.Xml.XmlDictionaryReaderQuotas" /> to apply.</param>
+      <param name="onClose">The <see cref="T:System.Xml.OnXmlDictionaryReaderClose" /> delegate to call when the reader is closed.</param>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.IXmlJsonReaderInitializer.SetInput(System.IO.Stream,System.Text.Encoding,System.Xml.XmlDictionaryReaderQuotas,System.Xml.OnXmlDictionaryReaderClose)">
+      <summary>Reinitializes a JavaScript Object Notation (JSON) enabled reader to a specified stream that contains JSON-encoded data.</summary>
+      <param name="stream">The input <see cref="T:System.IO.Stream" /> from which to read.</param>
+      <param name="encoding">The <see cref="T:System.Text.Encoding" /> used by the reader.</param>
+      <param name="quotas">
+        <see cref="T:System.Xml.XmlDictionaryReaderQuotas" /> to apply.</param>
+      <param name="onClose">Delegate to call when the reader is closed.</param>
+    </member>
+    <member name="T:System.Runtime.Serialization.Json.IXmlJsonWriterInitializer">
+      <summary>Specifies the interface for initializing a JavaScript Object Notation (JSON) writer when reusing them to write to a particular output stream.</summary>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.IXmlJsonWriterInitializer.SetOutput(System.IO.Stream,System.Text.Encoding,System.Boolean)">
+      <summary>Initializes (or reinitializes) a JavaScript Object Notation (JSON) writer to a specified output stream with specified character encoding.</summary>
+      <param name="stream">The output <see cref="T:System.IO.Stream" /> to which the writer writes.</param>
+      <param name="encoding">The <see cref="T:System.Text.Encoding" /> that specifies the character encoding of the output stream.</param>
+      <param name="ownsStream">If <see langword="true" />, the output stream is closed by the writer when done; otherwise <see langword="false" />.</param>
+    </member>
+    <member name="T:System.Runtime.Serialization.Json.JsonReaderWriterFactory">
+      <summary>Produces instances of <see cref="T:System.Xml.XmlDictionaryReader" /> that can read data encoded with JavaScript Object Notation (JSON) from a stream or buffer and map it to an XML Infoset and instances of <see cref="T:System.Xml.XmlDictionaryWriter" /> that can map an XML Infoset to JSON and write JSON-encoded data to a stream.</summary>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonReader(System.Byte[],System.Int32,System.Int32,System.Text.Encoding,System.Xml.XmlDictionaryReaderQuotas,System.Xml.OnXmlDictionaryReaderClose)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryReader" /> that can map buffers encoded with JavaScript Object Notation (JSON), with a specified size and offset and character encoding, to an XML Infoset.</summary>
+      <param name="buffer">The input <see cref="T:System.Byte" /> buffer array from which to read.</param>
+      <param name="offset">Starting position from which to read in <paramref name="buffer" />.</param>
+      <param name="count">Number of bytes that can be read from <paramref name="buffer" />.</param>
+      <param name="encoding">The <see cref="T:System.Text.Encoding" /> that specifies the character encoding used by the reader. If <see langword="null" /> is specified as the value, the reader attempts to auto-detect the encoding.</param>
+      <param name="quotas">The <see cref="T:System.Xml.XmlDictionaryReaderQuotas" /> used to prevent Denial of Service attacks when reading untrusted data.</param>
+      <param name="onClose">The <see cref="T:System.Xml.OnXmlDictionaryReaderClose" /> delegate to call when the reader is closed. The default value is <see langword="null" />.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryReader" /> that can read JavaScript Object Notation (JSON).</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonReader(System.Byte[],System.Int32,System.Int32,System.Xml.XmlDictionaryReaderQuotas)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryReader" /> that can map buffers encoded with JavaScript Object Notation (JSON), of a specified size and offset, to an XML Infoset.</summary>
+      <param name="buffer">The input <see cref="T:System.Byte" /> buffer array from which to read.</param>
+      <param name="offset">Starting position from which to read in <paramref name="buffer" />.</param>
+      <param name="count">Number of bytes that can be read from <paramref name="buffer" />.</param>
+      <param name="quotas">The <see cref="T:System.Xml.XmlDictionaryReaderQuotas" /> used to prevent Denial of Service attacks when reading untrusted data.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryReader" /> that can read JavaScript Object Notation (JSON).</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonReader(System.Byte[],System.Xml.XmlDictionaryReaderQuotas)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryReader" /> that can map buffers encoded with JavaScript Object Notation (JSON) to an XML Infoset.</summary>
+      <param name="buffer">The input <see cref="T:System.Byte" /> buffer array from which to read.</param>
+      <param name="quotas">The <see cref="T:System.Xml.XmlDictionaryReaderQuotas" /> used to prevent Denial of Service attacks when reading untrusted data.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryReader" /> that can process JavaScript Object Notation (JSON) data.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonReader(System.IO.Stream,System.Text.Encoding,System.Xml.XmlDictionaryReaderQuotas,System.Xml.OnXmlDictionaryReaderClose)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryReader" /> that can map streams encoded with JavaScript Object Notation (JSON), of a specified size and offset, to an XML Infoset.</summary>
+      <param name="stream">The input <see cref="T:System.IO.Stream" /> from which to read.</param>
+      <param name="encoding">The <see cref="T:System.Text.Encoding" /> that specifies the character encoding used by the reader. If <see langword="null" /> is specified as the value, the reader attempts to auto-detect the encoding.</param>
+      <param name="quotas">The <see cref="T:System.Xml.XmlDictionaryReaderQuotas" /> used to prevent Denial of Service attacks when reading untrusted data.</param>
+      <param name="onClose">The <see cref="T:System.Xml.OnXmlDictionaryReaderClose" /> delegate to call when the reader is closed.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryReader" /> that can read JavaScript Object Notation (JSON).</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonReader(System.IO.Stream,System.Xml.XmlDictionaryReaderQuotas)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryReader" /> that can map streams encoded with JavaScript Object Notation (JSON) to an XML Infoset.</summary>
+      <param name="stream">The input <see cref="T:System.IO.Stream" /> from which to read.</param>
+      <param name="quotas">The <see cref="T:System.Xml.XmlDictionaryReaderQuotas" /> used to prevent Denial of Service attacks when reading untrusted data.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryReader" /> that can read JavaScript Object Notation (JSON).</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonWriter(System.IO.Stream)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to a stream.</summary>
+      <param name="stream">The output <see cref="T:System.IO.Stream" /> for the JSON writer.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to the stream based on an XML Infoset.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonWriter(System.IO.Stream,System.Text.Encoding)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to a stream with a specified character encoding.</summary>
+      <param name="stream">The output <see cref="T:System.IO.Stream" /> for the JSON writer.</param>
+      <param name="encoding">The <see cref="T:System.Text.Encoding" /> that specifies the character encoding used by the writer. The default encoding is UTF-8.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to the stream based on an XML Infoset.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonWriter(System.IO.Stream,System.Text.Encoding,System.Boolean)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to a stream with a specified character encoding.</summary>
+      <param name="stream">The output <see cref="T:System.IO.Stream" /> for the JSON writer.</param>
+      <param name="encoding">The <see cref="T:System.Text.Encoding" /> that specifies the character encoding used by the writer. The default encoding is UTF-8.</param>
+      <param name="ownsStream">If <see langword="true" />, the output stream is closed by the writer when done; otherwise <see langword="false" />. The default value is <see langword="true" />.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to the stream based on an XML Infoset.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonWriter(System.IO.Stream,System.Text.Encoding,System.Boolean,System.Boolean)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to a stream with a specified character.</summary>
+      <param name="stream">The output <see cref="T:System.IO.Stream" /> for the JSON writer.</param>
+      <param name="encoding">The <see cref="T:System.Text.Encoding" /> that specifies the character encoding used by the writer. The default encoding is UTF-8.</param>
+      <param name="ownsStream">If <see langword="true" />, the output stream is closed by the writer when done; otherwise <see langword="false" />. The default value is <see langword="true" />.</param>
+      <param name="indent">If <see langword="true" />, the output uses multiline format, indenting each level properly; otherwise, <see langword="false" />.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to the stream based on an XML Infoset.</returns>
+    </member>
+    <member name="M:System.Runtime.Serialization.Json.JsonReaderWriterFactory.CreateJsonWriter(System.IO.Stream,System.Text.Encoding,System.Boolean,System.Boolean,System.String)">
+      <summary>Creates an <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to a stream with a specified character.</summary>
+      <param name="stream">The output <see cref="T:System.IO.Stream" /> for the JSON writer.</param>
+      <param name="encoding">The <see cref="T:System.Text.Encoding" /> that specifies the character encoding used by the writer. The default encoding is UTF-8.</param>
+      <param name="ownsStream">If <see langword="true" />, the output stream is closed by the writer when done; otherwise <see langword="false" />. The default value is <see langword="true" />.</param>
+      <param name="indent">If <see langword="true" />, the output uses multiline format, indenting each level properly; otherwise, <see langword="false" />.</param>
+      <param name="indentChars">The string used to indent each level.</param>
+      <returns>An <see cref="T:System.Xml.XmlDictionaryWriter" /> that writes data encoded with JSON to the stream based on an XML Infoset.</returns>
+    </member>
+  </members>
+</doc>

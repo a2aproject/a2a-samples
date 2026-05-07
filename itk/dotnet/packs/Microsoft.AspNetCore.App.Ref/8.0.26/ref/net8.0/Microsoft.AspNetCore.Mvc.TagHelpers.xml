@@ -1,0 +1,1759 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Mvc.TagHelpers</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;a&gt; elements.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper"/>.
+            </summary>
+            <param name="generator">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Generator">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/> used to generate the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Action">
+            <summary>
+            The name of the action method.
+            </summary>
+            <remarks>
+            Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Route"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Page"/> is non-<c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Controller">
+            <summary>
+            The name of the controller.
+            </summary>
+            <remarks>
+            Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Route"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Page"/> is non-<c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Area">
+            <summary>
+            The name of the area.
+            </summary>
+            <remarks>
+            Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Route"/> is non-<c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Page">
+            <summary>
+            The name of the page.
+            </summary>
+            <remarks>
+            Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Route"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Action"/>, <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Controller"/>
+            is non-<c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.PageHandler">
+            <summary>
+            The name of the page handler.
+            </summary>
+            <remarks>
+            Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Route"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Action"/>, or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Controller"/>
+            is non-<c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Protocol">
+            <summary>
+            The protocol for the URL, such as &quot;http&quot; or &quot;https&quot;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Host">
+            <summary>
+            The host name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Fragment">
+            <summary>
+            The URL fragment name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Route">
+            <summary>
+            Name of the route.
+            </summary>
+            <remarks>
+            Must be <c>null</c> if one of <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Action"/>, <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Controller"/>, <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Area"/>
+            or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Page"/> is non-<c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.RouteValues">
+            <summary>
+            Additional parameters for the route.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.ViewContext">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> for the current request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.AnchorTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>Does nothing if user provides an <c>href</c> attribute.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.AttributeMatcher">
+            <summary>
+            Methods for determining how an <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> should run based on the attributes that were specified.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.AttributeMatcher.TryDetermineMode``1(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Mvc.TagHelpers.ModeAttributes{``0}[],System.Func{``0,``0,System.Int32},``0@)">
+            <summary>
+            Determines the most effective mode a <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper" /> can run in based on which modes have
+            all their required attributes present.
+            </summary>
+            <typeparam name="TMode">The type representing the <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper" />'s modes.</typeparam>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext"/>.</param>
+            <param name="modeInfos">The modes and their required attributes.</param>
+            <param name="compare">A comparer delegate.</param>
+            <param name="result">The resulting most effective mode.</param>
+            <returns><c>true</c> if a mode was determined, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper"/> implementation targeting &lt;cache&gt; elements.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper.CacheKeyPrefix">
+            <summary>
+            Prefix used by <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/> instances when creating entries in <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper.MemoryCache"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper.#ctor(Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperMemoryCacheFactory,System.Text.Encodings.Web.HtmlEncoder)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/>.
+            </summary>
+            <param name="factory">The factory containing the private <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> instance
+            used by the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/>.</param>
+            <param name="htmlEncoder">The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> to use.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper.MemoryCache">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> instance used to cache entries.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper.Priority">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.Extensions.Caching.Memory.CacheItemPriority"/> policy for the cache entry.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper"/> base implementation for caching elements.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.DefaultExpiration">
+            <summary>
+            The default duration, from the time the cache entry was added, when it should be evicted.
+            This default duration will only be used if no other expiration criteria is specified.
+            The default expiration time is a sliding expiration of 30 seconds.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.#ctor(System.Text.Encodings.Web.HtmlEncoder)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase"/>.
+            </summary>
+            <param name="htmlEncoder">The <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.HtmlEncoder"/> to use.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.HtmlEncoder">
+            <summary>
+            Gets the <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> which encodes the content to be cached.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.ViewContext">
+            <summary>
+            Gets or sets the <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.ViewContext"/> for the current executing View.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.VaryBy">
+            <summary>
+            Gets or sets a <see cref="T:System.String" /> to vary the cached result by.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.VaryByHeader">
+            <summary>
+            Gets or sets a comma-delimited set of HTTP request headers to vary the cached result by.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.VaryByQuery">
+            <summary>
+            Gets or sets a comma-delimited set of query parameters to vary the cached result by.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.VaryByRoute">
+            <summary>
+            Gets or sets a comma-delimited set of route data parameters to vary the cached result by.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.VaryByCookie">
+            <summary>
+            Gets or sets a comma-delimited set of cookie names to vary the cached result by.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.VaryByUser">
+            <summary>
+            Gets or sets a value that determines if the cached result is to be varied by the Identity for the logged in
+            <see cref="P:Microsoft.AspNetCore.Http.HttpContext.User"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.VaryByCulture">
+            <summary>
+            Gets or sets a value that determines if the cached result is to be varied by request culture.
+            <para>
+            Setting this to <c>true</c> would result in the result to be varied by <see cref="P:System.Globalization.CultureInfo.CurrentCulture" />
+            and <see cref="P:System.Globalization.CultureInfo.CurrentUICulture" />.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.ExpiresOn">
+            <summary>
+            Gets or sets the exact <see cref="T:System.DateTimeOffset"/> the cache entry should be evicted.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.ExpiresAfter">
+            <summary>
+            Gets or sets the duration, from the time the cache entry was added, when it should be evicted.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.ExpiresSliding">
+            <summary>
+            Gets or sets the duration from last access that the cache entry should be evicted.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperBase.Enabled">
+            <summary>
+            Gets or sets the value which determines if the tag helper is enabled or not.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperMemoryCacheFactory">
+            <summary>
+            A factory for <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/>s configured using <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperOptions"/>.
+            <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/> uses this factory to set its <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper.MemoryCache"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperMemoryCacheFactory.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperOptions})">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperMemoryCacheFactory"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperOptions"/> to apply to the <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperMemoryCacheFactory.Cache"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperMemoryCacheFactory.Cache">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperOptions">
+            <summary>
+            Provides programmatic configuration for the cache tag helper in the MVC framework.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperOptions.SizeLimit">
+            <summary>
+            The maximum total size in bytes that will be cached by the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/>
+            at any given time.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey">
+            <summary>
+            An instance of <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey"/> represents the state of <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/>
+            or <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper"/> keys.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey.#ctor(Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey"/> for a specific <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/>.
+            </summary>
+            <param name="tagHelper">The <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/>.</param>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext"/>.</param>
+            <returns>A new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey.#ctor(Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey"/> for a specific <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper"/>.
+            </summary>
+            <param name="tagHelper">The <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper"/>.</param>
+            <returns>A new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey.GenerateKey">
+            <summary>
+            Creates a <see cref="T:System.String"/> representation of the key.
+            </summary>
+            <returns>A <see cref="T:System.String"/> uniquely representing the key.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey.GenerateHashedKey">
+            <summary>
+            Creates a hashed value of the key.
+            </summary>
+            <returns>A cryptographic hash of the key.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey.Equals(Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperFormatter">
+            <summary>
+            Implements <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperFormatter"/> by serializing the content
+            in UTF8.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperFormatter.SerializeAsync(Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperFormattingContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperFormatter.DeserializeAsync(System.Byte[])">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperFormattingContext">
+            <summary>
+            Represents an object containing the information to serialize with <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperFormatter" />.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperFormattingContext.Html">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Html.HtmlString"/> instance.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperService">
+            <summary>
+            Implements <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperService"/> and ensures
+            multiple concurrent requests are gated.
+            The entries are stored like this:
+            <list type="bullet">
+            <item>
+            <description>Int32 representing the hashed cache key size.</description>
+            </item>
+            <item>
+            <description>The UTF8 encoded hashed cache key.</description>
+            </item>
+            <item>
+            <description>The UTF8 encoded cached content.</description>
+            </item>
+            </list>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperService.#ctor(Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperStorage,Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperFormatter,System.Text.Encodings.Web.HtmlEncoder,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperService"/>.
+            </summary>
+            <param name="storage">The <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper"/>'s <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperStorage"/>.</param>
+            <param name="formatter">The <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperFormatter"/> for cache value serialization.</param>
+            <param name="HtmlEncoder">The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> used to encode cache content.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperService.ProcessContentAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput,Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey,Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperStorage">
+            <summary>
+            Implements <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperStorage"/> by storing the content
+            in using <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/> as the store.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperStorage.#ctor(Microsoft.Extensions.Caching.Distributed.IDistributedCache)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperStorage"/>.
+            </summary>
+            <param name="distributedCache">The <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/> to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperStorage.GetAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperStorage.SetAsync(System.String,System.Byte[],Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperFormatter">
+            <summary>
+            An implementation of this interface provides a service to
+            serialize html fragments for being store by <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperStorage" />
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperFormatter.SerializeAsync(Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperFormattingContext)">
+            <summary>
+            Serializes some html content.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.DistributedCacheTagHelperFormattingContext" /> to serialize.</param>
+            <returns>The serialized result.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperFormatter.DeserializeAsync(System.Byte[])">
+            <summary>
+            Deserialize some html content.
+            </summary>
+            <param name="value">The value to deserialize.</param>
+            <returns>The deserialized content, <value>null</value> otherwise.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperService">
+            <summary>
+            An implementation of this interface provides a service to process
+            the content or fetches it from cache for distributed cache tag helpers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperService.ProcessContentAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput,Microsoft.AspNetCore.Mvc.TagHelpers.Cache.CacheTagKey,Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions)">
+            <summary>
+            Processes the html content of a distributed cache tag helper.
+            </summary>
+            <param name="output">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput" />.</param>
+            <param name="key">The key in the storage.</param>
+            <param name="options">The <see cref="T:Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions"/>.</param>
+            <returns>A cached or new content for the cache tag helper.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperStorage">
+            <summary>
+            An implementation of this interface provides a service to
+            cache distributed html fragments from the &lt;distributed-cache&gt;
+            tag helper.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperStorage.GetAsync(System.String)">
+            <summary>
+            Gets the content from the cache and deserializes it.
+            </summary>
+            <param name="key">The unique key to use in the cache.</param>
+            <returns>The stored value if it exists, <value>null</value> otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperStorage.SetAsync(System.String,System.Byte[],Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions)">
+            <summary>
+            Sets the content in the cache and serialized it.
+            </summary>
+            <param name="key">The unique key to use in the cache.</param>
+            <param name="value">The value to cache.</param>
+            <param name="options">The cache entry options.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.ComponentTagHelper">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper"/> that renders a Razor component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ComponentTagHelper.ViewContext">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> for the current request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ComponentTagHelper.Parameters">
+            <summary>
+            Gets or sets values for component parameters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ComponentTagHelper.ComponentType">
+            <summary>
+            Gets or sets the component type. This value is required.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ComponentTagHelper.RenderMode">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.RenderMode"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ComponentTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper"/> implementation targeting &lt;distributed-cache&gt; elements.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper.CacheKeyPrefix">
+            <summary>
+            Prefix used by <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper"/> instances when creating entries in <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperStorage"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper.#ctor(Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperService,System.Text.Encodings.Web.HtmlEncoder)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/>.
+            </summary>
+            <param name="distributedCacheService">The <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.Cache.IDistributedCacheTagHelperService"/>.</param>
+            <param name="htmlEncoder">The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper.MemoryCache">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> instance used to cache workers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper.Name">
+            <summary>
+            Gets or sets a unique name to discriminate cached entries.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.DistributedCacheTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;environment&gt; elements that conditionally renders
+            content based on the current value of <see cref="P:Microsoft.AspNetCore.Hosting.IHostingEnvironment.EnvironmentName"/>.
+            If the environment is not listed in the specified <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Names"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Include"/>,
+            or if it is in <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Exclude"/>, the content will not be rendered.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.#ctor(Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper"/>.
+            </summary>
+            <param name="hostingEnvironment">The <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Names">
+            <summary>
+            A comma separated list of environment names in which the content should be rendered.
+            If the current environment is also in the <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Exclude"/> list, the content will not be rendered.
+            </summary>
+            <remarks>
+            The specified environment names are compared case insensitively to the current value of
+            <see cref="P:Microsoft.AspNetCore.Hosting.IHostingEnvironment.EnvironmentName"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Include">
+            <summary>
+            A comma separated list of environment names in which the content should be rendered.
+            If the current environment is also in the <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Exclude"/> list, the content will not be rendered.
+            </summary>
+            <remarks>
+            The specified environment names are compared case insensitively to the current value of
+            <see cref="P:Microsoft.AspNetCore.Hosting.IHostingEnvironment.EnvironmentName"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Exclude">
+            <summary>
+            A comma separated list of environment names in which the content will not be rendered.
+            </summary>
+            <remarks>
+            The specified environment names are compared case insensitively to the current value of
+            <see cref="P:Microsoft.AspNetCore.Hosting.IHostingEnvironment.EnvironmentName"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.HostingEnvironment">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/> for the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;button&gt; elements and &lt;input&gt; elements with
+            their <c>type</c> attribute set to <c>image</c> or <c>submit</c>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.#ctor(Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper"/>.
+            </summary>
+            <param name="urlHelperFactory">The <see cref="T:Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.ViewContext">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> for the current request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.UrlHelperFactory">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory"/> used to create an <see cref="T:Microsoft.AspNetCore.Mvc.IUrlHelper"/> to generate links.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Action">
+            <summary>
+            The name of the action method.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Controller">
+            <summary>
+            The name of the controller.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Area">
+            <summary>
+            The name of the area.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Page">
+            <summary>
+            The name of the page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.PageHandler">
+            <summary>
+            The name of the page handler.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Fragment">
+            <summary>
+            Gets or sets the URL fragment.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Route">
+            <summary>
+            Name of the route.
+            </summary>
+            <remarks>
+            Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Action"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Controller"/> is non-<c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.RouteValues">
+            <summary>
+            Additional parameters for the route.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>Does nothing if user provides an <c>FormAction</c> attribute.</remarks>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if <c>FormAction</c> attribute is provided and <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Action"/>, <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Controller"/>,
+            <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Fragment"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Route"/> are non-<c>null</c> or if the user provided <c>asp-route-*</c> attributes.
+            Also thrown if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Route"/> and one or both of <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Action"/> and <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormActionTagHelper.Controller"/>
+            are non-<c>null</c>
+            </exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;form&gt; elements.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper"/>.
+            </summary>
+            <param name="generator">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Generator">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/> used to generate the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Action">
+            <summary>
+            The name of the action method.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Controller">
+            <summary>
+            The name of the controller.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Area">
+            <summary>
+            The name of the area.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Page">
+            <summary>
+            The name of the page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.PageHandler">
+            <summary>
+            The name of the page handler.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Antiforgery">
+            <summary>
+            Whether the antiforgery token should be generated.
+            </summary>
+            <value>Defaults to <c>false</c> if user provides an <c>action</c> attribute
+            or if the <c>method</c> is <see cref="F:Microsoft.AspNetCore.Mvc.Rendering.FormMethod.Get"/>; <c>true</c> otherwise.</value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Fragment">
+            <summary>
+            Gets or sets the URL fragment.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Route">
+            <summary>
+            Name of the route.
+            </summary>
+            <remarks>
+            Must be <c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Action"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Controller"/> is non-<c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Method">
+            <summary>
+            The HTTP method to use.
+            </summary>
+            <remarks>Passed through to the generated HTML in all cases.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.RouteValues">
+            <summary>
+            Additional parameters for the route.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>
+            Does nothing if user provides an <c>action</c> attribute and <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Antiforgery"/> is <c>null</c> or
+            <c>false</c>.
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if <c>action</c> attribute is provided and <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Action"/>, <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Controller"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper.Fragment"/> are
+            non-<c>null</c> or if the user provided <c>asp-route-*</c> attributes.
+            </exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.GlobbingUrlBuilder">
+            <summary>
+            Utility methods for <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>'s that support
+            attributes containing file globbing patterns.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.GlobbingUrlBuilder.#ctor(Microsoft.Extensions.FileProviders.IFileProvider,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.AspNetCore.Http.PathString)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.GlobbingUrlBuilder"/>.
+            </summary>
+            <param name="fileProvider">The file provider.</param>
+            <param name="cache">The cache.</param>
+            <param name="requestPathBase">The request path base.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.GlobbingUrlBuilder.Cache">
+            <summary>
+            The <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> to cache globbing results in.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.GlobbingUrlBuilder.FileProvider">
+            <summary>
+            The <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/> used to watch for changes to file globbing results.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.GlobbingUrlBuilder.RequestPathBase">
+            <summary>
+            The base path of the current request (i.e. <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.PathBase"/>).
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.GlobbingUrlBuilder.BuildUrlList(System.String,System.String,System.String)">
+            <summary>
+            Builds a list of URLs.
+            </summary>
+            <param name="staticUrl">The statically declared URL. This will always be added to the result.</param>
+            <param name="includePattern">The file globbing include pattern.</param>
+            <param name="excludePattern">The file globbing exclude pattern.</param>
+            <returns>The list of URLs</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;img&gt; elements that supports file versioning.
+            </summary>
+            <remarks>
+            The tag helper won't process for cases with just the 'src' attribute.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider,System.Text.Encodings.Web.HtmlEncoder,Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper"/>.
+            </summary>
+            <param name="fileVersionProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider"/>.</param>
+            <param name="htmlEncoder">The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> to use.</param>
+            <param name="urlHelperFactory">The <see cref="T:Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper.#ctor(Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.AspNetCore.Mvc.Razor.Infrastructure.TagHelperMemoryCacheProvider,Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider,System.Text.Encodings.Web.HtmlEncoder,Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper"/>.
+            This constructor is obsolete and will be removed in a future version.
+            </summary>
+            <param name="hostingEnvironment">The <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/>.</param>
+            <param name="cacheProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Infrastructure.TagHelperMemoryCacheProvider"/>.</param>
+            <param name="fileVersionProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider"/>.</param>
+            <param name="htmlEncoder">The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> to use.</param>
+            <param name="urlHelperFactory">The <see cref="T:Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper.Src">
+            <summary>
+            Source of the image.
+            </summary>
+            <remarks>
+            Passed through to the generated HTML in all cases.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper.AppendVersion">
+            <summary>
+            Value indicating if file version should be appended to the src urls.
+            </summary>
+            <remarks>
+            If <c>true</c> then a query string "v" with the encoded content of the file is added.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper.HostingEnvironment">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/> for the application.
+            This property is obsolete and will be removed in a future version.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper.Cache">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> used to store globbed urls.
+            This property is obsolete and will be removed in a future version.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ImageTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;input&gt; elements with an <c>asp-for</c> attribute.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper"/>.
+            </summary>
+            <param name="generator">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Generator">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/> used to generate the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.For">
+            <summary>
+            An expression to be evaluated against the current model.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Format">
+            <summary>
+            The format string (see <see href="https://msdn.microsoft.com/en-us/library/txafckwd.aspx"/>) used to format the
+            <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.For"/> result. Sets the generated "value" attribute to that formatted string.
+            </summary>
+            <remarks>
+            Not used if the provided (see <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.InputTypeName"/>) or calculated "type" attribute value is
+            <c>checkbox</c>, <c>password</c>, or <c>radio</c>. That is, <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Format"/> is used when calling
+            <see cref="M:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator.GenerateTextBox(Microsoft.AspNetCore.Mvc.Rendering.ViewContext,Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExplorer,System.String,System.Object,System.String,System.Object)"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.InputTypeName">
+            <summary>
+            The type of the &lt;input&gt; element.
+            </summary>
+            <remarks>
+            Passed through to the generated HTML in all cases. Also used to determine the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>
+            helper to call and the default <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Format"/> value. A default <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Format"/> is not calculated
+            if the provided (see <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.InputTypeName"/>) or calculated "type" attribute value is <c>checkbox</c>,
+            <c>hidden</c>, <c>password</c>, or <c>radio</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.FormName">
+            <summary>
+            The name of the associated form
+            </summary>
+            <remarks>
+            Used to associate a hidden checkbox tag to the respecting form when <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.CheckBoxHiddenInputRenderMode"/> is not <see cref="F:Microsoft.AspNetCore.Mvc.Rendering.CheckBoxHiddenInputRenderMode.None"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Name">
+            <summary>
+            The name of the &lt;input&gt; element.
+            </summary>
+            <remarks>
+            Passed through to the generated HTML in all cases. Also used to determine whether <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.For"/> is
+            valid with an empty <see cref="P:Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExpression.Name"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Value">
+            <summary>
+            The value of the &lt;input&gt; element.
+            </summary>
+            <remarks>
+            Passed through to the generated HTML in all cases. Also used to determine the generated "checked" attribute
+            if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.InputTypeName"/> is "radio". Must not be <c>null</c> in that case.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>Does nothing if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.For"/> is <c>null</c>.</remarks>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.Format"/> is non-<c>null</c> but <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.For"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper.GetInputType(Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExplorer,System.String@)">
+            <summary>
+            Gets an &lt;input&gt; element's "type" attribute value based on the given <paramref name="modelExplorer"/>
+            or <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.InputType"/>.
+            </summary>
+            <param name="modelExplorer">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExplorer"/> to use.</param>
+            <param name="inputTypeHint">When this method returns, contains the string, often the name of a
+            <see cref="P:Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata.ModelType"/> base class, used to determine this method's return value.</param>
+            <returns>An &lt;input&gt; element's "type" attribute value.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.JavaScriptResources">
+            <summary>
+            Methods for loading JavaScript from assembly embedded resources.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.JavaScriptResources.GetEmbeddedJavaScript(System.String)">
+            <summary>
+            Gets an embedded JavaScript file resource and decodes it for use as a .NET format string.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;label&gt; elements with an <c>asp-for</c> attribute.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper"/>.
+            </summary>
+            <param name="generator">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper.Generator">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/> used to generate the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper.For">
+            <summary>
+            An expression to be evaluated against the current model.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>Does nothing if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LabelTagHelper.For"/> is <c>null</c>.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;link&gt; elements that supports fallback href paths.
+            </summary>
+            <remarks>
+            The tag helper won't process for cases with just the 'href' attribute.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.#ctor(Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.AspNetCore.Mvc.Razor.Infrastructure.TagHelperMemoryCacheProvider,Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider,System.Text.Encodings.Web.HtmlEncoder,System.Text.Encodings.Web.JavaScriptEncoder,Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper"/>.
+            </summary>
+            <param name="hostingEnvironment">The <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/>.</param>
+            <param name="cacheProvider"></param>
+            <param name="fileVersionProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider"/>.</param>
+            <param name="htmlEncoder">The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/>.</param>
+            <param name="javaScriptEncoder">The <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.JavaScriptEncoder"/>.</param>
+            <param name="urlHelperFactory">The <see cref="T:Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.Href">
+            <summary>
+            Address of the linked resource.
+            </summary>
+            <remarks>
+            Passed through to the generated HTML in all cases.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.HrefInclude">
+            <summary>
+            A comma separated list of globbed file patterns of CSS stylesheets to load.
+            The glob patterns are assessed relative to the application's 'webroot' setting.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.HrefExclude">
+            <summary>
+            A comma separated list of globbed file patterns of CSS stylesheets to exclude from loading.
+            The glob patterns are assessed relative to the application's 'webroot' setting.
+            Must be used in conjunction with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.HrefInclude"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHref">
+            <summary>
+            The URL of a CSS stylesheet to fallback to in the case the primary one fails.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.SuppressFallbackIntegrity">
+            <summary>
+            Boolean value that determines if an integrity hash will be compared with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHref"/> value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.AppendVersion">
+            <summary>
+            Value indicating if file version should be appended to the href urls.
+            </summary>
+            <remarks>
+            If <c>true</c> then a query string "v" with the encoded content of the file is added.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHrefInclude">
+            <summary>
+            A comma separated list of globbed file patterns of CSS stylesheets to fallback to in the case the primary
+            one fails.
+            The glob patterns are assessed relative to the application's 'webroot' setting.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHrefExclude">
+            <summary>
+            A comma separated list of globbed file patterns of CSS stylesheets to exclude from the fallback list, in
+            the case the primary one fails.
+            The glob patterns are assessed relative to the application's 'webroot' setting.
+            Must be used in conjunction with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHrefInclude"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackTestClass">
+            <summary>
+            The class name defined in the stylesheet to use for the fallback test.
+            Must be used in conjunction with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackTestProperty"/> and <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackTestValue"/>,
+            and either <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHref"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHrefInclude"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackTestProperty">
+            <summary>
+            The CSS property name to use for the fallback test.
+            Must be used in conjunction with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackTestClass"/> and <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackTestValue"/>,
+            and either <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHref"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHrefInclude"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackTestValue">
+            <summary>
+            The CSS property value to use for the fallback test.
+            Must be used in conjunction with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackTestClass"/> and <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackTestProperty"/>,
+            and either <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHref"/> or <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.FallbackHrefInclude"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.HostingEnvironment">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/> for the application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.Cache">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> used to store globbed urls.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.JavaScriptEncoder">
+            <summary>
+            Gets the <see cref="T:System.Text.Encodings.Web.JavaScriptEncoder"/> used to encode fallback information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.GlobbingUrlBuilder">
+            <summary>
+            Gets the <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.GlobbingUrlBuilder"/> used to populate included and excluded urls.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.Mode.AppendVersion">
+            <summary>
+            Just adding a file version for the generated urls.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.Mode.GlobbedHref">
+            <summary>
+            Just performing file globbing search for the href, rendering a separate &lt;link&gt; for each match.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper.Mode.Fallback">
+            <summary>
+            Rendering a fallback block if primary stylesheet fails to load. Will also do globbing for both the
+            primary and fallback hrefs if the appropriate properties are set.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.ModeAttributes`1">
+            <summary>
+            A mapping of a <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> mode to its required attributes.
+            </summary>
+            <typeparam name="TMode">The type representing the <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>'s mode.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ModeAttributes`1.#ctor(`0,System.String[])">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.ModeAttributes`1"/>.
+            </summary>
+            <param name="mode">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>'s mode.</param>
+            <param name="attributes">The names of attributes required for this mode.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ModeAttributes`1.Mode">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>'s mode.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ModeAttributes`1.Attributes">
+            <summary>
+            Gets the names of attributes required for this mode.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;option&gt; elements.
+            </summary>
+            <remarks>
+            This <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> works in conjunction with <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper"/>. It reads elements
+            content but does not modify that content. The only modification it makes is to add a <c>selected</c> attribute
+            in some cases.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper"/>.
+            </summary>
+            <param name="generator">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper.Generator">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/> used to generate the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper.Value">
+            <summary>
+            Specifies a value for the &lt;option&gt; element.
+            </summary>
+            <remarks>
+            Passed through to the generated HTML in all cases.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.OptionTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>
+            Does nothing unless <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext.Items"/> contains a
+            <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper"/> <see cref="T:System.Type"/> entry and that entry is a non-<c>null</c>
+            <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CurrentValues"/> instance. Also does nothing if the associated &lt;option&gt; is already
+            selected.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper">
+            <summary>
+            Renders a partial view.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewEngines.ICompositeViewEngine,Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers.IViewBufferScope)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper"/>.
+            </summary>
+            <param name="viewEngine">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewEngines.ICompositeViewEngine"/> used to locate the partial view.</param>
+            <param name="viewBufferScope">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers.IViewBufferScope"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.Name">
+            <summary>
+            The name or path of the partial view that is rendered to the response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.For">
+            <summary>
+            An expression to be evaluated against the current model. Cannot be used together with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.Model"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.Model">
+            <summary>
+            The model to pass into the partial view. Cannot be used together with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.For"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.Optional">
+            <summary>
+            When optional, executing the tag helper will no-op if the view cannot be located.
+            Otherwise will throw stating the view could not be found.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.FallbackName">
+            <summary>
+            View to lookup if the view specified by <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.Name"/> cannot be located.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.ViewData">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary"/> to pass into the partial view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.PersistComponentStateTagHelper">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelper"/> that saves the state of Razor components rendered on the page up to that point.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.PersistComponentStateTagHelper.ViewContext">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> for the current request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.PersistComponentStateTagHelper.PersistenceMode">
+            <summary>
+            Gets or sets the <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.PersistComponentStateTagHelper.PersistenceMode"/> for the state to persist.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.PersistComponentStateTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.PersistenceMode">
+            <summary>
+            The way to persist the component application state.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.PersistenceMode.Server">
+            <summary>
+            The state is persisted for a Blazor Server application.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.PersistenceMode.WebAssembly">
+            <summary>
+            The state is persisted for a Blazor WebAssembly application.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.RenderAtEndOfFormTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting all form elements
+            to generate content before the form end tag.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.RenderAtEndOfFormTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.RenderAtEndOfFormTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.RenderAtEndOfFormTagHelper.Init(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.RenderAtEndOfFormTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;script&gt; elements that supports fallback src paths.
+            </summary>
+            <remarks>
+            The tag helper won't process for cases with just the 'src' attribute.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.#ctor(Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.AspNetCore.Mvc.Razor.Infrastructure.TagHelperMemoryCacheProvider,Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider,System.Text.Encodings.Web.HtmlEncoder,System.Text.Encodings.Web.JavaScriptEncoder,Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper"/>.
+            </summary>
+            <param name="hostingEnvironment">The <see cref="T:Microsoft.AspNetCore.Hosting.IHostingEnvironment"/>.</param>
+            <param name="cacheProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Infrastructure.TagHelperMemoryCacheProvider"/>.</param>
+            <param name="fileVersionProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IFileVersionProvider"/>.</param>
+            <param name="htmlEncoder">The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/>.</param>
+            <param name="javaScriptEncoder">The <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.JavaScriptEncoder"/>.</param>
+            <param name="urlHelperFactory">The <see cref="T:Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.Src">
+            <summary>
+            Address of the external script to use.
+            </summary>
+            <remarks>
+            Passed through to the generated HTML in all cases.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.SrcInclude">
+            <summary>
+            A comma separated list of globbed file patterns of JavaScript scripts to load.
+            The glob patterns are assessed relative to the application's 'webroot' setting.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.SrcExclude">
+            <summary>
+            A comma separated list of globbed file patterns of JavaScript scripts to exclude from loading.
+            The glob patterns are assessed relative to the application's 'webroot' setting.
+            Must be used in conjunction with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.SrcInclude"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.FallbackSrc">
+            <summary>
+            The URL of a Script tag to fallback to in the case the primary one fails.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.SuppressFallbackIntegrity">
+            <summary>
+            Boolean value that determines if an integrity hash will be compared with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.FallbackSrc"/> value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.AppendVersion">
+            <summary>
+            Value indicating if file version should be appended to src urls.
+            </summary>
+            <remarks>
+            A query string "v" with the encoded content of the file is added.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.FallbackSrcInclude">
+            <summary>
+            A comma separated list of globbed file patterns of JavaScript scripts to fallback to in the case the
+            primary one fails.
+            The glob patterns are assessed relative to the application's 'webroot' setting.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.FallbackSrcExclude">
+            <summary>
+            A comma separated list of globbed file patterns of JavaScript scripts to exclude from the fallback list, in
+            the case the primary one fails.
+            The glob patterns are assessed relative to the application's 'webroot' setting.
+            Must be used in conjunction with <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.FallbackSrcInclude"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.FallbackTestExpression">
+            <summary>
+            The script method defined in the primary script to use for the fallback test.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.HostingEnvironment">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/> for the application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.Cache">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> used to store globbed urls.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.JavaScriptEncoder">
+            <summary>
+            Gets the <see cref="T:System.Text.Encodings.Web.JavaScriptEncoder"/> used to encode fallback information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.GlobbingUrlBuilder">
+            <summary>
+            Gets the <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.GlobbingUrlBuilder"/> used to populate included and excluded urls.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.Mode.AppendVersion">
+            <summary>
+            Just adding a file version for the generated urls.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.Mode.GlobbedSrc">
+            <summary>
+            Just performing file globbing search for the src, rendering a separate &lt;script&gt; for each match.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper.Mode.Fallback">
+            <summary>
+            Rendering a fallback block if primary javascript fails to load. Will also do globbing for both the
+            primary and fallback srcs if the appropriate properties are set.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;select&gt; elements with <c>asp-for</c> and/or
+            <c>asp-items</c> attribute(s).
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper"/>.
+            </summary>
+            <param name="generator">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.Generator">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/> used to generate the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.For">
+            <summary>
+            An expression to be evaluated against the current model.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.Items">
+            <summary>
+            A collection of <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.SelectListItem"/> objects used to populate the &lt;select&gt; element with
+            &lt;optgroup&gt; and &lt;option&gt; elements.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.Name">
+            <summary>
+            The name of the &lt;input&gt; element.
+            </summary>
+            <remarks>
+            Passed through to the generated HTML in all cases. Also used to determine whether <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.For"/> is
+            valid with an empty <see cref="P:Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExpression.Name"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.Init(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>Does nothing if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.SelectTagHelper.For"/> is <c>null</c>.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.TagHelperOutputExtensions">
+            <summary>
+            Utility related extensions for <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.TagHelperOutputExtensions.CopyHtmlAttribute(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput,System.String,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext)">
+            <summary>
+            Copies a user-provided attribute from <paramref name="context"/>'s
+            <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext.AllAttributes"/> to <paramref name="tagHelperOutput"/>'s
+            <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Attributes"/>.
+            </summary>
+            <param name="tagHelperOutput">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput"/> this method extends.</param>
+            <param name="attributeName">The name of the bound attribute.</param>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext"/>.</param>
+            <remarks>
+            <para>
+            Only copies the attribute if <paramref name="tagHelperOutput"/>'s
+            <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Attributes"/> does not contain an attribute with the given
+            <paramref name="attributeName"/>.
+            </para>
+            <para>
+            Duplicate attributes same name in <paramref name="context"/>'s <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext.AllAttributes"/>
+            or <paramref name="tagHelperOutput"/>'s <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Attributes"/> may result in copied
+            attribute order not being maintained.
+            </para></remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.TagHelperOutputExtensions.MergeAttributes(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput,Microsoft.AspNetCore.Mvc.Rendering.TagBuilder)">
+            <summary>
+            Merges the given <paramref name="tagBuilder"/>'s <see cref="P:Microsoft.AspNetCore.Mvc.Rendering.TagBuilder.Attributes"/> into the
+            <paramref name="tagHelperOutput"/>.
+            </summary>
+            <param name="tagHelperOutput">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput"/> this method extends.</param>
+            <param name="tagBuilder">The <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.TagBuilder"/> to merge attributes from.</param>
+            <remarks>Existing <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Attributes"/> on the given <paramref name="tagHelperOutput"/>
+            are not overridden; "class" attributes are merged with spaces.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.TagHelperOutputExtensions.RemoveRange(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput,System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute})">
+            <summary>
+            Removes the given <paramref name="attributes"/> from <paramref name="tagHelperOutput"/>'s
+            <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Attributes"/>.
+            </summary>
+            <param name="tagHelperOutput">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput"/> this method extends.</param>
+            <param name="attributes">Attributes to remove.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.TagHelperOutputExtensions.AddClass(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput,System.String,System.Text.Encodings.Web.HtmlEncoder)">
+            <summary>
+            Adds the given <paramref name="classValue"/> to the <paramref name="tagHelperOutput"/>'s
+            <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Attributes"/>.
+            </summary>
+            <param name="tagHelperOutput">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput"/> this method extends.</param>
+            <param name="classValue">The class value to add.</param>
+            <param name="htmlEncoder">The current HTML encoder.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.TagHelperOutputExtensions.RemoveClass(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput,System.String,System.Text.Encodings.Web.HtmlEncoder)">
+            <summary>
+            Removes the given <paramref name="classValue"/> from the <paramref name="tagHelperOutput"/>'s
+            <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Attributes"/>.
+            </summary>
+            <param name="tagHelperOutput">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput"/> this method extends.</param>
+            <param name="classValue">The class value to remove.</param>
+            <param name="htmlEncoder">The current HTML encoder.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;textarea&gt; elements with an <c>asp-for</c> attribute.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper"/>.
+            </summary>
+            <param name="generator">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper.Generator">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/> used to generate the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper.For">
+            <summary>
+            An expression to be evaluated against the current model.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper.Name">
+            <summary>
+            The name of the &lt;input&gt; element.
+            </summary>
+            <remarks>
+            Passed through to the generated HTML in all cases. Also used to determine whether <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper.For"/> is
+            valid with an empty <see cref="P:Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExpression.Name"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>Does nothing if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.TextAreaTagHelper.For"/> is <c>null</c>.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;span&gt; elements with an <c>asp-validation-for</c>
+            attribute.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper"/>.
+            </summary>
+            <param name="generator">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper.Generator">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/> used to generate the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper.For">
+            <summary>
+            Gets an expression to be evaluated against the current model.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>Does nothing if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationMessageTagHelper.For"/> is <c>null</c>.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting &lt;div&gt; elements with an <c>asp-validation-summary</c>
+            attribute.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper.#ctor(Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper"/>.
+            </summary>
+            <param name="generator">The <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper.ViewContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> of the executing view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper.Generator">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.IHtmlGenerator"/> used to generate the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper.ValidationSummary">
+            <summary>
+            If <see cref="F:Microsoft.AspNetCore.Mvc.Rendering.ValidationSummary.All"/> or <see cref="F:Microsoft.AspNetCore.Mvc.Rendering.ValidationSummary.ModelOnly"/>, appends a validation
+            summary. Otherwise (<see cref="F:Microsoft.AspNetCore.Mvc.Rendering.ValidationSummary.None"/>, the default), this tag helper does nothing.
+            </summary>
+            <exception cref="T:System.ArgumentException">
+            Thrown if setter is called with an undefined <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper.ValidationSummary"/> value e.g.
+            <c>(ValidationSummary)23</c>.
+            </exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+            <remarks>Does nothing if <see cref="P:Microsoft.AspNetCore.Mvc.TagHelpers.ValidationSummaryTagHelper.ValidationSummary"/> is <see cref="F:Microsoft.AspNetCore.Mvc.Rendering.ValidationSummary.None"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.CannotDetermineAttributeFor">
+            <summary>Cannot determine the '{0}' attribute for {1}. The following attributes are mutually exclusive:</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatCannotDetermineAttributeFor(System.Object,System.Object)">
+            <summary>Cannot determine the '{0}' attribute for {1}. The following attributes are mutually exclusive:</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.AnchorTagHelper_CannotOverrideHref">
+            <summary>Cannot override the '{0}' attribute for {1}. An {1} with a specified '{0}' must not have attributes starting with '{2}' or an '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}' or '{11}' attribute.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatAnchorTagHelper_CannotOverrideHref(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>Cannot override the '{0}' attribute for {1}. An {1} with a specified '{0}' must not have attributes starting with '{2}' or an '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}' or '{11}' attribute.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormTagHelper_CannotOverrideAction">
+            <summary>Cannot override the '{0}' attribute for {1}. A {1} with a specified '{0}' must not have attributes starting with '{2}' or an '{3}', '{4}', '{5}', '{6}', '{7}', '{8}' or '{9}' attribute.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatFormTagHelper_CannotOverrideAction(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>Cannot override the '{0}' attribute for {1}. A {1} with a specified '{0}' must not have attributes starting with '{2}' or an '{3}', '{4}', '{5}', '{6}', '{7}', '{8}' or '{9}' attribute.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.InputTagHelper_InvalidExpressionResult">
+            <summary>Unexpected '{1}' expression result type '{2}' for {0}. '{1}' must be of type '{3}' or '{4}' that can be parsed as a '{3}' if '{5}' is '{6}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatInputTagHelper_InvalidExpressionResult(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>Unexpected '{1}' expression result type '{2}' for {0}. '{1}' must be of type '{3}' or '{4}' that can be parsed as a '{3}' if '{5}' is '{6}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.InputTagHelper_InvalidStringResult">
+            <summary>Unexpected expression result value '{1}' for {0}. '{1}' cannot be parsed as a '{2}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatInputTagHelper_InvalidStringResult(System.Object,System.Object,System.Object)">
+            <summary>Unexpected expression result value '{1}' for {0}. '{1}' cannot be parsed as a '{2}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.InputTagHelper_ValueRequired">
+            <summary>'{1}' must not be null for {0} if '{2}' is '{3}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatInputTagHelper_ValueRequired(System.Object,System.Object,System.Object,System.Object)">
+            <summary>'{1}' must not be null for {0} if '{2}' is '{3}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.TagHelpers_NoProvidedMetadata">
+            <summary>The {2} was unable to provide metadata about '{1}' expression value '{3}' for {0}.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatTagHelpers_NoProvidedMetadata(System.Object,System.Object,System.Object,System.Object)">
+            <summary>The {2} was unable to provide metadata about '{1}' expression value '{3}' for {0}.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.InvalidEnumArgument">
+            <summary>The value of argument '{0}' ({1}) is invalid for Enum type '{2}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatInvalidEnumArgument(System.Object,System.Object,System.Object)">
+            <summary>The value of argument '{0}' ({1}) is invalid for Enum type '{2}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.TagHelperOutput_AttributeDoesNotExist">
+            <summary>The attribute '{0}' does not exist in the {1}.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatTagHelperOutput_AttributeDoesNotExist(System.Object,System.Object)">
+            <summary>The attribute '{0}' does not exist in the {1}.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.PropertyOfTypeCannotBeNull">
+            <summary>The '{0}' property of '{1}' must not be null.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatPropertyOfTypeCannotBeNull(System.Object,System.Object)">
+            <summary>The '{0}' property of '{1}' must not be null.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormActionTagHelper_CannotOverrideFormAction">
+            <summary>Cannot override the '{0}' attribute for &lt;{1}&gt;. &lt;{1}&gt; elements with a specified '{0}' must not have attributes starting with '{2}' or an '{3}', '{4}', '{5}', '{6}', '{7}', '{8}' or '{9}' attribute.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatFormActionTagHelper_CannotOverrideFormAction(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>Cannot override the '{0}' attribute for &lt;{1}&gt;. &lt;{1}&gt; elements with a specified '{0}' must not have attributes starting with '{2}' or an '{3}', '{4}', '{5}', '{6}', '{7}', '{8}' or '{9}' attribute.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.ArgumentCannotContainHtmlSpace">
+            <summary>Value cannot contain HTML space characters.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.ViewEngine_PartialViewNotFound">
+            <summary>The partial view '{0}' was not found. The following locations were searched:{1}</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatViewEngine_PartialViewNotFound(System.Object,System.Object)">
+            <summary>The partial view '{0}' was not found. The following locations were searched:{1}</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.PartialTagHelper_InvalidModelAttributes">
+            <summary>Cannot use '{0}' with both '{1}' and '{2}' attributes.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatPartialTagHelper_InvalidModelAttributes(System.Object,System.Object,System.Object)">
+            <summary>Cannot use '{0}' with both '{1}' and '{2}' attributes.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.ViewEngine_FallbackViewNotFound">
+            <summary>The fallback partial view '{0}' was not found. The following locations were searched:{1}</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatViewEngine_FallbackViewNotFound(System.Object,System.Object)">
+            <summary>The fallback partial view '{0}' was not found. The following locations were searched:{1}</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.AttributeIsRequired">
+            <summary>A value for the '{0}' attribute must be supplied to the '{1}' tag helper.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.TagHelpers.Resources.FormatAttributeIsRequired(System.Object,System.Object)">
+            <summary>A value for the '{0}' attribute must be supplied to the '{1}' tag helper.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Rendering.ValidationSummary">
+            <summary>
+            Acceptable validation summary rendering modes.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.Rendering.ValidationSummary.None">
+            <summary>
+            No validation summary.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.Rendering.ValidationSummary.ModelOnly">
+            <summary>
+            Validation summary with model-level errors only (excludes all property errors).
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.Rendering.ValidationSummary.All">
+            <summary>
+            Validation summary with all errors.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.TagHelperServicesExtensions">
+            <summary>
+            Extension methods for configuring Razor cache tag helpers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.TagHelperServicesExtensions.AddCacheTagHelper(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)">
+            <summary>
+             Adds MVC cache tag helper services to the application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.TagHelperServicesExtensions.AddCacheTagHelperLimits(Microsoft.Extensions.DependencyInjection.IMvcBuilder,System.Action{Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperOptions})">
+            <summary>
+             Configures the memory size limits on the cache of the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <param name="configure">The <see cref="T:System.Action`1"/>to configure the cache options.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.TagHelperServicesExtensions.AddCacheTagHelperLimits(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Action{Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelperOptions})">
+            <summary>
+             Configures the memory size limits on the cache of the <see cref="T:Microsoft.AspNetCore.Mvc.TagHelpers.CacheTagHelper"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <param name="configure">The <see cref="T:System.Action`1"/>to configure the cache options.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,412 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.FileProviders.Physical</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.FileProviders.Physical.ExclusionFilters">
+            <summary>
+            Specifies filtering behavior for files or directories.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.FileProviders.Physical.ExclusionFilters.Sensitive">
+            <summary>
+            Equivalent to <c>DotPrefixed | Hidden | System</c>. Exclude files and directories when the name begins with a period, or has either <see cref="F:System.IO.FileAttributes.Hidden"/> or <see cref="F:System.IO.FileAttributes.System"/> is set on <see cref="P:System.IO.FileSystemInfo.Attributes"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.FileProviders.Physical.ExclusionFilters.DotPrefixed">
+            <summary>
+            Exclude files and directories when the name begins with period.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.FileProviders.Physical.ExclusionFilters.Hidden">
+            <summary>
+            Exclude files and directories when <see cref="F:System.IO.FileAttributes.Hidden"/> is set on <see cref="P:System.IO.FileSystemInfo.Attributes"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.FileProviders.Physical.ExclusionFilters.System">
+            <summary>
+            Exclude files and directories when <see cref="F:System.IO.FileAttributes.System"/> is set on <see cref="P:System.IO.FileSystemInfo.Attributes"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.FileProviders.Physical.ExclusionFilters.None">
+            <summary>
+            Do not exclude any files.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo">
+            <summary>
+            Represents a directory on a physical filesystem
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo.#ctor(System.IO.DirectoryInfo)">
+            <summary>
+            Initializes an instance of <see cref="T:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo"/> that wraps an instance of <see cref="T:System.IO.DirectoryInfo"/>
+            </summary>
+            <param name="info">The directory</param>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo.Exists">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo.Length">
+            <summary>
+            Always equals -1.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo.PhysicalPath">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo.LastModified">
+            <summary>
+            The time when the directory was last written to.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo.IsDirectory">
+            <summary>
+            Always true.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PhysicalDirectoryInfo.CreateReadStream">
+            <summary>
+            Always throws an exception because read streams are not support on directories.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Always thrown</exception>
+            <returns>Never returns</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo">
+            <summary>
+            Represents a file on a physical filesystem
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo.#ctor(System.IO.FileInfo)">
+            <summary>
+            Initializes an instance of <see cref="T:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo"/> that wraps an instance of <see cref="T:System.IO.FileInfo"/>
+            </summary>
+            <param name="info">The <see cref="T:System.IO.FileInfo"/></param>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo.Exists">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo.Length">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo.PhysicalPath">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo.LastModified">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo.IsDirectory">
+            <summary>
+            Always false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFileInfo.CreateReadStream">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher">
+            <summary>
+                <para>
+                A file watcher that watches a physical filesystem for changes.
+                </para>
+                <para>
+                Triggers events on <see cref="T:Microsoft.Extensions.Primitives.IChangeToken" /> when files are created, change, renamed, or deleted.
+                </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher.#ctor(System.String,System.IO.FileSystemWatcher,System.Boolean)">
+            <summary>
+            Initializes an instance of <see cref="T:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher" /> that watches files in <paramref name="root" />.
+            Wraps an instance of <see cref="T:System.IO.FileSystemWatcher" />
+            </summary>
+            <param name="root">Root directory for the watcher</param>
+            <param name="fileSystemWatcher">The wrapped watcher that is watching <paramref name="root" /></param>
+            <param name="pollForChanges">
+            True when the watcher should use polling to trigger instances of
+            <see cref="T:Microsoft.Extensions.Primitives.IChangeToken" /> created by <see cref="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher.CreateFileChangeToken(System.String)" />
+            </param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher.#ctor(System.String,System.IO.FileSystemWatcher,System.Boolean,Microsoft.Extensions.FileProviders.Physical.ExclusionFilters)">
+            <summary>
+            Initializes an instance of <see cref="T:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher" /> that watches files in <paramref name="root" />.
+            Wraps an instance of <see cref="T:System.IO.FileSystemWatcher" />
+            </summary>
+            <param name="root">Root directory for the watcher</param>
+            <param name="fileSystemWatcher">The wrapped watcher that is watching <paramref name="root" /></param>
+            <param name="pollForChanges">
+            True when the watcher should use polling to trigger instances of
+            <see cref="T:Microsoft.Extensions.Primitives.IChangeToken" /> created by <see cref="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher.CreateFileChangeToken(System.String)" />
+            </param>
+            <param name="filters">Specifies which files or directories are excluded. Notifications of changes to are not raised to these.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher.CreateFileChangeToken(System.String)">
+            <summary>
+                <para>
+                Creates an instance of <see cref="T:Microsoft.Extensions.Primitives.IChangeToken" /> for all files and directories that match the
+                <paramref name="filter" />
+                </para>
+                <para>
+                Globbing patterns are relative to the root directory given in the constructor
+                <seealso cref="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher.#ctor(System.String,System.IO.FileSystemWatcher,System.Boolean)" />. Globbing patterns
+                are interpreted by <seealso cref="T:Microsoft.Extensions.FileSystemGlobbing.Matcher" />.
+                </para>
+            </summary>
+            <param name="filter">A globbing pattern for files and directories to watch</param>
+            <returns>A change token for all files that match the filter</returns>
+            <exception cref="T:System.ArgumentNullException">When <paramref name="filter" /> is null</exception>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher.Dispose">
+            <summary>
+            Disposes the provider. Change tokens may not trigger after the provider is disposed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PhysicalFilesWatcher.Dispose(System.Boolean)">
+            <summary>
+            Disposes the provider.
+            </summary>
+            <param name="disposing"><c>true</c> is invoked from <see cref="M:System.IDisposable.Dispose"/>.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.Physical.PollingFileChangeToken">
+            <summary>
+                <para>
+                A change token that polls for file system changes.
+                </para>
+                <para>
+                This change token does not raise any change callbacks. Callers should watch for <see cref="P:Microsoft.Extensions.FileProviders.Physical.PollingFileChangeToken.HasChanged" /> to turn
+                from false to true
+                and dispose the token after this happens.
+                </para>
+            </summary>
+            <remarks>
+            Polling occurs every 4 seconds.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PollingFileChangeToken.#ctor(System.IO.FileInfo)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.FileProviders.Physical.PollingFileChangeToken" /> that polls the specified file for changes as
+            determined by <see cref="P:System.IO.FileSystemInfo.LastWriteTimeUtc" />.
+            </summary>
+            <param name="fileInfo">The <see cref="T:System.IO.FileInfo"/> to poll</param>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PollingFileChangeToken.ActiveChangeCallbacks">
+            <summary>
+            Always false.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PollingFileChangeToken.HasChanged">
+            <summary>
+            True when the file has changed since the change token was created. Once the file changes, this value is always true
+            </summary>
+            <remarks>
+            Once true, the value will always be true. Change tokens should not re-used once expired. The caller should discard this
+            instance once it sees <see cref="P:Microsoft.Extensions.FileProviders.Physical.PollingFileChangeToken.HasChanged" /> is true.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PollingFileChangeToken.RegisterChangeCallback(System.Action{System.Object},System.Object)">
+            <summary>
+            Does not actually register callbacks.
+            </summary>
+            <param name="callback">This parameter is ignored</param>
+            <param name="state">This parameter is ignored</param>
+            <returns>A disposable object that noops when disposed</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.Physical.PollingWildCardChangeToken">
+            <summary>
+            A polling based <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> for wildcard patterns.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PollingWildCardChangeToken.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.FileProviders.Physical.PollingWildCardChangeToken"/>.
+            </summary>
+            <param name="root">The root of the file system.</param>
+            <param name="pattern">The pattern to watch.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PollingWildCardChangeToken.ActiveChangeCallbacks">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Physical.PollingWildCardChangeToken.HasChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Physical.PollingWildCardChangeToken.GetLastWriteUtc(System.String)">
+            <summary>
+            Gets the last write time of the file at the specified <paramref name="path"/>.
+            </summary>
+            <param name="path">The root relative path.</param>
+            <returns>The <see cref="T:System.DateTime"/> that the file was last modified.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.Internal.PhysicalDirectoryContents">
+            <summary>
+            Represents the contents of a physical file directory
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Internal.PhysicalDirectoryContents.#ctor(System.String)">
+            <summary>
+            Initializes an instance of <see cref="T:Microsoft.Extensions.FileProviders.Internal.PhysicalDirectoryContents"/>
+            </summary>
+            <param name="directory">The directory</param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Internal.PhysicalDirectoryContents.#ctor(System.String,Microsoft.Extensions.FileProviders.Physical.ExclusionFilters)">
+            <summary>
+            Initializes an instance of <see cref="T:Microsoft.Extensions.FileProviders.Internal.PhysicalDirectoryContents"/>
+            </summary>
+            <param name="directory">The directory</param>
+            <param name="filters">Specifies which files or directories are excluded from enumeration.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Internal.PhysicalDirectoryContents.Exists">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Internal.PhysicalDirectoryContents.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.PhysicalFileProvider">
+            <summary>
+            Looks up files using the on-disk file system
+            </summary>
+            <remarks>
+            When the environment variable "DOTNET_USE_POLLING_FILE_WATCHER" is set to "1" or "true", calls to
+            <see cref="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.Watch(System.String)" /> will use <see cref="T:Microsoft.Extensions.FileProviders.Physical.PollingFileChangeToken" />.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of a PhysicalFileProvider at the given root directory.
+            </summary>
+            <param name="root">The root directory. This should be an absolute path.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.#ctor(System.String,Microsoft.Extensions.FileProviders.Physical.ExclusionFilters)">
+            <summary>
+            Initializes a new instance of a PhysicalFileProvider at the given root directory.
+            </summary>
+            <param name="root">The root directory. This should be an absolute path.</param>
+            <param name="filters">Specifies which files or directories are excluded.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.PhysicalFileProvider.UsePollingFileWatcher">
+            <summary>
+            Gets or sets a value that determines if this instance of <see cref="T:Microsoft.Extensions.FileProviders.PhysicalFileProvider"/>
+            uses polling to determine file changes.
+            <para>
+            By default, <see cref="T:Microsoft.Extensions.FileProviders.PhysicalFileProvider"/>  uses <see cref="T:System.IO.FileSystemWatcher"/> to listen to file change events
+            for <see cref="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.Watch(System.String)"/>. <see cref="T:System.IO.FileSystemWatcher"/> is ineffective in some scenarios such as mounted drives.
+            Polling is required to effectively watch for file changes.
+            </para>
+            <seealso cref="P:Microsoft.Extensions.FileProviders.PhysicalFileProvider.UseActivePolling"/>.
+            </summary>
+            <value>
+            The default value of this property is determined by the value of environment variable named <c>DOTNET_USE_POLLING_FILE_WATCHER</c>.
+            When <c>true</c> or <c>1</c>, this property defaults to <c>true</c>; otherwise false.
+            </value>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.PhysicalFileProvider.UseActivePolling">
+            <summary>
+            Gets or sets a value that determines if this instance of <see cref="T:Microsoft.Extensions.FileProviders.PhysicalFileProvider"/>
+            actively polls for file changes.
+            <para>
+            When <see langword="true"/>, <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> returned by <see cref="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.Watch(System.String)"/> will actively poll for file changes
+            (<see cref="P:Microsoft.Extensions.Primitives.IChangeToken.ActiveChangeCallbacks"/> will be <see langword="true"/>) instead of being passive.
+            </para>
+            <para>
+            This property is only effective when <see cref="P:Microsoft.Extensions.FileProviders.PhysicalFileProvider.UsePollingFileWatcher"/> is set.
+            </para>
+            </summary>
+            <value>
+            The default value of this property is determined by the value of environment variable named <c>DOTNET_USE_POLLING_FILE_WATCHER</c>.
+            When <c>true</c> or <c>1</c>, this property defaults to <c>true</c>; otherwise false.
+            </value>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.Dispose">
+            <summary>
+            Disposes the provider. Change tokens may not trigger after the provider is disposed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.Dispose(System.Boolean)">
+            <summary>
+            Disposes the provider.
+            </summary>
+            <param name="disposing"><c>true</c> is invoked from <see cref="M:System.IDisposable.Dispose"/>.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.PhysicalFileProvider.Root">
+            <summary>
+            The root directory for this instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.GetFileInfo(System.String)">
+            <summary>
+            Locate a file at the given path by directly mapping path segments to physical directories.
+            </summary>
+            <param name="subpath">A path under the root directory</param>
+            <returns>The file information. Caller must check <see cref="P:Microsoft.Extensions.FileProviders.IFileInfo.Exists"/> property. </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.GetDirectoryContents(System.String)">
+            <summary>
+            Enumerate a directory at the given path, if any.
+            </summary>
+            <param name="subpath">A path under the root directory. Leading slashes are ignored.</param>
+            <returns>
+            Contents of the directory. Caller must check <see cref="P:Microsoft.Extensions.FileProviders.IDirectoryContents.Exists"/> property. <see cref="T:Microsoft.Extensions.FileProviders.NotFoundDirectoryContents" /> if
+            <paramref name="subpath" /> is absolute, if the directory does not exist, or <paramref name="subpath" /> has invalid
+            characters.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.Watch(System.String)">
+            <summary>
+                <para>Creates a <see cref="T:Microsoft.Extensions.Primitives.IChangeToken" /> for the specified <paramref name="filter" />.</para>
+                <para>Globbing patterns are interpreted by <seealso cref="T:Microsoft.Extensions.FileSystemGlobbing.Matcher" />.</para>
+            </summary>
+            <param name="filter">
+            Filter string used to determine what files or folders to monitor. Example: **/*.cs, *.*,
+            subFolder/**/*.cshtml.
+            </param>
+            <returns>
+            An <see cref="T:Microsoft.Extensions.Primitives.IChangeToken" /> that is notified when a file matching <paramref name="filter" /> is added,
+            modified or deleted. Returns a <see cref="T:Microsoft.Extensions.FileProviders.NullChangeToken" /> if <paramref name="filter" /> has invalid filter
+            characters or if <paramref name="filter" /> is an absolute path or outside the root directory specified in the
+            constructor <seealso cref="M:Microsoft.Extensions.FileProviders.PhysicalFileProvider.#ctor(System.String)" />.
+            </returns>
+        </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+        <member name="P:System.SR.Argument_InvalidOffLen">
+            <summary>Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.</summary>
+        </member>
+        <member name="P:System.SR.ArgumentOutOfRange_NeedNonNegNum">
+            <summary>Non-negative number required.</summary>
+        </member>
+        <member name="P:System.SR.Error_FileSystemWatcherRequiredWithoutPolling">
+            <summary>The fileSystemWatcher parameter must be non-null when pollForChanges is false.</summary>
+        </member>
+        <member name="P:System.SR.CannotCreateStream">
+            <summary>Cannot create a stream for a directory.</summary>
+        </member>
+        <member name="P:System.SR.CannotModifyWhenFileWatcherInitialized">
+            <summary>Cannot modify {0} once file watcher has been initialized.</summary>
+        </member>
+        <member name="P:System.SR.Cryptography_HashAlgorithmNameNullOrEmpty">
+            <summary>The hash algorithm name cannot be null or empty.</summary>
+        </member>
+        <member name="P:System.SR.UnexpectedFileSystemInfo">
+            <summary>Unexpected type of FileSystemInfo</summary>
+        </member>
+        <member name="P:System.SR.FileSystemWatcher_PlatformNotSupported">
+            <summary>The type '{0}' is not supported on this platform, use polling instead.</summary>
+        </member>
+    </members>
+</doc>

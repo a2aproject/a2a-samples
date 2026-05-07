@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Mvc</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions">
+            <summary>
+            Extension methods for setting up MVC services in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddMvc(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds MVC services to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> that can be used to further configure the MVC services.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddMvc(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Mvc.MvcOptions})">
+            <summary>
+            Adds MVC services to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="setupAction">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> that can be used to further configure the MVC services.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds services for controllers to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>. This method will not
+            register services used for views or pages.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> that can be used to further configure the MVC services.</returns>
+            <remarks>
+            <para>
+            This method configures the MVC services for the commonly used features with controllers for an API. This
+            combines the effects of <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreServiceCollectionExtensions.AddMvcCore(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcApiExplorerMvcCoreBuilderExtensions.AddApiExplorer(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddAuthorization(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCorsMvcCoreBuilderExtensions.AddCors(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions.AddDataAnnotations(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            and <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddFormatterMappings(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>.
+            </para>
+            <para>
+            To add services for controllers with views call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllersWithViews(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
+            on the resulting builder.
+            </para>
+            <para>
+            To add services for pages call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddRazorPages(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
+            on the resulting builder.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllers(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Mvc.MvcOptions})">
+            <summary>
+            Adds services for controllers to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>. This method will not
+            register services used for views or pages.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="configure">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> that can be used to further configure the MVC services.</returns>
+            <remarks>
+            <para>
+            This method configures the MVC services for the commonly used features with controllers for an API. This
+            combines the effects of <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreServiceCollectionExtensions.AddMvcCore(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcApiExplorerMvcCoreBuilderExtensions.AddApiExplorer(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddAuthorization(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCorsMvcCoreBuilderExtensions.AddCors(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions.AddDataAnnotations(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            and <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddFormatterMappings(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>.
+            </para>
+            <para>
+            To add services for controllers with views call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllersWithViews(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
+            on the resulting builder.
+            </para>
+            <para>
+            To add services for pages call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddRazorPages(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>
+            on the resulting builder.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllersWithViews(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds services for controllers to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>. This method will not
+            register services used for pages.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> that can be used to further configure the MVC services.</returns>
+            <remarks>
+            <para>
+            This method configures the MVC services for the commonly used features with controllers with views. This
+            combines the effects of <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreServiceCollectionExtensions.AddMvcCore(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcApiExplorerMvcCoreBuilderExtensions.AddApiExplorer(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddAuthorization(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCorsMvcCoreBuilderExtensions.AddCors(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions.AddDataAnnotations(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddFormatterMappings(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.TagHelperServicesExtensions.AddCacheTagHelper(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            and <see cref="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>.
+            </para>
+            <para>
+            To add services for pages call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddRazorPages(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllersWithViews(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Mvc.MvcOptions})">
+            <summary>
+            Adds services for controllers to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>. This method will not
+            register services used for pages.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="configure">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> that can be used to further configure the MVC services.</returns>
+            <remarks>
+            <para>
+            This method configures the MVC services for the commonly used features with controllers with views. This
+            combines the effects of <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreServiceCollectionExtensions.AddMvcCore(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcApiExplorerMvcCoreBuilderExtensions.AddApiExplorer(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddAuthorization(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCorsMvcCoreBuilderExtensions.AddCors(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions.AddDataAnnotations(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddFormatterMappings(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.TagHelperServicesExtensions.AddCacheTagHelper(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcViewFeaturesMvcCoreBuilderExtensions.AddViews(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            and <see cref="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>.
+            </para>
+            <para>
+            To add services for pages call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddRazorPages(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddRazorPages(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds services for pages to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> that can be used to further configure the MVC services.</returns>
+            <remarks>
+            <para>
+            This method configures the MVC services for the commonly used features for pages. This
+            combines the effects of <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreServiceCollectionExtensions.AddMvcCore(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddAuthorization(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions.AddDataAnnotations(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.TagHelperServicesExtensions.AddCacheTagHelper(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            and <see cref="M:Microsoft.Extensions.DependencyInjection.MvcRazorPagesMvcCoreBuilderExtensions.AddRazorPages(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>.
+            </para>
+            <para>
+            To add services for controllers for APIs call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllers(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>.
+            </para>
+            <para>
+            To add services for controllers with views call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllersWithViews(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddRazorPages(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Mvc.RazorPages.RazorPagesOptions})">
+            <summary>
+            Adds services for pages to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="configure">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> that can be used to further configure the MVC services.</returns>
+            <remarks>
+            <para>
+            This method configures the MVC services for the commonly used features for pages. This
+            combines the effects of <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreServiceCollectionExtensions.AddMvcCore(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcCoreMvcCoreBuilderExtensions.AddAuthorization(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions.AddDataAnnotations(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            <see cref="M:Microsoft.Extensions.DependencyInjection.TagHelperServicesExtensions.AddCacheTagHelper(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>,
+            and <see cref="M:Microsoft.Extensions.DependencyInjection.MvcRazorPagesMvcCoreBuilderExtensions.AddRazorPages(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)"/>.
+            </para>
+            <para>
+            To add services for controllers for APIs call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllers(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>.
+            </para>
+            <para>
+            To add services for controllers with views call <see cref="M:Microsoft.Extensions.DependencyInjection.MvcServiceCollectionExtensions.AddControllersWithViews(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/>.
+            </para>
+            </remarks>
+        </member>
+    </members>
+</doc>

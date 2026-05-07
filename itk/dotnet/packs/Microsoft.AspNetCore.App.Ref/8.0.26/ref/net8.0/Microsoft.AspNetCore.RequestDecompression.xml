@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.RequestDecompression</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.RequestDecompression.BrotliDecompressionProvider">
+            <summary>
+            Brotli decompression provider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RequestDecompression.BrotliDecompressionProvider.GetDecompressionStream(System.IO.Stream)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.RequestDecompression.DefaultRequestDecompressionProvider">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.RequestDecompression.DefaultRequestDecompressionProvider.GetDecompressionStream(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.RequestDecompression.DeflateDecompressionProvider">
+            <summary>
+            DEFLATE decompression provider.
+            </summary>
+            <remarks>
+            As described in RFC 2616, the deflate content-coding token represents the "zlib" format
+            (RFC 1950) in combination with the "deflate" compression algorithm (RFC 1951).
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RequestDecompression.DeflateDecompressionProvider.GetDecompressionStream(System.IO.Stream)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.RequestDecompression.GZipDecompressionProvider">
+            <summary>
+            GZip decompression provider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RequestDecompression.GZipDecompressionProvider.GetDecompressionStream(System.IO.Stream)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.RequestDecompression.IDecompressionProvider">
+            <summary>
+            Provides a specific decompression implementation to decompress HTTP request bodies.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RequestDecompression.IDecompressionProvider.GetDecompressionStream(System.IO.Stream)">
+            <summary>
+            Creates a new decompression stream.
+            </summary>
+            <param name="stream">The compressed request body stream.</param>
+            <returns>The decompression stream.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.RequestDecompression.IRequestDecompressionProvider">
+            <summary>
+            Used to examine requests to see if decompression should be used.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RequestDecompression.IRequestDecompressionProvider.GetDecompressionStream(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Examines the request and selects an acceptable decompression provider, if any.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns>The decompression stream when the provider is capable of decompressing the HTTP request body, otherwise <see langword="null" />.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.RequestDecompression.RequestDecompressionMiddleware">
+            <summary>
+            Enables HTTP request decompression.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RequestDecompression.RequestDecompressionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.RequestDecompression.RequestDecompressionMiddleware},Microsoft.AspNetCore.RequestDecompression.IRequestDecompressionProvider)">
+            <summary>
+            Initialize the request decompression middleware.
+            </summary>
+            <param name="next">The delegate representing the remaining middleware in the request pipeline.</param>
+            <param name="logger">The logger.</param>
+            <param name="provider">The <see cref="T:Microsoft.AspNetCore.RequestDecompression.IRequestDecompressionProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RequestDecompression.RequestDecompressionMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invoke the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns>A task that represents the execution of this middleware.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.RequestDecompression.RequestDecompressionOptions">
+            <summary>
+            Options for the HTTP request decompression middleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RequestDecompression.RequestDecompressionOptions.DecompressionProviders">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.RequestDecompression.IDecompressionProvider"/> types to use for request decompression.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RequestDecompressionBuilderExtensions">
+            <summary>
+            Extension methods for the HTTP request decompression middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RequestDecompressionBuilderExtensions.UseRequestDecompression(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds middleware for dynamically decompressing HTTP request bodies.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> instance this method extends.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.RequestDecompressionServiceExtensions">
+            <summary>
+            Extension methods for the HTTP request decompression middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.RequestDecompressionServiceExtensions.AddRequestDecompression(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add request decompression services.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.RequestDecompressionServiceExtensions.AddRequestDecompression(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.RequestDecompression.RequestDecompressionOptions})">
+            <summary>
+            Add request decompression services and configure the related options.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configureOptions">A delegate to configure the <see cref="T:Microsoft.AspNetCore.RequestDecompression.RequestDecompressionOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+    </members>
+</doc>

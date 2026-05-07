@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Http.Connections.Common</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.AvailableTransport">
+            <summary>
+            Part of the <see cref="T:Microsoft.AspNetCore.Http.Connections.NegotiationResponse"/> that represents an individual transport and the trasfer formats the transport supports.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.AvailableTransport.Transport">
+            <summary>
+            A transport available on the server.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.AvailableTransport.TransferFormats">
+            <summary>
+            A list of formats supported by the transport. Examples include "Text" and "Binary".
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.HttpTransports">
+            <summary>
+            Constants related to HTTP transports.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Connections.HttpTransports.All">
+            <summary>
+            A bitmask combining all available <see cref="T:Microsoft.AspNetCore.Http.Connections.HttpTransportType"/> values.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.HttpTransportType">
+            <summary>
+            Specifies transports that the client can use to send HTTP requests.
+            </summary>
+            <remarks>
+            This enumeration has a <see cref="T:System.FlagsAttribute"/> attribute that allows a bitwise combination of its member values.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Connections.HttpTransportType.None">
+            <summary>
+            Specifies that no transport is used.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets">
+            <summary>
+            Specifies that the web sockets transport is used.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Connections.HttpTransportType.ServerSentEvents">
+            <summary>
+            Specifies that the server sent events transport is used.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling">
+            <summary>
+            Specifies that the long polling transport is used.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.NegotiateProtocol">
+            <summary>
+            The protocol for reading and writing negotiate requests and responses.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.NegotiateProtocol.WriteResponse(Microsoft.AspNetCore.Http.Connections.NegotiationResponse,System.Buffers.IBufferWriter{System.Byte})">
+            <summary>
+            Writes the <paramref name="response"/> to the <paramref name="output"/>.
+            </summary>
+            <param name="response">The negotiation response generated in response to a negotiation request.</param>
+            <param name="output">Where the <paramref name="response"/> is written to as Json.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Connections.NegotiateProtocol.ParseResponse(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Parses a <see cref="T:Microsoft.AspNetCore.Http.Connections.NegotiationResponse"/> from the <paramref name="content"/> as Json.
+            </summary>
+            <param name="content">The bytes of a Json payload that represents a <see cref="T:Microsoft.AspNetCore.Http.Connections.NegotiationResponse"/>.</param>
+            <returns>The parsed <see cref="T:Microsoft.AspNetCore.Http.Connections.NegotiationResponse"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Connections.NegotiationResponse">
+            <summary>
+            A response to a '/negotiate' request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.NegotiationResponse.Url">
+            <summary>
+            An optional Url to redirect the client to another endpoint.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.NegotiationResponse.AccessToken">
+            <summary>
+            An optional access token to go along with the Url.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.NegotiationResponse.ConnectionId">
+            <summary>
+            The public ID for the connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.NegotiationResponse.ConnectionToken">
+            <summary>
+            The private ID for the connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.NegotiationResponse.Version">
+            <summary>
+            The minimum value between the version the client sends and the maximum version the server supports.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.NegotiationResponse.AvailableTransports">
+            <summary>
+            A list of transports the server supports.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.NegotiationResponse.Error">
+            <summary>
+            An optional error during the negotiate. If this is not null the other properties on the response can be ignored.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Connections.NegotiationResponse.UseStatefulReconnect">
+            <summary>
+            If set, the connection should attempt to reconnect with the same <see cref="P:Microsoft.AspNetCore.Connections.BaseConnectionContext.ConnectionId"/> if it disconnects.
+            It should also set <see cref="T:Microsoft.AspNetCore.Connections.Abstractions.IStatefulReconnectFeature"/> on the <see cref="P:Microsoft.AspNetCore.Connections.BaseConnectionContext.Features"/> collection so other layers of the
+            application (like SignalR) can react.
+            </summary>
+        </member>
+    </members>
+</doc>

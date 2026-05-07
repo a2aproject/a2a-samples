@@ -1,0 +1,2421 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Components.Server</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Components.Server.BlazorPack.BlazorPackHubProtocol">
+            <summary>
+            Implements the SignalR Hub Protocol using MessagePack with limited type support.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.BlazorPack.BlazorPackHubProtocol.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.BlazorPack.BlazorPackHubProtocol.Version">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.BlazorPack.BlazorPackHubProtocol.TransferFormat">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.BlazorPack.BlazorPackHubProtocol.IsVersionSupported(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.BlazorPack.BlazorPackHubProtocol.TryParseMessage(System.Buffers.ReadOnlySequence{System.Byte}@,Microsoft.AspNetCore.SignalR.IInvocationBinder,Microsoft.AspNetCore.SignalR.Protocol.HubMessage@)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.BlazorPack.BlazorPackHubProtocol.WriteMessage(Microsoft.AspNetCore.SignalR.Protocol.HubMessage,System.Buffers.IBufferWriter{System.Byte})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.BlazorPack.BlazorPackHubProtocol.GetMessageBytes(Microsoft.AspNetCore.SignalR.Protocol.HubMessage)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.CircuitOptions">
+            <summary>
+            Options to configure circuit handler for server-side Blazor
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.CircuitOptions.DisconnectedCircuitMaxRetained">
+            <summary>
+            Gets or sets a value that determines the maximum number of disconnected circuit state details
+            are retained by the server.
+            <para>
+            When a client disconnects, ASP.NET Core Components attempts to retain state on the server for an
+            interval. This allows the client to re-establish a connection to the existing circuit on the server
+            without losing any state in the event of transient connection issues.
+            </para>
+            <para>
+            This value determines the maximum number of circuit states retained by the server.
+            <seealso cref="P:Microsoft.AspNetCore.Components.Server.CircuitOptions.DisconnectedCircuitRetentionPeriod"/>
+            </para>
+            </summary>
+            <value>
+            Defaults to <c>100</c>.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.CircuitOptions.DisconnectedCircuitRetentionPeriod">
+            <summary>
+            Gets or sets a value that determines the maximum duration state for a disconnected circuit is
+            retained on the server.
+            <para>
+            When a client disconnects, ASP.NET Core Components attempts to retain state on the server for an
+            interval. This allows the client to re-establish a connection to the existing circuit on the server
+            without losing any state in the event of transient connection issues.
+            </para>
+            <para>
+            This value determines the maximum duration circuit state is retained by the server before being evicted.
+            <seealso cref="P:Microsoft.AspNetCore.Components.Server.CircuitOptions.DisconnectedCircuitMaxRetained"/>
+            </para>
+            </summary>
+            <value>
+            Defaults to <c>3 minutes</c>.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.CircuitOptions.DetailedErrors">
+            <summary>
+            Gets or sets a value that determines whether or not to send detailed exception messages to JavaScript when an unhandled exception
+            happens on the circuit or when a .NET method invocation through JS interop results in an exception.
+            </summary>
+            <remarks>
+            This value should only be turned on in development scenarios as turning it on in production might result in the leak of
+            sensitive information to untrusted parties.
+            </remarks>
+            <value>Defaults to <c>false</c>.</value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.CircuitOptions.JSInteropDefaultCallTimeout">
+            <summary>
+            Gets or sets a value that indicates how long the server will wait before timing out an asynchronous JavaScript function invocation.
+            </summary>
+            <value>
+            Defaults to <c>1 minute</c>.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.CircuitOptions.MaxBufferedUnacknowledgedRenderBatches">
+            <summary>
+            Gets or sets the maximum number of render batches that a circuit will buffer until an acknowledgement for the batch is
+            received.
+            </summary>
+            <remarks>
+            When the limit of buffered render batches is reached components will stop rendering and will wait until either the
+            circuit is disconnected and disposed or at least one batch gets acknowledged.
+            </remarks>
+            <value>
+            Defaults to <c>10</c>.</value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.CircuitOptions.RootComponents">
+            <summary>
+            Gets options for root components within the circuit.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.CircuitRootComponentOptions">
+            <summary>
+            Options for root components within the circuit.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.CircuitRootComponentOptions.JSComponents">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.CircuitRootComponentOptions.MaxJSRootComponents">
+            <summary>
+            Gets or sets the maximum number of root components added from JavaScript.
+            </summary>
+            <value>Defaults to <c>100</c>.</value>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.Circuits.Circuit">
+            <summary>
+            Represents a link between a ASP.NET Core Component on the server and a client.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.Circuit.Id">
+            <summary>
+            Gets the identifier for the <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.Circuit"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler"/> allows running code during specific lifetime events of a <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.Circuit"/>.
+            <list type="bullet">
+            <item><description>
+            <see cref="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnCircuitOpenedAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)"/> is invoked after an initial circuit to the client
+            has been established.
+            </description></item>
+            <item><description>
+            <see cref="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnConnectionUpAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)"/> is invoked immediately after the completion of
+            <see cref="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnCircuitOpenedAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)"/>. In addition, the method is invoked each time a connection is re-established
+            with a client after it's been dropped. <see cref="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnConnectionDownAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)"/> is invoked each time a connection
+            is dropped.
+            </description></item>
+            <item><description>
+            <see cref="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnCircuitClosedAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)"/> is invoked prior to the server evicting the circuit to the client.
+            Application users may use this event to save state for a client that can be later rehydrated.
+            </description></item>
+            </list>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.Order">
+            <summary>
+            Gets the execution order for the current instance of <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler"/>.
+            <para>
+            When multiple <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler"/> instances are registered, the <see cref="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.Order"/>
+            property is used to determine the order in which instances are executed. When two handlers
+            have the same value for <see cref="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.Order"/>, their execution order is non-deterministic.
+            </para>
+            </summary>
+            <value>
+            Defaults to 0.
+            </value>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnCircuitOpenedAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)">
+            <summary>
+            Invoked when a new circuit was established.
+            </summary>
+            <param name="circuit">The <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.Circuit"/>.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> that notifies when the client connection is aborted.</param>
+            <returns><see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous execution operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnConnectionUpAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)">
+            <summary>
+            Invoked when a connection to the client was established.
+            <para>
+            This method is executed once initially after <see cref="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnCircuitOpenedAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)"/>
+            and once each for each reconnect during the lifetime of a circuit.
+            </para>
+            </summary>
+            <param name="circuit">The <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.Circuit"/>.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> that notifies when the client connection is aborted.</param>
+            <returns><see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous execution operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnConnectionDownAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)">
+            <summary>
+            Invoked when a connection to the client was dropped.
+            </summary>
+            <param name="circuit">The <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.Circuit"/>.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns><see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous execution operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.OnCircuitClosedAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit,System.Threading.CancellationToken)">
+            <summary>
+            Invoked when a new circuit is being discarded.
+            </summary>
+            <param name="circuit">The <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.Circuit"/>.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns><see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous execution operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHandler.CreateInboundActivityHandler(System.Func{Microsoft.AspNetCore.Components.Server.Circuits.CircuitInboundActivityContext,System.Threading.Tasks.Task})">
+            <summary>
+            Creates a handler that gets invoked when inbound activity on the circuit causes an asynchronous task to be dispatched on the server.
+            </summary>
+            <param name="next">The next handler to invoke.</param>
+            <returns>A handler function that returns a <see cref="T:System.Threading.Tasks.Task"/> that completes when the activity has finished.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitInboundActivityContext">
+            <summary>
+            Contains information about inbound <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.Circuit"/> activity.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitInboundActivityContext.Circuit">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.Circuit"/> associated with the activity.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitRegistry">
+             <summary>
+             <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitRegistry"/> manages the lifetime of a <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHost"/>.
+             </summary>
+             <remarks>
+             Hosts start off by being registered using <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHost"/>.
+            
+             In the simplest of cases, the client disconnects e.g. the user is done with the application and closes the browser.
+             The server (eventually) learns of the disconnect. The host is transitioned from <see cref="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitRegistry.ConnectedCircuits"/> to
+             <see cref="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitRegistry.DisconnectedCircuits"/> where it sits with an expiration time. We'll mark the associated <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitClientProxy"/> as disconnected
+             so that consumers of the Circuit know of the current state.
+             Once the entry for the host in <see cref="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitRegistry.DisconnectedCircuits"/> expires, we'll dispose off the host.
+            
+             The alternate case is when the disconnect was transient, e.g. due to a network failure, and the client attempts to reconnect.
+             We'll attempt to connect it back to the host and the preserved server state, when available. In this event, we do the opposite of
+             what we did during disconnect - transition the host from <see cref="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitRegistry.DisconnectedCircuits"/> to <see cref="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitRegistry.ConnectedCircuits"/>, and transfer
+             the <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitClientProxy"/> to use the new client instance that attempted to reconnect to the server. Removing the entry from
+             <see cref="P:Microsoft.AspNetCore.Components.Server.Circuits.CircuitRegistry.DisconnectedCircuits"/> should ensure we no longer have to concern ourselves with entry expiration.
+            
+             Knowing when a client disconnected is not an exact science. There's a fair possibility that a client may reconnect before the server realizes.
+             Consequently, we have to account for reconnects and disconnects occuring simultaneously as well as appearing out of order.
+             To manage this, we use a critical section to manage all state transitions.
+             </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.CircuitRegistry.Register(Microsoft.AspNetCore.Components.Server.Circuits.CircuitHost)">
+            <summary>
+            Registers an active <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.CircuitHost"/> with the register.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.RemoteJSDataStream.PipeReader">
+            <summary>
+            Gets a <see cref="P:Microsoft.AspNetCore.Components.Server.Circuits.RemoteJSDataStream.PipeReader"/> to directly read data sent by the JavaScript client.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteJSDataStream.InvalidateLastDataReceivedTimeForTimeout">
+             <summary>
+             For testing purposes only.
+            
+             Triggers the timeout on the next check.
+             </summary>
+        </member>
+        <member name="E:Microsoft.AspNetCore.Components.Server.Circuits.RemoteJSRuntime.UnhandledException">
+            <summary>
+            Notifies when a runtime exception occurred.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager">
+            <summary>
+            A Server-Side Blazor implementation of <see cref="T:Microsoft.AspNetCore.Components.NavigationManager"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.#ctor(Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager})">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager"/> instance.
+            </summary>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger`1"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.HasAttachedJSRuntime">
+            <summary>
+            Gets or sets whether the circuit has an attached <see cref="T:Microsoft.JSInterop.IJSRuntime"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.Initialize(System.String,System.String)">
+            <summary>
+            Initializes the <see cref="T:Microsoft.AspNetCore.Components.NavigationManager" />.
+            </summary>
+            <param name="baseUri">The base URI.</param>
+            <param name="uri">The absolute URI.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.AttachJsRuntime(Microsoft.JSInterop.IJSRuntime)">
+            <summary>
+            Initializes the <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager"/>.
+            </summary>
+            <param name="jsRuntime">The <see cref="T:Microsoft.JSInterop.IJSRuntime"/> to use for interoperability.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.NavigateToCore(System.String,Microsoft.AspNetCore.Components.NavigationOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteNavigationManager.Refresh(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="E:Microsoft.AspNetCore.Components.Server.Circuits.RemoteRenderer.UnhandledException">
+            <summary>
+            Notifies when a rendering exception occurred.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteRenderer.#ctor(System.IServiceProvider,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.AspNetCore.Components.Server.CircuitOptions,Microsoft.AspNetCore.Components.Server.Circuits.CircuitClientProxy,Microsoft.AspNetCore.Components.Server.IServerComponentDeserializer,Microsoft.Extensions.Logging.ILogger,Microsoft.AspNetCore.Components.Server.Circuits.RemoteJSRuntime,Microsoft.AspNetCore.Components.Server.Circuits.CircuitJSComponentInterop)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.RemoteRenderer"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteRenderer.HandleException(System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteRenderer.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.RemoteRenderer.UpdateDisplayAsync(Microsoft.AspNetCore.Components.RenderTree.RenderBatch@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1">
+             <summary>
+             Implements a list that uses an array of objects to store the elements.
+            
+             This differs from a <see cref="T:System.Collections.Generic.List`1"/> in that
+             it not only grows as required but also shrinks if cleared with significant
+             excess capacity. This makes it useful for component rendering, because
+             components can be long-lived and re-render frequently, with the rendered size
+             varying dramatically depending on the user's navigation in the app.
+             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1.#ctor(System.Int32,System.Buffers.ArrayPool{`0})">
+            <summary>
+            Constructs a new instance of <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1.Count">
+            <summary>
+            Gets the number of items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1.Buffer">
+            <summary>
+            Gets the underlying buffer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1.Append(`0@)">
+            <summary>
+            Appends a new item, automatically resizing the underlying array if necessary.
+            </summary>
+            <param name="item">The item to append.</param>
+            <returns>The index of the appended item.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1.Overwrite(System.Int32,`0@)">
+            <summary>
+            Sets the supplied value at the specified index. The index must be within
+            range for the array.
+            </summary>
+            <param name="index">The index.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1.RemoveLast">
+            <summary>
+            Removes the last item.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1.InsertExpensive(System.Int32,`0)">
+            <summary>
+            Inserts the item at the specified index, moving the contents of the subsequent entries along by one.
+            </summary>
+            <param name="index">The index at which the value is to be inserted.</param>
+            <param name="value">The value to insert.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1.Clear">
+            <summary>
+            Marks the array as empty, also shrinking the underlying storage if it was
+            not being used to near its full capacity.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.Circuits.RenderBatchWriter">
+             <summary>
+             Provides a custom binary serializer for <see cref="T:Microsoft.AspNetCore.Components.RenderTree.RenderBatch"/> instances.
+             This is designed with both server-side and client-side perf in mind:
+            
+              * Array-like regions always have a fixed size per entry (even if some entry types
+                don't require as much space as others) so the recipient can index directly.
+              * The indices describing where field data starts, where each string value starts,
+                etc., are written *after* that data, so when writing the data we don't have to
+                compute the locations up front or seek back to an earlier point in the stream.
+                The recipient can only process the data after reading it all into a buffer,
+                so it's no disadvantage for the location info to be at the end.
+              * We only serialize the data that the JS side will need. For example, we don't
+                emit frame sequence numbers, or any representation of nonstring attribute
+                values, or component instances, etc.
+            
+             We don't have or need a .NET reader for this format. We only read it from JS code.
+             </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream">
+            <summary>
+            Writeable memory stream backed by a an <see cref="T:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilder`1"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.CanRead">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.CanSeek">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.CanWrite">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.Length">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.Position">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.ReadAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.WriteAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.Flush">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.FlushAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.SetLength(System.Int64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.Circuits.ArrayBuilderMemoryStream.DisposeAsync">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.RevalidatingServerAuthenticationStateProvider">
+            <summary>
+            A base class for <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider"/> services that receive an
+            authentication state from the host environment, and revalidate it at regular intervals.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.RevalidatingServerAuthenticationStateProvider.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Server.RevalidatingServerAuthenticationStateProvider"/>.
+            </summary>
+            <param name="loggerFactory">A logger factory.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.RevalidatingServerAuthenticationStateProvider.RevalidationInterval">
+            <summary>
+            Gets the interval between revalidation attempts.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.RevalidatingServerAuthenticationStateProvider.ValidateAuthenticationStateAsync(Microsoft.AspNetCore.Components.Authorization.AuthenticationState,System.Threading.CancellationToken)">
+            <summary>
+            Determines whether the authentication state is still valid.
+            </summary>
+            <param name="authenticationState">The current <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationState"/>.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> to observe while performing the operation.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that resolves as true if the <paramref name="authenticationState"/> is still valid, or false if it is not.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.RevalidatingServerAuthenticationStateProvider.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.ServerAuthenticationStateProvider">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider"/> intended for use in server-side Blazor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ServerAuthenticationStateProvider.GetAuthenticationStateAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ServerAuthenticationStateProvider.SetAuthenticationState(System.Threading.Tasks.Task{Microsoft.AspNetCore.Components.Authorization.AuthenticationState})">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.ComponentHub.DefaultPath">
+            <summary>
+            Gets the default endpoint path for incoming connections.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage">
+            <summary>
+            Provides mechanisms for storing and retrieving data in the browser storage.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage.#ctor(System.String,Microsoft.JSInterop.IJSRuntime,Microsoft.AspNetCore.DataProtection.IDataProtectionProvider)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage"/>.
+            </summary>
+            <param name="storeName">The name of the store in which the data should be stored.</param>
+            <param name="jsRuntime">The <see cref="T:Microsoft.JSInterop.IJSRuntime"/>.</param>
+            <param name="dataProtectionProvider">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage.SetAsync(System.String,System.Object)">
+            <summary>
+            <para>
+            Asynchronously stores the specified data.
+            </para>
+            <para>
+            Since no data protection purpose is specified with this overload, the purpose is derived from
+            <paramref name="key"/> and the store name. This is a good default purpose to use if the keys come from a
+            fixed set known at compile-time.
+            </para>
+            </summary>
+            <param name="key">A <see cref="T:System.String"/> value specifying the name of the storage slot to use.</param>
+            <param name="value">A JSON-serializable value to be stored.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> representing the completion of the operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage.SetAsync(System.String,System.String,System.Object)">
+            <summary>
+            Asynchronously stores the supplied data.
+            </summary>
+            <param name="purpose">
+            A string that defines a scope for the data protection. The protected data can only
+            be unprotected by code that specifies the same purpose.
+            </param>
+            <param name="key">A <see cref="T:System.String"/> value specifying the name of the storage slot to use.</param>
+            <param name="value">A JSON-serializable value to be stored.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> representing the completion of the operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage.GetAsync``1(System.String)">
+            <summary>
+            <para>
+            Asynchronously retrieves the specified data.
+            </para>
+            <para>
+            Since no data protection purpose is specified with this overload, the purpose is derived from
+            <paramref name="key"/> and the store name. This is a good default purpose to use if the keys come from a
+            fixed set known at compile-time.
+            </para>
+            </summary>
+            <param name="key">A <see cref="T:System.String"/> value specifying the name of the storage slot to use.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> representing the completion of the operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage.GetAsync``1(System.String,System.String)">
+            <summary>
+            <para>
+            Asynchronously retrieves the specified data.
+            </para>
+            </summary>
+            <param name="purpose">
+            A string that defines a scope for the data protection. The protected data can only
+            be unprotected if the same purpose was previously specified when calling
+            <see cref="M:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage.SetAsync(System.String,System.String,System.Object)"/>.
+            </param>
+            <param name="key">A <see cref="T:System.String"/> value specifying the name of the storage slot to use.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> representing the completion of the operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorage.DeleteAsync(System.String)">
+            <summary>
+            Asynchronously deletes any data stored for the specified key.
+            </summary>
+            <param name="key">
+            A <see cref="T:System.String"/> value specifying the name of the storage slot whose value should be deleted.
+            </param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> representing the completion of the operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorageResult`1">
+            <summary>
+            Contains the result of a protected browser storage operation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorageResult`1.Success">
+            <summary>
+            Gets whether the operation succeeded.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedBrowserStorageResult`1.Value">
+            <summary>
+            Gets the result value of the operation.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedLocalStorage">
+             <summary>
+             Provides mechanisms for storing and retrieving data in the browser's
+             'localStorage' collection.
+            
+             This data will be scoped to the current user's browser, shared across
+             all tabs. The data will persist across browser restarts.
+            
+             See: <see href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"/>.
+             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedLocalStorage.#ctor(Microsoft.JSInterop.IJSRuntime,Microsoft.AspNetCore.DataProtection.IDataProtectionProvider)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedLocalStorage"/>.
+            </summary>
+            <param name="jsRuntime">The <see cref="T:Microsoft.JSInterop.IJSRuntime"/>.</param>
+            <param name="dataProtectionProvider">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedSessionStorage">
+             <summary>
+             Provides mechanisms for storing and retrieving data in the browser's
+             'sessionStorage' collection.
+            
+             This data will be scoped to the current browser tab. The data will be
+             discarded if the user closes the browser tab or closes the browser itself.
+            
+             See: <see href="https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage"/>.
+             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedSessionStorage.#ctor(Microsoft.JSInterop.IJSRuntime,Microsoft.AspNetCore.DataProtection.IDataProtectionProvider)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedSessionStorage"/>.
+            </summary>
+            <param name="jsRuntime">The <see cref="T:Microsoft.JSInterop.IJSRuntime"/>.</param>
+            <param name="dataProtectionProvider">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.DefaultAntiforgeryStateProvider.GetAntiforgeryToken">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Forms.DefaultAntiforgeryStateProvider.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.MessagePackHubProtocolWorker">
+            <summary>
+            Implements support for MessagePackHubProtocol. This code is shared between SignalR and Blazor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.MessagePackHubProtocolWorker.WriteMessage(Microsoft.AspNetCore.SignalR.Protocol.HubMessage,System.Buffers.IBufferWriter{System.Byte})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.MessagePackHubProtocolWorker.GetMessageBytes(Microsoft.AspNetCore.SignalR.Protocol.HubMessage)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ComponentEndpointConventionBuilder">
+            <summary>
+            Builds conventions that will be used for customization of ComponentHub <see cref="T:Microsoft.AspNetCore.Builder.EndpointBuilder"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ComponentEndpointConventionBuilder.Add(System.Action{Microsoft.AspNetCore.Builder.EndpointBuilder})">
+            <summary>
+            Adds the specified convention to the builder. Conventions are used to customize <see cref="T:Microsoft.AspNetCore.Builder.EndpointBuilder"/> instances.
+            </summary>
+            <param name="convention">The convention to add to the builder.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ComponentEndpointConventionBuilder.Finally(System.Action{Microsoft.AspNetCore.Builder.EndpointBuilder})">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ComponentEndpointRouteBuilderExtensions">
+            <summary>
+            Extensions for <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ComponentEndpointRouteBuilderExtensions.MapBlazorHub(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)">
+            <summary>
+            Maps the Blazor <see cref="T:Microsoft.AspNetCore.SignalR.Hub" /> to the default path.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.ComponentEndpointConventionBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ComponentEndpointRouteBuilderExtensions.MapBlazorHub(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String)">
+            <summary>
+            Maps the Blazor <see cref="T:Microsoft.AspNetCore.SignalR.Hub" /> to the path <paramref name="path"/>.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>
+            <param name="path">The path to map the Blazor <see cref="T:Microsoft.AspNetCore.SignalR.Hub" />.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.ComponentEndpointConventionBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ComponentEndpointRouteBuilderExtensions.MapBlazorHub(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.Action{Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions})">
+             <summary>
+            Maps the Blazor <see cref="T:Microsoft.AspNetCore.SignalR.Hub" /> to the default path.
+             </summary>
+             <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>
+             <param name="configureOptions">A callback to configure dispatcher options.</param>
+             <returns>The <see cref="T:Microsoft.AspNetCore.Builder.ComponentEndpointConventionBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ComponentEndpointRouteBuilderExtensions.MapBlazorHub(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.Action{Microsoft.AspNetCore.Http.Connections.HttpConnectionDispatcherOptions})">
+            <summary>
+            Maps the Blazor <see cref="T:Microsoft.AspNetCore.SignalR.Hub" /> to the path <paramref name="path"/>.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>
+            <param name="path">The path to map the Blazor <see cref="T:Microsoft.AspNetCore.SignalR.Hub" />.</param>
+            <param name="configureOptions">A callback to configure dispatcher options.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.ComponentEndpointConventionBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ServerRazorComponentsEndpointConventionBuilderExtensions">
+            <summary>
+            Interactive server specific endpoint conventions for razor component applications.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ServerRazorComponentsEndpointConventionBuilderExtensions.AddInteractiveServerRenderMode(Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder)">
+            <summary>
+            Configures the application to support the <see cref="P:Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer"/> render mode.
+            </summary>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.RazorComponentsEndpointConventionBuilder"/>.</returns>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Internal.LinkerFlags.JsonSerialized">
+            <summary>
+            Flags for a member that is JSON (de)serialized.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Internal.LinkerFlags.Component">
+            <summary>
+            Flags for a component
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Internal.LinkerFlags.JSInvokable">
+            <summary>
+            Flags for a JSInvokable type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.MemoryBufferWriter.WrittenBuffers">
+            <summary>
+            Holds the written segments from a MemoryBufferWriter and is no longer attached to a MemoryBufferWriter.
+            You are now responsible for calling Dispose on this type to return the memory to the pool.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.MemoryBufferWriter.CompletedBuffer">
+            <summary>
+            Holds a byte[] from the pool and a size value. Basically a Memory but guaranteed to be backed by an ArrayPool byte[], so that we know we can return it.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ComponentServiceCollectionExtensions">
+            <summary>
+            Extension methods to configure an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for components.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ComponentServiceCollectionExtensions.AddServerSideBlazor(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Components.Server.CircuitOptions})">
+            <summary>
+            Adds Server-Side Blazor services to the service collection.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <param name="configure">A callback to configure <see cref="T:Microsoft.AspNetCore.Components.Server.CircuitOptions"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IServerSideBlazorBuilder"/> that can be used to further customize the configuration.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.IServerSideBlazorBuilder">
+            <summary>
+            A builder that can be used to configure Server-Side Blazor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.DependencyInjection.IServerSideBlazorBuilder.Services">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ServerRazorComponentsBuilderExtensions">
+            <summary>
+            Extension methods to configure an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for components.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServerRazorComponentsBuilderExtensions.AddInteractiveServerComponents(Microsoft.Extensions.DependencyInjection.IRazorComponentsBuilder,System.Action{Microsoft.AspNetCore.Components.Server.CircuitOptions})">
+            <summary>
+            Adds services to support rendering interactive server components in a razor components
+            application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IRazorComponentsBuilder"/>.</param>
+            <param name="configure">A callback to configure <see cref="T:Microsoft.AspNetCore.Components.Server.CircuitOptions"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IRazorComponentsBuilder"/> that can be used to further customize the configuration.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ServerSideBlazorBuilderExtensions">
+            <summary>
+            Provides options for configuring Server-Side Blazor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServerSideBlazorBuilderExtensions.AddCircuitOptions(Microsoft.Extensions.DependencyInjection.IServerSideBlazorBuilder,System.Action{Microsoft.AspNetCore.Components.Server.CircuitOptions})">
+            <summary>
+            Adds options to configure circuits.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServerSideBlazorBuilder"/>.</param>
+            <param name="configure">A callback to configure <see cref="T:Microsoft.AspNetCore.Components.Server.CircuitOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServerSideBlazorBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServerSideBlazorBuilderExtensions.AddHubOptions(Microsoft.Extensions.DependencyInjection.IServerSideBlazorBuilder,System.Action{Microsoft.AspNetCore.SignalR.HubOptions})">
+            <summary>
+            Adds hub options for the configuration of the SignalR Hub used by Server-Side Blazor.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServerSideBlazorBuilder"/>.</param>
+            <param name="configure">A callback to configure the hub options.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServerSideBlazorBuilder"/>.</returns>
+        </member>
+        <member name="T:Nerdbank.Streams.Sequence`1">
+            <summary>
+            Manages a sequence of elements, readily castable as a <see cref="T:System.Buffers.ReadOnlySequence`1"/>.
+            </summary>
+            <typeparam name="T">The type of element stored by the sequence.</typeparam>
+            <remarks>
+            Instance members are not thread-safe.
+            </remarks>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nerdbank.Streams.Sequence`1"/> class
+            that uses a private <see cref="T:System.Buffers.ArrayPool`1"/> for recycling arrays.
+            </summary>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.#ctor(System.Buffers.MemoryPool{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nerdbank.Streams.Sequence`1"/> class.
+            </summary>
+            <param name="memoryPool">The pool to use for recycling backing arrays.</param>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.#ctor(System.Buffers.ArrayPool{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nerdbank.Streams.Sequence`1"/> class.
+            </summary>
+            <param name="arrayPool">The pool to use for recycling backing arrays.</param>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.MinimumSpanLength">
+            <summary>
+            Gets or sets the minimum length for any array allocated as a segment in the sequence.
+            Any non-positive value allows the pool to determine the length of the array.
+            </summary>
+            <value>The default value is 0.</value>
+            <remarks>
+            <para>
+            Each time <see cref="M:Nerdbank.Streams.Sequence`1.GetSpan(System.Int32)"/> or <see cref="M:Nerdbank.Streams.Sequence`1.GetMemory(System.Int32)"/> is called,
+            previously allocated memory is used if it is large enough to satisfy the length demand.
+            If new memory must be allocated, the argument to one of these methods typically dictate
+            the length of array to allocate. When the caller uses very small values (just enough for its immediate need)
+            but the high level scenario can predict that a large amount of memory will be ultimately required,
+            it can be advisable to set this property to a value such that just a few larger arrays are allocated
+            instead of many small ones.
+            </para>
+            <para>
+            The <see cref="T:System.Buffers.MemoryPool`1"/> in use may itself have a minimum array length as well,
+            in which case the higher of the two minimums dictate the minimum array size that will be allocated.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.AsReadOnlySequence">
+            <summary>
+            Gets this sequence expressed as a <see cref="T:System.Buffers.ReadOnlySequence`1"/>.
+            </summary>
+            <returns>A read only sequence representing the data in this object.</returns>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.Length">
+            <summary>
+            Gets the length of the sequence.
+            </summary>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.DebuggerDisplay">
+            <summary>
+            Gets the value to display in a debugger datatip.
+            </summary>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.op_Implicit(Nerdbank.Streams.Sequence{`0})~System.Buffers.ReadOnlySequence{`0}">
+            <summary>
+            Expresses this sequence as a <see cref="T:System.Buffers.ReadOnlySequence`1"/>.
+            </summary>
+            <param name="sequence">The sequence to convert.</param>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.AdvanceTo(System.SequencePosition)">
+            <summary>
+            Removes all elements from the sequence from its beginning to the specified position,
+            considering that data to have been fully processed.
+            </summary>
+            <param name="position">
+            The position of the first element that has not yet been processed.
+            This is typically <see cref="P:System.Buffers.ReadOnlySequence`1.End"/> after reading all elements from that instance.
+            </param>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.Advance(System.Int32)">
+            <summary>
+            Advances the sequence to include the specified number of elements initialized into memory
+            returned by a prior call to <see cref="M:Nerdbank.Streams.Sequence`1.GetMemory(System.Int32)"/>.
+            </summary>
+            <param name="count">The number of elements written into memory.</param>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.GetMemory(System.Int32)">
+            <summary>
+            Gets writable memory that can be initialized and added to the sequence via a subsequent call to <see cref="M:Nerdbank.Streams.Sequence`1.Advance(System.Int32)"/>.
+            </summary>
+            <param name="sizeHint">The size of the memory required, or 0 to just get a convenient (non-empty) buffer.</param>
+            <returns>The requested memory.</returns>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.GetSpan(System.Int32)">
+            <summary>
+            Gets writable memory that can be initialized and added to the sequence via a subsequent call to <see cref="M:Nerdbank.Streams.Sequence`1.Advance(System.Int32)"/>.
+            </summary>
+            <param name="sizeHint">The size of the memory required, or 0 to just get a convenient (non-empty) buffer.</param>
+            <returns>The requested memory.</returns>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.Dispose">
+            <summary>
+            Clears the entire sequence, recycles associated memory into pools,
+            and resets this instance for reuse.
+            This invalidates any <see cref="T:System.Buffers.ReadOnlySequence`1"/> previously produced by this instance.
+            </summary>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.Reset">
+            <summary>
+            Clears the entire sequence and recycles associated memory into pools.
+            This invalidates any <see cref="T:System.Buffers.ReadOnlySequence`1"/> previously produced by this instance.
+            </summary>
+        </member>
+        <member name="F:Nerdbank.Streams.Sequence`1.SequenceSegment.IsValueTypeElement">
+            <summary>
+            A value indicating whether the element is a value type.
+            </summary>
+        </member>
+        <member name="F:Nerdbank.Streams.Sequence`1.SequenceSegment.array">
+            <summary>
+            Gets the backing array, when using an <see cref="T:System.Buffers.ArrayPool`1"/> instead of a <see cref="T:System.Buffers.MemoryPool`1"/>.
+            </summary>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.SequenceSegment.Start">
+            <summary>
+            Gets the position within <see cref="P:System.Buffers.ReadOnlySequenceSegment`1.Memory"/> where the data starts.
+            </summary>
+            <remarks>This may be nonzero as a result of calling <see cref="M:Nerdbank.Streams.Sequence`1.AdvanceTo(System.SequencePosition)"/>.</remarks>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.SequenceSegment.End">
+            <summary>
+            Gets the position within <see cref="P:System.Buffers.ReadOnlySequenceSegment`1.Memory"/> where the data ends.
+            </summary>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.SequenceSegment.RemainingMemory">
+            <summary>
+            Gets the tail of memory that has not yet been committed.
+            </summary>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.SequenceSegment.RemainingSpan">
+            <summary>
+            Gets the tail of memory that has not yet been committed.
+            </summary>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.SequenceSegment.MemoryOwner">
+            <summary>
+            Gets the tracker for the underlying array for this segment, which can be used to recycle the array when we're disposed of.
+            Will be <c>null</c> if using an array pool, in which case the memory is held by <see cref="F:Nerdbank.Streams.Sequence`1.SequenceSegment.array"/>.
+            </summary>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.SequenceSegment.AvailableMemory">
+            <summary>
+            Gets the full memory owned by the <see cref="P:Nerdbank.Streams.Sequence`1.SequenceSegment.MemoryOwner"/>.
+            </summary>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.SequenceSegment.Length">
+            <summary>
+            Gets the number of elements that are committed in this segment.
+            </summary>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.SequenceSegment.WritableBytes">
+            <summary>
+            Gets the amount of writable bytes in this segment.
+            It is the amount of bytes between <see cref="P:Nerdbank.Streams.Sequence`1.SequenceSegment.Length"/> and <see cref="P:Nerdbank.Streams.Sequence`1.SequenceSegment.End"/>.
+            </summary>
+        </member>
+        <member name="P:Nerdbank.Streams.Sequence`1.SequenceSegment.Next">
+            <summary>
+            Gets or sets the next segment in the singly linked list of segments.
+            </summary>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.SequenceSegment.Assign(System.Buffers.IMemoryOwner{`0})">
+            <summary>
+            Assigns this (recyclable) segment a new area in memory.
+            </summary>
+            <param name="memoryOwner">The memory and a means to recycle it.</param>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.SequenceSegment.Assign(`0[])">
+            <summary>
+            Assigns this (recyclable) segment a new area in memory.
+            </summary>
+            <param name="array">An array drawn from an <see cref="T:System.Buffers.ArrayPool`1"/>.</param>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.SequenceSegment.ResetMemory(System.Buffers.ArrayPool{`0})">
+            <summary>
+            Clears all fields in preparation to recycle this instance.
+            </summary>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.SequenceSegment.SetNext(Nerdbank.Streams.Sequence{`0}.SequenceSegment)">
+            <summary>
+            Adds a new segment after this one.
+            </summary>
+            <param name="segment">The next segment in the linked list.</param>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.SequenceSegment.Advance(System.Int32)">
+            <summary>
+            Commits more elements as written in this segment.
+            </summary>
+            <param name="count">The number of elements written.</param>
+        </member>
+        <member name="M:Nerdbank.Streams.Sequence`1.SequenceSegment.AdvanceTo(System.Int32)">
+            <summary>
+            Removes some elements from the start of this segment.
+            </summary>
+            <param name="offset">The number of elements to ignore from the start of the underlying array.</param>
+        </member>
+        <member name="T:MessagePack.BufferWriter">
+            <summary>
+            A fast access struct that wraps <see cref="T:System.Buffers.IBufferWriter`1"/>.
+            </summary>
+        </member>
+        <member name="F:MessagePack.BufferWriter._output">
+            <summary>
+            The underlying <see cref="T:System.Buffers.IBufferWriter`1"/>.
+            </summary>
+        </member>
+        <member name="F:MessagePack.BufferWriter._span">
+            <summary>
+            The result of the last call to <see cref="M:System.Buffers.IBufferWriter`1.GetSpan(System.Int32)"/>, less any bytes already "consumed" with <see cref="M:MessagePack.BufferWriter.Advance(System.Int32)"/>.
+            Backing field for the <see cref="P:MessagePack.BufferWriter.Span"/> property.
+            </summary>
+        </member>
+        <member name="F:MessagePack.BufferWriter._segment">
+            <summary>
+            The result of the last call to <see cref="M:System.Buffers.IBufferWriter`1.GetMemory(System.Int32)"/>, less any bytes already "consumed" with <see cref="M:MessagePack.BufferWriter.Advance(System.Int32)"/>.
+            </summary>
+        </member>
+        <member name="F:MessagePack.BufferWriter._buffered">
+            <summary>
+            The number of uncommitted bytes (all the calls to <see cref="M:MessagePack.BufferWriter.Advance(System.Int32)"/> since the last call to <see cref="M:MessagePack.BufferWriter.Commit"/>).
+            </summary>
+        </member>
+        <member name="F:MessagePack.BufferWriter._bytesCommitted">
+            <summary>
+            The total number of bytes written with this writer.
+            Backing field for the <see cref="P:MessagePack.BufferWriter.BytesCommitted"/> property.
+            </summary>
+        </member>
+        <member name="M:MessagePack.BufferWriter.#ctor(System.Buffers.IBufferWriter{System.Byte})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.BufferWriter"/> struct.
+            </summary>
+            <param name="output">The <see cref="T:System.Buffers.IBufferWriter`1"/> to be wrapped.</param>
+        </member>
+        <member name="M:MessagePack.BufferWriter.#ctor(MessagePack.SequencePool,System.Byte[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.BufferWriter"/> struct.
+            </summary>
+            <param name="sequencePool">The pool from which to draw an <see cref="T:System.Buffers.IBufferWriter`1"/> if required..</param>
+            <param name="array">An array to start with so we can avoid accessing the <paramref name="sequencePool"/> if possible.</param>
+        </member>
+        <member name="P:MessagePack.BufferWriter.Span">
+            <summary>
+            Gets the result of the last call to <see cref="M:System.Buffers.IBufferWriter`1.GetSpan(System.Int32)"/>.
+            </summary>
+        </member>
+        <member name="P:MessagePack.BufferWriter.BytesCommitted">
+            <summary>
+            Gets the total number of bytes written with this writer.
+            </summary>
+        </member>
+        <member name="P:MessagePack.BufferWriter.UnderlyingWriter">
+            <summary>
+            Gets the <see cref="T:System.Buffers.IBufferWriter`1"/> underlying this instance.
+            </summary>
+        </member>
+        <member name="M:MessagePack.BufferWriter.Commit">
+            <summary>
+            Calls <see cref="M:System.Buffers.IBufferWriter`1.Advance(System.Int32)"/> on the underlying writer
+            with the number of uncommitted bytes.
+            </summary>
+        </member>
+        <member name="M:MessagePack.BufferWriter.Advance(System.Int32)">
+            <summary>
+            Used to indicate that part of the buffer has been written to.
+            </summary>
+            <param name="count">The number of bytes written to.</param>
+        </member>
+        <member name="M:MessagePack.BufferWriter.Write(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Copies the caller's buffer into this writer and calls <see cref="M:MessagePack.BufferWriter.Advance(System.Int32)"/> with the length of the source buffer.
+            </summary>
+            <param name="source">The buffer to copy in.</param>
+        </member>
+        <member name="M:MessagePack.BufferWriter.Ensure(System.Int32)">
+            <summary>
+            Acquires a new buffer if necessary to ensure that some given number of bytes can be written to a single buffer.
+            </summary>
+            <param name="count">The number of bytes that must be allocated in a single buffer.</param>
+        </member>
+        <member name="M:MessagePack.BufferWriter.TryGetUncommittedSpan(System.ReadOnlySpan{System.Byte}@)">
+            <summary>
+            Gets the span to the bytes written if they were never committed to the underlying buffer writer.
+            </summary>
+            <param name="span"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MessagePack.BufferWriter.EnsureMore(System.Int32)">
+            <summary>
+            Gets a fresh span to write to, with an optional minimum size.
+            </summary>
+            <param name="count">The minimum size for the next requested buffer.</param>
+        </member>
+        <member name="M:MessagePack.BufferWriter.WriteMultiBuffer(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Copies the caller's buffer into this writer, potentially across multiple buffers from the underlying writer.
+            </summary>
+            <param name="source">The buffer to copy into this writer.</param>
+        </member>
+        <member name="T:MessagePack.MessagePackType">
+            <summary>
+            https://github.com/msgpack/msgpack/blob/master/spec.md#serialization-type-to-format-conversion.
+            </summary>
+        </member>
+        <member name="T:MessagePack.MessagePackCode">
+            <summary>
+            The core type codes as defined by msgpack.
+            </summary>
+            <seealso href="https://github.com/msgpack/msgpack/blob/master/spec.md#overview" />
+        </member>
+        <member name="M:MessagePack.MessagePackCode.IsSignedInteger(System.Byte)">
+            <summary>
+            Checks whether a given messagepack code represents an integer that might include a sign (i.e. might be a negative number).
+            </summary>
+            <param name="code">The messagepack code.</param>
+            <returns>A boolean value.</returns>
+        </member>
+        <member name="T:MessagePack.ReservedMessagePackExtensionTypeCode">
+            <summary>
+            The officially defined messagepack extension type codes.
+            </summary>
+        </member>
+        <member name="T:MessagePack.MessagePackReader">
+            <summary>
+            A primitive types reader for the MessagePack format.
+            </summary>
+            <remarks>
+            <see href="https://github.com/msgpack/msgpack/blob/master/spec.md">The MessagePack spec.</see>.
+            </remarks>
+            <exception cref="T:MessagePack.MessagePackSerializationException">Thrown when reading methods fail due to invalid data.</exception>
+            <exception cref="T:System.IO.EndOfStreamException">Thrown by reading methods when there are not enough bytes to read the required value.</exception>
+        </member>
+        <member name="F:MessagePack.MessagePackReader.reader">
+            <summary>
+            The reader over the sequence.
+            </summary>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.#ctor(System.ReadOnlyMemory{System.Byte})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackReader"/> struct.
+            </summary>
+            <param name="memory">The buffer to read from.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.#ctor(System.Buffers.ReadOnlySequence{System.Byte}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackReader"/> struct.
+            </summary>
+            <param name="readOnlySequence">The sequence to read from.</param>
+        </member>
+        <member name="P:MessagePack.MessagePackReader.CancellationToken">
+            <summary>
+            Gets or sets the cancellation token for this deserialization operation.
+            </summary>
+        </member>
+        <member name="P:MessagePack.MessagePackReader.Depth">
+            <summary>
+            Gets or sets the present depth of the object graph being deserialized.
+            </summary>
+        </member>
+        <member name="P:MessagePack.MessagePackReader.Sequence">
+            <summary>
+            Gets the <see cref="T:System.Buffers.ReadOnlySequence`1"/> originally supplied to the constructor.
+            </summary>
+        </member>
+        <member name="P:MessagePack.MessagePackReader.Position">
+            <summary>
+            Gets the current position of the reader within <see cref="P:MessagePack.MessagePackReader.Sequence"/>.
+            </summary>
+        </member>
+        <member name="P:MessagePack.MessagePackReader.Consumed">
+            <summary>
+            Gets the number of bytes consumed by the reader.
+            </summary>
+        </member>
+        <member name="P:MessagePack.MessagePackReader.End">
+            <summary>
+            Gets a value indicating whether the reader is at the end of the sequence.
+            </summary>
+        </member>
+        <member name="P:MessagePack.MessagePackReader.IsNil">
+            <summary>
+            Gets a value indicating whether the reader position is pointing at a nil value.
+            </summary>
+            <exception cref="T:System.IO.EndOfStreamException">Thrown if the end of the sequence provided to the constructor is reached before the expected end of the data.</exception>
+        </member>
+        <member name="P:MessagePack.MessagePackReader.NextMessagePackType">
+            <summary>
+            Gets the next message pack type to be read.
+            </summary>
+        </member>
+        <member name="P:MessagePack.MessagePackReader.NextCode">
+            <summary>
+            Gets the type of the next MessagePack block.
+            </summary>
+            <exception cref="T:System.IO.EndOfStreamException">Thrown if the end of the sequence provided to the constructor is reached before the expected end of the data.</exception>
+            <remarks>
+            See <see cref="T:MessagePack.MessagePackCode"/> for valid message pack codes and ranges.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.Clone(System.Buffers.ReadOnlySequence{System.Byte}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackReader"/> struct,
+            with the same settings as this one, but with its own buffer to read from.
+            </summary>
+            <param name="readOnlySequence">The sequence to read from.</param>
+            <returns>The new reader.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.CreatePeekReader">
+            <summary>
+            Creates a new <see cref="T:MessagePack.MessagePackReader"/> at this reader's current position.
+            The two readers may then be used independently without impacting each other.
+            </summary>
+            <returns>A new <see cref="T:MessagePack.MessagePackReader"/>.</returns>
+            <devremarks>
+            Since this is a struct, copying it completely is as simple as returning itself
+            from a property that isn't a "ref return" property.
+            </devremarks>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.Skip">
+            <summary>
+            Advances the reader to the next MessagePack primitive to be read.
+            </summary>
+            <remarks>
+            The entire primitive is skipped, including content of maps or arrays, or any other type with payloads.
+            To get the raw MessagePack sequence that was skipped, use <see cref="M:MessagePack.MessagePackReader.ReadRaw"/> instead.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.TrySkip">
+            <summary>
+            Advances the reader to the next MessagePack primitive to be read.
+            </summary>
+            <returns><c>true</c> if the entire structure beginning at the current <see cref="P:MessagePack.MessagePackReader.Position"/> is found in the <see cref="P:MessagePack.MessagePackReader.Sequence"/>; <c>false</c> otherwise.</returns>
+            <remarks>
+            The entire primitive is skipped, including content of maps or arrays, or any other type with payloads.
+            To get the raw MessagePack sequence that was skipped, use <see cref="M:MessagePack.MessagePackReader.ReadRaw"/> instead.
+            WARNING: when false is returned, the position of the reader is undefined.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadNil">
+            <summary>
+            Reads a <see cref="F:MessagePack.MessagePackCode.Nil"/> value.
+            </summary>
+            <returns>A nil value.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.TryReadNil">
+            <summary>
+            Reads nil if it is the next token.
+            </summary>
+            <returns><c>true</c> if the next token was nil; <c>false</c> otherwise.</returns>
+            <exception cref="T:System.IO.EndOfStreamException">Thrown if the end of the sequence provided to the constructor is reached before the expected end of the data.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadRaw(System.Int64)">
+            <summary>
+            Reads a sequence of bytes without any decoding.
+            </summary>
+            <param name="length">The number of bytes to read.</param>
+            <returns>The sequence of bytes read.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadRaw">
+            <summary>
+            Reads the next MessagePack primitive.
+            </summary>
+            <returns>The raw MessagePack sequence.</returns>
+            <remarks>
+            The entire primitive is read, including content of maps or arrays, or any other type with payloads.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadArrayHeader">
+            <summary>
+            Read an array header from
+            <see cref="F:MessagePack.MessagePackCode.Array16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Array32"/>, or
+            some built-in code between <see cref="F:MessagePack.MessagePackCode.MinFixArray"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixArray"/>.
+            </summary>
+            <exception cref="T:System.IO.EndOfStreamException">
+            Thrown if the header cannot be read in the bytes left in the <see cref="P:MessagePack.MessagePackReader.Sequence"/>
+            or if it is clear that there are insufficient bytes remaining after the header to include all the elements the header claims to be there.
+            </exception>
+            <exception cref="T:MessagePack.MessagePackSerializationException">Thrown if a code other than an array header is encountered.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.TryReadArrayHeader(System.Int32@)">
+            <summary>
+            Reads an array header from
+            <see cref="F:MessagePack.MessagePackCode.Array16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Array32"/>, or
+            some built-in code between <see cref="F:MessagePack.MessagePackCode.MinFixArray"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixArray"/>
+            if there is sufficient buffer to read it.
+            </summary>
+            <param name="count">Receives the number of elements in the array if the entire array header could be read.</param>
+            <returns><c>true</c> if there was sufficient buffer and an array header was found; <c>false</c> if the buffer incompletely describes an array header.</returns>
+            <exception cref="T:MessagePack.MessagePackSerializationException">Thrown if a code other than an array header is encountered.</exception>
+            <remarks>
+            When this method returns <c>false</c> the position of the reader is left in an undefined position.
+            The caller is expected to recreate the reader (presumably with a longer sequence to read from) before continuing.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadMapHeader">
+            <summary>
+            Read a map header from
+            <see cref="F:MessagePack.MessagePackCode.Map16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Map32"/>, or
+            some built-in code between <see cref="F:MessagePack.MessagePackCode.MinFixMap"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixMap"/>.
+            </summary>
+            <returns>The number of key=value pairs in the map.</returns>
+            <exception cref="T:System.IO.EndOfStreamException">
+            Thrown if the header cannot be read in the bytes left in the <see cref="P:MessagePack.MessagePackReader.Sequence"/>
+            or if it is clear that there are insufficient bytes remaining after the header to include all the elements the header claims to be there.
+            </exception>
+            <exception cref="T:MessagePack.MessagePackSerializationException">Thrown if a code other than an map header is encountered.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.TryReadMapHeader(System.Int32@)">
+            <summary>
+            Reads a map header from
+            <see cref="F:MessagePack.MessagePackCode.Map16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Map32"/>, or
+            some built-in code between <see cref="F:MessagePack.MessagePackCode.MinFixMap"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixMap"/>
+            if there is sufficient buffer to read it.
+            </summary>
+            <param name="count">Receives the number of key=value pairs in the map if the entire map header can be read.</param>
+            <returns><c>true</c> if there was sufficient buffer and a map header was found; <c>false</c> if the buffer incompletely describes an map header.</returns>
+            <exception cref="T:MessagePack.MessagePackSerializationException">Thrown if a code other than an map header is encountered.</exception>
+            <remarks>
+            When this method returns <c>false</c> the position of the reader is left in an undefined position.
+            The caller is expected to recreate the reader (presumably with a longer sequence to read from) before continuing.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadBoolean">
+            <summary>
+            Reads a boolean value from either a <see cref="F:MessagePack.MessagePackCode.False"/> or <see cref="F:MessagePack.MessagePackCode.True"/>.
+            </summary>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadChar">
+            <summary>
+            Reads a <see cref="T:System.Char"/> from any of:
+            <see cref="F:MessagePack.MessagePackCode.UInt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt16"/>,
+            or anything between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>.
+            </summary>
+            <returns>A character.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadSingle">
+            <summary>
+            Reads an <see cref="T:System.Single"/> value from any value encoded with:
+            <see cref="F:MessagePack.MessagePackCode.Float32"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int32"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int64"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt32"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt64"/>,
+            or some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            or some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>.
+            </summary>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadDouble">
+            <summary>
+            Reads an <see cref="T:System.Double"/> value from any value encoded with:
+            <see cref="F:MessagePack.MessagePackCode.Float64"/>,
+            <see cref="F:MessagePack.MessagePackCode.Float32"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int32"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int64"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt32"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt64"/>,
+            or some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            or some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>.
+            </summary>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadDateTime">
+            <summary>
+            Reads a <see cref="T:System.DateTime"/> from a value encoded with
+            <see cref="F:MessagePack.MessagePackCode.FixExt4"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt8"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Ext8"/>.
+            Expects extension type code <see cref="F:MessagePack.ReservedMessagePackExtensionTypeCode.DateTime"/>.
+            </summary>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadDateTime(MessagePack.ExtensionHeader)">
+            <summary>
+            Reads a <see cref="T:System.DateTime"/> from a value encoded with
+            <see cref="F:MessagePack.MessagePackCode.FixExt4"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext8"/>.
+            Expects extension type code <see cref="F:MessagePack.ReservedMessagePackExtensionTypeCode.DateTime"/>.
+            </summary>
+            <param name="header">The extension header that was already read.</param>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadBytes">
+            <summary>
+            Reads a span of bytes, whose length is determined by a header of one of these types:
+            <see cref="F:MessagePack.MessagePackCode.Bin8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Bin16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Bin32"/>,
+            or to support OldSpec compatibility:
+            <see cref="F:MessagePack.MessagePackCode.Str16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str32"/>,
+            or something between <see cref="F:MessagePack.MessagePackCode.MinFixStr"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixStr"/>.
+            </summary>
+            <returns>
+            A sequence of bytes, or <c>null</c> if the read token is <see cref="F:MessagePack.MessagePackCode.Nil"/>.
+            The data is a slice from the original sequence passed to this reader's constructor.
+            </returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadStringSequence">
+            <summary>
+            Reads a string of bytes, whose length is determined by a header of one of these types:
+            <see cref="F:MessagePack.MessagePackCode.Str8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str32"/>,
+            or a code between <see cref="F:MessagePack.MessagePackCode.MinFixStr"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixStr"/>.
+            </summary>
+            <returns>
+            The sequence of bytes, or <c>null</c> if the read token is <see cref="F:MessagePack.MessagePackCode.Nil"/>.
+            The data is a slice from the original sequence passed to this reader's constructor.
+            </returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.TryReadStringSpan(System.ReadOnlySpan{System.Byte}@)">
+            <summary>
+            Reads a string of bytes, whose length is determined by a header of one of these types:
+            <see cref="F:MessagePack.MessagePackCode.Str8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str32"/>,
+            or a code between <see cref="F:MessagePack.MessagePackCode.MinFixStr"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixStr"/>.
+            </summary>
+            <param name="span">Receives the span to the string.</param>
+            <returns>
+            <c>true</c> if the string is contiguous in memory such that it could be set as a single span.
+            <c>false</c> if the read token is <see cref="F:MessagePack.MessagePackCode.Nil"/> or the string is not in a contiguous span.
+            </returns>
+            <remarks>
+            Callers should generally be prepared for a <c>false</c> result and failover to calling <see cref="M:MessagePack.MessagePackReader.ReadStringSequence"/>
+            which can represent a <c>null</c> result and handle strings that are not contiguous in memory.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadString">
+            <summary>
+            Reads a string, whose length is determined by a header of one of these types:
+            <see cref="F:MessagePack.MessagePackCode.Str8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str32"/>,
+            or a code between <see cref="F:MessagePack.MessagePackCode.MinFixStr"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixStr"/>.
+            </summary>
+            <returns>A string, or <c>null</c> if the current msgpack token is <see cref="F:MessagePack.MessagePackCode.Nil"/>.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadExtensionFormatHeader">
+            <summary>
+            Reads an extension format header, based on one of these codes:
+            <see cref="F:MessagePack.MessagePackCode.FixExt1"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt2"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt4"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Ext32"/>.
+            </summary>
+            <returns>The extension header.</returns>
+            <exception cref="T:System.IO.EndOfStreamException">
+            Thrown if the header cannot be read in the bytes left in the <see cref="P:MessagePack.MessagePackReader.Sequence"/>
+            or if it is clear that there are insufficient bytes remaining after the header to include all the bytes the header claims to be there.
+            </exception>
+            <exception cref="T:MessagePack.MessagePackSerializationException">Thrown if a code other than an extension format header is encountered.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.TryReadExtensionFormatHeader(MessagePack.ExtensionHeader@)">
+            <summary>
+            Reads an extension format header, based on one of these codes:
+            <see cref="F:MessagePack.MessagePackCode.FixExt1"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt2"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt4"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Ext32"/>
+            if there is sufficient buffer to read it.
+            </summary>
+            <param name="extensionHeader">Receives the extension header if the remaining bytes in the <see cref="P:MessagePack.MessagePackReader.Sequence"/> fully describe the header.</param>
+            <returns>The number of key=value pairs in the map.</returns>
+            <exception cref="T:MessagePack.MessagePackSerializationException">Thrown if a code other than an extension format header is encountered.</exception>
+            <remarks>
+            When this method returns <c>false</c> the position of the reader is left in an undefined position.
+            The caller is expected to recreate the reader (presumably with a longer sequence to read from) before continuing.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadExtensionFormat">
+            <summary>
+            Reads an extension format header and data, based on one of these codes:
+            <see cref="F:MessagePack.MessagePackCode.FixExt1"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt2"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt4"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Ext32"/>.
+            </summary>
+            <returns>
+            The extension format.
+            The data is a slice from the original sequence passed to this reader's constructor.
+            </returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ThrowNotEnoughBytesException">
+            <summary>
+            Throws an exception indicating that there aren't enough bytes remaining in the buffer to store
+            the promised data.
+            </summary>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ThrowNotEnoughBytesException(System.Exception)">
+            <summary>
+            Throws an exception indicating that there aren't enough bytes remaining in the buffer to store
+            the promised data.
+            </summary>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ThrowInvalidCode(System.Byte)">
+            <summary>
+            Throws an <see cref="T:MessagePack.MessagePackSerializationException"/> explaining an unexpected code was encountered.
+            </summary>
+            <param name="code">The code that was encountered.</param>
+            <returns>Nothing. This method always throws.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ThrowInsufficientBufferUnless(System.Boolean)">
+            <summary>
+            Throws <see cref="T:System.IO.EndOfStreamException"/> if a condition is false.
+            </summary>
+            <param name="condition">A boolean value.</param>
+            <exception cref="T:System.IO.EndOfStreamException">Thrown if <paramref name="condition"/> is <c>false</c>.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.TryGetStringLengthInBytes(System.Int32@)">
+            <summary>
+            Gets the length of the next string.
+            </summary>
+            <param name="length">Receives the length of the next string, if there were enough bytes to read it.</param>
+            <returns><c>true</c> if there were enough bytes to read the length of the next string; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.GetStringLengthInBytes">
+            <summary>
+            Gets the length of the next string.
+            </summary>
+            <returns>The length of the next string.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadStringSlow(System.Int32)">
+            <summary>
+            Reads a string assuming that it is spread across multiple spans in the <see cref="T:System.Buffers.ReadOnlySequence`1"/>.
+            </summary>
+            <param name="byteLength">The length of the string to be decoded, in bytes.</param>
+            <returns>The decoded string.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadByte">
+            <summary>
+            Reads an <see cref="T:System.Byte"/> value from:
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>,
+            or any of the other MsgPack integer types.
+            </summary>
+            <returns>The value.</returns>
+            <exception cref="T:System.OverflowException">Thrown when the value exceeds what can be stored in the returned type.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadUInt16">
+            <summary>
+            Reads an <see cref="T:System.UInt16"/> value from:
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>,
+            or any of the other MsgPack integer types.
+            </summary>
+            <returns>The value.</returns>
+            <exception cref="T:System.OverflowException">Thrown when the value exceeds what can be stored in the returned type.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadUInt32">
+            <summary>
+            Reads an <see cref="T:System.UInt32"/> value from:
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>,
+            or any of the other MsgPack integer types.
+            </summary>
+            <returns>The value.</returns>
+            <exception cref="T:System.OverflowException">Thrown when the value exceeds what can be stored in the returned type.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadUInt64">
+            <summary>
+            Reads an <see cref="T:System.UInt64"/> value from:
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>,
+            or any of the other MsgPack integer types.
+            </summary>
+            <returns>The value.</returns>
+            <exception cref="T:System.OverflowException">Thrown when the value exceeds what can be stored in the returned type.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadSByte">
+            <summary>
+            Reads an <see cref="T:System.SByte"/> value from:
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>,
+            or any of the other MsgPack integer types.
+            </summary>
+            <returns>The value.</returns>
+            <exception cref="T:System.OverflowException">Thrown when the value exceeds what can be stored in the returned type.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadInt16">
+            <summary>
+            Reads an <see cref="T:System.Int16"/> value from:
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>,
+            or any of the other MsgPack integer types.
+            </summary>
+            <returns>The value.</returns>
+            <exception cref="T:System.OverflowException">Thrown when the value exceeds what can be stored in the returned type.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadInt32">
+            <summary>
+            Reads an <see cref="T:System.Int32"/> value from:
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>,
+            or any of the other MsgPack integer types.
+            </summary>
+            <returns>The value.</returns>
+            <exception cref="T:System.OverflowException">Thrown when the value exceeds what can be stored in the returned type.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackReader.ReadInt64">
+            <summary>
+            Reads an <see cref="T:System.Int64"/> value from:
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinNegativeFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxNegativeFixInt"/>,
+            Some value between <see cref="F:MessagePack.MessagePackCode.MinFixInt"/> and <see cref="F:MessagePack.MessagePackCode.MaxFixInt"/>,
+            or any of the other MsgPack integer types.
+            </summary>
+            <returns>The value.</returns>
+            <exception cref="T:System.OverflowException">Thrown when the value exceeds what can be stored in the returned type.</exception>
+        </member>
+        <member name="T:MessagePack.MessagePackSerializationException">
+            <summary>
+            An exception thrown during serializing an object graph or deserializing a messagepack sequence.
+            </summary>
+        </member>
+        <member name="M:MessagePack.MessagePackSerializationException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackSerializationException"/> class.
+            </summary>
+        </member>
+        <member name="M:MessagePack.MessagePackSerializationException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackSerializationException"/> class.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackSerializationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackSerializationException"/> class.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="inner">The inner exception.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackSerializationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackSerializationException"/> class.
+            </summary>
+            <param name="info">Serialization info.</param>
+            <param name="context">Serialization context.</param>
+        </member>
+        <member name="T:MessagePack.MessagePackWriter">
+            <summary>
+            A primitive types writer for the MessagePack format.
+            </summary>
+            <remarks>
+            <see href="https://github.com/msgpack/msgpack/blob/master/spec.md">The MessagePack spec.</see>.
+            </remarks>
+        </member>
+        <member name="F:MessagePack.MessagePackWriter.writer">
+            <summary>
+            The writer to use.
+            </summary>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.#ctor(System.Buffers.IBufferWriter{System.Byte})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackWriter"/> struct.
+            </summary>
+            <param name="writer">The writer to use.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.#ctor(MessagePack.SequencePool,System.Byte[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackWriter"/> struct.
+            </summary>
+            <param name="sequencePool">The pool from which to draw an <see cref="T:System.Buffers.IBufferWriter`1"/> if required..</param>
+            <param name="array">An array to start with so we can avoid accessing the <paramref name="sequencePool"/> if possible.</param>
+        </member>
+        <member name="P:MessagePack.MessagePackWriter.CancellationToken">
+            <summary>
+            Gets or sets the cancellation token for this serialization operation.
+            </summary>
+        </member>
+        <member name="P:MessagePack.MessagePackWriter.OldSpec">
+            <summary>
+            Gets or sets a value indicating whether to write in <see href="https://github.com/msgpack/msgpack/blob/master/spec-old.md">old spec</see> compatibility mode.
+            </summary>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Clone(System.Buffers.IBufferWriter{System.Byte})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.MessagePackWriter"/> struct,
+            with the same settings as this one, but with its own buffer writer.
+            </summary>
+            <param name="writer">The writer to use for the new instance.</param>
+            <returns>The new writer.</returns>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Flush">
+            <summary>
+            Ensures everything previously written has been flushed to the underlying <see cref="T:System.Buffers.IBufferWriter`1"/>.
+            </summary>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteNil">
+            <summary>
+            Writes a <see cref="F:MessagePack.MessagePackCode.Nil"/> value.
+            </summary>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteRaw(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Copies bytes directly into the message pack writer.
+            </summary>
+            <param name="rawMessagePackBlock">The span of bytes to copy from.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteRaw(System.Buffers.ReadOnlySequence{System.Byte}@)">
+            <summary>
+            Copies bytes directly into the message pack writer.
+            </summary>
+            <param name="rawMessagePackBlock">The span of bytes to copy from.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteArrayHeader(System.Int32)">
+            <summary>
+            Write the length of the next array to be written in the most compact form of
+            <see cref="F:MessagePack.MessagePackCode.MinFixArray"/>,
+            <see cref="F:MessagePack.MessagePackCode.Array16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Array32"/>.
+            </summary>
+            <param name="count">The number of elements that will be written in the array.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteArrayHeader(System.UInt32)">
+            <summary>
+            Write the length of the next array to be written in the most compact form of
+            <see cref="F:MessagePack.MessagePackCode.MinFixArray"/>,
+            <see cref="F:MessagePack.MessagePackCode.Array16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Array32"/>.
+            </summary>
+            <param name="count">The number of elements that will be written in the array.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteMapHeader(System.Int32)">
+            <summary>
+            Write the length of the next map to be written in the most compact form of
+            <see cref="F:MessagePack.MessagePackCode.MinFixMap"/>,
+            <see cref="F:MessagePack.MessagePackCode.Map16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Map32"/>.
+            </summary>
+            <param name="count">The number of key=value pairs that will be written in the map.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteMapHeader(System.UInt32)">
+            <summary>
+            Write the length of the next map to be written in the most compact form of
+            <see cref="F:MessagePack.MessagePackCode.MinFixMap"/>,
+            <see cref="F:MessagePack.MessagePackCode.Map16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Map32"/>.
+            </summary>
+            <param name="count">The number of key=value pairs that will be written in the map.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Byte)">
+            <summary>
+            Writes a <see cref="T:System.Byte"/> value using a 1-byte code when possible, otherwise as <see cref="F:MessagePack.MessagePackCode.UInt8"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteUInt8(System.Byte)">
+            <summary>
+            Writes a <see cref="T:System.Byte"/> value using <see cref="F:MessagePack.MessagePackCode.UInt8"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.SByte)">
+            <summary>
+            Writes an 8-bit value using a 1-byte code when possible, otherwise as <see cref="F:MessagePack.MessagePackCode.Int8"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteInt8(System.SByte)">
+            <summary>
+            Writes an 8-bit value using <see cref="F:MessagePack.MessagePackCode.Int8"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.UInt16)">
+            <summary>
+            Writes a <see cref="T:System.UInt16"/> value using a 1-byte code when possible, otherwise as <see cref="F:MessagePack.MessagePackCode.UInt8"/> or <see cref="F:MessagePack.MessagePackCode.UInt16"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteUInt16(System.UInt16)">
+            <summary>
+            Writes a <see cref="T:System.UInt16"/> value using <see cref="F:MessagePack.MessagePackCode.UInt16"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Int16)">
+            <summary>
+            Writes a <see cref="T:System.Int16"/> using a built-in 1-byte code when within specific MessagePack-supported ranges,
+            or the most compact of
+            <see cref="F:MessagePack.MessagePackCode.UInt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int8"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Int16"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteInt16(System.Int16)">
+            <summary>
+            Writes a <see cref="T:System.Int16"/> using <see cref="F:MessagePack.MessagePackCode.Int16"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.UInt32)">
+            <summary>
+            Writes an <see cref="T:System.UInt32"/> using a built-in 1-byte code when within specific MessagePack-supported ranges,
+            or the most compact of
+            <see cref="F:MessagePack.MessagePackCode.UInt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.UInt32"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteUInt32(System.UInt32)">
+            <summary>
+            Writes an <see cref="T:System.UInt32"/> using <see cref="F:MessagePack.MessagePackCode.UInt32"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Int32)">
+            <summary>
+            Writes an <see cref="T:System.Int32"/> using a built-in 1-byte code when within specific MessagePack-supported ranges,
+            or the most compact of
+            <see cref="F:MessagePack.MessagePackCode.UInt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt32"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int32"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteInt32(System.Int32)">
+            <summary>
+            Writes an <see cref="T:System.Int32"/> using <see cref="F:MessagePack.MessagePackCode.Int32"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.UInt64)">
+            <summary>
+            Writes an <see cref="T:System.UInt64"/> using a built-in 1-byte code when within specific MessagePack-supported ranges,
+            or the most compact of
+            <see cref="F:MessagePack.MessagePackCode.UInt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt32"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int32"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteUInt64(System.UInt64)">
+            <summary>
+            Writes an <see cref="T:System.UInt64"/> using <see cref="F:MessagePack.MessagePackCode.Int32"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Int64)">
+            <summary>
+            Writes an <see cref="T:System.Int64"/> using a built-in 1-byte code when within specific MessagePack-supported ranges,
+            or the most compact of
+            <see cref="F:MessagePack.MessagePackCode.UInt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt32"/>,
+            <see cref="F:MessagePack.MessagePackCode.UInt64"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int32"/>,
+            <see cref="F:MessagePack.MessagePackCode.Int64"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteInt64(System.Int64)">
+            <summary>
+            Writes a <see cref="T:System.Int64"/> using <see cref="F:MessagePack.MessagePackCode.Int64"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Boolean)">
+            <summary>
+            Writes a <see cref="T:System.Boolean"/> value using either <see cref="F:MessagePack.MessagePackCode.True"/> or <see cref="F:MessagePack.MessagePackCode.False"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Char)">
+            <summary>
+            Writes a <see cref="T:System.Char"/> value using a 1-byte code when possible, otherwise as <see cref="F:MessagePack.MessagePackCode.UInt8"/> or <see cref="F:MessagePack.MessagePackCode.UInt16"/>.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Single)">
+            <summary>
+            Writes a <see cref="F:MessagePack.MessagePackCode.Float32"/> value.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Double)">
+            <summary>
+            Writes a <see cref="F:MessagePack.MessagePackCode.Float64"/> value.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.DateTime)">
+            <summary>
+            Writes a <see cref="T:System.DateTime"/> using the message code <see cref="F:MessagePack.ReservedMessagePackExtensionTypeCode.DateTime"/>.
+            </summary>
+            <param name="dateTime">The value to write.</param>
+            <exception cref="T:System.NotSupportedException">Thrown when <see cref="P:MessagePack.MessagePackWriter.OldSpec"/> is true because the old spec does not define a <see cref="T:System.DateTime"/> format.</exception>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Byte[])">
+            <summary>
+            Writes a <see cref="T:System.Byte"/>[], prefixed with a length encoded as the smallest fitting from:
+            <see cref="F:MessagePack.MessagePackCode.Bin8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Bin16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Bin32"/>,
+            or <see cref="F:MessagePack.MessagePackCode.Nil"/> if <paramref name="src"/> is <c>null</c>.
+            </summary>
+            <param name="src">The array of bytes to write. May be <c>null</c>.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Writes a span of bytes, prefixed with a length encoded as the smallest fitting from:
+            <see cref="F:MessagePack.MessagePackCode.Bin8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Bin16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Bin32"/>.
+            </summary>
+            <param name="src">The span of bytes to write.</param>
+            <remarks>
+            When <see cref="P:MessagePack.MessagePackWriter.OldSpec"/> is <c>true</c>, the msgpack code used is <see cref="F:MessagePack.MessagePackCode.Str8"/>, <see cref="F:MessagePack.MessagePackCode.Str16"/> or <see cref="F:MessagePack.MessagePackCode.Str32"/> instead.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.Buffers.ReadOnlySequence{System.Byte}@)">
+            <summary>
+            Writes a sequence of bytes, prefixed with a length encoded as the smallest fitting from:
+            <see cref="F:MessagePack.MessagePackCode.Bin8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Bin16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Bin32"/>.
+            </summary>
+            <param name="src">The span of bytes to write.</param>
+            <remarks>
+            When <see cref="P:MessagePack.MessagePackWriter.OldSpec"/> is <c>true</c>, the msgpack code used is <see cref="F:MessagePack.MessagePackCode.Str8"/>, <see cref="F:MessagePack.MessagePackCode.Str16"/> or <see cref="F:MessagePack.MessagePackCode.Str32"/> instead.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteBinHeader(System.Int32)">
+            <summary>
+            Writes the header that precedes a raw binary sequence with a length encoded as the smallest fitting from:
+            <see cref="F:MessagePack.MessagePackCode.Bin8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Bin16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Bin32"/>.
+            </summary>
+            <param name="length">The length of bytes that will be written next.</param>
+            <remarks>
+            <para>
+            The caller should use <see cref="M:MessagePack.MessagePackWriter.WriteRaw(System.Buffers.ReadOnlySequence{System.Byte}@)"/> or <see cref="M:MessagePack.MessagePackWriter.WriteRaw(System.ReadOnlySpan{System.Byte})"/>
+            after calling this method to actually write the content.
+            Alternatively a single call to <see cref="M:MessagePack.MessagePackWriter.Write(System.ReadOnlySpan{System.Byte})"/> or <see cref="M:MessagePack.MessagePackWriter.Write(System.Buffers.ReadOnlySequence{System.Byte}@)"/> will take care of the header and content in one call.
+            </para>
+            <para>
+            When <see cref="P:MessagePack.MessagePackWriter.OldSpec"/> is <c>true</c>, the msgpack code used is <see cref="F:MessagePack.MessagePackCode.Str8"/>, <see cref="F:MessagePack.MessagePackCode.Str16"/> or <see cref="F:MessagePack.MessagePackCode.Str32"/> instead.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteString(System.Buffers.ReadOnlySequence{System.Byte}@)">
+            <summary>
+            Writes out an array of bytes that (may) represent a UTF-8 encoded string, prefixed with the length using one of these message codes:
+            <see cref="F:MessagePack.MessagePackCode.MinFixStr"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Str32"/>.
+            </summary>
+            <param name="utf8stringBytes">The bytes to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteString(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Writes out an array of bytes that (may) represent a UTF-8 encoded string, prefixed with the length using one of these message codes:
+            <see cref="F:MessagePack.MessagePackCode.MinFixStr"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Str32"/>.
+            </summary>
+            <param name="utf8stringBytes">The bytes to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteStringHeader(System.Int32)">
+            <summary>
+            Writes out the header that may precede a UTF-8 encoded string, prefixed with the length using one of these message codes:
+            <see cref="F:MessagePack.MessagePackCode.MinFixStr"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Str32"/>.
+            </summary>
+            <param name="byteCount">The number of bytes in the string that will follow this header.</param>
+            <remarks>
+            The caller should use <see cref="M:MessagePack.MessagePackWriter.WriteRaw(System.Buffers.ReadOnlySequence{System.Byte}@)"/> or <see cref="M:MessagePack.MessagePackWriter.WriteRaw(System.ReadOnlySpan{System.Byte})"/>
+            after calling this method to actually write the content.
+            Alternatively a single call to <see cref="M:MessagePack.MessagePackWriter.WriteString(System.ReadOnlySpan{System.Byte})"/> or <see cref="M:MessagePack.MessagePackWriter.WriteString(System.Buffers.ReadOnlySequence{System.Byte}@)"/> will take care of the header and content in one call.
+            </remarks>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.String)">
+            <summary>
+            Writes out a <see cref="T:System.String"/>, prefixed with the length using one of these message codes:
+            <see cref="F:MessagePack.MessagePackCode.MinFixStr"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str32"/>,
+            or <see cref="F:MessagePack.MessagePackCode.Nil"/> if the <paramref name="value"/> is <c>null</c>.
+            </summary>
+            <param name="value">The value to write. May be null.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Write(System.ReadOnlySpan{System.Char})">
+            <summary>
+            Writes out a <see cref="T:System.String"/>, prefixed with the length using one of these message codes:
+            <see cref="F:MessagePack.MessagePackCode.MinFixStr"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Str32"/>.
+            </summary>
+            <param name="value">The value to write.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteExtensionFormatHeader(MessagePack.ExtensionHeader)">
+            <summary>
+            Writes the extension format header, using the smallest one of these codes:
+            <see cref="F:MessagePack.MessagePackCode.FixExt1"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt2"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt4"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Ext32"/>.
+            </summary>
+            <param name="extensionHeader">The extension header.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteExtensionFormat(MessagePack.ExtensionResult)">
+            <summary>
+            Writes an extension format, using the smallest one of these codes:
+            <see cref="F:MessagePack.MessagePackCode.FixExt1"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt2"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt4"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt8"/>,
+            <see cref="F:MessagePack.MessagePackCode.FixExt16"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext8"/>,
+            <see cref="F:MessagePack.MessagePackCode.Ext16"/>, or
+            <see cref="F:MessagePack.MessagePackCode.Ext32"/>.
+            </summary>
+            <param name="extensionData">The extension data.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.GetSpan(System.Int32)">
+            <summary>
+            Gets memory where raw messagepack data can be written.
+            </summary>
+            <param name="length">The size of the memory block required.</param>
+            <returns>The span of memory to write to. This *may* exceed <paramref name="length"/>.</returns>
+            <remarks>
+            <para>After initializing the resulting memory, always follow up with a call to <see cref="M:MessagePack.MessagePackWriter.Advance(System.Int32)"/>.</para>
+            <para>
+            This is similar in purpose to <see cref="M:MessagePack.MessagePackWriter.WriteRaw(System.ReadOnlySpan{System.Byte})"/>
+            but provides uninitialized memory for the caller to write to instead of copying initialized memory from elsewhere.
+            </para>
+            </remarks>
+            <seealso cref="M:System.Buffers.IBufferWriter`1.GetSpan(System.Int32)"/>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.Advance(System.Int32)">
+            <summary>
+            Commits memory previously returned from <see cref="M:MessagePack.MessagePackWriter.GetSpan(System.Int32)"/> as initialized.
+            </summary>
+            <param name="length">The number of bytes initialized with messagepack data from the previously returned span.</param>
+            <seealso cref="M:System.Buffers.IBufferWriter`1.Advance(System.Int32)"/>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteBigEndian(System.UInt16)">
+            <summary>
+            Writes a 16-bit integer in big endian format.
+            </summary>
+            <param name="value">The integer.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteBigEndian(System.UInt32)">
+            <summary>
+            Writes a 32-bit integer in big endian format.
+            </summary>
+            <param name="value">The integer.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteBigEndian(System.UInt64)">
+            <summary>
+            Writes a 64-bit integer in big endian format.
+            </summary>
+            <param name="value">The integer.</param>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteString_PrepareSpan(System.Int32,System.Int32@,System.Int32@)">
+            <summary>
+            Estimates the length of the header required for a given string.
+            </summary>
+            <param name="characterLength">The length of the string to be written, in characters.</param>
+            <param name="bufferSize">Receives the guaranteed length of the returned buffer.</param>
+            <param name="encodedBytesOffset">Receives the offset within the returned buffer to write the encoded string to.</param>
+            <returns>
+            A reference to the first byte in the buffer.
+            </returns>
+        </member>
+        <member name="M:MessagePack.MessagePackWriter.WriteString_PostEncoding(System.Byte*,System.Int32,System.Int32)">
+            <summary>
+            Finalizes an encoding of a string.
+            </summary>
+            <param name="pBuffer">A pointer obtained from a prior call to <see cref="M:MessagePack.MessagePackWriter.WriteString_PrepareSpan(System.Int32,System.Int32@,System.Int32@)"/>.</param>
+            <param name="estimatedOffset">The offset obtained from a prior call to <see cref="M:MessagePack.MessagePackWriter.WriteString_PrepareSpan(System.Int32,System.Int32@,System.Int32@)"/>.</param>
+            <param name="byteCount">The number of bytes used to actually encode the string.</param>
+        </member>
+        <member name="T:MessagePack.SequencePool">
+            <summary>
+            A thread-safe, alloc-free reusable object pool.
+            </summary>
+        </member>
+        <member name="F:MessagePack.SequencePool.Shared">
+            <summary>
+            A thread-safe pool of reusable <see cref="T:Nerdbank.Streams.Sequence`1"/> objects.
+            </summary>
+        </member>
+        <member name="F:MessagePack.SequencePool.MinimumSpanLength">
+            <summary>
+            The value to use for <see cref="P:Nerdbank.Streams.Sequence`1.MinimumSpanLength"/>.
+            </summary>
+            <remarks>
+            Individual users that want a different value for this can modify the setting on the rented <see cref="T:Nerdbank.Streams.Sequence`1"/>
+            or by supplying their own <see cref="T:System.Buffers.IBufferWriter`1" />.
+            </remarks>
+            <devremarks>
+            We use 32KB so that when LZ4Codec.MaximumOutputLength is used on this length it does not require a
+            buffer that would require the Large Object Heap.
+            </devremarks>
+        </member>
+        <member name="F:MessagePack.SequencePool.arrayPool">
+            <summary>
+            The array pool which we share with all <see cref="T:Nerdbank.Streams.Sequence`1"/> objects created by this <see cref="T:MessagePack.SequencePool"/> instance.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequencePool.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.SequencePool"/> class.
+            </summary>
+            <remarks>
+            We use a <see cref="F:MessagePack.SequencePool.maxSize"/> that allows every processor to be involved in messagepack serialization concurrently,
+            plus one nested serialization per processor (since LZ4 and sometimes other nested serializations may exist).
+            </remarks>
+        </member>
+        <member name="M:MessagePack.SequencePool.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.SequencePool"/> class.
+            </summary>
+            <param name="maxSize">The maximum size to allow the pool to grow.</param>
+            <devremarks>
+            We allow 100 arrays to be shared (instead of the default 50) and reduce the max array length from the default 1MB to something more reasonable for our expected use.
+            </devremarks>
+        </member>
+        <member name="M:MessagePack.SequencePool.#ctor(System.Int32,System.Buffers.ArrayPool{System.Byte})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.SequencePool"/> class.
+            </summary>
+            <param name="maxSize">The maximum size to allow the pool to grow.</param>
+            <param name="arrayPool">Array pool that will be used.</param>
+        </member>
+        <member name="M:MessagePack.SequencePool.Rent">
+            <summary>
+            Gets an instance of <see cref="T:Nerdbank.Streams.Sequence`1"/>
+            This is taken from the recycled pool if one is available; otherwise a new one is created.
+            </summary>
+            <returns>The rental tracker that provides access to the object as well as a means to return it.</returns>
+        </member>
+        <member name="P:MessagePack.SequencePool.Rental.Value">
+            <summary>
+            Gets the recyclable object.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequencePool.Rental.Dispose">
+            <summary>
+            Returns the recyclable object to the pool.
+            </summary>
+            <remarks>
+            The instance is cleaned first, if a clean delegate was provided.
+            It is dropped instead of being returned to the pool if the pool is already at its maximum size.
+            </remarks>
+        </member>
+        <member name="F:MessagePack.SequenceReader`1.usingSequence">
+            <summary>
+            A value indicating whether we're using <see cref="F:MessagePack.SequenceReader`1.sequence"/> (as opposed to <see cref="F:MessagePack.SequenceReader`1.memory"/>.
+            </summary>
+        </member>
+        <member name="F:MessagePack.SequenceReader`1.sequence">
+            <summary>
+            Backing for the entire sequence when we're not using <see cref="F:MessagePack.SequenceReader`1.memory"/>.
+            </summary>
+        </member>
+        <member name="F:MessagePack.SequenceReader`1.currentPosition">
+            <summary>
+            The position at the start of the <see cref="P:MessagePack.SequenceReader`1.CurrentSpan"/>.
+            </summary>
+        </member>
+        <member name="F:MessagePack.SequenceReader`1.nextPosition">
+            <summary>
+            The position at the end of the <see cref="P:MessagePack.SequenceReader`1.CurrentSpan"/>.
+            </summary>
+        </member>
+        <member name="F:MessagePack.SequenceReader`1.memory">
+            <summary>
+            Backing for the entire sequence when we're not using <see cref="F:MessagePack.SequenceReader`1.sequence"/>.
+            </summary>
+        </member>
+        <member name="F:MessagePack.SequenceReader`1.moreData">
+            <summary>
+            A value indicating whether there is unread data remaining.
+            </summary>
+        </member>
+        <member name="F:MessagePack.SequenceReader`1.length">
+            <summary>
+            The total number of elements in the sequence.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.#ctor(System.Buffers.ReadOnlySequence{`0}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.SequenceReader`1"/> struct
+            over the given <see cref="T:System.Buffers.ReadOnlySequence`1"/>.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.#ctor(System.ReadOnlyMemory{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:MessagePack.SequenceReader`1"/> struct
+            over the given <see cref="T:System.ReadOnlyMemory`1"/>.
+            </summary>
+        </member>
+        <member name="P:MessagePack.SequenceReader`1.End">
+            <summary>
+            Gets a value indicating whether there is no more data in the <see cref="P:MessagePack.SequenceReader`1.Sequence"/>.
+            </summary>
+        </member>
+        <member name="P:MessagePack.SequenceReader`1.Sequence">
+            <summary>
+            Gets the underlying <see cref="T:System.Buffers.ReadOnlySequence`1"/> for the reader.
+            </summary>
+        </member>
+        <member name="P:MessagePack.SequenceReader`1.Position">
+            <summary>
+            Gets the current position in the <see cref="P:MessagePack.SequenceReader`1.Sequence"/>.
+            </summary>
+        </member>
+        <member name="P:MessagePack.SequenceReader`1.CurrentSpan">
+            <summary>
+            Gets the current segment in the <see cref="P:MessagePack.SequenceReader`1.Sequence"/> as a span.
+            </summary>
+        </member>
+        <member name="P:MessagePack.SequenceReader`1.CurrentSpanIndex">
+            <summary>
+            Gets the index in the <see cref="P:MessagePack.SequenceReader`1.CurrentSpan"/>.
+            </summary>
+        </member>
+        <member name="P:MessagePack.SequenceReader`1.UnreadSpan">
+            <summary>
+            Gets the unread portion of the <see cref="P:MessagePack.SequenceReader`1.CurrentSpan"/>.
+            </summary>
+        </member>
+        <member name="P:MessagePack.SequenceReader`1.Consumed">
+            <summary>
+            Gets the total number of <typeparamref name="T"/>'s processed by the reader.
+            </summary>
+        </member>
+        <member name="P:MessagePack.SequenceReader`1.Remaining">
+            <summary>
+            Gets remaining <typeparamref name="T"/>'s in the reader's <see cref="P:MessagePack.SequenceReader`1.Sequence"/>.
+            </summary>
+        </member>
+        <member name="P:MessagePack.SequenceReader`1.Length">
+            <summary>
+            Gets count of <typeparamref name="T"/> in the reader's <see cref="P:MessagePack.SequenceReader`1.Sequence"/>.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.TryPeek(`0@)">
+            <summary>
+            Peeks at the next value without advancing the reader.
+            </summary>
+            <param name="value">The next value or default if at the end.</param>
+            <returns>False if at the end of the reader.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.TryRead(`0@)">
+            <summary>
+            Read the next value and advance the reader.
+            </summary>
+            <param name="value">The next value or default if at the end.</param>
+            <returns>False if at the end of the reader.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.Rewind(System.Int64)">
+            <summary>
+            Move the reader back the specified number of items.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.GetNextSpan">
+            <summary>
+            Get the next segment with available data, if any.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.Advance(System.Int64)">
+            <summary>
+            Move the reader ahead the specified number of items.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.AdvanceCurrentSpan(System.Int64)">
+            <summary>
+            Unchecked helper to avoid unnecessary checks where you know count is valid.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.AdvanceWithinSpan(System.Int64)">
+            <summary>
+            Only call this helper if you know that you are advancing in the current span
+            with valid count and there is no need to fetch the next one.
+            </summary>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.TryAdvance(System.Int64)">
+            <summary>
+            Move the reader ahead the specified number of items
+            if there are enough elements remaining in the sequence.
+            </summary>
+            <returns><c>true</c> if there were enough elements to advance; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReader`1.TryCopyTo(System.Span{`0})">
+            <summary>
+            Copies data from the current <see cref="P:MessagePack.SequenceReader`1.Position"/> to the given <paramref name="destination"/> span.
+            </summary>
+            <param name="destination">Destination to copy to.</param>
+            <returns>True if there is enough data to copy to the <paramref name="destination"/>.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryRead``1(MessagePack.SequenceReader{System.Byte}@,``0@)">
+            <summary>
+            Try to read the given type out of the buffer if possible. Warning: this is dangerous to use with arbitrary
+            structs- see remarks for full details.
+            </summary>
+            <remarks>
+            IMPORTANT: The read is a straight copy of bits. If a struct depends on specific state of its members to
+            behave correctly this can lead to exceptions, etc. If reading endian specific integers, use the explicit
+            overloads such as <see cref="M:MessagePack.SequenceReaderExtensions.TryReadBigEndian(MessagePack.SequenceReader{System.Byte}@,System.Int16@)"/>.
+            </remarks>
+            <returns>
+            True if successful. <paramref name="value"/> will be default if failed (due to lack of space).
+            </returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryRead(MessagePack.SequenceReader{System.Byte}@,System.SByte@)">
+            <summary>
+            Reads an <see cref="T:System.SByte"/> from the next position in the sequence.
+            </summary>
+            <param name="reader">The reader to read from.</param>
+            <param name="value">Receives the value read.</param>
+            <returns><c>true</c> if there was another byte in the sequence; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryReadBigEndian(MessagePack.SequenceReader{System.Byte}@,System.Int16@)">
+            <summary>
+            Reads an <see cref="T:System.Int16"/> as big endian.
+            </summary>
+            <returns>False if there wasn't enough data for an <see cref="T:System.Int16"/>.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryReadBigEndian(MessagePack.SequenceReader{System.Byte}@,System.UInt16@)">
+            <summary>
+            Reads an <see cref="T:System.UInt16"/> as big endian.
+            </summary>
+            <returns>False if there wasn't enough data for an <see cref="T:System.UInt16"/>.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryReadBigEndian(MessagePack.SequenceReader{System.Byte}@,System.Int32@)">
+            <summary>
+            Reads an <see cref="T:System.Int32"/> as big endian.
+            </summary>
+            <returns>False if there wasn't enough data for an <see cref="T:System.Int32"/>.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryReadBigEndian(MessagePack.SequenceReader{System.Byte}@,System.UInt32@)">
+            <summary>
+            Reads an <see cref="T:System.UInt32"/> as big endian.
+            </summary>
+            <returns>False if there wasn't enough data for an <see cref="T:System.UInt32"/>.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryReadBigEndian(MessagePack.SequenceReader{System.Byte}@,System.Int64@)">
+            <summary>
+            Reads an <see cref="T:System.Int64"/> as big endian.
+            </summary>
+            <returns>False if there wasn't enough data for an <see cref="T:System.Int64"/>.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryReadBigEndian(MessagePack.SequenceReader{System.Byte}@,System.UInt64@)">
+            <summary>
+            Reads an <see cref="T:System.UInt64"/> as big endian.
+            </summary>
+            <returns>False if there wasn't enough data for an <see cref="T:System.UInt64"/>.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryReadBigEndian(MessagePack.SequenceReader{System.Byte}@,System.Single@)">
+            <summary>
+            Reads a <see cref="T:System.Single"/> as big endian.
+            </summary>
+            <returns>False if there wasn't enough data for a <see cref="T:System.Single"/>.</returns>
+        </member>
+        <member name="M:MessagePack.SequenceReaderExtensions.TryReadBigEndian(MessagePack.SequenceReader{System.Byte}@,System.Double@)">
+            <summary>
+            Reads a <see cref="T:System.Double"/> as big endian.
+            </summary>
+            <returns>False if there wasn't enough data for a <see cref="T:System.Double"/>.</returns>
+        </member>
+        <member name="T:MessagePack.Utilities">
+            <summary>
+            Internal utilities and extension methods for various external types.
+            </summary>
+        </member>
+        <member name="F:MessagePack.Utilities.IsMono">
+            <summary>
+            A value indicating whether we're running on mono.
+            </summary>
+        </member>
+    </members>
+</doc>

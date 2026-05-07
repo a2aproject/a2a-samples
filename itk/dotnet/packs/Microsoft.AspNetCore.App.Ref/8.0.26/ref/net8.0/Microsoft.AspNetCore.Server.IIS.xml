@@ -1,0 +1,910 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Server.IIS</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Server.IIS.BadHttpRequestException">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.BadHttpRequestException.StatusCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.IISHttpContext.ReadAsync(System.Memory{System.Byte},System.Threading.CancellationToken)">
+            <summary>
+            Reads data from the Input pipe to the user.
+            </summary>
+            <param name="memory"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.IISHttpContext.WriteAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)">
+            <summary>
+            Writes data to the output pipe.
+            </summary>
+            <param name="memory"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.IISHttpContext.FlushAsync(System.Threading.CancellationToken)">
+            <summary>
+            Flushes the data in the output pipe
+            </summary>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.IIS.Core.IISServerAuthenticationHandlerInternal">
+            <summary>
+            The default authentication handler with IIS In-Process
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.IISServerAuthenticationHandlerInternal.AuthenticateAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.IISServerAuthenticationHandlerInternal.ChallengeAsync(Microsoft.AspNetCore.Authentication.AuthenticationProperties)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.IISServerAuthenticationHandlerInternal.ForbidAsync(Microsoft.AspNetCore.Authentication.AuthenticationProperties)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.IISServerAuthenticationHandlerInternal.InitializeAsync(Microsoft.AspNetCore.Authentication.AuthenticationScheme,Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.IIS.Core.ThrowingWasUpgradedWriteOnlyStreamInternal">
+            <summary>
+            A <see cref="T:System.IO.Stream"/> which throws on calls to write after the stream was upgraded
+            </summary>
+            <remarks>
+            Users should not need to instantiate this class.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.ThrowingWasUpgradedWriteOnlyStreamInternal.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.ThrowingWasUpgradedWriteOnlyStreamInternal.WriteAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.ThrowingWasUpgradedWriteOnlyStreamInternal.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.ThrowingWasUpgradedWriteOnlyStreamInternal.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.ThrowingWasUpgradedWriteOnlyStreamInternal.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal">
+            <summary>
+            A <see cref="T:System.IO.Stream"/> which only allows for writes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.ReadTimeout">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.Position">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.ReadAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.Core.WriteOnlyStreamInternal.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.IIS.HttpContextExtensions">
+            <summary>
+            Extensions to <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> that enable access to IIS features.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.HttpContextExtensions.GetIISServerVariable(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>
+            Gets the value of a server variable for the current request.
+            </summary>
+            <param name="context">The http context for the request.</param>
+            <param name="variableName">The name of the variable.</param>
+            <returns>
+            <c>null</c> if the server does not support the <see cref="T:Microsoft.AspNetCore.Http.Features.IServerVariablesFeature"/> feature.
+            May return null or empty if the variable does not exist or is not set.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature">
+            <summary>
+            This feature provides access to IIS application information
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature.IISVersion">
+            <summary>
+            Gets the version of IIS that is being used.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature.AppPoolId">
+            <summary>
+            Gets the AppPool name that is currently running
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature.AppPoolConfigFile">
+            <summary>
+            Gets the path to the AppPool config
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature.AppConfigPath">
+            <summary>
+            Gets path to the application configuration that is currently running
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature.ApplicationPhysicalPath">
+            <summary>
+            Gets the physical path of the application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature.ApplicationVirtualPath">
+            <summary>
+            Gets the virtual path of the application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature.ApplicationId">
+            <summary>
+            Gets ID of the current application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature.SiteName">
+            <summary>
+            Gets the name of the current site.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.IIISEnvironmentFeature.SiteId">
+            <summary>
+            Gets the id of the current site.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.IIS.IISServerDefaults">
+            <summary>
+            String constants used to configure IIS In-Process.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.IIS.IISServerDefaults.AuthenticationScheme">
+            <summary>
+            Default authentication scheme, which is "Windows".
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.ResponseStreamWasUpgraded">
+            <summary>Cannot write to response body after connection has been upgraded.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.UnhandledApplicationException">
+            <summary>The response has been aborted due to an unhandled application exception.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.CannotUpgradeNonUpgradableRequest">
+            <summary>Cannot upgrade a non-upgradable request. Check IHttpUpgradeFeature.IsUpgradableRequest to determine if a request can be upgraded.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.UpgradeCannotBeCalledMultipleTimes">
+            <summary>IHttpUpgradeFeature.UpgradeAsync was already called and can only be called once per connection.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.SynchronousReadsDisallowed">
+            <summary>Synchronous operations are disallowed. Call ReadAsync or set AllowSynchronousIO to true instead.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.SynchronousWritesDisallowed">
+            <summary>Synchronous operations are disallowed. Call WriteAsync or set AllowSynchronousIO to true instead.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.WritingToResponseBodyAfterResponseCompleted">
+            <summary>Cannot write to the response body, the response has completed.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.ConnectionAbortedByApplication">
+            <summary>The connection was aborted by the application.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.ConnectionOrStreamAbortedByCancellationToken">
+            <summary>The connection or stream was aborted because a write operation was aborted with a CancellationToken.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.ParameterReadOnlyAfterResponseStarted">
+            <summary>{name} cannot be set because the response has already started.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IIS.CoreStrings.FormatParameterReadOnlyAfterResponseStarted(System.Object)">
+            <summary>{name} cannot be set because the response has already started.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.BadRequest_RequestBodyTooLarge">
+            <summary>Request body too large.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.MaxRequestBodySizeCannotBeModifiedAfterRead">
+            <summary>The maximum request body size cannot be modified after the app has already started reading from the request body.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.MaxRequestBodySizeCannotBeModifiedForUpgradedRequests">
+            <summary>The maximum request body size cannot be modified after the request has been upgraded.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.NonNegativeNumberOrNullRequired">
+            <summary>Value must be null or a non-negative number.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.BadRequest">
+            <summary>Bad request.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.MaxRequestLimitWarning">
+            <summary>Increasing the MaxRequestBodySize conflicts with the max value for IIS limit maxAllowedContentLength. HTTP requests that have a content length greater than maxAllowedContentLength will still be rejected by IIS. You can disable the limit by either removing  ...</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.IIS.CoreStrings.UpgradeWithWrongProtocolVersion">
+            <summary>Upgrade requires HTTP/1.1.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.Kestrel.Core.Internal.DuplexPipeStreamAdapter`1">
+            <summary>
+            A helper for wrapping a Stream decorator from an <see cref="T:System.IO.Pipelines.IDuplexPipe"/>.
+            </summary>
+            <typeparam name="TStream"></typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.Kestrel.Core.Internal.MemoryPoolExtensions.GetMinimumSegmentSize(System.Buffers.MemoryPool{System.Byte})">
+            <summary>
+            Computes a minimum segment size
+            </summary>
+            <param name="pool"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.StringUtilities.ConcatAsHexSuffix(System.String,System.Char,System.UInt32)">
+            <summary>
+            A faster version of String.Concat(<paramref name="str"/>, <paramref name="separator"/>, <paramref name="number"/>.ToString("X8"))
+            </summary>
+            <param name="str"></param>
+            <param name="separator"></param>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.IISServerOptions">
+            <summary>
+            Provides configuration for IIS In-Process.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISServerOptions.AllowSynchronousIO">
+            <summary>
+            Gets or sets a value that controls whether synchronous IO is allowed for the <see cref="P:Microsoft.AspNetCore.Http.HttpContext.Request"/> and <see cref="P:Microsoft.AspNetCore.Http.HttpContext.Response"/>
+            </summary>
+            <remarks>
+            Defaults to false.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISServerOptions.AutomaticAuthentication">
+            <summary>
+            If true the server should set HttpContext.User. If false the server will only provide an
+            identity when explicitly requested by the AuthenticationScheme.
+            Note Windows Authentication must also be enabled in IIS for this to work.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISServerOptions.AuthenticationDisplayName">
+            <summary>
+            Sets the display name shown to users on login pages. The default is null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISServerOptions.MaxRequestBodyBufferSize">
+            <summary>
+            Gets or sets the maximum unconsumed incoming bytes the server will buffer for incoming request body.
+            </summary>
+            <value>
+            Defaults to 1 MB.
+            </value>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISServerOptions.ForwardWindowsAuthentication">
+            <summary>
+            Used to indicate if the authentication handler should be registered. This is only done if ANCM indicates
+            IIS has a non-anonymous authentication enabled, or for back compat with ANCMs that did not provide this information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISServerOptions.MaxRequestBodySize">
+            <summary>
+            Gets or sets the maximum allowed size of any request body in bytes.
+            When set to null, the maximum request length will not be restricted in ASP.NET Core.
+            However, the IIS maxAllowedContentLength will still restrict content length requests (30,000,000 by default).
+            This limit has no effect on upgraded connections which are always unlimited.
+            This can be overridden per-request via <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature"/>.
+            </summary>
+            <remarks>
+            Defaults to 30,000,000 bytes (~28.6 MB).
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.WebHostBuilderIISExtensions">
+            <summary>
+            Extension methods for the IIS In-Process.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderIISExtensions.UseIIS(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Configures the port and base path the server should listen on when running behind AspNetCoreModule.
+            The app will also be configured to capture startup errors.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.Views.ErrorPageModel">
+            <summary>
+            Holds data to be displayed on the error page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Hosting.Views.ErrorPageModel.ErrorDetails">
+            <summary>
+            Detailed information about each exception in the stack.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpSys.Internal.SocketAddress">
+            <devdoc>
+               <para>
+                  This class is used when subclassing EndPoint, and provides indication
+                  on how to format the memory buffers that winsock uses for network addresses.
+               </para>
+            </devdoc>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.SocketAddress.#ctor(System.Net.Sockets.AddressFamily,System.Int32)">
+            <devdoc>
+               <para>[To be supplied.]</para>
+            </devdoc>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpSys.Internal.SocketAddress.Item(System.Int32)">
+            <devdoc>
+               <para>[To be supplied.]</para>
+            </devdoc>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpSys.Internal.NativeRequestContext.PinsReleased">
+            <summary>
+            Shows whether <see cref="M:Microsoft.AspNetCore.HttpSys.Internal.NativeRequestContext.ReleasePins"/> was already invoked on this native request context
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RawUrlHelper.GetPath(System.Span{System.Byte})">
+            <summary>
+            Find the segment of the URI byte array which represents the path.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RawUrlHelper.FindHttpOrHttps(System.Span{System.Byte})">
+            <summary>
+            Compare the beginning portion of the raw URL byte array to https:// and http://
+            </summary>
+            <param name="raw">The byte array represents the raw URI</param>
+            <returns>Length of the matched bytes, 0 if it is not matched.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RequestUriBuilder.Unescape(System.Span{System.Byte})">
+            <summary>
+            Unescape a given path string in place. The given path string  may contain escaped char.
+            </summary>
+            <param name="rawPath">The raw path string to be unescaped</param>
+            <returns>The unescaped path string</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RequestUriBuilder.DecodeCore(System.Int32@,System.Int32@,System.Int32,System.Span{System.Byte})">
+            <summary>
+            Unescape the percent-encodings
+            </summary>
+            <param name="reader">The iterator point to the first % char</param>
+            <param name="writer">The place to write to</param>
+            <param name="end">The end of the buffer</param>
+            <param name="buffer">The byte array</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RequestUriBuilder.UnescapePercentEncoding(System.Int32@,System.Int32,System.ReadOnlySpan{System.Byte})">
+             <summary>
+             Read the percent-encoding and try unescape it.
+            
+             The operation first peek at the character the <paramref name="scan"/>
+             iterator points at. If it is % the <paramref name="scan"/> is then
+             moved on to scan the following to characters. If the two following
+             characters are hexadecimal literals they will be unescaped and the
+             value will be returned.
+            
+             If the first character is not % the <paramref name="scan"/> iterator
+             will be removed beyond the location of % and -1 will be returned.
+            
+             If the following two characters can't be successfully unescaped the
+             <paramref name="scan"/> iterator will be move behind the % and -1
+             will be returned.
+             </summary>
+             <param name="scan">The value to read</param>
+             <param name="end">The end of the buffer</param>
+             <param name="buffer">The byte array</param>
+             <returns>The unescaped byte if success. Otherwise return -1.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpSys.Internal.RequestUriBuilder.ReadHex(System.Int32@,System.Int32,System.ReadOnlySpan{System.Byte})">
+             <summary>
+             Read the next char and convert it into hexadecimal value.
+            
+             The <paramref name="scan"/> iterator will be moved to the next
+             byte no matter no matter whether the operation successes.
+             </summary>
+             <param name="scan">The value to read</param>
+             <param name="end">The end of the buffer</param>
+             <param name="buffer">The byte array</param>
+             <returns>The hexadecimal value if successes, otherwise -1.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.TypeNameHelper.GetTypeDisplayName(System.Type,System.Boolean,System.Boolean,System.Boolean,System.Char)">
+            <summary>
+            Pretty print a type name.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/>.</param>
+            <param name="fullName"><c>true</c> to print a fully qualified name.</param>
+            <param name="includeGenericParameterNames"><c>true</c> to include generic parameter names.</param>
+            <param name="includeGenericParameters"><c>true</c> to include generic parameters.</param>
+            <param name="nestedTypeDelimiter">Character to use as a delimiter in nested type names</param>
+            <returns>The pretty printed type name.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails">
+            <summary>
+            Contains details for individual exception messages.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails.Error">
+            <summary>
+            An individual exception
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails.StackFrames">
+            <summary>
+            The generated stack frames
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails.ErrorMessage">
+            <summary>
+            Gets or sets the summary message.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo">
+            <summary>
+            Contains the source code where the exception occurred.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.Function">
+            <summary>
+            Function containing instruction
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.File">
+            <summary>
+            File containing the instruction
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.Line">
+            <summary>
+            The line number of the instruction
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.PreContextLine">
+            <summary>
+            The line preceding the frame line
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.PreContextCode">
+            <summary>
+            Lines of code before the actual error line(s).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.ContextCode">
+            <summary>
+            Line(s) of code responsible for the error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.PostContextCode">
+            <summary>
+            Lines of code after the actual error line(s).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.ErrorDetails">
+            <summary>
+            Specific error details for this stack frame.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.RazorViews.BaseView">
+            <summary>
+            Infrastructure
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Context">
+            <summary>
+            The request context
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Request">
+            <summary>
+            The request
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Response">
+            <summary>
+            The response
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Output">
+            <summary>
+            The output stream
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.HtmlEncoder">
+            <summary>
+            Html encoder used to encode content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.UrlEncoder">
+            <summary>
+            Url encoder used to encode content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.JavaScriptEncoder">
+            <summary>
+            JavaScript encoder used to encode content.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync(System.IO.Stream)">
+            <summary>
+            Execute an individual request
+            </summary>
+            <param name="stream">The stream to write to</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Execute an individual request
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync">
+            <summary>
+            Execute an individual request
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.WriteLiteral(System.Object)">
+            <summary>
+            Write the given value without HTML encoding directly to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.WriteLiteral(System.String)">
+            <summary>
+            Write the given value without HTML encoding directly to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.WriteAttribute(System.String,System.String,System.String,Microsoft.Extensions.RazorViews.AttributeValue[])">
+            <summary>
+            Writes the given attribute to the given writer
+            </summary>
+            <param name="name">The name of the attribute to write</param>
+            <param name="leader">The value of the prefix</param>
+            <param name="trailer">The value of the suffix</param>
+            <param name="values">The <see cref="T:Microsoft.Extensions.RazorViews.AttributeValue"/>s to write.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.Write(Microsoft.Extensions.RazorViews.HelperResult)">
+            <summary>
+            <see cref="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)"/> is invoked
+            </summary>
+            <param name="result">The <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/> to invoke</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.Write(System.Object)">
+            <summary>
+            Writes the specified <paramref name="value"/> to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+            <remarks>
+            <see cref="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)"/> is invoked for <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/> types.
+            For all other types, the encoded result of <see cref="M:System.Object.ToString"/> is written to
+            <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.Write(System.String)">
+            <summary>
+            Writes the specified <paramref name="value"/> with HTML encoding to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.RazorViews.HelperResult">
+            <summary>
+            Represents a deferred write operation in a <see cref="T:Microsoft.Extensions.RazorViews.BaseView"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.HelperResult.#ctor(System.Action{System.IO.TextWriter})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/>.
+            </summary>
+            <param name="action">The delegate to invoke when <see cref="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)"/> is called.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)">
+            <summary>
+            Method invoked to produce content from the <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/>.
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+        </member>
+        <member name="T:StartupHook">
+            <summary>
+            Startup hooks are pieces of code that will run before a users program main executes
+            See: <see href="https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/host-startup-hook.md"/>
+            The type must be named StartupHook without any namespace, and should be internal.
+            </summary>
+        </member>
+        <member name="M:StartupHook.Initialize">
+            <summary>
+            Startup hooks are pieces of code that will run before a users program main executes
+            See: <see href="https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/host-startup-hook.md"/>
+            </summary>
+        </member>
+        <member name="T:System.Buffers.DiagnosticMemoryPool">
+            <summary>
+            Used to allocate and distribute re-usable blocks of memory.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.DiagnosticMemoryPool.AnySize">
+            <summary>
+            This default value passed in to Rent to use the default value for the pool.
+            </summary>
+        </member>
+        <member name="T:System.Buffers.DiagnosticPoolBlock">
+            <summary>
+            Block tracking object used by the byte buffer memory pool. A slab is a large allocation which is divided into smaller blocks. The
+            individual blocks are then treated as independent array segments.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.DiagnosticPoolBlock._pool">
+            <summary>
+            Back-reference to the memory pool which this block was allocated from. It may only be returned to this pool.
+            </summary>
+        </member>
+        <member name="M:System.Buffers.DiagnosticPoolBlock.#ctor(System.Buffers.DiagnosticMemoryPool,System.Buffers.IMemoryOwner{System.Byte})">
+            <summary>
+            This object cannot be instantiated outside of the static Create method
+            </summary>
+        </member>
+        <member name="T:System.Buffers.MemoryPoolBlock">
+            <summary>
+            Wraps an array allocated in the pinned object heap in a reusable block of managed memory
+            </summary>
+        </member>
+        <member name="P:System.Buffers.MemoryPoolBlock.Pool">
+            <summary>
+            Back-reference to the memory pool which this block was allocated from. It may only be returned to this pool.
+            </summary>
+        </member>
+        <member name="T:System.Buffers.PinnedBlockMemoryPool">
+            <summary>
+            Used to allocate and distribute re-usable blocks of memory.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool._blockSize">
+            <summary>
+            The size of a block. 4096 is chosen because most operating systems use 4k pages.
+            </summary>
+        </member>
+        <member name="P:System.Buffers.PinnedBlockMemoryPool.MaxBufferSize">
+            <summary>
+            Max allocation block size for pooled blocks,
+            larger values can be leased but they will be disposed after use rather than returned to the pool.
+            </summary>
+        </member>
+        <member name="P:System.Buffers.PinnedBlockMemoryPool.BlockSize">
+            <summary>
+            The size of a block. 4096 is chosen because most operating systems use 4k pages.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool._blocks">
+            <summary>
+            Thread-safe collection of blocks which are currently in the pool. A slab will pre-allocate all of the block tracking objects
+            and add them to this collection. When memory is requested it is taken from here first, and when it is returned it is re-added.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool._isDisposed">
+            <summary>
+            This is part of implementing the IDisposable pattern.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool.AnySize">
+            <summary>
+            This default value passed in to Rent to use the default value for the pool.
+            </summary>
+        </member>
+        <member name="M:System.Buffers.PinnedBlockMemoryPool.Return(System.Buffers.MemoryPoolBlock)">
+            <summary>
+            Called to return a block to the pool. Once Return has been called the memory no longer belongs to the caller, and
+            Very Bad Things will happen if the memory is read of modified subsequently. If a caller fails to call Return and the
+            block tracking object is garbage collected, the block tracking object's finalizer will automatically re-create and return
+            a new tracking object into the pool. This will only happen if there is a bug in the server, however it is necessary to avoid
+            leaving "dead zones" in the slab due to lost block tracking objects.
+            </summary>
+            <param name="block">The block to return. It must have been acquired by calling Lease on the same memory pool instance.</param>
+        </member>
+        <member name="M:System.Buffers.BufferExtensions.PositionOfAny``1(System.Buffers.ReadOnlySequence{``0}@,``0,``0)">
+            <summary>
+            Returns position of first occurrence of item in the <see cref="T:System.Buffers.ReadOnlySequence`1"/>
+            </summary>
+        </member>
+        <member name="T:System.Buffers.BufferWriter`1">
+            <summary>
+            A fast access struct that wraps <see cref="T:System.Buffers.IBufferWriter`1"/>.
+            </summary>
+            <typeparam name="T">The type of element to be written.</typeparam>
+        </member>
+        <member name="F:System.Buffers.BufferWriter`1._output">
+            <summary>
+            The underlying <see cref="T:System.Buffers.IBufferWriter`1"/>.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.BufferWriter`1._span">
+            <summary>
+            The result of the last call to <see cref="M:System.Buffers.IBufferWriter`1.GetSpan(System.Int32)"/>, less any bytes already "consumed" with <see cref="M:System.Buffers.BufferWriter`1.Advance(System.Int32)"/>.
+            Backing field for the <see cref="P:System.Buffers.BufferWriter`1.Span"/> property.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.BufferWriter`1._buffered">
+            <summary>
+            The number of uncommitted bytes (all the calls to <see cref="M:System.Buffers.BufferWriter`1.Advance(System.Int32)"/> since the last call to <see cref="M:System.Buffers.BufferWriter`1.Commit"/>).
+            </summary>
+        </member>
+        <member name="F:System.Buffers.BufferWriter`1._bytesCommitted">
+            <summary>
+            The total number of bytes written with this writer.
+            Backing field for the <see cref="P:System.Buffers.BufferWriter`1.BytesCommitted"/> property.
+            </summary>
+        </member>
+        <member name="M:System.Buffers.BufferWriter`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Buffers.BufferWriter`1"/> struct.
+            </summary>
+            <param name="output">The <see cref="T:System.Buffers.IBufferWriter`1"/> to be wrapped.</param>
+        </member>
+        <member name="P:System.Buffers.BufferWriter`1.Span">
+            <summary>
+            Gets the result of the last call to <see cref="M:System.Buffers.IBufferWriter`1.GetSpan(System.Int32)"/>.
+            </summary>
+        </member>
+        <member name="P:System.Buffers.BufferWriter`1.BytesCommitted">
+            <summary>
+            Gets the total number of bytes written with this writer.
+            </summary>
+        </member>
+        <member name="M:System.Buffers.BufferWriter`1.Commit">
+            <summary>
+            Calls <see cref="M:System.Buffers.IBufferWriter`1.Advance(System.Int32)"/> on the underlying writer
+            with the number of uncommitted bytes.
+            </summary>
+        </member>
+        <member name="M:System.Buffers.BufferWriter`1.Advance(System.Int32)">
+            <summary>
+            Used to indicate that part of the buffer has been written to.
+            </summary>
+            <param name="count">The number of bytes written to.</param>
+        </member>
+        <member name="M:System.Buffers.BufferWriter`1.Write(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Copies the caller's buffer into this writer and calls <see cref="M:System.Buffers.BufferWriter`1.Advance(System.Int32)"/> with the length of the source buffer.
+            </summary>
+            <param name="source">The buffer to copy in.</param>
+        </member>
+        <member name="M:System.Buffers.BufferWriter`1.Ensure(System.Int32)">
+            <summary>
+            Acquires a new buffer if necessary to ensure that some given number of bytes can be written to a single buffer.
+            </summary>
+            <param name="count">The number of bytes that must be allocated in a single buffer.</param>
+        </member>
+        <member name="M:System.Buffers.BufferWriter`1.EnsureMore(System.Int32)">
+            <summary>
+            Gets a fresh span to write to, with an optional minimum size.
+            </summary>
+            <param name="count">The minimum size for the next requested buffer.</param>
+        </member>
+        <member name="M:System.Buffers.BufferWriter`1.WriteMultiBuffer(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Copies the caller's buffer into this writer, potentially across multiple buffers from the underlying writer.
+            </summary>
+            <param name="source">The buffer to copy into this writer.</param>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm">
+            <summary>
+            Provides support for efficiently using Tasks to implement the APM (Begin/End) pattern.
+            </summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.Begin(System.Threading.Tasks.Task,System.AsyncCallback,System.Object)">
+            <summary>
+            Marshals the Task as an IAsyncResult, using the supplied callback and state
+            to implement the APM pattern.
+            </summary>
+            <param name="task">The Task to be marshaled.</param>
+            <param name="callback">The callback to be invoked upon completion.</param>
+            <param name="state">The state to be stored in the IAsyncResult.</param>
+            <returns>An IAsyncResult to represent the task's asynchronous operation.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End``1(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm.TaskAsyncResult">
+            <summary>Provides a simple IAsyncResult that wraps a Task.</summary>
+            <remarks>
+            We could use the Task as the IAsyncResult if the Task's AsyncState is the same as the object state,
+            but that's very rare, in particular in a situation where someone cares about allocation, and always
+            using TaskAsyncResult simplifies things and enables additional optimizations.
+            </remarks>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task">
+            <summary>The wrapped Task.</summary>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._callback">
+            <summary>Callback to invoke when the wrapped task completes.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.#ctor(System.Threading.Tasks.Task,System.Object,System.AsyncCallback)">
+            <summary>Initializes the IAsyncResult with the Task to wrap and the associated object state.</summary>
+            <param name="task">The Task to wrap.</param>
+            <param name="state">The new AsyncState value.</param>
+            <param name="callback">Callback to invoke when the wrapped task completes.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.InvokeCallback">
+            <summary>Invokes the callback.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncState">
+            <summary>Gets a user-defined object that qualifies or contains information about an asynchronous operation.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.CompletedSynchronously">
+            <summary>Gets a value that indicates whether the asynchronous operation completed synchronously.</summary>
+            <remarks>This is set lazily based on whether the <see cref="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task"/> has completed by the time this object is created.</remarks>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.IsCompleted">
+            <summary>Gets a value that indicates whether the asynchronous operation has completed.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncWaitHandle">
+            <summary>Gets a <see cref="T:System.Threading.WaitHandle"/> that is used to wait for an asynchronous operation to complete.</summary>
+        </member>
+        <member name="T:UnmanagedBufferAllocator">
+            <summary>
+            Allocator that manages blocks of unmanaged memory.
+            </summary>
+        </member>
+        <member name="P:UnmanagedBufferAllocator.DefaultBlockSize">
+            <summary>
+            The default block size for the allocator.
+            </summary>
+            <remarks>
+            This size assumes a common page size and provides an accommodation
+            for the pointer chain used to track allocated blocks.
+            </remarks>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.#ctor(System.Int32)">
+            <summary>
+            Instantiate an <see cref="T:UnmanagedBufferAllocator"/> instance.
+            </summary>
+            <param name="blockSize">The unmanaged memory block size in bytes.</param>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.AllocAsPointer``1(System.Int32)">
+            <summary>
+            Allocate the requested amount of space from the allocator.
+            </summary>
+            <typeparam name="T">The type requested</typeparam>
+            <param name="count">The count in <typeparamref name="T"/> units</param>
+            <returns>A pointer to the reserved memory.</returns>
+            <remarks>
+            The allocated memory is uninitialized.
+            </remarks>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.AllocAsSpan``1(System.Int32)">
+            <summary>
+            Allocate the requested amount of space from the allocator.
+            </summary>
+            <typeparam name="T">The type requested</typeparam>
+            <param name="count">The count in <typeparamref name="T"/> units</param>
+            <returns>A Span to the reserved memory.</returns>
+            <remarks>
+            The allocated memory is uninitialized.
+            </remarks>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.GetHeaderEncodedBytes(System.String,System.Int32@)">
+            <summary>
+            Get pointer to bytes for the supplied string in UTF-8.
+            </summary>
+            <param name="myString">The string</param>
+            <param name="length">The length of the returned byte buffer.</param>
+            <returns>A pointer to the buffer of bytes</returns>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,291 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Server.Kestrel.Transport.Quic</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.Internal.QuicConnectionListener">
+            <summary>
+            Listens for new Quic Connections.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportFactory">
+            <summary>
+            A factory for QUIC based connections.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportFactory.BindAsync(System.Net.EndPoint,Microsoft.AspNetCore.Http.Features.IFeatureCollection,System.Threading.CancellationToken)">
+            <summary>
+            Binds an endpoint to be used for QUIC connections.
+            </summary>
+            <param name="endpoint">The endpoint to bind to.</param>
+            <param name="features">Additional features to be used to create the listener.</param>
+            <param name="cancellationToken">To cancel the </param>
+            <returns>A </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportOptions">
+            <summary>
+            Options for Quic based connections.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportOptions.MaxBidirectionalStreamCount">
+            <summary>
+            The maximum number of concurrent bi-directional streams per connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportOptions.MaxUnidirectionalStreamCount">
+            <summary>
+            The maximum number of concurrent inbound uni-directional streams per connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportOptions.MaxReadBufferSize">
+            <summary>
+            The maximum read size.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportOptions.MaxWriteBufferSize">
+            <summary>
+            The maximum write size.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportOptions.Backlog">
+            <summary>
+            The maximum length of the pending connection queue.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportOptions.DefaultStreamErrorCode">
+            <summary>
+            Error code used when the stream needs to abort the read or write side of the stream internally.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportOptions.DefaultCloseErrorCode">
+            <summary>
+            Error code used when an open connection is disposed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.StringUtilities.ConcatAsHexSuffix(System.String,System.Char,System.UInt32)">
+            <summary>
+            A faster version of String.Concat(<paramref name="str"/>, <paramref name="separator"/>, <paramref name="number"/>.ToString("X8"))
+            </summary>
+            <param name="str"></param>
+            <param name="separator"></param>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.WebHostBuilderQuicExtensions">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder" /> extension methods to configure the Quic transport to be used by Kestrel.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderQuicExtensions.UseQuic(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Specify Quic as the transport to be used by Kestrel.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderQuicExtensions.UseQuic(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.QuicTransportOptions})">
+            <summary>
+            Specify Quic as the transport to be used by Kestrel.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <param name="configureOptions">A callback to configure transport options.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="T:System.Buffers.DiagnosticMemoryPool">
+            <summary>
+            Used to allocate and distribute re-usable blocks of memory.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.DiagnosticMemoryPool.AnySize">
+            <summary>
+            This default value passed in to Rent to use the default value for the pool.
+            </summary>
+        </member>
+        <member name="T:System.Buffers.DiagnosticPoolBlock">
+            <summary>
+            Block tracking object used by the byte buffer memory pool. A slab is a large allocation which is divided into smaller blocks. The
+            individual blocks are then treated as independent array segments.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.DiagnosticPoolBlock._pool">
+            <summary>
+            Back-reference to the memory pool which this block was allocated from. It may only be returned to this pool.
+            </summary>
+        </member>
+        <member name="M:System.Buffers.DiagnosticPoolBlock.#ctor(System.Buffers.DiagnosticMemoryPool,System.Buffers.IMemoryOwner{System.Byte})">
+            <summary>
+            This object cannot be instantiated outside of the static Create method
+            </summary>
+        </member>
+        <member name="T:System.Buffers.MemoryPoolBlock">
+            <summary>
+            Wraps an array allocated in the pinned object heap in a reusable block of managed memory
+            </summary>
+        </member>
+        <member name="P:System.Buffers.MemoryPoolBlock.Pool">
+            <summary>
+            Back-reference to the memory pool which this block was allocated from. It may only be returned to this pool.
+            </summary>
+        </member>
+        <member name="T:System.Buffers.PinnedBlockMemoryPool">
+            <summary>
+            Used to allocate and distribute re-usable blocks of memory.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool._blockSize">
+            <summary>
+            The size of a block. 4096 is chosen because most operating systems use 4k pages.
+            </summary>
+        </member>
+        <member name="P:System.Buffers.PinnedBlockMemoryPool.MaxBufferSize">
+            <summary>
+            Max allocation block size for pooled blocks,
+            larger values can be leased but they will be disposed after use rather than returned to the pool.
+            </summary>
+        </member>
+        <member name="P:System.Buffers.PinnedBlockMemoryPool.BlockSize">
+            <summary>
+            The size of a block. 4096 is chosen because most operating systems use 4k pages.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool._blocks">
+            <summary>
+            Thread-safe collection of blocks which are currently in the pool. A slab will pre-allocate all of the block tracking objects
+            and add them to this collection. When memory is requested it is taken from here first, and when it is returned it is re-added.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool._isDisposed">
+            <summary>
+            This is part of implementing the IDisposable pattern.
+            </summary>
+        </member>
+        <member name="F:System.Buffers.PinnedBlockMemoryPool.AnySize">
+            <summary>
+            This default value passed in to Rent to use the default value for the pool.
+            </summary>
+        </member>
+        <member name="M:System.Buffers.PinnedBlockMemoryPool.Return(System.Buffers.MemoryPoolBlock)">
+            <summary>
+            Called to return a block to the pool. Once Return has been called the memory no longer belongs to the caller, and
+            Very Bad Things will happen if the memory is read of modified subsequently. If a caller fails to call Return and the
+            block tracking object is garbage collected, the block tracking object's finalizer will automatically re-create and return
+            a new tracking object into the pool. This will only happen if there is a bug in the server, however it is necessary to avoid
+            leaving "dead zones" in the slab due to lost block tracking objects.
+            </summary>
+            <param name="block">The block to return. It must have been acquired by calling Lease on the same memory pool instance.</param>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm">
+            <summary>
+            Provides support for efficiently using Tasks to implement the APM (Begin/End) pattern.
+            </summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.Begin(System.Threading.Tasks.Task,System.AsyncCallback,System.Object)">
+            <summary>
+            Marshals the Task as an IAsyncResult, using the supplied callback and state
+            to implement the APM pattern.
+            </summary>
+            <param name="task">The Task to be marshaled.</param>
+            <param name="callback">The callback to be invoked upon completion.</param>
+            <param name="state">The state to be stored in the IAsyncResult.</param>
+            <returns>An IAsyncResult to represent the task's asynchronous operation.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End``1(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm.TaskAsyncResult">
+            <summary>Provides a simple IAsyncResult that wraps a Task.</summary>
+            <remarks>
+            We could use the Task as the IAsyncResult if the Task's AsyncState is the same as the object state,
+            but that's very rare, in particular in a situation where someone cares about allocation, and always
+            using TaskAsyncResult simplifies things and enables additional optimizations.
+            </remarks>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task">
+            <summary>The wrapped Task.</summary>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._callback">
+            <summary>Callback to invoke when the wrapped task completes.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.#ctor(System.Threading.Tasks.Task,System.Object,System.AsyncCallback)">
+            <summary>Initializes the IAsyncResult with the Task to wrap and the associated object state.</summary>
+            <param name="task">The Task to wrap.</param>
+            <param name="state">The new AsyncState value.</param>
+            <param name="callback">Callback to invoke when the wrapped task completes.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.InvokeCallback">
+            <summary>Invokes the callback.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncState">
+            <summary>Gets a user-defined object that qualifies or contains information about an asynchronous operation.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.CompletedSynchronously">
+            <summary>Gets a value that indicates whether the asynchronous operation completed synchronously.</summary>
+            <remarks>This is set lazily based on whether the <see cref="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task"/> has completed by the time this object is created.</remarks>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.IsCompleted">
+            <summary>Gets a value that indicates whether the asynchronous operation has completed.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncWaitHandle">
+            <summary>Gets a <see cref="T:System.Threading.WaitHandle"/> that is used to wait for an asynchronous operation to complete.</summary>
+        </member>
+        <member name="T:UnmanagedBufferAllocator">
+            <summary>
+            Allocator that manages blocks of unmanaged memory.
+            </summary>
+        </member>
+        <member name="P:UnmanagedBufferAllocator.DefaultBlockSize">
+            <summary>
+            The default block size for the allocator.
+            </summary>
+            <remarks>
+            This size assumes a common page size and provides an accommodation
+            for the pointer chain used to track allocated blocks.
+            </remarks>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.#ctor(System.Int32)">
+            <summary>
+            Instantiate an <see cref="T:UnmanagedBufferAllocator"/> instance.
+            </summary>
+            <param name="blockSize">The unmanaged memory block size in bytes.</param>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.AllocAsPointer``1(System.Int32)">
+            <summary>
+            Allocate the requested amount of space from the allocator.
+            </summary>
+            <typeparam name="T">The type requested</typeparam>
+            <param name="count">The count in <typeparamref name="T"/> units</param>
+            <returns>A pointer to the reserved memory.</returns>
+            <remarks>
+            The allocated memory is uninitialized.
+            </remarks>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.AllocAsSpan``1(System.Int32)">
+            <summary>
+            Allocate the requested amount of space from the allocator.
+            </summary>
+            <typeparam name="T">The type requested</typeparam>
+            <param name="count">The count in <typeparamref name="T"/> units</param>
+            <returns>A Span to the reserved memory.</returns>
+            <remarks>
+            The allocated memory is uninitialized.
+            </remarks>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.GetHeaderEncodedBytes(System.String,System.Int32@)">
+            <summary>
+            Get pointer to bytes for the supplied string in UTF-8.
+            </summary>
+            <param name="myString">The string</param>
+            <param name="length">The length of the returned byte buffer.</param>
+            <returns>A pointer to the buffer of bytes</returns>
+        </member>
+        <member name="M:UnmanagedBufferAllocator.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

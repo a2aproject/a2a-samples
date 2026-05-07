@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Features</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Http.Features.FeatureCollection">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureCollection.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.FeatureCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureCollection.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.FeatureCollection"/> with the specified initial capacity.
+            </summary>
+            <param name="initialCapacity">The initial number of elements that the collection can contain.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="initialCapacity"/> is less than 0</exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureCollection.#ctor(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.FeatureCollection"/> with the specified defaults.
+            </summary>
+            <param name="defaults">The feature defaults.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FeatureCollection.Revision">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FeatureCollection.IsReadOnly">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FeatureCollection.Item(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureCollection.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureCollection.Get``1">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureCollection.Set``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.FeatureCollectionExtensions">
+            <summary>
+            Extension methods for getting feature from <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureCollectionExtensions.GetRequiredFeature``1(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Retrives the requested feature from the collection.
+            Throws an <see cref="T:System.InvalidOperationException"/> if the feature is not present.
+            </summary>
+            <param name="featureCollection">The <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/>.</param>
+            <typeparam name="TFeature">The feature key.</typeparam>
+            <returns>The requested feature.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureCollectionExtensions.GetRequiredFeature(Microsoft.AspNetCore.Http.Features.IFeatureCollection,System.Type)">
+            <summary>
+            Retrives the requested feature from the collection.
+            Throws an <see cref="T:System.InvalidOperationException"/> if the feature is not present.
+            </summary>
+            <param name="featureCollection">feature collection</param>
+            <param name="key">The feature key.</param>
+            <returns>The requested feature.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.FeatureReference`1">
+            <summary>
+            A cached reference to a feature.
+            </summary>
+            <typeparam name="T">The feature type.</typeparam>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.FeatureReference`1.Default">
+            <summary>
+            Gets the default <see cref="T:Microsoft.AspNetCore.Http.Features.FeatureReference`1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureReference`1.Fetch(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Gets the feature of type <typeparamref name="T"/> from <paramref name="features"/>.
+            </summary>
+            <param name="features">The <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/>.</param>
+            <returns>The feature.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureReference`1.Update(Microsoft.AspNetCore.Http.Features.IFeatureCollection,`0)">
+            <summary>
+            Updates the reference to the feature.
+            </summary>
+            <param name="features">The <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> to update.</param>
+            <param name="feature">The instance of the feature.</param>
+            <returns>A reference to <paramref name="feature"/> after the operation has completed.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.FeatureReferences`1">
+            <summary>
+            A reference to a collection of features.
+            </summary>
+            <typeparam name="TCache">The type of the feature.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureReferences`1.#ctor(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.FeatureReferences`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureReferences`1.Initalize(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Initializes the <see cref="T:Microsoft.AspNetCore.Http.Features.FeatureReferences`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> to initialize with.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureReferences`1.Initalize(Microsoft.AspNetCore.Http.Features.IFeatureCollection,System.Int32)">
+            <summary>
+            Initializes the <see cref="T:Microsoft.AspNetCore.Http.Features.FeatureReferences`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> to initialize with.</param>
+            <param name="revision">The version of the <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FeatureReferences`1.Collection">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FeatureReferences`1.Revision">
+            <summary>
+            Gets the revision number.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.FeatureReferences`1.Cache">
+            <summary>
+            This API is part of ASP.NET Core's infrastructure and should not be referenced by application code.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureReferences`1.Fetch``2(``0@,``1,System.Func{``1,``0})">
+            <summary>
+            This API is part of ASP.NET Core's infrastructure and should not be referenced by application code.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FeatureReferences`1.Fetch``1(``0@,System.Func{Microsoft.AspNetCore.Http.Features.IFeatureCollection,``0})">
+            <summary>
+            This API is part of ASP.NET Core's infrastructure and should not be referenced by application code.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection">
+            <summary>
+            Represents a collection of HTTP features.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IFeatureCollection.IsReadOnly">
+            <summary>
+            Indicates if the collection can be modified.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IFeatureCollection.Revision">
+            <summary>
+            Incremented for each modification and can be used to verify cached results.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IFeatureCollection.Item(System.Type)">
+            <summary>
+            Gets or sets a given feature. Setting a null value removes the feature.
+            </summary>
+            <param name="key"></param>
+            <returns>The requested feature, or null if it is not present.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IFeatureCollection.Get``1">
+            <summary>
+            Retrieves the requested feature from the collection.
+            </summary>
+            <typeparam name="TFeature">The feature key.</typeparam>
+            <returns>The requested feature, or null if it is not present.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.IFeatureCollection.Set``1(``0)">
+            <summary>
+            Sets the given feature in the collection.
+            </summary>
+            <typeparam name="TFeature">The feature key.</typeparam>
+            <param name="instance">The feature value.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
+            <param name="value">The argument to validate as non-zero.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int64,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegativeOrZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
+            <param name="value">The argument to validate as non-zero or non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,1112 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Diagnostics</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Builder.DeveloperExceptionPageExtensions">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> extension methods for the <see cref="T:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DeveloperExceptionPageExtensions.UseDeveloperExceptionPage(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Captures synchronous and asynchronous <see cref="T:System.Exception"/> instances from the pipeline and generates HTML error responses.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <returns>A reference to the <paramref name="app"/> after the operation has completed.</returns>
+            <remarks>
+            This should only be enabled in the Development environment.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DeveloperExceptionPageExtensions.UseDeveloperExceptionPage(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.DeveloperExceptionPageOptions)">
+            <summary>
+            Captures synchronous and asynchronous <see cref="T:System.Exception"/> instances from the pipeline and generates HTML error responses.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <param name="options">A <see cref="T:Microsoft.AspNetCore.Builder.DeveloperExceptionPageOptions"/> that specifies options for the middleware.</param>
+            <returns>A reference to the <paramref name="app"/> after the operation has completed.</returns>
+            <remarks>
+            This should only be enabled in the Development environment.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.DeveloperExceptionPageOptions">
+            <summary>
+            Options for the <see cref="T:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DeveloperExceptionPageOptions.#ctor">
+            <summary>
+            Create an instance with the default options settings.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.DeveloperExceptionPageOptions.SourceCodeLineCount">
+            <summary>
+            Determines how many lines of code to include before and after the line of code
+            present in an exception's stack frame. Only applies when symbols are available and
+            source code referenced by the exception stack trace is present on the server.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.DeveloperExceptionPageOptions.FileProvider">
+            <summary>
+            Provides files containing source code used to display contextual information of an exception.
+            </summary>
+            <remarks>
+            If <c>null</c> <see cref="T:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware" /> will use a <see cref="T:Microsoft.Extensions.FileProviders.PhysicalFileProvider"/>.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions">
+            <summary>
+            Extension methods for enabling <see cref="T:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds a middleware to the pipeline that will catch exceptions, log them, and re-execute the request in an alternate pipeline.
+            The request will not be re-executed if the response has already started.
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+            Adds a middleware to the pipeline that will catch exceptions, log them, reset the request path, and re-execute the request.
+            The request will not be re-executed if the response has already started.
+            </summary>
+            <param name="app"></param>
+            <param name="errorHandlingPath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.Boolean)">
+            <summary>
+            Adds a middleware to the pipeline that will catch exceptions, log them, reset the request path, and re-execute the request.
+            The request will not be re-executed if the response has already started.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <param name="errorHandlingPath">The <see cref="T:System.String"/> path to the endpoint that will handle the exception.</param>
+            <param name="createScopeForErrors">Whether or not to create a new <see cref="T:System.IServiceProvider"/> scope.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})">
+            <summary>
+            Adds a middleware to the pipeline that will catch exceptions, log them, and re-execute the request in an alternate pipeline.
+            The request will not be re-executed if the response has already started.
+            </summary>
+            <param name="app"></param>
+            <param name="configure"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.ExceptionHandlerOptions)">
+            <summary>
+            Adds a middleware to the pipeline that will catch exceptions, log them, and re-execute the request in an alternate pipeline.
+            The request will not be re-executed if the response has already started.
+            </summary>
+            <param name="app"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ExceptionHandlerOptions">
+            <summary>
+            Options for configuring the <see cref="T:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ExceptionHandlerOptions.ExceptionHandlingPath">
+            <summary>
+            The path to the exception handling endpoint. This path will be used when executing
+            the <see cref="P:Microsoft.AspNetCore.Builder.ExceptionHandlerOptions.ExceptionHandler"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ExceptionHandlerOptions.CreateScopeForErrors">
+            <summary>
+            Gets or sets whether the handler needs to create a separate <see cref="T:System.IServiceProvider"/> scope and
+            replace it on <see cref="P:Microsoft.AspNetCore.Http.HttpContext.RequestServices"/> when re-executing the request to handle an error.
+            </summary>
+            <remarks>The default value is <see langword="false"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ExceptionHandlerOptions.ExceptionHandler">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate" /> that will handle the exception. If this is not
+            explicitly provided, the subsequent middleware pipeline will be used by default.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ExceptionHandlerOptions.AllowStatusCode404Response">
+            <summary>
+            This value controls whether the <see cref="T:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware" /> should
+            consider a response with a 404 status code to be a valid result of executing the
+            <see cref="P:Microsoft.AspNetCore.Builder.ExceptionHandlerOptions.ExceptionHandler"/>. The default value is false and the middleware will
+            consider 404 status codes to be an error on the server and will therefore rethrow
+            the original exception.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.StatusCodePagesExtensions">
+            <summary>
+            Extension methods for enabling <see cref="T:Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StatusCodePagesExtensions.UseStatusCodePages(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.StatusCodePagesOptions)">
+            <summary>
+            Adds a StatusCodePages middleware with the given options that checks for responses with status codes
+            between 400 and 599 that do not have a body.
+            </summary>
+            <param name="app"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StatusCodePagesExtensions.UseStatusCodePages(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds a StatusCodePages middleware with a default response handler that checks for responses with status codes
+            between 400 and 599 that do not have a body.
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StatusCodePagesExtensions.UseStatusCodePages(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Func{Microsoft.AspNetCore.Diagnostics.StatusCodeContext,System.Threading.Tasks.Task})">
+            <summary>
+            Adds a StatusCodePages middleware with the specified handler that checks for responses with status codes
+            between 400 and 599 that do not have a body.
+            </summary>
+            <param name="app"></param>
+            <param name="handler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StatusCodePagesExtensions.UseStatusCodePages(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.String)">
+            <summary>
+            Adds a StatusCodePages middleware with the specified response body to send. This may include a '{0}' placeholder for the status code.
+            The middleware checks for responses with status codes between 400 and 599 that do not have a body.
+            </summary>
+            <param name="app"></param>
+            <param name="contentType"></param>
+            <param name="bodyFormat"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StatusCodePagesExtensions.UseStatusCodePagesWithRedirects(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+            Adds a StatusCodePages middleware to the pipeline. Specifies that responses should be handled by redirecting
+            with the given location URL template. This may include a '{0}' placeholder for the status code. URLs starting
+            with '~' will have PathBase prepended, where any other URL will be used as is.
+            </summary>
+            <param name="app"></param>
+            <param name="locationFormat"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StatusCodePagesExtensions.UseStatusCodePages(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})">
+            <summary>
+            Adds a StatusCodePages middleware to the pipeline with the specified alternate middleware pipeline to execute
+            to generate the response body.
+            </summary>
+            <param name="app"></param>
+            <param name="configuration"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StatusCodePagesExtensions.UseStatusCodePagesWithReExecute(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.String)">
+            <summary>
+            Adds a StatusCodePages middleware to the pipeline. Specifies that the response body should be generated by
+            re-executing the request pipeline using an alternate path. This path may contain a '{0}' placeholder of the status code.
+            </summary>
+            <param name="app"></param>
+            <param name="pathFormat"></param>
+            <param name="queryFormat"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.StatusCodePagesOptions">
+            <summary>
+            Options for <see cref="T:Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StatusCodePagesOptions.#ctor">
+            <summary>
+            Creates a default <see cref="T:Microsoft.AspNetCore.Builder.StatusCodePagesOptions"/> which produces a plaintext response
+            containing the status code and the reason phrase.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.StatusCodePagesOptions.HandleAsync">
+            <summary>
+            The handler that generates the response body for the given <see cref="T:Microsoft.AspNetCore.Diagnostics.StatusCodeContext"/>. By default this produces a plain text response that includes the status code.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.WelcomePageExtensions">
+            <summary>
+            IApplicationBuilder extensions for the WelcomePageMiddleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WelcomePageExtensions.UseWelcomePage(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.WelcomePageOptions)">
+            <summary>
+            Adds the WelcomePageMiddleware to the pipeline with the given options.
+            </summary>
+            <param name="app"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WelcomePageExtensions.UseWelcomePage(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Http.PathString)">
+            <summary>
+            Adds the WelcomePageMiddleware to the pipeline with the given path.
+            </summary>
+            <param name="app"></param>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WelcomePageExtensions.UseWelcomePage(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+            Adds the WelcomePageMiddleware to the pipeline with the given path.
+            </summary>
+            <param name="app"></param>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WelcomePageExtensions.UseWelcomePage(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds the WelcomePageMiddleware to the pipeline.
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.WelcomePageOptions">
+            <summary>
+            Options for the WelcomePageMiddleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WelcomePageOptions.Path">
+            <summary>
+            Specifies which requests paths will be responded to. Exact matches only. Leave null to handle all requests.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware">
+            <summary>
+            Captures synchronous and asynchronous exceptions from the pipeline and generates error responses.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.DeveloperExceptionPageOptions},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,System.Diagnostics.DiagnosticSource,System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Diagnostics.IDeveloperPageExceptionFilter})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware"/> class
+            </summary>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.</param>
+            <param name="options">The options for configuring the middleware.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> used for logging.</param>
+            <param name="hostingEnvironment"></param>
+            <param name="diagnosticSource">The <see cref="T:System.Diagnostics.DiagnosticSource"/> used for writing diagnostic messages.</param>
+            <param name="filters">The list of registered <see cref="T:Microsoft.AspNetCore.Diagnostics.IDeveloperPageExceptionFilter"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Process an individual request.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl">
+            <summary>
+            Captures synchronous and asynchronous exceptions from the pipeline and generates error responses.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Process an individual request.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.ExceptionExtensionData">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.IHeaderDictionary">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.RouteValueDictionary">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.StringValues">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.Object">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.ExtensionsExceptionJsonContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.RazorViews.CompilationErrorPageModel">
+            <summary>
+            Holds data to be displayed on the compilation error page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.CompilationErrorPageModel.Options">
+            <summary>
+            Options for what output to display.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.CompilationErrorPageModel.ErrorDetails">
+            <summary>
+            Detailed information about each parse or compilation error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.CompilationErrorPageModel.CompiledContent">
+            <summary>
+            Gets the generated content that produced the corresponding <see cref="P:Microsoft.AspNetCore.Diagnostics.RazorViews.CompilationErrorPageModel.ErrorDetails"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.RazorViews.ErrorPageModel">
+            <summary>
+            Holds data to be displayed on the error page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.ErrorPageModel.Options">
+            <summary>
+            Options for what output to display.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.ErrorPageModel.ErrorDetails">
+            <summary>
+            Detailed information about each exception in the stack.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.ErrorPageModel.Query">
+            <summary>
+            Parsed query data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.ErrorPageModel.Cookies">
+            <summary>
+            Request cookies.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.ErrorPageModel.Headers">
+            <summary>
+            Request headers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.ErrorPageModel.RouteValues">
+            <summary>
+            Request route values.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.ErrorPageModel.Endpoint">
+            <summary>
+            Request endpoint.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.RazorViews.ErrorPageModel.Title">
+            <summary>
+            The text be inside the HTML title element.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerFeature">
+            <summary>
+            A feature containing the path and error of the original request for examination by an exception handler.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerFeature.Error">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerFeature.Path">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerFeature.Endpoint">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerFeature.RouteValues">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware">
+            <summary>
+            A middleware for handling exceptions in the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.ExceptionHandlerOptions},System.Diagnostics.DiagnosticListener)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware"/>
+            </summary>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> used for logging.</param>
+            <param name="options">The options for configuring the middleware.</param>
+            <param name="diagnosticListener">The <see cref="T:System.Diagnostics.DiagnosticListener"/> used for writing diagnostic messages.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Executes the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> for the current request.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl">
+            <summary>
+            A middleware for handling exceptions in the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Executes the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> for the current request.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.IExceptionHandler">
+            <summary>
+            Represents an interface for handling exceptions in ASP.NET Core applications.
+            `IExceptionHandler` implementations are used by the exception handler middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.IExceptionHandler.TryHandleAsync(Microsoft.AspNetCore.Http.HttpContext,System.Exception,System.Threading.CancellationToken)">
+            <summary>
+            Tries to handle the specified exception asynchronously within the ASP.NET Core pipeline.
+            Implementations of this method can provide custom exception-handling logic for different scenarios. 
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> for the request.</param>
+            <param name="exception">The unhandled exception.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>
+            A task that represents the asynchronous read operation. The value of its <see cref="P:System.Threading.Tasks.ValueTask`1.Result" />
+            property contains the result of the handling operation.
+            <see langword="true"/> if the exception was handled successfully; otherwise <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.StatusCodeContext">
+            <summary>
+            Contains information used by the handler of the <see cref="T:Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.StatusCodeContext.#ctor(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Builder.StatusCodePagesOptions,Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Diagnostics.StatusCodeContext"/>.
+            </summary>
+            <param name="context">The <see cref="P:Microsoft.AspNetCore.Diagnostics.StatusCodeContext.HttpContext"/>.</param>
+            <param name="options">The configured <see cref="T:Microsoft.AspNetCore.Builder.StatusCodePagesOptions"/>.</param>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodeContext.HttpContext">
+            <summary>
+            Gets the <see cref="P:Microsoft.AspNetCore.Diagnostics.StatusCodeContext.HttpContext"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodeContext.Options">
+            <summary>
+            Gets the configured <see cref="T:Microsoft.AspNetCore.Builder.StatusCodePagesOptions"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodeContext.Next">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.StatusCodePagesFeature">
+            <summary>
+            Represents the Status code pages feature.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodePagesFeature.Enabled">
+            <summary>
+            Enables or disables status code pages. The default value is true.
+            Set this to false to prevent the <see cref="T:Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware"/>
+            from creating a response body while handling the error status code.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware">
+            <summary>
+            A middleware for generating the response body of error status codes with no body.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.StatusCodePagesOptions})">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware"/>
+            </summary>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.</param>
+            <param name="options">The options for configuring the middleware.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Executes the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> for the current request.</param>
+            <returns>A task that represents the execution of this middleware.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.StatusCodeReExecuteFeature">
+            <summary>Default implementation for <see cref="T:Microsoft.AspNetCore.Diagnostics.IStatusCodeReExecuteFeature" />.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodeReExecuteFeature.OriginalPath">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodeReExecuteFeature.OriginalPathBase">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodeReExecuteFeature.OriginalQueryString">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodeReExecuteFeature.OriginalStatusCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodeReExecuteFeature.Endpoint">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.StatusCodeReExecuteFeature.RouteValues">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.WelcomePageMiddleware">
+            <summary>
+            This middleware provides a default web page for new applications.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.WelcomePageMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.WelcomePageOptions})">
+            <summary>
+            Creates a default web page for new applications.
+            </summary>
+            <param name="next"></param>
+            <param name="options"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.WelcomePageMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Process an individual request.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.DiagnosticsPageHtml_Information">
+            <summary>You are seeing this page because DiagnosticsPageMiddleware was added to your web application.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.DiagnosticsPageHtml_TestErrorMessage">
+            <summary>Test Error Message</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.DiagnosticsPageHtml_TestErrorSection">
+            <summary>Test Error Page</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.DiagnosticsPageHtml_Title">
+            <summary>Diagnostics Page</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_CookiesButton">
+            <summary>Cookies</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_HeadersButton">
+            <summary>Headers</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_NoCookieData">
+            <summary>No cookie data.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_NoHeaderData">
+            <summary>No header data.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_NoQueryStringData">
+            <summary>No query string data.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_QueryButton">
+            <summary>Query</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_StackButton">
+            <summary>Stack</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_Title">
+            <summary>Internal Server Error</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_UnhandledException">
+            <summary>An unhandled exception occurred while processing the request.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_UnknownLocation">
+            <summary>Unknown location</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_ValueColumn">
+            <summary>Value</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_VariableColumn">
+            <summary>Variable</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.Exception_PathMustStartWithSlash">
+            <summary>The path must start with a '/'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_PackageNameColumnName">
+            <summary>Name</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_PackagePathColumnName">
+            <summary>Path</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_Packages">
+            <summary>Packages:</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_PackagesFail">
+            <summary>Could not retrieve the list of loaded packages.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_PackageVersionColumnName">
+            <summary>Version</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_RuntimeVersion">
+            <summary>Runtime Version:</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_RuntimeVersionFail">
+            <summary>Could not determine the runtime version.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_Title">
+            <summary>Runtime Information</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.WelcomeHeader">
+            <summary>Welcome</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.WelcomeLearnMicrosoftAspNet">
+            <summary>Learn more about the Microsoft ASP.NET Core components</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.WelcomePageImageText_Browser">
+            <summary>Browser</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.WelcomePageImageText_LearnMore">
+            <summary>Learn More</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.WelcomePageImageText_LightBulb">
+            <summary>Light Bulb</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.WelcomePageImageText_Skyline">
+            <summary>Skyline</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.WelcomeStarted">
+            <summary>Your ASP.NET Core application has been successfully started</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.WelcomeTitle">
+            <summary>Your ASP.NET Core application has been successfully started.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_CompilationException">
+            <summary>An error occurred during the compilation of a resource required to process this request. Please review the following specific error details and modify your source code appropriately.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_OperatingSystem">
+            <summary>Operating System:</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_RuntimeArchitecture">
+            <summary>Runtime Architecture:</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_RuntimeType">
+            <summary>Runtime Type:</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_OperatingSystemFail">
+            <summary>Could not determine the operating system.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_RuntimeArchitectureFail">
+            <summary>Could not determine the runtime architecture.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_RuntimeTypeFail">
+            <summary>Could not determine the runtime type.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.RuntimeInfoPage_Environment">
+            <summary>Environment:</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ExceptionHandlerOptions_NotConfiguredCorrectly">
+            <summary>An error occurred when configuring the exception handler middleware. Either the 'ExceptionHandlingPath' or the 'ExceptionHandler' property must be set in 'UseExceptionHandler()'. Alternatively, set one of the aforementioned properties in 'Startup.Configure ...</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_NoRouteValues">
+            <summary>No route values.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_RoutingButton">
+            <summary>Routing</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_Endpoint">
+            <summary>Endpoint</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_EndpointDisplayName">
+            <summary>Display Name</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_EndpointRouteOrder">
+            <summary>Route Order</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_EndpointRouteHttpMethod">
+            <summary>Route HTTP Method</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_EndpointRoutePattern">
+            <summary>Route Pattern</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_NoEndpoint">
+            <summary>No endpoint.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_RouteValues">
+            <summary>Route Values</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.Resources.ErrorPageHtml_NameColumn">
+            <summary>Name</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Analyzers.Infrastructure.AnalyzerDebug.Assert(System.Boolean)">
+            <inheritdoc cref="M:System.Diagnostics.Debug.Assert(System.Boolean)"/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Analyzers.Infrastructure.AnalyzerDebug.Assert(System.Boolean,System.String)">
+            <inheritdoc cref="M:System.Diagnostics.Debug.Assert(System.Boolean,System.String)"/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.Context">
+            <summary>
+            The request context
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.Request">
+            <summary>
+            The request
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.Response">
+            <summary>
+            The response
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.Output">
+            <summary>
+            The output stream
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.HtmlEncoder">
+            <summary>
+            Html encoder used to encode content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.UrlEncoder">
+            <summary>
+            Url encoder used to encode content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.JavaScriptEncoder">
+            <summary>
+            JavaScript encoder used to encode content.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.ExecuteAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Execute an individual request
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.ExecuteAsync">
+            <summary>
+            Execute an individual request
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.WriteLiteral(System.String)">
+            <summary>
+            Write the given value directly to the output
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.WriteLiteral(System.Object)">
+            <summary>
+            Write the given value directly to the output
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.WriteAttributeTo(System.IO.TextWriter,System.String,System.String,System.String,Microsoft.AspNetCore.DiagnosticsViewPage.Views.AttributeValue[])">
+            <summary>
+            Writes the given attribute to the given writer
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+            <param name="name">The name of the attribute to write</param>
+            <param name="leader">The value of the prefix</param>
+            <param name="trailer">The value of the suffix</param>
+            <param name="values">The <see cref="T:Microsoft.AspNetCore.DiagnosticsViewPage.Views.AttributeValue"/>s to write.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.Write(System.Object)">
+            <summary>
+            Convert to string and html encode
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.Write(System.String)">
+            <summary>
+            Html encode and write
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.Write(Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult)">
+            <summary>
+            <see cref="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult.WriteTo(System.IO.TextWriter)"/> is invoked
+            </summary>
+            <param name="result">The <see cref="T:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult"/> to invoke</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.WriteTo(System.IO.TextWriter,System.Object)">
+            <summary>
+            Writes the specified <paramref name="value"/> to <paramref name="writer"/>.
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+            <remarks>
+            <see cref="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult.WriteTo(System.IO.TextWriter)"/> is invoked for <see cref="T:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult"/> types.
+            For all other types, the encoded result of <see cref="M:System.Object.ToString"/> is written to the
+            <paramref name="writer"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.WriteTo(System.IO.TextWriter,System.String)">
+            <summary>
+            Writes the specified <paramref name="value"/> with HTML encoding to <paramref name="writer"/>.
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.WriteLiteralTo(System.IO.TextWriter,System.Object)">
+            <summary>
+            Writes the specified <paramref name="value"/> without HTML encoding to the <paramref name="writer"/>.
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.WriteLiteralTo(System.IO.TextWriter,System.String)">
+            <summary>
+            Writes the specified <paramref name="value"/> without HTML encoding to <see cref="P:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView.Output"/>.
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult">
+            <summary>
+            Represents a deferred write operation in a <see cref="T:Microsoft.AspNetCore.DiagnosticsViewPage.Views.BaseView"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult.#ctor(System.Action{System.IO.TextWriter})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult"/>.
+            </summary>
+            <param name="action">The delegate to invoke when <see cref="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult.WriteTo(System.IO.TextWriter)"/> is called.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult.WriteTo(System.IO.TextWriter)">
+            <summary>
+            Method invoked to produce content from the <see cref="T:Microsoft.AspNetCore.DiagnosticsViewPage.Views.HelperResult"/>.
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ExceptionHandlerServiceCollectionExtensions">
+            <summary>
+            Extension methods for the exception handler middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ExceptionHandlerServiceCollectionExtensions.AddExceptionHandler(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Builder.ExceptionHandlerOptions})">
+            <summary>
+            Adds services and options for the exception handler middleware.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configureOptions">A delegate to configure the <see cref="T:Microsoft.AspNetCore.Builder.ExceptionHandlerOptions"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ExceptionHandlerServiceCollectionExtensions.AddExceptionHandler``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Builder.ExceptionHandlerOptions,``0})">
+            <summary>
+            Adds services and options for the exception handler middleware.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configureOptions">A delegate to configure the <see cref="T:Microsoft.AspNetCore.Builder.ExceptionHandlerOptions"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ExceptionHandlerServiceCollectionExtensions.AddExceptionHandler``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds an `IExceptionHandler` implementation to services. `IExceptionHandler` implementations are used by the exception handler middleware to handle unexpected request exceptions.
+            Multiple handlers can be added and they're called by the middleware in the order they're added.
+            </summary>
+            <typeparam name="T">The type of the exception handler implementation.</typeparam>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <returns>The modified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.RazorViews.BaseView">
+            <summary>
+            Infrastructure
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Context">
+            <summary>
+            The request context
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Request">
+            <summary>
+            The request
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Response">
+            <summary>
+            The response
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Output">
+            <summary>
+            The output stream
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.HtmlEncoder">
+            <summary>
+            Html encoder used to encode content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.UrlEncoder">
+            <summary>
+            Url encoder used to encode content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.JavaScriptEncoder">
+            <summary>
+            JavaScript encoder used to encode content.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync(System.IO.Stream)">
+            <summary>
+            Execute an individual request
+            </summary>
+            <param name="stream">The stream to write to</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Execute an individual request
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync">
+            <summary>
+            Execute an individual request
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.WriteLiteral(System.Object)">
+            <summary>
+            Write the given value without HTML encoding directly to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.WriteLiteral(System.String)">
+            <summary>
+            Write the given value without HTML encoding directly to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.WriteAttribute(System.String,System.String,System.String,Microsoft.Extensions.RazorViews.AttributeValue[])">
+            <summary>
+            Writes the given attribute to the given writer
+            </summary>
+            <param name="name">The name of the attribute to write</param>
+            <param name="leader">The value of the prefix</param>
+            <param name="trailer">The value of the suffix</param>
+            <param name="values">The <see cref="T:Microsoft.Extensions.RazorViews.AttributeValue"/>s to write.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.Write(Microsoft.Extensions.RazorViews.HelperResult)">
+            <summary>
+            <see cref="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)"/> is invoked
+            </summary>
+            <param name="result">The <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/> to invoke</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.Write(System.Object)">
+            <summary>
+            Writes the specified <paramref name="value"/> to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+            <remarks>
+            <see cref="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)"/> is invoked for <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/> types.
+            For all other types, the encoded result of <see cref="M:System.Object.ToString"/> is written to
+            <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.Write(System.String)">
+            <summary>
+            Writes the specified <paramref name="value"/> with HTML encoding to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.RazorViews.HelperResult">
+            <summary>
+            Represents a deferred write operation in a <see cref="T:Microsoft.Extensions.RazorViews.BaseView"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.HelperResult.#ctor(System.Action{System.IO.TextWriter})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/>.
+            </summary>
+            <param name="action">The delegate to invoke when <see cref="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)"/> is called.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)">
+            <summary>
+            Method invoked to produce content from the <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/>.
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails">
+            <summary>
+            Contains details for individual exception messages.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails.Error">
+            <summary>
+            An individual exception
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails.StackFrames">
+            <summary>
+            The generated stack frames
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails.ErrorMessage">
+            <summary>
+            Gets or sets the summary message.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo">
+            <summary>
+            Contains the source code where the exception occurred.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.Function">
+            <summary>
+            Function containing instruction
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.File">
+            <summary>
+            File containing the instruction
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.Line">
+            <summary>
+            The line number of the instruction
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.PreContextLine">
+            <summary>
+            The line preceding the frame line
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.PreContextCode">
+            <summary>
+            Lines of code before the actual error line(s).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.ContextCode">
+            <summary>
+            Line(s) of code responsible for the error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.PostContextCode">
+            <summary>
+            Lines of code after the actual error line(s).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.ErrorDetails">
+            <summary>
+            Specific error details for this stack frame.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.TypeNameHelper.GetTypeDisplayName(System.Type,System.Boolean,System.Boolean,System.Boolean,System.Char)">
+            <summary>
+            Pretty print a type name.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/>.</param>
+            <param name="fullName"><c>true</c> to print a fully qualified name.</param>
+            <param name="includeGenericParameterNames"><c>true</c> to include generic parameter names.</param>
+            <param name="includeGenericParameters"><c>true</c> to include generic parameters.</param>
+            <param name="nestedTypeDelimiter">Character to use as a delimiter in nested type names</param>
+            <returns>The pretty printed type name.</returns>
+        </member>
+    </members>
+</doc>

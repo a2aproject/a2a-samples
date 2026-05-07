@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Cryptography.Internal</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Cryptography.Cng.BCryptUtil">
+            <summary>
+            Wraps utility BCRYPT APIs that don't work directly with handles.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.Cng.BCryptUtil.GenRandom(System.Byte*,System.UInt32)">
+            <summary>
+            Fills a buffer with cryptographically secure random data.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.Cng.CachedAlgorithmHandles">
+            <summary>
+            Provides cached CNG algorithm provider instances, as calling BCryptOpenAlgorithmProvider is expensive.
+            Callers should use caution never to dispose of the algorithm provider instances returned by this type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptAlgorithmHandle">
+            <summary>
+            Represents a handle to a BCrypt algorithm provider from which keys and hashes can be created.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptAlgorithmHandle.CreateHash">
+            <summary>
+            Creates an unkeyed hash handle from this hash algorithm.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptAlgorithmHandle.CreateHmac(System.Byte*,System.UInt32)">
+            <summary>
+            Creates an HMAC hash handle from this hash algorithm.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptAlgorithmHandle.GenerateSymmetricKey(System.Byte*,System.UInt32)">
+            <summary>
+            Imports a key into a symmetric encryption or KDF algorithm.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptAlgorithmHandle.GetAlgorithmName">
+            <summary>
+            Gets the name of this BCrypt algorithm.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptAlgorithmHandle.GetCipherBlockLength">
+            <summary>
+            Gets the cipher block length (in bytes) of this block cipher algorithm.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptAlgorithmHandle.GetHashBlockLength">
+            <summary>
+            Gets the hash block length (in bytes) of this hash algorithm.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptAlgorithmHandle.GetSupportedKeyLengths">
+            <summary>
+            Gets the key lengths (in bits) supported by this algorithm.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptAlgorithmHandle.GetHashDigestLength">
+            <summary>
+            Gets the digest length (in bytes) of this hash algorithm provider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptHashHandle.DuplicateHash">
+            <summary>
+            Duplicates this hash handle, including any existing hashed state.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.BCryptHashHandle.HashData(System.Byte*,System.UInt32,System.Byte*,System.UInt32)">
+            <summary>
+            Calculates the cryptographic hash over a set of input data.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.SafeHandles.LocalAllocHandle">
+            <summary>
+            Represents a handle returned by LocalAlloc.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.SafeHandles.SafeLibraryHandle">
+            <summary>
+            Represents a handle to a Windows module (DLL).
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.SafeLibraryHandle.DoesProcExist(System.String)">
+            <summary>
+            Returns a value stating whether the library exports a given proc.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.SafeLibraryHandle.ForbidUnload">
+            <summary>
+            Forbids this library from being unloaded. The library will remain loaded until process termination,
+            regardless of how many times FreeLibrary is called.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.SafeLibraryHandle.FormatMessage(System.Int32)">
+            <summary>
+            Formats a message string using the resource table in the specified library.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.SafeLibraryHandle.GetProcAddress``1(System.String,System.Boolean)">
+            <summary>
+            Gets a delegate pointing to a given export from this library.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.SafeLibraryHandle.Open(System.String)">
+            <summary>
+            Opens a library. If 'filename' is not a fully-qualified path, the default search path is used.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.SafeHandles.SecureLocalAllocHandle">
+            <summary>
+            Represents a handle returned by LocalAlloc.
+            The memory will be zeroed out before it's freed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.SafeHandles.SecureLocalAllocHandle.Allocate(System.IntPtr)">
+            <summary>
+            Allocates some amount of memory using LocalAlloc.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.UnsafeBufferUtil.SecureZeroMemory(System.Byte*,System.Int32)">
+            <summary>
+            Securely clears a memory buffer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.UnsafeBufferUtil.SecureZeroMemory(System.Byte*,System.UInt32)">
+            <summary>
+            Securely clears a memory buffer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.UnsafeBufferUtil.SecureZeroMemory(System.Byte*,System.UInt64)">
+            <summary>
+            Securely clears a memory buffer.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.UnsafeBufferUtil.SecureZeroMemory(System.Byte*,System.IntPtr)">
+            <summary>
+            Securely clears a memory buffer.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Cryptography.Internal.Resources.BCryptAlgorithmHandle_ProviderNotFound">
+            <summary>A provider could not be found for algorithm '{0}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.Internal.Resources.FormatBCryptAlgorithmHandle_ProviderNotFound(System.Object)">
+            <summary>A provider could not be found for algorithm '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Cryptography.Internal.Resources.BCRYPT_KEY_LENGTHS_STRUCT_InvalidKeyLength">
+            <summary>The key length {0} is invalid. Valid key lengths are {1} to {2} bits (step size {3}).</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.Internal.Resources.FormatBCRYPT_KEY_LENGTHS_STRUCT_InvalidKeyLength(System.Object,System.Object,System.Object,System.Object)">
+            <summary>The key length {0} is invalid. Valid key lengths are {1} to {2} bits (step size {3}).</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Cryptography.Internal.Resources.Platform_Windows7Required">
+            <summary>This operation requires Windows 7 / Windows Server 2008 R2 or later.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Cryptography.Internal.Resources.Platform_Windows8Required">
+            <summary>This operation requires Windows 8 / Windows Server 2012 or later.</summary>
+        </member>
+    </members>
+</doc>

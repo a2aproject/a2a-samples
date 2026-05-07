@@ -1,0 +1,697 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.StaticFiles</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.DefaultFilesMiddleware">
+            <summary>
+            This examines a directory path and determines if there is a default file present.
+            If so the file name is appended to the path and execution continues.
+            Note we don't just serve the file because it may require interpretation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.DefaultFilesMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.DefaultFilesOptions})">
+            <summary>
+            Creates a new instance of the DefaultFilesMiddleware.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+            <param name="hostingEnv">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/> used by this middleware.</param>
+            <param name="options">The configuration options for this middleware.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.DefaultFilesMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            This examines the request to see if it matches a configured directory, and if there are any files with the
+            configured default names in that directory.  If so this will append the corresponding file name to the request
+            path for a later middleware to handle.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.DirectoryBrowserMiddleware">
+            <summary>
+            Enables directory browsing
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.DirectoryBrowserMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.DirectoryBrowserOptions})">
+            <summary>
+            Creates a new instance of the SendFileMiddleware. Using <see cref="P:System.Text.Encodings.Web.HtmlEncoder.Default"/> instance.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+            <param name="hostingEnv">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/> used by this middleware.</param>
+            <param name="options">The configuration for this middleware.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.DirectoryBrowserMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,System.Text.Encodings.Web.HtmlEncoder,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.DirectoryBrowserOptions})">
+            <summary>
+            Creates a new instance of the SendFileMiddleware.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+            <param name="hostingEnv">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/> used by this middleware.</param>
+            <param name="encoder">The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> used by the default <see cref="T:Microsoft.AspNetCore.StaticFiles.HtmlDirectoryFormatter"/>.</param>
+            <param name="options">The configuration for this middleware.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.DirectoryBrowserMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Examines the request to see if it matches a configured directory.  If so, a view of the directory contents is returned.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider">
+            <summary>
+            Provides a mapping between file extensions and MIME types.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider.#ctor">
+            <summary>
+            Creates a new provider with a set of default mappings.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider.#ctor(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Creates a lookup engine using the provided mapping.
+            It is recommended that the IDictionary instance use StringComparer.OrdinalIgnoreCase.
+            </summary>
+            <param name="mapping"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider.Mappings">
+            <summary>
+            The cross reference table of file extensions and content-types.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider.TryGetContentType(System.String,System.String@)">
+            <summary>
+            Given a file path, determine the MIME type
+            </summary>
+            <param name="subpath">A file path</param>
+            <param name="contentType">The resulting MIME type</param>
+            <returns>True if MIME type could be determined</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.HtmlDirectoryFormatter">
+            <summary>
+            Generates an HTML view for a directory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.HtmlDirectoryFormatter.#ctor(System.Text.Encodings.Web.HtmlEncoder)">
+            <summary>
+            Constructs the <see cref="T:Microsoft.AspNetCore.StaticFiles.HtmlDirectoryFormatter"/>.
+            </summary>
+            <param name="encoder">The character encoding representation to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.HtmlDirectoryFormatter.GenerateContentAsync(Microsoft.AspNetCore.Http.HttpContext,System.Collections.Generic.IEnumerable{Microsoft.Extensions.FileProviders.IFileInfo})">
+            <summary>
+            Generates an HTML view for a directory.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.IContentTypeProvider">
+            <summary>
+            Used to look up MIME types given a file path
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.IContentTypeProvider.TryGetContentType(System.String,System.String@)">
+            <summary>
+            Given a file path, determine the MIME type
+            </summary>
+            <param name="subpath">A file path</param>
+            <param name="contentType">The resulting MIME type</param>
+            <returns>True if MIME type could be determined</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.IDirectoryFormatter">
+            <summary>
+            Generates the view for a directory
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.IDirectoryFormatter.GenerateContentAsync(Microsoft.AspNetCore.Http.HttpContext,System.Collections.Generic.IEnumerable{Microsoft.Extensions.FileProviders.IFileInfo})">
+            <summary>
+            Generates the view for a directory.
+            Implementers should properly handle HEAD requests.
+            Implementers should set all necessary response headers (e.g. Content-Type, Content-Length, etc.).
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptions">
+            <summary>
+            Options common to several middleware components
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptions.#ctor">
+            <summary>
+            Defaults to all request paths.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptions.RequestPath">
+            <summary>
+            The request path that maps to static resources
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptions.FileProvider">
+            <summary>
+            The file system used to locate resources
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptions.RedirectToAppendTrailingSlash">
+            <summary>
+            Indicates whether to redirect to add a trailing slash at the end of path. Relative resource links may require this.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptionsBase">
+            <summary>
+            Options common to several middleware components
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptionsBase.#ctor(Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptions)">
+            <summary>
+            Creates an new instance of the SharedOptionsBase.
+            </summary>
+            <param name="sharedOptions"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptionsBase.SharedOptions">
+            <summary>
+            Options common to several middleware components
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptionsBase.RequestPath">
+            <summary>
+            The relative request path that maps to static resources.
+            This defaults to the site root '/'.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptionsBase.FileProvider">
+            <summary>
+            The file system used to locate resources
+            </summary>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptionsBase.RedirectToAppendTrailingSlash">
+            <summary>
+            Indicates whether to redirect to add a trailing slash at the end of path. Relative resource links may require this.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.LoggerExtensions">
+            <summary>
+            Defines *all* the logger messages produced by static files
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware">
+            <summary>
+            Enables serving static files for a given request path
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.StaticFileOptions},Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new instance of the StaticFileMiddleware.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+            <param name="hostingEnv">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/> used by this middleware.</param>
+            <param name="options">The configuration options.</param>
+            <param name="loggerFactory">An <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> instance used to create loggers.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Processes a request to determine if it matches a known file, and if so, serves it.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.StaticFiles.StaticFileResponseContext">
+            <summary>
+            Contains information about the request and the file that will be served in response.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticFiles.StaticFileResponseContext.#ctor(Microsoft.AspNetCore.Http.HttpContext,Microsoft.Extensions.FileProviders.IFileInfo)">
+            <summary>
+            Constructs the <see cref="T:Microsoft.AspNetCore.StaticFiles.StaticFileResponseContext"/>.
+            </summary>
+            <param name="context">The request and response information.</param>
+            <param name="file">The file to be served.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.StaticFileResponseContext.Context">
+            <summary>
+            The request and response information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.StaticFileResponseContext.File">
+            <summary>
+            The file to be served.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Resources.Args_NoFormatter">
+            <summary>No formatter provided.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Resources.HtmlDir_IndexOf">
+            <summary>Index of</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Resources.HtmlDir_LastModified">
+            <summary>Last Modified</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Resources.HtmlDir_Modified">
+            <summary>Modified</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Resources.HtmlDir_Name">
+            <summary>Name</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Resources.HtmlDir_Size">
+            <summary>Size</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticFiles.Resources.HtmlDir_TableSummary">
+            <summary>The list of files in the given directory.  Column headers are listed in the first row.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.DefaultFilesExtensions">
+            <summary>
+            Extension methods for the DefaultFilesMiddleware
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DefaultFilesExtensions.UseDefaultFiles(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Enables default file mapping on the current path
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DefaultFilesExtensions.UseDefaultFiles(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+            Enables default file mapping for the given request path
+            </summary>
+            <param name="app"></param>
+            <param name="requestPath">The relative request path.</param>
+            <returns></returns>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DefaultFilesExtensions.UseDefaultFiles(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.DefaultFilesOptions)">
+            <summary>
+            Enables default file mapping with the given options
+            </summary>
+            <param name="app"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.DefaultFilesOptions">
+            <summary>
+            Options for selecting default file names.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DefaultFilesOptions.#ctor">
+            <summary>
+            Configuration for the DefaultFilesMiddleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DefaultFilesOptions.#ctor(Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptions)">
+            <summary>
+            Configuration for the DefaultFilesMiddleware.
+            </summary>
+            <param name="sharedOptions"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.DefaultFilesOptions.DefaultFileNames">
+            <summary>
+            An ordered list of file names to select by default. List length and ordering may affect performance.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.DirectoryBrowserExtensions">
+            <summary>
+            Extension methods for the DirectoryBrowserMiddleware
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DirectoryBrowserExtensions.UseDirectoryBrowser(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Enable directory browsing on the current path
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DirectoryBrowserExtensions.UseDirectoryBrowser(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+            Enables directory browsing for the given request path
+            </summary>
+            <param name="app"></param>
+            <param name="requestPath">The relative request path.</param>
+            <returns></returns>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DirectoryBrowserExtensions.UseDirectoryBrowser(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.DirectoryBrowserOptions)">
+            <summary>
+            Enable directory browsing with the given options
+            </summary>
+            <param name="app"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.DirectoryBrowserOptions">
+            <summary>
+            Directory browsing options
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DirectoryBrowserOptions.#ctor">
+            <summary>
+            Enabled directory browsing for all request paths
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.DirectoryBrowserOptions.#ctor(Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptions)">
+            <summary>
+            Enabled directory browsing all request paths
+            </summary>
+            <param name="sharedOptions"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.DirectoryBrowserOptions.Formatter">
+            <summary>
+            The component that generates the view.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.FileServerExtensions">
+            <summary>
+            Extension methods that combine all of the static file middleware components:
+            Default files, directory browsing, send file, and static files
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.FileServerExtensions.UseFileServer(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Enable all static file middleware (except directory browsing) for the current request path in the current directory.
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.FileServerExtensions.UseFileServer(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Boolean)">
+            <summary>
+            Enable all static file middleware on for the current request path in the current directory.
+            </summary>
+            <param name="app"></param>
+            <param name="enableDirectoryBrowsing">Should directory browsing be enabled?</param>
+            <returns></returns>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.FileServerExtensions.UseFileServer(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+            Enables all static file middleware (except directory browsing) for the given request path from the directory of the same name
+            </summary>
+            <param name="app"></param>
+            <param name="requestPath">The relative request path.</param>
+            <returns></returns>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.FileServerExtensions.UseFileServer(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.FileServerOptions)">
+            <summary>
+            Enable all static file middleware with the given options
+            </summary>
+            <param name="app"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.FileServerOptions">
+            <summary>
+            Options for all of the static file middleware components
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.FileServerOptions.#ctor">
+            <summary>
+            Creates a combined options class for all of the static file middleware components.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.FileServerOptions.StaticFileOptions">
+            <summary>
+            Options for configuring the StaticFileMiddleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.FileServerOptions.DirectoryBrowserOptions">
+            <summary>
+            Options for configuring the DirectoryBrowserMiddleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.FileServerOptions.DefaultFilesOptions">
+            <summary>
+            Options for configuring the DefaultFilesMiddleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.FileServerOptions.EnableDirectoryBrowsing">
+            <summary>
+            Directory browsing is disabled by default.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.FileServerOptions.EnableDefaultFiles">
+            <summary>
+            Default files are enabled by default.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.StaticFileExtensions">
+            <summary>
+            Extension methods for the StaticFileMiddleware
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StaticFileExtensions.UseStaticFiles(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Enables static file serving for the current request path
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StaticFileExtensions.UseStaticFiles(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+            Enables static file serving for the given request path
+            </summary>
+            <param name="app"></param>
+            <param name="requestPath">The relative request path.</param>
+            <returns></returns>
+            <remarks>
+            Files are served from the path specified in <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootPath"/>
+            or <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> which defaults to the 'wwwroot' subfolder.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StaticFileExtensions.UseStaticFiles(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.StaticFileOptions)">
+            <summary>
+            Enables static file serving with the given options
+            </summary>
+            <param name="app"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.StaticFileOptions">
+            <summary>
+            Options for serving static files
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StaticFileOptions.#ctor">
+            <summary>
+            Defaults to all request paths
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StaticFileOptions.#ctor(Microsoft.AspNetCore.StaticFiles.Infrastructure.SharedOptions)">
+            <summary>
+            Defaults to all request paths
+            </summary>
+            <param name="sharedOptions"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.StaticFileOptions.ContentTypeProvider">
+            <summary>
+            Used to map files to content-types.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.StaticFileOptions.DefaultContentType">
+            <summary>
+            The default content type for a request if the ContentTypeProvider cannot determine one.
+            None is provided by default, so the client must determine the format themselves.
+            http://www.w3.org/Protocols/rfc2616/rfc2616-sec7.html#sec7
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.StaticFileOptions.ServeUnknownFileTypes">
+            <summary>
+            If the file is not a recognized content-type should it be served?
+            Default: false.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.StaticFileOptions.HttpsCompression">
+            <summary>
+            Indicates if files should be compressed for HTTPS requests when the Response Compression middleware is available.
+            The default value is <see cref="F:Microsoft.AspNetCore.Http.Features.HttpsCompressionMode.Compress"/>.
+            </summary>
+            <remarks>
+            Enabling compression on HTTPS requests for remotely manipulable content may expose security problems.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.StaticFileOptions.OnPrepareResponse">
+            <summary>
+            Called after the status code and headers have been set, but before the body has been written.
+            This can be used to add or change the response headers.
+            </summary>
+            <remarks>
+            <see cref="P:Microsoft.AspNetCore.Builder.StaticFileOptions.OnPrepareResponse" /> is called before <see cref="P:Microsoft.AspNetCore.Builder.StaticFileOptions.OnPrepareResponseAsync" />.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.StaticFileOptions.OnPrepareResponseAsync">
+            <summary>
+            Called after the status code and headers have been set, but before the body has been written.
+            This can be used to add or change the response headers.
+            </summary>
+            <remarks>
+            <see cref="P:Microsoft.AspNetCore.Builder.StaticFileOptions.OnPrepareResponse" /> is called before <see cref="P:Microsoft.AspNetCore.Builder.StaticFileOptions.OnPrepareResponseAsync" />.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions">
+            <summary>
+            Contains extension methods for using static files with endpoint routing.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String)">
+            <summary>
+            Adds a specialized <see cref="T:Microsoft.AspNetCore.Routing.RouteEndpoint"/> to the <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> that will match
+            requests for non-filenames with the lowest possible priority. The request will be routed to a
+            <see cref="T:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/> that attempts to serve the file specified by <paramref name="filePath"/>.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>
+            <param name="filePath">The file path of the file to serve.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/></returns>
+            <remarks>
+            <para>
+            <see cref="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String)"/> is intended to handle cases where URL path of
+            the request does not contain a filename, and no other endpoint has matched. This is convenient for routing
+            requests for dynamic content to a SPA framework, while also allowing requests for non-existent files to
+            result in an HTTP 404.
+            </para>
+            <para>
+            The default <see cref="T:Microsoft.AspNetCore.Builder.StaticFileOptions"/> for the <see cref="T:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/> will be used.
+            </para>
+            <para>
+            <see cref="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String)"/> registers an endpoint using the pattern
+            <c>{*path:nonfile}</c>. The order of the registered endpoint will be <c>int.MaxValue</c>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,Microsoft.AspNetCore.Builder.StaticFileOptions)">
+            <summary>
+            Adds a specialized <see cref="T:Microsoft.AspNetCore.Routing.RouteEndpoint"/> to the <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> that will match
+            requests for non-filenames with the lowest possible priority. The request will be routed to a
+            <see cref="T:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/> that attempts to serve the file specified by <paramref name="filePath"/>.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>
+            <param name="filePath">The file path of the file to serve.</param>
+            <param name="options"><see cref="T:Microsoft.AspNetCore.Builder.StaticFileOptions"/> for the <see cref="T:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/></returns>
+            <remarks>
+            <para>
+            <see cref="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,Microsoft.AspNetCore.Builder.StaticFileOptions)"/> is intended to handle cases
+            where URL path of the request does not contain a file name, and no other endpoint has matched. This is convenient
+            for routing requests for dynamic content to a SPA framework, while also allowing requests for non-existent files to
+            result in an HTTP 404.
+            </para>
+            <para>
+            <see cref="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,Microsoft.AspNetCore.Builder.StaticFileOptions)"/> registers an endpoint using the pattern
+            <c>{*path:nonfile}</c>. The order of the registered endpoint will be <c>int.MaxValue</c>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String)">
+            <summary>
+            Adds a specialized <see cref="T:Microsoft.AspNetCore.Routing.RouteEndpoint"/> to the <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> that will match
+            requests for non-filenames with the lowest possible priority. The request will be routed to a
+            <see cref="T:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/> that attempts to serve the file specified by <paramref name="filePath"/>.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>
+            <param name="pattern">The route pattern.</param>
+            <param name="filePath">The file path of the file to serve.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/></returns>
+            <remarks>
+            <para>
+            <see cref="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String)"/> is intended to handle
+            cases where URL path of the request does not contain a filename, and no other endpoint has matched. This is
+            convenient for routing requests for dynamic content to a SPA framework, while also allowing requests for
+            non-existent files to result in an HTTP 404.
+            </para>
+            <para>
+            The default <see cref="T:Microsoft.AspNetCore.Builder.StaticFileOptions"/> for the <see cref="T:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/> will be used.
+            </para>
+            <para>
+            The order of the registered endpoint will be <c>int.MaxValue</c>.
+            </para>
+            <para>
+            This overload will use the provided <paramref name="pattern"/> verbatim. Use the <c>:nonfile</c> route contraint
+            to exclude requests for static files.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String,Microsoft.AspNetCore.Builder.StaticFileOptions)">
+            <summary>
+            Adds a specialized <see cref="T:Microsoft.AspNetCore.Routing.RouteEndpoint"/> to the <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> that will match
+            requests for non-filenames with the lowest possible priority. The request will be routed to a
+            <see cref="T:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/> that attempts to serve the file specified by <paramref name="filePath"/>.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/>.</param>\
+            <param name="pattern">The route pattern.</param>
+            <param name="filePath">The file path of the file to serve.</param>
+            <param name="options"><see cref="T:Microsoft.AspNetCore.Builder.StaticFileOptions"/> for the <see cref="T:Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/></returns>
+            <remarks>
+            <para>
+            <see cref="M:Microsoft.AspNetCore.Builder.StaticFilesEndpointRouteBuilderExtensions.MapFallbackToFile(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.String,Microsoft.AspNetCore.Builder.StaticFileOptions)"/> is intended to handle
+            cases where URL path of the request does not contain a filename, and no other endpoint has matched. This is
+            convenient for routing requests for dynamic content to a SPA framework, while also allowing requests for
+            non-existent files to result in an HTTP 404.
+            </para>
+            <para>
+            The order of the registered endpoint will be <c>int.MaxValue</c>.
+            </para>
+            <para>
+            This overload will use the provided <paramref name="pattern"/> verbatim. Use the <c>:nonfile</c> route contraint
+            to exclude requests for static files.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.RangeHelper">
+            <summary>
+            Provides a parser for the Range Header in an <see cref="P:Microsoft.AspNetCore.Http.HttpContext.Request"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.RangeHelper.ParseRange(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Http.Headers.RequestHeaders,System.Int64,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Returns the normalized form of the requested range if the Range Header in the <see cref="P:Microsoft.AspNetCore.Http.HttpContext.Request"/> is valid.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the request.</param>
+            <param name="requestHeaders">The <see cref="T:Microsoft.AspNetCore.Http.Headers.RequestHeaders"/> associated with the given <paramref name="context"/>.</param>
+            <param name="length">The total length of the file representation requested.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/>.</param>
+            <returns>A boolean value which represents if the <paramref name="requestHeaders"/> contain a single valid
+            range request. A <see cref="T:Microsoft.Net.Http.Headers.RangeItemHeaderValue"/> which represents the normalized form of the
+            range parsed from the <paramref name="requestHeaders"/> or <c>null</c> if it cannot be normalized.</returns>
+            <remark>If the Range header exists but cannot be parsed correctly, or if the provided length is 0, then the range request cannot be satisfied (status 416).
+            This results in (<c>true</c>,<c>null</c>) return values.</remark>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.DirectoryBrowserServiceExtensions">
+            <summary>
+            Extension methods for adding directory browser services.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.DirectoryBrowserServiceExtensions.AddDirectoryBrowser(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds directory browser middleware services.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Localization</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Localization.AssemblyWrapper">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Localization.IResourceStringProvider">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Localization.ResourceManagerStringProvider">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Localization.IResourceNamesCache">
+            <summary>
+            Represents a cache of string names in resources.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.IResourceNamesCache.GetOrAdd(System.String,System.Func{System.String,System.Collections.Generic.IList{System.String}})">
+            <summary>
+            Adds a set of resource names to the cache by using the specified function, if the name does not already exist.
+            </summary>
+            <param name="name">The resource name to add string names for.</param>
+            <param name="valueFactory">The function used to generate the string names for the resource.</param>
+            <returns>The string names for the resource.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Localization.LocalizationOptions">
+            <summary>
+            Provides programmatic configuration for localization.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.LocalizationOptions.#ctor">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Localization.LocalizationOptions" />.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Localization.LocalizationOptions.ResourcesPath">
+            <summary>
+            The relative path under application root where resource files are located.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Localization.ResourceLocationAttribute">
+            <summary>
+            Provides the location of resources for an Assembly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceLocationAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Localization.ResourceLocationAttribute"/>.
+            </summary>
+            <param name="resourceLocation">The location of resources for this Assembly.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.Localization.ResourceLocationAttribute.ResourceLocation">
+            <summary>
+            The location of resources for this Assembly.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer">
+            <summary>
+            An <see cref="T:Microsoft.Extensions.Localization.IStringLocalizer"/> that uses the <see cref="T:System.Resources.ResourceManager"/> and
+            <see cref="T:System.Resources.ResourceReader"/> to provide localized strings.
+            </summary>
+            <remarks>This type is thread-safe.</remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer.#ctor(System.Resources.ResourceManager,System.Reflection.Assembly,System.String,Microsoft.Extensions.Localization.IResourceNamesCache,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/>.
+            </summary>
+            <param name="resourceManager">The <see cref="T:System.Resources.ResourceManager"/> to read strings from.</param>
+            <param name="resourceAssembly">The <see cref="T:System.Reflection.Assembly"/> that contains the strings as embedded resources.</param>
+            <param name="baseName">The base name of the embedded resource that contains the strings.</param>
+            <param name="resourceNamesCache">Cache of the list of strings for a given resource assembly name.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer.#ctor(System.Resources.ResourceManager,Microsoft.Extensions.Localization.AssemblyWrapper,System.String,Microsoft.Extensions.Localization.IResourceNamesCache,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Intended for testing purposes only.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer.#ctor(System.Resources.ResourceManager,Microsoft.Extensions.Localization.IResourceStringProvider,System.String,Microsoft.Extensions.Localization.IResourceNamesCache,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Intended for testing purposes only.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer.Item(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer.Item(System.String,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer.GetAllStrings(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer.GetAllStrings(System.Boolean,System.Globalization.CultureInfo)">
+            <summary>
+            Returns all strings in the specified culture.
+            </summary>
+            <param name="includeParentCultures">Whether to include parent cultures in the search for a resource.</param>
+            <param name="culture">The <see cref="T:System.Globalization.CultureInfo"/> to get strings for.</param>
+            <returns>The strings.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer.GetStringSafely(System.String,System.Globalization.CultureInfo)">
+            <summary>
+            Gets a resource string from a <see cref="T:System.Resources.ResourceManager"/> and returns <c>null</c> instead of
+            throwing exceptions if a match isn't found.
+            </summary>
+            <param name="name">The name of the string resource.</param>
+            <param name="culture">The <see cref="T:System.Globalization.CultureInfo"/> to get the string for.</param>
+            <returns>The resource string, or <c>null</c> if none was found.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory">
+            <summary>
+            An <see cref="T:Microsoft.Extensions.Localization.IStringLocalizerFactory"/> that creates instances of <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/>.
+            </summary>
+            <remarks>
+            <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory"/> offers multiple ways to set the relative path of
+            resources to be used. They are, in order of precedence:
+            <see cref="T:Microsoft.Extensions.Localization.ResourceLocationAttribute"/> -> <see cref="P:Microsoft.Extensions.Localization.LocalizationOptions.ResourcesPath"/> -> the project root.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.Extensions.Localization.LocalizationOptions},Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/>.
+            </summary>
+            <param name="localizationOptions">The <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.GetResourcePrefix(System.Reflection.TypeInfo)">
+            <summary>
+            Gets the resource prefix used to look up the resource.
+            </summary>
+            <param name="typeInfo">The type of the resource to be looked up.</param>
+            <returns>The prefix for resource lookup.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.GetResourcePrefix(System.Reflection.TypeInfo,System.String,System.String)">
+            <summary>
+            Gets the resource prefix used to look up the resource.
+            </summary>
+            <param name="typeInfo">The type of the resource to be looked up.</param>
+            <param name="baseNamespace">The base namespace of the application.</param>
+            <param name="resourcesRelativePath">The folder containing all resources.</param>
+            <returns>The prefix for resource lookup.</returns>
+            <remarks>
+            For the type "Sample.Controllers.Home" if there's a resourceRelativePath return
+            "Sample.Resourcepath.Controllers.Home" if there isn't one then it would return "Sample.Controllers.Home".
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.GetResourcePrefix(System.String,System.String)">
+            <summary>
+            Gets the resource prefix used to look up the resource.
+            </summary>
+            <param name="baseResourceName">The name of the resource to be looked up</param>
+            <param name="baseNamespace">The base namespace of the application.</param>
+            <returns>The prefix for resource lookup.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.Create(System.Type)">
+            <summary>
+            Creates a <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/> using the <see cref="T:System.Reflection.Assembly"/> and
+            <see cref="P:System.Type.FullName"/> of the specified <see cref="T:System.Type"/>.
+            </summary>
+            <param name="resourceSource">The <see cref="T:System.Type"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.Create(System.String,System.String)">
+            <summary>
+            Creates a <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/>.
+            </summary>
+            <param name="baseName">The base name of the resource to load strings from.</param>
+            <param name="location">The location to load resources from.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.CreateResourceManagerStringLocalizer(System.Reflection.Assembly,System.String)">
+            <summary>Creates a <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/> for the given input.</summary>
+            <param name="assembly">The assembly to create a <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/> for.</param>
+            <param name="baseName">The base name of the resource to search for.</param>
+            <returns>A <see cref="T:Microsoft.Extensions.Localization.ResourceManagerStringLocalizer"/> for the given <paramref name="assembly"/> and <paramref name="baseName"/>.</returns>
+            <remarks>This method is virtual for testing purposes only.</remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.GetResourcePrefix(System.String,System.String,System.String)">
+            <summary>
+            Gets the resource prefix used to look up the resource.
+            </summary>
+            <param name="location">The general location of the resource.</param>
+            <param name="baseName">The base name of the resource.</param>
+            <param name="resourceLocation">The location of the resource within <paramref name="location"/>.</param>
+            <returns>The resource prefix used to look up the resource.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.GetResourceLocationAttribute(System.Reflection.Assembly)">
+            <summary>Gets a <see cref="T:Microsoft.Extensions.Localization.ResourceLocationAttribute"/> from the provided <see cref="T:System.Reflection.Assembly"/>.</summary>
+            <param name="assembly">The assembly to get a <see cref="T:Microsoft.Extensions.Localization.ResourceLocationAttribute"/> from.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Localization.ResourceLocationAttribute"/> associated with the given <see cref="T:System.Reflection.Assembly"/>.</returns>
+            <remarks>This method is protected and virtual for testing purposes only.</remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceManagerStringLocalizerFactory.GetRootNamespaceAttribute(System.Reflection.Assembly)">
+            <summary>Gets a <see cref="T:Microsoft.Extensions.Localization.RootNamespaceAttribute"/> from the provided <see cref="T:System.Reflection.Assembly"/>.</summary>
+            <param name="assembly">The assembly to get a <see cref="T:Microsoft.Extensions.Localization.RootNamespaceAttribute"/> from.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Localization.RootNamespaceAttribute"/> associated with the given <see cref="T:System.Reflection.Assembly"/>.</returns>
+            <remarks>This method is protected and virtual for testing purposes only.</remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.Localization.ResourceNamesCache">
+            <summary>
+            An implementation of <see cref="T:Microsoft.Extensions.Localization.IResourceNamesCache"/> backed by a <see cref="T:System.Collections.Concurrent.ConcurrentDictionary`2"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceNamesCache.#ctor">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Localization.ResourceNamesCache" />
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.ResourceNamesCache.GetOrAdd(System.String,System.Func{System.String,System.Collections.Generic.IList{System.String}})">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.Localization.RootNamespaceAttribute">
+            <summary>
+            Provides the RootNamespace of an Assembly. The RootNamespace of the assembly is used by Localization to
+            determine the resource name to look for when RootNamespace differs from the AssemblyName.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.RootNamespaceAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Localization.RootNamespaceAttribute"/>.
+            </summary>
+            <param name="rootNamespace">The RootNamespace for this Assembly.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.Localization.RootNamespaceAttribute.RootNamespace">
+            <summary>
+            The RootNamespace of this Assembly. The RootNamespace of the assembly is used by Localization to
+            determine the resource name to look for when RootNamespace differs from the AssemblyName.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Localization.Resources.Localization_MissingManifest">
+            <summary>The manifest '{0}' was not found.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.Resources.FormatLocalization_MissingManifest(System.Object)">
+            <summary>The manifest '{0}' was not found.</summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Localization.Resources.Localization_MissingManifest_Parent">
+            <summary>No manifests exist for the current culture.</summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Localization.Resources.Localization_TypeMustHaveTypeName">
+            <summary>Type '{0}' must have a non-null type name.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Localization.Resources.FormatLocalization_TypeMustHaveTypeName(System.Object)">
+            <summary>Type '{0}' must have a non-null type name.</summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.LocalizationServiceCollectionExtensions">
+            <summary>
+            Extension methods for setting up localization services in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.LocalizationServiceCollectionExtensions.AddLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds services required for application localization.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.LocalizationServiceCollectionExtensions.AddLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.Extensions.Localization.LocalizationOptions})">
+            <summary>
+            Adds services required for application localization.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <param name="setupAction">
+            An <see cref="T:System.Action`1"/> to configure the <see cref="T:Microsoft.Extensions.Localization.LocalizationOptions"/>.
+            </param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null or an <see cref="T:System.ArgumentException"/> if it is empty.</summary>
+            <param name="argument">The reference type argument to validate as neither null nor empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+    </members>
+</doc>

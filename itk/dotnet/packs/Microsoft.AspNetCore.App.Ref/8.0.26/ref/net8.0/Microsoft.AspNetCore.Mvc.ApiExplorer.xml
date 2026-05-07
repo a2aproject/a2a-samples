@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Mvc.ApiExplorer</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionExtensions.GetProperty``1(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription)">
+            <summary>
+            Gets the value of a property from the <see cref="P:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription.Properties"/> collection
+            using the provided value of <typeparamref name="T"/> as the key.
+            </summary>
+            <typeparam name="T">The type of the property.</typeparam>
+            <param name="apiDescription">The <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription"/>.</param>
+            <returns>The property or the default value of <typeparamref name="T"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionExtensions.SetProperty``1(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription,``0)">
+            <summary>
+            Sets the value of an property in the <see cref="P:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription.Properties"/> collection using
+            the provided value of <typeparamref name="T"/> as the key.
+            </summary>
+            <typeparam name="T">The type of the property.</typeparam>
+            <param name="apiDescription">The <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription"/>.</param>
+            <param name="value">The value of the property.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup">
+            <summary>
+            Represents a group of related apis.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup.#ctor(System.String,System.Collections.Generic.IReadOnlyList{Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription})">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup"/>.
+            </summary>
+            <param name="groupName">The group name.</param>
+            <param name="items">A collection of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription"/> items for this group.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup.GroupName">
+            <summary>
+            The group name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup.Items">
+            <summary>
+            A collection of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription"/> items for this group.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroupCollection">
+            <summary>
+            A cached collection of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroupCollection.#ctor(System.Collections.Generic.IReadOnlyList{Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup},System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroupCollection"/>.
+            </summary>
+            <param name="items">The list of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup"/>.</param>
+            <param name="version">The unique version of discovered groups.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroupCollection.Items">
+            <summary>
+            Returns the list of <see cref="T:System.Collections.Generic.IReadOnlyList`1"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroupCollection.Version">
+            <summary>
+            Returns the unique version of the current items.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroupCollectionProvider">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroupCollectionProvider.#ctor(Microsoft.AspNetCore.Mvc.Infrastructure.IActionDescriptorCollectionProvider,System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Mvc.ApiExplorer.IApiDescriptionProvider})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroupCollectionProvider"/>.
+            </summary>
+            <param name="actionDescriptorCollectionProvider">
+            The <see cref="T:Microsoft.AspNetCore.Mvc.Infrastructure.IActionDescriptorCollectionProvider"/>.
+            </param>
+            <param name="apiDescriptionProviders">
+            The <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroupCollectionProvider.ApiDescriptionGroups">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApiExplorer.DefaultApiDescriptionProvider">
+            <summary>
+            Implements a provider of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescription"/> for actions represented
+            by <see cref="T:Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApiExplorer.DefaultApiDescriptionProvider.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Mvc.MvcOptions},Microsoft.AspNetCore.Routing.IInlineConstraintResolver,Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider,Microsoft.AspNetCore.Mvc.Infrastructure.IActionResultTypeMapper,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Routing.RouteOptions})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.DefaultApiDescriptionProvider"/>.
+            </summary>
+            <param name="optionsAccessor">The accessor for <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+            <param name="constraintResolver">The <see cref="T:Microsoft.AspNetCore.Routing.IInlineConstraintResolver"/> used for resolving inline
+            constraints.</param>
+            <param name="modelMetadataProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider"/>.</param>
+            <param name="mapper">The <see cref="T:Microsoft.AspNetCore.Mvc.Infrastructure.IActionResultTypeMapper"/>.</param>
+            <param name="routeOptions">The accessor for <see cref="T:Microsoft.AspNetCore.Routing.RouteOptions"/>.</param>
+            <remarks>The <paramref name="mapper"/> parameter is currently ignored.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApiExplorer.DefaultApiDescriptionProvider.Order">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApiExplorer.DefaultApiDescriptionProvider.OnProvidersExecuting(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApiExplorer.DefaultApiDescriptionProvider.OnProvidersExecuted(Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiDescriptionGroupCollectionProvider">
+            <summary>
+            Provides access to a collection of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiDescriptionGroupCollectionProvider.ApiDescriptionGroups">
+            <summary>
+            Gets a collection of <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.ApiDescriptionGroup"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.PropertyAsParameterInfo.Flatten(System.Reflection.ParameterInfo[],Microsoft.AspNetCore.Http.ParameterBindingMethodCache)">
+            <summary>
+            Unwraps all parameters that contains <see cref="T:Microsoft.AspNetCore.Http.AsParametersAttribute"/> and
+            creates a flat list merging the current parameters, not including the
+            parameters that contain a <see cref="T:Microsoft.AspNetCore.Http.AsParametersAttribute"/>, and all additional
+            parameters detected.
+            </summary>
+            <param name="parameters">List of parameters to be flattened.</param>
+            <param name="cache">An instance of the method cache class.</param>
+            <returns>Flat list of parameters.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.EndpointMetadataApiExplorerServiceCollectionExtensions">
+            <summary>
+            Extensions for configuring ApiExplorer using <see cref="P:Microsoft.AspNetCore.Http.Endpoint.Metadata"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.EndpointMetadataApiExplorerServiceCollectionExtensions.AddEndpointsApiExplorer(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures ApiExplorer using <see cref="P:Microsoft.AspNetCore.Http.Endpoint.Metadata"/>.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcApiExplorerMvcCoreBuilderExtensions">
+            <summary>
+            Extensions for configuring ApiExplorer using an <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcApiExplorerMvcCoreBuilderExtensions.AddApiExplorer(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)">
+            <summary>
+            Configures <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/> to use ApiExplorer.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.TypeHelper.IsCompilerGeneratedType(System.Type)">
+            <summary>
+            Checks to see if a given type is compiler generated.
+            <remarks>
+            The compiler will annotate either the target type or the declaring type
+            with the CompilerGenerated attribute. We walk up the declaring types until
+            we find a CompilerGenerated attribute or declare the type as not compiler
+            generated otherwise.
+            </remarks>
+            </summary>
+            <param name="type">The type to evaluate.</param>
+            <returns><see langword="true" /> if <paramref name="type"/> is compiler generated.</returns>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.TypeHelper.IsCompilerGeneratedMethod(System.Reflection.MethodInfo)">
+            <summary>
+            Checks to see if a given method is compiler generated.
+            </summary>
+            <param name="method">The method to evaluate.</param>
+            <returns><see langword="true" /> if <paramref name="method"/> is compiler generated.</returns>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.TypeHelper.TryParseLocalFunctionName(System.String,System.String@)">
+            <summary>
+            Parses generated local function name out of a generated method name. This code is a stop-gap and exists to address the issues with extracting
+            original method names from generated local functions. See https://github.com/dotnet/roslyn/issues/55651 for more info.
+            </summary>
+        </member>
+        <member name="M:System.Runtime.CompilerServices.TypeHelper.TryGetNonCompilerGeneratedMethodName(System.Reflection.MethodInfo,System.String@)">
+            <summary>
+            Tries to get non-compiler-generated name of function. This parses generated local function names out of a generated method name if possible.
+            </summary>
+        </member>
+    </members>
+</doc>

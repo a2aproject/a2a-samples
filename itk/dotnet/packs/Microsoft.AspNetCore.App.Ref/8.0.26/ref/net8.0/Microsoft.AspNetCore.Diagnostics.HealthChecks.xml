@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Diagnostics.HealthChecks</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Builder.HealthCheckApplicationBuilderExtensions">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> extension methods for the <see cref="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckMiddleware"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HealthCheckApplicationBuilderExtensions.UseHealthChecks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Http.PathString)">
+            <summary>
+            Adds a middleware that provides health check status.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <param name="path">The path on which to provide health check status.</param>
+            <returns>A reference to the <paramref name="app"/> after the operation has completed.</returns>
+            <remarks>
+            <para>
+            If <paramref name="path"/> is set to <c>null</c> or the empty string then the health check middleware
+            will ignore the URL path and process all requests. If <paramref name="path"/> is set to a non-empty
+            value, the health check middleware will process requests with a URL that matches the provided value
+            of <paramref name="path"/> case-insensitively, allowing for an extra trailing slash ('/') character.
+            </para>
+            <para>
+            The health check middleware will use default settings from <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HealthCheckApplicationBuilderExtensions.UseHealthChecks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Http.PathString,Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions)">
+            <summary>
+            Adds a middleware that provides health check status.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <param name="path">The path on which to provide health check status.</param>
+            <param name="options">A <see cref="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions"/> used to configure the middleware.</param>
+            <returns>A reference to the <paramref name="app"/> after the operation has completed.</returns>
+            <remarks>
+            <para>
+            If <paramref name="path"/> is set to <c>null</c> or the empty string then the health check middleware
+            will ignore the URL path and process all requests. If <paramref name="path"/> is set to a non-empty
+            value, the health check middleware will process requests with a URL that matches the provided value
+            of <paramref name="path"/> case-insensitively, allowing for an extra trailing slash ('/') character.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HealthCheckApplicationBuilderExtensions.UseHealthChecks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Http.PathString,System.Int32)">
+            <summary>
+            Adds a middleware that provides health check status.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <param name="path">The path on which to provide health check status.</param>
+            <param name="port">The port to listen on. Must be a local port on which the server is listening.</param>
+            <returns>A reference to the <paramref name="app"/> after the operation has completed.</returns>
+            <remarks>
+            <para>
+            If <paramref name="path"/> is set to <c>null</c> or the empty string then the health check middleware
+            will ignore the URL path and process all requests on the specified port. If <paramref name="path"/> is
+            set to a non-empty value, the health check middleware will process requests with a URL that matches the
+            provided value of <paramref name="path"/> case-insensitively, allowing for an extra trailing slash ('/')
+            character.
+            </para>
+            <para>
+            The health check middleware will use default settings from <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HealthCheckApplicationBuilderExtensions.UseHealthChecks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Http.PathString,System.String)">
+            <summary>
+            Adds a middleware that provides health check status.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <param name="path">The path on which to provide health check status.</param>
+            <param name="port">The port to listen on. Must be a local port on which the server is listening.</param>
+            <returns>A reference to the <paramref name="app"/> after the operation has completed.</returns>
+            <remarks>
+            <para>
+            If <paramref name="path"/> is set to <c>null</c> or the empty string then the health check middleware
+            will ignore the URL path and process all requests on the specified port. If <paramref name="path"/> is
+            set to a non-empty value, the health check middleware will process requests with a URL that matches the
+            provided value of <paramref name="path"/> case-insensitively, allowing for an extra trailing slash ('/')
+            character.
+            </para>
+            <para>
+            The health check middleware will use default settings from <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HealthCheckApplicationBuilderExtensions.UseHealthChecks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Http.PathString,System.Int32,Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions)">
+            <summary>
+            Adds a middleware that provides health check status.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <param name="path">The path on which to provide health check status.</param>
+            <param name="port">The port to listen on. Must be a local port on which the server is listening.</param>
+            <param name="options">A <see cref="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions"/> used to configure the middleware.</param>
+            <returns>A reference to the <paramref name="app"/> after the operation has completed.</returns>
+            <remarks>
+            <para>
+            If <paramref name="path"/> is set to <c>null</c> or the empty string then the health check middleware
+            will ignore the URL path and process all requests on the specified port. If <paramref name="path"/> is
+            set to a non-empty value, the health check middleware will process requests with a URL that matches the
+            provided value of <paramref name="path"/> case-insensitively, allowing for an extra trailing slash ('/')
+            character.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HealthCheckApplicationBuilderExtensions.UseHealthChecks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Http.PathString,System.String,Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions)">
+            <summary>
+            Adds a middleware that provides health check status.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <param name="path">The path on which to provide health check status.</param>
+            <param name="port">The port to listen on. Must be a local port on which the server is listening.</param>
+            <param name="options">A <see cref="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions"/> used to configure the middleware.</param>
+            <returns>A reference to the <paramref name="app"/> after the operation has completed.</returns>
+            <remarks>
+            <para>
+            If <paramref name="path"/> is set to <c>null</c> or the empty string then the health check middleware
+            will ignore the URL path and process all requests on the specified port. If <paramref name="path"/> is
+            set to a non-empty value, the health check middleware will process requests with a URL that matches the
+            provided value of <paramref name="path"/> case-insensitively, allowing for an extra trailing slash ('/')
+            character.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.HealthCheckEndpointRouteBuilderExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add health checks.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HealthCheckEndpointRouteBuilderExtensions.MapHealthChecks(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String)">
+            <summary>
+            Adds a health checks endpoint to the <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> with the specified template.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the health checks endpoint to.</param>
+            <param name="pattern">The URL pattern of the health checks endpoint.</param>
+            <returns>A convention routes for the health checks endpoint.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HealthCheckEndpointRouteBuilderExtensions.MapHealthChecks(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions)">
+            <summary>
+            Adds a health checks endpoint to the <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> with the specified template and options.
+            </summary>
+            <param name="endpoints">The <see cref="T:Microsoft.AspNetCore.Routing.IEndpointRouteBuilder"/> to add the health checks endpoint to.</param>
+            <param name="pattern">The URL pattern of the health checks endpoint.</param>
+            <param name="options">A <see cref="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions"/> used to configure the health checks.</param>
+            <returns>A convention routes for the health checks endpoint.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckMiddleware">
+            <summary>
+            Middleware that exposes a health checks response with a URL endpoint.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions},Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckService)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckMiddleware"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Processes a request.
+            </summary>
+            <param name="httpContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions">
+            <summary>
+            Contains options for the <see cref="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckMiddleware"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions.Predicate">
+            <summary>
+            Gets or sets a predicate that is used to filter the set of health checks executed.
+            </summary>
+            <remarks>
+            If <see cref="P:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions.Predicate"/> is <c>null</c>, the <see cref="T:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckMiddleware"/> will run all
+            registered health checks - this is the default behavior. To run a subset of health checks,
+            provide a function that filters the set of checks.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions.ResultStatusCodes">
+            <summary>
+            Gets or sets a dictionary mapping the <see cref="T:Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus"/> to an HTTP status code applied
+            to the response. This property can be used to configure the status codes returned for each status.
+            </summary>
+            <remarks>
+            Setting this property to <c>null</c> resets the mapping to its default value which maps
+            <see cref="F:Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Healthy"/> to 200 (OK), <see cref="F:Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded"/> to 200 (OK) and
+            <see cref="F:Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy"/> to 503 (Service Unavailable).
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">Thrown if at least one <see cref="T:Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus"/> is missing when setting this property.</exception>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions.ResponseWriter">
+            <summary>
+            Gets or sets a delegate used to write the response.
+            </summary>
+            <remarks>
+            The default value is a delegate that will write a minimal <c>text/plain</c> response with the value
+            of <see cref="P:Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport.Status"/> as a string.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions.AllowCachingResponses">
+            <summary>
+            Gets or sets a value that controls whether responses from the health check middleware can be cached.
+            </summary>
+            <remarks>
+            <para>
+            The health check middleware does not perform caching of any kind. This setting configures whether
+            the middleware will apply headers to the HTTP response that instruct clients to avoid caching.
+            </para>
+            <para>
+            If the value is <c>false</c> the health check middleware will set or override the
+            <c>Cache-Control</c>, <c>Expires</c>, and <c>Pragma</c> headers to prevent response caching. If the value
+            is <c>true</c> the health check middleware will not modify the cache headers of the response.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Diagnostics.HealthChecks.Resources.UnableToFindServices">
+            <summary>Unable to find the required services. Please add all the required services by calling '{0}.{1}' inside the call to '{2}' in the application startup code.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Diagnostics.HealthChecks.Resources.FormatUnableToFindServices(System.Object,System.Object,System.Object)">
+            <summary>Unable to find the required services. Please add all the required services by calling '{0}.{1}' inside the call to '{2}' in the application startup code.</summary>
+        </member>
+    </members>
+</doc>

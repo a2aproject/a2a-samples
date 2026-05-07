@@ -1,0 +1,509 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.ObjectModel</name>
+  </assembly>
+  <members>
+    <member name="T:System.Collections.ObjectModel.KeyedCollection`2">
+      <summary>Provides the abstract base class for a collection whose keys are embedded in the values.</summary>
+      <typeparam name="TKey">The type of keys in the collection.</typeparam>
+      <typeparam name="TItem">The type of items in the collection.</typeparam>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" /> class that uses the default equality comparer.</summary>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" /> class that uses the specified equality comparer.</summary>
+      <param name="comparer">The implementation of the <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> generic interface to use when comparing keys, or <see langword="null" /> to use the default equality comparer for the type of the key, obtained from <see cref="P:System.Collections.Generic.EqualityComparer`1.Default" />.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.#ctor(System.Collections.Generic.IEqualityComparer{`0},System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" /> class that uses the specified equality comparer and creates a lookup dictionary when the specified threshold is exceeded.</summary>
+      <param name="comparer">The implementation of the <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> generic interface to use when comparing keys, or <see langword="null" /> to use the default equality comparer for the type of the key, obtained from <see cref="P:System.Collections.Generic.EqualityComparer`1.Default" />.</param>
+      <param name="dictionaryCreationThreshold">The number of elements the collection can hold without creating a lookup dictionary (0 creates the lookup dictionary when the first item is added), or -1 to specify that a lookup dictionary is never created.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="dictionaryCreationThreshold" /> is less than -1.</exception>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.ChangeItemKey(`1,`0)">
+      <summary>Changes the key associated with the specified element in the lookup dictionary.</summary>
+      <param name="item">The element to change the key of.</param>
+      <param name="newKey">The new key for <paramref name="item" />.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="item" /> is <see langword="null" />.  
+  
+ -or-  
+  
+ <paramref name="key" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="item" /> is not found.  
+  
+ -or-  
+  
+ <paramref name="key" /> already exists in the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" />.</exception>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.ClearItems">
+      <summary>Removes all elements from the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" />.</summary>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.Contains(`0)">
+      <summary>Determines whether the collection contains an element with the specified key.</summary>
+      <param name="key">The key to locate in the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" />.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="key" /> is <see langword="null" />.</exception>
+      <returns>
+        <see langword="true" /> if the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" /> contains an element with the specified key; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.GetKeyForItem(`1)">
+      <summary>When implemented in a derived class, extracts the key from the specified element.</summary>
+      <param name="item">The element from which to extract the key.</param>
+      <returns>The key for the specified element.</returns>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.InsertItem(System.Int32,`1)">
+      <summary>Inserts an element into the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" /> at the specified index.</summary>
+      <param name="index">The zero-based index at which <paramref name="item" /> should be inserted.</param>
+      <param name="item">The object to insert.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="index" /> is less than 0.  
+  
+ -or-  
+  
+ <paramref name="index" /> is greater than <see cref="P:System.Collections.ObjectModel.Collection`1.Count" />.</exception>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.Remove(`0)">
+      <summary>Removes the element with the specified key from the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" />.</summary>
+      <param name="key">The key of the element to remove.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="key" /> is <see langword="null" />.</exception>
+      <returns>
+        <see langword="true" /> if the element is successfully removed; otherwise, <see langword="false" />.  This method also returns <see langword="false" /> if <paramref name="key" /> is not found in the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" />.</returns>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.RemoveItem(System.Int32)">
+      <summary>Removes the element at the specified index of the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" />.</summary>
+      <param name="index">The index of the element to remove.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.SetItem(System.Int32,`1)">
+      <summary>Replaces the item at the specified index with the specified item.</summary>
+      <param name="index">The zero-based index of the item to be replaced.</param>
+      <param name="item">The new item.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.KeyedCollection`2.TryGetValue(`0,`1@)">
+      <summary>Tries to get an item from the collection using the specified key.</summary>
+      <param name="key">The key of the item to search in the collection.</param>
+      <param name="item">When this method returns <see langword="true" />, the item from the collection that matches the provided key; when this method returns <see langword="false" />, the <see langword="default" /> value for the type of the collection.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="key" /> is <see langword="null" />.</exception>
+      <returns>
+        <see langword="true" /> if an item for the specified key was found in the collection; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Collections.ObjectModel.KeyedCollection`2.Comparer">
+      <summary>Gets the generic equality comparer that is used to determine equality of keys in the collection.</summary>
+      <returns>The implementation of the <see cref="T:System.Collections.Generic.IEqualityComparer`1" /> generic interface that is used to determine equality of keys in the collection.</returns>
+    </member>
+    <member name="P:System.Collections.ObjectModel.KeyedCollection`2.Dictionary">
+      <summary>Gets the lookup dictionary of the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" />.</summary>
+      <returns>The lookup dictionary of the <see cref="T:System.Collections.ObjectModel.KeyedCollection`2" />, if it exists; otherwise, <see langword="null" />.</returns>
+    </member>
+    <member name="P:System.Collections.ObjectModel.KeyedCollection`2.Item(`0)">
+      <summary>Gets the element with the specified key.</summary>
+      <param name="key">The key of the element to get.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="key" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Collections.Generic.KeyNotFoundException">An element with the specified key does not exist in the collection.</exception>
+      <returns>The element with the specified key. If an element with the specified key is not found, an exception is thrown.</returns>
+    </member>
+    <member name="T:System.Collections.ObjectModel.ObservableCollection`1">
+      <summary>Represents a dynamic data collection that provides notifications when items get added or removed, or when the whole list is refreshed.</summary>
+      <typeparam name="T">The type of elements in the collection.</typeparam>
+    </member>
+    <member name="E:System.Collections.ObjectModel.ObservableCollection`1.CollectionChanged">
+      <summary>Occurs when an item is added, removed, or moved, or the entire list is refreshed.</summary>
+    </member>
+    <member name="E:System.Collections.ObjectModel.ObservableCollection`1.PropertyChanged">
+      <summary>Occurs when a property value changes.</summary>
+    </member>
+    <member name="E:System.Collections.ObjectModel.ObservableCollection`1.System#ComponentModel#INotifyPropertyChanged#PropertyChanged">
+      <summary>Occurs when a property value changes.</summary>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1" /> class.</summary>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1" /> class that contains elements copied from the specified collection.</summary>
+      <param name="collection">The collection from which the elements are copied.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="collection" /> parameter cannot be <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.#ctor(System.Collections.Generic.List{`0})">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1" /> class that contains elements copied from the specified list.</summary>
+      <param name="list">The list from which the elements are copied.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="list" /> parameter cannot be <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.BlockReentrancy">
+      <summary>Disallows reentrant attempts to change this collection.</summary>
+      <returns>An <see cref="T:System.IDisposable" /> object that can be used to dispose of the object.</returns>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.CheckReentrancy">
+      <summary>Checks for reentrant attempts to change this collection.</summary>
+      <exception cref="T:System.InvalidOperationException">If there was a call to <see cref="M:System.Collections.ObjectModel.ObservableCollection`1.BlockReentrancy" /> of which the <see cref="T:System.IDisposable" /> return value has not yet been disposed of. Typically, this means when there are additional attempts to change this collection during a <see cref="E:System.Collections.ObjectModel.ObservableCollection`1.CollectionChanged" /> event. However, it depends on when derived classes choose to call <see cref="M:System.Collections.ObjectModel.ObservableCollection`1.BlockReentrancy" />.</exception>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.ClearItems">
+      <summary>Removes all items from the collection.</summary>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.InsertItem(System.Int32,`0)">
+      <summary>Inserts an item into the collection at the specified index.</summary>
+      <param name="index">The zero-based index at which <paramref name="item" /> should be inserted.</param>
+      <param name="item">The object to insert.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.Move(System.Int32,System.Int32)">
+      <summary>Moves the item at the specified index to a new location in the collection.</summary>
+      <param name="oldIndex">The zero-based index specifying the location of the item to be moved.</param>
+      <param name="newIndex">The zero-based index specifying the new location of the item.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.MoveItem(System.Int32,System.Int32)">
+      <summary>Moves the item at the specified index to a new location in the collection.</summary>
+      <param name="oldIndex">The zero-based index specifying the location of the item to be moved.</param>
+      <param name="newIndex">The zero-based index specifying the new location of the item.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+      <summary>Raises the <see cref="E:System.Collections.ObjectModel.ObservableCollection`1.CollectionChanged" /> event with the provided arguments.</summary>
+      <param name="e">Arguments of the event being raised.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
+      <summary>Raises the <see cref="E:System.Collections.ObjectModel.ObservableCollection`1.PropertyChanged" /> event with the provided arguments.</summary>
+      <param name="e">Arguments of the event being raised.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.RemoveItem(System.Int32)">
+      <summary>Removes the item at the specified index of the collection.</summary>
+      <param name="index">The zero-based index of the element to remove.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ObservableCollection`1.SetItem(System.Int32,`0)">
+      <summary>Replaces the element at the specified index.</summary>
+      <param name="index">The zero-based index of the element to replace.</param>
+      <param name="item">The new value for the element at the specified index.</param>
+    </member>
+    <member name="T:System.Collections.ObjectModel.ReadOnlyObservableCollection`1">
+      <summary>Represents a read-only <see cref="T:System.Collections.ObjectModel.ObservableCollection`1" />.</summary>
+      <typeparam name="T">The type of elements in the collection.</typeparam>
+    </member>
+    <member name="E:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.CollectionChanged">
+      <summary>Occurs when an item is added or removed.</summary>
+    </member>
+    <member name="E:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.PropertyChanged">
+      <summary>Occurs when a property value changes.</summary>
+    </member>
+    <member name="E:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.System#Collections#Specialized#INotifyCollectionChanged#CollectionChanged">
+      <summary>Occurs when the collection changes.</summary>
+    </member>
+    <member name="E:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.System#ComponentModel#INotifyPropertyChanged#PropertyChanged">
+      <summary>Occurs when a property value changes.</summary>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.#ctor(System.Collections.ObjectModel.ObservableCollection{`0})">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.ObjectModel.ReadOnlyObservableCollection`1" /> class that serves as a wrapper around the specified <see cref="T:System.Collections.ObjectModel.ObservableCollection`1" />.</summary>
+      <param name="list">The <see cref="T:System.Collections.ObjectModel.ObservableCollection`1" /> with which to create this instance of the <see cref="T:System.Collections.ObjectModel.ReadOnlyObservableCollection`1" /> class.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="list" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+      <summary>Raises the <see cref="E:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.CollectionChanged" /> event using the provided arguments.</summary>
+      <param name="args">Arguments of the event being raised.</param>
+    </member>
+    <member name="M:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
+      <summary>Raises the <see cref="E:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.PropertyChanged" /> event using the provided arguments.</summary>
+      <param name="args">Arguments of the event being raised.</param>
+    </member>
+    <member name="P:System.Collections.ObjectModel.ReadOnlyObservableCollection`1.Empty">
+      <summary>Gets an empty <see cref="T:System.Collections.ObjectModel.ReadOnlyObservableCollection`1" />.</summary>
+      <returns>An empty <see cref="T:System.Collections.ObjectModel.ReadOnlyObservableCollection`1" />.</returns>
+    </member>
+    <member name="T:System.Collections.Specialized.INotifyCollectionChanged">
+      <summary>Notifies listeners of dynamic changes, such as when an item is added and removed or the whole list is cleared.</summary>
+    </member>
+    <member name="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged">
+      <summary>Occurs when the collection changes.</summary>
+    </member>
+    <member name="T:System.Collections.Specialized.NotifyCollectionChangedAction">
+      <summary>Describes the action that caused a <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged" /> event.</summary>
+    </member>
+    <member name="F:System.Collections.Specialized.NotifyCollectionChangedAction.Add">
+      <summary>An item was added to the collection.</summary>
+    </member>
+    <member name="F:System.Collections.Specialized.NotifyCollectionChangedAction.Move">
+      <summary>An item was moved within the collection.</summary>
+    </member>
+    <member name="F:System.Collections.Specialized.NotifyCollectionChangedAction.Remove">
+      <summary>An item was removed from the collection.</summary>
+    </member>
+    <member name="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace">
+      <summary>An item was replaced in the collection.</summary>
+    </member>
+    <member name="F:System.Collections.Specialized.NotifyCollectionChangedAction.Reset">
+      <summary>The contents of the collection changed dramatically.</summary>
+    </member>
+    <member name="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs">
+      <summary>Provides data for the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged" /> event.</summary>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Reset" /> change.</summary>
+      <param name="action">The action that caused the event. This must be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Reset" />.</param>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Collections.IList)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a multi-item change.</summary>
+      <param name="action">The action that caused the event. This can be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Reset" />, <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Add" />, or <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Remove" />.</param>
+      <param name="changedItems">The items that are affected by the change.</param>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Collections.IList,System.Collections.IList)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a multi-item <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" /> change.</summary>
+      <param name="action">The action that caused the event. This can only be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" />.</param>
+      <param name="newItems">The new items that are replacing the original items.</param>
+      <param name="oldItems">The original items that are replaced.</param>
+      <exception cref="T:System.ArgumentException">If <paramref name="action" /> is not Replace.</exception>
+      <exception cref="T:System.ArgumentNullException">If <paramref name="oldItems" /> or <paramref name="newItems" /> is null.</exception>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Collections.IList,System.Collections.IList,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a multi-item <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" /> change.</summary>
+      <param name="action">The action that caused the event. This can only be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" />.</param>
+      <param name="newItems">The new items that are replacing the original items.</param>
+      <param name="oldItems">The original items that are replaced.</param>
+      <param name="startingIndex">The index of the first item of the items that are being replaced.</param>
+      <exception cref="T:System.ArgumentException">If <paramref name="action" /> is not Replace.</exception>
+      <exception cref="T:System.ArgumentNullException">If <paramref name="oldItems" /> or <paramref name="newItems" /> is null.</exception>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Collections.IList,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a multi-item change or a <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Reset" /> change.</summary>
+      <param name="action">The action that caused the event. This can be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Reset" />, <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Add" />, or <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Remove" />.</param>
+      <param name="changedItems">The items affected by the change.</param>
+      <param name="startingIndex">The index where the change occurred.</param>
+      <exception cref="T:System.ArgumentException">If <paramref name="action" /> is not Reset, Add, or Remove, if <paramref name="action" /> is Reset and either <paramref name="changedItems" /> is not null or <paramref name="startingIndex" /> is not -1, or if action is Add or Remove and <paramref name="startingIndex" /> is less than -1.</exception>
+      <exception cref="T:System.ArgumentNullException">If <paramref name="action" /> is Add or Remove and <paramref name="changedItems" /> is null.</exception>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Collections.IList,System.Int32,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a multi-item <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Move" /> change.</summary>
+      <param name="action">The action that caused the event. This can only be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Move" />.</param>
+      <param name="changedItems">The items affected by the change.</param>
+      <param name="index">The new index for the changed items.</param>
+      <param name="oldIndex">The old index for the changed items.</param>
+      <exception cref="T:System.ArgumentException">If <paramref name="action" /> is not Move or <paramref name="index" /> is less than 0.</exception>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Object)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a one-item change.</summary>
+      <param name="action">The action that caused the event. This can be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Reset" />, <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Add" />, or <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Remove" />.</param>
+      <param name="changedItem">The item that is affected by the change.</param>
+      <exception cref="T:System.ArgumentException">If <paramref name="action" /> is not Reset, Add, or Remove, or if <paramref name="action" /> is Reset and <paramref name="changedItem" /> is not null.</exception>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Object,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a one-item change.</summary>
+      <param name="action">The action that caused the event. This can be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Reset" />, <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Add" />, or <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Remove" />.</param>
+      <param name="changedItem">The item that is affected by the change.</param>
+      <param name="index">The index where the change occurred.</param>
+      <exception cref="T:System.ArgumentException">If <paramref name="action" /> is not Reset, Add, or Remove, or if <paramref name="action" /> is Reset and either <paramref name="changedItems" /> is not null or <paramref name="index" /> is not -1.</exception>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Object,System.Int32,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a one-item <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Move" /> change.</summary>
+      <param name="action">The action that caused the event. This can only be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Move" />.</param>
+      <param name="changedItem">The item affected by the change.</param>
+      <param name="index">The new index for the changed item.</param>
+      <param name="oldIndex">The old index for the changed item.</param>
+      <exception cref="T:System.ArgumentException">If <paramref name="action" /> is not Move or <paramref name="index" /> is less than 0.</exception>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Object,System.Object)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a one-item <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" /> change.</summary>
+      <param name="action">The action that caused the event. This can only be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" />.</param>
+      <param name="newItem">The new item that is replacing the original item.</param>
+      <param name="oldItem">The original item that is replaced.</param>
+      <exception cref="T:System.ArgumentException">If <paramref name="action" /> is not Replace.</exception>
+    </member>
+    <member name="M:System.Collections.Specialized.NotifyCollectionChangedEventArgs.#ctor(System.Collections.Specialized.NotifyCollectionChangedAction,System.Object,System.Object,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> class that describes a one-item <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" /> change.</summary>
+      <param name="action">The action that caused the event. This can be set to <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" />.</param>
+      <param name="newItem">The new item that is replacing the original item.</param>
+      <param name="oldItem">The original item that is replaced.</param>
+      <param name="index">The index of the item being replaced.</param>
+      <exception cref="T:System.ArgumentException">If <paramref name="action" /> is not Replace.</exception>
+    </member>
+    <member name="P:System.Collections.Specialized.NotifyCollectionChangedEventArgs.Action">
+      <summary>Gets the action that caused the event.</summary>
+      <returns>A <see cref="T:System.Collections.Specialized.NotifyCollectionChangedAction" /> value that describes the action that caused the event.</returns>
+    </member>
+    <member name="P:System.Collections.Specialized.NotifyCollectionChangedEventArgs.NewItems">
+      <summary>Gets the list of new items involved in the change.</summary>
+      <returns>The list of new items involved in the change.</returns>
+    </member>
+    <member name="P:System.Collections.Specialized.NotifyCollectionChangedEventArgs.NewStartingIndex">
+      <summary>Gets the index at which the change occurred.</summary>
+      <returns>The zero-based index at which the change occurred.</returns>
+    </member>
+    <member name="P:System.Collections.Specialized.NotifyCollectionChangedEventArgs.OldItems">
+      <summary>Gets the list of items affected by a <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" />, Remove, or Move action.</summary>
+      <returns>The list of items affected by a <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Replace" />, Remove, or Move action.</returns>
+    </member>
+    <member name="P:System.Collections.Specialized.NotifyCollectionChangedEventArgs.OldStartingIndex">
+      <summary>Gets the index at which a <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Move" />, Remove, or Replace action occurred.</summary>
+      <returns>The zero-based index at which a <see cref="F:System.Collections.Specialized.NotifyCollectionChangedAction.Move" />, Remove, or Replace action occurred.</returns>
+    </member>
+    <member name="T:System.Collections.Specialized.NotifyCollectionChangedEventHandler">
+      <summary>Represents the method that handles the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged" /> event.</summary>
+      <param name="sender">The object that raised the event.</param>
+      <param name="e">Information about the event.</param>
+    </member>
+    <member name="T:System.ComponentModel.DataErrorsChangedEventArgs">
+      <summary>Provides data for the <see cref="E:System.ComponentModel.INotifyDataErrorInfo.ErrorsChanged" /> event.</summary>
+    </member>
+    <member name="M:System.ComponentModel.DataErrorsChangedEventArgs.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.ComponentModel.DataErrorsChangedEventArgs" /> class.</summary>
+      <param name="propertyName">The name of the property that has an error.  <see langword="null" /> or <see cref="F:System.String.Empty" /> if the error is object-level.</param>
+    </member>
+    <member name="P:System.ComponentModel.DataErrorsChangedEventArgs.PropertyName">
+      <summary>Gets the name of the property that has an error.</summary>
+      <returns>The name of the property that has an error. <see langword="null" /> or <see cref="F:System.String.Empty" /> if the error is object-level.</returns>
+    </member>
+    <member name="T:System.ComponentModel.INotifyDataErrorInfo">
+      <summary>Defines members that data entity classes can implement to provide custom synchronous and asynchronous validation support.</summary>
+    </member>
+    <member name="E:System.ComponentModel.INotifyDataErrorInfo.ErrorsChanged">
+      <summary>Occurs when the validation errors have changed for a property or for the entire entity.</summary>
+    </member>
+    <member name="M:System.ComponentModel.INotifyDataErrorInfo.GetErrors(System.String)">
+      <summary>Gets the validation errors for a specified property or for the entire entity.</summary>
+      <param name="propertyName">The name of the property to retrieve validation errors for; or <see langword="null" /> or <see cref="F:System.String.Empty" />, to retrieve entity-level errors.</param>
+      <returns>The validation errors for the property or entity.</returns>
+    </member>
+    <member name="P:System.ComponentModel.INotifyDataErrorInfo.HasErrors">
+      <summary>Gets a value that indicates whether the entity has validation errors.</summary>
+      <returns>
+        <see langword="true" /> if the entity currently has validation errors; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="T:System.ComponentModel.INotifyPropertyChanged">
+      <summary>Notifies clients that a property value has changed.</summary>
+    </member>
+    <member name="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged">
+      <summary>Occurs when a property value changes.</summary>
+    </member>
+    <member name="T:System.ComponentModel.INotifyPropertyChanging">
+      <summary>Notifies clients that a property value is changing.</summary>
+    </member>
+    <member name="E:System.ComponentModel.INotifyPropertyChanging.PropertyChanging">
+      <summary>Occurs when a property value is changing.</summary>
+    </member>
+    <member name="T:System.ComponentModel.PropertyChangedEventArgs">
+      <summary>Provides data for the <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged" /> event.</summary>
+    </member>
+    <member name="M:System.ComponentModel.PropertyChangedEventArgs.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.ComponentModel.PropertyChangedEventArgs" /> class.</summary>
+      <param name="propertyName">The name of the property that changed.</param>
+    </member>
+    <member name="P:System.ComponentModel.PropertyChangedEventArgs.PropertyName">
+      <summary>Gets the name of the property that changed.</summary>
+      <returns>The name of the property that changed.</returns>
+    </member>
+    <member name="T:System.ComponentModel.PropertyChangedEventHandler">
+      <summary>Represents the method that will handle the <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged" /> event raised when a property is changed on a component.</summary>
+      <param name="sender">The source of the event.</param>
+      <param name="e">A <see cref="T:System.ComponentModel.PropertyChangedEventArgs" /> that contains the event data.</param>
+    </member>
+    <member name="T:System.ComponentModel.PropertyChangingEventArgs">
+      <summary>Provides data for the <see cref="E:System.ComponentModel.INotifyPropertyChanging.PropertyChanging" /> event.</summary>
+    </member>
+    <member name="M:System.ComponentModel.PropertyChangingEventArgs.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.ComponentModel.PropertyChangingEventArgs" /> class.</summary>
+      <param name="propertyName">The name of the property whose value is changing.</param>
+    </member>
+    <member name="P:System.ComponentModel.PropertyChangingEventArgs.PropertyName">
+      <summary>Gets the name of the property whose value is changing.</summary>
+      <returns>The name of the property whose value is changing.</returns>
+    </member>
+    <member name="T:System.ComponentModel.PropertyChangingEventHandler">
+      <summary>Represents the method that will handle the <see cref="E:System.ComponentModel.INotifyPropertyChanging.PropertyChanging" /> event of an <see cref="T:System.ComponentModel.INotifyPropertyChanging" /> interface.</summary>
+      <param name="sender">The source of the event.</param>
+      <param name="e">A <see cref="T:System.ComponentModel.PropertyChangingEventArgs" /> that contains the event data.</param>
+    </member>
+    <member name="T:System.ComponentModel.TypeConverterAttribute">
+      <summary>Specifies what type to use as a converter for the object this attribute is bound to.</summary>
+    </member>
+    <member name="F:System.ComponentModel.TypeConverterAttribute.Default">
+      <summary>Specifies the type to use as a converter for the object this attribute is bound to.</summary>
+    </member>
+    <member name="M:System.ComponentModel.TypeConverterAttribute.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.ComponentModel.TypeConverterAttribute" /> class with the default type converter, which is an empty string ("").</summary>
+    </member>
+    <member name="M:System.ComponentModel.TypeConverterAttribute.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.ComponentModel.TypeConverterAttribute" /> class, using the specified type name as the data converter for the object this attribute is bound to.</summary>
+      <param name="typeName">The fully qualified name of the class to use for data conversion for the object this attribute is bound to.</param>
+    </member>
+    <member name="M:System.ComponentModel.TypeConverterAttribute.#ctor(System.Type)">
+      <summary>Initializes a new instance of the <see cref="T:System.ComponentModel.TypeConverterAttribute" /> class, using the specified type as the data converter for the object this attribute is bound to.</summary>
+      <param name="type">A <see cref="T:System.Type" /> that represents the type of the converter class to use for data conversion for the object this attribute is bound to.</param>
+    </member>
+    <member name="M:System.ComponentModel.TypeConverterAttribute.Equals(System.Object)">
+      <summary>Returns whether the value of the given object is equal to the current <see cref="T:System.ComponentModel.TypeConverterAttribute" />.</summary>
+      <param name="obj">The object to test the value equality of.</param>
+      <returns>
+        <see langword="true" /> if the value of the given object is equal to that of the current <see cref="T:System.ComponentModel.TypeConverterAttribute" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.ComponentModel.TypeConverterAttribute.GetHashCode">
+      <summary>Returns the hash code for this instance.</summary>
+      <returns>A hash code for the current <see cref="T:System.ComponentModel.TypeConverterAttribute" />.</returns>
+    </member>
+    <member name="P:System.ComponentModel.TypeConverterAttribute.ConverterTypeName">
+      <summary>Gets the fully qualified type name of the <see cref="T:System.Type" /> to use as a converter for the object this attribute is bound to.</summary>
+      <returns>The fully qualified type name of the <see cref="T:System.Type" /> to use as a converter for the object this attribute is bound to, or an empty string ("") if none exists. The default value is an empty string ("").</returns>
+    </member>
+    <member name="T:System.ComponentModel.TypeDescriptionProviderAttribute">
+      <summary>Specifies the custom type description provider for a class. This class cannot be inherited.</summary>
+    </member>
+    <member name="M:System.ComponentModel.TypeDescriptionProviderAttribute.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.ComponentModel.TypeDescriptionProviderAttribute" /> class using the specified type name.</summary>
+      <param name="typeName">The qualified name of the type.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="typeName" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.ComponentModel.TypeDescriptionProviderAttribute.#ctor(System.Type)">
+      <summary>Initializes a new instance of the <see cref="T:System.ComponentModel.TypeDescriptionProviderAttribute" /> class using the specified type.</summary>
+      <param name="type">The type to store in the attribute.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="type" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="P:System.ComponentModel.TypeDescriptionProviderAttribute.TypeName">
+      <summary>Gets the type name for the type description provider.</summary>
+      <returns>A <see cref="T:System.String" /> containing the qualified type name for the <see cref="T:System.ComponentModel.TypeDescriptionProvider" />.</returns>
+    </member>
+    <member name="T:System.Reflection.ICustomTypeProvider">
+      <summary>Represents an object that provides a custom type.</summary>
+    </member>
+    <member name="M:System.Reflection.ICustomTypeProvider.GetCustomType">
+      <summary>Gets the custom type provided by this object.</summary>
+      <returns>The custom type.</returns>
+    </member>
+    <member name="T:System.Windows.Input.ICommand">
+      <summary>Defines a command.</summary>
+    </member>
+    <member name="E:System.Windows.Input.ICommand.CanExecuteChanged">
+      <summary>Occurs when changes occur that affect whether or not the command should execute.</summary>
+    </member>
+    <member name="M:System.Windows.Input.ICommand.CanExecute(System.Object)">
+      <summary>Defines the method that determines whether the command can execute in its current state.</summary>
+      <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
+      <returns>
+        <see langword="true" /> if this command can be executed; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Windows.Input.ICommand.Execute(System.Object)">
+      <summary>Defines the method to be called when the command is invoked.</summary>
+      <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
+    </member>
+    <member name="T:System.Windows.Markup.ValueSerializerAttribute">
+      <summary>Identifies the <see cref="T:System.Windows.Markup.ValueSerializer" /> class that a type or property should use when it is serialized.</summary>
+    </member>
+    <member name="M:System.Windows.Markup.ValueSerializerAttribute.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Markup.ValueSerializerAttribute" /> class, using an assembly qualified type name string.</summary>
+      <param name="valueSerializerTypeName">The assembly qualified type name string for the <see cref="T:System.Windows.Markup.ValueSerializer" /> class to use.</param>
+    </member>
+    <member name="M:System.Windows.Markup.ValueSerializerAttribute.#ctor(System.Type)">
+      <summary>Initializes a new instance of the <see cref="T:System.Windows.Markup.ValueSerializerAttribute" /> class, using the specified type.</summary>
+      <param name="valueSerializerType">A type that represents the type of the <see cref="T:System.Windows.Markup.ValueSerializer" /> class.</param>
+    </member>
+    <member name="P:System.Windows.Markup.ValueSerializerAttribute.ValueSerializerType">
+      <summary>Gets the type of the <see cref="T:System.Windows.Markup.ValueSerializer" /> class reported by this attribute.</summary>
+      <returns>The type of the <see cref="T:System.Windows.Markup.ValueSerializer" />.</returns>
+    </member>
+    <member name="P:System.Windows.Markup.ValueSerializerAttribute.ValueSerializerTypeName">
+      <summary>Gets the assembly qualified name of the <see cref="T:System.Windows.Markup.ValueSerializer" /> type for this type or property.</summary>
+      <returns>The assembly qualified name of the type.</returns>
+    </member>
+  </members>
+</doc>

@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.FileProviders.Composite</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.FileProviders.Composite.CompositeDirectoryContents">
+            <summary>
+            Represents the result of a call composition of <see cref="M:Microsoft.Extensions.FileProviders.IFileProvider.GetDirectoryContents(System.String)"/>
+            for a list of <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/> and a path.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Composite.CompositeDirectoryContents.#ctor(System.Collections.Generic.IList{Microsoft.Extensions.FileProviders.IFileProvider},System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Extensions.FileProviders.Composite.CompositeDirectoryContents"/> to represents the result of a call composition of
+            <see cref="M:Microsoft.Extensions.FileProviders.IFileProvider.GetDirectoryContents(System.String)"/>.
+            </summary>
+            <param name="fileProviders">The list of <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/> for which the results have to be composed.</param>
+            <param name="subpath">The path.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.Composite.CompositeDirectoryContents.GetEnumerator">
+            <summary>
+            Creates an enumerator for all files in all providers given.
+            Ensures each item in the collection is distinct.
+            </summary>
+            <returns>An enumerator over all files in all given providers</returns>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.Composite.CompositeDirectoryContents.Exists">
+            <summary>
+            True if any given providers exists
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.FileProviders.CompositeFileProvider">
+            <summary>
+            Looks up files using a collection of <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.CompositeFileProvider.#ctor(Microsoft.Extensions.FileProviders.IFileProvider[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.FileProviders.CompositeFileProvider" /> class using a collection of file provider.
+            </summary>
+            <param name="fileProviders">The collection of <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider" /></param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.CompositeFileProvider.#ctor(System.Collections.Generic.IEnumerable{Microsoft.Extensions.FileProviders.IFileProvider})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.FileProviders.CompositeFileProvider" /> class using a collection of file provider.
+            </summary>
+            <param name="fileProviders">The collection of <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider" /></param>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.CompositeFileProvider.GetFileInfo(System.String)">
+            <summary>
+            Locates a file at the given path.
+            </summary>
+            <param name="subpath">The path that identifies the file. </param>
+            <returns>The file information. Caller must check Exists property. This will be the first existing <see cref="T:Microsoft.Extensions.FileProviders.IFileInfo"/> returned by the provided <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/> or a not found <see cref="T:Microsoft.Extensions.FileProviders.IFileInfo"/> if no existing files is found.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.CompositeFileProvider.GetDirectoryContents(System.String)">
+            <summary>
+            Enumerate a directory at the given path, if any.
+            </summary>
+            <param name="subpath">The path that identifies the directory</param>
+            <returns>Contents of the directory. Caller must check Exists property.
+            The content is a merge of the contents of the provided <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/>.
+            When there is multiple <see cref="T:Microsoft.Extensions.FileProviders.IFileInfo"/> with the same Name property, only the first one is included on the results.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.FileProviders.CompositeFileProvider.Watch(System.String)">
+            <summary>
+            Creates a <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> for the specified <paramref name="pattern"/>.
+            </summary>
+            <param name="pattern">Filter string used to determine what files or folders to monitor. Example: **/*.cs, *.*, subFolder/**/*.cshtml.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> that is notified when a file matching <paramref name="pattern"/> is added, modified or deleted.
+            The change token will be notified when one of the change token returned by the provided <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/> will be notified.</returns>
+        </member>
+        <member name="P:Microsoft.Extensions.FileProviders.CompositeFileProvider.FileProviders">
+            <summary>
+            Gets the list of configured <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider" /> instances.
+            </summary>
+        </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+    </members>
+</doc>

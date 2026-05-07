@@ -1,0 +1,726 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Diagnostics.StackTrace</name>
+  </assembly>
+  <members>
+    <member name="T:System.Diagnostics.StackFrame">
+      <summary>Provides information about a <see cref="T:System.Diagnostics.StackFrame" />, which represents a function call on the call stack for the current thread.</summary>
+    </member>
+    <member name="F:System.Diagnostics.StackFrame.OFFSET_UNKNOWN">
+      <summary>Defines the value that is returned from the <see cref="M:System.Diagnostics.StackFrame.GetNativeOffset" /> or <see cref="M:System.Diagnostics.StackFrame.GetILOffset" /> method when the native or Microsoft intermediate language (MSIL) offset is unknown. This field is constant.</summary>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackFrame" /> class.</summary>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.#ctor(System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackFrame" /> class, optionally capturing source information.</summary>
+      <param name="needFileInfo" />
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.#ctor(System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackFrame" /> class that corresponds to a frame above the current stack frame.</summary>
+      <param name="skipFrames">The number of frames up the stack to skip.</param>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.#ctor(System.Int32,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackFrame" /> class that corresponds to a frame above the current stack frame, optionally capturing source information.</summary>
+      <param name="skipFrames">The number of frames up the stack to skip.</param>
+      <param name="needFileInfo" />
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.#ctor(System.String,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackFrame" /> class that contains only the given file name and line number.</summary>
+      <param name="fileName">The file name.</param>
+      <param name="lineNumber">The line number in the specified file.</param>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.#ctor(System.String,System.Int32,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackFrame" /> class that contains only the given file name, line number, and column number.</summary>
+      <param name="fileName">The file name.</param>
+      <param name="lineNumber">The line number in the specified file.</param>
+      <param name="colNumber">The column number in the specified file.</param>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.GetFileColumnNumber">
+      <summary>Gets the column number in the file that contains the code that is executing. This information is typically extracted from the debugging symbols for the executable.</summary>
+      <returns>The file column number, or 0 (zero) if the file column number cannot be determined.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.GetFileLineNumber">
+      <summary>Gets the line number in the file that contains the code that is executing. This information is typically extracted from the debugging symbols for the executable.</summary>
+      <returns>The file line number, or 0 (zero) if the file line number cannot be determined.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.GetFileName">
+      <summary>Gets the file name that contains the code that is executing. This information is typically extracted from the debugging symbols for the executable.</summary>
+      <returns>The file name, or <see langword="null" /> if the file name cannot be determined.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.GetILOffset">
+      <summary>Gets the offset from the start of the Microsoft intermediate language (MSIL) code for the method that is executing. This offset might be an approximation depending on whether or not the just-in-time (JIT) compiler is generating debugging code. The generation of this debugging information is controlled by the <see cref="T:System.Diagnostics.DebuggableAttribute" />.</summary>
+      <returns>The offset from the start of the MSIL code for the method that is executing.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.GetMethod">
+      <summary>Gets the method in which the frame is executing.</summary>
+      <returns>The method in which the frame is executing.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.GetNativeOffset">
+      <summary>Gets the offset from the start of the native just-in-time (JIT)-compiled code for the method that is being executed. The generation of this debugging information is controlled by the <see cref="T:System.Diagnostics.DebuggableAttribute" /> class.</summary>
+      <returns>The offset from the start of the JIT-compiled code for the method that is being executed.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrame.ToString">
+      <summary>Builds a readable representation of the stack trace.</summary>
+      <returns>A readable representation of the stack trace.</returns>
+    </member>
+    <member name="T:System.Diagnostics.StackFrameExtensions">
+      <summary>Provides extension methods for the <see cref="T:System.Diagnostics.StackFrame" /> class, which represents a function call on the call stack for the current thread.</summary>
+    </member>
+    <member name="M:System.Diagnostics.StackFrameExtensions.GetNativeImageBase(System.Diagnostics.StackFrame)">
+      <summary>Returns a pointer to the base address of the native image that this stack frame is executing.</summary>
+      <param name="stackFrame">A stack frame.</param>
+      <returns>A pointer to the base address of the native image or <see cref="F:System.IntPtr.Zero" /> if you're targeting the .NET Framework.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrameExtensions.GetNativeIP(System.Diagnostics.StackFrame)">
+      <summary>Gets an interface pointer to the start of the native code for the method that is being executed.</summary>
+      <param name="stackFrame">A stack frame.</param>
+      <returns>An interface pointer to the start of the native code for the method that is being executed or <see cref="F:System.IntPtr.Zero" /> if you're targeting the .NET Framework.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrameExtensions.HasILOffset(System.Diagnostics.StackFrame)">
+      <summary>Indicates whether an offset from the start of the IL code for the method that is executing is available.</summary>
+      <param name="stackFrame">A stack frame.</param>
+      <returns>
+        <see langword="true" /> if the offset is available; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrameExtensions.HasMethod(System.Diagnostics.StackFrame)">
+      <summary>Indicates whether information about the method in which the specified frame is executing is available.</summary>
+      <param name="stackFrame">A stack frame.</param>
+      <returns>
+        <see langword="true" /> if information about the method in which the current frame is executing is available; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrameExtensions.HasNativeImage(System.Diagnostics.StackFrame)">
+      <summary>Indicates whether the native image is available for the specified stack frame.</summary>
+      <param name="stackFrame">A stack frame.</param>
+      <returns>
+        <see langword="true" /> if a native image is available for this stack frame; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackFrameExtensions.HasSource(System.Diagnostics.StackFrame)">
+      <summary>Indicates whether the file that contains the code that the specified stack frame is executing is available.</summary>
+      <param name="stackFrame">A stack frame.</param>
+      <returns>
+        <see langword="true" /> if the code that the specified stack frame is executing is available; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="T:System.Diagnostics.StackTrace">
+      <summary>Represents a stack trace, which is an ordered collection of one or more stack frames.</summary>
+    </member>
+    <member name="F:System.Diagnostics.StackTrace.METHODS_TO_SKIP">
+      <summary>Defines the default for the number of methods to omit from the stack trace. This field is constant.</summary>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackTrace" /> class from the caller's frame.</summary>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor(System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackTrace" /> class from the caller's frame, optionally capturing source information.</summary>
+      <param name="fNeedFileInfo">
+        <see langword="true" /> to capture the file name, line number, and column number; otherwise, <see langword="false" />.</param>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor(System.Collections.Generic.IEnumerable{System.Diagnostics.StackFrame})">
+      <summary>Constructs a stack trace from a set of <see cref="T:System.Diagnostics.StackFrame" /> objects.</summary>
+      <param name="frames">The set of stack frames that should be present in the stack trace.</param>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor(System.Diagnostics.StackFrame)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackTrace" /> class that contains a single frame.</summary>
+      <param name="frame">The frame that the <see cref="T:System.Diagnostics.StackTrace" /> object should contain.</param>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor(System.Exception)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackTrace" /> class using the provided exception object.</summary>
+      <param name="e">The exception object from which to construct the stack trace.</param>
+      <exception cref="T:System.ArgumentNullException">The parameter <paramref name="e" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor(System.Exception,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackTrace" /> class, using the provided exception object and optionally capturing source information.</summary>
+      <param name="e">The exception object from which to construct the stack trace.</param>
+      <param name="fNeedFileInfo">
+        <see langword="true" /> to capture the file name, line number, and column number; otherwise, <see langword="false" />.</param>
+      <exception cref="T:System.ArgumentNullException">The parameter <paramref name="e" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor(System.Exception,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackTrace" /> class using the provided exception object and skipping the specified number of frames.</summary>
+      <param name="e">The exception object from which to construct the stack trace.</param>
+      <param name="skipFrames">The number of frames up the stack from which to start the trace.</param>
+      <exception cref="T:System.ArgumentNullException">The parameter <paramref name="e" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="skipFrames" /> parameter is negative.</exception>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor(System.Exception,System.Int32,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackTrace" /> class using the provided exception object, skipping the specified number of frames and optionally capturing source information.</summary>
+      <param name="e">The exception object from which to construct the stack trace.</param>
+      <param name="skipFrames">The number of frames up the stack from which to start the trace.</param>
+      <param name="fNeedFileInfo">
+        <see langword="true" /> to capture the file name, line number, and column number; otherwise, <see langword="false" />.</param>
+      <exception cref="T:System.ArgumentNullException">The parameter <paramref name="e" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="skipFrames" /> parameter is negative.</exception>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor(System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackTrace" /> class from the caller's frame, skipping the specified number of frames.</summary>
+      <param name="skipFrames">The number of frames up the stack from which to start the trace.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="skipFrames" /> parameter is negative.</exception>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.#ctor(System.Int32,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.StackTrace" /> class from the caller's frame, skipping the specified number of frames and optionally capturing source information.</summary>
+      <param name="skipFrames">The number of frames up the stack from which to start the trace.</param>
+      <param name="fNeedFileInfo">
+        <see langword="true" /> to capture the file name, line number, and column number; otherwise, <see langword="false" />.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="skipFrames" /> parameter is negative.</exception>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.GetFrame(System.Int32)">
+      <summary>Gets the specified stack frame.</summary>
+      <param name="index">The index of the stack frame requested.</param>
+      <returns>The specified stack frame.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.GetFrames">
+      <summary>Returns a copy of all stack frames in the current stack trace.</summary>
+      <returns>An array of type <see cref="T:System.Diagnostics.StackFrame" /> representing the function calls in the stack trace.</returns>
+    </member>
+    <member name="M:System.Diagnostics.StackTrace.ToString">
+      <summary>Builds a readable representation of the stack trace.</summary>
+      <returns>A readable representation of the stack trace.</returns>
+    </member>
+    <member name="P:System.Diagnostics.StackTrace.FrameCount">
+      <summary>Gets the number of frames in the stack trace.</summary>
+      <returns>The number of frames in the stack trace.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolBinder">
+      <summary>Represents a symbol binder for managed code.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolBinder.GetReader(System.Int32,System.String,System.String)">
+      <summary>Gets the interface of the symbol reader for the current file.</summary>
+      <param name="importer">The metadata import interface.</param>
+      <param name="filename">The name of the file for which the reader interface is required.</param>
+      <param name="searchPath">The search path used to locate the symbol file.</param>
+      <returns>The <see cref="T:System.Diagnostics.SymbolStore.ISymbolReader" /> interface that reads the debugging symbols.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolBinder1">
+      <summary>Represents a symbol binder for managed code.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolBinder1.GetReader(System.IntPtr,System.String,System.String)">
+      <summary>Gets the interface of the symbol reader for the current file.</summary>
+      <param name="importer">An <see cref="T:System.IntPtr" /> that refers to the metadata import interface.</param>
+      <param name="filename">The name of the file for which the reader interface is required.</param>
+      <param name="searchPath">The search path used to locate the symbol file.</param>
+      <returns>The <see cref="T:System.Diagnostics.SymbolStore.ISymbolReader" /> interface that reads the debugging symbols.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolDocument">
+      <summary>Represents a document referenced by a symbol store.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolDocument.FindClosestLine(System.Int32)">
+      <summary>Returns the closest line that is a sequence point, given a line in the current document that might or might not be a sequence point.</summary>
+      <param name="line">The specified line in the document.</param>
+      <returns>The closest line that is a sequence point.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolDocument.GetCheckSum">
+      <summary>Gets the checksum.</summary>
+      <returns>The checksum.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolDocument.GetSourceRange(System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary>Gets the embedded document source for the specified range.</summary>
+      <param name="startLine">The starting line in the current document.</param>
+      <param name="startColumn">The starting column in the current document.</param>
+      <param name="endLine">The ending line in the current document.</param>
+      <param name="endColumn">The ending column in the current document.</param>
+      <returns>The document source for the specified range.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolDocument.CheckSumAlgorithmId">
+      <summary>Gets the checksum algorithm identifier.</summary>
+      <returns>A GUID identifying the checksum algorithm. The value is all zeros, if there is no checksum.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolDocument.DocumentType">
+      <summary>Gets the type of the current document.</summary>
+      <returns>The type of the current document.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolDocument.HasEmbeddedSource">
+      <summary>Checks whether the current document is stored in the symbol store.</summary>
+      <returns>
+        <see langword="true" /> if the current document is stored in the symbol store; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolDocument.Language">
+      <summary>Gets the language of the current document.</summary>
+      <returns>The language of the current document.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolDocument.LanguageVendor">
+      <summary>Gets the language vendor of the current document.</summary>
+      <returns>The language vendor of the current document.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolDocument.SourceLength">
+      <summary>Gets the length, in bytes, of the embedded source.</summary>
+      <returns>The source length of the current document.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolDocument.URL">
+      <summary>Gets the URL of the current document.</summary>
+      <returns>The URL of the current document.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolDocumentWriter">
+      <summary>Represents a document referenced by a symbol store.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolDocumentWriter.SetCheckSum(System.Guid,System.Byte[])">
+      <summary>Sets checksum information.</summary>
+      <param name="algorithmId">The GUID representing the algorithm ID.</param>
+      <param name="checkSum">The checksum.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolDocumentWriter.SetSource(System.Byte[])">
+      <summary>Stores the raw source for a document in the symbol store.</summary>
+      <param name="source">The document source represented as unsigned bytes.</param>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolMethod">
+      <summary>Represents a method within a symbol store.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolMethod.GetNamespace">
+      <summary>Gets the namespace that the current method is defined within.</summary>
+      <returns>The namespace that the current method is defined within.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolMethod.GetOffset(System.Diagnostics.SymbolStore.ISymbolDocument,System.Int32,System.Int32)">
+      <summary>Gets the Microsoft intermediate language (MSIL) offset within the method that corresponds to the specified position.</summary>
+      <param name="document">The document for which the offset is requested.</param>
+      <param name="line">The document line corresponding to the offset.</param>
+      <param name="column">The document column corresponding to the offset.</param>
+      <returns>The offset within the specified document.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolMethod.GetParameters">
+      <summary>Gets the parameters for the current method.</summary>
+      <returns>The array of parameters for the current method.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolMethod.GetRanges(System.Diagnostics.SymbolStore.ISymbolDocument,System.Int32,System.Int32)">
+      <summary>Gets an array of start and end offset pairs that correspond to the ranges of Microsoft intermediate language (MSIL) that a given position covers within this method.</summary>
+      <param name="document">The document for which the offset is requested.</param>
+      <param name="line">The document line corresponding to the ranges.</param>
+      <param name="column">The document column corresponding to the ranges.</param>
+      <returns>An array of start and end offset pairs.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolMethod.GetScope(System.Int32)">
+      <summary>Returns the most enclosing lexical scope when given an offset within a method.</summary>
+      <param name="offset">The byte offset within the method of the lexical scope.</param>
+      <returns>The most enclosing lexical scope for the given byte offset within the method.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolMethod.GetSequencePoints(System.Int32[],System.Diagnostics.SymbolStore.ISymbolDocument[],System.Int32[],System.Int32[],System.Int32[],System.Int32[])">
+      <summary>Gets the sequence points for the current method.</summary>
+      <param name="offsets">The array of byte offsets from the beginning of the method for the sequence points.</param>
+      <param name="documents">The array of documents in which the sequence points are located.</param>
+      <param name="lines">The array of lines in the documents at which the sequence points are located.</param>
+      <param name="columns">The array of columns in the documents at which the sequence points are located.</param>
+      <param name="endLines">The array of lines in the documents at which the sequence points end.</param>
+      <param name="endColumns">The array of columns in the documents at which the sequence points end.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolMethod.GetSourceStartEnd(System.Diagnostics.SymbolStore.ISymbolDocument[],System.Int32[],System.Int32[])">
+      <summary>Gets the start and end positions for the source of the current method.</summary>
+      <param name="docs">The starting and ending source documents.</param>
+      <param name="lines">The starting and ending lines in the corresponding source documents.</param>
+      <param name="columns">The starting and ending columns in the corresponding source documents.</param>
+      <returns>
+        <see langword="true" /> if the positions were defined; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolMethod.RootScope">
+      <summary>Gets the root lexical scope for the current method. This scope encloses the entire method.</summary>
+      <returns>The root lexical scope that encloses the entire method.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolMethod.SequencePointCount">
+      <summary>Gets a count of the sequence points in the method.</summary>
+      <returns>The count of the sequence points in the method.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolMethod.Token">
+      <summary>Gets the <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> containing the metadata for the current method.</summary>
+      <returns>The metadata token for the current method.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolNamespace">
+      <summary>Represents a namespace within a symbol store.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolNamespace.GetNamespaces">
+      <summary>Gets the child members of the current namespace.</summary>
+      <returns>The child members of the current namespace.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolNamespace.GetVariables">
+      <summary>Gets all the variables defined at global scope within the current namespace.</summary>
+      <returns>The variables defined at global scope within the current namespace.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolNamespace.Name">
+      <summary>Gets the current namespace.</summary>
+      <returns>The current namespace.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolReader">
+      <summary>Represents a symbol reader for managed code.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolReader.GetDocument(System.String,System.Guid,System.Guid,System.Guid)">
+      <summary>Gets a document specified by the language, vendor, and type.</summary>
+      <param name="url">The URL that identifies the document.</param>
+      <param name="language">The document language. You can specify this parameter as <see cref="F:System.Guid.Empty" />.</param>
+      <param name="languageVendor">The identity of the vendor for the document language. You can specify this parameter as <see cref="F:System.Guid.Empty" />.</param>
+      <param name="documentType">The type of the document. You can specify this parameter as <see cref="F:System.Guid.Empty" />.</param>
+      <returns>The specified document.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolReader.GetDocuments">
+      <summary>Gets an array of all documents defined in the symbol store.</summary>
+      <returns>An array of all documents defined in the symbol store.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolReader.GetGlobalVariables">
+      <summary>Gets all global variables in the module.</summary>
+      <returns>An array of all variables in the module.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolReader.GetMethod(System.Diagnostics.SymbolStore.SymbolToken)">
+      <summary>Gets a symbol reader method object when given the identifier of a method.</summary>
+      <param name="method">The metadata token of the method.</param>
+      <returns>The symbol reader method object for the specified method identifier.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolReader.GetMethod(System.Diagnostics.SymbolStore.SymbolToken,System.Int32)">
+      <summary>Gets a symbol reader method object when given the identifier of a method and its edit and continue version.</summary>
+      <param name="method">The metadata token of the method.</param>
+      <param name="version">The edit and continue version of the method.</param>
+      <returns>The symbol reader method object for the specified method identifier.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolReader.GetMethodFromDocumentPosition(System.Diagnostics.SymbolStore.ISymbolDocument,System.Int32,System.Int32)">
+      <summary>Gets a symbol reader method object that contains a specified position in a document.</summary>
+      <param name="document">The document in which the method is located.</param>
+      <param name="line">The position of the line within the document. The lines are numbered, beginning with 1.</param>
+      <param name="column">The position of column within the document. The columns are numbered, beginning with 1.</param>
+      <returns>The reader method object for the specified position in the document.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolReader.GetNamespaces">
+      <summary>Gets the namespaces that are defined in the global scope within the current symbol store.</summary>
+      <returns>The namespaces defined in the global scope within the current symbol store.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolReader.GetSymAttribute(System.Diagnostics.SymbolStore.SymbolToken,System.String)">
+      <summary>Gets an attribute value when given the attribute name.</summary>
+      <param name="parent">The metadata token for the object for which the attribute is requested.</param>
+      <param name="name">The attribute name.</param>
+      <returns>The value of the attribute.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolReader.GetVariables(System.Diagnostics.SymbolStore.SymbolToken)">
+      <summary>Gets the variables that are not local when given the parent.</summary>
+      <param name="parent">The metadata token for the type for which the variables are requested.</param>
+      <returns>An array of variables for the parent.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolReader.UserEntryPoint">
+      <summary>Gets the metadata token for the method that was specified as the user entry point for the module, if any.</summary>
+      <returns>The metadata token for the method that is the user entry point for the module.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolScope">
+      <summary>Represents a lexical scope within <see cref="T:System.Diagnostics.SymbolStore.ISymbolMethod" />, providing access to the start and end offsets of the scope, as well as its child and parent scopes.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolScope.GetChildren">
+      <summary>Gets the child lexical scopes of the current lexical scope.</summary>
+      <returns>The child lexical scopes that of the current lexical scope.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolScope.GetLocals">
+      <summary>Gets the local variables within the current lexical scope.</summary>
+      <returns>The local variables within the current lexical scope.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolScope.GetNamespaces">
+      <summary>Gets the namespaces that are used within the current scope.</summary>
+      <returns>The namespaces that are used within the current scope.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolScope.EndOffset">
+      <summary>Gets the end offset of the current lexical scope.</summary>
+      <returns>The end offset of the current lexical scope.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolScope.Method">
+      <summary>Gets the method that contains the current lexical scope.</summary>
+      <returns>The method that contains the current lexical scope.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolScope.Parent">
+      <summary>Gets the parent lexical scope of the current scope.</summary>
+      <returns>The parent lexical scope of the current scope.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolScope.StartOffset">
+      <summary>Gets the start offset of the current lexical scope.</summary>
+      <returns>The start offset of the current lexical scope.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolVariable">
+      <summary>Represents a variable within a symbol store.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolVariable.GetSignature">
+      <summary>Gets the variable signature.</summary>
+      <returns>The variable signature as an opaque blob.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolVariable.AddressField1">
+      <summary>Gets the first address of a variable.</summary>
+      <returns>The first address of the variable.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolVariable.AddressField2">
+      <summary>Gets the second address of a variable.</summary>
+      <returns>The second address of the variable.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolVariable.AddressField3">
+      <summary>Gets the third address of a variable.</summary>
+      <returns>The third address of the variable.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolVariable.AddressKind">
+      <summary>Gets the <see cref="T:System.Diagnostics.SymbolStore.SymAddressKind" /> value describing the type of the address.</summary>
+      <returns>The type of the address. One of the <see cref="T:System.Diagnostics.SymbolStore.SymAddressKind" /> values.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolVariable.Attributes">
+      <summary>Gets the attributes of the variable.</summary>
+      <returns>The variable attributes.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolVariable.EndOffset">
+      <summary>Gets the end offset of a variable within the scope of the variable.</summary>
+      <returns>The end offset of the variable.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolVariable.Name">
+      <summary>Gets the name of the variable.</summary>
+      <returns>The name of the variable.</returns>
+    </member>
+    <member name="P:System.Diagnostics.SymbolStore.ISymbolVariable.StartOffset">
+      <summary>Gets the start offset of the variable within the scope of the variable.</summary>
+      <returns>The start offset of the variable.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.ISymbolWriter">
+      <summary>Represents a symbol writer for managed code.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.Close">
+      <summary>Closes <see cref="T:System.Diagnostics.SymbolStore.ISymbolWriter" /> and commits the symbols to the symbol store.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.CloseMethod">
+      <summary>Closes the current method.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.CloseNamespace">
+      <summary>Closes the most recent namespace.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.CloseScope(System.Int32)">
+      <summary>Closes the current lexical scope.</summary>
+      <param name="endOffset">The points past the last instruction in the scope.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.DefineDocument(System.String,System.Guid,System.Guid,System.Guid)">
+      <summary>Defines a source document.</summary>
+      <param name="url">The URL that identifies the document.</param>
+      <param name="language">The document language. This parameter can be <see cref="F:System.Guid.Empty" />.</param>
+      <param name="languageVendor">The identity of the vendor for the document language. This parameter can be <see cref="F:System.Guid.Empty" />.</param>
+      <param name="documentType">The type of the document. This parameter can be <see cref="F:System.Guid.Empty" />.</param>
+      <returns>The object that represents the document.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.DefineField(System.Diagnostics.SymbolStore.SymbolToken,System.String,System.Reflection.FieldAttributes,System.Byte[],System.Diagnostics.SymbolStore.SymAddressKind,System.Int32,System.Int32,System.Int32)">
+      <summary>Defines a field in a type or a global field.</summary>
+      <param name="parent">The metadata type or method token.</param>
+      <param name="name">The field name.</param>
+      <param name="attributes">A bitwise combination of the field attributes.</param>
+      <param name="signature">The field signature.</param>
+      <param name="addrKind">The address types for <paramref name="addr1" /> and <paramref name="addr2" />.</param>
+      <param name="addr1">The first address for the field specification.</param>
+      <param name="addr2">The second address for the field specification.</param>
+      <param name="addr3">The third address for the field specification.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.DefineGlobalVariable(System.String,System.Reflection.FieldAttributes,System.Byte[],System.Diagnostics.SymbolStore.SymAddressKind,System.Int32,System.Int32,System.Int32)">
+      <summary>Defines a single global variable.</summary>
+      <param name="name">The global variable name.</param>
+      <param name="attributes">A bitwise combination of the global variable attributes.</param>
+      <param name="signature">The global variable signature.</param>
+      <param name="addrKind">The address types for <paramref name="addr1" />, <paramref name="addr2" />, and <paramref name="addr3" />.</param>
+      <param name="addr1">The first address for the global variable specification.</param>
+      <param name="addr2">The second address for the global variable specification.</param>
+      <param name="addr3">The third address for the global variable specification.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.DefineLocalVariable(System.String,System.Reflection.FieldAttributes,System.Byte[],System.Diagnostics.SymbolStore.SymAddressKind,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary>Defines a single variable in the current lexical scope.</summary>
+      <param name="name">The local variable name.</param>
+      <param name="attributes">A bitwise combination of the local variable attributes.</param>
+      <param name="signature">The local variable signature.</param>
+      <param name="addrKind">The address types for <paramref name="addr1" />, <paramref name="addr2" />, and <paramref name="addr3" />.</param>
+      <param name="addr1">The first address for the local variable specification.</param>
+      <param name="addr2">The second address for the local variable specification.</param>
+      <param name="addr3">The third address for the local variable specification.</param>
+      <param name="startOffset">The start offset for the variable. If this parameter is zero, it is ignored and the variable is defined throughout the entire scope. If the parameter is nonzero, the variable falls within the offsets of the current scope.</param>
+      <param name="endOffset">The end offset for the variable. If this parameter is zero, it is ignored and the variable is defined throughout the entire scope. If the parameter is nonzero, the variable falls within the offsets of the current scope.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.DefineParameter(System.String,System.Reflection.ParameterAttributes,System.Int32,System.Diagnostics.SymbolStore.SymAddressKind,System.Int32,System.Int32,System.Int32)">
+      <summary>Defines a single parameter in the current method. The type of each parameter is taken from its position within the signature of the method.</summary>
+      <param name="name">The parameter name.</param>
+      <param name="attributes">A bitwise combination of the parameter attributes.</param>
+      <param name="sequence">The parameter signature.</param>
+      <param name="addrKind">The address types for <paramref name="addr1" />, <paramref name="addr2" />, and <paramref name="addr3" />.</param>
+      <param name="addr1">The first address for the parameter specification.</param>
+      <param name="addr2">The second address for the parameter specification.</param>
+      <param name="addr3">The third address for the parameter specification.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.DefineSequencePoints(System.Diagnostics.SymbolStore.ISymbolDocumentWriter,System.Int32[],System.Int32[],System.Int32[],System.Int32[],System.Int32[])">
+      <summary>Defines a group of sequence points within the current method.</summary>
+      <param name="document">The document object for which the sequence points are being defined.</param>
+      <param name="offsets">The sequence point offsets measured from the beginning of methods.</param>
+      <param name="lines">The document lines for the sequence points.</param>
+      <param name="columns">The document positions for the sequence points.</param>
+      <param name="endLines">The document end lines for the sequence points.</param>
+      <param name="endColumns">The document end positions for the sequence points.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.Initialize(System.IntPtr,System.String,System.Boolean)">
+      <summary>Sets the metadata emitter interface to associate with a writer.</summary>
+      <param name="emitter">The metadata emitter interface.</param>
+      <param name="filename">The file name for which the debugging symbols are written. Some writers require a file name, and others do not. If a file name is specified for a writer that does not use file names, this parameter is ignored.</param>
+      <param name="fFullBuild">
+        <see langword="true" /> indicates that this is a full rebuild; <see langword="false" /> indicates that this is an incremental compilation.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.OpenMethod(System.Diagnostics.SymbolStore.SymbolToken)">
+      <summary>Opens a method to place symbol information into.</summary>
+      <param name="method">The metadata token for the method to be opened.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.OpenNamespace(System.String)">
+      <summary>Opens a new namespace.</summary>
+      <param name="name">The name of the new namespace.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.OpenScope(System.Int32)">
+      <summary>Opens a new lexical scope in the current method.</summary>
+      <param name="startOffset">The offset, in bytes, from the beginning of the method to the first instruction in the lexical scope.</param>
+      <returns>An opaque scope identifier that can be used with <see cref="M:System.Diagnostics.SymbolStore.ISymbolWriter.SetScopeRange(System.Int32,System.Int32,System.Int32)" /> to define the start and end offsets of a scope at a later time. In this case, the offsets passed to <see cref="M:System.Diagnostics.SymbolStore.ISymbolWriter.OpenScope(System.Int32)" /> and <see cref="M:System.Diagnostics.SymbolStore.ISymbolWriter.CloseScope(System.Int32)" /> are ignored. A scope identifier is valid only in the current method.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.SetMethodSourceRange(System.Diagnostics.SymbolStore.ISymbolDocumentWriter,System.Int32,System.Int32,System.Diagnostics.SymbolStore.ISymbolDocumentWriter,System.Int32,System.Int32)">
+      <summary>Specifies the true start and end of a method within a source file. Use <see cref="M:System.Diagnostics.SymbolStore.ISymbolWriter.SetMethodSourceRange(System.Diagnostics.SymbolStore.ISymbolDocumentWriter,System.Int32,System.Int32,System.Diagnostics.SymbolStore.ISymbolDocumentWriter,System.Int32,System.Int32)" /> to specify the extent of a method, independent of the sequence points that exist within the method.</summary>
+      <param name="startDoc">The document that contains the starting position.</param>
+      <param name="startLine">The starting line number.</param>
+      <param name="startColumn">The starting column.</param>
+      <param name="endDoc">The document that contains the ending position.</param>
+      <param name="endLine">The ending line number.</param>
+      <param name="endColumn">The ending column number.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.SetScopeRange(System.Int32,System.Int32,System.Int32)">
+      <summary>Defines the offset range for the specified lexical scope.</summary>
+      <param name="scopeID">The identifier of the lexical scope.</param>
+      <param name="startOffset">The byte offset of the beginning of the lexical scope.</param>
+      <param name="endOffset">The byte offset of the end of the lexical scope.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.SetSymAttribute(System.Diagnostics.SymbolStore.SymbolToken,System.String,System.Byte[])">
+      <summary>Defines an attribute when given the attribute name and the attribute value.</summary>
+      <param name="parent">The metadata token for which the attribute is being defined.</param>
+      <param name="name">The attribute name.</param>
+      <param name="data">The attribute value.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.SetUnderlyingWriter(System.IntPtr)">
+      <summary>Sets the underlying <see langword="ISymUnmanagedWriter" /> (the corresponding unmanaged interface) that a managed <see cref="T:System.Diagnostics.SymbolStore.ISymbolWriter" /> uses to emit symbols.</summary>
+      <param name="underlyingWriter">A pointer to code that represents the underlying writer.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.SetUserEntryPoint(System.Diagnostics.SymbolStore.SymbolToken)">
+      <summary>Identifies the user-defined method as the entry point for the current module.</summary>
+      <param name="entryMethod">The metadata token for the method that is the user entry point.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.ISymbolWriter.UsingNamespace(System.String)">
+      <summary>Specifies that the given, fully qualified namespace name is used within the open lexical scope.</summary>
+      <param name="fullName">The fully qualified name of the namespace.</param>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.SymAddressKind">
+      <summary>Specifies address types for local variables, parameters, and fields in the methods <see cref="M:System.Diagnostics.SymbolStore.ISymbolWriter.DefineLocalVariable(System.String,System.Reflection.FieldAttributes,System.Byte[],System.Diagnostics.SymbolStore.SymAddressKind,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)" />, <see cref="M:System.Diagnostics.SymbolStore.ISymbolWriter.DefineParameter(System.String,System.Reflection.ParameterAttributes,System.Int32,System.Diagnostics.SymbolStore.SymAddressKind,System.Int32,System.Int32,System.Int32)" />, and <see cref="M:System.Diagnostics.SymbolStore.ISymbolWriter.DefineField(System.Diagnostics.SymbolStore.SymbolToken,System.String,System.Reflection.FieldAttributes,System.Byte[],System.Diagnostics.SymbolStore.SymAddressKind,System.Int32,System.Int32,System.Int32)" /> of the <see cref="T:System.Diagnostics.SymbolStore.ISymbolWriter" /> interface.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.BitField">
+      <summary>A bit field. The <paramref name="addr1" /> parameter is the position where the field starts, and the <paramref name="addr2" /> parameter is the field length.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.ILOffset">
+      <summary>A Microsoft intermediate language (MSIL) offset. The <paramref name="addr1" /> parameter is the MSIL local variable or parameter index.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.NativeOffset">
+      <summary>A native offset. The <paramref name="addr1" /> parameter is the offset from the start of the parent.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.NativeRegister">
+      <summary>A native register address. The <paramref name="addr1" /> parameter is the register in which the variable is stored.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.NativeRegisterRegister">
+      <summary>A register-relative address. The <paramref name="addr1" /> parameter is the low-order register, and the <paramref name="addr2" /> parameter is the high-order register.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.NativeRegisterRelative">
+      <summary>A register-relative address. The <paramref name="addr1" /> parameter is the register, and the <paramref name="addr2" /> parameter is the offset.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.NativeRegisterStack">
+      <summary>A register-relative address. The <paramref name="addr1" /> parameter is the low-order register, the <paramref name="addr2" /> parameter is the stack register, and the <paramref name="addr3" /> parameter is the offset from the stack pointer to the high-order part of the value.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.NativeRVA">
+      <summary>A native Relevant Virtual Address (RVA). The <paramref name="addr1" /> parameter is the RVA in the module.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.NativeSectionOffset">
+      <summary>A native section offset. The <paramref name="addr1" /> parameter is the section, and the <paramref name="addr2" /> parameter is the offset.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymAddressKind.NativeStackRegister">
+      <summary>A register-relative address. The <paramref name="addr1" /> parameter is the stack register, the <paramref name="addr2" /> parameter is the offset from the stack pointer to the low-order part of the value, and the <paramref name="addr3" /> parameter is the high-order register.</summary>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.SymbolToken">
+      <summary>The <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> structure is an object representation of a token that represents symbolic information.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymbolToken.#ctor(System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> structure when given a value.</summary>
+      <param name="val">The value to be used for the token.</param>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymbolToken.Equals(System.Diagnostics.SymbolStore.SymbolToken)">
+      <summary>Determines whether <paramref name="obj" /> is equal to this instance.</summary>
+      <param name="obj">The <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> to check.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="obj" /> is equal to this instance; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymbolToken.Equals(System.Object)">
+      <summary>Determines whether <paramref name="obj" /> is an instance of <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> and is equal to this instance.</summary>
+      <param name="obj">The object to check.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="obj" /> is an instance of <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> and is equal to this instance; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymbolToken.GetHashCode">
+      <summary>Generates the hash code for the current token.</summary>
+      <returns>The hash code for the current token.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymbolToken.GetToken">
+      <summary>Gets the value of the current token.</summary>
+      <returns>The value of the current token.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymbolToken.op_Equality(System.Diagnostics.SymbolStore.SymbolToken,System.Diagnostics.SymbolStore.SymbolToken)">
+      <summary>Returns a value indicating whether two <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> objects are equal.</summary>
+      <param name="a">A <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> structure.</param>
+      <param name="b">A <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> structure.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="a" /> and <paramref name="b" /> are equal; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymbolToken.op_Inequality(System.Diagnostics.SymbolStore.SymbolToken,System.Diagnostics.SymbolStore.SymbolToken)">
+      <summary>Returns a value indicating whether two <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> objects are not equal.</summary>
+      <param name="a">A <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> structure.</param>
+      <param name="b">A <see cref="T:System.Diagnostics.SymbolStore.SymbolToken" /> structure.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="a" /> and <paramref name="b" /> are not equal; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.SymDocumentType">
+      <summary>Holds the public GUIDs for document types to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymDocumentType.Text">
+      <summary>Specifies the GUID of the document type to be used with the symbol store.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymDocumentType.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.SymbolStore.SymDocumentType" /> class.</summary>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.SymLanguageType">
+      <summary>Holds the public GUIDs for language types to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.Basic">
+      <summary>Specifies the GUID of the Basic language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.C">
+      <summary>Specifies the GUID of the C language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.Cobol">
+      <summary>Specifies the GUID of the Cobol language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.CPlusPlus">
+      <summary>Specifies the GUID of the C++ language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.CSharp">
+      <summary>Specifies the GUID of the C# language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.ILAssembly">
+      <summary>Specifies the GUID of the ILAssembly language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.Java">
+      <summary>Specifies the GUID of the Java language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.JScript">
+      <summary>Specifies the GUID of the JScript language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.MCPlusPlus">
+      <summary>Specifies the GUID of the C++ language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.Pascal">
+      <summary>Specifies the GUID of the Pascal language type to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageType.SMC">
+      <summary>Specifies the GUID of the SMC language type to be used with the symbol store.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymLanguageType.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.SymbolStore.SymLanguageType" /> class.</summary>
+    </member>
+    <member name="T:System.Diagnostics.SymbolStore.SymLanguageVendor">
+      <summary>Holds the public GUIDs for language vendors to be used with the symbol store.</summary>
+    </member>
+    <member name="F:System.Diagnostics.SymbolStore.SymLanguageVendor.Microsoft">
+      <summary>Specifies the GUID of the Microsoft language vendor.</summary>
+    </member>
+    <member name="M:System.Diagnostics.SymbolStore.SymLanguageVendor.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Diagnostics.SymbolStore.SymLanguageVendor" /> class.</summary>
+    </member>
+  </members>
+</doc>

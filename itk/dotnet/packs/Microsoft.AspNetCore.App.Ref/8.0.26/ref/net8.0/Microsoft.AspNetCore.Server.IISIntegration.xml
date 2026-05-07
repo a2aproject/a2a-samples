@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Server.IISIntegration</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Server.IISIntegration.IISDefaults">
+            <summary>
+            String constants used to configure IIS Out-Of-Process.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme">
+            <summary>
+            Default authentication scheme, which is "Windows".
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.Negotiate">
+            <summary>
+            Default negotiate string, which is "Negotiate".
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.Ntlm">
+            <summary>
+            Default NTLM string, which is "NTLM".
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.IISIntegration.IISHostingStartup">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Hosting.IHostingStartup"/> to add IISIntegration to apps.
+            </summary>
+            <remarks>
+            This API isn't meant to be used by user code.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IISIntegration.IISHostingStartup.Configure(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Adds IISIntegration into the middleware pipeline.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware">
+            <summary>
+            The middleware that enables IIS Out-Of-Process to work.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.IISOptions},System.String,Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider,Microsoft.Extensions.Hosting.IHostApplicationLifetime)">
+            <summary>
+            The middleware that enables IIS Out-Of-Process to work.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory" />.</param>
+            <param name="options">The configuration for this middleware.</param>
+            <param name="pairingToken">A token used to coordinate with the ASP.NET Core Module.</param>
+            <param name="authentication">The <see cref="T:Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider"/>.</param>
+            <param name="applicationLifetime">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationLifetime"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.IISOptions},System.String,System.Boolean,Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider,Microsoft.Extensions.Hosting.IHostApplicationLifetime)">
+            <summary>
+            The middleware that enables IIS Out-Of-Process to work.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory" />.</param>
+            <param name="options">The configuration for this middleware.</param>
+            <param name="pairingToken">A token used to coordinate with the ASP.NET Core Module.</param>
+            <param name="isWebsocketsSupported">Whether websockets are supported by IIS.</param>
+            <param name="authentication">The <see cref="T:Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider"/>.</param>
+            <param name="applicationLifetime">The <see cref="T:Microsoft.Extensions.Hosting.IHostApplicationLifetime"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invoke the middleware.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that represents the asynchronous operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.IISOptions">
+            <summary>
+            Options to configure IIS Out-Of-Process.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISOptions.AutomaticAuthentication">
+            <summary>
+            If true the middleware should set HttpContext.User. If false the middleware will only provide an
+            identity when explicitly requested by the AuthenticationScheme.
+            Note Windows Authentication must also be enabled in IIS for this to work.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISOptions.AuthenticationDisplayName">
+            <summary>
+            Sets the display name shown to users on login pages. The default is null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISOptions.ForwardWindowsAuthentication">
+            <summary>
+            Used to indicate if the authentication handler should be registered. This is only done if ANCM indicates
+            IIS has a non-anonymous authentication enabled, or for back compat with ANCMs that did not provide this information.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.IISOptions.ForwardClientCertificate">
+            <summary>
+            Populates the ITLSConnectionFeature if the MS-ASPNETCORE-CLIENTCERT request header is present.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.WebHostBuilderIISExtensions">
+            <summary>
+            Extension methods for the IIS Out-Of-Process.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderIISExtensions.UseIISIntegration(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Configures the port and base path the server should listen on when running behind AspNetCoreModule.
+            The app will also be configured to capture startup errors.
+            </summary>
+            <param name="hostBuilder"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

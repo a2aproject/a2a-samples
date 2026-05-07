@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Configuration.Xml</name>
+    </assembly>
+    <members>
+        <member name="P:Microsoft.Extensions.Configuration.Xml.XmlConfigurationElement.SiblingName">
+            <summary>
+            A composition of ElementName and Name, that serves as the basis for detecting siblings
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.Xml.XmlConfigurationElement.ChildrenBySiblingName">
+            <summary>
+            The children of this element
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.Xml.XmlConfigurationElement.SingleChild">
+            <summary>
+            Performance optimization: do not initialize a dictionary and a list for elements with a single child
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Xml.XmlConfigurationProvider">
+            <summary>
+            Represents an XML file as an <see cref="T:Microsoft.Extensions.Configuration.IConfigurationSource"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlConfigurationProvider.#ctor(Microsoft.Extensions.Configuration.Xml.XmlConfigurationSource)">
+            <summary>
+            Initializes a new instance with the specified source.
+            </summary>
+            <param name="source">The source settings.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlConfigurationProvider.Load(System.IO.Stream)">
+            <summary>
+            Loads the XML data from a stream.
+            </summary>
+            <param name="stream">The stream to read.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Xml.XmlConfigurationSource">
+            <summary>
+            An XML file based <see cref="T:Microsoft.Extensions.Configuration.FileConfigurationSource"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlConfigurationSource.Build(Microsoft.Extensions.Configuration.IConfigurationBuilder)">
+            <summary>
+            Builds the <see cref="T:Microsoft.Extensions.Configuration.Xml.XmlConfigurationProvider"/> for this source.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</param>
+            <returns>A <see cref="T:Microsoft.Extensions.Configuration.Xml.XmlConfigurationProvider"/></returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Xml.XmlDocumentDecryptor">
+            <summary>
+            Class responsible for encrypting and decrypting XML.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.Configuration.Xml.XmlDocumentDecryptor.Instance">
+            <summary>
+            Accesses the singleton decryptor instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlDocumentDecryptor.#ctor">
+            <summary>
+            Initializes a XmlDocumentDecryptor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlDocumentDecryptor.CreateDecryptingXmlReader(System.IO.Stream,System.Xml.XmlReaderSettings)">
+            <summary>
+            Creates an <see cref="T:System.Xml.XmlReader"/> that decrypts data transparently.
+            </summary>
+            <param name="input">The input <see cref="T:System.IO.Stream"/> to read the XML configuration data from.</param>
+            <param name="settings">The settings for the new <see cref="T:System.Xml.XmlReader"/> instance.</param>
+            <returns>An <see cref="T:System.Xml.XmlReader"/> that decrypts data transparently.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlDocumentDecryptor.DecryptDocumentAndCreateXmlReader(System.Xml.XmlDocument)">
+            <summary>
+            Creates a reader that can decrypt an encrypted XML document.
+            </summary>
+            <param name="document">The document.</param>
+            <returns>An XmlReader which can read the document.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationProvider">
+            <summary>
+            An XML file based <see cref="T:Microsoft.Extensions.Configuration.IConfigurationProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationProvider.#ctor(Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationSource)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="source">The <see cref="T:Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationSource"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationProvider.Read(System.IO.Stream,Microsoft.Extensions.Configuration.Xml.XmlDocumentDecryptor)">
+            <summary>
+            Read a stream of XML values into a key/value dictionary.
+            </summary>
+            <param name="stream">The stream of XML data.</param>
+            <param name="decryptor">The <see cref="T:Microsoft.Extensions.Configuration.Xml.XmlDocumentDecryptor"/> to use to decrypt.</param>
+            <returns>The <see cref="T:System.Collections.Generic.IDictionary`2"/> which was read from the stream.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationProvider.Load(System.IO.Stream)">
+            <summary>
+            Loads XML configuration key/values from a stream into a provider.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load ini configuration data from.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Xml.Prefix">
+            <summary>
+            Helper class to build the configuration keys in a way that does not require string.Join
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationSource">
+            <summary>
+            Represents a XML file as an <see cref="T:Microsoft.Extensions.Configuration.IConfigurationSource"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationSource.Build(Microsoft.Extensions.Configuration.IConfigurationBuilder)">
+            <summary>
+            Builds the <see cref="T:Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationProvider"/> for this source.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.Configuration.Xml.XmlStreamConfigurationProvider"/></returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.XmlConfigurationExtensions">
+            <summary>
+            Extension methods for adding <see cref="T:Microsoft.Extensions.Configuration.Xml.XmlConfigurationProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.XmlConfigurationExtensions.AddXmlFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.String)">
+            <summary>
+            Adds the XML configuration provider at <paramref name="path"/> to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="path">Path relative to the base path stored in
+            <see cref="P:Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.XmlConfigurationExtensions.AddXmlFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.String,System.Boolean)">
+            <summary>
+            Adds the XML configuration provider at <paramref name="path"/> to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="path">Path relative to the base path stored in
+            <see cref="P:Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
+            <param name="optional">Whether the file is optional.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.XmlConfigurationExtensions.AddXmlFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Adds the XML configuration provider at <paramref name="path"/> to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="path">Path relative to the base path stored in
+            <see cref="P:Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
+            <param name="optional">Whether the file is optional.</param>
+            <param name="reloadOnChange">Whether the configuration should be reloaded if the file changes.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.XmlConfigurationExtensions.AddXmlFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,Microsoft.Extensions.FileProviders.IFileProvider,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Adds a XML configuration source to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="provider">The <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/> to use to access the file.</param>
+            <param name="path">Path relative to the base path stored in
+            <see cref="P:Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
+            <param name="optional">Whether the file is optional.</param>
+            <param name="reloadOnChange">Whether the configuration should be reloaded if the file changes.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.XmlConfigurationExtensions.AddXmlFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.Action{Microsoft.Extensions.Configuration.Xml.XmlConfigurationSource})">
+            <summary>
+            Adds a XML configuration source to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="configureSource">Configures the source.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.XmlConfigurationExtensions.AddXmlStream(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.IO.Stream)">
+            <summary>
+            Adds a XML configuration source to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to read the XML configuration data from.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+        <member name="P:System.SR.Error_InvalidFilePath">
+            <summary>File path must be a non-empty string.</summary>
+        </member>
+        <member name="P:System.SR.Error_KeyIsDuplicated">
+            <summary>A duplicate key '{0}' was found.{1}</summary>
+        </member>
+        <member name="P:System.SR.Error_NamespaceIsNotSupported">
+            <summary>XML namespaces are not supported.{0}</summary>
+        </member>
+        <member name="P:System.SR.Error_UnsupportedNodeType">
+            <summary>Unsupported node type '{0}' was found.{1}</summary>
+        </member>
+        <member name="P:System.SR.Msg_LineInfo">
+            <summary>Line {0}, position {1}.</summary>
+        </member>
+    </members>
+</doc>

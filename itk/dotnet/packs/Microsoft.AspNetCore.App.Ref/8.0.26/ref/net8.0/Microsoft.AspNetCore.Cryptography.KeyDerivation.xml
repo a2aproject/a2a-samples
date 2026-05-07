@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Cryptography.KeyDerivation</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivation">
+            <summary>
+            Provides algorithms for performing key derivation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivation.Pbkdf2(System.String,System.Byte[],Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf,System.Int32,System.Int32)">
+            <summary>
+            Performs key derivation using the PBKDF2 algorithm.
+            </summary>
+            <param name="password">The password from which to derive the key.</param>
+            <param name="salt">The salt to be used during the key derivation process.</param>
+            <param name="prf">The pseudo-random function to be used in the key derivation process.</param>
+            <param name="iterationCount">The number of iterations of the pseudo-random function to apply
+            during the key derivation process.</param>
+            <param name="numBytesRequested">The desired length (in bytes) of the derived key.</param>
+            <returns>The derived key.</returns>
+            <remarks>
+            The PBKDF2 algorithm is specified in RFC 2898.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf">
+            <summary>
+            Specifies the PRF which should be used for the key derivation algorithm.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf.HMACSHA1">
+            <summary>
+            The HMAC algorithm (RFC 2104) using the SHA-1 hash function (FIPS 180-4).
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf.HMACSHA256">
+            <summary>
+            The HMAC algorithm (RFC 2104) using the SHA-256 hash function (FIPS 180-4).
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf.HMACSHA512">
+            <summary>
+            The HMAC algorithm (RFC 2104) using the SHA-512 hash function (FIPS 180-4).
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.KeyDerivation.PBKDF2.IPbkdf2Provider">
+            <summary>
+            Internal interface used for abstracting away the PBKDF2 implementation since the implementation is OS-specific.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.KeyDerivation.PBKDF2.ManagedPbkdf2Provider">
+            <summary>
+            A PBKDF2 provider which utilizes the managed hash algorithm classes as PRFs.
+            This isn't the preferred provider since the implementation is slow, but it is provided as a fallback.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.KeyDerivation.PBKDF2.NetCorePbkdf2Provider">
+            <summary>
+            Implements Pbkdf2 using <see cref="T:System.Security.Cryptography.Rfc2898DeriveBytes"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.KeyDerivation.PBKDF2.Pbkdf2Util">
+            <summary>
+            Internal base class used for abstracting away the PBKDF2 implementation since the implementation is OS-specific.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.KeyDerivation.PBKDF2.Win7Pbkdf2Provider">
+            <summary>
+            A PBKDF2 provider which utilizes the Win7 API BCryptDeriveKeyPBKDF2.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Cryptography.KeyDerivation.PBKDF2.Win8Pbkdf2Provider">
+            <summary>
+            A PBKDF2 provider which utilizes the Win8 API BCryptKeyDerivation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
+            <param name="value">The argument to validate as non-zero.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int64,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegativeOrZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
+            <param name="value">The argument to validate as non-zero or non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+    </members>
+</doc>

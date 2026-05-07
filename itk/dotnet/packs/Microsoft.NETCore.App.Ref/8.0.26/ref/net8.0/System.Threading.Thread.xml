@@ -1,0 +1,620 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Threading.Thread</name>
+  </assembly>
+  <members>
+    <member name="T:System.LocalDataStoreSlot">
+      <summary>Encapsulates a memory slot to store local data. This class cannot be inherited.</summary>
+    </member>
+    <member name="M:System.LocalDataStoreSlot.Finalize">
+      <summary>Ensures that resources are freed and other cleanup operations are performed when the garbage collector reclaims the <see cref="T:System.LocalDataStoreSlot" /> object.</summary>
+    </member>
+    <member name="T:System.Threading.ApartmentState">
+      <summary>Specifies the apartment state of a <see cref="T:System.Threading.Thread" />.</summary>
+    </member>
+    <member name="F:System.Threading.ApartmentState.MTA">
+      <summary>The <see cref="T:System.Threading.Thread" /> will create and enter a multithreaded apartment.</summary>
+    </member>
+    <member name="F:System.Threading.ApartmentState.STA">
+      <summary>The <see cref="T:System.Threading.Thread" /> will create and enter a single-threaded apartment.</summary>
+    </member>
+    <member name="F:System.Threading.ApartmentState.Unknown">
+      <summary>The <see cref="P:System.Threading.Thread.ApartmentState" /> property has not been set.</summary>
+    </member>
+    <member name="T:System.Threading.CompressedStack">
+      <summary>Provides methods for setting and capturing the compressed stack on the current thread. This class cannot be inherited.</summary>
+    </member>
+    <member name="M:System.Threading.CompressedStack.Capture">
+      <summary>Captures the compressed stack from the current thread.</summary>
+      <returns>A <see cref="T:System.Threading.CompressedStack" /> object.</returns>
+    </member>
+    <member name="M:System.Threading.CompressedStack.CreateCopy">
+      <summary>Creates a copy of the current compressed stack.</summary>
+      <returns>A <see cref="T:System.Threading.CompressedStack" /> object representing the current compressed stack.</returns>
+    </member>
+    <member name="M:System.Threading.CompressedStack.GetCompressedStack">
+      <summary>Gets the compressed stack for the current thread.</summary>
+      <exception cref="T:System.Security.SecurityException">A caller in the call chain does not have permission to access unmanaged code.  
+  
+ -or-  
+  
+ The request for <see cref="T:System.Security.Permissions.StrongNameIdentityPermission" /> failed.</exception>
+      <returns>A <see cref="T:System.Threading.CompressedStack" /> for the current thread.</returns>
+    </member>
+    <member name="M:System.Threading.CompressedStack.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Sets the <see cref="T:System.Runtime.Serialization.SerializationInfo" /> object with the logical context information needed to recreate an instance of this execution context.</summary>
+      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> object to be populated with serialization information.</param>
+      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> structure representing the destination context of the serialization.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="info" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Threading.CompressedStack.Run(System.Threading.CompressedStack,System.Threading.ContextCallback,System.Object)">
+      <summary>Runs a method in the specified compressed stack on the current thread.</summary>
+      <param name="compressedStack">The <see cref="T:System.Threading.CompressedStack" /> to set.</param>
+      <param name="callback">A <see cref="T:System.Threading.ContextCallback" /> that represents the method to be run in the specified security context.</param>
+      <param name="state">The object to be passed to the callback method.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="compressedStack" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="T:System.Threading.ParameterizedThreadStart">
+      <summary>Represents the method that executes on a <see cref="T:System.Threading.Thread" />.</summary>
+      <param name="obj">An object that contains data for the thread procedure.</param>
+    </member>
+    <member name="T:System.Threading.Thread">
+      <summary>Creates and controls a thread, sets its priority, and gets its status.</summary>
+    </member>
+    <member name="M:System.Threading.Thread.#ctor(System.Threading.ParameterizedThreadStart)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.Thread" /> class, specifying a delegate that allows an object to be passed to the thread when the thread is started.</summary>
+      <param name="start">A delegate that represents the methods to be invoked when this thread begins executing.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="start" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.#ctor(System.Threading.ParameterizedThreadStart,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.Thread" /> class, specifying a delegate that allows an object to be passed to the thread when the thread is started and specifying the maximum stack size for the thread.</summary>
+      <param name="start">A <see cref="T:System.Threading.ParameterizedThreadStart" /> delegate that represents the methods to be invoked when this thread begins executing.</param>
+      <param name="maxStackSize">The maximum stack size, in bytes, to be used by the thread, or 0 to use the default maximum stack size specified in the header for the executable.  
+  
+ Important   For partially trusted code, <paramref name="maxStackSize" /> is ignored if it is greater than the default stack size. No exception is thrown.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="start" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="maxStackSize" /> is less than zero.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.#ctor(System.Threading.ThreadStart)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.Thread" /> class.</summary>
+      <param name="start">A <see cref="T:System.Threading.ThreadStart" /> delegate that represents the methods to be invoked when this thread begins executing.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="start" /> parameter is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.#ctor(System.Threading.ThreadStart,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.Thread" /> class, specifying the maximum stack size for the thread.</summary>
+      <param name="start">A <see cref="T:System.Threading.ThreadStart" /> delegate that represents the methods to be invoked when this thread begins executing.</param>
+      <param name="maxStackSize">The maximum stack size, in bytes, to be used by the thread, or 0 to use the default maximum stack size specified in the header for the executable.  
+  
+ Important   For partially trusted code, <paramref name="maxStackSize" /> is ignored if it is greater than the default stack size. No exception is thrown.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="start" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="maxStackSize" /> is less than zero.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.Abort">
+      <summary>Raises a <see cref="T:System.Threading.ThreadAbortException" /> in the thread on which it is invoked, to begin the process of terminating the thread. Calling this method usually terminates the thread.</summary>
+      <exception cref="T:System.PlatformNotSupportedException">.NET Core and .NET 5+ only: In all cases.</exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+      <exception cref="T:System.Threading.ThreadStateException">The thread that is being aborted is currently suspended.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.Abort(System.Object)">
+      <summary>Raises a <see cref="T:System.Threading.ThreadAbortException" /> in the thread on which it is invoked, to begin the process of terminating the thread while also providing exception information about the thread termination. Calling this method usually terminates the thread.</summary>
+      <param name="stateInfo">An object that contains application-specific information, such as state, which can be used by the thread being aborted.</param>
+      <exception cref="T:System.PlatformNotSupportedException">.NET Core and .NET 5+ only: In all cases.</exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+      <exception cref="T:System.Threading.ThreadStateException">The thread that is being aborted is currently suspended.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.AllocateDataSlot">
+      <summary>Allocates an unnamed data slot on all the threads. For better performance, use fields that are marked with the <see cref="T:System.ThreadStaticAttribute" /> attribute instead.</summary>
+      <returns>The allocated named data slot on all threads.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.AllocateNamedDataSlot(System.String)">
+      <summary>Allocates a named data slot on all threads. For better performance, use fields that are marked with the <see cref="T:System.ThreadStaticAttribute" /> attribute instead.</summary>
+      <param name="name">The name of the data slot to be allocated.</param>
+      <exception cref="T:System.ArgumentException">A named data slot with the specified name already exists.</exception>
+      <returns>The allocated named data slot on all threads.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.BeginCriticalRegion">
+      <summary>Notifies a host that execution is about to enter a region of code in which the effects of a thread abort or unhandled exception might jeopardize other tasks in the application domain.</summary>
+    </member>
+    <member name="M:System.Threading.Thread.BeginThreadAffinity">
+      <summary>Notifies a host that managed code is about to execute instructions that depend on the identity of the current physical operating system thread.</summary>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.DisableComObjectEagerCleanup">
+      <summary>Turns off automatic cleanup of runtime callable wrappers (RCW) for the current thread.</summary>
+    </member>
+    <member name="M:System.Threading.Thread.EndCriticalRegion">
+      <summary>Notifies a host that execution is about to enter a region of code in which the effects of a thread abort or unhandled exception are limited to the current task.</summary>
+    </member>
+    <member name="M:System.Threading.Thread.EndThreadAffinity">
+      <summary>Notifies a host that managed code has finished executing instructions that depend on the identity of the current physical operating system thread.</summary>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.Finalize">
+      <summary>Ensures that resources are freed and other cleanup operations are performed when the garbage collector reclaims the <see cref="T:System.Threading.Thread" /> object.</summary>
+    </member>
+    <member name="M:System.Threading.Thread.FreeNamedDataSlot(System.String)">
+      <summary>Eliminates the association between a name and a slot, for all threads in the process. For better performance, use fields that are marked with the <see cref="T:System.ThreadStaticAttribute" /> attribute instead.</summary>
+      <param name="name">The name of the data slot to be freed.</param>
+    </member>
+    <member name="M:System.Threading.Thread.GetApartmentState">
+      <summary>Returns an <see cref="T:System.Threading.ApartmentState" /> value indicating the apartment state.</summary>
+      <returns>One of the <see cref="T:System.Threading.ApartmentState" /> values indicating the apartment state of the managed thread. The default is <see cref="F:System.Threading.ApartmentState.Unknown" />.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.GetCompressedStack">
+      <summary>Returns a <see cref="T:System.Threading.CompressedStack" /> object that can be used to capture the stack for the current thread.</summary>
+      <exception cref="T:System.InvalidOperationException">In all cases.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.GetCurrentProcessorId">
+      <summary>Gets an ID used to indicate on which processor the current thread is executing.</summary>
+      <returns>An integer representing the cached processor ID.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.GetData(System.LocalDataStoreSlot)">
+      <summary>Retrieves the value from the specified slot on the current thread, within the current thread's current domain. For better performance, use fields that are marked with the <see cref="T:System.ThreadStaticAttribute" /> attribute instead.</summary>
+      <param name="slot">The <see cref="T:System.LocalDataStoreSlot" /> from which to get the value.</param>
+      <returns>The retrieved value.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.GetDomain">
+      <summary>Returns the current domain in which the current thread is running.</summary>
+      <returns>An <see cref="T:System.AppDomain" /> representing the current application domain of the running thread.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.GetDomainID">
+      <summary>Returns a unique application domain identifier.</summary>
+      <returns>A 32-bit signed integer uniquely identifying the application domain.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.GetHashCode">
+      <summary>Returns a hash code for the current thread.</summary>
+      <returns>An integer hash code value.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.GetNamedDataSlot(System.String)">
+      <summary>Looks up a named data slot. For better performance, use fields that are marked with the <see cref="T:System.ThreadStaticAttribute" /> attribute instead.</summary>
+      <param name="name">The name of the local data slot.</param>
+      <returns>A <see cref="T:System.LocalDataStoreSlot" /> allocated for this thread.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.Interrupt">
+      <summary>Interrupts a thread that is in the <see cref="F:System.Threading.ThreadState.WaitSleepJoin" /> thread state.</summary>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the appropriate <see cref="T:System.Security.Permissions.SecurityPermission" />.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.Join">
+      <summary>Blocks the calling thread until the thread represented by this instance terminates, while continuing to perform standard COM and <see langword="SendMessage" /> pumping.</summary>
+      <exception cref="T:System.Threading.ThreadStateException">The caller attempted to join a thread that is in the <see cref="F:System.Threading.ThreadState.Unstarted" /> state.</exception>
+      <exception cref="T:System.Threading.ThreadInterruptedException">The thread is interrupted while waiting.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.Join(System.Int32)">
+      <summary>Blocks the calling thread until the thread represented by this instance terminates or the specified time elapses, while continuing to perform standard COM and SendMessage pumping.</summary>
+      <param name="millisecondsTimeout">The number of milliseconds to wait for the thread to terminate.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value of <paramref name="millisecondsTimeout" /> is negative and is not equal to <see cref="F:System.Threading.Timeout.Infinite" /> in milliseconds.</exception>
+      <exception cref="T:System.Threading.ThreadStateException">The thread has not been started.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="millisecondsTimeout" /> is less than -1 (Timeout.Infinite).</exception>
+      <exception cref="T:System.Threading.ThreadInterruptedException">The thread was interrupted while waiting.</exception>
+      <returns>
+        <see langword="true" /> if the thread has terminated; <see langword="false" /> if the thread has not terminated after the amount of time specified by the <paramref name="millisecondsTimeout" /> parameter has elapsed.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.Join(System.TimeSpan)">
+      <summary>Blocks the calling thread until the thread represented by this instance terminates or the specified time elapses, while continuing to perform standard COM and SendMessage pumping.</summary>
+      <param name="timeout">A <see cref="T:System.TimeSpan" /> set to the amount of time to wait for the thread to terminate.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value of <paramref name="timeout" /> is negative and is not equal to <see cref="F:System.Threading.Timeout.Infinite" /> in milliseconds, or is greater than <see cref="F:System.Int32.MaxValue">Int32.MaxValue</see> milliseconds.</exception>
+      <exception cref="T:System.Threading.ThreadStateException">The caller attempted to join a thread that is in the <see cref="F:System.Threading.ThreadState.Unstarted" /> state.</exception>
+      <returns>
+        <see langword="true" /> if the thread terminated; <see langword="false" /> if the thread has not terminated after the amount of time specified by the <paramref name="timeout" /> parameter has elapsed.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.MemoryBarrier">
+      <summary>Synchronizes memory access as follows: The processor executing the current thread cannot reorder instructions in such a way that memory accesses prior to the call to <see cref="M:System.Threading.Thread.MemoryBarrier" /> execute after memory accesses that follow the call to <see cref="M:System.Threading.Thread.MemoryBarrier" />.</summary>
+    </member>
+    <member name="M:System.Threading.Thread.ResetAbort">
+      <summary>Cancels an <see cref="M:System.Threading.Thread.Abort(System.Object)" /> requested for the current thread.</summary>
+      <exception cref="T:System.PlatformNotSupportedException">.NET Core and .NET 5+ only: In all cases.</exception>
+      <exception cref="T:System.Threading.ThreadStateException">
+        <see langword="Abort" /> was not invoked on the current thread.</exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the required security permission for the current thread.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.Resume">
+      <summary>Resumes a thread that has been suspended.</summary>
+      <exception cref="T:System.PlatformNotSupportedException">.NET Core and .NET 5+ only: In all cases.</exception>
+      <exception cref="T:System.Threading.ThreadStateException">The thread has not been started, is dead, or is not in the suspended state.</exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the appropriate <see cref="T:System.Security.Permissions.SecurityPermission" />.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.SetApartmentState(System.Threading.ApartmentState)">
+      <summary>Sets the apartment state of a thread before it is started.</summary>
+      <param name="state">The new apartment state.</param>
+      <exception cref="T:System.PlatformNotSupportedException">.NET Core and .NET 5+ only: In all cases on macOS and Linux.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="state" /> is not a valid apartment state.</exception>
+      <exception cref="T:System.Threading.ThreadStateException">The thread has already been started.</exception>
+      <exception cref="T:System.InvalidOperationException">The apartment state has already been initialized.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.SetCompressedStack(System.Threading.CompressedStack)">
+      <summary>Applies a captured <see cref="T:System.Threading.CompressedStack" /> to the current thread.</summary>
+      <param name="stack">The <see cref="T:System.Threading.CompressedStack" /> object to be applied to the current thread.</param>
+      <exception cref="T:System.InvalidOperationException">In all cases.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.SetData(System.LocalDataStoreSlot,System.Object)">
+      <summary>Sets the data in the specified slot on the currently running thread, for that thread's current domain. For better performance, use fields marked with the <see cref="T:System.ThreadStaticAttribute" /> attribute instead.</summary>
+      <param name="slot">The <see cref="T:System.LocalDataStoreSlot" /> in which to set the value.</param>
+      <param name="data">The value to be set.</param>
+    </member>
+    <member name="M:System.Threading.Thread.Sleep(System.Int32)">
+      <summary>Suspends the current thread for the specified number of milliseconds.</summary>
+      <param name="millisecondsTimeout">The number of milliseconds for which the thread is suspended. If the value of the <paramref name="millisecondsTimeout" /> argument is zero, the thread relinquishes the remainder of its time slice to any thread of equal priority that is ready to run. If there are no other threads of equal priority that are ready to run, execution of the current thread is not suspended.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">The time-out value is negative and is not equal to <see cref="F:System.Threading.Timeout.Infinite" />.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.Sleep(System.TimeSpan)">
+      <summary>Suspends the current thread for the specified amount of time.</summary>
+      <param name="timeout">The amount of time for which the thread is suspended. If the value of the <paramref name="timeout" /> argument is <see cref="F:System.TimeSpan.Zero" />, the thread relinquishes the remainder of its time slice to any thread of equal priority that is ready to run. If there are no other threads of equal priority that are ready to run, execution of the current thread is not suspended.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value of <paramref name="timeout" /> is negative and is not equal to <see cref="F:System.Threading.Timeout.Infinite" /> in milliseconds, or is greater than <see cref="F:System.Int32.MaxValue">Int32.MaxValue</see> milliseconds.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.SpinWait(System.Int32)">
+      <summary>Causes a thread to wait the number of times defined by the <paramref name="iterations" /> parameter.</summary>
+      <param name="iterations">A 32-bit signed integer that defines how long a thread is to wait.</param>
+    </member>
+    <member name="M:System.Threading.Thread.Start">
+      <summary>Causes the operating system to change the state of the current instance to <see cref="F:System.Threading.ThreadState.Running" />.</summary>
+      <exception cref="T:System.Threading.ThreadStateException">The thread has already been started.</exception>
+      <exception cref="T:System.OutOfMemoryException">There is not enough memory available to start this thread.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.Start(System.Object)">
+      <summary>Causes the operating system to change the state of the current instance to <see cref="F:System.Threading.ThreadState.Running" />, and optionally supplies an object containing data to be used by the method the thread executes.</summary>
+      <param name="parameter">An object that contains data to be used by the method the thread executes.</param>
+      <exception cref="T:System.Threading.ThreadStateException">The thread has already been started.</exception>
+      <exception cref="T:System.OutOfMemoryException">There is not enough memory available to start this thread.</exception>
+      <exception cref="T:System.InvalidOperationException">This thread was created using a <see cref="T:System.Threading.ThreadStart" /> delegate instead of a <see cref="T:System.Threading.ParameterizedThreadStart" /> delegate.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.Suspend">
+      <summary>Either suspends the thread, or if the thread is already suspended, has no effect.</summary>
+      <exception cref="T:System.PlatformNotSupportedException">.NET Core and .NET 5+ only: In all cases.</exception>
+      <exception cref="T:System.Threading.ThreadStateException">The thread has not been started or is dead.</exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the appropriate <see cref="T:System.Security.Permissions.SecurityPermission" />.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.TrySetApartmentState(System.Threading.ApartmentState)">
+      <summary>Sets the apartment state of a thread before it is started.</summary>
+      <param name="state">The new apartment state.</param>
+      <exception cref="T:System.PlatformNotSupportedException">.NET Core and .NET 5+ only: In all cases on macOS and Linux.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="state" /> is not a valid apartment state.</exception>
+      <exception cref="T:System.Threading.ThreadStateException">The thread was started and has terminated, or the call is not being made from the thread's context while the thread is running.</exception>
+      <returns>
+        <see langword="true" /> if the apartment state is set; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.UnsafeStart">
+      <summary>Causes the operating system to change the state of the current instance to <see cref="F:System.Threading.ThreadState.Running" />.</summary>
+      <exception cref="T:System.Threading.ThreadStateException">The thread has already been started.</exception>
+      <exception cref="T:System.OutOfMemoryException">There is not enough memory available to start this thread.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.UnsafeStart(System.Object)">
+      <summary>Causes the operating system to change the state of the current instance to <see cref="F:System.Threading.ThreadState.Running" />, and optionally supplies an object containing data to be used by the method the thread executes.</summary>
+      <param name="parameter">An object that contains data to be used by the method the thread executes.</param>
+      <exception cref="T:System.Threading.ThreadStateException">The thread has already been started.</exception>
+      <exception cref="T:System.OutOfMemoryException">There is not enough memory available to start this thread.</exception>
+      <exception cref="T:System.InvalidOperationException">This thread was created using a <see cref="T:System.Threading.ThreadStart" /> delegate instead of a <see cref="T:System.Threading.ParameterizedThreadStart" /> delegate.</exception>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.Byte@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.Double@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.Int16@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.Int32@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.Int64@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.IntPtr@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.Object@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.SByte@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.Single@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.UInt16@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.UInt32@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.UInt64@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileRead(System.UIntPtr@)">
+      <summary>Reads the value of a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears after this method in the code, the processor cannot move it before this method.</summary>
+      <param name="address">The field to be read.</param>
+      <returns>The value that was read.</returns>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.Byte@,System.Byte)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.Double@,System.Double)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.Int16@,System.Int16)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.Int32@,System.Int32)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.Int64@,System.Int64)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.IntPtr@,System.IntPtr)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.Object@,System.Object)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.SByte@,System.SByte)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.Single@,System.Single)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.UInt16@,System.UInt16)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.UInt32@,System.UInt32)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.UInt64@,System.UInt64)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.VolatileWrite(System.UIntPtr@,System.UIntPtr)">
+      <summary>Writes a value to a field. On systems that require it, inserts a memory barrier that prevents the processor from reordering memory operations as follows: If a read or write appears before this method in the code, the processor cannot move it after this method.</summary>
+      <param name="address">The field to which the value is to be written.</param>
+      <param name="value">The value to be written.</param>
+    </member>
+    <member name="M:System.Threading.Thread.Yield">
+      <summary>Causes the calling thread to yield execution to another thread that is ready to run on the current processor. The operating system selects the thread to yield to.</summary>
+      <returns>
+        <see langword="true" /> if the operating system switched execution to another thread; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.ApartmentState">
+      <summary>Gets or sets the apartment state of this thread.</summary>
+      <exception cref="T:System.ArgumentException">An attempt is made to set this property to a state that is not a valid apartment state (a state other than single-threaded apartment (<see langword="STA" />) or multithreaded apartment (<see langword="MTA" />)).</exception>
+      <returns>One of the <see cref="T:System.Threading.ApartmentState" /> values. The initial value is <see langword="Unknown" />.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.CurrentCulture">
+      <summary>Gets or sets the culture for the current thread.</summary>
+      <exception cref="T:System.ArgumentNullException">The property is set to <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">.NET Core and .NET 5+ only: Reading or writing the culture of a thread from another thread is not supported.</exception>
+      <returns>An object that represents the culture for the current thread.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.CurrentPrincipal">
+      <summary>Gets or sets the thread's current principal (for role-based security).</summary>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the permission required to set the principal.</exception>
+      <returns>An <see cref="T:System.Security.Principal.IPrincipal" /> value representing the security context.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.CurrentThread">
+      <summary>Gets the currently running thread.</summary>
+      <returns>A <see cref="T:System.Threading.Thread" /> that is the representation of the currently running thread.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.CurrentUICulture">
+      <summary>Gets or sets the current culture used by the Resource Manager to look up culture-specific resources at run time.</summary>
+      <exception cref="T:System.ArgumentNullException">The property is set to <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">The property is set to a culture name that cannot be used to locate a resource file. Resource filenames must include only letters, numbers, hyphens or underscores.</exception>
+      <exception cref="T:System.InvalidOperationException">.NET Core and .NET 5+ only: Reading or writing the culture of a thread from another thread is not supported.</exception>
+      <returns>An object that represents the current culture.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.ExecutionContext">
+      <summary>Gets an <see cref="T:System.Threading.ExecutionContext" /> object that contains information about the various contexts of the current thread.</summary>
+      <returns>An <see cref="T:System.Threading.ExecutionContext" /> object that consolidates context information for the current thread.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.IsAlive">
+      <summary>Gets a value indicating the execution status of the current thread.</summary>
+      <returns>
+        <see langword="true" /> if this thread has been started and has not terminated normally or aborted; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.IsBackground">
+      <summary>Gets or sets a value indicating whether or not a thread is a background thread.</summary>
+      <exception cref="T:System.Threading.ThreadStateException">The thread is dead.</exception>
+      <returns>
+        <see langword="true" /> if this thread is or is to become a background thread; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.IsThreadPoolThread">
+      <summary>Gets a value indicating whether or not a thread belongs to the managed thread pool.</summary>
+      <returns>
+        <see langword="true" /> if this thread belongs to the managed thread pool; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.ManagedThreadId">
+      <summary>Gets a unique identifier for the current managed thread.</summary>
+      <returns>An integer that represents a unique identifier for this managed thread.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.Name">
+      <summary>Gets or sets the name of the thread.</summary>
+      <exception cref="T:System.InvalidOperationException">A set operation was requested, but the <see langword="Name" /> property has already been set.</exception>
+      <returns>A string containing the name of the thread, or <see langword="null" /> if no name was set.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.Priority">
+      <summary>Gets or sets a value indicating the scheduling priority of a thread.</summary>
+      <exception cref="T:System.Threading.ThreadStateException">The thread has reached a final state, such as <see cref="F:System.Threading.ThreadState.Aborted" />.</exception>
+      <exception cref="T:System.ArgumentException">The value specified for a set operation is not a valid <see cref="T:System.Threading.ThreadPriority" /> value.</exception>
+      <returns>One of the <see cref="T:System.Threading.ThreadPriority" /> values. The default value is <see cref="F:System.Threading.ThreadPriority.Normal" />.</returns>
+    </member>
+    <member name="P:System.Threading.Thread.ThreadState">
+      <summary>Gets a value containing the states of the current thread.</summary>
+      <returns>One of the <see cref="T:System.Threading.ThreadState" /> values indicating the state of the current thread. The initial value is <see cref="F:System.Threading.ThreadState.Unstarted" />.</returns>
+    </member>
+    <member name="T:System.Threading.ThreadAbortException">
+      <summary>The exception that is thrown when a call is made to the <see cref="M:System.Threading.Thread.Abort(System.Object)" /> method. This class cannot be inherited.</summary>
+    </member>
+    <member name="P:System.Threading.ThreadAbortException.ExceptionState">
+      <summary>Gets an object that contains application-specific information related to the thread abort.</summary>
+      <returns>An object containing application-specific information.</returns>
+    </member>
+    <member name="T:System.Threading.ThreadExceptionEventArgs">
+      <summary>Provides data for the <see cref="E:System.Windows.Forms.Application.ThreadException" /> event.</summary>
+    </member>
+    <member name="M:System.Threading.ThreadExceptionEventArgs.#ctor(System.Exception)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.ThreadExceptionEventArgs" /> class.</summary>
+      <param name="t">The <see cref="T:System.Exception" /> that occurred.</param>
+    </member>
+    <member name="P:System.Threading.ThreadExceptionEventArgs.Exception">
+      <summary>Gets the <see cref="T:System.Exception" /> that occurred.</summary>
+      <returns>The <see cref="T:System.Exception" /> that occurred.</returns>
+    </member>
+    <member name="T:System.Threading.ThreadExceptionEventHandler">
+      <summary>Represents the method that will handle the <see cref="E:System.Windows.Forms.Application.ThreadException" /> event of an <see cref="T:System.Windows.Forms.Application" />.</summary>
+      <param name="sender">The source of the event.</param>
+      <param name="e">A <see cref="T:System.Threading.ThreadExceptionEventArgs" /> that contains the event data.</param>
+    </member>
+    <member name="T:System.Threading.ThreadInterruptedException">
+      <summary>The exception that is thrown when a <see cref="T:System.Threading.Thread" /> is interrupted while it is in a waiting state.</summary>
+    </member>
+    <member name="M:System.Threading.ThreadInterruptedException.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.ThreadInterruptedException" /> class with default properties.</summary>
+    </member>
+    <member name="M:System.Threading.ThreadInterruptedException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.ThreadInterruptedException" /> class with serialized data.</summary>
+      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+    </member>
+    <member name="M:System.Threading.ThreadInterruptedException.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.ThreadInterruptedException" /> class with a specified error message.</summary>
+      <param name="message">The error message that explains the reason for the exception.</param>
+    </member>
+    <member name="M:System.Threading.ThreadInterruptedException.#ctor(System.String,System.Exception)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.ThreadInterruptedException" /> class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
+      <param name="message">The error message that explains the reason for the exception.</param>
+      <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException" /> parameter is not <see langword="null" />, the current exception is raised in a <see langword="catch" /> block that handles the inner exception.</param>
+    </member>
+    <member name="T:System.Threading.ThreadPriority">
+      <summary>Specifies the scheduling priority of a <see cref="T:System.Threading.Thread" />.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadPriority.AboveNormal">
+      <summary>The <see cref="T:System.Threading.Thread" /> can be scheduled after threads with <see langword="Highest" /> priority and before those with <see langword="Normal" /> priority.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadPriority.BelowNormal">
+      <summary>The <see cref="T:System.Threading.Thread" /> can be scheduled after threads with <see langword="Normal" /> priority and before those with <see langword="Lowest" /> priority.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadPriority.Highest">
+      <summary>The <see cref="T:System.Threading.Thread" /> can be scheduled before threads with any other priority.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadPriority.Lowest">
+      <summary>The <see cref="T:System.Threading.Thread" /> can be scheduled after threads with any other priority.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadPriority.Normal">
+      <summary>The <see cref="T:System.Threading.Thread" /> can be scheduled after threads with <see langword="AboveNormal" /> priority and before those with <see langword="BelowNormal" /> priority. Threads have <see langword="Normal" /> priority by default.</summary>
+    </member>
+    <member name="T:System.Threading.ThreadStart">
+      <summary>Represents the method that executes on a <see cref="T:System.Threading.Thread" />.</summary>
+    </member>
+    <member name="T:System.Threading.ThreadStartException">
+      <summary>The exception that is thrown when a failure occurs in a managed thread after the underlying operating system thread has been started, but before the thread is ready to execute user code.</summary>
+    </member>
+    <member name="T:System.Threading.ThreadState">
+      <summary>Specifies the execution states of a <see cref="T:System.Threading.Thread" />.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.Aborted">
+      <summary>The thread state includes <see cref="F:System.Threading.ThreadState.AbortRequested" /> and the thread is now dead, but its state has not yet changed to <see cref="F:System.Threading.ThreadState.Stopped" />.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.AbortRequested">
+      <summary>The <see cref="M:System.Threading.Thread.Abort(System.Object)" /> method has been invoked on the thread, but the thread has not yet received the pending <see cref="T:System.Threading.ThreadAbortException" /> that will attempt to terminate it.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.Background">
+      <summary>The thread is being executed as a background thread, as opposed to a foreground thread. This state is controlled by setting the <see cref="P:System.Threading.Thread.IsBackground" /> property.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.Running">
+      <summary>The thread has been started and not yet stopped.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.Stopped">
+      <summary>The thread has stopped.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.StopRequested">
+      <summary>The thread is being requested to stop. This is for internal use only.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.Suspended">
+      <summary>The thread has been suspended.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.SuspendRequested">
+      <summary>The thread is being requested to suspend.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.Unstarted">
+      <summary>The <see cref="M:System.Threading.Thread.Start" /> method has not been invoked on the thread.</summary>
+    </member>
+    <member name="F:System.Threading.ThreadState.WaitSleepJoin">
+      <summary>The thread is blocked. This could be the result of calling <see cref="M:System.Threading.Thread.Sleep(System.Int32)" /> or <see cref="M:System.Threading.Thread.Join" />, of requesting a lock - for example, by calling <see cref="M:System.Threading.Monitor.Enter(System.Object)" /> or <see cref="M:System.Threading.Monitor.Wait(System.Object,System.Int32,System.Boolean)" /> - or of waiting on a thread synchronization object such as <see cref="T:System.Threading.ManualResetEvent" />.</summary>
+    </member>
+    <member name="T:System.Threading.ThreadStateException">
+      <summary>The exception that is thrown when a <see cref="T:System.Threading.Thread" /> is in an invalid <see cref="P:System.Threading.Thread.ThreadState" /> for the method call.</summary>
+    </member>
+    <member name="M:System.Threading.ThreadStateException.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.ThreadStateException" /> class with default properties.</summary>
+    </member>
+    <member name="M:System.Threading.ThreadStateException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.ThreadStateException" /> class with serialized data.</summary>
+      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
+    </member>
+    <member name="M:System.Threading.ThreadStateException.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.ThreadStateException" /> class with a specified error message.</summary>
+      <param name="message">The error message that explains the reason for the exception.</param>
+    </member>
+    <member name="M:System.Threading.ThreadStateException.#ctor(System.String,System.Exception)">
+      <summary>Initializes a new instance of the <see cref="T:System.Threading.ThreadStateException" /> class with a specified error message and a reference to the inner exception that is the cause of this exception.</summary>
+      <param name="message">The error message that explains the reason for the exception.</param>
+      <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException" /> parameter is not <see langword="null" />, the current exception is raised in a <see langword="catch" /> block that handles the inner exception.</param>
+    </member>
+  </members>
+</doc>

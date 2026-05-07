@@ -1,0 +1,50 @@
+{
+  "version": "8.0.0-preview.1.23557.2",
+  "workloads": {
+    "aspire": {
+      "description": ".NET Aspire SDK (Preview)",
+      "packs": [
+        "Aspire.Hosting.Sdk",
+        "Aspire.ProjectTemplates",
+        "Aspire.Hosting.Orchestration",
+        "Aspire.Hosting"
+      ],
+      // DCP only support these hosts
+      "platforms": [
+        "win-x64",
+        "win-arm64",
+        "linux-x64",
+        "linux-arm64",
+        "osx-x64",
+        "osx-arm64"
+      ]
+    }
+  },
+  "packs": {
+    "Aspire.Hosting.Sdk": {
+      "kind": "sdk",
+      "version": "8.0.0-preview.1.23557.2"
+    },
+    "Aspire.ProjectTemplates": {
+      "kind": "template",
+      "version": "8.0.0-preview.1.23557.2"
+    },
+   "Aspire.Hosting.Orchestration": {
+      "kind": "sdk",
+      "version": "8.0.0-preview.1.23557.2",
+      "alias-to": {
+        "win-x86": "Aspire.Hosting.Orchestration.win-x86",
+        "win-x64": "Aspire.Hosting.Orchestration.win-x64",
+        "win-arm64": "Aspire.Hosting.Orchestration.win-arm64",
+        "linux-x64": "Aspire.Hosting.Orchestration.linux-x64",
+        "linux-arm64": "Aspire.Hosting.Orchestration.linux-arm64",
+        "osx-x64": "Aspire.Hosting.Orchestration.osx-x64",
+        "osx-arm64": "Aspire.Hosting.Orchestration.osx-arm64"
+      }
+    },
+    "Aspire.Hosting": {
+      "kind": "library",
+      "version": "8.0.0-preview.1.23557.2"
+    }
+  }
+}

@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.WebEncoders</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.DependencyInjection.EncoderServiceCollectionExtensions">
+            <summary>
+            Extension methods for setting up web encoding services in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.EncoderServiceCollectionExtensions.AddWebEncoders(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/>, <see cref="T:System.Text.Encodings.Web.JavaScriptEncoder"/> and <see cref="T:System.Text.Encodings.Web.UrlEncoder"/>
+            to the specified <paramref name="services" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.EncoderServiceCollectionExtensions.AddWebEncoders(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.Extensions.WebEncoders.WebEncoderOptions})">
+            <summary>
+            Adds <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/>, <see cref="T:System.Text.Encodings.Web.JavaScriptEncoder"/> and <see cref="T:System.Text.Encodings.Web.UrlEncoder"/>
+            to the specified <paramref name="services" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <param name="setupAction">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.Extensions.WebEncoders.WebEncoderOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.WebEncoders.Testing.HtmlTestEncoder">
+            <summary>
+            <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> used for unit testing. This encoder does not perform any encoding and should not be used in application code.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.WebEncoders.Testing.HtmlTestEncoder.MaxOutputCharactersPerInputCharacter">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.HtmlTestEncoder.Encode(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.HtmlTestEncoder.Encode(System.IO.TextWriter,System.Char[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.HtmlTestEncoder.Encode(System.IO.TextWriter,System.String,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.HtmlTestEncoder.WillEncode(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.HtmlTestEncoder.FindFirstCharacterToEncode(System.Char*,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.HtmlTestEncoder.TryEncodeUnicodeScalar(System.Int32,System.Char*,System.Int32,System.Int32@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.WebEncoders.Testing.JavaScriptTestEncoder">
+            <summary>
+            <see cref="T:System.Text.Encodings.Web.JavaScriptEncoder"/> used for unit testing. This encoder does not perform any encoding and should not be used in application code.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.WebEncoders.Testing.JavaScriptTestEncoder.MaxOutputCharactersPerInputCharacter">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.JavaScriptTestEncoder.Encode(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.JavaScriptTestEncoder.Encode(System.IO.TextWriter,System.Char[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.JavaScriptTestEncoder.Encode(System.IO.TextWriter,System.String,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.JavaScriptTestEncoder.WillEncode(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.JavaScriptTestEncoder.FindFirstCharacterToEncode(System.Char*,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.JavaScriptTestEncoder.TryEncodeUnicodeScalar(System.Int32,System.Char*,System.Int32,System.Int32@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.WebEncoders.Testing.UrlTestEncoder">
+            <summary>
+            <see cref="T:System.Text.Encodings.Web.UrlEncoder"/> used for unit testing. This encoder does not perform any encoding and should not be used in application code.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.WebEncoders.Testing.UrlTestEncoder.MaxOutputCharactersPerInputCharacter">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.UrlTestEncoder.Encode(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.UrlTestEncoder.Encode(System.IO.TextWriter,System.Char[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.UrlTestEncoder.Encode(System.IO.TextWriter,System.String,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.UrlTestEncoder.WillEncode(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.UrlTestEncoder.FindFirstCharacterToEncode(System.Char*,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Testing.UrlTestEncoder.TryEncodeUnicodeScalar(System.Int32,System.Char*,System.Int32,System.Int32@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.WebEncoders.WebEncoderOptions">
+            <summary>
+            Specifies options common to all three encoders (HtmlEncode, JavaScriptEncode, UrlEncode).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.WebEncoders.WebEncoderOptions.TextEncoderSettings">
+            <summary>
+            Specifies which code points are allowed to be represented unescaped by the encoders.
+            </summary>
+            <remarks>
+            If this property is null, then the encoders will use their default allow lists.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+    </members>
+</doc>

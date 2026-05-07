@@ -1,0 +1,992 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Reflection.Primitives</name>
+  </assembly>
+  <members>
+    <member name="T:System.Reflection.Emit.FlowControl">
+      <summary>Describes how an instruction alters the flow of control.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.FlowControl.Branch">
+      <summary>Branch instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.FlowControl.Break">
+      <summary>Break instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.FlowControl.Call">
+      <summary>Call instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.FlowControl.Cond_Branch">
+      <summary>Conditional branch instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.FlowControl.Meta">
+      <summary>Provides information about a subsequent instruction. For example, the <see langword="Unaligned" /> instruction of <see langword="Reflection.Emit.Opcodes" /> has <see langword="FlowControl.Meta" /> and specifies that the subsequent pointer instruction might be unaligned.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.FlowControl.Next">
+      <summary>Normal flow of control.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.FlowControl.Phi">
+      <summary>This enumerator value is reserved and should not be used.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.FlowControl.Return">
+      <summary>Return instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.FlowControl.Throw">
+      <summary>Exception throw instruction.</summary>
+    </member>
+    <member name="T:System.Reflection.Emit.OpCode">
+      <summary>Describes an intermediate language (IL) instruction.</summary>
+    </member>
+    <member name="M:System.Reflection.Emit.OpCode.Equals(System.Object)">
+      <summary>Tests whether the given object is equal to this <see langword="Opcode" />.</summary>
+      <param name="obj">The object to compare to this object.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="obj" /> is an instance of <see langword="Opcode" /> and is equal to this object; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Reflection.Emit.OpCode.Equals(System.Reflection.Emit.OpCode)">
+      <summary>Indicates whether the current instance is equal to the specified <see cref="T:System.Reflection.Emit.OpCode" />.</summary>
+      <param name="obj">The <see cref="T:System.Reflection.Emit.OpCode" /> to compare to the current instance.</param>
+      <returns>
+        <see langword="true" /> if the value of <paramref name="obj" /> is equal to the value of the current instance; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Reflection.Emit.OpCode.GetHashCode">
+      <summary>Returns the generated hash code for this <see langword="Opcode" />.</summary>
+      <returns>The hash code for this instance.</returns>
+    </member>
+    <member name="M:System.Reflection.Emit.OpCode.op_Equality(System.Reflection.Emit.OpCode,System.Reflection.Emit.OpCode)">
+      <summary>Indicates whether two <see cref="T:System.Reflection.Emit.OpCode" /> structures are equal.</summary>
+      <param name="a">The <see cref="T:System.Reflection.Emit.OpCode" /> to compare to <paramref name="b" />.</param>
+      <param name="b">The <see cref="T:System.Reflection.Emit.OpCode" /> to compare to <paramref name="a" />.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="a" /> is equal to <paramref name="b" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Reflection.Emit.OpCode.op_Inequality(System.Reflection.Emit.OpCode,System.Reflection.Emit.OpCode)">
+      <summary>Indicates whether two <see cref="T:System.Reflection.Emit.OpCode" /> structures are not equal.</summary>
+      <param name="a">The <see cref="T:System.Reflection.Emit.OpCode" /> to compare to <paramref name="b" />.</param>
+      <param name="b">The <see cref="T:System.Reflection.Emit.OpCode" /> to compare to <paramref name="a" />.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="a" /> is not equal to <paramref name="b" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Reflection.Emit.OpCode.ToString">
+      <summary>Returns this <see langword="Opcode" /> as a <see cref="T:System.String" />.</summary>
+      <returns>A string containing the name of this <see langword="Opcode" />.</returns>
+    </member>
+    <member name="P:System.Reflection.Emit.OpCode.FlowControl">
+      <summary>The flow control characteristics of the intermediate language (IL) instruction.</summary>
+      <returns>Read-only. The type of flow control.</returns>
+    </member>
+    <member name="P:System.Reflection.Emit.OpCode.Name">
+      <summary>The name of the intermediate language (IL) instruction.</summary>
+      <returns>Read-only. The name of the IL instruction.</returns>
+    </member>
+    <member name="P:System.Reflection.Emit.OpCode.OpCodeType">
+      <summary>The type of intermediate language (IL) instruction.</summary>
+      <returns>Read-only. The type of intermediate language (IL) instruction.</returns>
+    </member>
+    <member name="P:System.Reflection.Emit.OpCode.OperandType">
+      <summary>The operand type of an intermediate language (IL) instruction.</summary>
+      <returns>Read-only. The operand type of an IL instruction.</returns>
+    </member>
+    <member name="P:System.Reflection.Emit.OpCode.Size">
+      <summary>The size of the intermediate language (IL) instruction.</summary>
+      <returns>Read-only. The size of the IL instruction.</returns>
+    </member>
+    <member name="P:System.Reflection.Emit.OpCode.StackBehaviourPop">
+      <summary>How the intermediate language (IL) instruction pops the stack.</summary>
+      <returns>Read-only. The way the IL instruction pops the stack.</returns>
+    </member>
+    <member name="P:System.Reflection.Emit.OpCode.StackBehaviourPush">
+      <summary>How the intermediate language (IL) instruction pushes operand onto the stack.</summary>
+      <returns>Read-only. The way the IL instruction pushes operand onto the stack.</returns>
+    </member>
+    <member name="P:System.Reflection.Emit.OpCode.Value">
+      <summary>Gets the numeric value of the intermediate language (IL) instruction.</summary>
+      <returns>Read-only. The numeric value of the IL instruction.</returns>
+    </member>
+    <member name="T:System.Reflection.Emit.OpCodes">
+      <summary>Provides field representations of the Microsoft Intermediate Language (MSIL) instructions for emission by the <see cref="T:System.Reflection.Emit.ILGenerator" /> class members (such as <see cref="M:System.Reflection.Emit.ILGenerator.Emit(System.Reflection.Emit.OpCode)" />).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Add">
+      <summary>Adds two values and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Add_Ovf">
+      <summary>Adds two integers, performs an overflow check, and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Add_Ovf_Un">
+      <summary>Adds two unsigned integer values, performs an overflow check, and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.And">
+      <summary>Computes the bitwise AND of two values and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Arglist">
+      <summary>Returns an unmanaged pointer to the argument list of the current method.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Beq">
+      <summary>Transfers control to a target instruction if two values are equal.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Beq_S">
+      <summary>Transfers control to a target instruction (short form) if two values are equal.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bge">
+      <summary>Transfers control to a target instruction if the first value is greater than or equal to the second value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bge_S">
+      <summary>Transfers control to a target instruction (short form) if the first value is greater than or equal to the second value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bge_Un">
+      <summary>Transfers control to a target instruction if the first value is greater than the second value, when comparing unsigned integer values or unordered float values.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bge_Un_S">
+      <summary>Transfers control to a target instruction (short form) if the first value is greater than the second value, when comparing unsigned integer values or unordered float values.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bgt">
+      <summary>Transfers control to a target instruction if the first value is greater than the second value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bgt_S">
+      <summary>Transfers control to a target instruction (short form) if the first value is greater than the second value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bgt_Un">
+      <summary>Transfers control to a target instruction if the first value is greater than the second value, when comparing unsigned integer values or unordered float values.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bgt_Un_S">
+      <summary>Transfers control to a target instruction (short form) if the first value is greater than the second value, when comparing unsigned integer values or unordered float values.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ble">
+      <summary>Transfers control to a target instruction if the first value is less than or equal to the second value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ble_S">
+      <summary>Transfers control to a target instruction (short form) if the first value is less than or equal to the second value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ble_Un">
+      <summary>Transfers control to a target instruction if the first value is less than or equal to the second value, when comparing unsigned integer values or unordered float values.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ble_Un_S">
+      <summary>Transfers control to a target instruction (short form) if the first value is less than or equal to the second value, when comparing unsigned integer values or unordered float values.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Blt">
+      <summary>Transfers control to a target instruction if the first value is less than the second value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Blt_S">
+      <summary>Transfers control to a target instruction (short form) if the first value is less than the second value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Blt_Un">
+      <summary>Transfers control to a target instruction if the first value is less than the second value, when comparing unsigned integer values or unordered float values.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Blt_Un_S">
+      <summary>Transfers control to a target instruction (short form) if the first value is less than the second value, when comparing unsigned integer values or unordered float values.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bne_Un">
+      <summary>Transfers control to a target instruction when two unsigned integer values or unordered float values are not equal.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Bne_Un_S">
+      <summary>Transfers control to a target instruction (short form) when two unsigned integer values or unordered float values are not equal.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Box">
+      <summary>Converts a value type to an object reference (type <see langword="O" />).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Br">
+      <summary>Unconditionally transfers control to a target instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Br_S">
+      <summary>Unconditionally transfers control to a target instruction (short form).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Break">
+      <summary>Signals the Common Language Infrastructure (CLI) to inform the debugger that a break point has been tripped.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Brfalse">
+      <summary>Transfers control to a target instruction if <paramref name="value" /> is <see langword="false" />, a null reference (<see langword="Nothing" /> in Visual Basic), or zero.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Brfalse_S">
+      <summary>Transfers control to a target instruction if <paramref name="value" /> is <see langword="false" />, a null reference, or zero.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Brtrue">
+      <summary>Transfers control to a target instruction if <paramref name="value" /> is <see langword="true" />, not null, or non-zero.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Brtrue_S">
+      <summary>Transfers control to a target instruction (short form) if <paramref name="value" /> is <see langword="true" />, not null, or non-zero.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Call">
+      <summary>Calls the method indicated by the passed method descriptor.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Calli">
+      <summary>Calls the method indicated on the evaluation stack (as a pointer to an entry point) with arguments described by a calling convention.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Callvirt">
+      <summary>Calls a late-bound method on an object, pushing the return value onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Castclass">
+      <summary>Attempts to cast an object passed by reference to the specified class.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ceq">
+      <summary>Compares two values. If they are equal, the integer value 1 <see langword="(int32" />) is pushed onto the evaluation stack; otherwise 0 (<see langword="int32" />) is pushed onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Cgt">
+      <summary>Compares two values. If the first value is greater than the second, the integer value 1 <see langword="(int32" />) is pushed onto the evaluation stack; otherwise 0 (<see langword="int32" />) is pushed onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Cgt_Un">
+      <summary>Compares two unsigned or unordered values. If the first value is greater than the second, the integer value 1 <see langword="(int32" />) is pushed onto the evaluation stack; otherwise 0 (<see langword="int32" />) is pushed onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ckfinite">
+      <summary>Throws <see cref="T:System.ArithmeticException" /> if value is not a finite number.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Clt">
+      <summary>Compares two values. If the first value is less than the second, the integer value 1 <see langword="(int32" />) is pushed onto the evaluation stack; otherwise 0 (<see langword="int32" />) is pushed onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Clt_Un">
+      <summary>Compares the unsigned or unordered values <paramref name="value1" /> and <paramref name="value2" />. If <paramref name="value1" /> is less than <paramref name="value2" />, then the integer value 1 <see langword="(int32" />) is pushed onto the evaluation stack; otherwise 0 (<see langword="int32" />) is pushed onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Constrained">
+      <summary>Constrains the type on which a virtual method call is made.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_I">
+      <summary>Converts the value on top of the evaluation stack to <see langword="native int" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_I1">
+      <summary>Converts the value on top of the evaluation stack to <see langword="int8" />, then extends (pads) it to <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_I2">
+      <summary>Converts the value on top of the evaluation stack to <see langword="int16" />, then extends (pads) it to <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_I4">
+      <summary>Converts the value on top of the evaluation stack to <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_I8">
+      <summary>Converts the value on top of the evaluation stack to <see langword="int64" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I">
+      <summary>Converts the signed value on top of the evaluation stack to signed <see langword="native int" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to signed <see langword="native int" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I1">
+      <summary>Converts the signed value on top of the evaluation stack to signed <see langword="int8" /> and extends it to <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I1_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to signed <see langword="int8" /> and extends it to <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I2">
+      <summary>Converts the signed value on top of the evaluation stack to signed <see langword="int16" /> and extending it to <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I2_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to signed <see langword="int16" /> and extends it to <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I4">
+      <summary>Converts the signed value on top of the evaluation stack to signed <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I4_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to signed <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I8">
+      <summary>Converts the signed value on top of the evaluation stack to signed <see langword="int64" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_I8_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to signed <see langword="int64" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U">
+      <summary>Converts the signed value on top of the evaluation stack to <see langword="unsigned native int" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to <see langword="unsigned native int" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U1">
+      <summary>Converts the signed value on top of the evaluation stack to <see langword="unsigned int8" /> and extends it to <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U1_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to <see langword="unsigned int8" /> and extends it to <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U2">
+      <summary>Converts the signed value on top of the evaluation stack to <see langword="unsigned int16" /> and extends it to <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U2_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to <see langword="unsigned int16" /> and extends it to <see langword="int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U4">
+      <summary>Converts the signed value on top of the evaluation stack to <see langword="unsigned int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U4_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to <see langword="unsigned int32" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U8">
+      <summary>Converts the signed value on top of the evaluation stack to <see langword="unsigned int64" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_Ovf_U8_Un">
+      <summary>Converts the unsigned value on top of the evaluation stack to <see langword="unsigned int64" />, throwing <see cref="T:System.OverflowException" /> on overflow.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_R_Un">
+      <summary>Converts the unsigned integer value on top of the evaluation stack to <see langword="float32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_R4">
+      <summary>Converts the value on top of the evaluation stack to <see langword="float32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_R8">
+      <summary>Converts the value on top of the evaluation stack to <see langword="float64" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_U">
+      <summary>Converts the value on top of the evaluation stack to <see langword="unsigned native int" />, and extends it to <see langword="native int" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_U1">
+      <summary>Converts the value on top of the evaluation stack to <see langword="unsigned int8" />, and extends it to <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_U2">
+      <summary>Converts the value on top of the evaluation stack to <see langword="unsigned int16" />, and extends it to <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_U4">
+      <summary>Converts the value on top of the evaluation stack to <see langword="unsigned int32" />, and extends it to <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Conv_U8">
+      <summary>Converts the value on top of the evaluation stack to <see langword="unsigned int64" />, and extends it to <see langword="int64" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Cpblk">
+      <summary>Copies a specified number bytes from a source address to a destination address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Cpobj">
+      <summary>Copies the value type located at the address of an object (type <see langword="&amp;" />, <see langword="*" /> or <see langword="native int" />) to the address of the destination object (type <see langword="&amp;" />, <see langword="*" /> or <see langword="native int" />).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Div">
+      <summary>Divides two values and pushes the result as a floating-point (type <see langword="F" />) or quotient (type <see langword="int32" />) onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Div_Un">
+      <summary>Divides two unsigned integer values and pushes the result (<see langword="int32" />) onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Dup">
+      <summary>Copies the current topmost value on the evaluation stack, and then pushes the copy onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Endfilter">
+      <summary>Transfers control from the <see langword="filter" /> clause of an exception back to the Common Language Infrastructure (CLI) exception handler.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Endfinally">
+      <summary>Transfers control from the <see langword="fault" /> or <see langword="finally" /> clause of an exception block back to the Common Language Infrastructure (CLI) exception handler.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Initblk">
+      <summary>Initializes a specified block of memory at a specific address to a given size and initial value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Initobj">
+      <summary>Initializes each field of the value type at a specified address to a null reference or a 0 of the appropriate primitive type.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Isinst">
+      <summary>Tests whether an object reference (type <see langword="O" />) is an instance of a particular class.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Jmp">
+      <summary>Exits current method and jumps to specified method.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldarg">
+      <summary>Loads an argument (referenced by a specified index value) onto the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldarg_0">
+      <summary>Loads the argument at index 0 onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldarg_1">
+      <summary>Loads the argument at index 1 onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldarg_2">
+      <summary>Loads the argument at index 2 onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldarg_3">
+      <summary>Loads the argument at index 3 onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldarg_S">
+      <summary>Loads the argument (referenced by a specified short form index) onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldarga">
+      <summary>Load an argument address onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldarga_S">
+      <summary>Load an argument address, in short form, onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4">
+      <summary>Pushes a supplied value of type <see langword="int32" /> onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_0">
+      <summary>Pushes the integer value of 0 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_1">
+      <summary>Pushes the integer value of 1 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_2">
+      <summary>Pushes the integer value of 2 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_3">
+      <summary>Pushes the integer value of 3 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_4">
+      <summary>Pushes the integer value of 4 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_5">
+      <summary>Pushes the integer value of 5 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_6">
+      <summary>Pushes the integer value of 6 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_7">
+      <summary>Pushes the integer value of 7 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_8">
+      <summary>Pushes the integer value of 8 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_M1">
+      <summary>Pushes the integer value of -1 onto the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I4_S">
+      <summary>Pushes the supplied <see langword="int8" /> value onto the evaluation stack as an <see langword="int32" />, short form.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_I8">
+      <summary>Pushes a supplied value of type <see langword="int64" /> onto the evaluation stack as an <see langword="int64" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_R4">
+      <summary>Pushes a supplied value of type <see langword="float32" /> onto the evaluation stack as type <see langword="F" /> (float).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldc_R8">
+      <summary>Pushes a supplied value of type <see langword="float64" /> onto the evaluation stack as type <see langword="F" /> (float).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem">
+      <summary>Loads the element at a specified array index onto the top of the evaluation stack as the type specified in the instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_I">
+      <summary>Loads the element with type <see langword="native int" /> at a specified array index onto the top of the evaluation stack as a <see langword="native int" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_I1">
+      <summary>Loads the element with type <see langword="int8" /> at a specified array index onto the top of the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_I2">
+      <summary>Loads the element with type <see langword="int16" /> at a specified array index onto the top of the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_I4">
+      <summary>Loads the element with type <see langword="int32" /> at a specified array index onto the top of the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_I8">
+      <summary>Loads the element with type <see langword="int64" /> at a specified array index onto the top of the evaluation stack as an <see langword="int64" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_R4">
+      <summary>Loads the element with type <see langword="float32" /> at a specified array index onto the top of the evaluation stack as type <see langword="F" /> (float).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_R8">
+      <summary>Loads the element with type <see langword="float64" /> at a specified array index onto the top of the evaluation stack as type <see langword="F" /> (float).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_Ref">
+      <summary>Loads the element containing an object reference at a specified array index onto the top of the evaluation stack as type <see langword="O" /> (object reference).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_U1">
+      <summary>Loads the element with type <see langword="unsigned int8" /> at a specified array index onto the top of the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_U2">
+      <summary>Loads the element with type <see langword="unsigned int16" /> at a specified array index onto the top of the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelem_U4">
+      <summary>Loads the element with type <see langword="unsigned int32" /> at a specified array index onto the top of the evaluation stack as an <see langword="int32" />.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldelema">
+      <summary>Loads the address of the array element at a specified array index onto the top of the evaluation stack as type <see langword="&amp;" /> (managed pointer).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldfld">
+      <summary>Finds the value of a field in the object whose reference is currently on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldflda">
+      <summary>Finds the address of a field in the object whose reference is currently on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldftn">
+      <summary>Pushes an unmanaged pointer (type <see langword="native int" />) to the native code implementing a specific method onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_I">
+      <summary>Loads a value of type <see langword="native int" /> as a <see langword="native int" /> onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_I1">
+      <summary>Loads a value of type <see langword="int8" /> as an <see langword="int32" /> onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_I2">
+      <summary>Loads a value of type <see langword="int16" /> as an <see langword="int32" /> onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_I4">
+      <summary>Loads a value of type <see langword="int32" /> as an <see langword="int32" /> onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_I8">
+      <summary>Loads a value of type <see langword="int64" /> as an <see langword="int64" /> onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_R4">
+      <summary>Loads a value of type <see langword="float32" /> as a type <see langword="F" /> (float) onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_R8">
+      <summary>Loads a value of type <see langword="float64" /> as a type <see langword="F" /> (float) onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_Ref">
+      <summary>Loads an object reference as a type <see langword="O" /> (object reference) onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_U1">
+      <summary>Loads a value of type <see langword="unsigned int8" /> as an <see langword="int32" /> onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_U2">
+      <summary>Loads a value of type <see langword="unsigned int16" /> as an <see langword="int32" /> onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldind_U4">
+      <summary>Loads a value of type <see langword="unsigned int32" /> as an <see langword="int32" /> onto the evaluation stack indirectly.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldlen">
+      <summary>Pushes the number of elements of a zero-based, one-dimensional array onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldloc">
+      <summary>Loads the local variable at a specific index onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldloc_0">
+      <summary>Loads the local variable at index 0 onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldloc_1">
+      <summary>Loads the local variable at index 1 onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldloc_2">
+      <summary>Loads the local variable at index 2 onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldloc_3">
+      <summary>Loads the local variable at index 3 onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldloc_S">
+      <summary>Loads the local variable at a specific index onto the evaluation stack, short form.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldloca">
+      <summary>Loads the address of the local variable at a specific index onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldloca_S">
+      <summary>Loads the address of the local variable at a specific index onto the evaluation stack, short form.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldnull">
+      <summary>Pushes a null reference (type <see langword="O" />) onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldobj">
+      <summary>Copies the value type object pointed to by an address to the top of the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldsfld">
+      <summary>Pushes the value of a static field onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldsflda">
+      <summary>Pushes the address of a static field onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldstr">
+      <summary>Pushes a new object reference to a string literal stored in the metadata.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldtoken">
+      <summary>Converts a metadata token to its runtime representation, pushing it onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ldvirtftn">
+      <summary>Pushes an unmanaged pointer (type <see langword="native int" />) to the native code implementing a particular virtual method associated with a specified object onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Leave">
+      <summary>Exits a protected region of code, unconditionally transferring control to a specific target instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Leave_S">
+      <summary>Exits a protected region of code, unconditionally transferring control to a target instruction (short form).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Localloc">
+      <summary>Allocates a certain number of bytes from the local dynamic memory pool and pushes the address (a transient pointer, type <see langword="*" />) of the first allocated byte onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Mkrefany">
+      <summary>Pushes a typed reference to an instance of a specific type onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Mul">
+      <summary>Multiplies two values and pushes the result on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Mul_Ovf">
+      <summary>Multiplies two integer values, performs an overflow check, and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Mul_Ovf_Un">
+      <summary>Multiplies two unsigned integer values, performs an overflow check, and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Neg">
+      <summary>Negates a value and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Newarr">
+      <summary>Pushes an object reference to a new zero-based, one-dimensional array whose elements are of a specific type onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Newobj">
+      <summary>Creates a new object or a new instance of a value type, pushing an object reference (type <see langword="O" />) onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Nop">
+      <summary>Fills space if opcodes are patched. No meaningful operation is performed although a processing cycle can be consumed.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Not">
+      <summary>Computes the bitwise complement of the integer value on top of the stack and pushes the result onto the evaluation stack as the same type.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Or">
+      <summary>Compute the bitwise complement of the two integer values on top of the stack and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Pop">
+      <summary>Removes the value currently on top of the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Prefix1">
+      <summary>This is a reserved instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Prefix2">
+      <summary>This is a reserved instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Prefix3">
+      <summary>This is a reserved instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Prefix4">
+      <summary>This is a reserved instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Prefix5">
+      <summary>This is a reserved instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Prefix6">
+      <summary>This is a reserved instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Prefix7">
+      <summary>This is a reserved instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Prefixref">
+      <summary>This is a reserved instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Readonly">
+      <summary>Specifies that the subsequent array address operation performs no type check at run time, and that it returns a managed pointer whose mutability is restricted.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Refanytype">
+      <summary>Retrieves the type token embedded in a typed reference.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Refanyval">
+      <summary>Retrieves the address (type <see langword="&amp;" />) embedded in a typed reference.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Rem">
+      <summary>Divides two values and pushes the remainder onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Rem_Un">
+      <summary>Divides two unsigned values and pushes the remainder onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Ret">
+      <summary>Returns from the current method, pushing a return value (if present) from the callee's evaluation stack onto the caller's evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Rethrow">
+      <summary>Rethrows the current exception.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Shl">
+      <summary>Shifts an integer value to the left (in zeroes) by a specified number of bits, pushing the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Shr">
+      <summary>Shifts an integer value (in sign) to the right by a specified number of bits, pushing the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Shr_Un">
+      <summary>Shifts an unsigned integer value (in zeroes) to the right by a specified number of bits, pushing the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Sizeof">
+      <summary>Pushes the size, in bytes, of a supplied value type onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Starg">
+      <summary>Stores the value on top of the evaluation stack in the argument slot at a specified index.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Starg_S">
+      <summary>Stores the value on top of the evaluation stack in the argument slot at a specified index, short form.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stelem">
+      <summary>Replaces the array element at a given index with the value on the evaluation stack, whose type is specified in the instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stelem_I">
+      <summary>Replaces the array element at a given index with the <see langword="native int" /> value on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stelem_I1">
+      <summary>Replaces the array element at a given index with the <see langword="int8" /> value on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stelem_I2">
+      <summary>Replaces the array element at a given index with the <see langword="int16" /> value on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stelem_I4">
+      <summary>Replaces the array element at a given index with the <see langword="int32" /> value on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stelem_I8">
+      <summary>Replaces the array element at a given index with the <see langword="int64" /> value on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stelem_R4">
+      <summary>Replaces the array element at a given index with the <see langword="float32" /> value on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stelem_R8">
+      <summary>Replaces the array element at a given index with the <see langword="float64" /> value on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stelem_Ref">
+      <summary>Replaces the array element at a given index with the object ref value (type <see langword="O" />) on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stfld">
+      <summary>Replaces the value stored in the field of an object reference or pointer with a new value.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stind_I">
+      <summary>Stores a value of type <see langword="native int" /> at a supplied address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stind_I1">
+      <summary>Stores a value of type <see langword="int8" /> at a supplied address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stind_I2">
+      <summary>Stores a value of type <see langword="int16" /> at a supplied address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stind_I4">
+      <summary>Stores a value of type <see langword="int32" /> at a supplied address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stind_I8">
+      <summary>Stores a value of type <see langword="int64" /> at a supplied address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stind_R4">
+      <summary>Stores a value of type <see langword="float32" /> at a supplied address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stind_R8">
+      <summary>Stores a value of type <see langword="float64" /> at a supplied address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stind_Ref">
+      <summary>Stores a object reference value at a supplied address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stloc">
+      <summary>Pops the current value from the top of the evaluation stack and stores it in the local variable list at a specified index.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stloc_0">
+      <summary>Pops the current value from the top of the evaluation stack and stores it in the local variable list at index 0.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stloc_1">
+      <summary>Pops the current value from the top of the evaluation stack and stores it in the local variable list at index 1.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stloc_2">
+      <summary>Pops the current value from the top of the evaluation stack and stores it in the local variable list at index 2.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stloc_3">
+      <summary>Pops the current value from the top of the evaluation stack and stores it in the local variable list at index 3.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stloc_S">
+      <summary>Pops the current value from the top of the evaluation stack and stores it in the local variable list at <paramref name="index" /> (short form).</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stobj">
+      <summary>Copies a value of a specified type from the evaluation stack into a supplied memory address.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Stsfld">
+      <summary>Replaces the value of a static field with a value from the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Sub">
+      <summary>Subtracts one value from another and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Sub_Ovf">
+      <summary>Subtracts one integer value from another, performs an overflow check, and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Sub_Ovf_Un">
+      <summary>Subtracts one unsigned integer value from another, performs an overflow check, and pushes the result onto the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Switch">
+      <summary>Implements a jump table.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Tailcall">
+      <summary>Performs a postfixed method call instruction such that the current method's stack frame is removed before the actual call instruction is executed.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Throw">
+      <summary>Throws the exception object currently on the evaluation stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Unaligned">
+      <summary>Indicates that an address currently atop the evaluation stack might not be aligned to the natural size of the immediately following <see langword="ldind" />, <see langword="stind" />, <see langword="ldfld" />, <see langword="stfld" />, <see langword="ldobj" />, <see langword="stobj" />, <see langword="initblk" />, or <see langword="cpblk" /> instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Unbox">
+      <summary>Converts the boxed representation of a value type to its unboxed form.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Unbox_Any">
+      <summary>Converts the boxed representation of a type specified in the instruction to its unboxed form.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Volatile">
+      <summary>Specifies that an address currently atop the evaluation stack might be volatile, and the results of reading that location cannot be cached or that multiple stores to that location cannot be suppressed.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodes.Xor">
+      <summary>Computes the bitwise XOR of the top two values on the evaluation stack, pushing the result onto the evaluation stack.</summary>
+    </member>
+    <member name="M:System.Reflection.Emit.OpCodes.TakesSingleByteArgument(System.Reflection.Emit.OpCode)">
+      <summary>Returns true or false if the supplied opcode takes a single byte argument.</summary>
+      <param name="inst">An instance of an Opcode object.</param>
+      <returns>
+        <see langword="true" /> or <see langword="false" />.</returns>
+    </member>
+    <member name="T:System.Reflection.Emit.OpCodeType">
+      <summary>Describes the types of the Microsoft intermediate language (MSIL) instructions.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodeType.Annotation">
+      <summary>This enumerator value is reserved and should not be used.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodeType.Macro">
+      <summary>These are Microsoft intermediate language (MSIL) instructions that are used as a synonym for other MSIL instructions. For example, <see langword="ldarg.0" /> represents the <see langword="ldarg" /> instruction with an argument of 0.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodeType.Nternal">
+      <summary>Describes a reserved Microsoft intermediate language (MSIL) instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodeType.Objmodel">
+      <summary>Describes a Microsoft intermediate language (MSIL) instruction that applies to objects.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodeType.Prefix">
+      <summary>Describes a prefix instruction that modifies the behavior of the following instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OpCodeType.Primitive">
+      <summary>Describes a built-in instruction.</summary>
+    </member>
+    <member name="T:System.Reflection.Emit.OperandType">
+      <summary>Describes the operand type of Microsoft intermediate language (MSIL) instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineBrTarget">
+      <summary>The operand is a 32-bit integer branch target.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineField">
+      <summary>The operand is a 32-bit metadata token.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineI">
+      <summary>The operand is a 32-bit integer.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineI8">
+      <summary>The operand is a 64-bit integer.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineMethod">
+      <summary>The operand is a 32-bit metadata token.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineNone">
+      <summary>No operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlinePhi">
+      <summary>The operand is reserved and should not be used.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineR">
+      <summary>The operand is a 64-bit IEEE floating point number.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineSig">
+      <summary>The operand is a 32-bit metadata signature token.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineString">
+      <summary>The operand is a 32-bit metadata string token.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineSwitch">
+      <summary>The operand is the 32-bit integer argument to a switch instruction.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineTok">
+      <summary>The operand is a <see langword="FieldRef" />, <see langword="MethodRef" />, or <see langword="TypeRef" /> token.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineType">
+      <summary>The operand is a 32-bit metadata token.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.InlineVar">
+      <summary>The operand is 16-bit integer containing the ordinal of a local variable or an argument.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.ShortInlineBrTarget">
+      <summary>The operand is an 8-bit integer branch target.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.ShortInlineI">
+      <summary>The operand is an 8-bit integer.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.ShortInlineR">
+      <summary>The operand is a 32-bit IEEE floating point number.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.OperandType.ShortInlineVar">
+      <summary>The operand is an 8-bit integer containing the ordinal of a local variable or an argumenta.</summary>
+    </member>
+    <member name="T:System.Reflection.Emit.PackingSize">
+      <summary>Specifies one of two factors that determine the memory alignment of fields when a type is marshaled.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.PackingSize.Size1">
+      <summary>The packing size is 1 byte.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.PackingSize.Size128">
+      <summary>The packing size is 128 bytes.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.PackingSize.Size16">
+      <summary>The packing size is 16 bytes.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.PackingSize.Size2">
+      <summary>The packing size is 2 bytes.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.PackingSize.Size32">
+      <summary>The packing size is 32 bytes.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.PackingSize.Size4">
+      <summary>The packing size is 4 bytes.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.PackingSize.Size64">
+      <summary>The packing size is 64 bytes.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.PackingSize.Size8">
+      <summary>The packing size is 8 bytes.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.PackingSize.Unspecified">
+      <summary>The packing size is not specified.</summary>
+    </member>
+    <member name="T:System.Reflection.Emit.StackBehaviour">
+      <summary>Describes how values are pushed onto a stack or popped off a stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Pop0">
+      <summary>No values are popped off the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Pop1">
+      <summary>Pops one value off the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Pop1_pop1">
+      <summary>Pops 1 value off the stack for the first operand, and 1 value of the stack for the second operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popi">
+      <summary>Pops a 32-bit integer off the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popi_pop1">
+      <summary>Pops a 32-bit integer off the stack for the first operand, and a value off the stack for the second operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popi_popi">
+      <summary>Pops a 32-bit integer off the stack for the first operand, and a 32-bit integer off the stack for the second operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popi_popi_popi">
+      <summary>Pops a 32-bit integer off the stack for the first operand, a 32-bit integer off the stack for the second operand, and a 32-bit integer off the stack for the third operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popi_popi8">
+      <summary>Pops a 32-bit integer off the stack for the first operand, and a 64-bit integer off the stack for the second operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popi_popr4">
+      <summary>Pops a 32-bit integer off the stack for the first operand, and a 32-bit floating point number off the stack for the second operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popi_popr8">
+      <summary>Pops a 32-bit integer off the stack for the first operand, and a 64-bit floating point number off the stack for the second operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popref">
+      <summary>Pops a reference off the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popref_pop1">
+      <summary>Pops a reference off the stack for the first operand, and a value off the stack for the second operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popref_popi">
+      <summary>Pops a reference off the stack for the first operand, and a 32-bit integer off the stack for the second operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popref_popi_pop1">
+      <summary>Pops a reference off the stack for the first operand, a value off the stack for the second operand, and a 32-bit integer off the stack for the third operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popref_popi_popi">
+      <summary>Pops a reference off the stack for the first operand, a value off the stack for the second operand, and a value off the stack for the third operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popref_popi_popi8">
+      <summary>Pops a reference off the stack for the first operand, a value off the stack for the second operand, and a 64-bit integer off the stack for the third operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popref_popi_popr4">
+      <summary>Pops a reference off the stack for the first operand, a value off the stack for the second operand, and a 32-bit integer off the stack for the third operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popref_popi_popr8">
+      <summary>Pops a reference off the stack for the first operand, a value off the stack for the second operand, and a 64-bit floating point number off the stack for the third operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Popref_popi_popref">
+      <summary>Pops a reference off the stack for the first operand, a value off the stack for the second operand, and a reference off the stack for the third operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Push0">
+      <summary>No values are pushed onto the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Push1">
+      <summary>Pushes one value onto the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Push1_push1">
+      <summary>Pushes 1 value onto the stack for the first operand, and 1 value onto the stack for the second operand.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Pushi">
+      <summary>Pushes a 32-bit integer onto the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Pushi8">
+      <summary>Pushes a 64-bit integer onto the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Pushr4">
+      <summary>Pushes a 32-bit floating point number onto the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Pushr8">
+      <summary>Pushes a 64-bit floating point number onto the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Pushref">
+      <summary>Pushes a reference onto the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Varpop">
+      <summary>Pops a variable off the stack.</summary>
+    </member>
+    <member name="F:System.Reflection.Emit.StackBehaviour.Varpush">
+      <summary>Pushes a variable onto the stack.</summary>
+    </member>
+  </members>
+</doc>

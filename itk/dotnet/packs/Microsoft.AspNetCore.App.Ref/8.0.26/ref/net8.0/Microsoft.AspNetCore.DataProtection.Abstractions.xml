@@ -1,0 +1,365 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.DataProtection.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions">
+            <summary>
+            Helpful extension methods for data protection APIs.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.CreateProtector(Microsoft.AspNetCore.DataProtection.IDataProtectionProvider,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> given a list of purposes.
+            </summary>
+            <param name="provider">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/> from which to generate the purpose chain.</param>
+            <param name="purposes">The list of purposes which contribute to the purpose chain. This list must
+            contain at least one element, and it may not contain null elements.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> tied to the provided purpose chain.</returns>
+            <remarks>
+            This is a convenience method which chains together several calls to
+            <see cref="M:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider.CreateProtector(System.String)"/>. See that method's
+            documentation for more information.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.CreateProtector(Microsoft.AspNetCore.DataProtection.IDataProtectionProvider,System.String,System.String[])">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> given a list of purposes.
+            </summary>
+            <param name="provider">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/> from which to generate the purpose chain.</param>
+            <param name="purpose">The primary purpose used to create the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/>.</param>
+            <param name="subPurposes">An optional list of secondary purposes which contribute to the purpose chain.
+            If this list is provided it cannot contain null elements.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> tied to the provided purpose chain.</returns>
+            <remarks>
+            This is a convenience method which chains together several calls to
+            <see cref="M:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider.CreateProtector(System.String)"/>. See that method's
+            documentation for more information.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.GetDataProtectionProvider(System.IServiceProvider)">
+            <summary>
+            Retrieves an <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/> from an <see cref="T:System.IServiceProvider"/>.
+            </summary>
+            <param name="services">The service provider from which to retrieve the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>. This method is guaranteed never to return null.</returns>
+            <exception cref="T:System.InvalidOperationException">If no <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/> service exists in <paramref name="services"/>.</exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.GetDataProtector(System.IServiceProvider,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Retrieves an <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> from an <see cref="T:System.IServiceProvider"/> given a list of purposes.
+            </summary>
+            <param name="services">An <see cref="T:System.IServiceProvider"/> which contains the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>
+            from which to generate the purpose chain.</param>
+            <param name="purposes">The list of purposes which contribute to the purpose chain. This list must
+            contain at least one element, and it may not contain null elements.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> tied to the provided purpose chain.</returns>
+            <remarks>
+            This is a convenience method which calls <see cref="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.GetDataProtectionProvider(System.IServiceProvider)"/>
+            then <see cref="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.CreateProtector(Microsoft.AspNetCore.DataProtection.IDataProtectionProvider,System.Collections.Generic.IEnumerable{System.String})"/>. See those methods'
+            documentation for more information.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.GetDataProtector(System.IServiceProvider,System.String,System.String[])">
+            <summary>
+            Retrieves an <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> from an <see cref="T:System.IServiceProvider"/> given a list of purposes.
+            </summary>
+            <param name="services">An <see cref="T:System.IServiceProvider"/> which contains the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>
+            from which to generate the purpose chain.</param>
+            <param name="purpose">The primary purpose used to create the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/>.</param>
+            <param name="subPurposes">An optional list of secondary purposes which contribute to the purpose chain.
+            If this list is provided it cannot contain null elements.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> tied to the provided purpose chain.</returns>
+            <remarks>
+            This is a convenience method which calls <see cref="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.GetDataProtectionProvider(System.IServiceProvider)"/>
+            then <see cref="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.CreateProtector(Microsoft.AspNetCore.DataProtection.IDataProtectionProvider,System.String,System.String[])"/>. See those methods'
+            documentation for more information.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.Protect(Microsoft.AspNetCore.DataProtection.IDataProtector,System.String)">
+            <summary>
+            Cryptographically protects a piece of plaintext data.
+            </summary>
+            <param name="protector">The data protector to use for this operation.</param>
+            <param name="plaintext">The plaintext data to protect.</param>
+            <returns>The protected form of the plaintext data.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionCommonExtensions.Unprotect(Microsoft.AspNetCore.DataProtection.IDataProtector,System.String)">
+            <summary>
+            Cryptographically unprotects a piece of protected data.
+            </summary>
+            <param name="protector">The data protector to use for this operation.</param>
+            <param name="protectedData">The protected data to unprotect.</param>
+            <returns>The plaintext form of the protected data.</returns>
+            <exception cref="T:System.Security.Cryptography.CryptographicException">
+            Thrown if <paramref name="protectedData"/> is invalid or malformed.
+            </exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider">
+            <summary>
+            An interface that can be used to create <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider.CreateProtector(System.String)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> given a purpose.
+            </summary>
+            <param name="purpose">
+            The purpose to be assigned to the newly-created <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/>.
+            </param>
+            <returns>An IDataProtector tied to the provided purpose.</returns>
+            <remarks>
+            The <paramref name="purpose"/> parameter must be unique for the intended use case; two
+            different <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> instances created with two different <paramref name="purpose"/>
+            values will not be able to decipher each other's payloads. The <paramref name="purpose"/> parameter
+            value is not intended to be kept secret.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.IDataProtector">
+            <summary>
+            An interface that can provide data protection services.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.IDataProtector.Protect(System.Byte[])">
+            <summary>
+            Cryptographically protects a piece of plaintext data.
+            </summary>
+            <param name="plaintext">The plaintext data to protect.</param>
+            <returns>The protected form of the plaintext data.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.IDataProtector.Unprotect(System.Byte[])">
+            <summary>
+            Cryptographically unprotects a piece of protected data.
+            </summary>
+            <param name="protectedData">The protected data to unprotect.</param>
+            <returns>The plaintext form of the protected data.</returns>
+            <exception cref="T:System.Security.Cryptography.CryptographicException">
+            Thrown if the protected data is invalid or malformed.
+            </exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Infrastructure.IApplicationDiscriminator">
+            <summary>
+            Provides information used to discriminate applications.
+            </summary>
+            <remarks>
+            This type supports the data protection system and is not intended to be used
+            by consumers.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Infrastructure.IApplicationDiscriminator.Discriminator">
+            <summary>
+            An identifier that uniquely discriminates this application from all other
+            applications on the machine.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.ExceptionExtensions.RequiresHomogenization(System.Exception)">
+            <summary>
+            Determines whether an exception must be homogenized by being wrapped inside a
+            CryptographicException before being rethrown.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Abstractions.Resources.CryptCommon_PayloadInvalid">
+            <summary>The payload was invalid. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Abstractions.Resources.DataProtectionExtensions_NullPurposesCollection">
+            <summary>The purposes collection cannot be null or empty and cannot contain null elements.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Abstractions.Resources.CryptCommon_GenericError">
+            <summary>An error occurred during a cryptographic operation. Refer to the inner exception for more information.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Abstractions.Resources.DataProtectionExtensions_NoService">
+            <summary>No service for type '{0}' has been registered.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Abstractions.Resources.FormatDataProtectionExtensions_NoService(System.Object)">
+            <summary>No service for type '{0}' has been registered.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
+            <param name="value">The argument to validate as non-zero.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int64,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegativeOrZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
+            <param name="value">The argument to validate as non-zero or non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="F:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.WebEncoders_InvalidCountOffsetOrLength">
+            <summary>
+            Invalid {0}, {1} or {2} length.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.WebEncoders_MalformedInput">
+            <summary>
+            Malformed input: {0} is an invalid input length.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.FormatWebEncoders_InvalidCountOffsetOrLength(System.Object,System.Object,System.Object)">
+            <summary>
+            Invalid {0}, {1} or {2} length.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.FormatWebEncoders_MalformedInput(System.Object)">
+            <summary>
+            Malformed input: {0} is an invalid input length.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Internal.WebEncoders">
+            <summary>
+            Contains utility APIs to assist with common encoding and decoding operations.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlDecode(System.String)">
+            <summary>
+            Decodes a base64url-encoded string.
+            </summary>
+            <param name="input">The base64url-encoded input to decode.</param>
+            <returns>The base64url-decoded form of the input.</returns>
+            <remarks>
+            The input must not contain any whitespace or padding characters.
+            Throws <see cref="T:System.FormatException"/> if the input is malformed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlDecode(System.String,System.Int32,System.Int32)">
+            <summary>
+            Decodes a base64url-encoded substring of a given string.
+            </summary>
+            <param name="input">A string containing the base64url-encoded input to decode.</param>
+            <param name="offset">The position in <paramref name="input"/> at which decoding should begin.</param>
+            <param name="count">The number of characters in <paramref name="input"/> to decode.</param>
+            <returns>The base64url-decoded form of the input.</returns>
+            <remarks>
+            The input must not contain any whitespace or padding characters.
+            Throws <see cref="T:System.FormatException"/> if the input is malformed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlDecode(System.String,System.Int32,System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Decodes a base64url-encoded <paramref name="input"/> into a <c>byte[]</c>.
+            </summary>
+            <param name="input">A string containing the base64url-encoded input to decode.</param>
+            <param name="offset">The position in <paramref name="input"/> at which decoding should begin.</param>
+            <param name="buffer">
+            Scratch buffer to hold the <see cref="T:System.Char"/>s to decode. Array must be large enough to hold
+            <paramref name="bufferOffset"/> and <paramref name="count"/> characters as well as Base64 padding
+            characters. Content is not preserved.
+            </param>
+            <param name="bufferOffset">
+            The offset into <paramref name="buffer"/> at which to begin writing the <see cref="T:System.Char"/>s to decode.
+            </param>
+            <param name="count">The number of characters in <paramref name="input"/> to decode.</param>
+            <returns>The base64url-decoded form of the <paramref name="input"/>.</returns>
+            <remarks>
+            The input must not contain any whitespace or padding characters.
+            Throws <see cref="T:System.FormatException"/> if the input is malformed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.GetArraySizeRequiredToDecode(System.Int32)">
+            <summary>
+            Gets the minimum <c>char[]</c> size required for decoding of <paramref name="count"/> characters
+            with the <see cref="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlDecode(System.String,System.Int32,System.Char[],System.Int32,System.Int32)"/> method.
+            </summary>
+            <param name="count">The number of characters to decode.</param>
+            <returns>
+            The minimum <c>char[]</c> size required for decoding  of <paramref name="count"/> characters.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.Byte[])">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <returns>The base64url-encoded form of <paramref name="input"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <param name="offset">The offset into <paramref name="input"/> at which to begin encoding.</param>
+            <param name="count">The number of bytes from <paramref name="input"/> to encode.</param>
+            <returns>The base64url-encoded form of <paramref name="input"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.Byte[],System.Int32,System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <param name="offset">The offset into <paramref name="input"/> at which to begin encoding.</param>
+            <param name="output">
+            Buffer to receive the base64url-encoded form of <paramref name="input"/>. Array must be large enough to
+            hold <paramref name="outputOffset"/> characters and the full base64-encoded form of
+            <paramref name="input"/>, including padding characters.
+            </param>
+            <param name="outputOffset">
+            The offset into <paramref name="output"/> at which to begin writing the base64url-encoded form of
+            <paramref name="input"/>.
+            </param>
+            <param name="count">The number of <c>byte</c>s from <paramref name="input"/> to encode.</param>
+            <returns>
+            The number of characters written to <paramref name="output"/>, less any padding characters.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.GetArraySizeRequiredToEncode(System.Int32)">
+            <summary>
+            Get the minimum output <c>char[]</c> size required for encoding <paramref name="count"/>
+            <see cref="T:System.Byte"/>s with the <see cref="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.Byte[],System.Int32,System.Char[],System.Int32,System.Int32)"/> method.
+            </summary>
+            <param name="count">The number of characters to encode.</param>
+            <returns>
+            The minimum output <c>char[]</c> size required for encoding <paramref name="count"/> <see cref="T:System.Byte"/>s.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.WebEncoders.Base64UrlEncode(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <returns>The base64url-encoded form of <paramref name="input"/>.</returns>
+        </member>
+    </members>
+</doc>

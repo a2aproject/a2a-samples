@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2A Integration Test Kit (ITK) Compatibility Dashboard</title>
+    <!-- Modern premium font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glow-bg"></div>
+    
+    <header class="glass-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="logo-icon"></div>
+                <div class="brand-text">
+                    <h1>A2A SDKs Compatibility</h1>
+                    <p class="subtitle">Multi-SDK Interop Matrix & Timeline</p>
+                </div>
+            </div>
+            <div class="run-meta" id="run-meta-header">
+                <div class="meta-item">
+                    <span class="label">Last Nightly Run</span>
+                    <span class="value" id="last-run-time">Loading...</span>
+                </div>
+                <div class="meta-item">
+                    <span class="label">Commit SHA</span>
+                    <span class="value mono" id="last-commit">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- SDK Navigation Tabs -->
+        <nav class="sdk-tabs-container">
+            <div class="tabs-label">Select SDK Target:</div>
+            <div class="tabs" id="sdk-tabs">
+                <button class="tab-btn active" data-sdk="python" data-url="itk_python.json">
+                    <span class="sdk-icon python"></span> Python SDK
+                </button>
+                <button class="tab-btn" data-sdk="go" data-url="itk_go.json">
+                    <span class="sdk-icon go"></span> Go SDK
+                </button>
+                <button class="tab-btn" data-sdk="dotnet" data-url="itk_dotnet.json">
+                    <span class="sdk-icon dotnet"></span> .NET SDK
+                </button>
+                <button class="tab-btn" data-sdk="ts" data-url="itk_ts.json">
+                    <span class="sdk-icon ts"></span> TypeScript SDK
+                </button>
+            </div>
+        </nav>
+
+        <!-- Dashboard Legend -->
+        <div class="legend-container hidden" id="dashboard-legend">
+            <span class="legend-title">Legend:</span>
+            <div class="legend-group">
+                <div class="legend-item"><span class="legend-color pass"></span> Passing</div>
+                <div class="legend-item"><span class="legend-color fail"></span> Fail</div>
+                <div class="legend-item"><span class="legend-color disabled"></span> Not Covered</div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-overlay" id="loading-state">
+            <div class="loader"></div>
+            <p>Fetching interoperability matrix...</p>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid hidden" id="dashboard-body">
+            <!-- Sidebar: History Timeline -->
+            <section class="panel glass history-sidebar">
+                <div class="panel-header">
+                    <h2>Nightly Runs History</h2>
+                    <span class="badge" id="history-count">0 runs</span>
+                </div>
+                <div class="history-timeline" id="history-timeline-list">
+                    <!-- Filled dynamically by JS -->
+                </div>
+            </section>
+
+            <!-- Main Content: Topologies and Compatibility Matrices -->
+            <section class="main-dashboard-panes">
+                <div class="pane-header">
+                    <h2>Active Compatibility Profiles</h2>
+                    <p>Visual topology graphs and corresponding compatibility matrices for protocols and behaviors.</p>
+                </div>
+
+                <div class="topologies-container" id="topologies-list">
+                    <!-- Filled dynamically by JS -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="glass-footer">
+        <div class="footer-container">
+            <p>Agent2Agent (A2A) Protocol Spec: <a href="https://goo.gle/a2a" target="_blank">goo.gle/a2a</a></p>
+            <p class="copyright">&copy; 2026 Google LLC. A2A Compatibility Kit.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

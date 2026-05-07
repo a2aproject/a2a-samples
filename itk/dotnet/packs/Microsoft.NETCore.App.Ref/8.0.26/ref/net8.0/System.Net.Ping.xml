@@ -1,0 +1,624 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Net.Ping</name>
+  </assembly>
+  <members>
+    <member name="T:System.Net.NetworkInformation.IPStatus">
+      <summary>Reports the status of sending an Internet Control Message Protocol (ICMP) echo message to a computer.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.BadDestination">
+      <summary>The ICMP echo request failed because the destination IP address cannot receive ICMP echo requests or should never appear in the destination address field of any IP datagram. For example, calling <see cref="Overload:System.Net.NetworkInformation.Ping.Send" /> and specifying IP address "000.0.0.0" returns this status.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.BadHeader">
+      <summary>The ICMP echo request failed because the header is invalid.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.BadOption">
+      <summary>The ICMP echo request failed because it contains an invalid option.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.BadRoute">
+      <summary>The ICMP echo request failed because there is no valid route between the source and destination computers.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.DestinationHostUnreachable">
+      <summary>The ICMP echo request failed because the destination computer is not reachable.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.DestinationNetworkUnreachable">
+      <summary>The ICMP echo request failed because the network that contains the destination computer is not reachable.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.DestinationPortUnreachable">
+      <summary>The ICMP echo request failed because the port on the destination computer is not available.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.DestinationProhibited">
+      <summary>The ICMPv6 echo request failed because contact with the destination computer is administratively prohibited. This value applies only to IPv6.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.DestinationProtocolUnreachable">
+      <summary>The ICMP echo request failed because the destination computer that is specified in an ICMP echo message is not reachable, because it does not support the packet's protocol. This value applies only to IPv4. This value is described in IETF RFC 1812 as Communication Administratively Prohibited.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.DestinationScopeMismatch">
+      <summary>The ICMP echo request failed because the source address and destination address that are specified in an ICMP echo message are not in the same scope. This is typically caused by a router forwarding a packet using an interface that is outside the scope of the source address. Address scopes (link-local, site-local, and global scope) determine where on the network an address is valid.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.DestinationUnreachable">
+      <summary>The ICMP echo request failed because the destination computer that is specified in an ICMP echo message is not reachable; the exact cause of problem is unknown.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.HardwareError">
+      <summary>The ICMP echo request failed because of a hardware error.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.IcmpError">
+      <summary>The ICMP echo request failed because of an ICMP protocol error.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.NoResources">
+      <summary>The ICMP echo request failed because of insufficient network resources.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.PacketTooBig">
+      <summary>The ICMP echo request failed because the packet containing the request is larger than the maximum transmission unit (MTU) of a node (router or gateway) located between the source and destination. The MTU defines the maximum size of a transmittable packet.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.ParameterProblem">
+      <summary>The ICMP echo request failed because a node (router or gateway) encountered problems while processing the packet header. This is the status if, for example, the header contains invalid field data or an unrecognized option.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.SourceQuench">
+      <summary>The ICMP echo request failed because the packet was discarded. This occurs when the source computer's output queue has insufficient storage space, or when packets arrive at the destination too quickly to be processed.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.Success">
+      <summary>The ICMP echo request succeeded; an ICMP echo reply was received. When you get this status code, the other <see cref="T:System.Net.NetworkInformation.PingReply" /> properties contain valid data.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.TimedOut">
+      <summary>The ICMP echo Reply was not received within the allotted time. The default time allowed for replies is 5 seconds. You can change this value using the <see cref="Overload:System.Net.NetworkInformation.Ping.Send" /> or <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> methods that take a <paramref name="timeout" /> parameter.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.TimeExceeded">
+      <summary>The ICMP echo request failed because its Time to Live (TTL) value reached zero, causing the forwarding node (router or gateway) to discard the packet.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.TtlExpired">
+      <summary>The ICMP echo request failed because its Time to Live (TTL) value reached zero, causing the forwarding node (router or gateway) to discard the packet.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.TtlReassemblyTimeExceeded">
+      <summary>The ICMP echo request failed because the packet was divided into fragments for transmission and all of the fragments were not received within the time allotted for reassembly. RFC 2460 specifies 60 seconds as the time limit within which all packet fragments must be received.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.Unknown">
+      <summary>The ICMP echo request failed for an unknown reason.</summary>
+    </member>
+    <member name="F:System.Net.NetworkInformation.IPStatus.UnrecognizedNextHeader">
+      <summary>The ICMP echo request failed because the Next Header field does not contain a recognized value. The Next Header field indicates the extension header type (if present) or the protocol above the IP layer, for example, TCP or UDP.</summary>
+    </member>
+    <member name="T:System.Net.NetworkInformation.Ping">
+      <summary>Allows an application to determine whether a remote computer is accessible over the network.</summary>
+    </member>
+    <member name="E:System.Net.NetworkInformation.Ping.PingCompleted">
+      <summary>Occurs when an asynchronous operation to send an Internet Control Message Protocol (ICMP) echo message and receive the corresponding ICMP echo reply message completes or is canceled.</summary>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.NetworkInformation.Ping" /> class.</summary>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Dispose(System.Boolean)">
+      <summary>Releases the unmanaged resources used by the <see cref="T:System.Net.NetworkInformation.Ping" /> object, and optionally disposes of the managed resources.</summary>
+      <param name="disposing">
+        <see langword="true" /> to release both managed and unmanaged resources; <see langword="false" /> to releases only unmanaged resources.</param>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.OnPingCompleted(System.Net.NetworkInformation.PingCompletedEventArgs)">
+      <summary>Raises the <see cref="E:System.Net.NetworkInformation.Ping.PingCompleted" /> event.</summary>
+      <param name="e">A <see cref="T:System.Net.NetworkInformation.PingCompletedEventArgs" /> object that contains event data.</param>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.Net.IPAddress)">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receive a corresponding ICMP echo reply message from that computer.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" /> that identifies the computer that is the destination for the ICMP echo message.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingReply" /> object that provides information about the ICMP echo reply message, if one was received, or describes the reason for the failure if no message was received.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.Net.IPAddress,System.Int32)">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receive a corresponding ICMP echo reply message from that computer. This method allows you to specify a time-out value for the operation.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" /> that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingReply" /> object that provides information about the ICMP echo reply message if one was received, or provides the reason for the failure if no message was received.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.Net.IPAddress,System.Int32,System.Byte[])">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" /> that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> or <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingReply" /> object that provides information about the ICMP echo reply message, if one was received, or provides the reason for the failure, if no message was received. The method will return <see cref="F:System.Net.NetworkInformation.IPStatus.PacketTooBig" /> if the packet exceeds the Maximum Transmission Unit (MTU).</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.Net.IPAddress,System.Int32,System.Byte[],System.Net.NetworkInformation.PingOptions)">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" /> and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation and control fragmentation and Time-to-Live values for the ICMP echo message packet.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" /> that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> or <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingReply" /> object that provides information about the ICMP echo reply message, if one was received, or provides the reason for the failure, if no message was received. The method will return <see cref="F:System.Net.NetworkInformation.IPStatus.PacketTooBig" /> if the packet exceeds the Maximum Transmission Unit (MTU).</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.Net.IPAddress,System.TimeSpan,System.Byte[],System.Net.NetworkInformation.PingOptions)">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and to receive a corresponding ICMP echo reply message from that computer.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" /> that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">A value that specifies the maximum amount of time (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message.
+            The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> or <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> represents a time less than zero milliseconds or greater than <see cref="F:System.Int32.MaxValue" /> milliseconds.</exception>
+      <exception cref="T:System.ArgumentException">The <paramref name="buffer" />'s size is greater than 65,500 bytes.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to SendAsync is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>Information about the ICMP echo reply message, if one was received, or the reason for the failure, if no message was received.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.String)">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified computer, and receive a corresponding ICMP echo reply message from that computer.</summary>
+      <param name="hostNameOrAddress">A <see cref="T:System.String" /> that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingReply" /> object that provides information about the ICMP echo reply message, if one was received, or provides the reason for the failure, if no message was received.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.String,System.Int32)">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified computer, and receive a corresponding ICMP echo reply message from that computer. This method allows you to specify a time-out value for the operation.</summary>
+      <param name="hostNameOrAddress">A <see cref="T:System.String" /> that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingReply" /> object that provides information about the ICMP echo reply message if one was received, or provides the reason for the failure if no message was received.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.String,System.Int32,System.Byte[])">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the specified computer, and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation.</summary>
+      <param name="hostNameOrAddress">A <see cref="T:System.String" /> that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").  
+  
+ -or-  
+  
+ <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingReply" /> object that provides information about the ICMP echo reply message if one was received, or provides the reason for the failure if no message was received.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.String,System.Int32,System.Byte[],System.Net.NetworkInformation.PingOptions)">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the specified computer, and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation and control fragmentation and Time-to-Live values for the ICMP packet.</summary>
+      <param name="hostNameOrAddress">A <see cref="T:System.String" /> that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is a zero-length string.  
+  
+ -or-  
+  
+ <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingReply" /> object that provides information about the ICMP echo reply message if one was received, or provides the reason for the failure if no message was received.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.Send(System.String,System.TimeSpan,System.Byte[],System.Net.NetworkInformation.PingOptions)">
+      <summary>Attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified computer, and to receive a corresponding ICMP echo reply message from that computer.</summary>
+      <param name="hostNameOrAddress">A <see cref="T:System.String" /> that identifies the computer that is the destination for the ICMP echo message.
+            The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">A value that specifies the maximum amount of time (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message.
+            The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="buffer" /> or <paramref name="hostNameOrAddress" /> is <see langword="null" /> or <paramref name="hostNameOrAddress" /> is an empty string ("").</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> represents a time less than zero milliseconds or greater than <see cref="F:System.Int32.MaxValue" /> milliseconds.</exception>
+      <exception cref="T:System.ArgumentException">The <paramref name="buffer" />'s size is greater than 65,500 bytes.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to SendAsync is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>Information about the ICMP echo reply message, if one was received, or the reason for the failure, if no message was received.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendAsync(System.Net.IPAddress,System.Int32,System.Byte[],System.Net.NetworkInformation.PingOptions,System.Object)">
+      <summary>Asynchronously attempts to send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation and control fragmentation and Time-to-Live values for the ICMP echo message packet.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" /> that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <param name="userToken">An object that is passed to the method invoked when the asynchronous operation completes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> or <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendAsync(System.Net.IPAddress,System.Int32,System.Byte[],System.Object)">
+      <summary>Asynchronously attempts to send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" /> that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="userToken">An object that is passed to the method invoked when the asynchronous operation completes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> or <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendAsync(System.Net.IPAddress,System.Int32,System.Object)">
+      <summary>Asynchronously attempts to send an Internet Control Message Protocol (ICMP) echo message to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" /> that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="userToken">An object that is passed to the method invoked when the asynchronous operation completes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="M:System.Net.NetworkInformation.Ping.SendAsync(System.Net.IPAddress,System.Int32,System.Byte[],System.Object)" /> method is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendAsync(System.Net.IPAddress,System.Object)">
+      <summary>Asynchronously attempts to send an Internet Control Message Protocol (ICMP) echo message to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receive a corresponding ICMP echo reply message from that computer.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" /> that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="userToken">An object that is passed to the method invoked when the asynchronous operation completes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to the <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> method is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendAsync(System.String,System.Int32,System.Byte[],System.Net.NetworkInformation.PingOptions,System.Object)">
+      <summary>Asynchronously attempts to send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the specified computer, and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation and control fragmentation and Time-to-Live values for the ICMP packet.</summary>
+      <param name="hostNameOrAddress">A <see cref="T:System.String" /> that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <param name="userToken">An object that is passed to the method invoked when the asynchronous operation completes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").  
+  
+ -or-  
+  
+ <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="hostNameOrAddress" /> could not be resolved to a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendAsync(System.String,System.Int32,System.Byte[],System.Object)">
+      <summary>Asynchronously attempts to send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the specified computer, and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation.</summary>
+      <param name="hostNameOrAddress">A <see cref="T:System.String" /> that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="userToken">An object that is passed to the method invoked when the asynchronous operation completes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").  
+  
+ -or-  
+  
+ <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="hostNameOrAddress" /> could not be resolved to a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendAsync(System.String,System.Int32,System.Object)">
+      <summary>Asynchronously attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified computer, and receive a corresponding ICMP echo reply message from that computer. This overload allows you to specify a time-out value for the operation.</summary>
+      <param name="hostNameOrAddress">A <see cref="T:System.String" /> that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">An <see cref="T:System.Int32" /> value that specifies the maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="userToken">An object that is passed to the method invoked when the asynchronous operation completes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="hostNameOrAddress" /> could not be resolved to a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendAsync(System.String,System.Object)">
+      <summary>Asynchronously attempts to send an Internet Control Message Protocol (ICMP) echo message to the specified computer, and receive a corresponding ICMP echo reply message from that computer.</summary>
+      <param name="hostNameOrAddress">A <see cref="T:System.String" /> that identifies the computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="userToken">An object that is passed to the method invoked when the asynchronous operation completes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="M:System.Net.NetworkInformation.Ping.SendAsync(System.String,System.Object)" /> method is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="hostNameOrAddress" /> could not be resolved to a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendAsyncCancel">
+      <summary>Cancels all pending asynchronous requests to send an Internet Control Message Protocol (ICMP) echo message and receives a corresponding ICMP echo reply message.</summary>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.Net.IPAddress)">
+      <summary>Send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receives a corresponding ICMP echo reply message from that computer as an asynchronous operation.</summary>
+      <param name="address">An IP address that identifies the computer that is the destination for the ICMP echo message.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendPingAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.Net.IPAddress,System.Int32)">
+      <summary>Send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receives a corresponding ICMP echo reply message from that computer as an asynchronous operation. This overload allows you to specify a time-out value for the operation.</summary>
+      <param name="address">An IP address that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">The maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to the <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> method is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.Net.IPAddress,System.Int32,System.Byte[])">
+      <summary>Send an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receives a corresponding ICMP echo reply message from that computer as an asynchronous operation. This overload allows you to specify a time-out value for the operation and a buffer to use for send and receive.</summary>
+      <param name="address">An IP address that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">The maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> or <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendPingAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65,500 bytes.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.Net.IPAddress,System.Int32,System.Byte[],System.Net.NetworkInformation.PingOptions)">
+      <summary>Sends an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receives a corresponding ICMP echo reply message from that computer as an asynchronous operation. This overload allows you to specify a time-out value for the operation, a buffer to use for send and receive, and control fragmentation and Time-to-Live values for the ICMP echo message packet.</summary>
+      <param name="address">An IP address that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">The maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> or <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendPingAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65,500 bytes.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.Net.IPAddress,System.TimeSpan,System.Byte[],System.Net.NetworkInformation.PingOptions,System.Threading.CancellationToken)">
+      <summary>Sends an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the computer that has the specified <see cref="T:System.Net.IPAddress" />, and receives a corresponding ICMP echo reply message from that computer as an asynchronous operation. This overload allows you to specify a time-out value for the operation, a buffer to use for send and receive, control fragmentation and Time-to-Live values, and a <see cref="T:System.Threading.CancellationToken" /> for the ICMP echo message packet.</summary>
+      <param name="address">An IP address that identifies the computer that is the destination for the ICMP echo message.</param>
+      <param name="timeout">The amount of time (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is
+        <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.String)">
+      <summary>Sends an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the specified computer, and receive a corresponding ICMP echo reply message from that computer as an asynchronous operation.</summary>
+      <param name="hostNameOrAddress">The computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="M:System.Net.NetworkInformation.Ping.SendAsync(System.String,System.Object)" /> method is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="hostNameOrAddress" /> could not be resolved to a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.String,System.Int32)">
+      <summary>Sends an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the specified computer, and receive a corresponding ICMP echo reply message from that computer as an asynchronous operation. This overload allows you to specify a time-out value for the operation.</summary>
+      <param name="hostNameOrAddress">The computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">The maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to the <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> method is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.String,System.Int32,System.Byte[])">
+      <summary>Sends an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the specified computer, and receive a corresponding ICMP echo reply message from that computer as an asynchronous operation. This overload allows you to specify a time-out value for the operation and a buffer to use for send and receive.</summary>
+      <param name="hostNameOrAddress">The computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">The maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").  
+  
+ -or-  
+  
+ <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="hostNameOrAddress" /> could not be resolved to a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.String,System.Int32,System.Byte[],System.Net.NetworkInformation.PingOptions)">
+      <summary>Sends an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the specified computer, and receive a corresponding ICMP echo reply message from that computer as an asynchronous operation. This overload allows you to specify a time-out value for the operation, a buffer to use for send and receive, and control fragmentation and Time-to-Live values for the ICMP echo message packet.</summary>
+      <param name="hostNameOrAddress">The computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">The maximum number of milliseconds (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" /> or is an empty string ("").  
+  
+ -or-  
+  
+ <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="timeout" /> is less than zero.</exception>
+      <exception cref="T:System.InvalidOperationException">A call to <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> is in progress.</exception>
+      <exception cref="T:System.Net.NetworkInformation.PingException">An exception was thrown while sending or receiving the ICMP messages. See the inner exception for the exact exception that was thrown.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">
+        <paramref name="hostNameOrAddress" /> could not be resolved to a valid IP address.</exception>
+      <exception cref="T:System.ObjectDisposedException">This object has been disposed.</exception>
+      <exception cref="T:System.ArgumentException">The size of <paramref name="buffer" /> exceeds 65500 bytes.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">.NET 7 and later versions only on Linux: The process is non-privileged, and <paramref name="buffer" /> is not empty.</exception>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="M:System.Net.NetworkInformation.Ping.SendPingAsync(System.String,System.TimeSpan,System.Byte[],System.Net.NetworkInformation.PingOptions,System.Threading.CancellationToken)">
+      <summary>Sends an Internet Control Message Protocol (ICMP) echo message with the specified data buffer to the specified computer, and receives a corresponding ICMP echo reply message from that computer as an asynchronous operation. This overload allows you to specify a time-out value for the operation, a buffer to use for send and receive, control fragmentation and Time-to-Live values, and a <see cref="T:System.Threading.CancellationToken" /> for the ICMP echo message packet.</summary>
+      <param name="hostNameOrAddress"> The computer that is the destination for the ICMP echo message. The value specified for this parameter can be a host name or a string representation of an IP address.</param>
+      <param name="timeout">The amount of time (after sending the echo message) to wait for the ICMP echo reply message.</param>
+      <param name="buffer">A <see cref="T:System.Byte" /> array that contains data to be sent with the ICMP echo message and returned in the ICMP echo reply message. The array cannot contain more than 65,500 bytes.</param>
+      <param name="options">A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object used to control fragmentation and Time-to-Live values for the ICMP echo message packet.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <returns>The task object representing the asynchronous operation.</returns>
+    </member>
+    <member name="T:System.Net.NetworkInformation.PingCompletedEventArgs">
+      <summary>Provides data for the <see cref="E:System.Net.NetworkInformation.Ping.PingCompleted" /> event.</summary>
+    </member>
+    <member name="P:System.Net.NetworkInformation.PingCompletedEventArgs.Reply">
+      <summary>Gets an object that contains data that describes an attempt to send an Internet Control Message Protocol (ICMP) echo request message and receive a corresponding ICMP echo reply message.</summary>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingReply" /> object that describes the results of the ICMP echo request.</returns>
+    </member>
+    <member name="T:System.Net.NetworkInformation.PingCompletedEventHandler">
+      <summary>Represents the method that will handle the <see cref="E:System.Net.NetworkInformation.Ping.PingCompleted" /> event of a <see cref="T:System.Net.NetworkInformation.Ping" /> object.</summary>
+      <param name="sender">The source of the <see cref="E:System.Net.NetworkInformation.Ping.PingCompleted" /> event.</param>
+      <param name="e">A <see cref="T:System.Net.NetworkInformation.PingCompletedEventArgs" /> object that contains the event data.</param>
+    </member>
+    <member name="T:System.Net.NetworkInformation.PingException">
+      <summary>The exception that is thrown when a <see cref="Overload:System.Net.NetworkInformation.Ping.Send" /> or <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> method calls a method that throws an exception.</summary>
+    </member>
+    <member name="M:System.Net.NetworkInformation.PingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.NetworkInformation.PingException" /> class with serialized data.</summary>
+      <param name="serializationInfo">The object that holds the serialized object data.</param>
+      <param name="streamingContext">A <see cref="T:System.Runtime.Serialization.StreamingContext" /> that specifies the contextual information about the source or destination for this serialization.</param>
+    </member>
+    <member name="M:System.Net.NetworkInformation.PingException.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.NetworkInformation.PingException" /> class using the specified message.</summary>
+      <param name="message">A <see cref="T:System.String" /> that describes the error.</param>
+    </member>
+    <member name="M:System.Net.NetworkInformation.PingException.#ctor(System.String,System.Exception)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.NetworkInformation.PingException" /> class using the specified message and inner exception.</summary>
+      <param name="message">A <see cref="T:System.String" /> that describes the error.</param>
+      <param name="innerException">The exception that causes the current exception.</param>
+    </member>
+    <member name="T:System.Net.NetworkInformation.PingOptions">
+      <summary>Used to control how <see cref="T:System.Net.NetworkInformation.Ping" /> data packets are transmitted.</summary>
+    </member>
+    <member name="M:System.Net.NetworkInformation.PingOptions.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.NetworkInformation.PingOptions" /> class.</summary>
+    </member>
+    <member name="M:System.Net.NetworkInformation.PingOptions.#ctor(System.Int32,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.NetworkInformation.PingOptions" /> class and sets the Time to Live and fragmentation values.</summary>
+      <param name="ttl">An <see cref="T:System.Int32" /> value greater than zero that specifies the number of times that the <see cref="T:System.Net.NetworkInformation.Ping" /> data packets can be forwarded.</param>
+      <param name="dontFragment">
+        <see langword="true" /> to prevent data sent to the remote host from being fragmented; otherwise, <see langword="false" />.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="ttl" /> is less than or equal to zero.</exception>
+    </member>
+    <member name="P:System.Net.NetworkInformation.PingOptions.DontFragment">
+      <summary>Gets or sets a <see cref="T:System.Boolean" /> value that controls fragmentation of the data sent to the remote host.</summary>
+      <returns>
+        <see langword="true" /> if the data cannot be sent in multiple packets; otherwise <see langword="false" />. The default is <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Net.NetworkInformation.PingOptions.Ttl">
+      <summary>Gets or sets the number of routing nodes that can forward the <see cref="T:System.Net.NetworkInformation.Ping" /> data before it is discarded.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value specified for a set operation is less than or equal to zero.</exception>
+      <returns>An <see cref="T:System.Int32" /> value that specifies the number of times the <see cref="T:System.Net.NetworkInformation.Ping" /> data packets can be forwarded. The default is 128.</returns>
+    </member>
+    <member name="T:System.Net.NetworkInformation.PingReply">
+      <summary>Provides information about the status and data resulting from a <see cref="Overload:System.Net.NetworkInformation.Ping.Send" /> or <see cref="Overload:System.Net.NetworkInformation.Ping.SendAsync" /> operation.</summary>
+    </member>
+    <member name="P:System.Net.NetworkInformation.PingReply.Address">
+      <summary>Gets the address of the host that sends the Internet Control Message Protocol (ICMP) echo reply.</summary>
+      <returns>An <see cref="T:System.Net.IPAddress" /> containing the destination for the ICMP echo message.</returns>
+    </member>
+    <member name="P:System.Net.NetworkInformation.PingReply.Buffer">
+      <summary>Gets the buffer of data received in an Internet Control Message Protocol (ICMP) echo reply message.</summary>
+      <returns>A <see cref="T:System.Byte" /> array containing the data received in an ICMP echo reply message, or an empty array, if no reply was received.</returns>
+    </member>
+    <member name="P:System.Net.NetworkInformation.PingReply.Options">
+      <summary>Gets the options used to transmit the reply to an Internet Control Message Protocol (ICMP) echo request.</summary>
+      <returns>A <see cref="T:System.Net.NetworkInformation.PingOptions" /> object that contains the Time to Live (TTL) and the fragmentation directive used for transmitting the reply if <see cref="P:System.Net.NetworkInformation.PingReply.Status" /> is <see cref="F:System.Net.NetworkInformation.IPStatus.Success" />; otherwise, <see langword="null" />.</returns>
+    </member>
+    <member name="P:System.Net.NetworkInformation.PingReply.RoundtripTime">
+      <summary>Gets the number of milliseconds taken to send an Internet Control Message Protocol (ICMP) echo request and receive the corresponding ICMP echo reply message.</summary>
+      <returns>An <see cref="T:System.Int64" /> that specifies the round trip time, in milliseconds.</returns>
+    </member>
+    <member name="P:System.Net.NetworkInformation.PingReply.Status">
+      <summary>Gets the status of an attempt to send an Internet Control Message Protocol (ICMP) echo request and receive the corresponding ICMP echo reply message.</summary>
+      <returns>An <see cref="T:System.Net.NetworkInformation.IPStatus" /> value indicating the result of the request.</returns>
+    </member>
+  </members>
+</doc>

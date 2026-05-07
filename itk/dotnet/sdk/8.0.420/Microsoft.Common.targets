@@ -1,0 +1,64 @@
+<!--
+***********************************************************************************************
+Microsoft.Common.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process for .NET projects.  It
+contains all the steps that are common among the different .NET languages, such as
+Visual Basic, and Visual C#.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+<Project DefaultTargets="Build">
+
+  <PropertyGroup>
+    <CommonTargetsPath>$(MSBuildToolsPath)\Microsoft.Common.CurrentVersion.targets</CommonTargetsPath>
+  </PropertyGroup>
+
+  <Import Project="$(CommonTargetsPath)" />
+
+  <!--
+      Prepare to import project extensions which usually come from packages.  Package management systems will create a file at:
+          $(MSBuildProjectExtensionsPath)\$(MSBuildProjectFile).<SomethingUnique>.targets
+
+        Each package management system should use a unique moniker to avoid collisions.  It is a wild-card import so the package
+        management system can write out multiple files but the order of the import is alphabetic because MSBuild sorts the list.
+  -->
+  <PropertyGroup>
+    <!--
+        Don't import project extensions during restore because NuGet restore generates them.  Importing them during restore will embed
+        the pre-restore files in the binary log and then NuGet won't be able to embed the generated one after restore.  If some other
+        project extension mechanism wants to import project extensions during restore, they need to explicitly set ImportProjectExtensionTargets
+    -->
+    <ImportProjectExtensionTargets Condition="$([MSBuild]::AreFeaturesEnabled('17.10')) And '$(ImportProjectExtensionTargets)' == '' And '$(MSBuildIsRestoring)' == 'true'">false</ImportProjectExtensionTargets>
+    
+    <ImportProjectExtensionTargets Condition="'$(ImportProjectExtensionTargets)' == ''">true</ImportProjectExtensionTargets>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildProjectExtensionsPath)$(MSBuildProjectFile).*.targets" Condition="'$(ImportProjectExtensionTargets)' == 'true' and exists('$(MSBuildProjectExtensionsPath)')" />
+
+  <PropertyGroup>
+    <ImportDirectoryBuildTargets Condition="'$(ImportDirectoryBuildTargets)' == ''">true</ImportDirectoryBuildTargets>
+  </PropertyGroup>
+
+  <!--
+      Determine the path to the directory build targets file if the user did not disable $(ImportDirectoryBuildTargets) and
+      they did not already specify an absolute path to use via $(DirectoryBuildTargetsPath)
+  -->
+  <PropertyGroup Condition="'$(ImportDirectoryBuildTargets)' == 'true' and '$(DirectoryBuildTargetsPath)' == ''">
+    <_DirectoryBuildTargetsFile Condition="'$(_DirectoryBuildTargetsFile)' == ''">Directory.Build.targets</_DirectoryBuildTargetsFile>
+    <_DirectoryBuildTargetsBasePath Condition="'$(_DirectoryBuildTargetsBasePath)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), '$(_DirectoryBuildTargetsFile)'))</_DirectoryBuildTargetsBasePath>
+    <DirectoryBuildTargetsPath Condition="'$(_DirectoryBuildTargetsBasePath)' != '' and '$(_DirectoryBuildTargetsFile)' != ''">$([System.IO.Path]::Combine('$(_DirectoryBuildTargetsBasePath)', '$(_DirectoryBuildTargetsFile)'))</DirectoryBuildTargetsPath>
+  </PropertyGroup>
+
+  <Import Project="$(CustomBeforeDirectoryBuildTargets)" Condition="'$(CustomBeforeDirectoryBuildTargets)' != ''" />
+
+  <Import Project="$(DirectoryBuildTargetsPath)" Condition="'$(ImportDirectoryBuildTargets)' == 'true' and exists('$(DirectoryBuildTargetsPath)')"/>
+
+  <Import Project="$(CustomAfterDirectoryBuildTargets)" Condition="'$(CustomAfterDirectoryBuildTargets)' != ''" />
+
+</Project>

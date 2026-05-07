@@ -1,0 +1,435 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Builder.ConfigureHostBuilder">
+            <summary>
+            A non-buildable <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/> for <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.
+            Use <see cref="M:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build"/> to build the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ConfigureHostBuilder.Properties">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureHostBuilder.ConfigureAppConfiguration(System.Action{Microsoft.Extensions.Hosting.HostBuilderContext,Microsoft.Extensions.Configuration.IConfigurationBuilder})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureHostBuilder.ConfigureContainer``1(System.Action{Microsoft.Extensions.Hosting.HostBuilderContext,``0})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureHostBuilder.ConfigureHostConfiguration(System.Action{Microsoft.Extensions.Configuration.IConfigurationBuilder})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureHostBuilder.ConfigureServices(System.Action{Microsoft.Extensions.Hosting.HostBuilderContext,Microsoft.Extensions.DependencyInjection.IServiceCollection})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureHostBuilder.UseServiceProviderFactory``1(Microsoft.Extensions.DependencyInjection.IServiceProviderFactory{``0})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureHostBuilder.UseServiceProviderFactory``1(System.Func{Microsoft.Extensions.Hosting.HostBuilderContext,Microsoft.Extensions.DependencyInjection.IServiceProviderFactory{``0}})">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ConfigureWebHostBuilder">
+            <summary>
+            A non-buildable <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> for <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.
+            Use <see cref="M:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build"/> to build the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureWebHostBuilder.ConfigureAppConfiguration(System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.Extensions.Configuration.IConfigurationBuilder})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureWebHostBuilder.ConfigureServices(System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.Extensions.DependencyInjection.IServiceCollection})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureWebHostBuilder.ConfigureServices(System.Action{Microsoft.Extensions.DependencyInjection.IServiceCollection})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureWebHostBuilder.GetSetting(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ConfigureWebHostBuilder.UseSetting(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.WebApplication">
+            <summary>
+            The web application used to configure the HTTP pipeline, and routes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplication.Services">
+            <summary>
+            The application's configured services.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplication.Configuration">
+            <summary>
+            The application's configured <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplication.Environment">
+            <summary>
+            The application's configured <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplication.Lifetime">
+            <summary>
+            Allows consumers to be notified of application lifetime events.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplication.Logger">
+            <summary>
+            The default logger for the application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplication.Urls">
+            <summary>
+            The list of URLs that the HTTP server is bound to.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.Create(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplication"/> class with preconfigured defaults.
+            </summary>
+            <param name="args">The command line arguments.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.WebApplication"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> class with preconfigured defaults.
+            </summary>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.CreateSlimBuilder">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> class with minimal defaults.
+            </summary>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> class with preconfigured defaults.
+            </summary>
+            <param name="args">The command line arguments.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.CreateSlimBuilder(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> class with minimal defaults.
+            </summary>
+            <param name="args">The command line arguments.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(Microsoft.AspNetCore.Builder.WebApplicationOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> class with preconfigured defaults.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationOptions"/> to configure the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.CreateSlimBuilder(Microsoft.AspNetCore.Builder.WebApplicationOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> class with minimal defaults.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationOptions"/> to configure the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.CreateEmptyBuilder(Microsoft.AspNetCore.Builder.WebApplicationOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/> class with no defaults.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationOptions"/> to configure the <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.StartAsync(System.Threading.CancellationToken)">
+            <summary>
+            Start the application.
+            </summary>
+            <param name="cancellationToken"></param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task"/> that represents the startup of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplication"/>.
+            Successful completion indicates the HTTP server is ready to accept new requests.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.StopAsync(System.Threading.CancellationToken)">
+            <summary>
+            Shuts down the application.
+            </summary>
+            <param name="cancellationToken"></param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task"/> that represents the shutdown of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplication"/>.
+            Successful completion indicates that all the HTTP server has stopped.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.RunAsync(System.String)">
+            <summary>
+            Runs an application and returns a Task that only completes when the token is triggered or shutdown is triggered.
+            </summary>
+            <param name="url">The URL to listen to if the server hasn't been configured directly.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task"/> that represents the entire runtime of the <see cref="T:Microsoft.AspNetCore.Builder.WebApplication"/> from startup to shutdown.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.Run(System.String)">
+            <summary>
+            Runs an application and block the calling thread until host shutdown.
+            </summary>
+            <param name="url">The URL to listen to if the server hasn't been configured directly.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.System#IDisposable#Dispose">
+            <summary>
+            Disposes the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.DisposeAsync">
+            <summary>
+            Disposes the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplication.Use(System.Func{Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.RequestDelegate})">
+            <summary>
+            Adds the middleware to the application request pipeline.
+            </summary>
+            <param name="middleware">The middleware.</param>
+            <returns>An instance of <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> after the operation has completed.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.WebApplicationBuilder">
+            <summary>
+            A builder for web applications and services.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Environment">
+            <summary>
+            Provides information about the web hosting environment an application is running.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Services">
+            <summary>
+            A collection of services for the application to compose. This is useful for adding user provided or framework provided services.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Configuration">
+            <summary>
+            A collection of configuration providers for the application to compose. This is useful for adding new configuration sources and providers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Logging">
+            <summary>
+            A collection of logging providers for the application to compose. This is useful for adding new logging providers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Metrics">
+            <summary>
+            Allows enabling metrics and directing their output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationBuilder.WebHost">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> for configuring server specific properties, but not building.
+            To build after configuration, call <see cref="M:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Host">
+            <summary>
+            An <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/> for configuring host specific properties, but not building.
+            To build after configuration, call <see cref="M:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.WebApplicationBuilder.Build">
+            <summary>
+            Builds the <see cref="T:Microsoft.AspNetCore.Builder.WebApplication"/>.
+            </summary>
+            <returns>A configured <see cref="T:Microsoft.AspNetCore.Builder.WebApplication"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.WebApplicationOptions">
+            <summary>
+            Options for configuring the behavior for <see cref="M:Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder(Microsoft.AspNetCore.Builder.WebApplicationOptions)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationOptions.Args">
+            <summary>
+            The command line arguments.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationOptions.EnvironmentName">
+            <summary>
+            The environment name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationOptions.ApplicationName">
+            <summary>
+            The application name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationOptions.ContentRootPath">
+            <summary>
+            The content root path.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.WebApplicationOptions.WebRootPath">
+            <summary>
+            The web root path.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebHost">
+            <summary>
+            Provides convenience methods for creating instances of <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> and <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> with pre-configured defaults.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebHost.Start(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes and starts a new <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> with pre-configured defaults.
+            See <see cref="M:Microsoft.AspNetCore.WebHost.CreateDefaultBuilder"/> for details.
+            </summary>
+            <param name="app">A delegate that handles requests to the application.</param>
+            <returns>A started <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> that hosts the application.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebHost.Start(System.String,Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes and starts a new <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> with pre-configured defaults.
+            See <see cref="M:Microsoft.AspNetCore.WebHost.CreateDefaultBuilder"/> for details.
+            </summary>
+            <param name="url">The URL the hosted application will listen on.</param>
+            <param name="app">A delegate that handles requests to the application.</param>
+            <returns>A started <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> that hosts the application.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebHost.Start(System.Action{Microsoft.AspNetCore.Routing.IRouteBuilder})">
+            <summary>
+            Initializes and starts a new <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> with pre-configured defaults.
+            See <see cref="M:Microsoft.AspNetCore.WebHost.CreateDefaultBuilder"/> for details.
+            </summary>
+            <param name="routeBuilder">A delegate that configures the router for handling requests to the application.</param>
+            <returns>A started <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> that hosts the application.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebHost.Start(System.String,System.Action{Microsoft.AspNetCore.Routing.IRouteBuilder})">
+            <summary>
+            Initializes and starts a new <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> with pre-configured defaults.
+            See <see cref="M:Microsoft.AspNetCore.WebHost.CreateDefaultBuilder"/> for details.
+            </summary>
+            <param name="url">The URL the hosted application will listen on.</param>
+            <param name="routeBuilder">A delegate that configures the router for handling requests to the application.</param>
+            <returns>A started <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> that hosts the application.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebHost.StartWith(System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})">
+            <summary>
+            Initializes and starts a new <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> with pre-configured defaults.
+            See <see cref="M:Microsoft.AspNetCore.WebHost.CreateDefaultBuilder"/> for details.
+            </summary>
+            <param name="app">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <returns>A started <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> that hosts the application.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebHost.StartWith(System.String,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})">
+            <summary>
+            Initializes and starts a new <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> with pre-configured defaults.
+            See <see cref="M:Microsoft.AspNetCore.WebHost.CreateDefaultBuilder"/> for details.
+            </summary>
+            <param name="url">The URL the hosted application will listen on.</param>
+            <param name="app">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <returns>A started <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> that hosts the application.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebHost.CreateDefaultBuilder">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilder"/> class with pre-configured defaults.
+            </summary>
+            <remarks>
+              The following defaults are applied to the returned <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilder"/>:
+                use Kestrel as the web server and configure it using the application's configuration providers,
+                set the <see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.ContentRootPath"/> to the result of <see cref="M:System.IO.Directory.GetCurrentDirectory"/>,
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from 'appsettings.json' and 'appsettings.[<see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.EnvironmentName"/>].json',
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from User Secrets when <see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.EnvironmentName"/> is 'Development' using the entry assembly,
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from environment variables,
+                configure the <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to log to the console and debug output,
+                adds the HostFiltering middleware,
+                adds the ForwardedHeaders middleware if ASPNETCORE_FORWARDEDHEADERS_ENABLED=true,
+                and enable IIS integration.
+            </remarks>
+            <returns>The initialized <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebHost.CreateDefaultBuilder(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilder"/> class with pre-configured defaults.
+            </summary>
+            <remarks>
+              The following defaults are applied to the returned <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilder"/>:
+                use Kestrel as the web server and configure it using the application's configuration providers,
+                set the <see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.ContentRootPath"/> to the result of <see cref="M:System.IO.Directory.GetCurrentDirectory"/>,
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from 'appsettings.json' and 'appsettings.[<see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.EnvironmentName"/>].json',
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from User Secrets when <see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.EnvironmentName"/> is 'Development' using the entry assembly,
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from environment variables,
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from supplied command line args,
+                configure the <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to log to the console and debug output,
+                configure the <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> to map static web assets when <see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.EnvironmentName"/> is 'Development' using the entry assembly,
+                adds the HostFiltering middleware,
+                adds the ForwardedHeaders middleware if ASPNETCORE_FORWARDEDHEADERS_ENABLED=true,
+                and enable IIS integration.
+            </remarks>
+            <param name="args">The command line args.</param>
+            <returns>The initialized <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebHost.CreateDefaultBuilder``1(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilder"/> class with pre-configured defaults using typed Startup.
+            </summary>
+            <remarks>
+              The following defaults are applied to the returned <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilder"/>:
+                use Kestrel as the web server and configure it using the application's configuration providers,
+                set the <see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.ContentRootPath"/> to the result of <see cref="M:System.IO.Directory.GetCurrentDirectory"/>,
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from 'appsettings.json' and 'appsettings.[<see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.EnvironmentName"/>].json',
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from User Secrets when <see cref="P:Microsoft.Extensions.Hosting.IHostEnvironment.EnvironmentName"/> is 'Development' using the entry assembly,
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from environment variables,
+                load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> from supplied command line args,
+                configure the <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to log to the console and debug output,
+                enable IIS integration.
+            </remarks>
+            <typeparam name ="TStartup">The type containing the startup methods for the application.</typeparam>
+            <param name="args">The command line args.</param>
+            <returns>The initialized <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Hosting.GenericHostBuilderExtensions">
+            <summary>
+            Extension methods for configuring the <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.GenericHostBuilderExtensions.ConfigureWebHostDefaults(Microsoft.Extensions.Hosting.IHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.IWebHostBuilder})">
+            <summary>
+            Configures a <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder" /> with defaults for hosting a web app. This should be called
+            before application specific configuration to avoid it overwriting provided services, configuration sources,
+            environments, content root, etc.
+            </summary>
+            <remarks>
+            The following defaults are applied to the <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/>:
+            <list type="bullet">
+                <item><description>use Kestrel as the web server and configure it using the application's configuration providers</description></item>
+                <item><description>configure <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> to include static web assets from projects referenced by the entry assembly during development</description></item>
+                <item><description>adds the HostFiltering middleware</description></item>
+                <item><description>adds the ForwardedHeaders middleware if ASPNETCORE_FORWARDEDHEADERS_ENABLED=true,</description></item>
+                <item><description>enable IIS integration</description></item>
+              </list>
+            </remarks>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder" /> instance to configure.</param>
+            <param name="configure">The configure callback</param>
+            <returns>A reference to the <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.GenericHostBuilderExtensions.ConfigureWebHostDefaults(Microsoft.Extensions.Hosting.IHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.IWebHostBuilder},System.Action{Microsoft.Extensions.Hosting.WebHostBuilderOptions})">
+            <summary>
+            Configures a <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder" /> with defaults for hosting a web app. This should be called
+            before application specific configuration to avoid it overwriting provided services, configuration sources,
+            environments, content root, etc.
+            </summary>
+            <remarks>
+            The following defaults are applied to the <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/>:
+            <list type="bullet">
+                <item><description>use Kestrel as the web server and configure it using the application's configuration providers</description></item>
+                <item><description>configure <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> to include static web assets from projects referenced by the entry assembly during development</description></item>
+                <item><description>adds the HostFiltering middleware</description></item>
+                <item><description>adds the ForwardedHeaders middleware if ASPNETCORE_FORWARDEDHEADERS_ENABLED=true,</description></item>
+                <item><description>enable IIS integration</description></item>
+              </list>
+            </remarks>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder" /> instance to configure.</param>
+            <param name="configure">The configure callback</param>
+            <param name="configureOptions">The delegate that configures the <see cref="T:Microsoft.Extensions.Hosting.WebHostBuilderOptions"/>.</param>
+            <returns>A reference to the <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+    </members>
+</doc>

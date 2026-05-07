@@ -1,0 +1,1926 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Net.Http.Headers</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Net.Http.Headers.CacheControlHeaderValue">
+            <summary>
+            Represents the <c>Cache-Control</c> HTTP header.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.PublicString">
+            <summary>
+            A constant for the <c>public</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.PrivateString">
+            <summary>
+            A constant for the <c>private</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MaxAgeString">
+            <summary>
+            A constant for the <c>max-age</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.SharedMaxAgeString">
+            <summary>
+            A constant for the <c>s-maxage</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.NoCacheString">
+            <summary>
+            A constant for the <c>no-cache</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.NoStoreString">
+            <summary>
+            A constant for the <c>no-store</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MaxStaleString">
+            <summary>
+            A constant for the <c>max-stale</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MinFreshString">
+            <summary>
+            A constant for the <c>min-fresh</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.NoTransformString">
+            <summary>
+            A constant for the <c>no-transform</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.OnlyIfCachedString">
+            <summary>
+            A constant for the <c>only-if-cached</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MustRevalidateString">
+            <summary>
+            A constant for the <c>must-revalidate</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.CacheControlHeaderValue.ProxyRevalidateString">
+            <summary>
+            A constant for the <c>proxy-revalidate</c> cache-control directive.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CacheControlHeaderValue.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.CacheControlHeaderValue"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.NoCache">
+            <summary>
+            Gets or sets a value for the <c>no-cache</c> directive.
+            <para>
+            Configuring no-cache indicates that the client must re-validate cached responses with the original server
+            before using it.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.1.4"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.NoCacheHeaders">
+            <summary>
+            Gets a collection of field names in the "no-cache" directive in a cache-control header field on an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.NoStore">
+            <summary>
+            Gets or sets a value for the <c>no-store</c> directive.
+            <para>
+            Configuring no-store indicates that the response may not be stored in any cache.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.1.5"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MaxAge">
+            <summary>
+            Gets or sets a value for the <c>max-age</c> directive.
+            <para>
+            max-age specifies the maximum amount of time the response is considered fresh.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.1.1"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.SharedMaxAge">
+            <summary>
+            Gets or sets a value for the <c>s-maxage</c> directive.
+            <para>
+            Overrides <see cref="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MaxAge">max-age</see>, but only for shared caches (such as proxies).
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.2.9"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MaxStale">
+            <summary>
+            Gets or sets a value that determines if the <c>max-stale</c> is included.
+            <para>
+            <c>max-stale</c> that the client will accept stale responses. The maximum tolerance for staleness
+            is specified by <see cref="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MaxStaleLimit"/>.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.1.2"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MaxStaleLimit">
+            <summary>
+            Gets or sets a value for the <c>max-stale</c> directive.
+            <para>
+            Indicates the maximum duration an HTTP client is willing to accept a response that has exceeded its expiration time.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.1.2"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MinFresh">
+            <summary>
+            Gets or sets a value for the <c>min-fresh</c> directive.
+            <para>
+            Indicates the freshness lifetime that an HTTP client is willing to accept a response.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.1.3"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.NoTransform">
+            <summary>
+            Gets or sets a value for the <c>no-transform</c> request directive.
+            <para>
+            Forbids intermediate caches or proxies from editing the response payload.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.1.6"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.OnlyIfCached">
+            <summary>
+            Gets or sets a value for the <c>only-if-cached</c> request directive.
+            <para>
+            Indicates that the client only wishes to obtain a stored response
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.1.7"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.Public">
+            <summary>
+            Gets or sets a value that determines if the <c>public</c> response directive is included.
+            <para>
+            Indicates that the response may be stored by any cache.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.2.5"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.Private">
+            <summary>
+            Gets or sets a value that determines if the <c>private</c> response directive is included.
+            <para>
+            Indicates that the response may not be stored by a shared cache.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.2.6"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.PrivateHeaders">
+            <summary>
+            Gets a collection of field names in the "private" directive in a cache-control header field on an HTTP response.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.MustRevalidate">
+            <summary>
+            Gets or sets a value that determines if the <c>must-revalidate</c> response directive is included.
+            <para>
+            Indicates that caches must revalidate the use of stale caches with the origin server before their use.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.2.1"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.ProxyRevalidate">
+            <summary>
+            Gets or sets a value that determines if the <c>proxy-validate</c> response directive is included.
+            <para>
+            Indicates that shared caches must revalidate the use of stale caches with the origin server before their use.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc7234#section-5.2.2.1"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CacheControlHeaderValue.Extensions">
+            <summary>
+            Gets cache-extension tokens, each with an optional assigned value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CacheControlHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CacheControlHeaderValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CacheControlHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CacheControlHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.CacheControlHeaderValue"/> value.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CacheControlHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.CacheControlHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.CacheControlHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.CacheControlHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue">
+            <summary>
+            Represents the value of a <c>Content-Disposition</c> header.
+            </summary>
+            <remarks>
+            Note this is for use both in HTTP (<see href="https://tools.ietf.org/html/rfc6266"/>) and MIME (<see href="https://tools.ietf.org/html/rfc2183"/>).
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue"/>.
+            </summary>
+            <param name="dispositionType">A <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> that represents a content disposition type.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.DispositionType">
+            <summary>
+            Gets or sets a content disposition type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parameters">
+            <summary>
+            Gets a collection of parameters included the <c>Content-Disposition</c> header.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Name">
+            <summary>
+            Gets or sets the name of the content body part.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.FileName">
+            <summary>
+            Gets or sets a value that suggests how to construct a filename for storing the message payload
+            to be used if the entity is detached and stored in a separate file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.FileNameStar">
+            <summary>
+            Gets or sets a value that suggests how to construct filenames for storing message payloads
+            to be used if the entities are detached and stored in a separate files.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.CreationDate">
+            <summary>
+            Gets or sets the <see cref="T:System.DateTimeOffset"/> at which the file was created.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.ModificationDate">
+            <summary>
+            Gets or sets the <see cref="T:System.DateTimeOffset"/> at which the file was last modified.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.ReadDate">
+            <summary>
+            Gets or sets the <see cref="T:System.DateTimeOffset"/> at which the file was last read.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Size">
+            <summary>
+            Gets or sets the approximate size, in bytes, of the file.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.SetHttpFileName(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Sets both FileName and FileNameStar using encodings appropriate for HTTP headers.
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.SetMimeFileName(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Sets the FileName parameter using encodings appropriate for MIME headers.
+            The FileNameStar parameter is removed.
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue"/> value.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.ContentDispositionHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.ContentDispositionHeaderValueIdentityExtensions">
+            <summary>
+            Various extension methods for <see cref="T:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue"/> for identifying the type of the disposition header
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValueIdentityExtensions.IsFileDisposition(Microsoft.Net.Http.Headers.ContentDispositionHeaderValue)">
+            <summary>
+            Checks if the content disposition header is a file disposition
+            </summary>
+            <param name="header">The header to check</param>
+            <returns>True if the header is file disposition, false otherwise</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentDispositionHeaderValueIdentityExtensions.IsFormDisposition(Microsoft.Net.Http.Headers.ContentDispositionHeaderValue)">
+            <summary>
+            Checks if the content disposition header is a form disposition
+            </summary>
+            <param name="header">The header to check</param>
+            <returns>True if the header is form disposition, false otherwise</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.ContentRangeHeaderValue">
+            <summary>
+            Represents a <c>Content-Range</c> response HTTP header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.#ctor(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.ContentRangeHeaderValue"/>.
+            </summary>
+            <param name="from">The start of the range.</param>
+            <param name="to">The end of the range.</param>
+            <param name="length">The total size of the document in bytes.</param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.#ctor(System.Int64)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.ContentRangeHeaderValue"/>.
+            </summary>
+            <param name="length">The total size of the document in bytes.</param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.#ctor(System.Int64,System.Int64)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.ContentRangeHeaderValue"/>.
+            </summary>
+            <param name="from">The start of the range.</param>
+            <param name="to">The end of the range.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.Unit">
+            <summary>
+            Gets or sets the unit in which ranges are specified.
+            </summary>
+            <value>Defaults to <c>bytes</c>.</value>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.From">
+            <summary>
+            Gets the start of the range.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.To">
+            <summary>
+            Gets the end of the range.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.Length">
+            <summary>
+            Gets the total size of the document.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.HasLength">
+            <summary>
+            Gets a value that determines if <see cref="P:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.Length"/> has been specified.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.HasRange">
+            <summary>
+            Gets a value that determines if <see cref="P:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.From"/> and <see cref="P:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.To"/> have been specified.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.ContentRangeHeaderValue"/> value.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.ContentRangeHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.ContentRangeHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.ContentRangeHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.ContentRangeHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.CookieHeaderValue">
+            <summary>
+            Represents the HTTP request <c>Cookie</c> header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/>.
+            </summary>
+            <param name="name">The cookie name.</param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/>.
+            </summary>
+            <param name="name">The cookie name.</param>
+            <param name="value">The cookie value.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CookieHeaderValue.Name">
+            <summary>
+            Gets or sets the cookie name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.CookieHeaderValue.Value">
+            <summary>
+            Gets or sets the cookie value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/> value.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.CookieHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.ParseList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/> values.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.ParseStrictList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/> values using string parsing rules.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.TryParseList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.CookieHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/>.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.TryParseStrictList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.CookieHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.CookieHeaderValue"/> using string parsing rules.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.CookieHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue">
+            <summary>
+            Represents an entity-tag (<c>etag</c>) header value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>.
+            </summary>
+            <param name="tag">A <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> that contains an <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>.</param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>.
+            </summary>
+            <param name="tag">A <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> that contains an <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>.</param>
+            <param name="isWeak">A value that indicates if this entity-tag header is a weak validator.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.EntityTagHeaderValue.Any">
+            <summary>
+            Gets the "any" etag.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.EntityTagHeaderValue.Tag">
+            <summary>
+            Gets the quoted tag.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.EntityTagHeaderValue.IsWeak">
+            <summary>
+            Gets a value that determines if the entity-tag header is a weak validator.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.Equals(System.Object)">
+            <summary>
+            Check against another <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/> for equality.
+            This equality check should not be used to determine if two values match under the RFC specifications (<see href="https://tools.ietf.org/html/rfc7232#section-2.3.2"/>).
+            </summary>
+            <param name="obj">The other value to check against for equality.</param>
+            <returns>
+            <c>true</c> if the strength and tag of the two values match,
+            <c>false</c> if the other value is null, is not an <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>, or if there is a mismatch of strength or tag between the two values.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.Compare(Microsoft.Net.Http.Headers.EntityTagHeaderValue,System.Boolean)">
+            <summary>
+            Compares against another <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/> to see if they match under the RFC specifications (<see href="https://tools.ietf.org/html/rfc7232#section-2.3.2"/>).
+            </summary>
+            <param name="other">The other <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/> to compare against.</param>
+            <param name="useStrongComparison"><c>true</c> to use a strong comparison, <c>false</c> to use a weak comparison</param>
+            <returns>
+            <c>true</c> if the <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/> match for the given comparison type,
+            <c>false</c> if the other value is null or the comparison failed.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/> value.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.EntityTagHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.ParseList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/> values.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.ParseStrictList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/> values using string parsing rules.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.TryParseList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.EntityTagHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.EntityTagHeaderValue.TryParseStrictList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.EntityTagHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/> using string parsing rules.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.HeaderNames">
+            <summary>
+            Defines constants for well-known HTTP headers.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Accept">
+            <summary>Gets the <c>Accept</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AcceptCharset">
+            <summary>Gets the <c>Accept-Charset</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AcceptEncoding">
+            <summary>Gets the <c>Accept-Encoding</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AcceptLanguage">
+            <summary>Gets the <c>Accept-Language</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AcceptRanges">
+            <summary>Gets the <c>Accept-Ranges</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AccessControlAllowCredentials">
+            <summary>Gets the <c>Access-Control-Allow-Credentials</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AccessControlAllowHeaders">
+            <summary>Gets the <c>Access-Control-Allow-Headers</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AccessControlAllowMethods">
+            <summary>Gets the <c>Access-Control-Allow-Methods</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AccessControlAllowOrigin">
+            <summary>Gets the <c>Access-Control-Allow-Origin</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AccessControlExposeHeaders">
+            <summary>Gets the <c>Access-Control-Expose-Headers</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AccessControlMaxAge">
+            <summary>Gets the <c>Access-Control-Max-Age</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AccessControlRequestHeaders">
+            <summary>Gets the <c>Access-Control-Request-Headers</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AccessControlRequestMethod">
+            <summary>Gets the <c>Access-Control-Request-Method</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Age">
+            <summary>Gets the <c>Age</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Allow">
+            <summary>Gets the <c>Allow</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.AltSvc">
+            <summary>Gets the <c>Alt-Svc</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Authority">
+            <summary>Gets the <c>:authority</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Authorization">
+            <summary>Gets the <c>Authorization</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Baggage">
+            <summary>Gets the <c>baggage</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.CacheControl">
+            <summary>Gets the <c>Cache-Control</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Connection">
+            <summary>Gets the <c>Connection</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentDisposition">
+            <summary>Gets the <c>Content-Disposition</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentEncoding">
+            <summary>Gets the <c>Content-Encoding</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentLanguage">
+            <summary>Gets the <c>Content-Language</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentLength">
+            <summary>Gets the <c>Content-Length</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentLocation">
+            <summary>Gets the <c>Content-Location</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentMD5">
+            <summary>Gets the <c>Content-MD5</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentRange">
+            <summary>Gets the <c>Content-Range</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentSecurityPolicy">
+            <summary>Gets the <c>Content-Security-Policy</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentSecurityPolicyReportOnly">
+            <summary>Gets the <c>Content-Security-Policy-Report-Only</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ContentType">
+            <summary>Gets the <c>Content-Type</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.CorrelationContext">
+            <summary>Gets the <c>Correlation-Context</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Cookie">
+            <summary>Gets the <c>Cookie</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Date">
+            <summary>Gets the <c>Date</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.DNT">
+            <summary>Gets the <c>DNT</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ETag">
+            <summary>Gets the <c>ETag</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Expires">
+            <summary>Gets the <c>Expires</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Expect">
+            <summary>Gets the <c>Expect</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.From">
+            <summary>Gets the <c>From</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.GrpcAcceptEncoding">
+            <summary>Gets the <c>Grpc-Accept-Encoding</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.GrpcEncoding">
+            <summary>Gets the <c>Grpc-Encoding</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.GrpcMessage">
+            <summary>Gets the <c>Grpc-Message</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.GrpcStatus">
+            <summary>Gets the <c>Grpc-Status</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.GrpcTimeout">
+            <summary>Gets the <c>Grpc-Timeout</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Host">
+            <summary>Gets the <c>Host</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.KeepAlive">
+            <summary>Gets the <c>Keep-Alive</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.IfMatch">
+            <summary>Gets the <c>If-Match</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.IfModifiedSince">
+            <summary>Gets the <c>If-Modified-Since</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.IfNoneMatch">
+            <summary>Gets the <c>If-None-Match</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.IfRange">
+            <summary>Gets the <c>If-Range</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.IfUnmodifiedSince">
+            <summary>Gets the <c>If-Unmodified-Since</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.LastModified">
+            <summary>Gets the <c>Last-Modified</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Link">
+            <summary>Gets the <c>Link</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Location">
+            <summary>Gets the <c>Location</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.MaxForwards">
+            <summary>Gets the <c>Max-Forwards</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Method">
+            <summary>Gets the <c>:method</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Origin">
+            <summary>Gets the <c>Origin</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Path">
+            <summary>Gets the <c>:path</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Pragma">
+            <summary>Gets the <c>Pragma</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ProxyAuthenticate">
+            <summary>Gets the <c>Proxy-Authenticate</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ProxyAuthorization">
+            <summary>Gets the <c>Proxy-Authorization</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.ProxyConnection">
+            <summary>Gets the <c>Proxy-Connection</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Range">
+            <summary>Gets the <c>Range</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Referer">
+            <summary>Gets the <c>Referer</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.RetryAfter">
+            <summary>Gets the <c>Retry-After</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.RequestId">
+            <summary>Gets the <c>Request-Id</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Scheme">
+            <summary>Gets the <c>:scheme</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.SecWebSocketAccept">
+            <summary>Gets the <c>Sec-WebSocket-Accept</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.SecWebSocketKey">
+            <summary>Gets the <c>Sec-WebSocket-Key</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.SecWebSocketProtocol">
+            <summary>Gets the <c>Sec-WebSocket-Protocol</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.SecWebSocketVersion">
+            <summary>Gets the <c>Sec-WebSocket-Version</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.SecWebSocketExtensions">
+            <summary>Gets the <c>Sec-WebSocket-Extensions</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Server">
+            <summary>Gets the <c>Server</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.SetCookie">
+            <summary>Gets the <c>Set-Cookie</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Status">
+            <summary>Gets the <c>:status</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.StrictTransportSecurity">
+            <summary>Gets the <c>Strict-Transport-Security</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.TE">
+            <summary>Gets the <c>TE</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Trailer">
+            <summary>Gets the <c>Trailer</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.TransferEncoding">
+            <summary>Gets the <c>Transfer-Encoding</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Translate">
+            <summary>Gets the <c>Translate</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.TraceParent">
+            <summary>Gets the <c>traceparent</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.TraceState">
+            <summary>Gets the <c>tracestate</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Upgrade">
+            <summary>Gets the <c>Upgrade</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.UpgradeInsecureRequests">
+            <summary>Gets the <c>Upgrade-Insecure-Requests</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.UserAgent">
+            <summary>Gets the <c>User-Agent</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Vary">
+            <summary>Gets the <c>Vary</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Via">
+            <summary>Gets the <c>Via</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.Warning">
+            <summary>Gets the <c>Warning</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.WebSocketSubProtocols">
+            <summary>Gets the <c>Sec-WebSocket-Protocol</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.WWWAuthenticate">
+            <summary>Gets the <c>WWW-Authenticate</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.XContentTypeOptions">
+            <summary>Gets the <c>X-Content-Type-Options</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.XFrameOptions">
+            <summary>Gets the <c>X-Frame-Options</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.XPoweredBy">
+            <summary>Gets the <c>X-Powered-By</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.XRequestedWith">
+            <summary>Gets the <c>X-Requested-With</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.XUACompatible">
+            <summary>Gets the <c>X-UA-Compatible</c> HTTP header name.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderNames.XXSSProtection">
+            <summary>Gets the <c>X-XSS-Protection</c> HTTP header name.</summary>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.HeaderQuality">
+            <summary>
+            Provides HTTP header quality factors.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderQuality.Match">
+            <summary>
+            Quality factor to indicate a perfect match.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.HeaderQuality.NoMatch">
+            <summary>
+            Quality factor to indicate no match.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.HeaderUtilities">
+            <summary>
+            Provides utilities to parse and modify HTTP header values.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.TryParseSeconds(Microsoft.Extensions.Primitives.StringValues,System.String,System.Nullable{System.TimeSpan}@)">
+            <summary>
+            Try to find a target header value among the set of given header values and parse it as a
+            <see cref="T:System.TimeSpan"/>.
+            </summary>
+            <param name="headerValues">
+            The <see cref="T:Microsoft.Extensions.Primitives.StringValues"/> containing the set of header values to search.
+            </param>
+            <param name="targetValue">
+            The target header value to look for.
+            </param>
+            <param name="value">
+            When this method returns, contains the parsed <see cref="T:System.TimeSpan"/>, if the parsing succeeded, or
+            null if the parsing failed. The conversion fails if the <paramref name="targetValue"/> was not
+            found or could not be parsed as a <see cref="T:System.TimeSpan"/>. This parameter is passed uninitialized;
+            any value originally supplied in result will be overwritten.
+            </param>
+            <returns>
+            <see langword="true" /> if <paramref name="targetValue"/> is found and successfully parsed; otherwise,
+            <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.ContainsCacheDirective(Microsoft.Extensions.Primitives.StringValues,System.String)">
+            <summary>
+            Check if a target directive exists among the set of given cache control directives.
+            </summary>
+            <param name="cacheControlDirectives">
+            The <see cref="T:Microsoft.Extensions.Primitives.StringValues"/> containing the set of cache control directives.
+            </param>
+            <param name="targetDirectives">
+            The target cache control directives to look for.
+            </param>
+            <returns>
+            <see langword="true" /> if <paramref name="targetDirectives"/> is contained in <paramref name="cacheControlDirectives"/>;
+            otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.TryParseNonNegativeInt32(Microsoft.Extensions.Primitives.StringSegment,System.Int32@)">
+            <summary>
+            Try to convert a string representation of a positive number to its 64-bit signed integer equivalent.
+            A return value indicates whether the conversion succeeded or failed.
+            </summary>
+            <param name="value">
+            A string containing a number to convert.
+            </param>
+            <param name="result">
+            When this method returns, contains the 64-bit signed integer value equivalent of the number contained
+            in the string, if the conversion succeeded, or zero if the conversion failed. The conversion fails if
+            the string is null or String.Empty, is not of the correct format, is negative, or represents a number
+            greater than Int64.MaxValue. This parameter is passed uninitialized; any value originally supplied in
+            result will be overwritten.
+            </param>
+            <returns><see langword="true" /> if parsing succeeded; otherwise, <see langword="false" />.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.TryParseNonNegativeInt64(Microsoft.Extensions.Primitives.StringSegment,System.Int64@)">
+            <summary>
+            Try to convert a <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> representation of a positive number to its 64-bit signed
+            integer equivalent. A return value indicates whether the conversion succeeded or failed.
+            </summary>
+            <param name="value">
+            A <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> containing a number to convert.
+            </param>
+            <param name="result">
+            When this method returns, contains the 64-bit signed integer value equivalent of the number contained
+            in the string, if the conversion succeeded, or zero if the conversion failed. The conversion fails if
+            the <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> is null or String.Empty, is not of the correct format, is negative, or
+            represents a number greater than Int64.MaxValue. This parameter is passed uninitialized; any value
+            originally supplied in result will be overwritten.
+            </param>
+            <returns><see langword="true" /> if parsing succeeded; otherwise, <see langword="false" />.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.FormatNonNegativeInt64(System.Int64)">
+            <summary>
+            Converts the non-negative 64-bit numeric value to its equivalent string representation.
+            </summary>
+            <param name="value">
+            The number to convert.
+            </param>
+            <returns>
+            The string representation of the value of this instance, consisting of a sequence of digits ranging from 0 to 9 with no leading zeroes.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.FormatInt64(System.Int64)">
+            <summary>
+            Converts the 64-bit numeric value to its equivalent string representation.
+            </summary>
+            <param name="value">
+            The number to convert.
+            </param>
+            <returns>
+            The string representation of the value of this instance, consisting of a sequence of digits ranging from 0 to 9 with no leading zeroes.
+            In case of negative numeric value it will have a leading minus sign.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.TryParseDate(Microsoft.Extensions.Primitives.StringSegment,System.DateTimeOffset@)">
+             <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:System.DateTimeOffset"/> value.
+             </summary>
+             <param name="input">The input value.</param>
+             <param name="result">The parsed value.</param>
+             <returns>
+             <see langword="true" /> if <paramref name="input"/> can be parsed as a date, otherwise <see langword="false" />.
+             </returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.FormatDate(System.DateTimeOffset)">
+            <summary>
+            Formats the <paramref name="dateTime"/> using the RFC1123 format specifier.
+            </summary>
+            <param name="dateTime">The date to format.</param>
+            <returns>The formatted date.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.FormatDate(System.DateTimeOffset,System.Boolean)">
+            <summary>
+            Formats the <paramref name="dateTime"/> using the RFC1123 format specifier and optionally quotes it.
+            </summary>
+            <param name="dateTime">The date to format.</param>
+            <param name="quoted">Determines if the formatted date should be quoted.</param>
+            <returns>The formatted date.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.RemoveQuotes(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Removes quotes from the specified <paramref name="input"/> if quoted.
+            </summary>
+            <param name="input">The input to remove quotes from.</param>
+            <returns>The value without quotes.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.IsQuoted(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Determines if the specified <paramref name="input"/> is quoted.
+            </summary>
+            <param name="input">The value to inspect.</param>
+            <returns><see langword="true"/> if the value is quoted, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.UnescapeAsQuotedString(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Given a quoted-string as defined by <see href="https://tools.ietf.org/html/rfc7230#section-3.2.6">the RFC specification</see>,
+            removes quotes and unescapes backslashes and quotes. This assumes that the input is a valid quoted-string.
+            </summary>
+            <param name="input">The quoted-string to be unescaped.</param>
+            <returns>An unescaped version of the quoted-string.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.HeaderUtilities.EscapeAsQuotedString(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Escapes a <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> as a quoted-string, which is defined by
+            <see href="https://tools.ietf.org/html/rfc7230#section-3.2.6">the RFC specification</see>.
+            </summary>
+            <remarks>
+            This will add a backslash before each backslash and quote and add quotes
+            around the input. Assumes that the input does not have quotes around it,
+            as this method will add them. Throws if the input contains any invalid escape characters,
+            as defined by rfc7230.
+            </remarks>
+            <param name="input">The input to be escaped.</param>
+            <returns>An escaped version of the quoted-string.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue">
+            <summary>
+            Representation of the media type header. See <see href="https://tools.ietf.org/html/rfc6838"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> instance.
+            </summary>
+            <param name="mediaType">A <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> representation of a media type.
+            The text provided must be a single media type without parameters. </param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment,System.Double)">
+            <summary>
+            Initializes a <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> instance.
+            </summary>
+            <param name="mediaType">A <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> representation of a media type.
+            The text provided must be a single media type without parameters. </param>
+            <param name="quality">The <see cref="T:System.Double"/> with the quality of the media type.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Charset">
+            <summary>
+            Gets or sets the value of the charset parameter. Returns <see cref="F:Microsoft.Extensions.Primitives.StringSegment.Empty"/>
+            if there is no charset.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Encoding">
+            <summary>
+            Gets or sets the value of the Encoding parameter. Setting the Encoding will set
+            the <see cref="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Charset"/> to <see cref="P:System.Text.Encoding.WebName"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Boundary">
+            <summary>
+            Gets or sets the value of the boundary parameter. Returns <see cref="F:Microsoft.Extensions.Primitives.StringSegment.Empty"/>
+            if there is no boundary.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parameters">
+            <summary>
+            Gets or sets the media type's parameters. Returns an empty <see cref="T:System.Collections.Generic.IList`1"/>
+            if there are no parameters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Quality">
+            <summary>
+            Gets or sets the value of the quality parameter. Returns null
+            if there is no quality.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.MediaType">
+            <summary>
+            Gets or sets the value of the media type. Returns <see cref="F:Microsoft.Extensions.Primitives.StringSegment.Empty"/>
+            if there is no media type.
+            </summary>
+            <example>
+            For the media type <c>"application/json"</c>, the property gives the value
+            <c>"application/json"</c>.
+            </example>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Type">
+            <summary>
+            Gets the type of the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>.
+            </summary>
+            <example>
+            For the media type <c>"application/json"</c>, the property gives the value <c>"application"</c>.
+            </example>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc6838#section-4.2"/> for more details on the type.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.SubType">
+            <summary>
+            Gets the subtype of the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>.
+            </summary>
+            <example>
+            For the media type <c>"application/vnd.example+json"</c>, the property gives the value
+            <c>"vnd.example+json"</c>.
+            </example>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc6838#section-4.2"/> for more details on the subtype.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.SubTypeWithoutSuffix">
+            <summary>
+            Gets subtype of the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>, excluding any structured syntax suffix. Returns <see cref="F:Microsoft.Extensions.Primitives.StringSegment.Empty"/>
+            if there is no subtype without suffix.
+            </summary>
+            <example>
+            For the media type <c>"application/vnd.example+json"</c>, the property gives the value
+            <c>"vnd.example"</c>.
+            </example>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Suffix">
+            <summary>
+            Gets the structured syntax suffix of the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> if it has one.
+            See <see href="https://tools.ietf.org/html/rfc6838#section-4.8">The RFC documentation on structured syntaxes.</see>
+            </summary>
+            <example>
+            For the media type <c>"application/vnd.example+json"</c>, the property gives the value
+            <c>"json"</c>.
+            </example>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Facets">
+            <summary>
+            Get a <see cref="T:System.Collections.Generic.IList`1"/> of facets of the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>. Facets are a
+            period separated list of StringSegments in the <see cref="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.SubTypeWithoutSuffix"/>.
+            See <see href="https://tools.ietf.org/html/rfc6838#section-3">The RFC documentation on facets.</see>
+            </summary>
+            <example>
+            For the media type <c>"application/vnd.example+json"</c>, the property gives the value:
+            <c>{"vnd", "example"}</c>
+            </example>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.MatchesAllTypes">
+            <summary>
+            Gets whether this <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> matches all types.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.MatchesAllSubTypes">
+            <summary>
+            Gets whether this <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> matches all subtypes.
+            </summary>
+            <example>
+            For the media type <c>"application/*"</c>, this property is <c>true</c>.
+            </example>
+            <example>
+            For the media type <c>"application/json"</c>, this property is <c>false</c>.
+            </example>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.MatchesAllSubTypesWithoutSuffix">
+            <summary>
+            Gets whether this <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> matches all subtypes, ignoring any structured syntax suffix.
+            </summary>
+            <example>
+            For the media type <c>"application/*+json"</c>, this property is <c>true</c>.
+            </example>
+            <example>
+            For the media type <c>"application/vnd.example+json"</c>, this property is <c>false</c>.
+            </example>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.IsReadOnly">
+            <summary>
+            Gets whether the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> is readonly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.IsSubsetOf(Microsoft.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Gets a value indicating whether this <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> is a subset of
+            <paramref name="otherMediaType"/>. A "subset" is defined as the same or a more specific media type
+            according to the precedence described in <see href="https://www.ietf.org/rfc/rfc2068.txt"/> section 14.1, Accept.
+            </summary>
+            <param name="otherMediaType">The <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> to compare.</param>
+            <returns>
+            A value indicating whether this <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> is a subset of
+            <paramref name="otherMediaType"/>.
+            </returns>
+            <remarks>
+            For example "multipart/mixed; boundary=1234" is a subset of "multipart/mixed; boundary=1234",
+            "multipart/mixed", "multipart/*", and "*/*" but not "multipart/mixed; boundary=2345" or
+            "multipart/message; boundary=1234".
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Copy">
+            <summary>
+            Performs a deep copy of this object and all of it's NameValueHeaderValue sub components,
+            while avoiding the cost of re-validating the components.
+            </summary>
+            <returns>A deep copy.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.CopyAsReadOnly">
+            <summary>
+            Performs a deep copy of this object and all of it's NameValueHeaderValue sub components,
+            while avoiding the cost of re-validating the components. This copy is read-only.
+            </summary>
+            <returns>A deep, read-only, copy.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.MatchesMediaType(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Gets a value indicating whether <paramref name="otherMediaType"/> is a subset of
+            this <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> in terms of type/subType. A "subset" is defined as the same or a more specific media type
+            according to the precedence described in <see href="https://www.ietf.org/rfc/rfc2068.txt"/> section 14.1, Accept.
+            </summary>
+            <param name="otherMediaType">The <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> to compare.</param>
+            <returns>
+            A value indicating whether <paramref name="otherMediaType"/> is a subset of
+            this <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>.
+            </returns>
+            <remarks>
+            For example "multipart/mixed" is a subset of "multipart/mixed",
+            "multipart/*", and "*/*" but not "multipart/message."
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Takes a media type and parses it into the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue" /> and its associated parameters.
+            </summary>
+            <param name="input">The <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> with the media type.</param>
+            <returns>The parsed <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.MediaTypeHeaderValue@)">
+            <summary>
+            Takes a media type, which can include parameters, and parses it into the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue" /> and its associated parameters.
+            </summary>
+            <param name="input">The <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> with the media type. The media type constructed here must not have an y</param>
+            <param name="parsedValue">The parsed <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/></param>
+            <returns>True if the value was successfully parsed.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.ParseList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Takes an <see cref="T:System.Collections.Generic.IList`1"/> of <see cref="T:System.String"/> and parses it into the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"></see> and its associated parameters.
+            </summary>
+            <param name="inputs">A list of media types</param>
+            <returns>The parsed <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.ParseStrictList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Takes an <see cref="T:System.Collections.Generic.IList`1"/> of <see cref="T:System.String"/> and parses it into the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"></see> and its associated parameters.
+            Throws if there is invalid data in a string.
+            </summary>
+            <param name="inputs">A list of media types</param>
+            <returns>The parsed <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.TryParseList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.MediaTypeHeaderValue}@)">
+            <summary>
+            Takes an <see cref="T:System.Collections.Generic.IList`1"/> of <see cref="T:System.String"/> and parses it into the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"></see> and its associated parameters.
+            </summary>
+            <param name="inputs">A list of media types</param>
+            <param name="parsedValues">The parsed <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>.</param>
+            <returns>True if the value was successfully parsed.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValue.TryParseStrictList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.MediaTypeHeaderValue}@)">
+            <summary>
+            Takes an <see cref="T:System.Collections.Generic.IList`1"/> of <see cref="T:System.String"/> and parses it into the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"></see> and its associated parameters.
+            </summary>
+            <param name="inputs">A list of media types</param>
+            <param name="parsedValues">The parsed <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>.</param>
+            <returns>True if the value was successfully parsed.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValueComparer">
+            <summary>
+            Implementation of <see cref="T:System.Collections.Generic.IComparer`1"/> that can compare accept media type header fields
+            based on their quality values (a.k.a q-values).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.MediaTypeHeaderValueComparer.QualityComparer">
+            <summary>
+            Gets the <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValueComparer"/> instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.MediaTypeHeaderValueComparer.Compare(Microsoft.Net.Http.Headers.MediaTypeHeaderValue,Microsoft.Net.Http.Headers.MediaTypeHeaderValue)">
+            <inheritdoc />
+            <remarks>
+            Performs comparisons based on the arguments' quality values
+            (aka their "q-value"). Values with identical q-values are considered equal (i.e. the result is 0)
+            with the exception that suffixed subtype wildcards are considered less than subtype wildcards, subtype wildcards
+            are considered less than specific media types and full wildcards are considered less than
+            subtype wildcards. This allows callers to sort a sequence of <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> following
+            their q-values in the order of specific media types, subtype wildcards, and last any full wildcards.
+            </remarks>
+            <example>
+            If we had a list of media types (comma separated): { text/*;q=0.8, text/*+json;q=0.8, */*;q=1, */*;q=0.8, text/plain;q=0.8 }
+            Sorting them using Compare would return: { */*;q=0.8, text/*;q=0.8, text/*+json;q=0.8, text/plain;q=0.8, */*;q=1 }
+            </example>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.NameValueHeaderValue">
+            <summary>
+            Represents a name/value pair used in various headers as defined in RFC 2616.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/>.
+            </summary>
+            <param name="name">The header name.</param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/>.
+            </summary>
+            <param name="name">The header name.</param>
+            <param name="value">The header value.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.NameValueHeaderValue.Name">
+            <summary>
+            Gets the header name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.NameValueHeaderValue.Value">
+            <summary>
+            Gets or sets the header value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.NameValueHeaderValue.IsReadOnly">
+            <summary>
+            Gets a value that determines if this header is read only.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.Copy">
+            <summary>
+            Provides a copy of this object without the cost of re-validating the values.
+            </summary>
+            <returns>A copy.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.CopyAsReadOnly">
+            <summary>
+            Provides a copy of this instance while making it immutable.
+            </summary>
+            <returns>The readonly <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.GetUnescapedValue">
+            <summary>
+            If the value is a quoted-string as defined by <see href="https://tools.ietf.org/html/rfc7230#section-3.2.6">the RFC specification</see>,
+            removes quotes and unescapes backslashes and quotes.
+            </summary>
+            <returns>An unescaped version of <see cref="P:Microsoft.Net.Http.Headers.NameValueHeaderValue.Value"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.SetAndEscapeValue(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Sets <see cref="P:Microsoft.Net.Http.Headers.NameValueHeaderValue.Value"/> after it has been quoted as defined by <see href="https://tools.ietf.org/html/rfc7230#section-3.2.6">the RFC specification</see>.
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/> value.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.NameValueHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.ParseList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/> values.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.ParseStrictList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/> values using string parsing rules.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.TryParseList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.NameValueHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/>.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.TryParseStrictList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.NameValueHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/> using string parsing rules.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.NameValueHeaderValue.Find(System.Collections.Generic.IList{Microsoft.Net.Http.Headers.NameValueHeaderValue},Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Finds a <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue"/> with the specified <paramref name="name"/>.
+            </summary>
+            <param name="values">The collection to search.</param>
+            <param name="name">The name to find.</param>
+            <returns>The <see cref="T:Microsoft.Net.Http.Headers.NameValueHeaderValue" /> if found, otherwise <see langword="null" />.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.RangeConditionHeaderValue">
+            <summary>
+            Represents an <c>If-Range</c> header value which can either be a date/time or an entity-tag value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.#ctor(System.DateTimeOffset)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.RangeConditionHeaderValue"/>.
+            </summary>
+            <param name="lastModified">A date value used to initialize the new instance.</param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.#ctor(Microsoft.Net.Http.Headers.EntityTagHeaderValue)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.RangeConditionHeaderValue"/>.
+            </summary>
+            <param name="entityTag">An entity tag uniquely representing the requested resource.</param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.RangeConditionHeaderValue"/>.
+            </summary>
+            <param name="entityTag">An entity tag uniquely representing the requested resource.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.LastModified">
+            <summary>
+            Gets the LastModified date from header.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.EntityTag">
+            <summary>
+            Gets the <see cref="T:Microsoft.Net.Http.Headers.EntityTagHeaderValue"/> from header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.RangeConditionHeaderValue"/> value.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeConditionHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.RangeConditionHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.RangeConditionHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.RangeConditionHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.RangeHeaderValue">
+            <summary>
+            Represents a <c>Range</c> header value.
+            <para>
+            The <see cref="T:Microsoft.Net.Http.Headers.RangeHeaderValue"/> class provides support for the Range header as defined in
+            <see href="https://tools.ietf.org/html/rfc2616">RFC 2616</see>.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeHeaderValue.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.RangeHeaderValue"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeHeaderValue.#ctor(System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.RangeHeaderValue"/>.
+            </summary>
+            <param name="from">The position at which to start sending data.</param>
+            <param name="to">The position at which to stop sending data.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.RangeHeaderValue.Unit">
+            <summary>
+            Gets or sets the unit from the header.
+            </summary>
+            <value>Defaults to <c>bytes</c>.</value>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.RangeHeaderValue.Ranges">
+            <summary>
+            Gets the ranges specified in the header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeHeaderValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.RangeHeaderValue"/> value.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.RangeHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.RangeHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.RangeHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.RangeItemHeaderValue">
+            <summary>
+            Represents a byte range in a Range header value.
+            <para>
+            The <see cref="T:Microsoft.Net.Http.Headers.RangeItemHeaderValue"/> class provides support for a byte range in a <c>Range</c> as defined
+            in <see href="https://tools.ietf.org/html/rfc2616">RFC 2616</see>.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeItemHeaderValue.#ctor(System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Net.Http.Headers.RangeItemHeaderValue"/> class.
+            </summary>
+            <param name="from">The position at which to start sending data.</param>
+            <param name="to">The position at which to stop sending data.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.RangeItemHeaderValue.From">
+            <summary>
+            Gets the position at which to start sending data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.RangeItemHeaderValue.To">
+            <summary>
+            Gets the position at which to stop sending data.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeItemHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeItemHeaderValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.RangeItemHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.SameSiteMode">
+            <summary>
+            Indicates if the client should include a cookie on "same-site" or "cross-site" requests.
+            RFC Draft: <see href="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-4.1.1"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.SameSiteMode.Unspecified">
+            <summary>No SameSite field will be set, the client should follow its default cookie policy.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.SameSiteMode.None">
+            <summary>Indicates the client should disable same-site restrictions.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.SameSiteMode.Lax">
+            <summary>Indicates the client should send the cookie with "same-site" requests, and with "cross-site" top-level navigations.</summary>
+        </member>
+        <member name="F:Microsoft.Net.Http.Headers.SameSiteMode.Strict">
+            <summary>Indicates the client should only send the cookie with "same-site" requests.</summary>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue">
+            <summary>
+            Represents the <c>Set-Cookie</c> header.
+            <para>
+            See http://tools.ietf.org/html/rfc6265 for the Set-Cookie header specification.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/>.
+            </summary>
+            <param name="name">The cookie name.</param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/>.
+            </summary>
+            <param name="name">The cookie name.</param>
+            <param name="value">The cookie value.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.Name">
+            <summary>
+            Gets or sets the cookie name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.Value">
+            <summary>
+            Gets or sets the cookie value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.Expires">
+            <summary>
+            Gets or sets a value for the <c>Expires</c> cookie attribute.
+            <para>
+            The Expires attribute indicates the maximum lifetime of the cookie,
+            represented as the date and time at which the cookie expires.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc6265#section-4.1.2.1"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.MaxAge">
+            <summary>
+            Gets or sets a value for the <c>Max-Age</c> cookie attribute.
+            <para>
+            The Max-Age attribute indicates the maximum lifetime of the cookie,
+            represented as the number of seconds until the cookie expires.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc6265#section-4.1.2.2"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.Domain">
+            <summary>
+            Gets or sets a value for the <c>Domain</c> cookie attribute.
+            <para>
+            The Domain attribute specifies those hosts to which the cookie will
+            be sent.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc6265#section-4.1.2.3"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.Path">
+            <summary>
+            Gets or sets a value for the <c>Path</c> cookie attribute.
+            <para>
+            The path attribute specifies those hosts to which the cookie will
+            be sent.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc6265#section-4.1.2.4"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.Secure">
+            <summary>
+            Gets or sets a value for the <c>Secure</c> cookie attribute.
+            <para>
+            The Secure attribute limits the scope of the cookie to "secure"
+            channels.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc6265#section-4.1.2.5"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.SameSite">
+            <summary>
+            Gets or sets a value for the <c>SameSite</c> cookie attribute.
+            <para>
+            "SameSite" cookies offer a robust defense against CSRF attack when
+            deployed in strict mode, and when supported by the client.
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-05#section-8.8"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.HttpOnly">
+            <summary>
+            Gets or sets a value for the <c>HttpOnly</c> cookie attribute.
+            <para>
+            HttpOnly instructs the user agent to
+            omit the cookie when providing access to cookies via "non-HTTP" APIs
+            (such as a web browser API that exposes cookies to scripts).
+            </para>
+            </summary>
+            <remarks>See <see href="https://tools.ietf.org/html/rfc6265#section-4.1.2.6"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.SetCookieHeaderValue.Extensions">
+            <summary>
+            Gets a collection of additional values to append to the cookie.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.AppendToStringBuilder(System.Text.StringBuilder)">
+            <summary>
+            Append string representation of this <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/> to given
+            <paramref name="builder"/>.
+            </summary>
+            <param name="builder">
+            The <see cref="T:System.Text.StringBuilder"/> to receive the string representation of this
+            <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/>.
+            </param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/> value.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.SetCookieHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.ParseList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/> values.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.ParseStrictList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/> values using string parsing rules.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.TryParseList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.SetCookieHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/>.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.TryParseStrictList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.SetCookieHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.SetCookieHeaderValue"/> using string parsing rules.
+            </summary>
+            <param name="inputs">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.SetCookieHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue">
+            <summary>
+            A string header value with an optional quality.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>.
+            </summary>
+            <param name="value">The <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> used to initialize the new instance.</param>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.#ctor(Microsoft.Extensions.Primitives.StringSegment,System.Double)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>.
+            </summary>
+            <param name="value">The <see cref="T:Microsoft.Extensions.Primitives.StringSegment"/> used to initialize the new instance.</param>
+            <param name="quality">The quality factor.</param>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.Value">
+            <summary>
+            Gets the string header value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.Quality">
+            <summary>
+            Gets the quality factor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.Parse(Microsoft.Extensions.Primitives.StringSegment)">
+            <summary>
+            Parses the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <returns>The parsed value.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.TryParse(Microsoft.Extensions.Primitives.StringSegment,Microsoft.Net.Http.Headers.StringWithQualityHeaderValue@)">
+            <summary>
+            Attempts to parse the specified <paramref name="input"/> as a <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>.
+            </summary>
+            <param name="input">The value to parse.</param>
+            <param name="parsedValue">The parsed value.</param>
+            <returns><see langword="true"/> if input is a valid <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.ParseList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/> values.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.ParseStrictList(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a sequence of inputs as a sequence of <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/> values using string parsing rules.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <returns>The parsed values.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.TryParseList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.StringWithQualityHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue.TryParseStrictList(System.Collections.Generic.IList{System.String},System.Collections.Generic.IList{Microsoft.Net.Http.Headers.StringWithQualityHeaderValue}@)">
+            <summary>
+            Attempts to parse the sequence of values as a sequence of <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/> using string parsing rules.
+            </summary>
+            <param name="input">The values to parse.</param>
+            <param name="parsedValues">The parsed values.</param>
+            <returns><see langword="true"/> if all inputs are valid <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValueComparer">
+            <summary>
+            Implementation of <see cref="T:System.Collections.Generic.IComparer`1"/> that can compare content negotiation header fields
+            based on their quality values (a.k.a q-values). This applies to values used in accept-charset,
+            accept-encoding, accept-language and related header fields with similar syntax rules. See
+            <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValueComparer"/> for a comparer for media type
+            q-values.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Net.Http.Headers.StringWithQualityHeaderValueComparer.QualityComparer">
+            <summary>
+            Gets the default instance of <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValueComparer"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Net.Http.Headers.StringWithQualityHeaderValueComparer.Compare(Microsoft.Net.Http.Headers.StringWithQualityHeaderValue,Microsoft.Net.Http.Headers.StringWithQualityHeaderValue)">
+            <summary>
+            Compares two <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/> based on their quality value
+            (a.k.a their "q-value").
+            Values with identical q-values are considered equal (i.e the result is 0) with the exception of wild-card
+            values (i.e. a value of "*") which are considered less than non-wild-card values. This allows to sort
+            a sequence of <see cref="T:Microsoft.Net.Http.Headers.StringWithQualityHeaderValue"/> following their q-values ending up with any
+            wild-cards at the end.
+            </summary>
+            <param name="stringWithQuality1">The first value to compare.</param>
+            <param name="stringWithQuality2">The second value to compare</param>
+            <returns>The result of the comparison.</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,866 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Mvc.Formatters.Xml</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerable`2">
+            <summary>
+            Serializes <see cref="T:System.Collections.Generic.IEnumerable`1"/> types by delegating them through a concrete implementation.
+            </summary>
+            <typeparam name="TWrapped">The wrapping or original type of the <see cref="T:System.Collections.Generic.IEnumerable`1"/>
+            to proxy.</typeparam>
+            <typeparam name="TDeclared">The type parameter of the original <see cref="T:System.Collections.Generic.IEnumerable`1"/>
+            to proxy.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerable`2.#ctor">
+            <summary>
+            Initializes a <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerable`2"/>.
+            </summary>
+            <remarks>
+            This constructor is necessary for <see cref="T:System.Runtime.Serialization.DataContractSerializer"/>
+            to serialize.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerable`2.#ctor(System.Collections.Generic.IEnumerable{`1},Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider)">
+            <summary>
+            Initializes a <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerable`2"/> with the original
+             <see cref="T:System.Collections.Generic.IEnumerable`1"/> and the wrapper provider for wrapping individual elements.
+            </summary>
+            <param name="source">The <see cref="T:System.Collections.Generic.IEnumerable`1"/> instance to get the enumerator from.</param>
+            <param name="elementWrapperProvider">The wrapper provider for wrapping individual elements.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerable`2.GetEnumerator">
+            <summary>
+            Gets a delegating enumerator of the original <see cref="T:System.Collections.Generic.IEnumerable`1"/> source which is being
+            wrapped.
+            </summary>
+            <returns>The delegating enumerator of the original <see cref="T:System.Collections.Generic.IEnumerable`1"/> source.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerable`2.Add(System.Object)">
+            <summary>
+            The serializer requires every type it encounters can be serialized and deserialized.
+            This type will never be used for deserialization, but we are required to implement the add
+            method so that the type can be serialized. This will never be called.
+            </summary>
+            <param name="item">The item to add.</param>
+            <exception cref="T:System.NotImplementedException">Thrown unconditionally.</exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerable`2.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets a delegating enumerator of the original <see cref="T:System.Collections.Generic.IEnumerable`1"/> source which is being
+            wrapped.
+            </summary>
+            <returns>The delegating enumerator of the original <see cref="T:System.Collections.Generic.IEnumerable`1"/> source.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerator`2">
+            <summary>
+            Delegates enumeration of elements to the original enumerator and wraps the items
+            with the supplied <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/>.
+            </summary>
+            <typeparam name="TWrapped">The type to which the individual elements need to be wrapped to.</typeparam>
+            <typeparam name="TDeclared">The original type of the element being wrapped.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerator`2.#ctor(System.Collections.Generic.IEnumerator{`1},Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider)">
+            <summary>
+            Initializes a <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerable`2"/> which enumerates
+            over the elements of the original enumerator and wraps them using the supplied
+            <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/>.
+            </summary>
+            <param name="inner">The original enumerator.</param>
+            <param name="wrapperProvider">The wrapper provider to wrap individual elements.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerator`2.Current">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerator`2.System#Collections#IEnumerator#Current">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerator`2.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerator`2.MoveNext">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.DelegatingEnumerator`2.Reset">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProvider">
+            <summary>
+            Provides a <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/> for interface types which implement
+            <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProvider.#ctor(System.Type,Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider)">
+            <summary>
+            Initializes an instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProvider"/>.
+            </summary>
+            <param name="sourceEnumerableOfT">Type of the original <see cref="T:System.Collections.Generic.IEnumerable`1" />
+            that is being wrapped.</param>
+            <param name="elementWrapperProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/> for the element type.
+            Can be null.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProvider.WrappingType">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProvider.Wrap(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProviderFactory">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProvider"/> for interface types implementing the
+            <see cref="T:System.Collections.Generic.IEnumerable`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProviderFactory.#ctor(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory})">
+            <summary>
+            Initializes an <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProviderFactory"/> with a list
+            <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory"/>.
+            </summary>
+            <param name="wrapperProviderFactories">List of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProviderFactory.GetProvider(Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext)">
+            <summary>
+            Gets an <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProvider"/> for the provided context.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext"/>.</param>
+            <returns>An instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.EnumerableWrapperProvider"/> if the declared type is
+            an interface and implements <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.FormattingUtilities">
+            <summary>
+            Contains methods which are used by Xml input formatters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.FormattingUtilities.GetDefaultXmlReaderQuotas">
+            <summary>
+            Gets the default Reader Quotas for XmlReader.
+            </summary>
+            <returns>XmlReaderQuotas with default values</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.FormattingUtilities.GetDefaultXmlWriterSettings">
+            <summary>
+            Gets the default XmlWriterSettings.
+            </summary>
+            <returns>Default <see cref="T:System.Xml.XmlWriterSettings"/></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IUnwrappable">
+            <summary>
+            Defines an interface for objects to be un-wrappable after deserialization.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.IUnwrappable.Unwrap(System.Type)">
+            <summary>
+            Unwraps an object.
+            </summary>
+            <param name="declaredType">The type to which the object should be un-wrapped to.</param>
+            <returns>The un-wrapped object.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider">
+            <summary>
+            Defines an interface for wrapping objects for serialization or deserialization into xml.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider.WrappingType">
+            <summary>
+            Gets the wrapping type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider.Wrap(System.Object)">
+            <summary>
+            Wraps the given object to the wrapping type provided by <see cref="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider.WrappingType"/>.
+            </summary>
+            <param name="original">The original non-wrapped object.</param>
+            <returns>Returns a wrapped object.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory">
+            <summary>
+            Create a <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/> given a <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory.GetProvider(Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext)">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/> for the provided context.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext"/>.</param>
+            <returns>A wrapping provider if the factory decides to wrap the type, else <c>null</c>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions">
+            <summary>
+            Provides configuration for XML formatters.
+            </summary>
+            <remarks>This class is currently empty.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper">
+            <summary>
+            Wrapper class for <see cref="T:Microsoft.AspNetCore.Mvc.ProblemDetails"/> to enable it to be serialized by the xml formatters.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper.EmptyKey">
+            <summary>
+            Key used to represent dictionary elements with empty keys
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper.#ctor(Microsoft.AspNetCore.Mvc.ProblemDetails)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper.GetSchema">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper.ReadXml(System.Xml.XmlReader)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper.ReadValue(System.Xml.XmlReader,System.String)">
+            <summary>
+            Reads the value for the specified <paramref name="name"/> from the <paramref name="reader"/>.
+            </summary>
+            <param name="reader">The <see cref="T:System.Xml.XmlReader"/>.</param>
+            <param name="name">The name of the node.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ProblemDetailsWrapper.WriteXml(System.Xml.XmlWriter)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper">
+            <summary>
+            Wrapper class for <see cref="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.SerializableError"/> to enable it to be serialized by the xml formatters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.#ctor">
+            <summary>
+            Initializes a new <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.#ctor(Microsoft.AspNetCore.Mvc.SerializableError)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper"/> class.
+            </summary>
+            <param name="error">The <see cref="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.SerializableError"/> object that needs to be wrapped.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.SerializableError">
+            <summary>
+            Gets the wrapped object which is serialized/deserialized into XML
+            representation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.GetSchema">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.ReadXml(System.Xml.XmlReader)">
+            <summary>
+            Generates a <see cref="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.SerializableError"/> object from its XML representation.
+            </summary>
+            <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.WriteXml(System.Xml.XmlWriter)">
+            <summary>
+            Converts the wrapped <see cref="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.SerializableError"/> object into its XML representation.
+            </summary>
+            <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapper.Unwrap(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapperProvider">
+            <summary>
+            Wraps the object of type <see cref="T:Microsoft.AspNetCore.Mvc.SerializableError"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapperProvider.WrappingType">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapperProvider.Wrap(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapperProviderFactory">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/> for the type <see cref="T:Microsoft.AspNetCore.Mvc.SerializableError"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapperProviderFactory.GetProvider(Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapperProvider"/> if the provided
+            <paramref name="context"/>'s <see cref="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext.DeclaredType"/> is
+            <see cref="T:Microsoft.AspNetCore.Mvc.SerializableError"/>.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext"/>.</param>
+            <returns>
+            An instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.SerializableErrorWrapperProvider"/> if the provided <paramref name="context"/>'s
+            <see cref="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext.DeclaredType"/> is
+            <see cref="T:Microsoft.AspNetCore.Mvc.SerializableError"/>; otherwise <c>null</c>.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.ValidationProblemDetailsWrapper">
+            <summary>
+            Wrapper class for <see cref="T:Microsoft.AspNetCore.Mvc.ValidationProblemDetails"/> to enable it to be serialized by the xml formatters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ValidationProblemDetailsWrapper.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.ValidationProblemDetailsWrapper"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ValidationProblemDetailsWrapper.#ctor(Microsoft.AspNetCore.Mvc.ValidationProblemDetails)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.ValidationProblemDetailsWrapper"/> for the specified
+            <paramref name="problemDetails"/>.
+            </summary>
+            <param name="problemDetails">The <see cref="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.ValidationProblemDetailsWrapper.ProblemDetails"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ValidationProblemDetailsWrapper.ReadValue(System.Xml.XmlReader,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.ValidationProblemDetailsWrapper.WriteXml(System.Xml.XmlWriter)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext">
+            <summary>
+            The context used by an <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/> to wrap or un-wrap types.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext.#ctor(System.Type,System.Boolean)">
+            <summary>
+            Initializes a <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext"/>.
+            </summary>
+            <param name="declaredType">The declared type of the object that needs to be wrapped.</param>
+            <param name="isSerialization"><see langword="true"/> if the wrapper provider is invoked during
+            serialization, otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext.DeclaredType">
+            <summary>
+            The declared type which could be wrapped/un-wrapped by a different type
+            during serialization or deserialization.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext.IsSerialization">
+            <summary>
+            <see langword="true"/> if a wrapper provider is invoked during serialization,
+            <see langword="false"/> otherwise.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderFactoriesExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderFactoriesExtensions.GetWrapperProvider(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory},Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext)">
+            <summary>
+            Gets an instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/> for the supplied
+            type.
+            </summary>
+            <param name="wrapperProviderFactories">A list of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory"/>.</param>
+            <param name="wrapperProviderContext">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.WrapperProviderContext"/>.</param>
+            <returns>An instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/> if there is a wrapping provider for the
+            supplied type, else null.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.Resources.EnumerableWrapperProvider_InvalidSourceEnumerableOfT">
+            <summary>The type must be an interface and must be or derive from '{0}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.Resources.FormatEnumerableWrapperProvider_InvalidSourceEnumerableOfT(System.Object)">
+            <summary>The type must be an interface and must be or derive from '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.Resources.ErrorDeserializingInputData">
+            <summary>An error occurred while deserializing input data.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.Resources.RequiredProperty_MustHaveDataMemberRequired">
+            <summary>{0} does not recognize '{1}', so instead use '{2}' with '{3}' set to '{4}' for value type property '{5}' on type '{6}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.Resources.FormatRequiredProperty_MustHaveDataMemberRequired(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>{0} does not recognize '{1}', so instead use '{2}' with '{3}' set to '{4}' for value type property '{5}' on type '{6}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.Xml.Resources.WrapperProvider_MismatchType">
+            <summary>The object to be wrapped must be of type '{0}' but was of type '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.Xml.Resources.FormatWrapperProvider_MismatchType(System.Object,System.Object)">
+            <summary>The object to be wrapped must be of type '{0}' but was of type '{1}'.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter">
+            <summary>
+            This class handles deserialization of input XML data
+            to strongly-typed objects using <see cref="T:System.Runtime.Serialization.DataContractSerializer"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.#ctor(Microsoft.AspNetCore.Mvc.MvcOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.WrapperProviderFactories">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory"/> to
+            provide the wrapping type for de-serialization.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.MaxDepth">
+            <summary>
+            Indicates the acceptable input XML depth.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.XmlDictionaryReaderQuotas">
+            <summary>
+            The quotas include - DefaultMaxDepth, DefaultMaxStringContentLength, DefaultMaxArrayLength,
+            DefaultMaxBytesPerRead, DefaultMaxNameTableCharCount
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.SerializerSettings">
+            <summary>
+            Gets or sets the <see cref="T:System.Runtime.Serialization.DataContractSerializerSettings"/> used to configure the
+            <see cref="T:System.Runtime.Serialization.DataContractSerializer"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.ExceptionPolicy">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.ReadRequestBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.InputFormatterContext,System.Text.Encoding)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.CanReadType(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.CreateXmlReader(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Called during deserialization to get the <see cref="T:System.Xml.XmlReader"/>.
+            </summary>
+            <param name="readStream">The <see cref="T:System.IO.Stream"/> from which to read.</param>
+            <param name="encoding">The <see cref="T:System.Text.Encoding"/> used to read the stream.</param>
+            <returns>The <see cref="T:System.Xml.XmlReader"/> used during deserialization.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.GetSerializableType(System.Type)">
+            <summary>
+            Gets the type to which the XML will be deserialized.
+            </summary>
+            <param name="declaredType">The declared type.</param>
+            <returns>The type to which the XML will be deserialized.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.CreateSerializer(System.Type)">
+            <summary>
+            Called during deserialization to get the <see cref="T:System.Runtime.Serialization.DataContractSerializer"/>.
+            </summary>
+            <param name="type">The type of object for which the serializer should be created.</param>
+            <returns>The <see cref="T:System.Runtime.Serialization.DataContractSerializer"/> used during deserialization.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerInputFormatter.GetCachedSerializer(System.Type)">
+            <summary>
+            Gets the cached serializer or creates and caches the serializer for the given type.
+            </summary>
+            <returns>The <see cref="T:System.Runtime.Serialization.DataContractSerializer"/> instance.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter">
+            <summary>
+            This class handles serialization of objects
+            to XML using <see cref="T:System.Runtime.Serialization.DataContractSerializer"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter"/>
+            with default <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter"/>
+            with default <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.#ctor(System.Xml.XmlWriterSettings)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter"/>.
+            </summary>
+            <param name="writerSettings">The settings to be used by the <see cref="T:System.Runtime.Serialization.DataContractSerializer"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.#ctor(System.Xml.XmlWriterSettings,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter"/>.
+            </summary>
+            <param name="writerSettings">The settings to be used by the <see cref="T:System.Runtime.Serialization.DataContractSerializer"/>.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.WrapperProviderFactories">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory"/> to
+            provide the wrapping type for serialization.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.WriterSettings">
+            <summary>
+            Gets the settings to be used by the XmlWriter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.SerializerSettings">
+            <summary>
+            Gets or sets the <see cref="T:System.Runtime.Serialization.DataContractSerializerSettings"/> used to configure the
+            <see cref="T:System.Runtime.Serialization.DataContractSerializer"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.GetSerializableType(System.Type)">
+            <summary>
+            Gets the type to be serialized.
+            </summary>
+            <param name="type">The original type to be serialized</param>
+            <returns>The original or wrapped type provided by any <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/>s.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.CanWriteType(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.CreateSerializer(System.Type)">
+            <summary>
+            Create a new instance of <see cref="T:System.Runtime.Serialization.DataContractSerializer"/> for the given object type.
+            </summary>
+            <param name="type">The type of object for which the serializer should be created.</param>
+            <returns>A new instance of <see cref="T:System.Runtime.Serialization.DataContractSerializer"/></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.CreateXmlWriter(System.IO.TextWriter,System.Xml.XmlWriterSettings)">
+            <summary>
+            Creates a new instance of <see cref="T:System.Xml.XmlWriter"/> using the given <see cref="T:System.IO.TextWriter"/> and
+            <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+            <param name="writer">
+            The underlying <see cref="T:System.IO.TextWriter"/> which the <see cref="T:System.Xml.XmlWriter"/> should write to.
+            </param>
+            <param name="xmlWriterSettings">
+            The <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </param>
+            <returns>A new instance of <see cref="T:System.Xml.XmlWriter"/></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.CreateXmlWriter(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.IO.TextWriter,System.Xml.XmlWriterSettings)">
+            <summary>
+            Creates a new instance of <see cref="T:System.Xml.XmlWriter"/> using the given <see cref="T:System.IO.TextWriter"/> and
+            <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+            <param name="context">The formatter context associated with the call.</param>
+            <param name="writer">
+            The underlying <see cref="T:System.IO.TextWriter"/> which the <see cref="T:System.Xml.XmlWriter"/> should write to.
+            </param>
+            <param name="xmlWriterSettings">
+            The <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </param>
+            <returns>A new instance of <see cref="T:System.Xml.XmlWriter"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.WriteResponseBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.Text.Encoding)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlDataContractSerializerOutputFormatter.GetCachedSerializer(System.Type)">
+            <summary>
+            Gets the cached serializer or creates and caches the serializer for the given type.
+            </summary>
+            <returns>The <see cref="T:System.Runtime.Serialization.DataContractSerializer"/> instance.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter">
+            <summary>
+            This class handles deserialization of input XML data
+            to strongly-typed objects using <see cref="T:System.Xml.Serialization.XmlSerializer"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.#ctor(Microsoft.AspNetCore.Mvc.MvcOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.WrapperProviderFactories">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory"/> to
+            provide the wrapping type for de-serialization.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.MaxDepth">
+            <summary>
+            Indicates the acceptable input XML depth.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.XmlDictionaryReaderQuotas">
+            <summary>
+            The quotas include - DefaultMaxDepth, DefaultMaxStringContentLength, DefaultMaxArrayLength,
+            DefaultMaxBytesPerRead, DefaultMaxNameTableCharCount
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.ExceptionPolicy">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.ReadRequestBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.InputFormatterContext,System.Text.Encoding)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.CanReadType(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.GetSerializableType(System.Type)">
+            <summary>
+            Gets the type to which the XML will be deserialized.
+            </summary>
+            <param name="declaredType">The declared type.</param>
+            <returns>The type to which the XML will be deserialized.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.CreateXmlReader(System.IO.Stream,System.Text.Encoding,System.Type)">
+            <summary>
+            Called during deserialization to get the <see cref="T:System.Xml.XmlReader"/>.
+            </summary>
+            <param name="readStream">The <see cref="T:System.IO.Stream"/> from which to read.</param>
+            <param name="encoding">The <see cref="T:System.Text.Encoding"/> used to read the stream.</param>
+            <param name="type">The <see cref="T:System.Type"/> that is to be deserialized.</param>
+            <returns>The <see cref="T:System.Xml.XmlReader"/> used during deserialization.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.CreateXmlReader(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Called during deserialization to get the <see cref="T:System.Xml.XmlReader"/>.
+            </summary>
+            <param name="readStream">The <see cref="T:System.IO.Stream"/> from which to read.</param>
+            <param name="encoding">The <see cref="T:System.Text.Encoding"/> used to read the stream.</param>
+            <returns>The <see cref="T:System.Xml.XmlReader"/> used during deserialization.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.CreateSerializer(System.Type)">
+            <summary>
+            Called during deserialization to get the <see cref="T:System.Xml.Serialization.XmlSerializer"/>.
+            </summary>
+            <returns>The <see cref="T:System.Xml.Serialization.XmlSerializer"/> used during deserialization.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerInputFormatter.GetCachedSerializer(System.Type)">
+            <summary>
+            Gets the cached serializer or creates and caches the serializer for the given type.
+            </summary>
+            <returns>The <see cref="T:System.Xml.Serialization.XmlSerializer"/> instance.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter">
+            <summary>
+            This class handles serialization of objects
+            to XML using <see cref="T:System.Xml.Serialization.XmlSerializer"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter"/>
+            with default <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter"/>
+            with default <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.#ctor(System.Xml.XmlWriterSettings)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter"/>.
+            </summary>
+            <param name="writerSettings">The settings to be used by the <see cref="T:System.Xml.Serialization.XmlSerializer"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.#ctor(System.Xml.XmlWriterSettings,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter"/>
+            </summary>
+            <param name="writerSettings">The settings to be used by the <see cref="T:System.Xml.Serialization.XmlSerializer"/>.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.WrapperProviderFactories">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProviderFactory"/> to
+            provide the wrapping type for serialization.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.WriterSettings">
+            <summary>
+            Gets the settings to be used by the XmlWriter.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.GetSerializableType(System.Type)">
+            <summary>
+            Gets the type to be serialized.
+            </summary>
+            <param name="type">The original type to be serialized</param>
+            <returns>The original or wrapped type provided by any <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.IWrapperProvider"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.CanWriteType(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.CreateSerializer(System.Type)">
+            <summary>
+            Create a new instance of <see cref="T:System.Xml.Serialization.XmlSerializer"/> for the given object type.
+            </summary>
+            <param name="type">The type of object for which the serializer should be created.</param>
+            <returns>A new instance of <see cref="T:System.Xml.Serialization.XmlSerializer"/></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.CreateXmlWriter(System.IO.TextWriter,System.Xml.XmlWriterSettings)">
+            <summary>
+            Creates a new instance of <see cref="T:System.Xml.XmlWriter"/> using the given <see cref="T:System.IO.TextWriter"/> and
+            <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+            <param name="writer">
+            The underlying <see cref="T:System.IO.TextWriter"/> which the <see cref="T:System.Xml.XmlWriter"/> should write to.
+            </param>
+            <param name="xmlWriterSettings">
+            The <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </param>
+            <returns>A new instance of <see cref="T:System.Xml.XmlWriter"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.CreateXmlWriter(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.IO.TextWriter,System.Xml.XmlWriterSettings)">
+            <summary>
+            Creates a new instance of <see cref="T:System.Xml.XmlWriter"/> using the given <see cref="T:System.IO.TextWriter"/> and
+            <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </summary>
+            <param name="context">The formatter context associated with the call.</param>
+            <param name="writer">
+            The underlying <see cref="T:System.IO.TextWriter"/> which the <see cref="T:System.Xml.XmlWriter"/> should write to.
+            </param>
+            <param name="xmlWriterSettings">
+            The <see cref="T:System.Xml.XmlWriterSettings"/>.
+            </param>
+            <returns>A new instance of <see cref="T:System.Xml.XmlWriter"/></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.WriteResponseBodyAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext,System.Text.Encoding)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.Serialize(System.Xml.Serialization.XmlSerializer,System.Xml.XmlWriter,System.Object)">
+            <summary>
+            Serializes value using the passed in <paramref name="xmlSerializer"/> and <paramref name="xmlWriter"/>.
+            </summary>
+            <param name="xmlSerializer">The serializer used to serialize the <paramref name="value"/>.</param>
+            <param name="xmlWriter">The writer used by the serializer <paramref name="xmlSerializer"/>
+            to serialize the <paramref name="value"/>.</param>
+            <param name="value">The value to be serialized.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Formatters.XmlSerializerOutputFormatter.GetCachedSerializer(System.Type)">
+            <summary>
+            Gets the cached serializer or creates and caches the serializer for the given type.
+            </summary>
+            <returns>The <see cref="T:System.Xml.Serialization.XmlSerializer"/> instance.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.DataMemberRequiredBindingMetadataProvider">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.IBindingMetadataProvider"/> for <see cref="P:System.Runtime.Serialization.DataMemberAttribute.IsRequired"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.DataMemberRequiredBindingMetadataProvider.CreateBindingMetadata(Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.BindingMetadataProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcXmlMvcBuilderExtensions">
+            <summary>
+            Extension methods for adding XML formatters to MVC.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcBuilderExtensions.AddXmlOptions(Microsoft.Extensions.DependencyInjection.IMvcBuilder,System.Action{Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions})">
+            <summary>
+            Adds configuration of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions"/> for the application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <param name="setupAction">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions"/> which need to be configured.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcBuilderExtensions.AddXmlDataContractSerializerFormatters(Microsoft.Extensions.DependencyInjection.IMvcBuilder)">
+            <summary>
+            Adds the XML DataContractSerializer formatters to MVC.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcBuilderExtensions.AddXmlDataContractSerializerFormatters(Microsoft.Extensions.DependencyInjection.IMvcBuilder,System.Action{Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions})">
+            <summary>
+            Adds the XML DataContractSerializer formatters to MVC.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <param name="setupAction">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions"/> which need to be configured.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcBuilderExtensions.AddXmlSerializerFormatters(Microsoft.Extensions.DependencyInjection.IMvcBuilder)">
+            <summary>
+            Adds the XML Serializer formatters to MVC.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcBuilderExtensions.AddXmlSerializerFormatters(Microsoft.Extensions.DependencyInjection.IMvcBuilder,System.Action{Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions})">
+            <summary>
+            Adds the XML Serializer formatters to MVC.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <param name="setupAction">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions"/> which need to be configured.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcXmlMvcCoreBuilderExtensions">
+            <summary>
+            Extension methods for adding XML formatters to MVC.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcCoreBuilderExtensions.AddXmlOptions(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Action{Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions})">
+            <summary>
+            Adds configuration of <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions"/> for the application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <param name="setupAction">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions"/> which need to be configured.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcCoreBuilderExtensions.AddXmlDataContractSerializerFormatters(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)">
+            <summary>
+            Adds the XML DataContractSerializer formatters to MVC.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcCoreBuilderExtensions.AddXmlDataContractSerializerFormatters(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Action{Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions})">
+            <summary>
+            Adds the XML DataContractSerializer formatters to MVC.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <param name="setupAction">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions"/> which need to be configured.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcCoreBuilderExtensions.AddXmlSerializerFormatters(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)">
+            <summary>
+            Adds the XML Serializer formatters to MVC.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcXmlMvcCoreBuilderExtensions.AddXmlSerializerFormatters(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Action{Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions})">
+            <summary>
+            Adds the XML Serializer formatters to MVC.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <param name="setupAction">The <see cref="T:Microsoft.AspNetCore.Mvc.Formatters.Xml.MvcXmlOptions"/> which need to be configured.</param>
+            /// <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.XmlDataContractSerializerMvcOptionsSetup">
+            <summary>
+            A <see cref="T:Microsoft.Extensions.Options.IConfigureOptions`1"/> implementation which will add the
+            data contract serializer formatters to <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.XmlDataContractSerializerMvcOptionsSetup.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.DependencyInjection.XmlDataContractSerializerMvcOptionsSetup"/>.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.XmlDataContractSerializerMvcOptionsSetup.Configure(Microsoft.AspNetCore.Mvc.MvcOptions)">
+            <summary>
+            Adds the data contract serializer formatters to <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.XmlSerializerMvcOptionsSetup">
+            <summary>
+            A <see cref="T:Microsoft.Extensions.Options.IConfigureOptions`1"/> implementation which will add the
+            XML serializer formatters to <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.XmlSerializerMvcOptionsSetup.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.DependencyInjection.XmlSerializerMvcOptionsSetup"/>.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.XmlSerializerMvcOptionsSetup.Configure(Microsoft.AspNetCore.Mvc.MvcOptions)">
+            <summary>
+            Adds the XML serializer formatters to <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.</param>
+        </member>
+    </members>
+</doc>

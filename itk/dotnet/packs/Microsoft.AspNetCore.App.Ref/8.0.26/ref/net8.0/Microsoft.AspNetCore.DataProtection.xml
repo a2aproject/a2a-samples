@@ -1,0 +1,2339 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.DataProtection</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.DataProtection.ActivatorExtensions">
+            <summary>
+            Extension methods for working with <see cref="T:Microsoft.AspNetCore.DataProtection.Internal.IActivator"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.ActivatorExtensions.CreateInstance``1(Microsoft.AspNetCore.DataProtection.Internal.IActivator,System.String)">
+            <summary>
+            Creates an instance of <paramref name="implementationTypeName"/> and ensures
+            that it is assignable to <typeparamref name="T"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.ActivatorExtensions.GetActivator(System.IServiceProvider)">
+            <summary>
+            Returns a <see cref="T:Microsoft.AspNetCore.DataProtection.Internal.IActivator"/> given an <see cref="T:System.IServiceProvider"/>.
+            Guaranteed to return non-null, even if <paramref name="serviceProvider"/> is null.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.ApplyPolicyAttribute">
+            <summary>
+            Signifies that the <see cref="T:Microsoft.AspNetCore.DataProtection.RegistryPolicyResolver"/> should bind this property from the registry.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.AuthenticatedEncryptorExtensions.PerformSelfTest(Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor)">
+            <summary>
+            Performs a self-test of this encryptor by running a sample payload through an
+            encrypt-then-decrypt operation. Throws if the operation fails.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.AuthenticatedEncryptorFactory">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptorFactory"/> to create an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor"/>
+            based on the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.AuthenticatedEncryptorFactory.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.AuthenticatedEncryptorFactory"/>.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.AuthenticatedEncryptorFactory.CreateEncryptorInstance(Microsoft.AspNetCore.DataProtection.KeyManagement.IKey)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.CngCbcAuthenticatedEncryptorFactory">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptorFactory"/> for <see cref="T:Microsoft.AspNetCore.DataProtection.Cng.CbcAuthenticatedEncryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.CngCbcAuthenticatedEncryptorFactory.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.CngCbcAuthenticatedEncryptorFactory"/>.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.CngCbcAuthenticatedEncryptorFactory.CreateEncryptorInstance(Microsoft.AspNetCore.DataProtection.KeyManagement.IKey)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.CngGcmAuthenticatedEncryptorFactory">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptorFactory"/> for <see cref="T:Microsoft.AspNetCore.DataProtection.Cng.CngGcmAuthenticatedEncryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.CngGcmAuthenticatedEncryptorFactory.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.CngCbcAuthenticatedEncryptorFactory"/>.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.CngGcmAuthenticatedEncryptorFactory.CreateEncryptorInstance(Microsoft.AspNetCore.DataProtection.KeyManagement.IKey)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AlgorithmConfiguration">
+            <summary>
+            A factory for producing <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AlgorithmConfiguration.CreateNewDescriptor">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/> instance based on this
+            configuration. The newly-created instance contains unique key material and is distinct
+            from all other descriptors created by the <see cref="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AlgorithmConfiguration.CreateNewDescriptor"/> method.
+            </summary>
+            <returns>A unique <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration">
+            <summary>
+            Represents a generalized authenticated encryption mechanism.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration.EncryptionAlgorithm">
+            <summary>
+            The algorithm to use for symmetric encryption (confidentiality).
+            </summary>
+            <remarks>
+            The default value is <see cref="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm.AES_256_CBC"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration.ValidationAlgorithm">
+            <summary>
+            The algorithm to use for message authentication (tamper-proofing).
+            </summary>
+            <remarks>
+            The default value is <see cref="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ValidationAlgorithm.HMACSHA256"/>.
+            This property is ignored if <see cref="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration.EncryptionAlgorithm"/> specifies a 'GCM' algorithm.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration.CreateNewDescriptor">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptor">
+            <summary>
+            A descriptor which can create an authenticated encryption system based upon the
+            configuration provided by an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration"/> object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptor.#ctor(Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration,Microsoft.AspNetCore.DataProtection.ISecret)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptor"/>.
+            </summary>
+            <param name="configuration">The <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptor"/>.</param>
+            <param name="masterKey">The master key.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptor.ExportToXml">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer">
+            <summary>
+            A class that can deserialize an <see cref="T:System.Xml.Linq.XElement"/> that represents the serialized version
+            of an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer.ImportFromXml(System.Xml.Linq.XElement)">
+            <summary>
+            Imports the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptor"/> from serialized XML.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration">
+            <summary>
+            Represents a configured authenticated encryption mechanism which uses
+            Windows CNG algorithms in CBC encryption + HMAC authentication modes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration.EncryptionAlgorithm">
+            <summary>
+            The name of the algorithm to use for symmetric encryption.
+            This property corresponds to the 'pszAlgId' parameter of BCryptOpenAlgorithmProvider.
+            This property is required to have a value.
+            </summary>
+            <remarks>
+            The algorithm must support CBC-style encryption and must have a block size of 64 bits
+            or greater.
+            The default value is 'AES'.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration.EncryptionAlgorithmProvider">
+            <summary>
+            The name of the provider which contains the implementation of the symmetric encryption algorithm.
+            This property corresponds to the 'pszImplementation' parameter of BCryptOpenAlgorithmProvider.
+            This property is optional.
+            </summary>
+            <remarks>
+            The default value is null.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration.EncryptionAlgorithmKeySize">
+            <summary>
+            The length (in bits) of the key that will be used for symmetric encryption.
+            This property is required to have a value.
+            </summary>
+            <remarks>
+            The key length must be 128 bits or greater.
+            The default value is 256.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration.HashAlgorithm">
+            <summary>
+            The name of the algorithm to use for hashing data.
+            This property corresponds to the 'pszAlgId' parameter of BCryptOpenAlgorithmProvider.
+            This property is required to have a value.
+            </summary>
+            <remarks>
+            The algorithm must support being opened in HMAC mode and must have a digest length
+            of 128 bits or greater.
+            The default value is 'SHA256'.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration.HashAlgorithmProvider">
+            <summary>
+            The name of the provider which contains the implementation of the hash algorithm.
+            This property corresponds to the 'pszImplementation' parameter of BCryptOpenAlgorithmProvider.
+            This property is optional.
+            </summary>
+            <remarks>
+            The default value is null.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration.CreateNewDescriptor">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration.Microsoft#AspNetCore#DataProtection#AuthenticatedEncryption#ConfigurationModel#IInternalAlgorithmConfiguration#Validate">
+            <summary>
+            Validates that this <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration"/> is well-formed, i.e.,
+            that the specified algorithms actually exist and that they can be instantiated properly.
+            An exception will be thrown if validation fails.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorDescriptor">
+            <summary>
+            A descriptor which can create an authenticated encryption system based upon the
+            configuration provided by an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration"/> object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorDescriptor.#ctor(Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration,Microsoft.AspNetCore.DataProtection.ISecret)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorDescriptor"/>.
+            </summary>
+            <param name="configuration">The <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration"/>.</param>
+            <param name="masterKey">The master key.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorDescriptor.ExportToXml">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorDescriptorDeserializer">
+            <summary>
+            A class that can deserialize an <see cref="T:System.Xml.Linq.XElement"/> that represents the serialized version
+            of an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorDescriptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorDescriptorDeserializer.ImportFromXml(System.Xml.Linq.XElement)">
+            <summary>
+            Imports the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorDescriptor"/> from serialized XML.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration">
+            <summary>
+            Represents a configured authenticated encryption mechanism which uses
+            Windows CNG algorithms in GCM encryption + authentication modes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration.EncryptionAlgorithm">
+            <summary>
+            The name of the algorithm to use for symmetric encryption.
+            This property corresponds to the 'pszAlgId' parameter of BCryptOpenAlgorithmProvider.
+            This property is required to have a value.
+            </summary>
+            <remarks>
+            The algorithm must support GCM-style encryption and must have a block size exactly
+            128 bits.
+            The default value is 'AES'.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration.EncryptionAlgorithmProvider">
+            <summary>
+            The name of the provider which contains the implementation of the symmetric encryption algorithm.
+            This property corresponds to the 'pszImplementation' parameter of BCryptOpenAlgorithmProvider.
+            This property is optional.
+            </summary>
+            <remarks>
+            The default value is null.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration.EncryptionAlgorithmKeySize">
+            <summary>
+            The length (in bits) of the key that will be used for symmetric encryption.
+            This property is required to have a value.
+            </summary>
+            <remarks>
+            The key length must be 128 bits or greater.
+            The default value is 256.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration.CreateNewDescriptor">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration.Microsoft#AspNetCore#DataProtection#AuthenticatedEncryption#ConfigurationModel#IInternalAlgorithmConfiguration#Validate">
+            <summary>
+            Validates that this <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration"/> is well-formed, i.e.,
+            that the specified algorithm actually exists and can be instantiated properly.
+            An exception will be thrown if validation fails.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorDescriptor">
+            <summary>
+            A descriptor which can create an authenticated encryption system based upon the
+            configuration provided by an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration"/> object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorDescriptor.#ctor(Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration,Microsoft.AspNetCore.DataProtection.ISecret)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorDescriptor"/>.
+            </summary>
+            <param name="configuration">The <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration"/>.</param>
+            <param name="masterKey">The master key.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorDescriptor.ExportToXml">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorDescriptorDeserializer">
+            <summary>
+            A class that can deserialize an <see cref="T:System.Xml.Linq.XElement"/> that represents the serialized version
+            of an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorDescriptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorDescriptorDeserializer.ImportFromXml(System.Xml.Linq.XElement)">
+            <summary>
+            Imports the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorDescriptor"/> from serialized XML.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor">
+            <summary>
+            A self-contained descriptor that wraps all information (including secret key
+            material) necessary to create an instance of an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor.ExportToXml">
+            <summary>
+            Exports the current descriptor to XML.
+            </summary>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlSerializedDescriptorInfo"/> wrapping the <see cref="T:System.Xml.Linq.XElement"/> which represents the serialized
+            current descriptor object. The deserializer type must be assignable to <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptorDeserializer"/>.
+            </returns>
+            <remarks>
+            If an element contains sensitive information (such as key material), the
+            element should be marked via the <see cref="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlExtensions.MarkAsRequiresEncryption(System.Xml.Linq.XElement)" />
+            extension method, and the caller should encrypt the element before persisting
+            the XML to storage.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptorDeserializer">
+            <summary>
+            The basic interface for deserializing an XML element into an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptorDeserializer.ImportFromXml(System.Xml.Linq.XElement)">
+            <summary>
+            Deserializes the specified XML element.
+            </summary>
+            <param name="element">The element to deserialize.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/> represented by <paramref name="element"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IInternalAlgorithmConfiguration">
+            <summary>
+            A type that knows how to create instances of an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/>
+            given specific secret key material.
+            </summary>
+            <remarks>
+            This type is not public because we don't want to lock ourselves into a contract stating
+            that a descriptor is simply a configuration plus a single serializable, reproducible secret.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IInternalAlgorithmConfiguration.CreateDescriptorFromSecret(Microsoft.AspNetCore.DataProtection.ISecret)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/> instance from this configuration
+            given specific secret key material.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IInternalAlgorithmConfiguration.Validate">
+            <summary>
+            Performs a self-test of the algorithm specified by the configuration object.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration">
+            <summary>
+            Represents a configured authenticated encryption mechanism which uses
+            managed <see cref="T:System.Security.Cryptography.SymmetricAlgorithm"/> and
+            <see cref="T:System.Security.Cryptography.KeyedHashAlgorithm"/> types.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration.EncryptionAlgorithmType">
+            <summary>
+            The type of the algorithm to use for symmetric encryption.
+            The type must subclass <see cref="T:System.Security.Cryptography.SymmetricAlgorithm"/>.
+            This property is required to have a value.
+            </summary>
+            <remarks>
+            The algorithm must support CBC-style encryption and PKCS#7 padding and must have a block size of 64 bits or greater.
+            The default algorithm is AES.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration.EncryptionAlgorithmKeySize">
+            <summary>
+            The length (in bits) of the key that will be used for symmetric encryption.
+            This property is required to have a value.
+            </summary>
+            <remarks>
+            The key length must be 128 bits or greater.
+            The default value is 256.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration.ValidationAlgorithmType">
+            <summary>
+            The type of the algorithm to use for validation.
+            Type type must subclass <see cref="T:System.Security.Cryptography.KeyedHashAlgorithm"/>.
+            This property is required to have a value.
+            </summary>
+            <remarks>
+            The algorithm must have a digest length of 128 bits or greater.
+            The default algorithm is HMACSHA256.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration.CreateNewDescriptor">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration.Microsoft#AspNetCore#DataProtection#AuthenticatedEncryption#ConfigurationModel#IInternalAlgorithmConfiguration#Validate">
+            <summary>
+            Validates that this <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration"/> is well-formed, i.e.,
+            that the specified algorithms actually exist and can be instantiated properly.
+            An exception will be thrown if validation fails.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorDescriptor">
+            <summary>
+            A descriptor which can create an authenticated encryption system based upon the
+            configuration provided by an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration"/> object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorDescriptor.#ctor(Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration,Microsoft.AspNetCore.DataProtection.ISecret)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorDescriptor"/>.
+            </summary>
+            <param name="configuration">The <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration"/>.</param>
+            <param name="masterKey">The master key.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorDescriptor.ExportToXml">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorDescriptorDeserializer">
+            <summary>
+            A class that can deserialize an <see cref="T:System.Xml.Linq.XElement"/> that represents the serialized version
+            of an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorDescriptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorDescriptorDeserializer.ImportFromXml(System.Xml.Linq.XElement)">
+            <summary>
+            Imports the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorDescriptor"/> from serialized XML.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.SecretExtensions.ToMasterKeyElement(Microsoft.AspNetCore.DataProtection.ISecret)">
+            <summary>
+            Converts an <see cref="T:Microsoft.AspNetCore.DataProtection.ISecret"/> to an &lt;masterKey&gt; element which is marked
+            as requiring encryption.
+            </summary>
+            <param name="secret">The secret for accessing the master key.</param>
+            <returns>The master key <see cref="T:System.Xml.Linq.XElement"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.SecretExtensions.ToSecret(System.String)">
+            <summary>
+            Converts a base64-encoded string into an <see cref="T:Microsoft.AspNetCore.DataProtection.ISecret"/>.
+            </summary>
+            <returns>The <see cref="T:Microsoft.AspNetCore.DataProtection.Secret"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlExtensions">
+            <summary>
+            Data protection extensions for <see cref="T:System.Xml.Linq.XElement"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlExtensions.MarkAsRequiresEncryption(System.Xml.Linq.XElement)">
+            <summary>
+            Marks the provided <see cref="T:System.Xml.Linq.XElement"/> as requiring encryption before being persisted
+            to storage. Use when implementing <see cref="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor.ExportToXml"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlSerializedDescriptorInfo">
+            <summary>
+            Wraps an <see cref="T:System.Xml.Linq.XElement"/> that contains the XML-serialized representation of an
+            <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/> along with the type that can be used
+            to deserialize it.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlSerializedDescriptorInfo.#ctor(System.Xml.Linq.XElement,System.Type)">
+            <summary>
+            Creates an instance of an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlSerializedDescriptorInfo"/>.
+            </summary>
+            <param name="serializedDescriptorElement">The XML-serialized form of the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/>.</param>
+            <param name="deserializerType">The class whose <see cref="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptorDeserializer.ImportFromXml(System.Xml.Linq.XElement)"/>
+            method can be used to deserialize <paramref name="serializedDescriptorElement"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlSerializedDescriptorInfo.DeserializerType">
+            <summary>
+            The class whose <see cref="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptorDeserializer.ImportFromXml(System.Xml.Linq.XElement)"/>
+            method can be used to deserialize the value stored in <see cref="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlSerializedDescriptorInfo.SerializedDescriptorElement"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.XmlSerializedDescriptorInfo.SerializedDescriptorElement">
+            <summary>
+            An XML-serialized representation of an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm">
+            <summary>
+            Specifies a symmetric encryption algorithm to use for providing confidentiality
+            to protected payloads.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm.AES_128_CBC">
+            <summary>
+            The AES algorithm (FIPS 197) with a 128-bit key running in Cipher Block Chaining mode.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm.AES_192_CBC">
+            <summary>
+            The AES algorithm (FIPS 197) with a 192-bit key running in Cipher Block Chaining mode.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm.AES_256_CBC">
+            <summary>
+            The AES algorithm (FIPS 197) with a 256-bit key running in Cipher Block Chaining mode.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm.AES_128_GCM">
+            <summary>
+            The AES algorithm (FIPS 197) with a 128-bit key running in Galois/Counter Mode (FIPS SP 800-38D).
+            </summary>
+            <remarks>
+            This cipher mode produces a 128-bit authentication tag. This algorithm is currently only
+            supported on Windows.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm.AES_192_GCM">
+            <summary>
+            The AES algorithm (FIPS 197) with a 192-bit key running in Galois/Counter Mode (FIPS SP 800-38D).
+            </summary>
+            <remarks>
+            This cipher mode produces a 128-bit authentication tag.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm.AES_256_GCM">
+            <summary>
+            The AES algorithm (FIPS 197) with a 256-bit key running in Galois/Counter Mode (FIPS SP 800-38D).
+            </summary>
+            <remarks>
+            This cipher mode produces a 128-bit authentication tag.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor">
+            <summary>
+            The basic interface for providing an authenticated encryption and decryption routine.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor.Decrypt(System.ArraySegment{System.Byte},System.ArraySegment{System.Byte})">
+            <summary>
+            Validates the authentication tag of and decrypts a blob of encrypted data.
+            </summary>
+            <param name="ciphertext">The ciphertext (including authentication tag) to decrypt.</param>
+            <param name="additionalAuthenticatedData">Any ancillary data which was used during computation
+            of the authentication tag. The same AAD must have been specified in the corresponding
+            call to 'Encrypt'.</param>
+            <returns>The original plaintext data (if the authentication tag was validated and decryption succeeded).</returns>
+            <remarks>All cryptography-related exceptions should be homogenized to CryptographicException.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor.Encrypt(System.ArraySegment{System.Byte},System.ArraySegment{System.Byte})">
+            <summary>
+            Encrypts and tamper-proofs a piece of data.
+            </summary>
+            <param name="plaintext">The plaintext to encrypt. This input may be zero bytes in length.</param>
+            <param name="additionalAuthenticatedData">A piece of data which will not be included in
+            the returned ciphertext but which will still be covered by the authentication tag.
+            This input may be zero bytes in length. The same AAD must be specified in the corresponding
+            call to Decrypt.</param>
+            <returns>The ciphertext blob, including authentication tag.</returns>
+            <remarks>All cryptography-related exceptions should be homogenized to CryptographicException.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptorFactory">
+            <summary>
+            A factory to produce <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptorFactory.CreateEncryptorInstance(Microsoft.AspNetCore.DataProtection.KeyManagement.IKey)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor"/> instance based on the given <see cref="P:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.Descriptor"/>.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor"/> instance.</returns>
+            <remarks>
+            For a given <see cref="P:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.Descriptor"/>, any two instances returned by this method should
+            be considered equivalent, e.g., the payload returned by one's <see cref="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor.Encrypt(System.ArraySegment{System.Byte},System.ArraySegment{System.Byte})"/>
+            method should be consumable by the other's <see cref="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor.Decrypt(System.ArraySegment{System.Byte},System.ArraySegment{System.Byte})"/> method.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IOptimizedAuthenticatedEncryptor">
+            <summary>
+            An optimized encryptor that can avoid buffer allocations in common code paths.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IOptimizedAuthenticatedEncryptor.Encrypt(System.ArraySegment{System.Byte},System.ArraySegment{System.Byte},System.UInt32,System.UInt32)">
+             <summary>
+             Encrypts and tamper-proofs a piece of data.
+             </summary>
+             <param name="plaintext">The plaintext to encrypt. This input may be zero bytes in length.</param>
+             <param name="additionalAuthenticatedData">A piece of data which will not be included in
+             the returned ciphertext but which will still be covered by the authentication tag.
+             This input may be zero bytes in length. The same AAD must be specified in the corresponding
+             call to Decrypt.</param>
+             <param name="preBufferSize">The number of bytes to pad before the ciphertext in the output.</param>
+             <param name="postBufferSize">The number of bytes to pad after the ciphertext in the output.</param>
+             <returns>
+             The ciphertext blob, including authentication tag. The ciphertext blob will be surrounded by
+             the number of padding bytes requested. For instance, if the given (plaintext, AAD) input results
+             in a (ciphertext, auth tag) output of 0x0102030405, and if 'preBufferSize' is 3 and
+             'postBufferSize' is 5, then the return value will be 0xYYYYYY0102030405ZZZZZZZZZZ, where bytes
+             YY and ZZ are undefined.
+             </returns>
+             <remarks>
+             This method allows for a slight performance improvement over IAuthenticatedEncryptor.Encrypt
+             in the case where the caller needs to prepend or append some data to the resulting ciphertext.
+             For instance, if the caller needs to append a 32-bit header to the resulting ciphertext, then
+             specify 4 for 'preBufferSize' and overwrite the first 32 bits of the buffer returned
+             by this function. This saves the caller from having to allocate a new buffer to hold the final
+             transformed result.
+            
+             All cryptography-related exceptions should be homogenized to CryptographicException.
+             </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ManagedAuthenticatedEncryptorFactory">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptorFactory"/> for <see cref="T:Microsoft.AspNetCore.DataProtection.Managed.ManagedAuthenticatedEncryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ManagedAuthenticatedEncryptorFactory.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ManagedAuthenticatedEncryptorFactory"/>.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ManagedAuthenticatedEncryptorFactory.CreateEncryptorInstance(Microsoft.AspNetCore.DataProtection.KeyManagement.IKey)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ManagedAuthenticatedEncryptorFactory.AlgorithmActivator">
+            <summary>
+            Contains helper methods for generating cryptographic algorithm factories.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ManagedAuthenticatedEncryptorFactory.AlgorithmActivator.CreateFactory``1(System.Type)">
+            <summary>
+            Creates a factory that wraps a call to <see cref="M:System.Activator.CreateInstance``1"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ValidationAlgorithm">
+            <summary>
+            Specifies a message authentication algorithm to use for providing tamper-proofing
+            to protected payloads.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ValidationAlgorithm.HMACSHA256">
+            <summary>
+            The HMAC algorithm (RFC 2104) using the SHA-256 hash function (FIPS 180-4).
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ValidationAlgorithm.HMACSHA512">
+            <summary>
+            The HMAC algorithm (RFC 2104) using the SHA-512 hash function (FIPS 180-4).
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.BitHelpers.WriteTo(System.Void*,System.UInt32)">
+            <summary>
+            Writes an unsigned 32-bit value to a memory address, big-endian.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.BitHelpers.WriteTo(System.Byte*@,System.UInt32)">
+            <summary>
+            Writes an unsigned 32-bit value to a memory address, big-endian.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.BitHelpers.WriteTo(System.Byte[],System.Int32@,System.Int32)">
+            <summary>
+            Writes a signed 32-bit value to a memory address, big-endian.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.BitHelpers.WriteTo(System.Byte[],System.Int32@,System.UInt32)">
+            <summary>
+            Writes a signed 32-bit value to a memory address, big-endian.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Cng.Internal.CngAuthenticatedEncryptorBase">
+            <summary>
+            Base class used for all CNG-related authentication encryption operations.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions">
+            <summary>
+            Extensions for configuring data protection using an <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.SetApplicationName(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.String)">
+            <summary>
+            Sets the unique name of this application within the data protection system.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="applicationName">The application name.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            This API corresponds to setting the <see cref="P:Microsoft.AspNetCore.DataProtection.DataProtectionOptions.ApplicationDiscriminator"/> property
+            to the value of <paramref name="applicationName"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.AddKeyEscrowSink(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink)">
+            <summary>
+            Registers a <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> to perform escrow before keys are persisted to storage.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="sink">The instance of the <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> to register.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            Registrations are additive.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.AddKeyEscrowSink``1(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder)">
+            <summary>
+            Registers a <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> to perform escrow before keys are persisted to storage.
+            </summary>
+            <typeparam name="TImplementation">The concrete type of the <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> to register.</typeparam>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            Registrations are additive. The factory is registered as <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.AddKeyEscrowSink(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.Func{System.IServiceProvider,Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink})">
+            <summary>
+            Registers a <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> to perform escrow before keys are persisted to storage.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="factory">A factory that creates the <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> instance.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            Registrations are additive. The factory is registered as <see cref="F:Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.AddKeyManagementOptions(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.Action{Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions})">
+            <summary>
+            Configures the key management options for the data protection system.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="setupAction">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions"/>.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.DisableAutomaticKeyGeneration(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder)">
+            <summary>
+            Configures the data protection system not to generate new keys automatically.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            Calling this API corresponds to setting <see cref="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.AutoGenerateKeys"/>
+            to 'false'. See that property's documentation for more information.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.PersistKeysToFileSystem(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.IO.DirectoryInfo)">
+            <summary>
+            Configures the data protection system to persist keys to the specified directory.
+            This path may be on the local machine or may point to a UNC share.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="directory">The directory in which to store keys.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.PersistKeysToRegistry(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,Microsoft.Win32.RegistryKey)">
+            <summary>
+            Configures the data protection system to persist keys to the Windows registry.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="registryKey">The location in the registry where keys should be stored.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.ProtectKeysWithCertificate(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Configures keys to be encrypted to a given certificate before being persisted to storage.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="certificate">The certificate to use when encrypting keys.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.ProtectKeysWithCertificate(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.String)">
+            <summary>
+            Configures keys to be encrypted to a given certificate before being persisted to storage.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="thumbprint">The thumbprint of the certificate to use when encrypting keys.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.UnprotectKeysWithAnyCertificate(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.Security.Cryptography.X509Certificates.X509Certificate2[])">
+            <summary>
+            Configures certificates which can be used to decrypt keys loaded from storage.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="certificates">Certificates that can be used to decrypt key data.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.ProtectKeysWithDpapi(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder)">
+            <summary>
+            Configures keys to be encrypted with Windows DPAPI before being persisted to
+            storage. The encrypted key will only be decryptable by the current Windows user account.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            This API is only supported on Windows platforms.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.ProtectKeysWithDpapi(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.Boolean)">
+            <summary>
+            Configures keys to be encrypted with Windows DPAPI before being persisted to
+            storage.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="protectToLocalMachine">'true' if the key should be decryptable by any
+            use on the local machine, 'false' if the key should only be decryptable by the current
+            Windows user account.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            This API is only supported on Windows platforms.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.ProtectKeysWithDpapiNG(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder)">
+            <summary>
+            Configures keys to be encrypted with Windows CNG DPAPI before being persisted
+            to storage. The keys will be decryptable by the current Windows user account.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            See <see href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh706794(v=vs.85).aspx"/>
+            for more information on DPAPI-NG. This API is only supported on Windows 8 / Windows Server 2012 and higher.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.ProtectKeysWithDpapiNG(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.String,Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGProtectionDescriptorFlags)">
+            <summary>
+            Configures keys to be encrypted with Windows CNG DPAPI before being persisted to storage.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="protectionDescriptorRule">The descriptor rule string with which to protect the key material.</param>
+            <param name="flags">Flags that should be passed to the call to 'NCryptCreateProtectionDescriptor'.
+            The default value of this parameter is <see cref="F:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGProtectionDescriptorFlags.None"/>.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            See <see href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh769091(v=vs.85).aspx"/>
+            and <see href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh706800(v=vs.85).aspx"/>
+            for more information on valid values for the the <paramref name="protectionDescriptorRule"/>
+            and <paramref name="flags"/> arguments.
+            This API is only supported on Windows 8 / Windows Server 2012 and higher.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.SetDefaultKeyLifetime(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.TimeSpan)">
+            <summary>
+            Sets the default lifetime of keys created by the data protection system.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="lifetime">The lifetime (time before expiration) for newly-created keys.
+            See <see cref="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.NewKeyLifetime"/> for more information and
+            usage notes.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.UseCryptographicAlgorithms(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration)">
+            <summary>
+            Configures the data protection system to use the specified cryptographic algorithms
+            by default when generating protected payloads.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="configuration">Information about what cryptographic algorithms should be used.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.UseCustomCryptographicAlgorithms(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngCbcAuthenticatedEncryptorConfiguration)">
+            <summary>
+            Configures the data protection system to use custom Windows CNG algorithms.
+            This API is intended for advanced scenarios where the developer cannot use the
+            algorithms specified in the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm"/> and
+            <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ValidationAlgorithm"/> enumerations.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="configuration">Information about what cryptographic algorithms should be used.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            This API is only available on Windows.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.UseCustomCryptographicAlgorithms(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.CngGcmAuthenticatedEncryptorConfiguration)">
+            <summary>
+            Configures the data protection system to use custom Windows CNG algorithms.
+            This API is intended for advanced scenarios where the developer cannot use the
+            algorithms specified in the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm"/> and
+            <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ValidationAlgorithm"/> enumerations.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="configuration">Information about what cryptographic algorithms should be used.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            This API is only available on Windows.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.UseCustomCryptographicAlgorithms(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.ManagedAuthenticatedEncryptorConfiguration)">
+            <summary>
+            Configures the data protection system to use custom algorithms.
+            This API is intended for advanced scenarios where the developer cannot use the
+            algorithms specified in the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.EncryptionAlgorithm"/> and
+            <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ValidationAlgorithm"/> enumerations.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <param name="configuration">Information about what cryptographic algorithms should be used.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.UseEphemeralDataProtectionProvider(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder)">
+            <summary>
+            Configures the data protection system to use the <see cref="T:Microsoft.AspNetCore.DataProtection.EphemeralDataProtectionProvider"/>
+            for data protection services.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.</param>
+            <returns>A reference to the <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder" /> after this operation has completed.</returns>
+            <remarks>
+            If this option is used, payloads protected by the data protection system will
+            be permanently undecipherable after the application exits.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.DataProtectionOptions">
+            <summary>
+            Provides global options for the Data Protection system.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.DataProtectionOptions.ApplicationDiscriminator">
+            <summary>
+            An identifier that uniquely discriminates this application from all other
+            applications on the machine. The discriminator value is implicitly included
+            in all protected payloads generated by the data protection system to isolate
+            multiple logical applications that all happen to be using the same key material.
+            </summary>
+            <remarks>
+            If two different applications need to share protected payloads, they should
+            ensure that this property is set to the same value across both applications.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.DataProtectionUtilityExtensions">
+            <summary>
+            Data protection extensions for <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionUtilityExtensions.GetApplicationUniqueIdentifier(System.IServiceProvider)">
+            <summary>
+            Returns a unique identifier for this application.
+            </summary>
+            <param name="services">The application-level <see cref="T:System.IServiceProvider"/>.</param>
+            <returns>A unique application identifier, or null if <paramref name="services"/> is null
+            or cannot provide a unique application identifier.</returns>
+            <remarks>
+            <para>
+            The returned identifier should be stable for repeated runs of this same application on
+            this machine. Additionally, the identifier is only unique within the scope of a single
+            machine, e.g., two different applications on two different machines may return the same
+            value.
+            </para>
+            <para>
+            This identifier may contain security-sensitive information such as physical file paths,
+            configuration settings, or other machine-specific information. Callers should take
+            special care not to disclose this information to untrusted entities.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.EphemeralDataProtectionProvider">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/> that is transient.
+            </summary>
+            <remarks>
+            Payloads generated by a given <see cref="T:Microsoft.AspNetCore.DataProtection.EphemeralDataProtectionProvider"/> instance can only
+            be deciphered by that same instance. Once the instance is lost, all ciphertexts
+            generated by that instance are permanently undecipherable.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.EphemeralDataProtectionProvider.#ctor">
+            <summary>
+            Creates an ephemeral <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.EphemeralDataProtectionProvider.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates an ephemeral <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/> with logging.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory" />.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.EphemeralDataProtectionProvider.CreateProtector(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder">
+            <summary>
+            Provides access to configuration for the data protection system, which allows the
+            developer to configure default cryptographic algorithms, key storage locations,
+            and the mechanism by which keys are protected at rest.
+            </summary>
+            <remarks>
+            <para>
+            If the developer changes the at-rest key protection mechanism, it is intended that
+            they also change the key storage location, and vice versa. For instance, a call to
+            <see cref="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.ProtectKeysWithCertificate(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.String)" /> should generally be accompanied by
+            a call to <see cref="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.PersistKeysToFileSystem(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.IO.DirectoryInfo)"/>, or exceptions may
+            occur at runtime due to the data protection system not knowing where to persist keys.
+            </para>
+            <para>
+            Similarly, when a developer modifies the default protected payload cryptographic
+            algorithms, they should also set an explicit key storage location.
+            A call to <see cref="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.UseCryptographicAlgorithms(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorConfiguration)"/>
+            should therefore generally be paired with a call to <see cref="M:Microsoft.AspNetCore.DataProtection.DataProtectionBuilderExtensions.PersistKeysToFileSystem(Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder,System.IO.DirectoryInfo)"/>,
+            for example.
+            </para>
+            <para>
+            When the default cryptographic algorithms or at-rest key protection mechanisms are
+            changed, they only affect <strong>new</strong> keys in the repository. The repository may
+            contain existing keys that use older algorithms or protection mechanisms.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder.Services">
+            <summary>
+            Provides access to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> passed to this object's constructor.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Internal.DataProtectionBuilder">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Internal.DataProtectionBuilder.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Creates a new configuration object linked to a <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Internal.DataProtectionBuilder.Services">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Internal.IActivator">
+            <summary>
+            An interface into <see cref="M:System.Activator.CreateInstance``1"/> that also supports
+            limited dependency injection (of <see cref="T:System.IServiceProvider"/>).
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Internal.IActivator.CreateInstance(System.Type,System.String)">
+            <summary>
+            Creates an instance of <paramref name="implementationTypeName"/> and ensures
+            that it is assignable to <paramref name="expectedBaseType"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Internal.KeyManagementOptionsPostSetup">
+            <summary>
+            Performs additional <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions" /> configuration, after the user's configuration has been applied.
+            </summary>
+            <remarks>
+            In practice, this type is used to set key management to readonly mode if an environment variable is set and the user
+            has not explicitly configured data protection.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.Internal.KeyManagementOptionsPostSetup.ReadOnlyDataProtectionKeyDirectoryKey">
+            <remarks>
+            Settable as `ReadOnlyDataProtectionKeyDirectory`, `DOTNET_ReadOnlyDataProtectionKeyDirectory`,
+            or `ASPNETCORE_ReadOnlyDataProtectionKeyDirectory`, in descending order of precedence.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.IPersistedDataProtector">
+            <summary>
+            An interface that can provide data protection services for data which has been persisted
+            to long-term storage.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.IPersistedDataProtector.DangerousUnprotect(System.Byte[],System.Boolean,System.Boolean@,System.Boolean@)">
+            <summary>
+            Cryptographically unprotects a piece of data, optionally ignoring failures due to
+            revocation of the cryptographic keys used to protect the payload.
+            </summary>
+            <param name="protectedData">The protected data to unprotect.</param>
+            <param name="ignoreRevocationErrors">'true' if the payload should be unprotected even
+            if the cryptographic key used to protect it has been revoked (due to potential compromise),
+            'false' if revocation should fail the unprotect operation.</param>
+            <param name="requiresMigration">'true' if the data should be reprotected before being
+            persisted back to long-term storage, 'false' otherwise. Migration might be requested
+            when the default protection key has changed, for instance.</param>
+            <param name="wasRevoked">'true' if the cryptographic key used to protect this payload
+            has been revoked, 'false' otherwise. Payloads whose keys have been revoked should be
+            treated as suspect unless the application has separate assurance that the payload
+            has not been tampered with.</param>
+            <returns>The plaintext form of the protected data.</returns>
+            <remarks>
+            Implementations should throw CryptographicException if the protected data is
+            invalid or malformed.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.ISecret">
+            <summary>
+            Represents a secret value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.ISecret.Length">
+            <summary>
+            The length (in bytes) of the secret value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.ISecret.WriteSecretIntoBuffer(System.ArraySegment{System.Byte})">
+            <summary>
+            Writes the secret value to the specified buffer.
+            </summary>
+            <param name="buffer">The buffer which should receive the secret value.</param>
+            <remarks>
+            The buffer size must exactly match the length of the secret value.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.DefaultKeyResolver">
+            <summary>
+            Implements policy for resolving the default key from a candidate keyring.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.KeyManagement.DefaultKeyResolver._keyPropagationWindow">
+            <summary>
+            The window of time before the key expires when a new key should be created
+            and persisted to the keyring to ensure uninterrupted service.
+            </summary>
+            <remarks>
+            If the propagation time is 5 days and the current key expires within 5 days,
+            a new key will be generated.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.KeyManagement.DefaultKeyResolver._maxServerToServerClockSkew">
+            <summary>
+            The maximum skew that is allowed between servers.
+            This is used to allow newly-created keys to be used across servers even though
+            their activation dates might be a few minutes into the future.
+            </summary>
+            <remarks>
+            If the max skew is 5 minutes and the best matching candidate default key has
+            an activation date of less than 5 minutes in the future, we'll use it.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.DeferredKey">
+            <summary>
+            The basic implementation of <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey"/>, where the incoming XML element
+            hasn't yet been fully processed.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey">
+            <summary>
+            The basic interface for representing an authenticated encryption key.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.ActivationDate">
+            <summary>
+            The date at which encryptions with this key can begin taking place.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.CreationDate">
+            <summary>
+            The date on which this key was created.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.ExpirationDate">
+            <summary>
+            The date after which encryptions with this key may no longer take place.
+            </summary>
+            <remarks>
+            An expired key may still be used to decrypt existing payloads.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.IsRevoked">
+            <summary>
+            Returns a value stating whether this key was revoked.
+            </summary>
+            <remarks>
+            A revoked key may still be used to decrypt existing payloads, but the payloads
+            must be treated as tampered unless the application has some other assurance
+            that the payloads are authentic.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.KeyId">
+            <summary>
+            The id of the key.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.Descriptor">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/> instance associated with this key.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.CreateEncryptor">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor"/> instance that can be used to encrypt data
+            to and decrypt data from this key.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink">
+            <summary>
+            The basic interface for implementing a key escrow sink.
+            </summary>
+            <remarks>
+            <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> is distinct from <see cref="T:Microsoft.AspNetCore.DataProtection.Repositories.IXmlRepository"/> in that
+            <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> provides a write-only interface and instances handle unencrypted key material,
+            while <see cref="T:Microsoft.AspNetCore.DataProtection.Repositories.IXmlRepository"/> provides a read+write interface and instances handle encrypted key material.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink.Store(System.Guid,System.Xml.Linq.XElement)">
+            <summary>
+            Stores the given key material to the escrow service.
+            </summary>
+            <param name="keyId">The id of the key being persisted to escrow.</param>
+            <param name="element">The unencrypted key material in XML form.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyManager">
+            <summary>
+            The basic interface for performing key management operations.
+            </summary>
+            <remarks>
+            Instantiations of this interface are expected to be thread-safe.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyManager.CreateNewKey(System.DateTimeOffset,System.DateTimeOffset)">
+            <summary>
+            Creates a new key with the specified activation and expiration dates and persists
+            the new key to the underlying repository.
+            </summary>
+            <param name="activationDate">The date on which encryptions to this key may begin.</param>
+            <param name="expirationDate">The date after which encryptions to this key may no longer take place.</param>
+            <returns>The newly-created IKey instance.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyManager.GetAllKeys">
+            <summary>
+            Fetches all keys from the underlying repository.
+            </summary>
+            <returns>The collection of all keys.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyManager.GetCacheExpirationToken">
+            <summary>
+            Retrieves a token that signals that callers who have cached the return value of
+            GetAllKeys should clear their caches. This could be in response to a call to
+            CreateNewKey or RevokeKey, or it could be in response to some other external notification.
+            Callers who are interested in observing this token should call this method before the
+            corresponding call to GetAllKeys.
+            </summary>
+            <returns>
+            The cache expiration token. When an expiration notification is triggered, any
+            tokens previously returned by this method will become canceled, and tokens returned by
+            future invocations of this method will themselves not trigger until the next expiration
+            event.
+            </returns>
+            <remarks>
+            Implementations are free to return 'CancellationToken.None' from this method.
+            Since this token is never guaranteed to fire, callers should still manually
+            clear their caches at a regular interval.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyManager.RevokeKey(System.Guid,System.String)">
+            <summary>
+            Revokes a specific key and persists the revocation to the underlying repository.
+            </summary>
+            <param name="keyId">The id of the key to revoke.</param>
+            <param name="reason">An optional human-readable reason for revocation.</param>
+            <remarks>
+            This method will not mutate existing IKey instances. After calling this method,
+            all existing IKey instances should be discarded, and GetAllKeys should be called again.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyManager.RevokeAllKeys(System.DateTimeOffset,System.String)">
+            <summary>
+            Revokes all keys created before a specified date and persists the revocation to the
+            underlying repository.
+            </summary>
+            <param name="revocationDate">The revocation date. All keys with a creation date before
+            this value will be revoked.</param>
+            <param name="reason">An optional human-readable reason for revocation.</param>
+            <remarks>
+            This method will not mutate existing IKey instances. After calling this method,
+            all existing IKey instances should be discarded, and GetAllKeys should be called again.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.CacheableKeyRing">
+            <summary>
+            Wraps both a keyring and its expiration policy.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.CacheableKeyRing.WithTemporaryExtendedLifetime(System.DateTimeOffset)">
+            <summary>
+            Returns a new <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.CacheableKeyRing"/> which is identical to 'this' but with a
+            lifetime extended 2 minutes from <paramref name="now"/>. The inner cancellation token
+            is also disconnected.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.DefaultKeyResolution">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.DefaultKeyResolution.DefaultKey">
+            <summary>
+            The default key, may be null if no key is a good default candidate.
+            </summary>
+            <remarks>
+            If this property is non-null, its <see cref="M:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.CreateEncryptor"/> method will succeed
+            so is appropriate for use with deferred keys.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.DefaultKeyResolution.FallbackKey">
+            <summary>
+            The fallback key, which should be used only if the caller is configured not to
+            honor the <see cref="F:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.DefaultKeyResolution.ShouldGenerateNewKey"/> property. This property may
+            be null if there is no viable fallback key.
+            </summary>
+            <remarks>
+            If this property is non-null, its <see cref="M:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey.CreateEncryptor"/> method will succeed
+            so is appropriate for use with deferred keys.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.DefaultKeyResolution.ShouldGenerateNewKey">
+            <summary>
+            'true' if a new key should be persisted to the keyring, 'false' otherwise.
+            This value may be 'true' even if a valid default key was found.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.ICacheableKeyRingProvider">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.ICacheableKeyRingProvider.GetCacheableKeyRing(System.DateTimeOffset)">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IDefaultKeyResolver">
+            <summary>
+            Implements policy for resolving the default key from a candidate keyring.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IDefaultKeyResolver.ResolveDefaultKeyPolicy(System.DateTimeOffset,System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.DataProtection.KeyManagement.IKey})">
+            <summary>
+            Locates the default key from the keyring.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IInternalXmlKeyManager">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IInternalXmlKeyManager.CreateNewKey(System.Guid,System.DateTimeOffset,System.DateTimeOffset,System.DateTimeOffset)">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IInternalXmlKeyManager.DeserializeDescriptorFromKeyElement(System.Xml.Linq.XElement)">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IInternalXmlKeyManager.RevokeSingleKey(System.Guid,System.DateTimeOffset,System.String)">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IKeyRing">
+            <summary>
+            The basic interface for accessing a read-only keyring.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IKeyRing.DefaultAuthenticatedEncryptor">
+            <summary>
+            The authenticated encryptor that shall be used for new encryption operations.
+            </summary>
+            <remarks>
+            Activation of the encryptor instance is deferred until first access.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IKeyRing.DefaultKeyId">
+            <summary>
+            The id of the key associated with <see cref="P:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IKeyRing.DefaultAuthenticatedEncryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IKeyRing.GetAuthenticatedEncryptorByKeyId(System.Guid,System.Boolean@)">
+            <summary>
+            Returns an encryptor instance for the given key, or 'null' if the key with the
+            specified id cannot be found in the keyring.
+            </summary>
+            <remarks>
+            Activation of the encryptor instance is deferred until first access.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IKeyRingProvider">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IKeyRingProvider.GetCurrentKeyRing">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Key">
+            <summary>
+            The basic implementation of <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey"/>, where the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/>
+            has already been created.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyBase">
+            <summary>
+            The basic implementation of <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKey"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyEscrowServiceProviderExtensions.GetKeyEscrowSink(System.IServiceProvider)">
+            <summary>
+            Gets an aggregate <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> from the underlying <see cref="T:System.IServiceProvider"/>.
+            This method may return null if no sinks are registered.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions">
+            <summary>
+            Options that control how an <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyManager"/> should behave.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.AutoGenerateKeys">
+            <summary>
+            Specifies whether the data protection system should auto-generate keys.
+            </summary>
+            <remarks>
+            If this value is 'false', the system will not generate new keys automatically.
+            The key ring must contain at least one active non-revoked key, otherwise calls
+            to <see cref="M:Microsoft.AspNetCore.DataProtection.IDataProtector.Protect(System.Byte[])"/> may fail. The system may end up
+            protecting payloads to expired keys if this property is set to 'false'.
+            The default value is 'true'.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.KeyPropagationWindow">
+            <summary>
+            Specifies the period before key expiration in which a new key should be generated
+            so that it has time to propagate fully throughout the key ring. For example, if this
+            period is 72 hours, then a new key will be created and persisted to storage
+            approximately 72 hours before expiration.
+            </summary>
+            <remarks>
+            This value is currently fixed at 48 hours.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.KeyRingRefreshPeriod">
+            <summary>
+            Controls the auto-refresh period where the key ring provider will
+            flush its collection of cached keys and reread the collection from
+            backing storage.
+            </summary>
+            <remarks>
+            This value is currently fixed at 24 hours.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.MaxServerClockSkew">
+            <summary>
+            Specifies the maximum clock skew allowed between servers when reading
+            keys from the key ring. The key ring may use a key which has not yet
+            been activated or which has expired if the key's valid lifetime is within
+            the allowed clock skew window. This value can be set to <see cref="F:System.TimeSpan.Zero"/>
+            if key activation and expiration times should be strictly honored by this server.
+            </summary>
+            <remarks>
+            This value is currently fixed at 5 minutes.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.NewKeyLifetime">
+            <summary>
+            Controls the lifetime (number of days before expiration)
+            for newly-generated keys.
+            </summary>
+            <remarks>
+            The lifetime cannot be less than one week.
+            The default value is 90 days.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.AuthenticatedEncryptorConfiguration">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AlgorithmConfiguration"/> instance that can be used to create
+            the <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.IAuthenticatedEncryptorDescriptor"/> instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.KeyEscrowSinks">
+            <summary>
+            The list of <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.IKeyEscrowSink"/> to store the key material in.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.XmlRepository">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.DataProtection.Repositories.IXmlRepository"/> to use for storing and retrieving XML elements.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.XmlEncryptor">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlEncryptor"/> to use for encrypting XML elements.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions.AuthenticatedEncryptorFactories">
+            <summary>
+            The list of <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptorFactory"/> that will be used for creating
+            <see cref="T:Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.IAuthenticatedEncryptor"/>s.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRing">
+            <summary>
+            A basic implementation of <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.Internal.IKeyRing"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager">
+            <summary>
+            A key manager backed by an <see cref="T:Microsoft.AspNetCore.DataProtection.Repositories.IXmlRepository"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions},Microsoft.AspNetCore.DataProtection.Internal.IActivator)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager"/>.
+            </summary>
+            <param name="keyManagementOptions">The <see cref="T:Microsoft.Extensions.Options.IOptions`1"/> instance that provides the configuration.</param>
+            <param name="activator">The <see cref="T:Microsoft.AspNetCore.DataProtection.Internal.IActivator"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.DataProtection.KeyManagement.KeyManagementOptions},Microsoft.AspNetCore.DataProtection.Internal.IActivator,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager"/>.
+            </summary>
+            <param name="keyManagementOptions">The <see cref="T:Microsoft.Extensions.Options.IOptions`1"/> instance that provides the configuration.</param>
+            <param name="activator">The <see cref="T:Microsoft.AspNetCore.DataProtection.Internal.IActivator"/>.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager.CreateNewKey(System.DateTimeOffset,System.DateTimeOffset)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager.GetAllKeys">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager.GetCacheExpirationToken">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager.RevokeAllKeys(System.DateTimeOffset,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager.RevokeKey(System.Guid,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.MemoryProtection">
+            <summary>
+            Wrappers around CryptProtectMemory / CryptUnprotectMemory.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.RegistryPolicyResolver">
+            <summary>
+            A type which allows reading policy from the system registry.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Repositories.DefaultKeyStorageDirectories.GetKeyStorageDirectory">
+            <summary>
+            The default key storage directory.
+            On Windows, this currently corresponds to "Environment.SpecialFolder.LocalApplication/ASP.NET/DataProtection-Keys".
+            On Linux and macOS, this currently corresponds to "$HOME/.aspnet/DataProtection-Keys".
+            </summary>
+            <remarks>
+            This property can return null if no suitable default key storage directory can
+            be found, such as the case when the user profile is unavailable.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Repositories.EphemeralXmlRepository">
+            <summary>
+            An ephemeral XML repository backed by process memory. This class must not be used for
+            anything other than dev scenarios as the keys will not be persisted to storage.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository">
+            <summary>
+            An XML repository backed by a file system.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository.#ctor(System.IO.DirectoryInfo,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository"/> with keys stored at the given directory.
+            </summary>
+            <param name="directory">The directory in which to persist key material.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository.DefaultKeyStorageDirectory">
+            <summary>
+            The default key storage directory.
+            On Windows, this currently corresponds to "Environment.SpecialFolder.LocalApplication/ASP.NET/DataProtection-Keys".
+            On Linux and macOS, this currently corresponds to "$HOME/.aspnet/DataProtection-Keys".
+            </summary>
+            <remarks>
+            This property can return null if no suitable default key storage directory can
+            be found, such as the case when the user profile is unavailable.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository.Directory">
+            <summary>
+            The directory into which key material will be written.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository.GetAllElements">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository.StoreElement(System.Xml.Linq.XElement,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Repositories.IDefaultKeyStorageDirectories">
+            <summary>
+            This interface enables overridding the default storage location of keys on disk
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Repositories.IXmlRepository">
+            <summary>
+            The basic interface for storing and retrieving XML elements.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Repositories.IXmlRepository.GetAllElements">
+            <summary>
+            Gets all top-level XML elements in the repository.
+            </summary>
+            <remarks>
+            All top-level elements in the repository.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Repositories.IXmlRepository.StoreElement(System.Xml.Linq.XElement,System.String)">
+            <summary>
+            Adds a top-level XML element to the repository.
+            </summary>
+            <param name="element">The element to add.</param>
+            <param name="friendlyName">An optional name to be associated with the XML element.
+            For instance, if this repository stores XML files on disk, the friendly name may
+            be used as part of the file name. Repository implementations are not required to
+            observe this parameter even if it has been provided by the caller.</param>
+            <remarks>
+            The 'friendlyName' parameter must be unique if specified. For instance, it could
+            be the id of the key being stored.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Repositories.RegistryXmlRepository">
+            <summary>
+            An XML repository backed by the Windows registry.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Repositories.RegistryXmlRepository.#ctor(Microsoft.Win32.RegistryKey,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.DataProtection.Repositories.RegistryXmlRepository"/> with keys stored in the given registry key.
+            </summary>
+            <param name="registryKey">The registry key in which to persist key material.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Repositories.RegistryXmlRepository.DefaultRegistryKey">
+            <summary>
+            The default key storage directory, which currently corresponds to
+            "HKLM\SOFTWARE\Microsoft\ASP.NET\4.0.30319.0\AutoGenKeys\{SID}".
+            </summary>
+            <remarks>
+            This property can return null if no suitable default registry key can
+            be found, such as the case when this application is not hosted inside IIS.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Repositories.RegistryXmlRepository.RegistryKey">
+            <summary>
+            The registry key into which key material will be written.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Repositories.RegistryXmlRepository.GetAllElements">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Repositories.RegistryXmlRepository.StoreElement(System.Xml.Linq.XElement,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.Secret">
+            <summary>
+            Represents a secret value stored in memory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Secret.#ctor(System.ArraySegment{System.Byte})">
+            <summary>
+            Creates a new Secret from the provided input value, where the input value
+            is specified as an array segment.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Secret.#ctor(System.Byte[])">
+            <summary>
+            Creates a new Secret from the provided input value, where the input value
+            is specified as an array.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Secret.#ctor(System.Byte*,System.Int32)">
+            <summary>
+            Creates a new Secret from the provided input value, where the input value
+            is specified as a pointer to unmanaged memory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Secret.#ctor(Microsoft.AspNetCore.DataProtection.ISecret)">
+            <summary>
+            Creates a new Secret from another secret object.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Secret.Length">
+            <summary>
+            The length (in bytes) of the secret value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Secret.Dispose">
+            <summary>
+            Wipes the secret from memory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Secret.Random(System.Int32)">
+            <summary>
+            Returns a Secret made entirely of random bytes retrieved from
+            a cryptographically secure RNG.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Secret.WriteSecretIntoBuffer(System.ArraySegment{System.Byte})">
+            <summary>
+            Writes the secret value to the specified buffer.
+            </summary>
+            <remarks>
+            The buffer size must exactly match the length of the secret value.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Secret.WriteSecretIntoBuffer(System.Byte*,System.Int32)">
+            <summary>
+            Writes the secret value to the specified buffer.
+            </summary>
+            <param name="buffer">The buffer into which to write the secret value.</param>
+            <param name="bufferLength">The size (in bytes) of the provided buffer.</param>
+            <remarks>
+            The 'bufferLength' parameter must exactly match the length of the secret value.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.SimpleActivator">
+            <summary>
+            A simplified default implementation of <see cref="T:Microsoft.AspNetCore.DataProtection.Internal.IActivator"/> that understands
+            how to call ctors which take <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.SimpleActivator.DefaultWithoutServices">
+            <summary>
+            A default <see cref="T:Microsoft.AspNetCore.DataProtection.SimpleActivator"/> whose wrapped <see cref="T:System.IServiceProvider"/> is null.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.SP800_108.SP800_108_CTR_HMACSHA512Util">
+            <summary>
+            Provides an implementation of the SP800-108-CTR-HMACSHA512 key derivation function.
+            This class assumes at least Windows 7 / Server 2008 R2.
+            </summary>
+            <remarks>
+            More info at http://csrc.nist.gov/publications/nistpubs/800-108/sp800-108.pdf, Sec. 5.1.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.TypeExtensions">
+            <summary>
+            Helpful extension methods on <see cref="T:System.Type"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.TypeExtensions.AssertIsAssignableFrom(System.Type,System.Type)">
+            <summary>
+            Throws <see cref="T:System.InvalidCastException"/> if <paramref name="implementationType"/>
+            is not assignable to <paramref name="expectedBaseType"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlConstants">
+            <summary>
+            Contains XLinq constants.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.XmlConstants.RootNamespace">
+            <summary>
+            The root namespace used for all DataProtection-specific XML elements and attributes.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.XmlConstants.DecryptorTypeAttributeName">
+            <summary>
+            Represents the type of decryptor that can be used when reading 'encryptedSecret' elements.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.XmlConstants.DeserializerTypeAttributeName">
+            <summary>
+            Elements with this attribute will be read with the specified deserializer type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.XmlConstants.EncryptedSecretElementName">
+            <summary>
+            Elements with this name will be automatically decrypted when read by the XML key manager.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.XmlConstants.RequiresEncryptionAttributeName">
+            <summary>
+            Elements where this attribute has a value of 'true' should be encrypted before storage.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.CertificateResolver">
+            <summary>
+            A default implementation of <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.ICertificateResolver"/> that looks in the current user
+            and local machine certificate stores.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.CertificateResolver.ResolveCertificate(System.String)">
+            <summary>
+            Locates an <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> given its thumbprint.
+            </summary>
+            <param name="thumbprint">The thumbprint (as a hex string) of the certificate to resolve.</param>
+            <returns>The resolved <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/>, or null if the certificate cannot be found.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.CertificateXmlEncryptor">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlEncryptor"/> that can perform XML encryption by using an X.509 certificate.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.CertificateXmlEncryptor.#ctor(System.String,Microsoft.AspNetCore.DataProtection.XmlEncryption.ICertificateResolver,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.CertificateXmlEncryptor"/> given a certificate's thumbprint, an
+            <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.ICertificateResolver"/> that can be used to resolve the certificate, and
+            an <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.CertificateXmlEncryptor.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.CertificateXmlEncryptor"/> given an <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> instance
+            and an <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.CertificateXmlEncryptor.Encrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Encrypts the specified <see cref="T:System.Xml.Linq.XElement"/> with an X.509 certificate.
+            </summary>
+            <param name="plaintextElement">The plaintext to encrypt.</param>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo"/> that contains the encrypted value of
+            <paramref name="plaintextElement"/> along with information about how to
+            decrypt it.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGProtectionDescriptorFlags">
+            <summary>
+            Flags used to control the creation of protection descriptors.
+            </summary>
+            <remarks>
+            These values correspond to the 'dwFlags' parameter on NCryptCreateProtectionDescriptor.
+            See <see href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh706800(v=vs.85).aspx"/> for more information.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGProtectionDescriptorFlags.None">
+            <summary>
+            No special handling is necessary.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGProtectionDescriptorFlags.NamedDescriptor">
+            <summary>
+            The provided descriptor is a reference to a full descriptor stored
+            in the system registry.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGProtectionDescriptorFlags.MachineKey">
+            <summary>
+            When combined with <see cref="F:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGProtectionDescriptorFlags.NamedDescriptor"/>, uses the HKLM registry
+            instead of the HKCU registry when locating the full descriptor.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlDecryptor">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlDecryptor"/> that decrypts XML elements that were encrypted with <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlEncryptor"/>.
+            </summary>
+            <remarks>
+            This API is only supported on Windows 8 / Windows Server 2012 and higher.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlDecryptor.#ctor">
+            <summary>
+            Creates a new instance of a <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlDecryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlDecryptor.#ctor(System.IServiceProvider)">
+            <summary>
+            Creates a new instance of a <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlDecryptor"/>.
+            </summary>
+            <param name="services">An optional <see cref="T:System.IServiceProvider"/> to provide ancillary services.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlDecryptor.Decrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Decrypts the specified XML element.
+            </summary>
+            <param name="encryptedElement">An encrypted XML element.</param>
+            <returns>The decrypted form of <paramref name="encryptedElement"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlEncryptor">
+            <summary>
+            A class that can encrypt XML elements using Windows DPAPI:NG.
+            </summary>
+            <remarks>
+            This API is only supported on Windows 8 / Windows Server 2012 and higher.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlEncryptor.#ctor(System.String,Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGProtectionDescriptorFlags,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new instance of a <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlEncryptor"/>.
+            </summary>
+            <param name="protectionDescriptorRule">The rule string from which to create the protection descriptor.</param>
+            <param name="flags">Flags controlling the creation of the protection descriptor.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlEncryptor.Encrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Encrypts the specified <see cref="T:System.Xml.Linq.XElement"/>.
+            </summary>
+            <param name="plaintextElement">The plaintext to encrypt.</param>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo"/> that contains the encrypted value of
+            <paramref name="plaintextElement"/> along with information about how to
+            decrypt it.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiNGXmlEncryptor.GetDefaultProtectionDescriptorString">
+            <summary>
+            Creates a rule string tied to the current Windows user and which is transferrable
+            across machines (backed up in AD).
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlDecryptor"/> that decrypts XML elements that were encrypted with <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlEncryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor.#ctor">
+            <summary>
+            Creates a new instance of a <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor.#ctor(System.IServiceProvider)">
+            <summary>
+            Creates a new instance of a <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor"/>.
+            </summary>
+            <param name="services">An optional <see cref="T:System.IServiceProvider"/> to provide ancillary services.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlDecryptor.Decrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Decrypts the specified XML element.
+            </summary>
+            <param name="encryptedElement">An encrypted XML element.</param>
+            <returns>The decrypted form of <paramref name="encryptedElement"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlEncryptor">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlEncryptor"/> that encrypts XML by using Windows DPAPI.
+            </summary>
+            <remarks>
+            This API is only supported on Windows platforms.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlEncryptor.#ctor(System.Boolean,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlEncryptor"/> given a protection scope and an <see cref="T:System.IServiceProvider"/>.
+            </summary>
+            <param name="protectToLocalMachine">'true' if the data should be decipherable by anybody on the local machine,
+            'false' if the data should only be decipherable by the current Windows user account.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.DpapiXmlEncryptor.Encrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Encrypts the specified <see cref="T:System.Xml.Linq.XElement"/>.
+            </summary>
+            <param name="plaintextElement">The plaintext to encrypt.</param>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo"/> that contains the encrypted value of
+            <paramref name="plaintextElement"/> along with information about how to
+            decrypt it.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlDecryptor">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlDecryptor"/> that decrypts XML elements by using the <see cref="T:System.Security.Cryptography.Xml.EncryptedXml"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlDecryptor.#ctor">
+            <summary>
+            Creates a new instance of an <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlDecryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlDecryptor.#ctor(System.IServiceProvider)">
+            <summary>
+            Creates a new instance of an <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlDecryptor"/>.
+            </summary>
+            <param name="services">An optional <see cref="T:System.IServiceProvider"/> to provide ancillary services.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlDecryptor.Decrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Decrypts the specified XML element.
+            </summary>
+            <param name="encryptedElement">An encrypted XML element.</param>
+            <returns>The decrypted form of <paramref name="encryptedElement"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlDecryptor.EncryptedXmlWithCertificateKeys">
+            <summary>
+            Can decrypt the XML key data from an <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> that is not in stored in <see cref="T:System.Security.Cryptography.X509Certificates.X509Store"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo">
+            <summary>
+            Wraps an <see cref="T:System.Xml.Linq.XElement"/> that contains a blob of encrypted XML
+            and information about the class which can be used to decrypt it.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo.#ctor(System.Xml.Linq.XElement,System.Type)">
+            <summary>
+            Creates an instance of an <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo"/>.
+            </summary>
+            <param name="encryptedElement">A piece of encrypted XML.</param>
+            <param name="decryptorType">The class whose <see cref="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlDecryptor.Decrypt(System.Xml.Linq.XElement)"/>
+            method can be used to decrypt <paramref name="encryptedElement"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo.DecryptorType">
+            <summary>
+            The class whose <see cref="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlDecryptor.Decrypt(System.Xml.Linq.XElement)"/> method can be used to
+            decrypt the value stored in <see cref="P:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo.EncryptedElement"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo.EncryptedElement">
+            <summary>
+            A piece of encrypted XML.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.ICertificateResolver">
+            <summary>
+            Provides services for locating <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.ICertificateResolver.ResolveCertificate(System.String)">
+            <summary>
+            Locates an <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> given its thumbprint.
+            </summary>
+            <param name="thumbprint">The thumbprint (as a hex string) of the certificate to resolve.</param>
+            <returns>The resolved <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/>, or null if the certificate cannot be found.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IInternalCertificateXmlEncryptor">
+            <summary>
+            Internal implementation details of <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.CertificateXmlEncryptor"/> for unit testing.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IInternalEncryptedXmlDecryptor">
+            <summary>
+            Internal implementation details of <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlDecryptor"/> for unit testing.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlDecryptor">
+            <summary>
+            The basic interface for decrypting an XML element.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlDecryptor.Decrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Decrypts the specified XML element.
+            </summary>
+            <param name="encryptedElement">An encrypted XML element.</param>
+            <returns>The decrypted form of <paramref name="encryptedElement"/>.</returns>
+            <remarks>
+            Implementations of this method must not mutate the <see cref="T:System.Xml.Linq.XElement"/>
+            instance provided by <paramref name="encryptedElement"/>.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlEncryptor">
+            <summary>
+            The basic interface for encrypting XML elements.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlEncryptor.Encrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Encrypts the specified <see cref="T:System.Xml.Linq.XElement"/>.
+            </summary>
+            <param name="plaintextElement">The plaintext to encrypt.</param>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo"/> that contains the encrypted value of
+            <paramref name="plaintextElement"/> along with information about how to
+            decrypt it.
+            </returns>
+            <remarks>
+            Implementations of this method must not mutate the <see cref="T:System.Xml.Linq.XElement"/>
+            instance provided by <paramref name="plaintextElement"/>.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.NullXmlDecryptor">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlDecryptor"/> that decrypts XML elements with a null decryptor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.NullXmlDecryptor.Decrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Decrypts the specified XML element.
+            </summary>
+            <param name="encryptedElement">An encrypted XML element.</param>
+            <returns>The decrypted form of <paramref name="encryptedElement"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.NullXmlEncryptor">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.IXmlEncryptor"/> that encrypts XML elements with a null encryptor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.NullXmlEncryptor.#ctor">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.NullXmlEncryptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.NullXmlEncryptor.#ctor(System.IServiceProvider)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.NullXmlEncryptor"/>.
+            </summary>
+            <param name="services">An optional <see cref="T:System.IServiceProvider"/> to provide ancillary services.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.NullXmlEncryptor.Encrypt(System.Xml.Linq.XElement)">
+            <summary>
+            Encrypts the specified <see cref="T:System.Xml.Linq.XElement"/> with a null encryptor, i.e.,
+            by returning the original value of <paramref name="plaintextElement"/> unencrypted.
+            </summary>
+            <param name="plaintextElement">The plaintext to echo back.</param>
+            <returns>
+            An <see cref="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.EncryptedXmlInfo"/> that contains the null-encrypted value of
+            <paramref name="plaintextElement"/> along with information about how to
+            decrypt it.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.XmlEncryptionExtensions.ToSecret(System.Xml.Linq.XElement)">
+            <summary>
+            Converts an <see cref="T:System.Xml.Linq.XElement"/> to a <see cref="T:Microsoft.AspNetCore.DataProtection.Secret"/> so that it can be kept in memory
+            securely or run through the DPAPI routines.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlEncryption.XmlEncryptionExtensions.ToXElement(Microsoft.AspNetCore.DataProtection.Secret)">
+            <summary>
+            Converts a <see cref="T:Microsoft.AspNetCore.DataProtection.Secret"/> back into an <see cref="T:System.Xml.Linq.XElement"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlEncryption.XmlKeyDecryptionOptions">
+            <summary>
+            Specifies settings for how to decrypt XML keys.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.XmlExtensions">
+            <summary>
+            Contains helpers to work with XElement objects.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.XmlExtensions.WithoutChildNodes(System.Xml.Linq.XElement)">
+            <summary>
+            Returns a new XElement which is a carbon copy of the provided element,
+            but with no child nodes. Useful for writing exception messages without
+            inadvertently disclosing secret key material. It is assumed that the
+            element name itself and its attribute values are not secret.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.ExceptionExtensions.RequiresHomogenization(System.Exception)">
+            <summary>
+            Determines whether an exception must be homogenized by being wrapped inside a
+            CryptographicException before being rethrown.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.CryptCommon_GenericError">
+            <summary>An error occurred during a cryptographic operation. Refer to the inner exception for more information.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Common_BufferIncorrectlySized">
+            <summary>The provided buffer is of length {0} byte(s). It must instead be exactly {1} byte(s) in length.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatCommon_BufferIncorrectlySized(System.Object,System.Object)">
+            <summary>The provided buffer is of length {0} byte(s). It must instead be exactly {1} byte(s) in length.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.CryptCommon_PayloadInvalid">
+            <summary>The payload was invalid. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Common_PropertyCannotBeNullOrEmpty">
+            <summary>Property {0} cannot be null or empty.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatCommon_PropertyCannotBeNullOrEmpty(System.Object)">
+            <summary>Property {0} cannot be null or empty.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Common_DecryptionFailed">
+            <summary>The provided payload could not be decrypted. Refer to the inner exception for more information.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Common_EncryptionFailed">
+            <summary>An error occurred while trying to encrypt the provided data. Refer to the inner exception for more information.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Common_KeyNotFound">
+            <summary>The key {0:B} was not found in the key ring. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Common_KeyRevoked">
+            <summary>The key {0:B} has been revoked. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.ProtectionProvider_BadMagicHeader">
+            <summary>The provided payload cannot be decrypted because it was not protected with this protection provider. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.ProtectionProvider_BadVersion">
+            <summary>The provided payload cannot be decrypted because it was protected with a newer version of the protection provider.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Common_ValueMustBeNonNegative">
+            <summary>Value must be non-negative.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.TypeExtensions_BadCast">
+            <summary>The type '{1}' is not assignable to '{0}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatTypeExtensions_BadCast(System.Object,System.Object)">
+            <summary>The type '{1}' is not assignable to '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.KeyManagementOptions_MinNewKeyLifetimeViolated">
+            <summary>The new key lifetime must be at least one week. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.XmlKeyManager_DuplicateKey">
+            <summary>The key {0:B} already exists in the keyring. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Common_ArgumentCannotBeNullOrEmpty">
+            <summary>Argument cannot be null or empty.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Common_PropertyMustBeNonNegative">
+            <summary>Property {0} must have a non-negative value.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatCommon_PropertyMustBeNonNegative(System.Object)">
+            <summary>Property {0} must have a non-negative value.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.Platform_WindowsRequiredForGcm">
+            <summary>GCM algorithms require the Windows platform. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.CertificateXmlEncryptor_CertificateNotFound">
+            <summary>A certificate with the thumbprint '{0}' could not be found. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatCertificateXmlEncryptor_CertificateNotFound(System.Object)">
+            <summary>A certificate with the thumbprint '{0}' could not be found. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.EncryptedXmlDecryptor_DoesNotWorkOnCoreClr">
+            <summary>Decrypting EncryptedXml-encapsulated payloads is not yet supported on Core CLR. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.AlgorithmAssert_BadBlockSize">
+            <summary>The symmetric algorithm block size of {0} bits is invalid. The block size must be between 64 and 2048 bits, inclusive, and it must be a multiple of 8 bits.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatAlgorithmAssert_BadBlockSize(System.Object)">
+            <summary>The symmetric algorithm block size of {0} bits is invalid. The block size must be between 64 and 2048 bits, inclusive, and it must be a multiple of 8 bits.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.AlgorithmAssert_BadDigestSize">
+            <summary>The validation algorithm digest size of {0} bits is invalid. The digest size must be between 128 and 2048 bits, inclusive, and it must be a multiple of 8 bits.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatAlgorithmAssert_BadDigestSize(System.Object)">
+            <summary>The validation algorithm digest size of {0} bits is invalid. The digest size must be between 128 and 2048 bits, inclusive, and it must be a multiple of 8 bits.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.AlgorithmAssert_BadKeySize">
+            <summary>The symmetric algorithm key size of {0} bits is invalid. The key size must be between 128 and 2048 bits, inclusive, and it must be a multiple of 8 bits.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatAlgorithmAssert_BadKeySize(System.Object)">
+            <summary>The symmetric algorithm key size of {0} bits is invalid. The key size must be between 128 and 2048 bits, inclusive, and it must be a multiple of 8 bits.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.KeyRingProvider_NoDefaultKey_AutoGenerateDisabled">
+            <summary>The key ring does not contain a valid default protection key. The data protection system cannot create a new key because auto-generation of keys is disabled. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.LifetimeMustNotBeNegative">
+            <summary>{0} must not be negative.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatLifetimeMustNotBeNegative(System.Object)">
+            <summary>{0} must not be negative.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Resources.FileSystem_EphemeralKeysLocationInContainer">
+            <summary>Storing keys in a directory '{path}' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Resources.FormatFileSystem_EphemeralKeysLocationInContainer(System.Object)">
+            <summary>Storing keys in a directory '{path}' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.DataProtectionServiceCollectionExtensions">
+            <summary>
+            Extension methods for setting up data protection services in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.DataProtectionServiceCollectionExtensions.AddDataProtection(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds data protection services to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.DataProtectionServiceCollectionExtensions.AddDataProtection(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.DataProtection.DataProtectionOptions})">
+            <summary>
+            Adds data protection services to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="setupAction">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.AspNetCore.DataProtection.DataProtectionOptions"/>.</param>
+            <returns>A reference to this instance after the operation has completed.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Logging.LoggingExtensions">
+            <summary>
+            Helpful extension methods on <see cref="T:Microsoft.Extensions.Logging.ILogger"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Logging.LoggingExtensions.IsDebugLevelEnabled(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Returns a value stating whether the 'debug' log level is enabled.
+            Returns false if the logger instance is null.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Logging.LoggingExtensions.IsTraceLevelEnabled(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Returns a value stating whether the 'trace' log level is enabled.
+            Returns false if the logger instance is null.
+            </summary>
+        </member>
+        <member name="T:System.LoggingServiceProviderExtensions">
+            <summary>
+            Helpful logging-related extension methods on <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="M:System.LoggingServiceProviderExtensions.GetLogger``1(System.IServiceProvider)">
+            <summary>
+            Retrieves an instance of <see cref="T:Microsoft.Extensions.Logging.ILogger"/> given the type name <typeparamref name="T"/>.
+            This is equivalent to <see cref="M:Microsoft.Extensions.Logging.LoggerFactoryExtensions.CreateLogger``1(Microsoft.Extensions.Logging.ILoggerFactory)"/>.
+            </summary>
+            <returns>
+            An <see cref="T:Microsoft.Extensions.Logging.ILogger"/> instance, or null if <paramref name="services"/> is null or the
+            <see cref="T:System.IServiceProvider"/> cannot produce an <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.
+            </returns>
+        </member>
+        <member name="M:System.LoggingServiceProviderExtensions.GetLogger(System.IServiceProvider,System.Type)">
+            <summary>
+            Retrieves an instance of <see cref="T:Microsoft.Extensions.Logging.ILogger"/> given the type name <paramref name="type"/>.
+            This is equivalent to <see cref="M:Microsoft.Extensions.Logging.LoggerFactoryExtensions.CreateLogger``1(Microsoft.Extensions.Logging.ILoggerFactory)"/>.
+            </summary>
+            <returns>
+            An <see cref="T:Microsoft.Extensions.Logging.ILogger"/> instance, or null if <paramref name="services"/> is null or the
+            <see cref="T:System.IServiceProvider"/> cannot produce an <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.
+            </returns>
+        </member>
+    </members>
+</doc>

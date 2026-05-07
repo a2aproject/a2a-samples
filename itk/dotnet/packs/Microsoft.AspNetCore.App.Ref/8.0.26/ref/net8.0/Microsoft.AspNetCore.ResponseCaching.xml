@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.ResponseCaching</name>
+    </assembly>
+    <members>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCache.Get(System.String)">
+            <summary>
+            Gets the cached response for the given key, if it exists.
+            If no cached response exists for the given key, <c>null</c> is returned.
+            </summary>
+            <param name="key">The cache key to look up.</param>
+            <returns>The response cache entry if it exists; otherwise <c>null</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCache.Set(System.String,Microsoft.AspNetCore.ResponseCaching.IResponseCacheEntry,System.TimeSpan)">
+            <summary>
+            Stores the given response in the response cache.
+            </summary>
+            <param name="key">The cache key to store the response under.</param>
+            <param name="entry">The response cache entry to store.</param>
+            <param name="validFor">The amount of time the entry will be kept in the cache before expiring, relative to now.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCachingKeyProvider.CreateBaseKey(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Create a base key for a response cache entry.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext"/>.</param>
+            <returns>The created base key.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCachingKeyProvider.CreateStorageVaryByKey(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Create a vary key for storing cached responses.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext"/>.</param>
+            <returns>The created vary key.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCachingKeyProvider.CreateLookupVaryByKeys(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Create one or more vary keys for looking up cached responses.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext"/>.</param>
+            <returns>An ordered <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the vary keys to try when looking up items.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCachingPolicyProvider.AttemptResponseCaching(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Determine whether the response caching logic should be attempted for the incoming HTTP request.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext"/>.</param>
+            <returns><c>true</c> if response caching logic should be attempted; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCachingPolicyProvider.AllowCacheLookup(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Determine whether a cache lookup is allowed for the incoming HTTP request.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext"/>.</param>
+            <returns><c>true</c> if cache lookup for this request is allowed; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCachingPolicyProvider.AllowCacheStorage(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Determine whether storage of the response is allowed for the incoming HTTP request.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext"/>.</param>
+            <returns><c>true</c> if storage of the response for this request is allowed; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCachingPolicyProvider.IsResponseCacheable(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Determine whether the response received by the middleware can be cached for future requests.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext"/>.</param>
+            <returns><c>true</c> if the response is cacheable; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.IResponseCachingPolicyProvider.IsCachedEntryFresh(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Determine whether the response retrieved from the response cache is fresh and can be served.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext"/>.</param>
+            <returns><c>true</c> if the cached entry is fresh; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCaching.LoggerExtensions">
+            <summary>
+            Defines *all* the logger messages produced by response caching
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingFeature">
+            Default implementation for <see cref="T:Microsoft.AspNetCore.ResponseCaching.IResponseCachingFeature" />
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCaching.ResponseCachingFeature.VaryByQueryKeys">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware">
+            <summary>
+            Enable HTTP response caching.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.ResponseCaching.ResponseCachingOptions},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.ObjectPool.ObjectPoolProvider)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware"/>.
+            </summary>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.</param>
+            <param name="options">The options for this middleware.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> used for logging.</param>
+            <param name="poolProvider">The <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPoolProvider"/> used for creating <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool"/> instances.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the logic of the middleware.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that completes when the middleware has completed processing.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware.OnFinalizeCacheHeaders(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Finalize cache headers.
+            </summary>
+            <param name="context"></param>
+            <returns><c>true</c> if a vary by entry needs to be stored in the cache; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware.OnStartResponse(Microsoft.AspNetCore.ResponseCaching.ResponseCachingContext)">
+            <summary>
+            Mark the response as started and set the response time if no response was started yet.
+            </summary>
+            <param name="context"></param>
+            <returns><c>true</c> if the response was not started before this call; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingOptions">
+            <summary>
+            Options for configuring the <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCaching.ResponseCachingOptions.SizeLimit">
+            <summary>
+            The size limit for the response cache middleware in bytes. The default is set to 100 MB.
+            When this limit is exceeded, no new responses will be cached until older entries are
+            evicted.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCaching.ResponseCachingOptions.MaximumBodySize">
+            <summary>
+            The largest cacheable size for the response body in bytes. The default is set to 64 MB.
+            If the response body exceeds this limit, it will not be cached by the <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCaching.ResponseCachingOptions.UseCaseSensitivePaths">
+            <summary>
+            <c>true</c> if request paths are case-sensitive; otherwise <c>false</c>. The default is to treat paths as case-insensitive.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCaching.ResponseCachingOptions.TimeProvider">
+            <summary>
+            For testing purposes only.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCaching.StreamUtilities.BodySegmentSize">
+            <summary>
+            The segment size for buffering the response body in bytes. The default is set to 80 KB (81920 Bytes) to avoid allocations on the LOH.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ResponseCachingExtensions">
+            <summary>
+            Extension methods for adding the <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware"/> to an application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ResponseCachingExtensions.UseResponseCaching(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds the <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingMiddleware"/> for caching HTTP responses.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ResponseCachingServicesExtensions">
+            <summary>
+            Extension methods for the ResponseCaching middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ResponseCachingServicesExtensions.AddResponseCaching(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add response caching services.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ResponseCachingServicesExtensions.AddResponseCaching(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.ResponseCaching.ResponseCachingOptions})">
+            <summary>
+            Add response caching services and configure the related options.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configureOptions">A delegate to configure the <see cref="T:Microsoft.AspNetCore.ResponseCaching.ResponseCachingOptions"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm">
+            <summary>
+            Provides support for efficiently using Tasks to implement the APM (Begin/End) pattern.
+            </summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.Begin(System.Threading.Tasks.Task,System.AsyncCallback,System.Object)">
+            <summary>
+            Marshals the Task as an IAsyncResult, using the supplied callback and state
+            to implement the APM pattern.
+            </summary>
+            <param name="task">The Task to be marshaled.</param>
+            <param name="callback">The callback to be invoked upon completion.</param>
+            <param name="state">The state to be stored in the IAsyncResult.</param>
+            <returns>An IAsyncResult to represent the task's asynchronous operation.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End``1(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm.TaskAsyncResult">
+            <summary>Provides a simple IAsyncResult that wraps a Task.</summary>
+            <remarks>
+            We could use the Task as the IAsyncResult if the Task's AsyncState is the same as the object state,
+            but that's very rare, in particular in a situation where someone cares about allocation, and always
+            using TaskAsyncResult simplifies things and enables additional optimizations.
+            </remarks>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task">
+            <summary>The wrapped Task.</summary>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._callback">
+            <summary>Callback to invoke when the wrapped task completes.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.#ctor(System.Threading.Tasks.Task,System.Object,System.AsyncCallback)">
+            <summary>Initializes the IAsyncResult with the Task to wrap and the associated object state.</summary>
+            <param name="task">The Task to wrap.</param>
+            <param name="state">The new AsyncState value.</param>
+            <param name="callback">Callback to invoke when the wrapped task completes.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.InvokeCallback">
+            <summary>Invokes the callback.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncState">
+            <summary>Gets a user-defined object that qualifies or contains information about an asynchronous operation.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.CompletedSynchronously">
+            <summary>Gets a value that indicates whether the asynchronous operation completed synchronously.</summary>
+            <remarks>This is set lazily based on whether the <see cref="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task"/> has completed by the time this object is created.</remarks>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.IsCompleted">
+            <summary>Gets a value that indicates whether the asynchronous operation has completed.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncWaitHandle">
+            <summary>Gets a <see cref="T:System.Threading.WaitHandle"/> that is used to wait for an asynchronous operation to complete.</summary>
+        </member>
+    </members>
+</doc>

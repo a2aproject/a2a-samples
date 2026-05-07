@@ -1,0 +1,540 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Rewrite</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Rewrite.ApacheModRewriteOptionsExtensions">
+            <summary>
+            Extensions for adding Apache mod_rewrite rules to <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewriteOptionsExtensions.AddApacheModRewrite(Microsoft.AspNetCore.Rewrite.RewriteOptions,Microsoft.Extensions.FileProviders.IFileProvider,System.String)">
+            <summary>
+            Add rules from an Apache mod_rewrite file
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/></param>
+            <param name="fileProvider">The <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/> </param>
+            <param name="filePath">The path to the file containing mod_rewrite rules.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewriteOptionsExtensions.AddApacheModRewrite(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.IO.TextReader)">
+            <summary>
+            Add rules from an Apache mod_rewrite file
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/></param>
+            <param name="reader">A stream of mod_rewrite rules.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.ConditionPatternParser">
+            <summary>
+            Parses the "CondPattern" portion of the RewriteCond.
+            RewriteCond TestString CondPattern
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.ConditionPatternParser.ParseActionCondition(System.String)">
+            <summary>
+            Given a CondPattern, create a ParsedConditionExpression, containing the type of operation
+            and value.
+            ParsedConditionExpression is an intermediary object, which will be made into a ConditionExpression
+            once the flags are parsed.
+            </summary>
+            <param name="condition">The CondPattern portion of a mod_rewrite RewriteCond.</param>
+            <returns>A new parsed condition.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.ConditionPatternParser.ParseProperty(Microsoft.AspNetCore.Rewrite.ParserContext,System.Boolean)">
+            <summary>
+            Given that the current index is a property (ex checks for directory or regular files), create a
+            new ParsedConditionExpression with the appropriate property operation.
+            </summary>
+            <param name="context"></param>
+            <param name="invert"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.CookieActionFactory.Create(System.String)">
+            <summary>
+             Creates a <see cref="T:Microsoft.AspNetCore.Rewrite.UrlActions.ChangeCookieAction" /> <see href="https://httpd.apache.org/docs/current/rewrite/flags.html#flag_co" /> for details.
+            </summary>
+            <param name="flagValue">The flag</param>
+            <returns>The action</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.ServerVariables">
+            <summary>
+            mod_rewrite lookups for specific string constants.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.ServerVariables.FindServerVariable(System.String,Microsoft.AspNetCore.Rewrite.ParserContext)">
+            <summary>
+            Translates mod_rewrite server variables strings to an enum of different server variables.
+            </summary>
+            <param name="serverVariable">The server variable string.</param>
+            <param name="context">The Parser context</param>
+            <returns>The appropriate enum if the server variable exists, else ServerVariable.None</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.TestStringParser">
+            <summary>
+            Parses the TestString segment of the mod_rewrite condition.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.TestStringParser.Parse(System.String)">
+            <summary>
+            Creates a pattern, which is a template to create a new test string to
+            compare to the condition pattern. Can contain server variables, back references, etc.
+            </summary>
+            <param name="testString">The test string portion of the RewriteCond
+            Examples:
+            %{REMOTE_ADDR}
+            /var/www/%{REQUEST_URI}
+            %1
+            $1</param>
+            <returns>A new <see cref="T:Microsoft.AspNetCore.Rewrite.Pattern"/>, containing a list of <see cref="T:Microsoft.AspNetCore.Rewrite.PatternSegment"/></returns>
+            http://httpd.apache.org/docs/current/mod/mod_rewrite.html
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.TestStringParser.ParseConditionParameter(Microsoft.AspNetCore.Rewrite.ParserContext,System.Collections.Generic.IList{Microsoft.AspNetCore.Rewrite.PatternSegment})">
+            <summary>
+            Obtains the condition parameter, which could either be a condition variable or a
+            server variable. Assumes the current character is immediately after the '%'.
+            context, on return will be on the last character of variable captured, such that after
+            Next() is called, it will be on the character immediately after the condition parameter.
+            </summary>
+            <param name="context">The ParserContext</param>
+            <param name="results">The List of results which the new condition parameter will be added.</param>
+            <returns>true </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.TestStringParser.ParseLiteral(Microsoft.AspNetCore.Rewrite.ParserContext,System.Collections.Generic.IList{Microsoft.AspNetCore.Rewrite.PatternSegment})">
+            <summary>
+            Parse a string literal in the test string. Continues capturing until the start of a new variable type.
+            </summary>
+            <param name="context"></param>
+            <param name="results"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.Tokenizer">
+            <summary>
+            Tokenizes a mod_rewrite rule, delimited by spaces.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.ApacheModRewrite.Tokenizer.Tokenize(System.String)">
+            <summary>
+            Splits a string on whitespace, ignoring spaces, creating into a list of strings.
+            </summary>
+            <param name="rule">The rule to tokenize.</param>
+            <returns>A list of tokens.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.IISUrlRewriteOptionsExtensions">
+            <summary>
+            Extensions for adding IIS Url Rewrite rules to <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.IISUrlRewriteOptionsExtensions.AddIISUrlRewrite(Microsoft.AspNetCore.Rewrite.RewriteOptions,Microsoft.Extensions.FileProviders.IFileProvider,System.String,System.Boolean)">
+            <summary>
+            Add rules from a IIS config file containing Url Rewrite rules
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/></param>
+            <param name="fileProvider">The <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/> </param>
+            <param name="filePath">The path to the file containing UrlRewrite rules.</param>
+            <param name="alwaysUseManagedServerVariables">Server variables are by default sourced from the server if it supports the <see cref="T:Microsoft.AspNetCore.Http.Features.IServerVariablesFeature"/> feature. Use <c>true</c> to disable that behavior</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.IISUrlRewriteOptionsExtensions.AddIISUrlRewrite(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.IO.TextReader,System.Boolean)">
+            <summary>
+            Add rules from a IIS config file containing Url Rewrite rules
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/></param>
+            <param name="reader">The text reader stream.</param>
+            <param name="alwaysUseManagedServerVariables">Server variables are by default sourced from the server if it supports the <see cref="T:Microsoft.AspNetCore.Http.Features.IServerVariablesFeature"/> feature. Use <c>true</c> to disable that behavior</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.IISUrlRewrite.InputParser.ParseInputString(System.String)">
+            <summary>
+            Creates a pattern, which is a template to create a new test string to
+            compare to the condition. Can contain server variables, back references, etc.
+            </summary>
+            <param name="testString"></param>
+            <returns>A new <see cref="T:Microsoft.AspNetCore.Rewrite.Pattern"/>, containing a list of <see cref="T:Microsoft.AspNetCore.Rewrite.PatternSegment"/></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.IISUrlRewrite.InputParser.ParseInputString(System.String,Microsoft.AspNetCore.Rewrite.IISUrlRewrite.UriMatchPart)">
+            <summary>
+            Creates a pattern, which is a template to create a new test string to
+            compare to the condition. Can contain server variables, back references, etc.
+            </summary>
+            <param name="testString"></param>
+            <param name="uriMatchPart">When testString evaluates to a URL segment, specify which part of the URI to evaluate.</param>
+            <returns>A new <see cref="T:Microsoft.AspNetCore.Rewrite.Pattern"/>, containing a list of <see cref="T:Microsoft.AspNetCore.Rewrite.PatternSegment"/></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.IISUrlRewrite.ServerVariables.FindServerVariable(System.String,Microsoft.AspNetCore.Rewrite.ParserContext,Microsoft.AspNetCore.Rewrite.IISUrlRewrite.UriMatchPart,System.Boolean)">
+            <summary>
+            Returns the matching <see cref="T:Microsoft.AspNetCore.Rewrite.PatternSegment"/> for the given <paramref name="serverVariable"/>
+            </summary>
+            <param name="serverVariable">The server variable</param>
+            <param name="context">The parser context which is utilized when an exception is thrown</param>
+            <param name="uriMatchPart">Indicates whether the full URI or the path should be evaluated for URL segments</param>
+            <param name="alwaysUseManagedServerVariables">Determines whether server variables are sourced from the managed server</param>
+            <exception cref="T:System.FormatException">Thrown when the server variable is unknown</exception>
+            <returns>The matching <see cref="T:Microsoft.AspNetCore.Rewrite.PatternSegment"/></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.IISUrlRewrite.UrlRewriteFileParser.Parse(System.IO.TextReader,System.Boolean)">
+            <summary>
+            Parse an IIS rewrite section into a list of <see cref="T:Microsoft.AspNetCore.Rewrite.IISUrlRewrite.IISUrlRewriteRule"/>s.
+            </summary>
+            <param name="reader">The reader containing the rewrite XML</param>
+            <param name="alwaysUseManagedServerVariables">Determines whether server variables will be sourced from the managed server</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.IRule">
+            <summary>
+            Represents a rule.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.IRule.ApplyRule(Microsoft.AspNetCore.Rewrite.RewriteContext)">
+            <summary>
+            Applies the rule.
+            Implementations of ApplyRule should set the value for <see cref="P:Microsoft.AspNetCore.Rewrite.RewriteContext.Result"/>
+            (defaults to RuleResult.ContinueRules)
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.ParserContext">
+            <summary>
+            Represents a string iterator, with captures.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.RewriteContext">
+            <summary>
+            A context object for <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteMiddleware"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.RewriteContext.HttpContext">
+            <summary>
+            Gets and sets the <see cref="P:Microsoft.AspNetCore.Rewrite.RewriteContext.HttpContext"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.RewriteContext.StaticFileProvider">
+            <summary>
+            Gets and sets the File Provider for file and directory checks.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.RewriteContext.Logger">
+            <summary>
+            Gets and sets the logger
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.RewriteContext.Result">
+            <summary>
+            A shared result that is set appropriately by each rule for the next action that
+            should be taken. See <see cref="T:Microsoft.AspNetCore.Rewrite.RuleResult"/>
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.RewriteMiddleware">
+            <summary>
+            Represents a middleware that rewrites urls
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Rewrite.RewriteOptions})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteMiddleware"/>
+            </summary>
+            <param name="next">The delegate representing the next middleware in the request pipeline.</param>
+            <param name="hostingEnvironment">The Hosting Environment.</param>
+            <param name="loggerFactory">The Logger Factory.</param>
+            <param name="options">The middleware options, containing the rules to apply.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Executes the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> for the current request.</param>
+            <returns>A task that represents the execution of this middleware.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.RewriteOptions">
+            <summary>
+            Options for the <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteMiddleware"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.RewriteOptions.Rules">
+            <summary>
+            A list of <see cref="T:Microsoft.AspNetCore.Rewrite.IRule"/> that will be applied in order upon a request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.RewriteOptions.StaticFileProvider">
+            <summary>
+            Gets and sets the File Provider for file and directory checks.
+            </summary>
+            <value>
+            Defaults to <see cref="P:Microsoft.AspNetCore.Hosting.IHostingEnvironment.WebRootFileProvider"/>.
+            </value>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions">
+            <summary>
+            The builder to a list of rules for <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/> and <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteMiddleware"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.Add(Microsoft.AspNetCore.Rewrite.RewriteOptions,Microsoft.AspNetCore.Rewrite.IRule)">
+            <summary>
+            Adds a rule to the current rules.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="rule">A rule to be added to the current rules.</param>
+            <returns>The Rewrite options.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.Add(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.Action{Microsoft.AspNetCore.Rewrite.RewriteContext})">
+            <summary>
+            Adds a rule to the current rules.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="applyRule">A Func that checks and applies the rule.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRewrite(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.String,System.String,System.Boolean)">
+            <summary>
+            Adds a rule that rewrites the path if the regex matches the HttpContext's PathString.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="regex">The regex string to compare with.</param>
+            <param name="replacement">If the regex matches, what to replace the uri with.</param>
+            <param name="skipRemainingRules">If the regex matches, conditionally stop processing other rules.</param>
+            <returns>The Rewrite options.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirect(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.String,System.String)">
+            <summary>
+            Redirect the request if the regex matches the HttpContext's PathString
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="regex">The regex string to compare with.</param>
+            <param name="replacement">If the regex matches, what to replace the uri with.</param>
+            <returns>The Rewrite options.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirect(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.String,System.String,System.Int32)">
+            <summary>
+            Redirect the request if the regex matches the HttpContext's PathString
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="regex">The regex string to compare with.</param>
+            <param name="replacement">If the regex matches, what to replace the uri with.</param>
+            <param name="statusCode">The status code to add to the response.</param>
+            <returns>The Rewrite options.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToHttpsPermanent(Microsoft.AspNetCore.Rewrite.RewriteOptions)">
+            <summary>
+            Redirect a request to https if the incoming request is http, with returning a 301
+            status code for permanently redirected.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToHttps(Microsoft.AspNetCore.Rewrite.RewriteOptions)">
+            <summary>
+            Redirect a request to https if the incoming request is http
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToHttps(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.Int32)">
+            <summary>
+            Redirect a request to https if the incoming request is http
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="statusCode">The status code to add to the response.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToHttps(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            Redirect a request to https if the incoming request is http
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="statusCode">The status code to add to the response.</param>
+            <param name="sslPort">The SSL port to add to the response.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToWwwPermanent(Microsoft.AspNetCore.Rewrite.RewriteOptions)">
+            <summary>
+            Permanently redirects the request to the www subdomain if the request is non-www.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToWwwPermanent(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.String[])">
+            <summary>
+            Permanently redirects the request to the www subdomain if the request is non-www.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="domains">Limit the rule to apply only on the specified domain(s).</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToWww(Microsoft.AspNetCore.Rewrite.RewriteOptions)">
+            <summary>
+            Redirect the request to the www subdomain if the incoming request is non-www.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToWww(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.String[])">
+            <summary>
+            Redirect the request to the www subdomain if the incoming request is non-www.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="domains">Limit the rule to apply only on the specified domain(s).</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToWww(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.Int32)">
+            <summary>
+            Redirect the request to the www subdomain if the incoming request is non-www.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="statusCode">The status code to add to the response.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToWww(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.Int32,System.String[])">
+            <summary>
+            Redirect the request to the www subdomain if the incoming request is non-www.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="statusCode">The status code to add to the response.</param>
+            <param name="domains">Limit the rule to apply only on the specified domain(s).</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToNonWwwPermanent(Microsoft.AspNetCore.Rewrite.RewriteOptions)">
+            <summary>
+            Permanently redirects the request to the root domain if the request is from the www subdomain.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToNonWwwPermanent(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.String[])">
+            <summary>
+            Permanently redirects the request to the root domain if the request is from the www subdomain.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="domains">Limit the rule to apply only on the specified domain(s).</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToNonWww(Microsoft.AspNetCore.Rewrite.RewriteOptions)">
+            <summary>
+            Redirect the request to the root domain if the incoming request is from the www subdomain.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToNonWww(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.String[])">
+            <summary>
+            Redirect the request to the root domain if the incoming request is from the www subdomain.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="domains">Limit the rule to apply only on the specified domain(s).</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToNonWww(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.Int32)">
+            <summary>
+            Redirect the request to the root domain if the incoming request is from the www subdomain.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="statusCode">The status code to add to the response.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.RewriteOptionsExtensions.AddRedirectToNonWww(Microsoft.AspNetCore.Rewrite.RewriteOptions,System.Int32,System.String[])">
+            <summary>
+            Redirect the request to the root domain if the incoming request is from the www subdomain.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteOptions"/>.</param>
+            <param name="statusCode">The status code to add to the response.</param>
+            <param name="domains">Limit the rule to apply only on the specified domain(s).</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Rewrite.RuleResult">
+            <summary>
+            An enum representing the result of a rule.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Rewrite.RuleResult.ContinueRules">
+            <summary>
+            Default value, continue applying rules.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Rewrite.RuleResult.EndResponse">
+            <summary>
+             The rule ended the request by providing a response.
+             </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Rewrite.RuleResult.SkipRemainingRules">
+            <summary>
+            Stop applying rules and send context to the next middleware
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_ChangeEnvironmentNotSupported">
+            <summary>Error adding a mod_rewrite rule. The change environment flag is not supported.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_CouldNotParseInteger">
+            <summary>Could not parse integer from value '{0}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_CouldNotParseInteger(System.Object)">
+            <summary>Could not parse integer from value '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_InputParserIndexOutOfRange">
+            <summary>Index out of range for backreference: '{0}' at string index: '{1}'</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_InputParserIndexOutOfRange(System.Object,System.Object)">
+            <summary>Index out of range for backreference: '{0}' at string index: '{1}'</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_InputParserInvalidInteger">
+            <summary>Cannot parse '{0}' to integer at string index: '{1}'</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_InputParserInvalidInteger(System.Object,System.Object)">
+            <summary>Cannot parse '{0}' to integer at string index: '{1}'</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_InputParserMissingCloseBrace">
+            <summary>Missing close brace for parameter at string index: '{0}'</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_InputParserMissingCloseBrace(System.Object)">
+            <summary>Missing close brace for parameter at string index: '{0}'</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_InputParserNoBackreference">
+            <summary>Missing backreference for parameter at string index: '{0}'</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_InputParserNoBackreference(System.Object)">
+            <summary>Missing backreference for parameter at string index: '{0}'</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_InputParserUnrecognizedParameter">
+            <summary>Unrecognized parameter type: '{0}', terminated at string index: '{1}'</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_InputParserUnrecognizedParameter(System.Object,System.Object)">
+            <summary>Unrecognized parameter type: '{0}', terminated at string index: '{1}'</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_IntegerMatch_FormatExceptionMessage">
+            <summary>Syntax error for integers in comparison.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_InvalidChangeCookieFlag">
+            <summary>Error parsing the mod_rewrite rule. The cookie flag (CO) has an incorrect format '{0}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_InvalidChangeCookieFlag(System.Object)">
+            <summary>Error parsing the mod_rewrite rule. The cookie flag (CO) has an incorrect format '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_ModRewriteParseError">
+            <summary>Could not parse the mod_rewrite file. Message: '{0}'.  Line number '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_ModRewriteParseError(System.Object,System.Object)">
+            <summary>Could not parse the mod_rewrite file. Message: '{0}'.  Line number '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_ModRewriteGeneralParseError">
+            <summary>Could not parse the mod_rewrite file.  Line number '{0}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_ModRewriteGeneralParseError(System.Object)">
+            <summary>Could not parse the mod_rewrite file.  Line number '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_UrlRewriteParseError">
+            <summary>Could not parse the UrlRewrite file. Message: '{0}'. Line number '{1}': '{2}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_UrlRewriteParseError(System.Object,System.Object,System.Object)">
+            <summary>Could not parse the UrlRewrite file. Message: '{0}'. Line number '{1}': '{2}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Rewrite.Resources.Error_UnsupportedServerVariable">
+            <summary>Rules using the '{0}' server variable are not supported</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Rewrite.Resources.FormatError_UnsupportedServerVariable(System.Object)">
+            <summary>Rules using the '{0}' server variable are not supported</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RewriteBuilderExtensions">
+            <summary>
+            Extension methods for the <see cref="T:Microsoft.AspNetCore.Rewrite.RewriteMiddleware"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RewriteBuilderExtensions.UseRewriter(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Checks if a given Url matches rules and conditions, and modifies the HttpContext on match.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RewriteBuilderExtensions.UseRewriter(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Rewrite.RewriteOptions)">
+            <summary>
+            Checks if a given Url matches rules and conditions, and modifies the HttpContext on match.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/></param>
+            <param name="options">Options for rewrite.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

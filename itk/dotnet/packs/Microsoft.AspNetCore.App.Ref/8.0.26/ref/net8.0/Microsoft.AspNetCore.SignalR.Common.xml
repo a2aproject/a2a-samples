@@ -1,0 +1,673 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.SignalR.Common</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.SignalR.HubException">
+            <summary>
+            The exception thrown from a hub when an error occurs.
+            </summary>
+            <remarks>
+            Exceptions often contain sensitive information, such as connection information. Because of this, SignalR does not expose the details
+            of exceptions that occur on the server to the client. However, instances of <see cref="T:Microsoft.AspNetCore.SignalR.HubException"/> <b>are</b> sent to the client.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.HubException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.HubException"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.HubException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.HubException"/> class
+            with a specified error message.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.HubException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.HubException"/> class
+            with a specified error message and a reference to the inner exception that is the cause of this exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception, or <c>null</c> if no inner exception is specified.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.HubException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.HubException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is <c>null</c>.</exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is <c>null</c> or <see cref="P:System.Exception.HResult"/> is zero (0).</exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.IInvocationBinder">
+            <summary>
+            Class used by <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol"/>s to get the <see cref="T:System.Type"/>(s) expected by the hub message being deserialized.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.IInvocationBinder.GetReturnType(System.String)">
+            <summary>
+            Gets the <see cref="T:System.Type"/> the invocation represented by the <paramref name="invocationId"/> is expected to contain.
+            </summary>
+            <param name="invocationId">The ID of the invocation being received.</param>
+            <returns>The <see cref="T:System.Type"/> the invocation is expected to contain.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.IInvocationBinder.GetParameterTypes(System.String)">
+            <summary>
+            Gets the list of <see cref="T:System.Type"/>s the method represented by <paramref name="methodName"/> takes as arguments.
+            </summary>
+            <param name="methodName">The name of the method being called.</param>
+            <returns>A list of <see cref="T:System.Type"/>s the method takes as arguments.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.IInvocationBinder.GetStreamItemType(System.String)">
+            <summary>
+            Gets the <see cref="T:System.Type"/> the stream item is expected to contain.
+            </summary>
+            <param name="streamId">The ID of the stream the stream item is a part of.</param>
+            <returns>The <see cref="T:System.Type"/> of the item the stream contains.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.IInvocationBinder.GetTarget(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Gets the <see cref="T:System.String"/> representation for the target from bytes.
+            </summary>
+            <param name="utf8Bytes">The target name as a utf8 sequence.</param>
+            <returns>A string that represents the target or null if the target string couldn't be determined.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.ISignalRBuilder">
+            <summary>
+            A builder abstraction for configuring SignalR object instances.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.ISignalRBuilder.Services">
+            <summary>
+            Gets the builder service collection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.AckMessage">
+            <summary>
+            Represents the ID being acknowledged so older messages do not need to be buffered anymore.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.AckMessage.#ctor(System.Int64)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.AckMessage"/> class.
+            </summary>
+            <param name="sequenceId">The ID of the last message that was received.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.AckMessage.SequenceId">
+            <summary>
+            The ID of the last message that was received.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.CancelInvocationMessage">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CancelInvocationMessage"/> represents a cancellation of a streaming method.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.CancelInvocationMessage.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CancelInvocationMessage"/> class.
+            </summary>
+            <param name="invocationId">The ID of the hub method invocation being canceled.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage">
+            <summary>
+            The message sent when closing a connection.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage.Empty">
+            <summary>
+            An empty close message with no error and <see cref="P:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage.AllowReconnect"/> set to <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage.Error">
+            <summary>
+            Gets the optional error message.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage.AllowReconnect">
+            <summary>
+            If <see langword="false"/>, clients with automatic reconnects enabled should not attempt to automatically reconnect after receiving the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage"/> class with an optional error message and <see cref="P:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage.AllowReconnect"/> set to <see langword="false"/>.
+            </summary>
+            <param name="error">An optional error message.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage"/> class with an optional error message and a <see cref="T:System.Boolean"/> indicating whether or not a client with
+            automatic reconnects enabled should attempt to reconnect upon receiving the message.
+            </summary>
+            <param name="error">An optional error message.</param>
+            <param name="allowReconnect">
+            <see langword="true"/>, if client with automatic reconnects enabled should attempt to reconnect after receiving the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CloseMessage"/>;
+            <see langword="false"/>, if the client should not try to reconnect whether or not automatic reconnects are enabled.
+            </param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage">
+            <summary>
+            Represents an invocation that has completed. If there is an error then the invocation didn't complete successfully.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage.Error">
+            <summary>
+            Optional error message if the invocation wasn't completed successfully. This must be null if there is a result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage.Result">
+            <summary>
+            Optional result from the invocation. This must be null if there is an error.
+            This can also be null if there wasn't a result from the method invocation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage.HasResult">
+            <summary>
+            Specifies whether the completion contains a result.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage.#ctor(System.String,System.String,System.Object,System.Boolean)">
+            <summary>
+            Constructs a <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage"/>.
+            </summary>
+            <param name="invocationId">The ID of the invocation that has completed.</param>
+            <param name="error">An optional error if the invocation failed.</param>
+            <param name="result">An optional result if the invocation returns a result.</param>
+            <param name="hasResult">Specifies whether the completion contains a result.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage.WithError(System.String,System.String)">
+            <summary>
+            Constructs a <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage"/> with an error.
+            </summary>
+            <param name="invocationId">The ID of the invocation that is being completed.</param>
+            <param name="error">The error that occurred during the invocation.</param>
+            <returns>The constructed <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage.WithResult(System.String,System.Object)">
+            <summary>
+            Constructs a <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage"/> with a result.
+            </summary>
+            <param name="invocationId">The ID of the invocation that is being completed.</param>
+            <param name="payload">The result from the invocation.</param>
+            <returns>The constructed <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage.Empty(System.String)">
+            <summary>
+            Constructs a <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage"/> without an error or result.
+            This means the invocation was successful but there is no return value.
+            </summary>
+            <param name="invocationId">The ID of the invocation that is being completed.</param>
+            <returns>The constructed <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeProtocol">
+            <summary>
+            A helper class for working with SignalR handshakes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HandshakeProtocol.GetSuccessfulHandshake(Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol)">
+            <summary>
+            Gets the bytes of a successful handshake message.
+            </summary>
+            <param name="protocol">The protocol being used for the connection.</param>
+            <returns>The bytes of a successful handshake message.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HandshakeProtocol.WriteRequestMessage(Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage,System.Buffers.IBufferWriter{System.Byte})">
+            <summary>
+            Writes the serialized representation of a <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage"/> to the specified writer.
+            </summary>
+            <param name="requestMessage">The message to write.</param>
+            <param name="output">The output writer.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HandshakeProtocol.WriteResponseMessage(Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage,System.Buffers.IBufferWriter{System.Byte})">
+            <summary>
+            Writes the serialized representation of a <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage"/> to the specified writer.
+            </summary>
+            <param name="responseMessage">The message to write.</param>
+            <param name="output">The output writer.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HandshakeProtocol.TryParseResponseMessage(System.Buffers.ReadOnlySequence{System.Byte}@,Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage@)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage"/> from the specified serialized representation.
+            </summary>
+            <param name="buffer">The serialized representation of the message.</param>
+            <param name="responseMessage">When this method returns, contains the parsed message.</param>
+            <returns>A value that is <c>true</c> if the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage"/> was successfully parsed; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HandshakeProtocol.TryParseRequestMessage(System.Buffers.ReadOnlySequence{System.Byte}@,Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage@)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage"/> from the specified serialized representation.
+            </summary>
+            <param name="buffer">The serialized representation of the message.</param>
+            <param name="requestMessage">When this method returns, contains the parsed message.</param>
+            <returns>A value that is <c>true</c> if the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage"/> was successfully parsed; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage">
+            <summary>
+            A handshake request message.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage"/> class.
+            </summary>
+            <param name="protocol">The requested protocol name.</param>
+            <param name="version">The requested protocol version.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage.Protocol">
+            <summary>
+            Gets the requested protocol name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.HandshakeRequestMessage.Version">
+            <summary>
+            Gets the requested protocol version.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage">
+            <summary>
+            A handshake response message.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage.Empty">
+            <summary>
+            An empty response message with no error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage.Error">
+            <summary>
+            Gets the optional error message.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HandshakeResponseMessage"/> class.
+            An error response does need a minor version. Since the handshake has failed, any extra data will be ignored.
+            </summary>
+            <param name="error">Error encountered by the server, indicating why the handshake has failed.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.HubInvocationMessage">
+            <summary>
+            A base class for hub messages related to a specific invocation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.HubInvocationMessage.Headers">
+            <summary>
+            Gets or sets a name/value collection of headers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.HubInvocationMessage.InvocationId">
+            <summary>
+            Gets the invocation ID.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HubInvocationMessage.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HubInvocationMessage"/> class.
+            </summary>
+            <param name="invocationId">The invocation ID.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.HubMessage">
+            <summary>
+            A base class for hub messages.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.HubMethodInvocationMessage">
+            <summary>
+            A base class for hub messages representing an invocation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.HubMethodInvocationMessage.Target">
+            <summary>
+            Gets the target method name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.HubMethodInvocationMessage.Arguments">
+            <summary>
+            Gets the target method arguments.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.HubMethodInvocationMessage.StreamIds">
+            <summary>
+            The target methods stream IDs.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HubMethodInvocationMessage.#ctor(System.String,System.String,System.Object[],System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HubMethodInvocationMessage"/> class.
+            </summary>
+            <param name="invocationId">The invocation ID.</param>
+            <param name="target">The target method name.</param>
+            <param name="arguments">The target method arguments.</param>
+            <param name="streamIds">The target methods stream IDs.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HubMethodInvocationMessage.#ctor(System.String,System.String,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HubMethodInvocationMessage"/> class.
+            </summary>
+            <param name="invocationId">The invocation ID.</param>
+            <param name="target">The target method name.</param>
+            <param name="arguments">The target method arguments.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.InvocationMessage">
+            <summary>
+            A hub message representing a non-streaming invocation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.InvocationMessage.#ctor(System.String,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.InvocationMessage"/> class.
+            </summary>
+            <param name="target">The target method name.</param>
+            <param name="arguments">The target method arguments.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.InvocationMessage.#ctor(System.String,System.String,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.InvocationMessage"/> class.
+            </summary>
+            <param name="invocationId">The invocation ID.</param>
+            <param name="target">The target method name.</param>
+            <param name="arguments">The target method arguments.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.InvocationMessage.#ctor(System.String,System.String,System.Object[],System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.InvocationMessage"/> class.
+            </summary>
+            <param name="invocationId">The invocation ID.</param>
+            <param name="target">The target method name.</param>
+            <param name="arguments">The target method arguments.</param>
+            <param name="streamIds">The target methods stream IDs.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.InvocationMessage.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.StreamInvocationMessage">
+            <summary>
+            A hub message representing a streaming invocation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.StreamInvocationMessage.#ctor(System.String,System.String,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.StreamInvocationMessage"/> class.
+            </summary>
+            <param name="invocationId">The invocation ID.</param>
+            <param name="target">The target method name.</param>
+            <param name="arguments">The target method arguments.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.StreamInvocationMessage.#ctor(System.String,System.String,System.Object[],System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.StreamInvocationMessage"/> class.
+            </summary>
+            <param name="invocationId">The invocation ID.</param>
+            <param name="target">The target method name.</param>
+            <param name="arguments">The target method arguments.</param>
+            <param name="streamIds">The target methods stream IDs.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.StreamInvocationMessage.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants">
+            <summary>
+            Constants related to the SignalR hub protocol.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants.InvocationMessageType">
+            <summary>
+            Represents the invocation message type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants.StreamItemMessageType">
+            <summary>
+            Represents the stream item message type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants.CompletionMessageType">
+            <summary>
+            Represents the completion message type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants.StreamInvocationMessageType">
+            <summary>
+            Represents the stream invocation message type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants.CancelInvocationMessageType">
+            <summary>
+            Represents the cancel invocation message type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants.PingMessageType">
+            <summary>
+            Represents the ping message type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants.CloseMessageType">
+            <summary>
+            Represents the close message type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants.AckMessageType">
+            <summary>
+            Represents the ack message type.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolConstants.SequenceMessageType">
+            <summary>
+            Represents the sequence message type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.HubProtocolExtensions.GetMessageBytes(Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol,Microsoft.AspNetCore.SignalR.Protocol.HubMessage)">
+            <summary>
+            Converts the specified <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HubMessage"/> to its serialized representation.
+            </summary>
+            <param name="hubProtocol">The hub protocol.</param>
+            <param name="message">The message to convert to bytes.</param>
+            <returns>The serialized representation of the specified message.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol">
+            <summary>
+            A protocol abstraction for communicating with SignalR hubs.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol.Name">
+            <summary>
+            Gets the name of the protocol. The name is used by SignalR to resolve the protocol between the client and server.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol.Version">
+            <summary>
+            Gets the major version of the protocol.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol.TransferFormat">
+            <summary>
+            Gets the transfer format of the protocol.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol.TryParseMessage(System.Buffers.ReadOnlySequence{System.Byte}@,Microsoft.AspNetCore.SignalR.IInvocationBinder,Microsoft.AspNetCore.SignalR.Protocol.HubMessage@)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HubMessage"/> from the specified serialized representation, and using the specified binder.
+            </summary>
+            <param name="input">The serialized representation of the message.</param>
+            <param name="binder">The binder used to parse the message.</param>
+            <param name="message">When this method returns <c>true</c>, contains the parsed message.</param>
+            <returns>A value that is <c>true</c> if the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HubMessage"/> was successfully parsed; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol.WriteMessage(Microsoft.AspNetCore.SignalR.Protocol.HubMessage,System.Buffers.IBufferWriter{System.Byte})">
+            <summary>
+            Writes the specified <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HubMessage"/> to a writer.
+            </summary>
+            <param name="message">The message to write.</param>
+            <param name="output">The output writer.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol.GetMessageBytes(Microsoft.AspNetCore.SignalR.Protocol.HubMessage)">
+            <summary>
+            Converts the specified <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.HubMessage"/> to its serialized representation.
+            </summary>
+            <param name="message">The message to convert.</param>
+            <returns>The serialized representation of the message.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol.IsVersionSupported(System.Int32)">
+            <summary>
+            Gets a value indicating whether the protocol supports the specified version.
+            </summary>
+            <param name="version">The version.</param>
+            <returns>A value indicating whether the protocol supports the specified version.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.InvocationBindingFailureMessage">
+            <summary>
+            Represents a failure to bind arguments for an invocation. This does not represent an actual
+            message that is sent on the wire, it is returned by <see cref="M:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol.TryParseMessage(System.Buffers.ReadOnlySequence{System.Byte}@,Microsoft.AspNetCore.SignalR.IInvocationBinder,Microsoft.AspNetCore.SignalR.Protocol.HubMessage@)"/>
+            to indicate that a binding failure occurred when parsing an invocation. The invocation ID is associated
+            so that the error can be sent back to the client, associated with the appropriate invocation ID.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.InvocationBindingFailureMessage.BindingFailure">
+            <summary>
+            Gets the exception thrown during binding.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.InvocationBindingFailureMessage.Target">
+            <summary>
+            Gets the target method name.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.InvocationBindingFailureMessage.#ctor(System.String,System.String,System.Runtime.ExceptionServices.ExceptionDispatchInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.InvocationBindingFailureMessage"/> class.
+            </summary>
+            <param name="invocationId">The invocation ID.</param>
+            <param name="target">The target method name.</param>
+            <param name="bindingFailure">The exception thrown during binding.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.PingMessage">
+            <summary>
+            A keep-alive message to let the other side of the connection know that the connection is still alive.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.SignalR.Protocol.PingMessage.Instance">
+            <summary>
+            A static instance of the PingMessage to remove unneeded allocations.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.RawResult">
+            <summary>
+            Type returned to <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol"/> implementations to let them know the object being deserialized should be
+            stored as raw serialized bytes in the format of the protocol being used.
+            </summary>
+            <example>
+            In Json that would mean storing the byte representation of ascii {"prop":10} as an example.
+            </example>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.RawResult.#ctor(System.Buffers.ReadOnlySequence{System.Byte})">
+            <summary>
+            Stores the raw serialized bytes of a <see cref="P:Microsoft.AspNetCore.SignalR.Protocol.CompletionMessage.Result"/> for forwarding to another server.
+            Will copy the passed in bytes to internal storage.
+            </summary>
+            <param name="rawBytes">The raw bytes from the client.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.RawResult.RawSerializedData">
+            <summary>
+            The raw serialized bytes from the client.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.SequenceMessage">
+            <summary>
+            Represents the restart of the sequence of messages being sent. <see cref="P:Microsoft.AspNetCore.SignalR.Protocol.SequenceMessage.SequenceId"/> is the starting ID of messages being sent, which might be duplicate messages.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.SequenceMessage.#ctor(System.Int64)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.SequenceMessage"/> class.
+            </summary>
+            <param name="sequenceId">Specifies the starting ID for messages that will be received from this point onward.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.SequenceMessage.SequenceId">
+            <summary>
+            The new starting ID of incoming messages.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.StreamBindingFailureMessage">
+            <summary>
+            Represents a failure to bind arguments for a StreamDataMessage. This does not represent an actual
+            message that is sent on the wire, it is returned by <see cref="M:Microsoft.AspNetCore.SignalR.Protocol.IHubProtocol.TryParseMessage(System.Buffers.ReadOnlySequence{System.Byte}@,Microsoft.AspNetCore.SignalR.IInvocationBinder,Microsoft.AspNetCore.SignalR.Protocol.HubMessage@)"/>
+            to indicate that a binding failure occurred when parsing a StreamDataMessage. The stream ID is associated
+            so that the error can be sent to the relevant hub method.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.StreamBindingFailureMessage.Id">
+            <summary>
+            Gets the id of the relevant stream
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.StreamBindingFailureMessage.BindingFailure">
+            <summary>
+            Gets the exception thrown during binding.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.StreamBindingFailureMessage.#ctor(System.String,System.Runtime.ExceptionServices.ExceptionDispatchInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.InvocationBindingFailureMessage"/> class.
+            </summary>
+            <param name="id">The stream ID.</param>
+            <param name="bindingFailure">The exception thrown during binding.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.SignalR.Protocol.StreamItemMessage">
+            <summary>
+            Represents a single item of an active stream.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.SignalR.Protocol.StreamItemMessage.Item">
+            <summary>
+            The single item from a stream.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.StreamItemMessage.#ctor(System.String,System.Object)">
+            <summary>
+            Constructs a <see cref="T:Microsoft.AspNetCore.SignalR.Protocol.StreamItemMessage"/>.
+            </summary>
+            <param name="invocationId">The ID of the stream.</param>
+            <param name="item">An item from the stream.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.SignalR.Protocol.StreamItemMessage.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.MemoryBufferWriter.WrittenBuffers">
+            <summary>
+            Holds the written segments from a MemoryBufferWriter and is no longer attached to a MemoryBufferWriter.
+            You are now responsible for calling Dispose on this type to return the memory to the pool.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.MemoryBufferWriter.CompletedBuffer">
+            <summary>
+            Holds a byte[] from the pool and a size value. Basically a Memory but guaranteed to be backed by an ArrayPool byte[], so that we know we can return it.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null or an <see cref="T:System.ArgumentException"/> if it is empty.</summary>
+            <param name="argument">The reference type argument to validate as neither null nor empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+    </members>
+</doc>

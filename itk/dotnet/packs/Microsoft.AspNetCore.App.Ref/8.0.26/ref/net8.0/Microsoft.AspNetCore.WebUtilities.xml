@@ -1,0 +1,1458 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.WebUtilities</name>
+    </assembly>
+    <members>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.DecodeRequestLine(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Boolean)">
+            <summary>
+            Unescape a URL path
+            </summary>
+            <param name="source">The byte span represents a UTF8 encoding url path.</param>
+            <param name="destination">The byte span where unescaped url path is copied to.</param>
+            <param name="isFormEncoding">Whether we are doing form encoding or not.</param>
+            <returns>The length of the byte sequence of the unescaped url path.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.DecodeInPlace(System.Span{System.Byte},System.Boolean)">
+            <summary>
+            Unescape a URL path in place.
+            </summary>
+            <param name="buffer">The byte span represents a UTF8 encoding url path.</param>
+            <param name="isFormEncoding">Whether we are doing form encoding or not.</param>
+            <returns>The number of the bytes representing the result.</returns>
+            <remarks>
+            The unescape is done in place, which means after decoding the result is the subset of
+            the input span.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.DecodeCore(System.Int32@,System.Int32@,System.Span{System.Byte},System.Boolean)">
+            <summary>
+            Unescape the percent-encodings
+            </summary>
+            <param name="sourceIndex">The iterator point to the first % char</param>
+            <param name="destinationIndex">The place to write to</param>
+            <param name="buffer">The byte array</param>
+            <param name="isFormEncoding">Whether we are doing form encodoing</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.UnescapePercentEncoding(System.Int32@,System.Span{System.Byte},System.Boolean)">
+             <summary>
+             Read the percent-encoding and try unescape it.
+            
+             The operation first peek at the character the <paramref name="scan"/>
+             iterator points at. If it is % the <paramref name="scan"/> is then
+             moved on to scan the following to characters. If the two following
+             characters are hexadecimal literals they will be unescaped and the
+             value will be returned.
+            
+             If the first character is not % the <paramref name="scan"/> iterator
+             will be removed beyond the location of % and -1 will be returned.
+            
+             If the following two characters can't be successfully unescaped the
+             <paramref name="scan"/> iterator will be move behind the % and -1
+             will be returned.
+             </summary>
+             <param name="scan">The value to read</param>
+             <param name="buffer">The byte array</param>
+             <param name="isFormEncoding">Whether we are decoding a form or not. Will escape '/' if we are doing form encoding</param>
+             <returns>The unescaped byte if success. Otherwise return -1.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.ReadHex(System.Int32@,System.Span{System.Byte})">
+             <summary>
+             Read the next char and convert it into hexadecimal value.
+            
+             The <paramref name="scan"/> index will be moved to the next
+             byte no matter whether the operation successes.
+             </summary>
+             <param name="scan">The index of the byte in the buffer to read</param>
+             <param name="buffer">The byte span from which the hex to be read</param>
+             <returns>The hexadecimal value if successes, otherwise -1.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.DecodeRequestLine(System.ReadOnlySpan{System.Char},System.Span{System.Char})">
+            <summary>
+            Unescape a URL path
+            </summary>
+            <param name="source">The escape sequences is expected to be well-formed UTF-8 code units.</param>
+            <param name="destination">The char span where unescaped url path is copied to.</param>
+            <returns>The length of the char sequence of the unescaped url path.</returns>
+            <remarks>
+            Form Encoding is not supported compared to the <see cref="M:Microsoft.AspNetCore.Internal.UrlDecoder.DecodeRequestLine(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Boolean)" />
+            for performance gains, as current use-cases does not require it.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.DecodeInPlace(System.Span{System.Char})">
+            <summary>
+            Unescape a URL path in place.
+            </summary>
+            <param name="buffer">The escape sequences is expected to be well-formed UTF-8 code units.</param>
+            <returns>The number of the chars representing the result.</returns>
+            <remarks>
+            The unescape is done in place, which means after decoding the result is the subset of
+            the input span.
+            Form Encoding is not supported compared to the <see cref="M:Microsoft.AspNetCore.Internal.UrlDecoder.DecodeInPlace(System.Span{System.Byte},System.Boolean)" />
+            for performance gains, as current use-cases does not require it.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.DecodeCore(System.Int32@,System.Int32@,System.Span{System.Char})">
+            <summary>
+            Unescape the percent-encodings
+            </summary>
+            <param name="sourceIndex">The iterator point to the first % char</param>
+            <param name="destinationIndex">The place to write to</param>
+            <param name="buffer">The char array</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.UnescapePercentEncoding(System.Int32@,System.ReadOnlySpan{System.Char})">
+             <summary>
+             Read the percent-encoding and try unescape it.
+            
+             The operation first peek at the character the <paramref name="scan"/>
+             iterator points at. If it is % the <paramref name="scan"/> is then
+             moved on to scan the following to characters. If the two following
+             characters are hexadecimal literals they will be unescaped and the
+             value will be returned.
+            
+             If the first character is not % the <paramref name="scan"/> iterator
+             will be removed beyond the location of % and -1 will be returned.
+            
+             If the following two characters can't be successfully unescaped the
+             <paramref name="scan"/> iterator will be move behind the % and -1
+             will be returned.
+             </summary>
+             <param name="scan">The value to read</param>
+             <param name="buffer">The char array</param>
+             <returns>The unescaped char if success. Otherwise return -1.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.UrlDecoder.ReadHex(System.Int32@,System.ReadOnlySpan{System.Char})">
+             <summary>
+             Read the next char and convert it into hexadecimal value.
+            
+             The <paramref name="scan"/> index will be moved to the next
+             char no matter whether the operation successes.
+             </summary>
+             <param name="scan">The index of the char in the buffer to read</param>
+             <param name="buffer">The char span from which the hex to be read</param>
+             <returns>The hexadecimal value if successes, otherwise -1.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.Base64UrlTextEncoder">
+            <summary>
+            Encodes and decodes using base64 url encoding.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.Base64UrlTextEncoder.Encode(System.Byte[])">
+            <summary>
+            Encodes supplied data into Base64 and replaces any URL encodable characters into non-URL encodable
+            characters.
+            </summary>
+            <param name="data">Data to be encoded.</param>
+            <returns>Base64 encoded string modified with non-URL encodable characters</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.Base64UrlTextEncoder.Decode(System.String)">
+            <summary>
+            Decodes supplied string by replacing the non-URL encodable characters with URL encodable characters and
+            then decodes the Base64 string.
+            </summary>
+            <param name="text">The string to be decoded.</param>
+            <returns>The decoded data.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.BufferedReadStream">
+            <summary>
+            A Stream that wraps another stream and allows reading lines.
+            The data is buffered in memory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.#ctor(System.IO.Stream,System.Int32)">
+            <summary>
+            Creates a new stream.
+            </summary>
+            <param name="inner">The stream to wrap.</param>
+            <param name="bufferSize">Size of buffer in bytes.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.#ctor(System.IO.Stream,System.Int32,System.Buffers.ArrayPool{System.Byte})">
+            <summary>
+            Creates a new stream.
+            </summary>
+            <param name="inner">The stream to wrap.</param>
+            <param name="bufferSize">Size of buffer in bytes.</param>
+            <param name="bytePool">ArrayPool for the buffer.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.BufferedData">
+            <summary>
+            The currently buffered data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.CanTimeout">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.Position">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.FlushAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.WriteAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.WriteAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.ReadAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.ReadAsync(System.Memory{System.Byte},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.EnsureBuffered">
+            <summary>
+            Ensures that the buffer is not empty.
+            </summary>
+            <returns>Returns <c>true</c> if the buffer is not empty; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.EnsureBufferedAsync(System.Threading.CancellationToken)">
+            <summary>
+            Ensures that the buffer is not empty.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Returns <c>true</c> if the buffer is not empty; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.EnsureBuffered(System.Int32)">
+            <summary>
+            Ensures that a minimum amount of buffered data is available.
+            </summary>
+            <param name="minCount">Minimum amount of buffered data.</param>
+            <returns>Returns <c>true</c> if the minimum amount of buffered data is available; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.EnsureBufferedAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Ensures that a minimum amount of buffered data is available.
+            </summary>
+            <param name="minCount">Minimum amount of buffered data.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Returns <c>true</c> if the minimum amount of buffered data is available; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.ReadLine(System.Int32)">
+            <summary>
+            Reads a line. A line is defined as a sequence of characters followed by
+            a carriage return immediately followed by a line feed. The resulting string does not
+            contain the terminating carriage return and line feed.
+            </summary>
+            <param name="lengthLimit">Maximum allowed line length.</param>
+            <returns>A line.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.BufferedReadStream.ReadLineAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Reads a line. A line is defined as a sequence of characters followed by
+            a carriage return immediately followed by a line feed. The resulting string does not
+            contain the terminating carriage return and line feed.
+            </summary>
+            <param name="lengthLimit">Maximum allowed line length.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A line.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream">
+            <summary>
+            A Stream that wraps another stream and enables rewinding by buffering the content as it is read.
+            The content is buffered in memory up to a certain size and then spooled to a temp file on disk.
+            The temp file will be deleted on Dispose.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.#ctor(System.IO.Stream,System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream" />.
+            </summary>
+            <param name="inner">The wrapping <see cref="T:System.IO.Stream" />.</param>
+            <param name="memoryThreshold">The maximum size to buffer in memory.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.#ctor(System.IO.Stream,System.Int32,System.Nullable{System.Int64},System.Func{System.String})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream" />.
+            </summary>
+            <param name="inner">The wrapping <see cref="T:System.IO.Stream" />.</param>
+            <param name="memoryThreshold">The maximum size to buffer in memory.</param>
+            <param name="bufferLimit">The maximum size that will be buffered before this <see cref="T:System.IO.Stream"/> throws.</param>
+            <param name="tempFileDirectoryAccessor">Provides the temporary directory to which files are buffered to.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.#ctor(System.IO.Stream,System.Int32,System.Nullable{System.Int64},System.Func{System.String},System.Buffers.ArrayPool{System.Byte})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream" />.
+            </summary>
+            <param name="inner">The wrapping <see cref="T:System.IO.Stream" />.</param>
+            <param name="memoryThreshold">The maximum size to buffer in memory.</param>
+            <param name="bufferLimit">The maximum size that will be buffered before this <see cref="T:System.IO.Stream"/> throws.</param>
+            <param name="tempFileDirectoryAccessor">Provides the temporary directory to which files are buffered to.</param>
+            <param name="bytePool">The <see cref="T:System.Buffers.ArrayPool`1"/> to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.#ctor(System.IO.Stream,System.Int32,System.Nullable{System.Int64},System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream" />.
+            </summary>
+            <param name="inner">The wrapping <see cref="T:System.IO.Stream" />.</param>
+            <param name="memoryThreshold">The maximum size to buffer in memory.</param>
+            <param name="bufferLimit">The maximum size that will be buffered before this <see cref="T:System.IO.Stream"/> throws.</param>
+            <param name="tempFileDirectory">The temporary directory to which files are buffered to.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.#ctor(System.IO.Stream,System.Int32,System.Nullable{System.Int64},System.String,System.Buffers.ArrayPool{System.Byte})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream" />.
+            </summary>
+            <param name="inner">The wrapping <see cref="T:System.IO.Stream" />.</param>
+            <param name="memoryThreshold">The maximum size to buffer in memory.</param>
+            <param name="bufferLimit">The maximum size that will be buffered before this <see cref="T:System.IO.Stream"/> throws.</param>
+            <param name="tempFileDirectory">The temporary directory to which files are buffered to.</param>
+            <param name="bytePool">The <see cref="T:System.Buffers.ArrayPool`1"/> to use.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.MemoryThreshold">
+            <summary>
+            The maximum amount of memory in bytes to allocate before switching to a file on disk.
+            </summary>
+            <remarks>
+            Defaults to 32kb.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.InMemory">
+            <summary>
+            Gets a value that determines if the contents are buffered entirely in memory.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.TempFileName">
+            <summary>
+            Gets a value that determines where the contents are buffered on disk.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.Length">
+            <summary>
+            The total bytes read from and buffered by the stream so far, it will not represent the full
+            data length until the stream is fully buffered. e.g. using <c>stream.DrainAsync()</c>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.Position">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.Read(System.Span{System.Byte})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.ReadAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.ReadAsync(System.Memory{System.Byte},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.WriteAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.WriteAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.CopyToAsync(System.IO.Stream,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingReadStream.DisposeAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream">
+            <summary>
+            A <see cref="T:System.IO.Stream"/> that buffers content to be written to disk. Use <see cref="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.DrainBufferAsync(System.IO.Stream,System.Threading.CancellationToken)" />
+            to write buffered content to a target <see cref="T:System.IO.Stream" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.#ctor(System.Int32,System.Nullable{System.Int64},System.Func{System.String})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream"/>.
+            </summary>
+            <param name="memoryThreshold">
+            The maximum amount of memory in bytes to allocate before switching to a file on disk.
+            Defaults to 32kb.
+            </param>
+            <param name="bufferLimit">
+            The maximum amount of bytes that the <see cref="T:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream"/> is allowed to buffer.
+            </param>
+            <param name="tempFileDirectoryAccessor">Provides the location of the directory to write buffered contents to.
+            When unspecified, uses the value specified by the environment variable <c>ASPNETCORE_TEMP</c> if available, otherwise
+            uses the value returned by <see cref="M:System.IO.Path.GetTempPath"/>.
+            </param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.MemoryThreshold">
+            <summary>
+            The maximum amount of memory in bytes to allocate before switching to a file on disk.
+            </summary>
+            <remarks>
+            Defaults to 32kb.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.CanRead">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.CanSeek">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.CanWrite">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.Length">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.Position">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.ReadAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.ReadAsync(System.Memory{System.Byte},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.WriteAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.WriteAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.Flush">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.FlushAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.SetLength(System.Int64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.DrainBufferAsync(System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Drains buffered content to <paramref name="destination"/>.
+            </summary>
+            <param name="destination">The <see cref="T:System.IO.Stream" /> to drain buffered contents to.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken" />.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task" /> that represents the asynchronous drain operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.DrainBufferAsync(System.IO.Pipelines.PipeWriter,System.Threading.CancellationToken)">
+            <summary>
+            Drains buffered content to <paramref name="destination"/>.
+            </summary>
+            <param name="destination">The <see cref="T:System.IO.Pipelines.PipeWriter" /> to drain buffered contents to.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken" />.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task" /> that represents the asynchronous drain operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileBufferingWriteStream.DisposeAsync">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.FileMultipartSection">
+            <summary>
+            Represents a file multipart section
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileMultipartSection.#ctor(Microsoft.AspNetCore.WebUtilities.MultipartSection)">
+            <summary>
+            Creates a new instance of the <see cref="T:Microsoft.AspNetCore.WebUtilities.FileMultipartSection"/> class
+            </summary>
+            <param name="section">The section from which to create the <see cref="T:Microsoft.AspNetCore.WebUtilities.FileMultipartSection"/></param>
+            <remarks>Reparses the content disposition header</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FileMultipartSection.#ctor(Microsoft.AspNetCore.WebUtilities.MultipartSection,Microsoft.Net.Http.Headers.ContentDispositionHeaderValue)">
+            <summary>
+            Creates a new instance of the <see cref="T:Microsoft.AspNetCore.WebUtilities.FileMultipartSection"/> class
+            </summary>
+            <param name="section">The section from which to create the <see cref="T:Microsoft.AspNetCore.WebUtilities.FileMultipartSection"/></param>
+            <param name="header">An already parsed content disposition header</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileMultipartSection.Section">
+            <summary>
+            Gets the original section from which this object was created
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileMultipartSection.FileStream">
+            <summary>
+            Gets the file stream from the section body
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileMultipartSection.Name">
+            <summary>
+            Gets the name of the section
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FileMultipartSection.FileName">
+            <summary>
+            Gets the name of the file from the section
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.FormMultipartSection">
+            <summary>
+            Represents a form multipart section
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormMultipartSection.#ctor(Microsoft.AspNetCore.WebUtilities.MultipartSection)">
+            <summary>
+            Creates a new instance of the <see cref="T:Microsoft.AspNetCore.WebUtilities.FormMultipartSection"/> class
+            </summary>
+            <param name="section">The section from which to create the <see cref="T:Microsoft.AspNetCore.WebUtilities.FormMultipartSection"/></param>
+            <remarks>Reparses the content disposition header</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormMultipartSection.#ctor(Microsoft.AspNetCore.WebUtilities.MultipartSection,Microsoft.Net.Http.Headers.ContentDispositionHeaderValue)">
+            <summary>
+            Creates a new instance of the <see cref="T:Microsoft.AspNetCore.WebUtilities.FormMultipartSection"/> class
+            </summary>
+            <param name="section">The section from which to create the <see cref="T:Microsoft.AspNetCore.WebUtilities.FormMultipartSection"/></param>
+            <param name="header">An already parsed content disposition header</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FormMultipartSection.Section">
+            <summary>
+            Gets the original section from which this object was created
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FormMultipartSection.Name">
+            <summary>
+            The form name
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormMultipartSection.GetValueAsync">
+            <summary>
+            Gets the form value
+            </summary>
+            <returns>The form value</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormMultipartSection.GetValueAsync(System.Threading.CancellationToken)">
+            <summary>
+            Gets the form value
+            </summary>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The form value</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.FormPipeReader">
+            <summary>
+            Used to read an 'application/x-www-form-urlencoded' form.
+            Internally reads from a PipeReader.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormPipeReader.#ctor(System.IO.Pipelines.PipeReader)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FormPipeReader"/>.
+            </summary>
+            <param name="pipeReader">The <see cref="T:System.IO.Pipelines.PipeReader"/> to read from.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormPipeReader.#ctor(System.IO.Pipelines.PipeReader,System.Text.Encoding)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FormPipeReader"/>.
+            </summary>
+            <param name="pipeReader">The <see cref="T:System.IO.Pipelines.PipeReader"/> to read from.</param>
+            <param name="encoding">The <see cref="T:System.Text.Encoding"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FormPipeReader.ValueCountLimit">
+            <summary>
+            The limit on the number of form values to allow in ReadForm or ReadFormAsync.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FormPipeReader.KeyLengthLimit">
+            <summary>
+            The limit on the length of form keys.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FormPipeReader.ValueLengthLimit">
+            <summary>
+            The limit on the length of form values.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormPipeReader.ReadFormAsync(System.Threading.CancellationToken)">
+            <summary>
+            Parses an HTTP form body.
+            </summary>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>The collection containing the parsed HTTP form body.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.FormReader">
+            <summary>
+            Used to read an 'application/x-www-form-urlencoded' form.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.WebUtilities.FormReader.DefaultValueCountLimit">
+            <summary>
+            Gets the default value for <see cref="P:Microsoft.AspNetCore.WebUtilities.FormReader.ValueCountLimit"/>.
+            Defaults to 1024.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.WebUtilities.FormReader.DefaultKeyLengthLimit">
+            <summary>
+            Gets the default value for <see cref="P:Microsoft.AspNetCore.WebUtilities.FormReader.KeyLengthLimit"/>.
+            Defaults to 2,048 bytes, which is approximately 2KB.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.WebUtilities.FormReader.DefaultValueLengthLimit">
+            <summary>
+            Gets the default value for <see cref="P:Microsoft.AspNetCore.WebUtilities.FormReader.ValueLengthLimit" />.
+            Defaults to 4,194,304 bytes, which is approximately 4MB.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FormReader"/>.
+            </summary>
+            <param name="data">The data to read.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.#ctor(System.String,System.Buffers.ArrayPool{System.Char})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FormReader"/>.
+            </summary>
+            <param name="data">The data to read.</param>
+            <param name="charPool">The <see cref="T:System.Buffers.ArrayPool`1"/> to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.#ctor(System.IO.Stream)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FormReader"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to read. Assumes a utf-8 encoded stream.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.#ctor(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FormReader"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to read.</param>
+            <param name="encoding">The character encoding to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.#ctor(System.IO.Stream,System.Text.Encoding,System.Buffers.ArrayPool{System.Char})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.FormReader"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to read.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="charPool">The <see cref="T:System.Buffers.ArrayPool`1"/> to use.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FormReader.ValueCountLimit">
+            <summary>
+            The limit on the number of form values to allow in ReadForm or ReadFormAsync.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FormReader.KeyLengthLimit">
+            <summary>
+            The limit on the length of form keys.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.FormReader.ValueLengthLimit">
+            <summary>
+            The limit on the length of form values.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.ReadNextPair">
+            <summary>
+            Reads the next key value pair from the form.
+            For unbuffered data use the async overload instead.
+            </summary>
+            <returns>The next key value pair, or null when the end of the form is reached.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.ReadNextPairAsync(System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously reads the next key value pair from the form.
+            </summary>
+            <param name="cancellationToken"></param>
+            <returns>The next key value pair, or null when the end of the form is reached.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.ReadForm">
+            <summary>
+            Parses text from an HTTP form body.
+            </summary>
+            <returns>The collection containing the parsed HTTP form body.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.ReadFormAsync(System.Threading.CancellationToken)">
+            <summary>
+            Parses an HTTP form body.
+            </summary>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>The collection containing the parsed HTTP form body.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.FormReader.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader">
+            <summary>
+            A <see cref="T:System.IO.TextReader"/> to read the HTTP request stream.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.#ctor(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader"/>.
+            </summary>
+            <param name="stream">The HTTP request <see cref="T:System.IO.Stream"/>.</param>
+            <param name="encoding">The character encoding to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader"/>.
+            </summary>
+            <param name="stream">The HTTP request <see cref="T:System.IO.Stream"/>.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="bufferSize">The minimum buffer size.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32,System.Buffers.ArrayPool{System.Byte},System.Buffers.ArrayPool{System.Char})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader"/>.
+            </summary>
+            <param name="stream">The HTTP request <see cref="T:System.IO.Stream"/>.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="bufferSize">The minimum buffer size.</param>
+            <param name="bytePool">The byte array pool to use.</param>
+            <param name="charPool">The char array pool to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.Peek">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.Read">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.Read(System.Char[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.Read(System.Span{System.Char})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.ReadAsync(System.Char[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.ReadAsync(System.Memory{System.Char},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.ReadLineAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.ReadLine">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpRequestStreamReader.ReadToEndAsync">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter">
+            <summary>
+            Writes to the HTTP response <see cref="T:System.IO.Stream"/> using the supplied <see cref="T:System.Text.Encoding"/>.
+            It does not write the BOM and also does not close the stream.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.#ctor(System.IO.Stream,System.Text.Encoding)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter"/>.
+            </summary>
+            <param name="stream">The HTTP response <see cref="T:System.IO.Stream"/>.</param>
+            <param name="encoding">The character encoding to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter"/>.
+            </summary>
+            <param name="stream">The HTTP response <see cref="T:System.IO.Stream"/>.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="bufferSize">The minimum buffer size.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.#ctor(System.IO.Stream,System.Text.Encoding,System.Int32,System.Buffers.ArrayPool{System.Byte},System.Buffers.ArrayPool{System.Char})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter"/>.
+            </summary>
+            <param name="stream">The HTTP response <see cref="T:System.IO.Stream"/>.</param>
+            <param name="encoding">The character encoding to use.</param>
+            <param name="bufferSize">The minimum buffer size.</param>
+            <param name="bytePool">The byte array pool.</param>
+            <param name="charPool">The char array pool.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.Encoding">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.Write(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.Write(System.Char[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.Write(System.ReadOnlySpan{System.Char})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.Write(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.WriteLine(System.ReadOnlySpan{System.Char})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.WriteAsync(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.WriteAsync(System.Char[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.WriteAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.WriteAsync(System.ReadOnlyMemory{System.Char},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.WriteLineAsync(System.ReadOnlyMemory{System.Char},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.WriteLineAsync(System.Char[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.WriteLineAsync(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.WriteLineAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.FlushAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.HttpResponseStreamWriter.DisposeAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.KeyValueAccumulator">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.KeyValueAccumulator.Append(System.String,System.String)">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.KeyValueAccumulator.HasValues">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.KeyValueAccumulator.KeyCount">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.KeyValueAccumulator.ValueCount">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.KeyValueAccumulator.GetResults">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.MultipartReader">
+            <summary>
+            Reads multipart form content from the specified <see cref="T:System.IO.Stream"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.WebUtilities.MultipartReader.DefaultHeadersCountLimit">
+            <summary>
+            Gets the default value for <see cref="P:Microsoft.AspNetCore.WebUtilities.MultipartReader.HeadersCountLimit"/>.
+            Defaults to 16.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.WebUtilities.MultipartReader.DefaultHeadersLengthLimit">
+            <summary>
+            Gets the default value for <see cref="P:Microsoft.AspNetCore.WebUtilities.MultipartReader.HeadersLengthLimit"/>.
+            Defaults to 16,384 bytes, which is approximately 16KB.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartReader.#ctor(System.String,System.IO.Stream)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.MultipartReader"/>.
+            </summary>
+            <param name="boundary">The multipart boundary.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> containing multipart data.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartReader.#ctor(System.String,System.IO.Stream,System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.MultipartReader"/>.
+            </summary>
+            <param name="boundary">The multipart boundary.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> containing multipart data.</param>
+            <param name="bufferSize">The minimum buffer size to use.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.MultipartReader.HeadersCountLimit">
+            <summary>
+            The limit for the number of headers to read.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.MultipartReader.HeadersLengthLimit">
+            <summary>
+            The combined size limit for headers per multipart section.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.MultipartReader.BodyLengthLimit">
+            <summary>
+            The optional limit for the body length of each multipart section.
+            The hosting server is responsible for limiting the overall body length.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartReader.ReadNextSectionAsync(System.Threading.CancellationToken)">
+            <summary>
+            Reads the next <see cref="T:Microsoft.AspNetCore.WebUtilities.MultipartSection"/>.
+            </summary>
+            <param name="cancellationToken">The token to monitor for cancellation requests.
+            The default value is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartReaderStream.#ctor(Microsoft.AspNetCore.WebUtilities.BufferedReadStream,Microsoft.AspNetCore.WebUtilities.MultipartBoundary)">
+            <summary>
+            Creates a stream that reads until it reaches the given boundary pattern.
+            </summary>
+            <param name="stream">The <see cref="T:Microsoft.AspNetCore.WebUtilities.BufferedReadStream"/>.</param>
+            <param name="boundary">The boundary pattern to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartReaderStream.#ctor(Microsoft.AspNetCore.WebUtilities.BufferedReadStream,Microsoft.AspNetCore.WebUtilities.MultipartBoundary,System.Buffers.ArrayPool{System.Byte})">
+            <summary>
+            Creates a stream that reads until it reaches the given boundary pattern.
+            </summary>
+            <param name="stream">The <see cref="T:Microsoft.AspNetCore.WebUtilities.BufferedReadStream"/>.</param>
+            <param name="boundary">The boundary pattern to use.</param>
+            <param name="bytePool">The ArrayPool pool to use for temporary byte arrays.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.MultipartSection">
+            <summary>
+            A multipart section read by <see cref="T:Microsoft.AspNetCore.WebUtilities.MultipartReader"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.MultipartSection.ContentType">
+            <summary>
+            Gets the value of the <c>Content-Type</c> header.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.MultipartSection.ContentDisposition">
+            <summary>
+            Gets the value of the <c>Content-Disposition</c> header.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.MultipartSection.Headers">
+            <summary>
+            Gets or sets the multipart header collection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.MultipartSection.Body">
+            <summary>
+            Gets or sets the body.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.MultipartSection.BaseStreamOffset">
+            <summary>
+            The position where the body starts in the total multipart body.
+            This may not be available if the total multipart body is not seekable.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.MultipartSectionConverterExtensions">
+            <summary>
+            Various extensions for converting multipart sections
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartSectionConverterExtensions.AsFileSection(Microsoft.AspNetCore.WebUtilities.MultipartSection)">
+            <summary>
+            Converts the section to a file section
+            </summary>
+            <param name="section">The section to convert</param>
+            <returns>A file section</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartSectionConverterExtensions.AsFormDataSection(Microsoft.AspNetCore.WebUtilities.MultipartSection)">
+            <summary>
+            Converts the section to a form section
+            </summary>
+            <param name="section">The section to convert</param>
+            <returns>A form section</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartSectionConverterExtensions.GetContentDispositionHeader(Microsoft.AspNetCore.WebUtilities.MultipartSection)">
+            <summary>
+            Retrieves and parses the content disposition header from a section
+            </summary>
+            <param name="section">The section from which to retrieve</param>
+            <returns>A <see cref="T:Microsoft.Net.Http.Headers.ContentDispositionHeaderValue"/> if the header was found, null otherwise</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.MultipartSectionStreamExtensions">
+            <summary>
+            Various extension methods for dealing with the section body stream
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartSectionStreamExtensions.ReadAsStringAsync(Microsoft.AspNetCore.WebUtilities.MultipartSection)">
+            <summary>
+            Reads the body of the section as a string
+            </summary>
+            <param name="section">The section to read from</param>
+            <returns>The body steam as string</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.MultipartSectionStreamExtensions.ReadAsStringAsync(Microsoft.AspNetCore.WebUtilities.MultipartSection,System.Threading.CancellationToken)">
+            <summary>
+            Reads the body of the section as a string
+            </summary>
+            <param name="section">The section to read from</param>
+            <param name="cancellationToken">The cancellationt token.</param>
+            <returns>The body steam as string</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.QueryHelpers">
+            <summary>
+            Provides methods for parsing and manipulating query strings.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(System.String,System.String,System.String)">
+            <summary>
+            Append the given query key and value to the URI.
+            </summary>
+            <param name="uri">The base URI.</param>
+            <param name="name">The name of the query key.</param>
+            <param name="value">The query value.</param>
+            <returns>The combined result.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="uri"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="name"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Append the given query keys and values to the URI.
+            </summary>
+            <param name="uri">The base URI.</param>
+            <param name="queryString">A dictionary of query keys and values to append.</param>
+            <returns>The combined result.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="uri"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="queryString"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,Microsoft.Extensions.Primitives.StringValues}})">
+            <summary>
+            Append the given query keys and values to the URI.
+            </summary>
+            <param name="uri">The base URI.</param>
+            <param name="queryString">A collection of query names and values to append.</param>
+            <returns>The combined result.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="uri"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="queryString"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Append the given query keys and values to the URI.
+            </summary>
+            <param name="uri">The base URI.</param>
+            <param name="queryString">A collection of name value query pairs to append.</param>
+            <returns>The combined result.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="uri"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="queryString"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(System.String)">
+            <summary>
+            Parse a query string into its component key and value parts.
+            </summary>
+            <param name="queryString">The raw query string value, with or without the leading '?'.</param>
+            <returns>A collection of parsed keys and values.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseNullableQuery(System.String)">
+            <summary>
+            Parse a query string into its component key and value parts.
+            </summary>
+            <param name="queryString">The raw query string value, with or without the leading '?'.</param>
+            <returns>A collection of parsed keys and values, null if there are no entries.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.ReasonPhrases">
+            <summary>
+            Provides access to HTTP status code reason phrases as listed in
+            http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.ReasonPhrases.GetReasonPhrase(System.Int32)">
+            <summary>
+            Gets the reason phrase for the specified status code.
+            </summary>
+            <param name="statusCode">The status code.</param>
+            <returns>The reason phrase, or <see cref="F:System.String.Empty"/> if the status code is unknown.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.StreamHelperExtensions">
+            <summary>
+            HTTP extension methods for <see cref="T:System.IO.Stream"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.StreamHelperExtensions.DrainAsync(System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Reads the specified <paramref name="stream"/> to the end.
+            <para>
+            This API is effective when used in conjunction with buffering. It allows
+            a buffered request stream to be synchronously read after it has been completely drained.
+            </para>
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to completely read.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.StreamHelperExtensions.DrainAsync(System.IO.Stream,System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Reads the specified <paramref name="stream"/> to the end.
+            <para>
+            This API is effective when used in conjunction with buffering. It allows
+            a buffered request stream to be synchronously read after it has been completely drained.
+            </para>
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to completely read.</param>
+            <param name="limit">The maximum number of bytes to read. Throws if the <see cref="T:System.IO.Stream"/> is larger than this limit.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.StreamHelperExtensions.DrainAsync(System.IO.Stream,System.Buffers.ArrayPool{System.Byte},System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Reads the specified <paramref name="stream"/> to the end.
+            <para>
+            This API is effective when used in conjunction with buffering. It allows
+            a buffered request stream to be synchronously read after it has been completely drained.
+            </para>
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to completely read.</param>
+            <param name="bytePool">The byte array pool to use.</param>
+            <param name="limit">The maximum number of bytes to read. Throws if the <see cref="T:System.IO.Stream"/> is larger than this limit.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable">
+            <summary>
+            An enumerable that can supply the name/value pairs from a URI query string.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.#ctor(System.String)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable"/>.
+            </summary>
+            <param name="queryString">The query string.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.#ctor(System.ReadOnlyMemory{System.Char})">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable"/>.
+            </summary>
+            <param name="queryString">The query string.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.GetEnumerator">
+            <summary>
+            Retrieves an object that can iterate through the name/value pairs in the query string.
+            </summary>
+            <returns>An object that can iterate through the name/value pairs in the query string.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.EncodedNameValuePair">
+            <summary>
+            Represents a single name/value pair extracted from a query string during enumeration.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.EncodedNameValuePair.EncodedName">
+            <summary>
+            Gets the name from this name/value pair in its original encoded form.
+            To get the decoded string, call <see cref="M:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.EncodedNameValuePair.DecodeName"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.EncodedNameValuePair.EncodedValue">
+            <summary>
+            Gets the value from this name/value pair in its original encoded form.
+            To get the decoded string, call <see cref="M:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.EncodedNameValuePair.DecodeValue"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.EncodedNameValuePair.DecodeName">
+            <summary>
+            Decodes the name from this name/value pair.
+            </summary>
+            <returns>Characters representing the decoded name.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.EncodedNameValuePair.DecodeValue">
+            <summary>
+            Decodes the value from this name/value pair.
+            </summary>
+            <returns>Characters representing the decoded value.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.Enumerator">
+            <summary>
+            An enumerator that supplies the name/value pairs from a URI query string.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.Enumerator.Current">
+            <summary>
+            Gets the currently referenced key/value pair in the query string being enumerated.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.QueryStringEnumerable.Enumerator.MoveNext">
+            <summary>
+            Moves to the next key/value pair in the query string being enumerated.
+            </summary>
+            <returns>True if there is another key/value pair, otherwise false.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.WebUtilities.WebEncoders">
+            <summary>
+            Contains utility APIs to assist with common encoding and decoding operations.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode(System.String)">
+            <summary>
+            Decodes a base64url-encoded string.
+            </summary>
+            <param name="input">The base64url-encoded input to decode.</param>
+            <returns>The base64url-decoded form of the input.</returns>
+            <remarks>
+            The input must not contain any whitespace or padding characters.
+            Throws <see cref="T:System.FormatException"/> if the input is malformed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode(System.String,System.Int32,System.Int32)">
+            <summary>
+            Decodes a base64url-encoded substring of a given string.
+            </summary>
+            <param name="input">A string containing the base64url-encoded input to decode.</param>
+            <param name="offset">The position in <paramref name="input"/> at which decoding should begin.</param>
+            <param name="count">The number of characters in <paramref name="input"/> to decode.</param>
+            <returns>The base64url-decoded form of the input.</returns>
+            <remarks>
+            The input must not contain any whitespace or padding characters.
+            Throws <see cref="T:System.FormatException"/> if the input is malformed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode(System.String,System.Int32,System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Decodes a base64url-encoded <paramref name="input"/> into a <c>byte[]</c>.
+            </summary>
+            <param name="input">A string containing the base64url-encoded input to decode.</param>
+            <param name="offset">The position in <paramref name="input"/> at which decoding should begin.</param>
+            <param name="buffer">
+            Scratch buffer to hold the <see cref="T:System.Char"/>s to decode. Array must be large enough to hold
+            <paramref name="bufferOffset"/> and <paramref name="count"/> characters as well as Base64 padding
+            characters. Content is not preserved.
+            </param>
+            <param name="bufferOffset">
+            The offset into <paramref name="buffer"/> at which to begin writing the <see cref="T:System.Char"/>s to decode.
+            </param>
+            <param name="count">The number of characters in <paramref name="input"/> to decode.</param>
+            <returns>The base64url-decoded form of the <paramref name="input"/>.</returns>
+            <remarks>
+            The input must not contain any whitespace or padding characters.
+            Throws <see cref="T:System.FormatException"/> if the input is malformed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.GetArraySizeRequiredToDecode(System.Int32)">
+            <summary>
+            Gets the minimum <c>char[]</c> size required for decoding of <paramref name="count"/> characters
+            with the <see cref="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode(System.String,System.Int32,System.Char[],System.Int32,System.Int32)"/> method.
+            </summary>
+            <param name="count">The number of characters to decode.</param>
+            <returns>
+            The minimum <c>char[]</c> size required for decoding  of <paramref name="count"/> characters.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(System.Byte[])">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <returns>The base64url-encoded form of <paramref name="input"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <param name="offset">The offset into <paramref name="input"/> at which to begin encoding.</param>
+            <param name="count">The number of bytes from <paramref name="input"/> to encode.</param>
+            <returns>The base64url-encoded form of <paramref name="input"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(System.Byte[],System.Int32,System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <param name="offset">The offset into <paramref name="input"/> at which to begin encoding.</param>
+            <param name="output">
+            Buffer to receive the base64url-encoded form of <paramref name="input"/>. Array must be large enough to
+            hold <paramref name="outputOffset"/> characters and the full base64-encoded form of
+            <paramref name="input"/>, including padding characters.
+            </param>
+            <param name="outputOffset">
+            The offset into <paramref name="output"/> at which to begin writing the base64url-encoded form of
+            <paramref name="input"/>.
+            </param>
+            <param name="count">The number of <c>byte</c>s from <paramref name="input"/> to encode.</param>
+            <returns>
+            The number of characters written to <paramref name="output"/>, less any padding characters.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.GetArraySizeRequiredToEncode(System.Int32)">
+            <summary>
+            Get the minimum output <c>char[]</c> size required for encoding <paramref name="count"/>
+            <see cref="T:System.Byte"/>s with the <see cref="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(System.Byte[],System.Int32,System.Char[],System.Int32,System.Int32)"/> method.
+            </summary>
+            <param name="count">The number of characters to encode.</param>
+            <returns>
+            The minimum output <c>char[]</c> size required for encoding <paramref name="count"/> <see cref="T:System.Byte"/>s.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Encodes <paramref name="input"/> using base64url encoding.
+            </summary>
+            <param name="input">The binary input to encode.</param>
+            <returns>The base64url-encoded form of <paramref name="input"/>.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.Resources.FormPipeReader_KeyOrValueTooLarge">
+            <summary>Form key length limit {0} or value length limit {1} exceeded.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.Resources.FormatFormPipeReader_KeyOrValueTooLarge(System.Object,System.Object)">
+            <summary>Form key length limit {0} or value length limit {1} exceeded.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.Resources.FormPipeReader_KeyTooLarge">
+            <summary>Form key length limit {0} exceeded.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.Resources.FormatFormPipeReader_KeyTooLarge(System.Object)">
+            <summary>Form key length limit {0} exceeded.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.Resources.FormPipeReader_ValueTooLarge">
+            <summary>Form value length limit {0} exceeded.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.Resources.FormatFormPipeReader_ValueTooLarge(System.Object)">
+            <summary>Form value length limit {0} exceeded.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.Resources.HttpRequestStreamReader_StreamNotReadable">
+            <summary>The stream must support reading.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.Resources.HttpResponseStreamWriter_StreamNotWritable">
+            <summary>The stream must support writing.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.WebUtilities.Resources.WebEncoders_InvalidCountOffsetOrLength">
+            <summary>Invalid {0}, {1} or {2} length.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.WebUtilities.Resources.FormatWebEncoders_InvalidCountOffsetOrLength(System.Object,System.Object,System.Object)">
+            <summary>Invalid {0}, {1} or {2} length.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
+            <param name="value">The argument to validate as non-zero.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegative(System.Int64,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
+            <param name="value">The argument to validate as non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfNegativeOrZero(System.Int32,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
+            <param name="value">The argument to validate as non-zero or non-negative.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfGreaterThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as less than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThan``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than or equal than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentOutOfRangeThrowHelper.ThrowIfLessThanOrEqual``1(``0,``0,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than or equal <paramref name="other"/>.</summary>
+            <param name="value">The argument to validate as greatar than than <paramref name="other"/>.</param>
+            <param name="other">The value to compare with <paramref name="value"/>.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+        </member>
+        <member name="F:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.WebEncoders_InvalidCountOffsetOrLength">
+            <summary>
+            Invalid {0}, {1} or {2} length.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.WebEncoders_MalformedInput">
+            <summary>
+            Malformed input: {0} is an invalid input length.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.FormatWebEncoders_InvalidCountOffsetOrLength(System.Object,System.Object,System.Object)">
+            <summary>
+            Invalid {0}, {1} or {2} length.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.WebEncoders.Sources.EncoderResources.FormatWebEncoders_MalformedInput(System.Object)">
+            <summary>
+            Malformed input: {0} is an invalid input length.
+            </summary>
+        </member>
+    </members>
+</doc>

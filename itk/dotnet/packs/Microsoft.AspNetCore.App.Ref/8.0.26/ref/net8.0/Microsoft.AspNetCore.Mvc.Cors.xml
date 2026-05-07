@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Mvc.Cors</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter">
+            <summary>
+            A filter that applies the given <see cref="T:Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy"/> and adds appropriate response headers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter.#ctor(Microsoft.AspNetCore.Cors.Infrastructure.ICorsService,Microsoft.AspNetCore.Cors.Infrastructure.ICorsPolicyProvider)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter"/>.
+            </summary>
+            <param name="corsService">The <see cref="T:Microsoft.AspNetCore.Cors.Infrastructure.ICorsService"/>.</param>
+            <param name="policyProvider">The <see cref="T:Microsoft.AspNetCore.Cors.Infrastructure.ICorsPolicyProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter.#ctor(Microsoft.AspNetCore.Cors.Infrastructure.ICorsService,Microsoft.AspNetCore.Cors.Infrastructure.ICorsPolicyProvider,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter"/>.
+            </summary>
+            <param name="corsService">The <see cref="T:Microsoft.AspNetCore.Cors.Infrastructure.ICorsService"/>.</param>
+            <param name="policyProvider">The <see cref="T:Microsoft.AspNetCore.Cors.Infrastructure.ICorsPolicyProvider"/>.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter.PolicyName">
+            <summary>
+            The policy name used to fetch a <see cref="T:Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter.Order">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter.OnAuthorizationAsync(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilterFactory">
+            <summary>
+            A filter factory which creates a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilterFactory.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilterFactory"/>.
+            </summary>
+            <param name="policyName">Name used to fetch a CORS policy.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilterFactory.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilterFactory.IsReusable">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilterFactory.CreateInstance(System.IServiceProvider)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Cors.DisableCorsAuthorizationFilter">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.Cors.ICorsAuthorizationFilter"/> which ensures that an action does not run for a pre-flight request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Cors.DisableCorsAuthorizationFilter.Order">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Cors.DisableCorsAuthorizationFilter.OnAuthorizationAsync(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Cors.ICorsAuthorizationFilter">
+            <summary>
+            A filter that can be used to enable/disable CORS support for a resource.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Cors.Resources.CorsAuthorizationFilter_MissingCorsPolicy">
+            <summary>A CORS policy named '{0}' could not be found.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Cors.Resources.FormatCorsAuthorizationFilter_MissingCorsPolicy(System.Object)">
+            <summary>A CORS policy named '{0}' could not be found.</summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcCorsMvcCoreBuilderExtensions">
+            <summary>
+            Extensions for configuring CORS using an <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcCorsMvcCoreBuilderExtensions.AddCors(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)">
+            <summary>
+            Configures <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/> to use CORS.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcCorsMvcCoreBuilderExtensions.AddCors(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Action{Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions})">
+            <summary>
+            Configures <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/> to use CORS.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <param name="setupAction">An <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcCorsMvcCoreBuilderExtensions.ConfigureCors(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Action{Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions})">
+            <summary>
+            Configures <see cref="T:Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <param name="setupAction">The configure action.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+    </members>
+</doc>

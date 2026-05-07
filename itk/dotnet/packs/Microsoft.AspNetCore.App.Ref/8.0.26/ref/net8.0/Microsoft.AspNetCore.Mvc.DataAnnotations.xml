@@ -1,0 +1,398 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Mvc.DataAnnotations</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.AttributeAdapterBase`1">
+            <summary>
+            An abstract subclass of <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1"/> which wraps up all the required
+            interfaces for the adapters.
+            </summary>
+            <typeparam name="TAttribute">The type of <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/> which is being wrapped.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.AttributeAdapterBase`1.#ctor(`0,Microsoft.Extensions.Localization.IStringLocalizer)">
+            <summary>
+            Instantiates a new <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.AttributeAdapterBase`1"/>.
+            </summary>
+            <param name="attribute">The <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/> being wrapped.</param>
+            <param name="stringLocalizer">The <see cref="T:Microsoft.Extensions.Localization.IStringLocalizer"/> to be used in error generation.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.AttributeAdapterBase`1.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.CompareAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsClientModelValidatorProvider">
+            <summary>
+            An implementation of <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IClientModelValidatorProvider"/> which provides client validators
+            for attributes which derive from <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/>. It also provides
+            a validator for types which implement <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IClientModelValidator"/>.
+            The logic to support <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IClientModelValidator"/>
+            is implemented in <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsClientModelValidatorProvider.#ctor(Microsoft.AspNetCore.Mvc.DataAnnotations.IValidationAttributeAdapterProvider,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions},Microsoft.Extensions.Localization.IStringLocalizerFactory)">
+            <summary>
+            Create a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsClientModelValidatorProvider"/>.
+            </summary>
+            <param name="validationAttributeAdapterProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IValidationAttributeAdapterProvider"/>
+            that supplies <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter"/>s.</param>
+            <param name="options">The <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>.</param>
+            <param name="stringLocalizerFactory">The <see cref="T:Microsoft.Extensions.Localization.IStringLocalizerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsClientModelValidatorProvider.CreateValidators(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ClientValidatorProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsMetadataProvider">
+            <summary>
+            An implementation of <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.IBindingMetadataProvider"/> and <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.IDisplayMetadataProvider"/> for
+            the System.ComponentModel.DataAnnotations attribute classes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsMetadataProvider.CreateBindingMetadata(Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.BindingMetadataProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsMetadataProvider.CreateDisplayMetadata(Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.DisplayMetadataProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsMetadataProvider.CreateValidationMetadata(Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.ValidationMetadataProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsModelValidator">
+            <summary>
+            Validates based on the given <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsModelValidator.#ctor(Microsoft.AspNetCore.Mvc.DataAnnotations.IValidationAttributeAdapterProvider,System.ComponentModel.DataAnnotations.ValidationAttribute,Microsoft.Extensions.Localization.IStringLocalizer)">
+            <summary>
+             Create a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsModelValidator"/>.
+            </summary>
+            <param name="attribute">The <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/> that defines what we're validating.</param>
+            <param name="stringLocalizer">The <see cref="T:Microsoft.Extensions.Localization.IStringLocalizer"/> used to create messages.</param>
+            <param name="validationAttributeAdapterProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IValidationAttributeAdapterProvider"/>
+            which <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1"/>'s will be created from.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsModelValidator.Attribute">
+            <summary>
+            The attribute being validated against.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsModelValidator.Validate(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContext)">
+            <summary>
+            Validates the context against the <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/>.
+            </summary>
+            <param name="validationContext">The context being validated.</param>
+            <returns>An enumerable of the validation results.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsModelValidatorProvider">
+            <summary>
+            An implementation of <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IModelValidatorProvider"/> which provides validators
+            for attributes which derive from <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/>. It also provides
+            a validator for types which implement <see cref="T:System.ComponentModel.DataAnnotations.IValidatableObject"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsModelValidatorProvider.#ctor(Microsoft.AspNetCore.Mvc.DataAnnotations.IValidationAttributeAdapterProvider,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions},Microsoft.Extensions.Localization.IStringLocalizerFactory)">
+            <summary>
+            Create a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DataAnnotationsModelValidatorProvider"/>.
+            </summary>
+            <param name="validationAttributeAdapterProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IValidationAttributeAdapterProvider"/>
+            that supplies <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter"/>s.</param>
+            <param name="options">The <see cref="T:Microsoft.Extensions.Options.IOptions`1"/>.</param>
+            <param name="stringLocalizerFactory">The <see cref="T:Microsoft.Extensions.Localization.IStringLocalizerFactory"/>.</param>
+            <remarks><paramref name="options"/> and <paramref name="stringLocalizerFactory"/>
+            are nullable only for testing ease.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DataTypeAttributeAdapter">
+            <summary>
+            A validation adapter that is used to map <see cref="T:System.ComponentModel.DataAnnotations.DataTypeAttribute"/>'s to a single client side validation
+            rule.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DataTypeAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DefaultClientModelValidatorProvider">
+            <summary>
+            A default implementation of <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IClientModelValidatorProvider"/>.
+            </summary>
+            <remarks>
+            The <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.DefaultClientModelValidatorProvider"/> provides validators from
+            <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IClientModelValidator"/> instances in <see cref="P:Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata.ValidatorMetadata"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.DefaultClientModelValidatorProvider.CreateValidators(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ClientValidatorProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.FileExtensionsAttributeAdapter.AddValidation(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ClientModelValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.FileExtensionsAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter">
+            <summary>
+            Interface so that adapters provide their relevant values to error messages.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <summary>
+            Gets the error message.
+            </summary>
+            <param name="validationContext">The context to use in message creation.</param>
+            <returns>The localized error message.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IValidationAttributeAdapterProvider">
+            <summary>
+            Provider for supplying <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter"/>'s.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.IValidationAttributeAdapterProvider.GetAttributeAdapter(System.ComponentModel.DataAnnotations.ValidationAttribute,Microsoft.Extensions.Localization.IStringLocalizer)">
+            <summary>
+            Returns the <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter"/> for the given <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/>.
+            </summary>
+            <param name="attribute">The <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/> to create an <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter"/>
+            for.</param>
+            <param name="stringLocalizer">The <see cref="T:Microsoft.Extensions.Localization.IStringLocalizer"/> which will be used to create messages.
+            </param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter"/> for the given <paramref name="attribute"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.MaxLengthAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.MinLengthAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions">
+            <summary>
+            Provides programmatic configuration for DataAnnotations localization in the MVC framework.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions.DataAnnotationLocalizerProvider">
+            <summary>
+            The delegate to invoke for creating <see cref="T:Microsoft.Extensions.Localization.IStringLocalizer"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.NumericClientModelValidator">
+            <summary>
+            An implementation of <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IClientModelValidator"/> that provides the rule for validating
+            numeric types.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.NumericClientModelValidator.AddValidation(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ClientModelValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.NumericClientModelValidatorProvider">
+            <summary>
+            An implementation of <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IClientModelValidatorProvider"/> which provides client validators
+            for specific numeric types.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.NumericClientModelValidatorProvider.CreateValidators(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ClientValidatorProviderContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.RangeAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.RegularExpressionAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.RequiredAttributeAdapter">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.AttributeAdapterBase`1"/> for <see cref="T:System.ComponentModel.DataAnnotations.RequiredAttribute"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.RequiredAttributeAdapter.#ctor(System.ComponentModel.DataAnnotations.RequiredAttribute,Microsoft.Extensions.Localization.IStringLocalizer)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.RequiredAttributeAdapter"/>.
+            </summary>
+            <param name="attribute">The <see cref="T:System.ComponentModel.DataAnnotations.RequiredAttribute"/>.</param>
+            <param name="stringLocalizer">The <see cref="T:Microsoft.Extensions.Localization.IStringLocalizer"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.RequiredAttributeAdapter.AddValidation(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ClientModelValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.RequiredAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.StringLengthAttributeAdapter.AddValidation(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ClientModelValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.StringLengthAttributeAdapter.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ModelValidationContextBase)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1">
+            <summary>
+            An implementation of <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IClientModelValidator"/> which understands data annotation attributes.
+            </summary>
+            <typeparam name="TAttribute">The type of the attribute.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1.#ctor(`0,Microsoft.Extensions.Localization.IStringLocalizer)">
+            <summary>
+            Create a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1"/>.
+            </summary>
+            <param name="attribute">The <typeparamref name="TAttribute"/> instance to validate.</param>
+            <param name="stringLocalizer">The <see cref="T:Microsoft.Extensions.Localization.IStringLocalizer"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1.Attribute">
+            <summary>
+            Gets the <typeparamref name="TAttribute"/> instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1.AddValidation(Microsoft.AspNetCore.Mvc.ModelBinding.Validation.ClientModelValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1.MergeAttribute(System.Collections.Generic.IDictionary{System.String,System.String},System.String,System.String)">
+            <summary>
+            Adds the given <paramref name="key"/> and <paramref name="value"/> into
+            <paramref name="attributes"/> if <paramref name="attributes"/> does not contain a value for
+            <paramref name="key"/>.
+            </summary>
+            <param name="attributes">The HTML attributes dictionary.</param>
+            <param name="key">The attribute key.</param>
+            <param name="value">The attribute value.</param>
+            <returns><c>true</c> if an attribute was added, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1.GetErrorMessage(Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata,System.Object[])">
+            <summary>
+            Gets the error message formatted using the <see cref="P:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1.Attribute"/>.
+            </summary>
+            <param name="modelMetadata">The <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata"/> associated with the model annotated with
+            <see cref="P:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapter`1.Attribute"/>.</param>
+            <param name="arguments">The value arguments which will be used in constructing the error message.</param>
+            <returns>Formatted error string.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapterProvider">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter"/> for the given attribute.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationAttributeAdapterProvider.GetAttributeAdapter(System.ComponentModel.DataAnnotations.ValidationAttribute,Microsoft.Extensions.Localization.IStringLocalizer)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter"/> for the given attribute.
+            </summary>
+            <param name="attribute">The attribute to create an adapter for.</param>
+            <param name="stringLocalizer">The localizer to provide to the adapter.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter"/> for the given attribute.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationProviderAttribute">
+            <summary>
+            Abstract class for grouping attributes of type <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/> into
+            one <see cref="T:System.Attribute"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.ValidationProviderAttribute.GetValidationAttributes">
+            <summary>
+            Gets <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute" /> instances associated with this attribute.
+            </summary>
+            <returns>Sequence of <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute" /> associated with this attribute.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.DataAnnotations.Resources.ValidatableObjectAdapter_IncompatibleType">
+            <summary>The model object inside the metadata claimed to be compatible with '{0}', but was actually '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.Resources.FormatValidatableObjectAdapter_IncompatibleType(System.Object,System.Object)">
+            <summary>The model object inside the metadata claimed to be compatible with '{0}', but was actually '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.DataAnnotations.Resources.ArgumentCannotBeNullOrEmpty">
+            <summary>Value cannot be null or empty.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.DataAnnotations.Resources.PropertyOfTypeCannotBeNull">
+            <summary>The '{0}' property of '{1}' must not be null.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.DataAnnotations.Resources.FormatPropertyOfTypeCannotBeNull(System.Object,System.Object)">
+            <summary>The '{0}' property of '{1}' must not be null.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.HiddenInputAttribute">
+            <summary>
+            Indicates associated property or all properties with the associated type should be edited using an
+            &lt;input&gt; element of type "hidden".
+            </summary>
+            <remarks>
+            When overriding a <see cref="T:Microsoft.AspNetCore.Mvc.HiddenInputAttribute"/> inherited from a base class, should apply both
+            <c>[HiddenInput(DisplayValue = true)]</c> (if the inherited attribute had <c>DisplayValue = false</c>) and a
+            <see cref="T:System.ComponentModel.DataAnnotations.UIHintAttribute"/> with some value other than "HiddenInput".
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.HiddenInputAttribute.#ctor">
+            <summary>
+            Instantiates a new instance of the <see cref="T:Microsoft.AspNetCore.Mvc.HiddenInputAttribute"/> class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.HiddenInputAttribute.DisplayValue">
+            <summary>
+            Gets or sets a value indicating whether to display the value as well as provide a hidden &lt;input&gt;
+            element. The default value is <c>true</c>.
+            </summary>
+            <remarks>
+            If <c>false</c>, also causes the default <see cref="T:System.Object"/> display and editor templates to return HTML
+            lacking the usual per-property &lt;div&gt; wrapper around the associated property and the default display
+            "HiddenInput" template to return <c>string.Empty</c> for the associated property. Thus the default
+            <see cref="T:System.Object"/> display template effectively skips the property and the default <see cref="T:System.Object"/>
+            editor template returns only the hidden &lt;input&gt; element for the property.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsLocalizationOptionsSetup">
+            <summary>
+            Sets up default options for <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsLocalizationOptionsSetup.Configure(Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcBuilderExtensions">
+            <summary>
+            Extension methods for configuring MVC data annotations localization.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcBuilderExtensions.AddDataAnnotationsLocalization(Microsoft.Extensions.DependencyInjection.IMvcBuilder)">
+            <summary>
+            Adds MVC data annotations localization to the application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcBuilderExtensions.AddDataAnnotationsLocalization(Microsoft.Extensions.DependencyInjection.IMvcBuilder,System.Action{Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions})">
+            <summary>
+            Adds MVC data annotations localization to the application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <param name="setupAction">The action to configure <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions"/>.
+            </param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions">
+            <summary>
+            Extensions for configuring MVC data annotations using an <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions.AddDataAnnotations(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)">
+            <summary>
+            Registers MVC data annotations.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions.AddDataAnnotationsLocalization(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)">
+            <summary>
+            Adds MVC data annotations localization to the application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcCoreBuilderExtensions.AddDataAnnotationsLocalization(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Action{Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions})">
+            <summary>
+            Registers an action to configure <see cref="T:Microsoft.AspNetCore.Mvc.DataAnnotations.MvcDataAnnotationsLocalizationOptions"/> for MVC data
+            annotations localization.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <param name="setupAction">An <see cref="T:System.Action`1"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcDataAnnotationsMvcOptionsSetup">
+            <summary>
+            Sets up default options for <see cref="T:Microsoft.AspNetCore.Mvc.MvcOptions"/>.
+            </summary>
+        </member>
+    </members>
+</doc>

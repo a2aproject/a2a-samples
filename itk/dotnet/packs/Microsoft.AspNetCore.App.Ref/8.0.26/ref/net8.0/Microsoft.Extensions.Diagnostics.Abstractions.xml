@@ -1,0 +1,336 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Diagnostics.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder">
+            <summary>
+            Represents a type used to configure the metrics system by registering IMetricsListeners and using rules
+            to determine which metrics are enabled.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder.Services">
+            <summary>
+            The application <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>. This is used by extension methods to register services.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener">
+            <summary>
+            Represents a type used to listen to metrics emitted from the system.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.Name">
+            <summary>
+            The name of the listener. This is used to identify the listener in the rules configuration.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.Initialize(Microsoft.Extensions.Diagnostics.Metrics.IObservableInstrumentsSource)">
+            <summary>
+            Called once by the runtime to provide a <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IObservableInstrumentsSource"/> used to pull for fresh metrics data.
+            </summary>
+            <param name="source">A <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IObservableInstrumentsSource"/> that can be called to request current metrics.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.InstrumentPublished(System.Diagnostics.Metrics.Instrument,System.Object@)">
+            <summary>
+            Called when a new instrument is created and enabled by a matching rule.
+            </summary>
+            <param name="instrument">The new <see cref="T:System.Diagnostics.Metrics.Instrument"/>.</param>
+            <param name="userState">Listener state associated with this instrument. This will be returned to <see cref="T:System.Diagnostics.Metrics.MeasurementCallback`1"/>
+            and <see cref="M:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.MeasurementsCompleted(System.Diagnostics.Metrics.Instrument,System.Object)"/>.</param>
+            <returns>Returns true if the listener wants to subscribe to this instrument, otherwise false.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.MeasurementsCompleted(System.Diagnostics.Metrics.Instrument,System.Object)">
+            <summary>
+            Called when a instrument is disabled by the producer or a rules change.
+            </summary>
+            <param name="instrument">The <see cref="T:System.Diagnostics.Metrics.Instrument"/> being disabled.</param>
+            <param name="userState">The original listener state returned by <see cref="M:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.InstrumentPublished(System.Diagnostics.Metrics.Instrument,System.Object@)"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.GetMeasurementHandlers">
+            <summary>
+            Called once to get the <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers"/> that will be used to process measurements.
+            </summary>
+            <returns>The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.InstrumentRule">
+            <summary>
+            A set of parameters used to determine which instruments are enabled for which listeners. Unspecified
+            parameters match anything.
+            </summary>
+            <remarks>
+            The most specific rule that matches a given instrument will be used. The priority of parameters is as follows:
+            - MeterName, either an exact match, or the longest prefix match. See <see cref="P:System.Diagnostics.Metrics.Meter.Name"/>.
+            - InstrumentName, an exact match. <see cref="P:System.Diagnostics.Metrics.Instrument.Name"/>.
+            - ListenerName, an exact match. <see cref="P:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.Name"/>.
+            - Scopes
+            </remarks>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix.</param>
+            <param name="instrumentName">The <see cref="P:System.Diagnostics.Metrics.Instrument.Name"/>.</param>
+            <param name="listenerName">The <see cref="P:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.Name"/>.</param>
+            <param name="scopes">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MeterScope"/>'s to consider.</param>
+            <param name="enable">Enables or disabled the matched instrument for this listener.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.InstrumentRule.#ctor(System.String,System.String,System.String,Microsoft.Extensions.Diagnostics.Metrics.MeterScope,System.Boolean)">
+            <summary>
+            A set of parameters used to determine which instruments are enabled for which listeners. Unspecified
+            parameters match anything.
+            </summary>
+            <remarks>
+            The most specific rule that matches a given instrument will be used. The priority of parameters is as follows:
+            - MeterName, either an exact match, or the longest prefix match. See <see cref="P:System.Diagnostics.Metrics.Meter.Name"/>.
+            - InstrumentName, an exact match. <see cref="P:System.Diagnostics.Metrics.Instrument.Name"/>.
+            - ListenerName, an exact match. <see cref="P:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.Name"/>.
+            - Scopes
+            </remarks>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix.</param>
+            <param name="instrumentName">The <see cref="P:System.Diagnostics.Metrics.Instrument.Name"/>.</param>
+            <param name="listenerName">The <see cref="P:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.Name"/>.</param>
+            <param name="scopes">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MeterScope"/>'s to consider.</param>
+            <param name="enable">Enables or disabled the matched instrument for this listener.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.InstrumentRule.MeterName">
+            <summary>
+            The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/>, either an exact match or the longest prefix match. Only full segment matches are considered.
+            All meters are matched if this is null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.InstrumentRule.InstrumentName">
+            <summary>
+            The <see cref="P:System.Diagnostics.Metrics.Instrument.Name"/>, an exact match.
+            All instruments for the given meter are matched if this is null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.InstrumentRule.ListenerName">
+            <summary>
+            The <see cref="P:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.Name"/>, an exact match.
+            All listeners are matched if this is null.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.InstrumentRule.Scopes">
+            <summary>
+            The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MeterScope"/>. This is used to distinguish between meters created via <see cref="T:System.Diagnostics.Metrics.Meter"/> constructors (<see cref="F:Microsoft.Extensions.Diagnostics.Metrics.MeterScope.Global"/>)
+            and those created via Dependency Injection with <see cref="M:System.Diagnostics.Metrics.IMeterFactory.Create(System.Diagnostics.Metrics.MeterOptions)"/> (<see cref="F:Microsoft.Extensions.Diagnostics.Metrics.MeterScope.Local"/>)."/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.InstrumentRule.Enable">
+            <summary>
+            Indicates if the instrument should be enabled for the listener.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.IObservableInstrumentsSource">
+            <summary>
+            An interface registered with each IMetricsListener using <see cref="M:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener.Initialize(Microsoft.Extensions.Diagnostics.Metrics.IObservableInstrumentsSource)"/>. The listener
+            can call <see cref="M:Microsoft.Extensions.Diagnostics.Metrics.IObservableInstrumentsSource.RecordObservableInstruments"/> to receive the current set of measurements for enabled observable instruments.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.IObservableInstrumentsSource.RecordObservableInstruments">
+            <summary>
+            Requests that the current set of metrics for enabled instruments be sent to the listener's <see cref="T:System.Diagnostics.Metrics.MeasurementCallback`1"/>'s.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers">
+            <summary>
+            A set of supported measurement types. If a listener does not support a given type, the measurement will be skipped.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers.ByteHandler">
+            <summary>
+            A <see cref="T:System.Diagnostics.Metrics.MeasurementCallback`1"/> for <see cref="T:System.Byte"/>. If null, byte measurements will be skipped.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers.ShortHandler">
+            <summary>
+            A <see cref="T:System.Diagnostics.Metrics.MeasurementCallback`1"/> for <see cref="T:System.Int16"/>. If null, short measurements will be skipped.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers.IntHandler">
+            <summary>
+            A <see cref="T:System.Diagnostics.Metrics.MeasurementCallback`1"/> for <see cref="T:System.Int32"/>. If null, int measurements will be skipped.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers.LongHandler">
+            <summary>
+            A <see cref="T:System.Diagnostics.Metrics.MeasurementCallback`1"/> for <see cref="T:System.Int64"/>. If null, long measurements will be skipped.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers.FloatHandler">
+            <summary>
+            A <see cref="T:System.Diagnostics.Metrics.MeasurementCallback`1"/> for <see cref="T:System.Single"/>. If null, float measurements will be skipped.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers.DoubleHandler">
+            <summary>
+            A <see cref="T:System.Diagnostics.Metrics.MeasurementCallback`1"/> for <see cref="T:System.Double"/>. If null, double measurements will be skipped.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.MeasurementHandlers.DecimalHandler">
+            <summary>
+            A <see cref="T:System.Diagnostics.Metrics.MeasurementCallback`1"/> for <see cref="T:System.Decimal"/>. If null, decimal measurements will be skipped.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.MeterScope">
+            <summary>
+            This is used by <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.InstrumentRule"/> to distinguish between meters created via <see cref="T:System.Diagnostics.Metrics.Meter"/> constructors (<see cref="F:Microsoft.Extensions.Diagnostics.Metrics.MeterScope.Global"/>)
+            and those created via Dependency Injection with <see cref="M:System.Diagnostics.Metrics.IMeterFactory.Create(System.Diagnostics.Metrics.MeterOptions)"/> (<see cref="F:Microsoft.Extensions.Diagnostics.Metrics.MeterScope.Local"/>)."/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.Diagnostics.Metrics.MeterScope.None">
+            <summary>
+            No scope is specified. This should not be used.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.Diagnostics.Metrics.MeterScope.Global">
+            <summary>
+            Indicates <see cref="T:System.Diagnostics.Metrics.Meter"/> instances created via <see cref="T:System.Diagnostics.Metrics.Meter"/> constructors.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.Diagnostics.Metrics.MeterScope.Local">
+            <summary>
+            Indicates <see cref="T:System.Diagnostics.Metrics.Meter"/> instances created via Dependency Injection with <see cref="M:System.Diagnostics.Metrics.IMeterFactory.Create(System.Diagnostics.Metrics.MeterOptions)"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/> to add or clear <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/> registrations, and to enable or disable metrics.
+            </summary>
+            <summary>
+            Extension methods for <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/> to add or clear <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/> registrations, and to enable or disable metrics.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.AddListener``1(Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder)">
+            <summary>
+            Registers a new <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/> of type <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The implementation type of the listener.</typeparam>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/>.</param>
+            <returns>Returns the original <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.AddListener(Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder,Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener)">
+            <summary>
+            Registers a new <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/> instance.
+            </summary>
+            <param name="listener">The implementation type of the listener.</param>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/>.</param>
+            <returns>Returns the original <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.ClearListeners(Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder)">
+            <summary>
+            Removes all <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/> registrations from the dependency injection container.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/>.</param>
+            <returns>Returns the original <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.EnableMetrics(Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder,System.String)">
+            <summary>
+            Enables all <see cref="T:System.Diagnostics.Metrics.Instrument"/>'s for the given meter, for all registered <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>'s.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/>.</param>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix. A null value matches all meters.</param>
+            <returns>The original <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.EnableMetrics(Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder,System.String,System.String,System.String,Microsoft.Extensions.Diagnostics.Metrics.MeterScope)">
+            <summary>
+            Enables a specified <see cref="T:System.Diagnostics.Metrics.Instrument"/> for the given <see cref="T:System.Diagnostics.Metrics.Meter"/> and <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/>.</param>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix. A null value matches all meters.</param>
+            <param name="instrumentName">The <see cref="P:System.Diagnostics.Metrics.Instrument.Name"/>. A null value matches all instruments.</param>
+            <param name="listenerName">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>.Name. A null value matches all listeners.</param>
+            <param name="scopes">Indicates which <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MeterScope"/>'s to consider. Default to all scopes.</param>
+            <returns>The original <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.EnableMetrics(Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions,System.String)">
+            <summary>
+            Enables all <see cref="T:System.Diagnostics.Metrics.Instrument"/>'s for the given meter, for all registered <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>'s.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions"/>.</param>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix. A null value matches all meters.</param>
+            <returns>The original <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.EnableMetrics(Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions,System.String,System.String,System.String,Microsoft.Extensions.Diagnostics.Metrics.MeterScope)">
+            <summary>
+            Enables a specified <see cref="T:System.Diagnostics.Metrics.Instrument"/> for the given <see cref="T:System.Diagnostics.Metrics.Meter"/> and <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>.
+            </summary>
+            <param name="options">The <see cref="T:System.Diagnostics.Metrics.MeterOptions"/>.</param>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix. A null value matches all meters.</param>
+            <param name="instrumentName">The <see cref="P:System.Diagnostics.Metrics.Instrument.Name"/>. A null value matches all instruments.</param>
+            <param name="listenerName">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>.Name. A null value matches all listeners.</param>
+            <param name="scopes">Indicates which <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MeterScope"/>'s to consider. Default to all scopes.</param>
+            <returns>The original <see cref="T:System.Diagnostics.Metrics.MeterOptions"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.DisableMetrics(Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder,System.String)">
+            <summary>
+            Disables all <see cref="T:System.Diagnostics.Metrics.Instrument"/>'s for the given meter, for all registered <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>'s.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/>.</param>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix. A null value matches all meters.</param>
+            <returns>The original <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.DisableMetrics(Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder,System.String,System.String,System.String,Microsoft.Extensions.Diagnostics.Metrics.MeterScope)">
+            <summary>
+            Disables a specified <see cref="T:System.Diagnostics.Metrics.Instrument"/> for the given <see cref="T:System.Diagnostics.Metrics.Meter"/> and <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/>.</param>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix. A null value matches all meters.</param>
+            <param name="instrumentName">The <see cref="P:System.Diagnostics.Metrics.Instrument.Name"/>. A null value matches all instruments.</param>
+            <param name="listenerName">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>.Name. A null value matches all listeners.</param>
+            <param name="scopes">Indicates which <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MeterScope"/>'s to consider. Default to all scopes.</param>
+            <returns>The original <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsBuilder"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.DisableMetrics(Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions,System.String)">
+            <summary>
+            Disables all <see cref="T:System.Diagnostics.Metrics.Instrument"/>'s for the given meter, for all registered <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>'s.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions"/>.</param>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix. A null value matches all meters.</param>
+            <returns>The original <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions"/> for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Diagnostics.Metrics.MetricsBuilderExtensions.DisableMetrics(Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions,System.String,System.String,System.String,Microsoft.Extensions.Diagnostics.Metrics.MeterScope)">
+            <summary>
+            Disables a specified <see cref="T:System.Diagnostics.Metrics.Instrument"/> for the given <see cref="T:System.Diagnostics.Metrics.Meter"/> and <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>.
+            </summary>
+            <param name="options">The <see cref="T:System.Diagnostics.Metrics.MeterOptions"/>.</param>
+            <param name="meterName">The <see cref="P:System.Diagnostics.Metrics.Meter.Name"/> or prefix. A null value matches all meters.</param>
+            <param name="instrumentName">The <see cref="P:System.Diagnostics.Metrics.Instrument.Name"/>. A null value matches all instruments.</param>
+            <param name="listenerName">The <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.IMetricsListener"/>.Name. A null value matches all listeners.</param>
+            <param name="scopes">Indicates which <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.MeterScope"/>'s to consider. Default to all scopes.</param>
+            <returns>The original <see cref="T:System.Diagnostics.Metrics.MeterOptions"/> for chaining.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions">
+            <summary>
+            Options for configuring the metrics system.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Diagnostics.Metrics.MetricsOptions.Rules">
+            <summary>
+            A list of <see cref="T:Microsoft.Extensions.Diagnostics.Metrics.InstrumentRule"/>'s that identify which metrics, instruments, and listeners are enabled.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.TypeNameHelper.GetTypeDisplayName(System.Type,System.Boolean,System.Boolean,System.Boolean,System.Char)">
+            <summary>
+            Pretty print a type name.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/>.</param>
+            <param name="fullName"><c>true</c> to print a fully qualified name.</param>
+            <param name="includeGenericParameterNames"><c>true</c> to include generic parameter names.</param>
+            <param name="includeGenericParameters"><c>true</c> to include generic parameters.</param>
+            <param name="nestedTypeDelimiter">Character to use as a delimiter in nested type names</param>
+            <returns>The pretty printed type name.</returns>
+        </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+    </members>
+</doc>

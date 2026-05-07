@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Net.NameResolution</name>
+  </assembly>
+  <members>
+    <member name="T:System.Net.Dns">
+      <summary>Provides simple domain name resolution functionality.</summary>
+    </member>
+    <member name="M:System.Net.Dns.BeginGetHostAddresses(System.String,System.AsyncCallback,System.Object)">
+      <summary>Asynchronously returns the Internet Protocol (IP) addresses for the specified host.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <param name="requestCallback">An <see cref="T:System.AsyncCallback" /> delegate that references the method to invoke when the operation is complete.</param>
+      <param name="state">A user-defined object that contains information about the operation. This object is passed to the <paramref name="requestCallback" /> delegate when the operation is complete.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The length of <paramref name="hostNameOrAddress" /> is greater than 255 characters.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="hostNameOrAddress" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="hostNameOrAddress" /> is an invalid IP address.</exception>
+      <returns>An <see cref="T:System.IAsyncResult" /> instance that references the asynchronous request.</returns>
+    </member>
+    <member name="M:System.Net.Dns.BeginGetHostByName(System.String,System.AsyncCallback,System.Object)">
+      <summary>Begins an asynchronous request for <see cref="T:System.Net.IPHostEntry" /> information about the specified DNS host name.</summary>
+      <param name="hostName">The DNS name of the host.</param>
+      <param name="requestCallback">An <see cref="T:System.AsyncCallback" /> delegate that references the method to invoke when the operation is complete.</param>
+      <param name="stateObject">A user-defined object that contains information about the operation. This object is passed to the <paramref name="requestCallback" /> delegate when the operation is complete.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error was encountered executing the DNS query.</exception>
+      <returns>An <see cref="T:System.IAsyncResult" /> instance that references the asynchronous request.</returns>
+    </member>
+    <member name="M:System.Net.Dns.BeginGetHostEntry(System.Net.IPAddress,System.AsyncCallback,System.Object)">
+      <summary>Asynchronously resolves an IP address to an <see cref="T:System.Net.IPHostEntry" /> instance.</summary>
+      <param name="address">The IP address to resolve.</param>
+      <param name="requestCallback">An <see cref="T:System.AsyncCallback" /> delegate that references the method to invoke when the operation is complete.</param>
+      <param name="stateObject">A user-defined object that contains information about the operation. This object is passed to the <paramref name="requestCallback" /> delegate when the operation is complete.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="address" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="address" /> is an invalid IP address.</exception>
+      <returns>An <see cref="T:System.IAsyncResult" /> instance that references the asynchronous request.</returns>
+    </member>
+    <member name="M:System.Net.Dns.BeginGetHostEntry(System.String,System.AsyncCallback,System.Object)">
+      <summary>Asynchronously resolves a host name or IP address to an <see cref="T:System.Net.IPHostEntry" /> instance.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <param name="requestCallback">An <see cref="T:System.AsyncCallback" /> delegate that references the method to invoke when the operation is complete.</param>
+      <param name="stateObject">A user-defined object that contains information about the operation. This object is passed to the <paramref name="requestCallback" /> delegate when the operation is complete.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The length of <paramref name="hostNameOrAddress" /> is greater than 255 characters.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="hostNameOrAddress" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="hostNameOrAddress" /> is an invalid IP address.</exception>
+      <returns>An <see cref="T:System.IAsyncResult" /> instance that references the asynchronous request.</returns>
+    </member>
+    <member name="M:System.Net.Dns.BeginResolve(System.String,System.AsyncCallback,System.Object)">
+      <summary>Begins an asynchronous request to resolve a DNS host name or IP address to an <see cref="T:System.Net.IPAddress" /> instance.</summary>
+      <param name="hostName">The DNS name of the host.</param>
+      <param name="requestCallback">An <see cref="T:System.AsyncCallback" /> delegate that references the method to invoke when the operation is complete.</param>
+      <param name="stateObject">A user-defined object that contains information about the operation. This object is passed to the <paramref name="requestCallback" /> delegate when the operation is complete.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">The caller does not have permission to access DNS information.</exception>
+      <returns>An <see cref="T:System.IAsyncResult" /> instance that references the asynchronous request.</returns>
+    </member>
+    <member name="M:System.Net.Dns.EndGetHostAddresses(System.IAsyncResult)">
+      <summary>Ends an asynchronous request for DNS information.</summary>
+      <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> instance returned by a call to the <see cref="M:System.Net.Dns.BeginGetHostAddresses(System.String,System.AsyncCallback,System.Object)" /> method.</param>
+      <returns>An array of type <see cref="T:System.Net.IPAddress" /> that holds the IP addresses for the host specified by the <paramref name="hostNameOrAddress" /> parameter of <see cref="M:System.Net.Dns.BeginGetHostAddresses(System.String,System.AsyncCallback,System.Object)" />.</returns>
+    </member>
+    <member name="M:System.Net.Dns.EndGetHostByName(System.IAsyncResult)">
+      <summary>Ends an asynchronous request for DNS information.</summary>
+      <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> instance that is returned by a call to the <see cref="M:System.Net.Dns.BeginGetHostByName(System.String,System.AsyncCallback,System.Object)" /> method.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" /> is <see langword="null" />.</exception>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> object that contains DNS information about a host.</returns>
+    </member>
+    <member name="M:System.Net.Dns.EndGetHostEntry(System.IAsyncResult)">
+      <summary>Ends an asynchronous request for DNS information.</summary>
+      <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> instance returned by a call to an <see cref="Overload:System.Net.Dns.BeginGetHostEntry" /> method.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" /> is <see langword="null" />.</exception>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> instance that contains address information about the host.</returns>
+    </member>
+    <member name="M:System.Net.Dns.EndResolve(System.IAsyncResult)">
+      <summary>Ends an asynchronous request for DNS information.</summary>
+      <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> instance that is returned by a call to the <see cref="M:System.Net.Dns.BeginResolve(System.String,System.AsyncCallback,System.Object)" /> method.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" /> is <see langword="null" />.</exception>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> object that contains DNS information about a host.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostAddresses(System.String)">
+      <summary>Returns the Internet Protocol (IP) addresses for the specified host.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The length of <paramref name="hostNameOrAddress" /> is greater than 255 characters.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="hostNameOrAddress" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="hostNameOrAddress" /> is an invalid IP address.</exception>
+      <returns>An array of type <see cref="T:System.Net.IPAddress" /> that holds the IP addresses for the host that is specified by the <paramref name="hostNameOrAddress" /> parameter.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostAddresses(System.String,System.Net.Sockets.AddressFamily)">
+      <summary>Returns the Internet Protocol (IP) addresses for the specified host.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <param name="family">The address family for which IPs should be retrieved. If <see cref="F:System.Net.Sockets.AddressFamily.Unspecified" />, retrieve all IPs regardless of address family.</param>
+      <returns>An array of type <see cref="T:System.Net.IPAddress" /> that holds the IP addresses for the host that is specified by the <paramref name="hostNameOrAddress" /> parameter.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostAddressesAsync(System.String)">
+      <summary>Returns the Internet Protocol (IP) addresses for the specified host as an asynchronous operation.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostNameOrAddress" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The length of <paramref name="hostNameOrAddress" /> is greater than 255 characters.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="hostNameOrAddress" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="hostNameOrAddress" /> is an invalid IP address.</exception>
+      <returns>The task object representing the asynchronous operation. The <see cref="P:System.Threading.Tasks.Task`1.Result" /> property on the task object returns an array of type <see cref="T:System.Net.IPAddress" /> that holds the IP addresses for the host that is specified by the <paramref name="hostNameOrAddress" /> parameter.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostAddressesAsync(System.String,System.Net.Sockets.AddressFamily,System.Threading.CancellationToken)">
+      <summary>Returns the Internet Protocol (IP) addresses for the specified host as an asynchronous operation.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <param name="family">The address family for which IPs should be retrieved. If <see cref="F:System.Net.Sockets.AddressFamily.Unspecified" />, retrieve all IPs regardless of address family.</param>
+      <param name="cancellationToken">A cancellation token that can be used to signal the asynchronous operation should be canceled.</param>
+      <returns>The task object representing the asynchronous operation. The <see cref="P:System.Threading.Tasks.Task`1.Result" /> property on the task object returns an array of type <see cref="T:System.Net.IPAddress" /> that holds the IP addresses for the host that is specified by the <paramref name="hostNameOrAddress" /> parameter.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostAddressesAsync(System.String,System.Threading.CancellationToken)">
+      <summary>Returns the Internet Protocol (IP) addresses for the specified host as an asynchronous operation.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <param name="cancellationToken">A cancellation token that can be used to signal the asynchronous operation should be canceled.</param>
+      <returns>The task object representing the asynchronous operation. The <see cref="P:System.Threading.Tasks.Task`1.Result" /> property on the task object returns an array of type <see cref="T:System.Net.IPAddress" /> that holds the IP addresses for the host that is specified by the <paramref name="hostNameOrAddress" /> parameter.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostByAddress(System.Net.IPAddress)">
+      <summary>Creates an <see cref="T:System.Net.IPHostEntry" /> instance from the specified <see cref="T:System.Net.IPAddress" />.</summary>
+      <param name="address">An <see cref="T:System.Net.IPAddress" />.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="address" />.</exception>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> instance.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostByAddress(System.String)">
+      <summary>Creates an <see cref="T:System.Net.IPHostEntry" /> instance from an IP address.</summary>
+      <param name="address">An IP address.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="address" />.</exception>
+      <exception cref="T:System.FormatException">
+        <paramref name="address" /> is not a valid IP address.</exception>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> instance.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostByName(System.String)">
+      <summary>Gets the DNS information for the specified DNS host name.</summary>
+      <param name="hostName">The DNS name of the host.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The length of <paramref name="hostName" /> is greater than 255 characters.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="hostName" />.</exception>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> object that contains host information for the address specified in <paramref name="hostName" />.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostEntry(System.Net.IPAddress)">
+      <summary>Resolves an IP address to an <see cref="T:System.Net.IPHostEntry" /> instance.</summary>
+      <param name="address">An IP address.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="address" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="address" /> is an invalid IP address.</exception>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> instance that contains address information about the host specified in <paramref name="address" />.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostEntry(System.String)">
+      <summary>Resolves a host name or IP address to an <see cref="T:System.Net.IPHostEntry" /> instance.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="hostNameOrAddress" /> parameter is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The length of <paramref name="hostNameOrAddress" /> parameter is greater than 255 characters.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error was encountered when resolving the <paramref name="hostNameOrAddress" /> parameter.</exception>
+      <exception cref="T:System.ArgumentException">The <paramref name="hostNameOrAddress" /> parameter is an invalid IP address.</exception>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> instance that contains address information about the host specified in <paramref name="hostNameOrAddress" />.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostEntry(System.String,System.Net.Sockets.AddressFamily)">
+      <summary>Resolves a host name or IP address to an <see cref="T:System.Net.IPHostEntry" /> instance.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <param name="family">The address family for which IPs should be retrieved. If <see cref="F:System.Net.Sockets.AddressFamily.Unspecified" />, retrieve all IPs regardless of address family.</param>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> instance that contains the address information about the host specified in <paramref name="hostNameOrAddress" />.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostEntryAsync(System.Net.IPAddress)">
+      <summary>Resolves an IP address to an <see cref="T:System.Net.IPHostEntry" /> instance as an asynchronous operation.</summary>
+      <param name="address">An IP address.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="address" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="address" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="address" /> is an invalid IP address.</exception>
+      <returns>The task object representing the asynchronous operation. The <see cref="P:System.Threading.Tasks.Task`1.Result" /> property on the task object returns an <see cref="T:System.Net.IPHostEntry" /> instance that contains address information about the host specified in <paramref name="address" />.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostEntryAsync(System.String)">
+      <summary>Resolves a host name or IP address to an <see cref="T:System.Net.IPHostEntry" /> instance as an asynchronous operation.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="hostNameOrAddress" /> parameter is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The length of <paramref name="hostNameOrAddress" /> parameter is greater than 255 characters.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error was encountered when resolving the <paramref name="hostNameOrAddress" /> parameter.</exception>
+      <exception cref="T:System.ArgumentException">The <paramref name="hostNameOrAddress" /> parameter is an invalid IP address.</exception>
+      <returns>The task object representing the asynchronous operation. The <see cref="P:System.Threading.Tasks.Task`1.Result" /> property on the task object returns an <see cref="T:System.Net.IPHostEntry" /> instance that contains address information about the host specified in <paramref name="hostNameOrAddress" />.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostEntryAsync(System.String,System.Net.Sockets.AddressFamily,System.Threading.CancellationToken)">
+      <summary>Resolves a host name or IP address to an <see cref="T:System.Net.IPHostEntry" /> instance as an asynchronous operation.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <param name="family">The address family for which IPs should be retrieved. If <see cref="F:System.Net.Sockets.AddressFamily.Unspecified" />, retrieve all IPs regardless of address family.</param>
+      <param name="cancellationToken">A cancellation token that can be used to signal the asynchronous operation should be canceled.</param>
+      <returns>The task object representing the asynchronous operation. The <see cref="P:System.Threading.Tasks.Task`1.Result" /> property on the task object returns an <see cref="T:System.Net.IPHostEntry" /> instance that contains the address information about the host specified in <paramref name="hostNameOrAddress" />.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostEntryAsync(System.String,System.Threading.CancellationToken)">
+      <summary>Resolves a host name or IP address to an <see cref="T:System.Net.IPHostEntry" /> instance as an asynchronous operation.</summary>
+      <param name="hostNameOrAddress">The host name or IP address to resolve.</param>
+      <param name="cancellationToken">A cancellation token that can be used to signal the asynchronous operation should be canceled.</param>
+      <returns>The task object representing the asynchronous operation. The <see cref="P:System.Threading.Tasks.Task`1.Result" /> property on the task object returns an <see cref="T:System.Net.IPHostEntry" /> instance that contains the address information about the host specified in <paramref name="hostNameOrAddress" />.</returns>
+    </member>
+    <member name="M:System.Net.Dns.GetHostName">
+      <summary>Gets the host name of the local computer.</summary>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving the local host name.</exception>
+      <returns>A string that contains the DNS host name of the local computer.</returns>
+    </member>
+    <member name="M:System.Net.Dns.Resolve(System.String)">
+      <summary>Resolves a DNS host name or IP address to an <see cref="T:System.Net.IPHostEntry" /> instance.</summary>
+      <param name="hostName">A DNS-style host name or IP address.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="hostName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The length of <paramref name="hostName" /> is greater than 255 characters.</exception>
+      <exception cref="T:System.Net.Sockets.SocketException">An error is encountered when resolving <paramref name="hostName" />.</exception>
+      <returns>An <see cref="T:System.Net.IPHostEntry" /> instance that contains address information about the host specified in <paramref name="hostName" />.</returns>
+    </member>
+    <member name="T:System.Net.IPHostEntry">
+      <summary>Provides a container class for Internet host address information.</summary>
+    </member>
+    <member name="M:System.Net.IPHostEntry.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.IPHostEntry" /> class.</summary>
+    </member>
+    <member name="P:System.Net.IPHostEntry.AddressList">
+      <summary>Gets or sets a list of IP addresses that are associated with a host.</summary>
+      <returns>An array of type <see cref="T:System.Net.IPAddress" /> that contains IP addresses that resolve to the host names that are contained in the <see cref="P:System.Net.IPHostEntry.Aliases" /> property.</returns>
+    </member>
+    <member name="P:System.Net.IPHostEntry.Aliases">
+      <summary>Gets or sets a list of aliases that are associated with a host.</summary>
+      <returns>An array of strings that contain DNS names that resolve to the IP addresses in the <see cref="P:System.Net.IPHostEntry.AddressList" /> property.</returns>
+    </member>
+    <member name="P:System.Net.IPHostEntry.HostName">
+      <summary>Gets or sets the DNS name of the host.</summary>
+      <returns>A string that contains the primary host name for the server.</returns>
+    </member>
+  </members>
+</doc>

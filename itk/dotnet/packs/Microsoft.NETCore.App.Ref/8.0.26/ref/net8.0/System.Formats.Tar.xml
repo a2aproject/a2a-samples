@@ -1,0 +1,703 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Formats.Tar</name>
+  </assembly>
+  <members>
+    <member name="T:System.Formats.Tar.GnuTarEntry">
+      <summary>Represents a tar entry in the GNU format.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.GnuTarEntry.#ctor(System.Formats.Tar.TarEntry)">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.GnuTarEntry" /> instance by converting the specified <paramref name="other" /> entry into the GNU format.</summary>
+      <param name="other">The <see cref="T:System.Formats.Tar.TarEntry" /> instance to convert to the GNU format.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="other" /> is a <see cref="T:System.Formats.Tar.PaxGlobalExtendedAttributesTarEntry" /> instance.
+
+-or-
+
+The entry type of <paramref name="other" /> is not supported in the GNU format.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.GnuTarEntry.#ctor(System.Formats.Tar.TarEntryType,System.String)">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.GnuTarEntry" /> instance with the specified entry type and entry name.</summary>
+      <param name="entryType">The type of the entry.</param>
+      <param name="entryName">A string with the path and file name of this entry.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="entryName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="entryName" /> is empty.
+
+-or-
+
+The entry type is not supported for creating an entry in the GNU format.</exception>
+    </member>
+    <member name="P:System.Formats.Tar.GnuTarEntry.AccessTime">
+      <summary>A timestamp that represents the last time the file represented by this entry was accessed.</summary>
+    </member>
+    <member name="P:System.Formats.Tar.GnuTarEntry.ChangeTime">
+      <summary>A timestamp that represents the last time the metadata of the file represented by this entry was changed.</summary>
+    </member>
+    <member name="T:System.Formats.Tar.PaxGlobalExtendedAttributesTarEntry">
+      <summary>Represents a global extended attributes tar entry of the PAX format.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.PaxGlobalExtendedAttributesTarEntry.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.PaxGlobalExtendedAttributesTarEntry" /> instance with the specified global extended attributes enumeration.</summary>
+      <param name="globalExtendedAttributes">An enumeration of string key-value pairs that represents the metadata to include as global extended attributes.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="globalExtendedAttributes" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="P:System.Formats.Tar.PaxGlobalExtendedAttributesTarEntry.GlobalExtendedAttributes">
+      <summary>Returns the global extended attributes stored in this entry.</summary>
+    </member>
+    <member name="T:System.Formats.Tar.PaxTarEntry">
+      <summary>Represents a tar entry in the PAX format.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.PaxTarEntry.#ctor(System.Formats.Tar.TarEntry)">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.PaxTarEntry" /> instance by converting the specified <paramref name="other" /> entry into the PAX format.</summary>
+      <param name="other">The <see cref="T:System.Formats.Tar.TarEntry" /> instance to convert to the PAX format.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="other" /> is a <see cref="T:System.Formats.Tar.PaxGlobalExtendedAttributesTarEntry" /> instance.
+
+-or-
+
+The entry type of <paramref name="other" /> is not supported in the PAX format.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.PaxTarEntry.#ctor(System.Formats.Tar.TarEntryType,System.String)">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.PaxTarEntry" /> instance with the specified entry type and entry name, and the default extended attributes.</summary>
+      <param name="entryType">The type of the entry.</param>
+      <param name="entryName">A string with the path and file name of this entry.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="entryName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="entryName" /> is empty.
+
+-or-
+
+The entry type is not supported for creating an entry in the PAX format.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.PaxTarEntry.#ctor(System.Formats.Tar.TarEntryType,System.String,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.PaxTarEntry" /> instance with the specified entry type, entry name, and extended attributes enumeration.</summary>
+      <param name="entryType">The type of the entry.</param>
+      <param name="entryName">A string with the path and file name of this entry.</param>
+      <param name="extendedAttributes">An enumeration of string key-value pairs that represents the metadata to include in the extended attributes entry that precedes the current entry.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="extendedAttributes" /> or <paramref name="entryName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="entryName" /> is empty.
+
+-or-
+
+The entry type is not supported for creating an entry in the PAX format.</exception>
+    </member>
+    <member name="P:System.Formats.Tar.PaxTarEntry.ExtendedAttributes">
+      <summary>Returns the extended attributes for this entry.</summary>
+    </member>
+    <member name="T:System.Formats.Tar.PosixTarEntry">
+      <summary>Defines the core behavior of a tar entry from an archive of a format that is based on the POSIX IEEE P1003.1 standard from 1988. This includes the formats <see cref="F:System.Formats.Tar.TarEntryFormat.Ustar" /> (represented by the <see cref="T:System.Formats.Tar.UstarTarEntry" /> class), <see cref="F:System.Formats.Tar.TarEntryFormat.Pax" /> (represented by the <see cref="T:System.Formats.Tar.PaxTarEntry" /> class), and <see cref="F:System.Formats.Tar.TarEntryFormat.Gnu" /> (represented by the <see cref="T:System.Formats.Tar.GnuTarEntry" /> class).</summary>
+    </member>
+    <member name="P:System.Formats.Tar.PosixTarEntry.DeviceMajor">
+      <summary>Gets or sets the device's major number. When the current entry represents a character device or a block device, the major number identifies the driver associated with the device.</summary>
+      <exception cref="T:System.InvalidOperationException">The entry does not represent a block device or a character device.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value is negative, or larger than 2097151.</exception>
+    </member>
+    <member name="P:System.Formats.Tar.PosixTarEntry.DeviceMinor">
+      <summary>Gets or sets the device's minor number. When the current entry represents a character device or a block device, the minor number is used by the driver to distinguish individual devices it controls.</summary>
+      <exception cref="T:System.InvalidOperationException">The entry does not represent a block device or a character device.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value is negative, or larger than 2097151.</exception>
+    </member>
+    <member name="P:System.Formats.Tar.PosixTarEntry.GroupName">
+      <summary>Gets or sets the name of the group that owns this entry.</summary>
+      <exception cref="T:System.ArgumentNullException">The group name is <see langword="null" />.</exception>
+    </member>
+    <member name="P:System.Formats.Tar.PosixTarEntry.UserName">
+      <summary>Gets or sets the name of the user that owns this entry.</summary>
+      <exception cref="T:System.ArgumentNullException">The user name is <see langword="null" />.</exception>
+    </member>
+    <member name="T:System.Formats.Tar.TarEntry">
+      <summary>Defines the core behavior of a tar entry from an archive.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.TarEntry.ExtractToFile(System.String,System.Boolean)">
+      <summary>Extracts the current file or directory to the filesystem. Symbolic links and hard links are not extracted.</summary>
+      <param name="destinationFileName">The path to the destination file.</param>
+      <param name="overwrite">
+        <see langword="true" /> if this method should overwrite any existing filesystem object located in the <paramref name="destinationFileName" /> path; <see langword="false" /> to prevent overwriting.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="destinationFileName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="destinationFileName" /> is empty.</exception>
+      <exception cref="T:System.IO.IOException">
+The parent directory of <paramref name="destinationFileName" /> does not exist.
+
+-or-
+
+<paramref name="overwrite" /> is <see langword="false" /> and a file already exists in <paramref name="destinationFileName" />.
+
+-or-
+
+A directory exists with the same name as <paramref name="destinationFileName" />.
+
+-or-
+
+An I/O problem occurred.</exception>
+      <exception cref="T:System.InvalidOperationException">Attempted to extract a symbolic link, a hard link, or an unsupported entry type.</exception>
+      <exception cref="T:System.UnauthorizedAccessException">Operation not permitted due to insufficient permissions.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarEntry.ExtractToFileAsync(System.String,System.Boolean,System.Threading.CancellationToken)">
+      <summary>Asynchronously extracts the current entry to the filesystem.</summary>
+      <param name="destinationFileName">The path to the destination file.</param>
+      <param name="overwrite">
+        <see langword="true" /> if this method should overwrite any existing filesystem object located in the <paramref name="destinationFileName" /> path; <see langword="false" /> to prevent overwriting.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="destinationFileName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="destinationFileName" /> is empty.</exception>
+      <exception cref="T:System.IO.IOException">
+The parent directory of <paramref name="destinationFileName" /> does not exist.
+
+-or-
+
+<paramref name="overwrite" /> is <see langword="false" /> and a file already exists in <paramref name="destinationFileName" />.
+
+-or-
+
+A directory exists with the same name as <paramref name="destinationFileName" />.
+
+-or-
+
+An I/O problem occurred.</exception>
+      <exception cref="T:System.InvalidOperationException">The entry type is unsupported.</exception>
+      <exception cref="T:System.UnauthorizedAccessException">Permissions are insufficient.</exception>
+      <returns>A task that represents the asynchronous extraction operation.</returns>
+    </member>
+    <member name="M:System.Formats.Tar.TarEntry.ToString">
+      <summary>Returns a string that represents the current entry.</summary>
+      <returns>The <see cref="P:System.Formats.Tar.TarEntry.Name" /> of the current entry.</returns>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.Checksum">
+      <summary>The checksum of all the fields in this entry. The value is non-zero either when the entry is read from an existing archive, or after the entry is written to a new archive.</summary>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.DataStream">
+      <summary>Gets or sets the data section of this entry. If the <see cref="P:System.Formats.Tar.TarEntry.EntryType" /> does not support containing data, then returns <see langword="null" />.</summary>
+      <exception cref="T:System.InvalidOperationException">Setting a data section is not supported because the <see cref="P:System.Formats.Tar.TarEntry.EntryType" /> is not <see cref="F:System.Formats.Tar.TarEntryType.RegularFile" /> (or <see cref="F:System.Formats.Tar.TarEntryType.V7RegularFile" /> for an archive of <see cref="F:System.Formats.Tar.TarEntryFormat.V7" /> format).</exception>
+      <exception cref="T:System.ArgumentException">The stream does not support reading.</exception>
+      <exception cref="T:System.IO.IOException">An I/O problem occurred.</exception>
+      <returns>
+        <para>Gets a stream that represents the data section of this entry.</para>
+        <para>Sets a new stream that represents the data section, if it makes sense for the <see cref="P:System.Formats.Tar.TarEntry.EntryType" /> to contain data. If a stream already exists, the old stream is disposed before substituting it with the new stream. Setting a <see langword="null" /> stream is allowed.</para>
+      </returns>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.EntryType">
+      <summary>Gets the type of filesystem object represented by this entry.</summary>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.Format">
+      <summary>The format of the entry.</summary>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.Gid">
+      <summary>Gets or sets the ID of the group that owns the file represented by this entry.</summary>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.Length">
+      <summary>When the <see cref="P:System.Formats.Tar.TarEntry.EntryType" /> indicates an entry that can contain data, gets the length in bytes of such data.</summary>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.LinkName">
+      <summary>When the <see cref="P:System.Formats.Tar.TarEntry.EntryType" /> indicates a <see cref="F:System.Formats.Tar.TarEntryType.SymbolicLink" /> or a <see cref="F:System.Formats.Tar.TarEntryType.HardLink" />, gets or sets the link target path of the link.</summary>
+      <exception cref="T:System.InvalidOperationException">The entry type is not <see cref="F:System.Formats.Tar.TarEntryType.HardLink" /> or <see cref="F:System.Formats.Tar.TarEntryType.SymbolicLink" />.</exception>
+      <exception cref="T:System.ArgumentNullException">The specified value is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">The specified value is empty.</exception>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.Mode">
+      <summary>Gets or sets the Unix file permissions of the file represented by this entry.</summary>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.ModificationTime">
+      <summary>Gets or sets the last time the contents of the file represented by this entry were modified.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The specified value is larger than <see cref="F:System.DateTimeOffset.UnixEpoch" />.</exception>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.Name">
+      <summary>Gets or sets the name of the entry, which includes the relative path and the filename.</summary>
+    </member>
+    <member name="P:System.Formats.Tar.TarEntry.Uid">
+      <summary>Gets or sets the ID of the user that owns the file represented by this entry.</summary>
+    </member>
+    <member name="T:System.Formats.Tar.TarEntryFormat">
+      <summary>Specifies the supported formats that tar entries can use.</summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryFormat.Gnu">
+      <summary>GNU tar entry format (gnu).</summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryFormat.Pax">
+      <summary>POSIX IEEE 1003.1-2001 ("POSIX.1") Pax Interchange tar entry format.</summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryFormat.Unknown">
+      <summary>Tar entry format undetermined.</summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryFormat.Ustar">
+      <summary>POSIX IEEE 1003.1-1988 Unix Standard tar entry format.</summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryFormat.V7">
+      <summary>1979 Version 7 AT&amp;T Unix tar entry format.</summary>
+    </member>
+    <member name="T:System.Formats.Tar.TarEntryType">
+      <summary>Specifies the tar entry types.</summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.BlockDevice">
+      <summary>
+        <para>Block device special file.</para>
+        <para>This entry type is supported only in the Unix platforms for writing.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.CharacterDevice">
+      <summary>
+        <para>Character device special file.</para>
+        <para>This entry type is supported only in the Unix platforms for writing.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.ContiguousFile">
+      <summary>
+        <para>GNU contiguous file.</para>
+        <para>This entry type is specific to the <see cref="F:System.Formats.Tar.TarEntryFormat.Gnu" /> format, and is treated as a <see cref="F:System.Formats.Tar.TarEntryType.RegularFile" /> entry type.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.Directory">
+      <summary>Directory.</summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.DirectoryList">
+      <summary>
+        <para>GNU directory with a list of entries.</para>
+        <para>This entry type is specific to the <see cref="F:System.Formats.Tar.TarEntryFormat.Gnu" /> format, and is treated as a <see cref="F:System.Formats.Tar.TarEntryType.Directory" /> entry type that contains a data section.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.ExtendedAttributes">
+      <summary>
+        <para>PAX Extended Attributes entry.</para>
+        <para>Metadata entry type.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.Fifo">
+      <summary>
+        <para>FIFO special file.</para>
+        <para>This entry type is supported only in the Unix platforms for writing.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.GlobalExtendedAttributes">
+      <summary>
+        <para>PAX Global Extended Attributes entry.</para>
+        <para>Metadata entry type.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.HardLink">
+      <summary>Hard link.</summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.LongLink">
+      <summary>
+        <para>GNU long link.</para>
+        <para>Metadata entry type.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.LongPath">
+      <summary>
+        <para>GNU long path.</para>
+        <para>Metadata entry type.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.MultiVolume">
+      <summary>
+        <para>GNU multi-volume file.</para>
+        <para>This entry type is specific to the <see cref="F:System.Formats.Tar.TarEntryFormat.Gnu" /> format and is not supported for writing.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.RegularFile">
+      <summary>
+        <para>Regular file.</para>
+        <para>This entry type is specific to the <see cref="F:System.Formats.Tar.TarEntryFormat.Ustar" />, <see cref="F:System.Formats.Tar.TarEntryFormat.Pax" /> and <see cref="F:System.Formats.Tar.TarEntryFormat.Gnu" /> formats.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.RenamedOrSymlinked">
+      <summary>
+        <para>GNU file to be renamed/symlinked.</para>
+        <para>This entry type is specific to the <see cref="F:System.Formats.Tar.TarEntryFormat.Gnu" /> format. It is considered unsafe and is ignored by other tools.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.SparseFile">
+      <summary>
+        <para>GNU sparse file.</para>
+        <para>This entry type is specific to the <see cref="F:System.Formats.Tar.TarEntryFormat.Gnu" /> format and is not supported for writing.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.SymbolicLink">
+      <summary>Symbolic link.</summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.TapeVolume">
+      <summary>
+        <para>GNU tape volume.</para>
+        <para>This entry type is specific to the <see cref="F:System.Formats.Tar.TarEntryFormat.Gnu" /> format and is not supported for writing.</para>
+      </summary>
+    </member>
+    <member name="F:System.Formats.Tar.TarEntryType.V7RegularFile">
+      <summary>
+        <para>V7 Regular file.</para>
+        <para>This entry type is specific to the <see cref="F:System.Formats.Tar.TarEntryFormat.V7" /> format.</para>
+      </summary>
+    </member>
+    <member name="T:System.Formats.Tar.TarFile">
+      <summary>Provides static methods for creating and extracting tar archives.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.TarFile.CreateFromDirectory(System.String,System.IO.Stream,System.Boolean)">
+      <summary>Creates a tar stream that contains all the filesystem entries from the specified directory.</summary>
+      <param name="sourceDirectoryName">The path of the directory to archive.</param>
+      <param name="destination">The destination stream for the archive.</param>
+      <param name="includeBaseDirectory">
+        <see langword="true" /> to include the base directory name as the first segment in all the names of the archive entries. <see langword="false" /> to exclude the base directory name from the archive entry names.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="sourceDirectoryName" /> or <paramref name="destination" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="sourceDirectoryName" /> is empty.
+
+-or-
+
+<paramref name="destination" /> does not support writing.</exception>
+      <exception cref="T:System.IO.DirectoryNotFoundException">The <paramref name="sourceDirectoryName" /> directory path is not found.</exception>
+      <exception cref="T:System.IO.IOException">An I/O exception occurred.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarFile.CreateFromDirectory(System.String,System.String,System.Boolean)">
+      <summary>Creates a tar file that contains all the filesystem entries from the specified directory.</summary>
+      <param name="sourceDirectoryName">The path of the directory to archive.</param>
+      <param name="destinationFileName">The path of the destination archive file.</param>
+      <param name="includeBaseDirectory">
+        <see langword="true" /> to include the base directory name as the first path segment in all the names of the archive entries. <see langword="false" /> to exclude the base directory name from the entry name paths.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="sourceDirectoryName" /> or <paramref name="destinationFileName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="sourceDirectoryName" /> or <paramref name="destinationFileName" /> is empty.</exception>
+      <exception cref="T:System.IO.DirectoryNotFoundException">The <paramref name="sourceDirectoryName" /> directory path is not found.</exception>
+      <exception cref="T:System.IO.IOException">An I/O exception occurred.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarFile.CreateFromDirectoryAsync(System.String,System.IO.Stream,System.Boolean,System.Threading.CancellationToken)">
+      <summary>Asynchronously creates a tar stream that contains all the filesystem entries from the specified directory.</summary>
+      <param name="sourceDirectoryName">The path of the directory to archive.</param>
+      <param name="destination">The destination stream of the archive.</param>
+      <param name="includeBaseDirectory">
+        <see langword="true" /> to include the base directory name as the first path segment in all the names of the archive entries. <see langword="false" /> to exclude the base directory name from the entry name paths.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="sourceDirectoryName" /> or <paramref name="destination" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="sourceDirectoryName" /> is empty.
+
+-or-
+
+<paramref name="destination" /> does not support writing.</exception>
+      <exception cref="T:System.IO.DirectoryNotFoundException">The <paramref name="sourceDirectoryName" /> directory path is not found.</exception>
+      <exception cref="T:System.IO.IOException">An I/O exception occurred.</exception>
+      <returns>A task that represents the asynchronous creation operation.</returns>
+    </member>
+    <member name="M:System.Formats.Tar.TarFile.CreateFromDirectoryAsync(System.String,System.String,System.Boolean,System.Threading.CancellationToken)">
+      <summary>Asynchronously creates a tar archive from the contents of the specified directory, and outputs them into the specified path. Can optionally include the base directory as the prefix for the entry names.</summary>
+      <param name="sourceDirectoryName">The path of the directory to archive.</param>
+      <param name="destinationFileName">The path of the destination archive file.</param>
+      <param name="includeBaseDirectory">
+        <see langword="true" /> to include the base directory name as the first path segment in all the names of the archive entries. <see langword="false" /> to exclude the base directory name from the entry name paths.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="sourceDirectoryName" /> or <paramref name="destinationFileName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="sourceDirectoryName" /> or <paramref name="destinationFileName" /> is empty.</exception>
+      <exception cref="T:System.IO.DirectoryNotFoundException">The <paramref name="sourceDirectoryName" /> directory path is not found.</exception>
+      <exception cref="T:System.IO.IOException">An I/O exception occurred.</exception>
+      <returns>A task that represents the asynchronous creation operation.</returns>
+    </member>
+    <member name="M:System.Formats.Tar.TarFile.ExtractToDirectory(System.IO.Stream,System.String,System.Boolean)">
+      <summary>Extracts the contents of a stream that represents a tar archive into the specified directory.</summary>
+      <param name="source">The stream containing the tar archive.</param>
+      <param name="destinationDirectoryName">The path of the destination directory where the filesystem entries should be extracted.</param>
+      <param name="overwriteFiles">
+        <see langword="true" /> to overwrite files and directories in <paramref name="destinationDirectoryName" />; <see langword="false" /> to avoid overwriting, and throw if any files or directories are found with existing names.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> or <paramref name="destinationDirectoryName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.DirectoryNotFoundException">The <paramref name="destinationDirectoryName" /> directory path is not found.</exception>
+      <exception cref="T:System.UnauthorizedAccessException">Permissions are insufficient.</exception>
+      <exception cref="T:System.ArgumentException">
+Extracting one of the tar entries would have resulted in a file outside the specified destination directory.
+
+-or-
+
+<paramref name="destinationDirectoryName" /> is empty.
+
+-or-
+
+<paramref name="source" /> does not support reading.</exception>
+      <exception cref="T:System.IO.IOException">An I/O exception occurred.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarFile.ExtractToDirectory(System.String,System.String,System.Boolean)">
+      <summary>Extracts the contents of a tar file into the specified directory.</summary>
+      <param name="sourceFileName">The path of the tar file to extract.</param>
+      <param name="destinationDirectoryName">The path of the destination directory where the filesystem entries should be extracted.</param>
+      <param name="overwriteFiles">
+        <see langword="true" /> to overwrite files and directories in <paramref name="destinationDirectoryName" />; <see langword="false" /> to avoid overwriting, and throw if any files or directories are found with existing names.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="sourceFileName" /> or <paramref name="destinationDirectoryName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.DirectoryNotFoundException">The <paramref name="destinationDirectoryName" /> directory path is not found.</exception>
+      <exception cref="T:System.IO.FileNotFoundException">The <paramref name="sourceFileName" /> file path is not found.</exception>
+      <exception cref="T:System.UnauthorizedAccessException">Permissions are insufficient.</exception>
+      <exception cref="T:System.ArgumentException">
+Extracting one of the tar entries would have resulted in a file outside the specified destination directory.
+
+-or-
+
+<paramref name="sourceFileName" /> or <paramref name="destinationDirectoryName" /> is empty.</exception>
+      <exception cref="T:System.IO.IOException">An I/O exception occurred.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarFile.ExtractToDirectoryAsync(System.IO.Stream,System.String,System.Boolean,System.Threading.CancellationToken)">
+      <summary>Asynchronously extracts the contents of a stream that represents a tar archive into the specified directory.</summary>
+      <param name="source">The stream containing the tar archive.</param>
+      <param name="destinationDirectoryName">The path of the destination directory where the filesystem entries should be extracted.</param>
+      <param name="overwriteFiles">
+        <see langword="true" /> to overwrite files and directories in <paramref name="destinationDirectoryName" />; <see langword="false" /> to avoid overwriting, and throw if any files or directories are found with existing names.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="source" /> or <paramref name="destinationDirectoryName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.DirectoryNotFoundException">The <paramref name="destinationDirectoryName" /> directory path is not found.</exception>
+      <exception cref="T:System.UnauthorizedAccessException">Permissions are insufficient.</exception>
+      <exception cref="T:System.ArgumentException">
+Extracting one of the tar entries would have resulted in a file outside the specified destination directory.
+
+-or-
+
+<paramref name="destinationDirectoryName" /> is empty.
+
+-or-
+
+<paramref name="source" /> does not support reading.</exception>
+      <exception cref="T:System.IO.IOException">An I/O exception occurred.</exception>
+      <returns>A task that represents the asynchronous extraction operation.</returns>
+    </member>
+    <member name="M:System.Formats.Tar.TarFile.ExtractToDirectoryAsync(System.String,System.String,System.Boolean,System.Threading.CancellationToken)">
+      <summary>Asynchronously extracts the contents of a tar file into the specified directory.</summary>
+      <param name="sourceFileName">The path of the tar file to extract.</param>
+      <param name="destinationDirectoryName">The path of the destination directory where the filesystem entries should be extracted.</param>
+      <param name="overwriteFiles">
+        <see langword="true" /> to overwrite files and directories in <paramref name="destinationDirectoryName" />; <see langword="false" /> to avoid overwriting, and throw if any files or directories are found with existing names.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="sourceFileName" /> or <paramref name="destinationDirectoryName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.DirectoryNotFoundException">The <paramref name="destinationDirectoryName" /> directory path is not found.</exception>
+      <exception cref="T:System.IO.FileNotFoundException">The <paramref name="sourceFileName" /> file path is not found.</exception>
+      <exception cref="T:System.UnauthorizedAccessException">Permissions are insufficient.</exception>
+      <exception cref="T:System.ArgumentException">
+Extracting one of the tar entries would have resulted in a file outside the specified destination directory.
+
+-or-
+
+<paramref name="sourceFileName" /> or <paramref name="destinationDirectoryName" /> is empty.</exception>
+      <exception cref="T:System.IO.IOException">An I/O exception occurred.</exception>
+      <returns>A task that represents the asynchronous extraction operation.</returns>
+    </member>
+    <member name="T:System.Formats.Tar.TarReader">
+      <summary>Reads a tar archive from a stream.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.TarReader.#ctor(System.IO.Stream,System.Boolean)">
+      <summary>Initializes a <see cref="T:System.Formats.Tar.TarReader" /> instance that can read tar entries from the specified stream, and can optionally leave the stream open upon disposal of this instance.</summary>
+      <param name="archiveStream">The stream to read from.</param>
+      <param name="leaveOpen">
+        <see langword="false" /> to dispose the <paramref name="archiveStream" /> when this instance is disposed; <see langword="true" /> to leave the stream open.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="archiveStream" /> does not support reading.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="archiveStream" /> is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarReader.Dispose">
+      <summary>Disposes the current <see cref="T:System.Formats.Tar.TarReader" /> instance, and disposes the streams of all the entries that were read from the archive if the <c>leaveOpen</c> argument was set to <see langword="false" /> in the constructor.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.TarReader.DisposeAsync">
+      <summary>Asynchronously disposes the current <see cref="T:System.Formats.Tar.TarReader" /> instance, and closes the streams of all the entries that were read from the archive if the <c>leaveOpen</c> argument was set to <see langword="false" /> in the constructor.</summary>
+      <returns>A value task that represents the asynchronous dispose operation.</returns>
+    </member>
+    <member name="M:System.Formats.Tar.TarReader.GetNextEntry(System.Boolean)">
+      <summary>Retrieves the next entry from the archive stream.</summary>
+      <param name="copyData">
+        <para>
+          <see langword="true" /> to copy the data of the entry into a new <see cref="T:System.IO.MemoryStream" />. This is helpful when the underlying archive stream is unseekable, and the data needs to be accessed later.</para>
+        <para>
+          <see langword="false" /> if the data should not be copied into a new stream. If the underlying stream is unseekable, the user has the responsibility of reading and processing the <see cref="P:System.Formats.Tar.TarEntry.DataStream" /> immediately after calling this method.</para>
+        <para>The default value is <see langword="false" />.</para>
+      </param>
+      <exception cref="T:System.IO.InvalidDataException">
+The entry's data is malformed.
+
+-or-
+
+The archive contains entries in different formats.
+
+-or-
+
+More than one global extended attributes entry was found in the current <see cref="F:System.Formats.Tar.TarEntryFormat.Pax" /> archive.
+
+-or-
+
+Two or more extended attributes entries were found consecutively in the current <see cref="F:System.Formats.Tar.TarEntryFormat.Pax" /> archive.</exception>
+      <exception cref="T:System.IO.IOException">An I/O problem occurred.</exception>
+      <returns>A <see cref="T:System.Formats.Tar.TarEntry" /> instance if a valid entry was found, or <see langword="null" /> if the end of the archive has been reached.</returns>
+    </member>
+    <member name="M:System.Formats.Tar.TarReader.GetNextEntryAsync(System.Boolean,System.Threading.CancellationToken)">
+      <summary>Asynchronously retrieves the next entry from the archive stream.</summary>
+      <param name="copyData">
+        <para>
+          <see langword="true" /> to copy the data of the entry into a new <see cref="T:System.IO.MemoryStream" />. This is helpful when the underlying archive stream does not support seeking, and the data needs to be accessed later.</para>
+        <para>
+          <see langword="false" /> if the data should not be copied into a new stream. If the underlying stream does not support seeking, the user has the responsibility of reading and processing the <see cref="P:System.Formats.Tar.TarEntry.DataStream" /> immediately after calling this method.</para>
+        <para>The default value is <see langword="false" />.</para>
+      </param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <exception cref="T:System.IO.InvalidDataException">
+The archive is malformed.
+
+-or-
+
+The archive contains entries in different formats.
+
+-or-
+
+More than one Global Extended Attributes Entry was found in the current <see cref="F:System.Formats.Tar.TarEntryFormat.Pax" /> archive.
+
+-or-
+
+Two or more Extended Attributes entries were found consecutively in the current <see cref="F:System.Formats.Tar.TarEntryFormat.Pax" /> archive.</exception>
+      <exception cref="T:System.IO.IOException">An I/O problem occurred.</exception>
+      <returns>A value task containing a <see cref="T:System.Formats.Tar.TarEntry" /> instance if a valid entry was found, or <see langword="null" /> if the end of the archive has been reached.</returns>
+    </member>
+    <member name="T:System.Formats.Tar.TarWriter">
+      <summary>Writes a tar archive into a stream.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.TarWriter.#ctor(System.IO.Stream)">
+      <summary>Initializes a <see cref="T:System.Formats.Tar.TarWriter" /> instance that can write tar entries to the specified stream and closes the <paramref name="archiveStream" /> upon disposal of this instance.</summary>
+      <param name="archiveStream">The stream to write to.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="archiveStream" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="archiveStream" /> does not support writing.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarWriter.#ctor(System.IO.Stream,System.Boolean)">
+      <summary>Initializes a <see cref="T:System.Formats.Tar.TarWriter" /> instance that can write tar entries to the specified stream and optionally leaves the stream open upon disposal of this instance. When using this constructor, the format of the resulting archive is <see cref="F:System.Formats.Tar.TarEntryFormat.Pax" />.</summary>
+      <param name="archiveStream">The stream to write to.</param>
+      <param name="leaveOpen">
+        <see langword="false" /> to dispose the <paramref name="archiveStream" /> when this instance is disposed; <see langword="true" /> to leave the stream open.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="archiveStream" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="archiveStream" /> does not support writing.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarWriter.#ctor(System.IO.Stream,System.Formats.Tar.TarEntryFormat,System.Boolean)">
+      <summary>Initializes a <see cref="T:System.Formats.Tar.TarWriter" /> instance that can write tar entries to the specified stream, optionally leaving the stream open upon disposal of this instance, and optionally specifying the format when writing entries using the <see cref="M:System.Formats.Tar.TarWriter.WriteEntry(System.String,System.String)" /> method.</summary>
+      <param name="archiveStream">The stream to write to.</param>
+      <param name="format">The format to use when calling <see cref="M:System.Formats.Tar.TarWriter.WriteEntry(System.String,System.String)" />. The default value is <see cref="F:System.Formats.Tar.TarEntryFormat.Pax" />.</param>
+      <param name="leaveOpen">
+        <see langword="false" /> to dispose the <paramref name="archiveStream" /> when this instance is disposed; <see langword="true" /> to leave the stream open.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="archiveStream" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="archiveStream" /> does not support writing.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="format" /> is either <see cref="F:System.Formats.Tar.TarEntryFormat.Unknown" /> or not one of the other enum values.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarWriter.Dispose">
+      <summary>Disposes the current <see cref="T:System.Formats.Tar.TarWriter" /> instance, and closes the archive stream if the <c>leaveOpen</c> argument was set to <see langword="false" /> in the constructor.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.TarWriter.DisposeAsync">
+      <summary>Asynchronously disposes the current <see cref="T:System.Formats.Tar.TarWriter" /> instance, and closes the archive stream if the <c>leaveOpen</c> argument was set to <see langword="false" /> in the constructor.</summary>
+      <returns>A value task that represents the asynchronous dispose operation.</returns>
+    </member>
+    <member name="M:System.Formats.Tar.TarWriter.WriteEntry(System.Formats.Tar.TarEntry)">
+      <summary>Writes the specified entry into the archive stream.</summary>
+      <param name="entry">The tar entry to write.</param>
+      <exception cref="T:System.ArgumentException">The entry type is <see cref="F:System.Formats.Tar.TarEntryType.HardLink" /> or <see cref="F:System.Formats.Tar.TarEntryType.SymbolicLink" /> and the <see cref="P:System.Formats.Tar.TarEntry.LinkName" /> is <see langword="null" /> or empty.</exception>
+      <exception cref="T:System.ObjectDisposedException">The archive stream is disposed.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="entry" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.IOException">An I/O problem occurred.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarWriter.WriteEntry(System.String,System.String)">
+      <summary>Writes the specified file into the archive stream as a tar entry.</summary>
+      <param name="fileName">The path to the file to write to the archive.</param>
+      <param name="entryName">The name of the file as it should be represented in the archive. It should include the optional relative path and the filename.</param>
+      <exception cref="T:System.ObjectDisposedException">The archive stream is disposed.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="fileName" /> or <paramref name="entryName" /> is <see langword="null" /> or empty.</exception>
+      <exception cref="T:System.IO.IOException">An I/O problem occurred.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.TarWriter.WriteEntryAsync(System.Formats.Tar.TarEntry,System.Threading.CancellationToken)">
+      <summary>Asynchronously writes the specified entry into the archive stream.</summary>
+      <param name="entry">The tar entry to write.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <exception cref="T:System.ArgumentException">The entry type is <see cref="F:System.Formats.Tar.TarEntryType.HardLink" /> or <see cref="F:System.Formats.Tar.TarEntryType.SymbolicLink" /> and the <see cref="P:System.Formats.Tar.TarEntry.LinkName" /> is <see langword="null" /> or empty.</exception>
+      <exception cref="T:System.ObjectDisposedException">The archive stream is disposed.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="entry" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.IOException">An I/O problem occurred.</exception>
+      <returns>A task that represents the asynchronous write operation.</returns>
+    </member>
+    <member name="M:System.Formats.Tar.TarWriter.WriteEntryAsync(System.String,System.String,System.Threading.CancellationToken)">
+      <summary>Asynchronously writes the specified file into the archive stream as a tar entry.</summary>
+      <param name="fileName">The path to the file to write to the archive.</param>
+      <param name="entryName">The name of the file as it should be represented in the archive. It should include the optional relative path and the filename.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <exception cref="T:System.ObjectDisposedException">The archive stream is disposed.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="fileName" /> or <paramref name="entryName" /> is <see langword="null" /> or empty.</exception>
+      <exception cref="T:System.IO.IOException">An I/O problem occurred.</exception>
+      <returns>A task that represents the asynchronous write operation.</returns>
+    </member>
+    <member name="P:System.Formats.Tar.TarWriter.Format">
+      <summary>Gets the format of the entries when writing them to the archive using the <see cref="M:System.Formats.Tar.TarWriter.WriteEntry(System.String,System.String)" /> method.</summary>
+    </member>
+    <member name="T:System.Formats.Tar.UstarTarEntry">
+      <summary>Represents a tar entry from an archive of the Ustar format.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.UstarTarEntry.#ctor(System.Formats.Tar.TarEntry)">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.UstarTarEntry" /> instance by converting the specified <paramref name="other" /> entry into the Ustar format.</summary>
+      <param name="other">The <see cref="T:System.Formats.Tar.TarEntry" /> instance to convert to the Ustar format.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="other" /> is a <see cref="T:System.Formats.Tar.PaxGlobalExtendedAttributesTarEntry" /> instance.
+
+-or-
+
+The entry type of <paramref name="other" /> is not supported in the Ustar format.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.UstarTarEntry.#ctor(System.Formats.Tar.TarEntryType,System.String)">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.UstarTarEntry" /> instance with the specified entry type and entry name.</summary>
+      <param name="entryType">The type of the entry.</param>
+      <param name="entryName">A string with the path and file name of this entry.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="entryName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="entryName" /> is empty.
+
+-or-
+
+The entry type is not supported for creating an entry in the Ustar format.</exception>
+    </member>
+    <member name="T:System.Formats.Tar.V7TarEntry">
+      <summary>Represents a tar entry from an archive of the V7 format.</summary>
+    </member>
+    <member name="M:System.Formats.Tar.V7TarEntry.#ctor(System.Formats.Tar.TarEntry)">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.V7TarEntry" /> instance by converting the specified <paramref name="other" /> entry into the V7 format.</summary>
+      <param name="other">The <see cref="T:System.Formats.Tar.TarEntry" /> instance to convert to the V7 format.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="other" /> is a <see cref="T:System.Formats.Tar.PaxGlobalExtendedAttributesTarEntry" /> and cannot be converted.
+
+-or-
+
+The entry type of <paramref name="other" /> is not supported in the V7 format.</exception>
+    </member>
+    <member name="M:System.Formats.Tar.V7TarEntry.#ctor(System.Formats.Tar.TarEntryType,System.String)">
+      <summary>Initializes a new <see cref="T:System.Formats.Tar.V7TarEntry" /> instance with the specified entry type and entry name.</summary>
+      <param name="entryType">The type of the entry.</param>
+      <param name="entryName">A string with the path and file name of this entry.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="entryName" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="entryName" /> is empty.
+
+-or-
+
+The entry type is not supported for creating an entry in the V7 format.</exception>
+    </member>
+  </members>
+</doc>

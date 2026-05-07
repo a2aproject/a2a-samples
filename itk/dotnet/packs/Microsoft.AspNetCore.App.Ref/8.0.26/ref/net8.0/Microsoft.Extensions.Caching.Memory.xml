@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Caching.Memory</name>
+    </assembly>
+    <members>
+        <member name="P:Microsoft.Extensions.Caching.Memory.CacheEntry.SlidingExpiration">
+            <summary>
+            Gets or sets how long a cache entry can be inactive (e.g. not accessed) before it will be removed.
+            This will not extend the entry lifetime beyond the absolute expiration (if set).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.CacheEntry.ExpirationTokens">
+            <summary>
+            Gets the <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> instances which cause the cache entry to expire.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.CacheEntry.PostEvictionCallbacks">
+            <summary>
+            Gets or sets the callbacks will be fired after the cache entry is evicted from the cache.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.CacheEntry.Priority">
+            <summary>
+            Gets or sets the priority for keeping the cache entry in the cache during a
+            memory pressure triggered cleanup. The default is <see cref="F:Microsoft.Extensions.Caching.Memory.CacheItemPriority.Normal"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Caching.Memory.MemoryCache">
+            <summary>
+            An implementation of <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> using a dictionary to
+            store its entries.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.Extensions.Caching.Memory.MemoryCacheOptions})">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryCache"/> instance.
+            </summary>
+            <param name="optionsAccessor">The options of the cache.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.Extensions.Caching.Memory.MemoryCacheOptions},Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryCache"/> instance.
+            </summary>
+            <param name="optionsAccessor">The options of the cache.</param>
+            <param name="loggerFactory">The factory used to create loggers.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.Finalize">
+            <summary>
+            Cleans up the background collection events.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCache.Count">
+            <summary>
+            Gets the count of the current entries for diagnostic purposes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCache.Size">
+             <summary>
+             Internal accessor for Size for testing only.
+            
+             Note that this is only eventually consistent with the contents of the collection.
+             See comment on <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryCache.CoherentState"/>.
+             </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.CreateEntry(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.TryGetValue(System.Object,System.Object@)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.Remove(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.Clear">
+            <summary>
+            Removes all keys and values from the cache.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.GetCurrentStatistics">
+            <summary>
+            Gets a snapshot of the current statistics for the memory cache.
+            </summary>
+            <returns>Returns <see langword="null"/> if statistics are not being tracked because <see cref="P:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions.TrackStatistics" /> is <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.UpdateCacheSizeExceedsCapacity(Microsoft.Extensions.Caching.Memory.CacheEntry,Microsoft.Extensions.Caching.Memory.MemoryCache.CoherentState)">
+            <summary>
+            Returns true if increasing the cache size by the size of entry would
+            cause it to exceed any size limit on the cache, otherwise, returns false.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.Compact(System.Double)">
+            Remove at least the given percentage (0.10 for 10%) of the total entries (or estimated memory?), according to the following policy:
+            1. Remove all expired items.
+            2. Bucket by CacheItemPriority.
+            3. Least recently used objects.
+            ?. Items with the soonest absolute expiration.
+            ?. Items with the soonest sliding expiration.
+            ?. Larger objects - estimated by object graph size, inaccurate.
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryCache.Dispose(System.Boolean)">
+            <summary>
+            Dispose the cache and clear all entries.
+            </summary>
+            <param name="disposing">Dispose the object resources if true; otherwise, take no action.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.Caching.Memory.MemoryCache.CoherentState">
+             <summary>
+             Wrapper for the memory cache entries collection.
+            
+             Entries may have various sizes. If a size limit has been set, the cache keeps track of the aggregate of all the entries' sizes
+             in order to trigger compaction when the size limit is exceeded.
+            
+             For performance reasons, the size is not updated atomically with the collection, but is only made eventually consistent.
+            
+             When the memory cache is cleared, it replaces the backing collection entirely. This may occur in parallel with operations
+             like add, set, remove, and compact which may modify the collection and thus its overall size.
+            
+             To keep the overall size eventually consistent, therefore, the collection and the overall size are wrapped in this CoherentState
+             object. Individual operations take a local reference to this wrapper object while they work, and make size updates to this object.
+             Clearing the cache simply replaces the object, so that any still in progress updates do not affect the overall size value for
+             the new backing collection.
+             </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions">
+            <summary>
+            Options class for <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryCache"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions.Clock">
+            <summary>
+            Gets or sets the clock used by the cache for expiration.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions.ExpirationScanFrequency">
+            <summary>
+            Gets or sets the minimum length of time between successive scans for expired items.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions.SizeLimit">
+            <summary>
+            Gets or sets the maximum size of the cache.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions.CompactOnMemoryPressure">
+            <summary>
+            Enables ot disables the option to compact the cache when the maximum size is exceeded.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions.CompactionPercentage">
+            <summary>
+            Gets or sets the amount to compact the cache by when the maximum size is exceeded.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions.TrackLinkedCacheEntries">
+            <summary>
+            Gets or sets whether to track linked entries. Disabled by default.
+            </summary>
+            <remarks>Prior to .NET 7 this feature was always enabled.</remarks>
+        </member>
+        <member name="P:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions.TrackStatistics">
+            <summary>
+            Gets or sets whether to track memory cache statistics. Disabled by default.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Caching.Memory.MemoryDistributedCacheOptions">
+            <summary>
+            Options class for <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryDistributedCacheOptions"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Memory.MemoryDistributedCacheOptions.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryDistributedCacheOptions"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache">
+            <summary>
+            An implementation of <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/> using <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.Extensions.Caching.Memory.MemoryDistributedCacheOptions})">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache"/> instance.
+            </summary>
+            <param name="optionsAccessor">The options of the cache.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.Extensions.Caching.Memory.MemoryDistributedCacheOptions},Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache"/> instance.
+            </summary>
+            <param name="optionsAccessor">The options of the cache.</param>
+            <param name="loggerFactory">The logger factory to create <see cref="T:Microsoft.Extensions.Logging.ILogger"/> used to log messages.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.Get(System.String)">
+            <summary>
+            Gets the specified item associated with a key from the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> as a byte array.
+            </summary>
+            <param name="key">The key of the item to get.</param>
+            <returns>The byte array value of the key.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.GetAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously gets the specified item associated with a key from the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> as a byte array.
+            </summary>
+            <param name="key">The key of the item to get.</param>
+            <param name="token">The <see cref="T:System.Threading.CancellationToken"/> to use to cancel operation.</param>
+            <returns>The task for getting the byte array value associated with the specified key from the cache.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.Set(System.String,System.Byte[],Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions)">
+            <summary>
+            Sets the specified item associated with a key in the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> as a byte array.
+            </summary>
+            <param name="key">The key of the item to set.</param>
+            <param name="value">The byte array value of the item to set.</param>
+            <param name="options">The cache options for the item to set.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.SetAsync(System.String,System.Byte[],Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously sets the specified item associated with a key in the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> as a byte array.
+            </summary>
+            <param name="key">The key of the item to set.</param>
+            <param name="value">The byte array value of the item to set.</param>
+            <param name="options">The cache options for the item to set.</param>
+            <param name="token">The <see cref="T:System.Threading.CancellationToken"/> to use to cancel operation.</param>
+            <returns>The task for setting the byte array value associated with the specified key in the cache.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.Refresh(System.String)">
+            <summary>
+            Refreshes the specified item associated with a key from the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/>.
+            </summary>
+            <param name="key">The key of the item to refresh.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.RefreshAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously refreshes the specified item associated with a key from the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/>.
+            </summary>
+            <param name="key">The key of the item to refresh.</param>
+            <param name="token">The <see cref="T:System.Threading.CancellationToken"/> to use to cancel operation.</param>
+            <returns>The task for refreshing the specified key in the cache.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.Remove(System.String)">
+            <summary>
+            Removes the specified item associated with a key from the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/>.
+            </summary>
+            <param name="key">The key of the item to remove.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Caching.Distributed.MemoryDistributedCache.RemoveAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously removes the specified item associated with a key from the <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/>.
+            </summary>
+            <param name="key">The key of the item to remove.</param>
+            <param name="token">The <see cref="T:System.Threading.CancellationToken"/> to use to cancel operation.</param>
+            <returns>The task for removing the specified key from the cache.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MemoryCacheServiceCollectionExtensions">
+            <summary>
+            Extension methods for setting up memory cache related services in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MemoryCacheServiceCollectionExtensions.AddMemoryCache(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds a non distributed in memory implementation of <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> to the
+            <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MemoryCacheServiceCollectionExtensions.AddMemoryCache(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.Extensions.Caching.Memory.MemoryCacheOptions})">
+            <summary>
+            Adds a non distributed in memory implementation of <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache"/> to the
+            <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="setupAction">
+            The <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryCacheOptions"/>.
+            </param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MemoryCacheServiceCollectionExtensions.AddDistributedMemoryCache(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds a default implementation of <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/> that stores items in memory
+            to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />. Frameworks that require a distributed cache to work
+            can safely add this dependency as part of their dependency list to ensure that there is at least
+            one implementation available.
+            </summary>
+            <remarks>
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MemoryCacheServiceCollectionExtensions.AddDistributedMemoryCache(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/> should only be used in single
+            server scenarios as this cache stores items in memory and doesn't expand across multiple machines.
+            For those scenarios it is recommended to use a proper distributed cache that can expand across
+            multiple machines.
+            </remarks>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MemoryCacheServiceCollectionExtensions.AddDistributedMemoryCache(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.Extensions.Caching.Memory.MemoryDistributedCacheOptions})">
+            <summary>
+            Adds a default implementation of <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/> that stores items in memory
+            to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />. Frameworks that require a distributed cache to work
+            can safely add this dependency as part of their dependency list to ensure that there is at least
+            one implementation available.
+            </summary>
+            <remarks>
+            <see cref="M:Microsoft.Extensions.DependencyInjection.MemoryCacheServiceCollectionExtensions.AddDistributedMemoryCache(Microsoft.Extensions.DependencyInjection.IServiceCollection)"/> should only be used in single
+            server scenarios as this cache stores items in memory and doesn't expand across multiple machines.
+            For those scenarios it is recommended to use a proper distributed cache that can expand across
+            multiple machines.
+            </remarks>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
+            <param name="setupAction">
+            The <see cref="T:System.Action`1"/> to configure the provided <see cref="T:Microsoft.Extensions.Caching.Memory.MemoryDistributedCacheOptions"/>.
+            </param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+        <member name="P:System.SR.CacheEntryHasEmptySize">
+            <summary>Cache entry must specify a value for {0} when {1} is set.</summary>
+        </member>
+    </members>
+</doc>

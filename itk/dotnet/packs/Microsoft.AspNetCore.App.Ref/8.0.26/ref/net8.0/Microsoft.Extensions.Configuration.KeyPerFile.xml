@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Configuration.KeyPerFile</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Configuration.KeyPerFileConfigurationBuilderExtensions">
+            <summary>
+            Extension methods for registering <see cref="T:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationProvider"/> with <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFileConfigurationBuilderExtensions.AddKeyPerFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.String)">
+            <summary>
+            Adds configuration using files from a directory. File names are used as the key,
+            file contents are used as the value.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="directoryPath">The path to the directory.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFileConfigurationBuilderExtensions.AddKeyPerFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.String,System.Boolean)">
+            <summary>
+            Adds configuration using files from a directory. File names are used as the key,
+            file contents are used as the value.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="directoryPath">The path to the directory.</param>
+            <param name="optional">Whether the directory is optional.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFileConfigurationBuilderExtensions.AddKeyPerFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Adds configuration using files from a directory. File names are used as the key,
+            file contents are used as the value.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="directoryPath">The path to the directory.</param>
+            <param name="optional">Whether the directory is optional.</param>
+            <param name="reloadOnChange">Whether the configuration should be reloaded if the files are changed, added or removed.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFileConfigurationBuilderExtensions.AddKeyPerFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.Action{Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource})">
+            <summary>
+            Adds configuration using files from a directory. File names are used as the key,
+            file contents are used as the value.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="configureSource">Configures the source.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationProvider">
+            <summary>
+            A <see cref="T:Microsoft.Extensions.Configuration.ConfigurationProvider"/> that uses a directory's files as configuration key/values.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationProvider.#ctor(Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="source">The settings.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationProvider.Load">
+            <summary>
+            Loads the configuration values.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationProvider.ToString">
+            <summary>
+            Generates a string representing this provider name and relevant details.
+            </summary>
+            <returns>The configuration name.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationProvider.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource">
+            <summary>
+            An <see cref="T:Microsoft.Extensions.Configuration.IConfigurationSource"/> used to configure <see cref="T:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource.#ctor">
+            <summary>
+            Constructor;
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource.FileProvider">
+            <summary>
+            The FileProvider whos root "/" directory files will be used as configuration data.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource.IgnorePrefix">
+            <summary>
+            Files that start with this prefix will be excluded.
+            Defaults to "ignore.".
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource.IgnoreCondition">
+            <summary>
+            Used to determine if a file should be ignored using its name.
+            Defaults to using the IgnorePrefix.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource.Optional">
+            <summary>
+            If false, will throw if the directory doesn't exist.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource.ReloadOnChange">
+            <summary>
+            Determines whether the source will be loaded if the underlying file changes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource.ReloadDelay">
+            <summary>
+            Number of milliseconds that reload will wait before calling Load.  This helps
+            avoid triggering reload before a file is completely written. Default is 250.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource.SectionDelimiter">
+            <summary>
+            The delimiter used to separate individual keys in a path.
+            </summary>
+            <value>Default is <c>__</c>.</value>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationSource.Build(Microsoft.Extensions.Configuration.IConfigurationBuilder)">
+            <summary>
+            Builds the <see cref="T:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationProvider"/> for this source.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</param>
+            <returns>A <see cref="T:Microsoft.Extensions.Configuration.KeyPerFile.KeyPerFileConfigurationProvider"/></returns>
+        </member>
+    </members>
+</doc>

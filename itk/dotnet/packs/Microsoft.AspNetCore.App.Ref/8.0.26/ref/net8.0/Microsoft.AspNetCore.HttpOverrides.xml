@@ -1,0 +1,435 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.HttpOverrides</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Builder.CertificateForwardingBuilderExtensions">
+            <summary>
+            Extension methods for using certificate forwarding.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.CertificateForwardingBuilderExtensions.UseCertificateForwarding(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds a middleware to the pipeline that will look for a certificate in a request header
+            decode it, and updates HttpContext.Connection.ClientCertificate.
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions">
+            <summary>
+            Extension methods for enabling <see cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Applies forwarded headers to their matching fields on the current request.
+            <para>
+            By convention, HTTP proxies forward information from the client in well-known HTTP headers.
+            The <see cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware"/> reads these headers and fills in the associated fields on HttpContext.
+            </para>
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" />.</param>
+            <returns>A reference to <paramref name="builder" /> after the operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.ForwardedHeadersOptions)">
+            <summary>
+            Applies forwarded headers to their matching fields on the current request.
+            <para>
+            By convention, HTTP proxies forward information from the client in well-known HTTP headers.
+            The <see cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware"/> reads these headers and fills in the associated fields on HttpContext.
+            </para>
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" />.</param>
+            <param name="options">Enables the different forwarding options.</param>
+            <returns>A reference to <paramref name="builder" /> after the operation has completed.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions">
+            <summary>
+            Options for <see cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.ForwardedForHeaderName">
+            <summary>
+            Gets or sets the header used to retrieve the originating client IP. Defaults to the value specified by
+            <see cref="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XForwardedForHeaderName"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.ForwardedHostHeaderName">
+            <summary>
+            Gets or sets the header used to retrieve the original value of the Host header field.
+            Defaults to the value specified by <see cref="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XForwardedHostHeaderName"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.ForwardedProtoHeaderName">
+            <summary>
+            Gets or sets the header used to retrieve the value for the originating scheme (HTTP/HTTPS).
+            Defaults to the value specified by <see cref="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XForwardedProtoHeaderName"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.ForwardedPrefixHeaderName">
+            <summary>
+            Gets or sets the header used to retrieve the value for the path base.
+            Defaults to the value specified by <see cref="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XForwardedPrefixHeaderName"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.OriginalForHeaderName">
+            <summary>
+            Gets or sets the header used to store the original value of client IP before applying forwarded headers.
+            Defaults to the value specified by <see cref="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XOriginalForHeaderName"/>
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults"/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.OriginalHostHeaderName">
+            <summary>
+            Gets or sets the header used to store the original value of the Host header field before applying forwarded headers.
+            Defaults to the value specified by <see cref="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XOriginalHostHeaderName"/>
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults"/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.OriginalProtoHeaderName">
+            <summary>
+            Gets or sets the header used to store the original scheme (HTTP/HTTPS) before applying forwarded headers.
+            Defaults to the value specified by <see cref="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XOriginalProtoHeaderName"/>
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults"/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.OriginalPrefixHeaderName">
+            <summary>
+            Gets or sets the header used to store the original path base before applying forwarded headers.
+            Defaults to the value specified by <see cref="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XOriginalPrefixHeaderName"/>
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults"/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.ForwardedHeaders">
+            <summary>
+            Identifies which forwarders should be processed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.ForwardLimit">
+            <summary>
+            Limits the number of entries in the headers that will be processed. The default value is 1.
+            Set to null to disable the limit, but this should only be done if
+            KnownProxies or KnownNetworks are configured.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.KnownProxies">
+            <summary>
+            Addresses of known proxies to accept forwarded headers from.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.KnownNetworks">
+            <summary>
+            Address ranges of known proxies to accept forwarded headers from.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.AllowedHosts">
+            <summary>
+            The allowed values from x-forwarded-host. If the list is empty then all hosts are allowed.
+            Failing to restrict this these values may allow an attacker to spoof links generated by your service.
+            </summary>
+            <remarks>
+            <list type="bullet">
+            <item><description>Port numbers must be excluded.</description></item>
+            <item><description>A top level wildcard "*" allows all non-empty hosts.</description></item>
+            <item><description>Subdomain wildcards are permitted. E.g. "*.example.com" matches subdomains like foo.example.com,
+               but not the parent domain example.com.</description></item>
+            <item><description>Unicode host names are allowed but will be converted to punycode for matching.</description></item>
+            <item><description>IPv6 addresses must include their bounding brackets and be in their normalized form.</description></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions.RequireHeaderSymmetry">
+            <summary>
+            Require the number of header values to be in sync between the different headers being processed.
+            The default is 'false'.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.HttpMethodOverrideExtensions">
+            <summary>
+            Extension methods for enabling <see cref="T:Microsoft.AspNetCore.HttpOverrides.HttpMethodOverrideMiddleware"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HttpMethodOverrideExtensions.UseHttpMethodOverride(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Allows incoming POST request to override method type with type specified in header. This middleware
+            is used when a client is limited to sending GET or POST methods but wants to invoke other HTTP methods.
+            By default, the X-HTTP-Method-Override request header is used to specify the HTTP method being tunneled.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> instance this method extends.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HttpMethodOverrideExtensions.UseHttpMethodOverride(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.HttpMethodOverrideOptions)">
+            <summary>
+            Allows incoming POST request to override method type with type specified in form. This middleware
+            is used when a client is limited to sending GET or POST methods but wants to invoke other HTTP methods.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> instance this method extends.</param>
+            <param name="options">
+            The <see cref="T:Microsoft.AspNetCore.Builder.HttpMethodOverrideOptions"/> which indicates which form type specifies the override method.
+            </param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.HttpMethodOverrideOptions">
+            <summary>
+            Options for configuring <see cref="T:Microsoft.AspNetCore.HttpOverrides.HttpMethodOverrideMiddleware"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.HttpMethodOverrideOptions.FormFieldName">
+            <summary>
+            Denotes the form element that contains the name of the resulting method type.
+            If not set the X-Http-Method-Override header will be used.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpOverrides.CertificateForwardingMiddleware">
+            <summary>
+            Middleware that converts a forward header into a client certificate if found.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.CertificateForwardingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.HttpOverrides.CertificateForwardingOptions})">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="next"></param>
+            <param name="loggerFactory"></param>
+            <param name="options"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.CertificateForwardingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Looks for the presence of a <see cref="P:Microsoft.AspNetCore.HttpOverrides.CertificateForwardingOptions.CertificateHeader"/> header in the request,
+            if found, converts this header to a ClientCertificate set on the connection.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpOverrides.CertificateForwardingOptions">
+            <summary>
+            Used to configure the <see cref="T:Microsoft.AspNetCore.HttpOverrides.CertificateForwardingMiddleware"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.CertificateForwardingOptions.CertificateHeader">
+            <summary>
+            The name of the header containing the client certificate.
+            </summary>
+            <remarks>
+            This defaults to X-Client-Cert
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpOverrides.CertificateForwardingOptions.HeaderConverter">
+            <summary>
+            The function used to convert the header to an instance of <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/>.
+            </summary>
+            <remarks>
+            This defaults to a conversion from a base64 encoded string.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders">
+            <summary>
+            Flags for controlling which forwarders are processed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.None">
+            <summary>
+            Do not process any forwarders
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor">
+            <summary>
+            Process X-Forwarded-For, which identifies the originating IP address of the client.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost">
+            <summary>
+            Process X-Forwarded-Host, which identifies the original host requested by the client.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto">
+            <summary>
+            Process X-Forwarded-Proto, which identifies the protocol (HTTP or HTTPS) the client used to connect.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedPrefix">
+            <summary>
+            Process X-Forwarded-Prefix, which identifies the original path base used by the client.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.All">
+            <summary>
+            Process X-Forwarded-For, X-Forwarded-Host, X-Forwarded-Proto and X-Forwarded-Prefix.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults">
+            <summary>
+            Default values related to <see cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware"/> middleware
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions"/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XForwardedForHeaderName">
+            <summary>
+            X-Forwarded-For
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XForwardedHostHeaderName">
+            <summary>
+            X-Forwarded-Host
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XForwardedProtoHeaderName">
+            <summary>
+            X-Forwarded-Proto
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XForwardedPrefixHeaderName">
+            <summary>
+            X-Forwarded-Prefix
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XOriginalForHeaderName">
+            <summary>
+            X-Original-For
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XOriginalHostHeaderName">
+            <summary>
+            X-Original-Host
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XOriginalProtoHeaderName">
+            <summary>
+            X-Original-Proto
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersDefaults.XOriginalPrefixHeaderName">
+            <summary>
+            X-Original-Prefix
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware">
+            <summary>
+            A middleware for forwarding proxied headers onto the current request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.ForwardedHeadersOptions})">
+            <summary>
+            Create a new <see cref="T:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware"/>.
+            </summary>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> used for logging.</param>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Builder.ForwardedHeadersOptions"/> for configuring the middleware.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Executes the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> for the current request.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.ForwardedHeadersMiddleware.ApplyForwarders(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Forward the proxied headers to the given <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpOverrides.HttpMethodOverrideMiddleware">
+            <summary>
+            A middleware for overriding the HTTP method of an incoming POST request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.HttpMethodOverrideMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.HttpMethodOverrideOptions})">
+            <summary>
+            Create a new <see cref="T:Microsoft.AspNetCore.HttpOverrides.HttpMethodOverrideMiddleware"/>.
+            </summary>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.</param>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Builder.HttpMethodOverrideOptions"/> for configuring the middleware.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.HttpMethodOverrideMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Executes the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> for the current request.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpOverrides.IPNetwork">
+            <summary>
+            A representation of an IP network based on CIDR notation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.IPNetwork.#ctor(System.Net.IPAddress,System.Int32)">
+            <summary>
+            Create a new <see cref="T:Microsoft.AspNetCore.HttpOverrides.IPNetwork"/> with the specified <see cref="T:System.Net.IPAddress"/> and prefix length.
+            </summary>
+            <param name="prefix">The <see cref="T:System.Net.IPAddress"/>.</param>
+            <param name="prefixLength">The prefix length.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="prefixLength"/> is out of range.</exception>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.IPNetwork.Prefix">
+            <summary>
+            Get the <see cref="T:System.Net.IPAddress"/> that represents the prefix for the network.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpOverrides.IPNetwork.PrefixLength">
+            <summary>
+            The CIDR notation of the subnet mask
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.IPNetwork.Contains(System.Net.IPAddress)">
+            <summary>
+            Determine whether a given The <see cref="T:System.Net.IPAddress"/> is part of the IP network.
+            </summary>
+            <param name="address">The <see cref="T:System.Net.IPAddress"/>.</param>
+            <returns><see langword="true"/> if the <see cref="T:System.Net.IPAddress"/> is part of the IP network. Otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.IPNetwork.Parse(System.ReadOnlySpan{System.Char})">
+             <summary>
+             Converts the specified <see cref="T:System.ReadOnlySpan`1"/> of <see langword="char"/> representation of
+             an IP address and a prefix length to its <see cref="T:Microsoft.AspNetCore.HttpOverrides.IPNetwork"/> equivalent.
+             </summary>
+             <param name="networkSpan">The <see cref="T:System.ReadOnlySpan`1"/> of <see langword="char"/> to convert, in CIDR notation.</param>
+             <returns>
+            The <see cref="T:Microsoft.AspNetCore.HttpOverrides.IPNetwork"/> equivalent to the IP address and prefix length contained in <paramref name="networkSpan"/>.
+             </returns>
+             <exception cref="T:System.FormatException"><paramref name="networkSpan"/> is not in the correct format.</exception>
+             <exception cref="T:System.ArgumentOutOfRangeException">The prefix length contained in <paramref name="networkSpan"/> is out of range.</exception>
+             <inheritdoc cref="M:Microsoft.AspNetCore.HttpOverrides.IPNetwork.TryParseComponents(System.ReadOnlySpan{System.Char},System.Net.IPAddress@,System.Int32@)"/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.IPNetwork.TryParse(System.ReadOnlySpan{System.Char},Microsoft.AspNetCore.HttpOverrides.IPNetwork@)">
+            <summary>
+            Converts the specified <see cref="T:System.ReadOnlySpan`1"/> of <see langword="char"/> representation of
+            an IP address and a prefix length to its <see cref="T:Microsoft.AspNetCore.HttpOverrides.IPNetwork"/> equivalent, and returns a value
+            that indicates whether the conversion succeeded.
+            </summary>
+            <param name="networkSpan">The <see cref="T:System.ReadOnlySpan`1"/> of <see langword="char"/> to validate.</param>
+            <param name="network">
+            When this method returns, contains the <see cref="T:Microsoft.AspNetCore.HttpOverrides.IPNetwork"/> equivalent to the IP Address
+            and prefix length contained in <paramref name="networkSpan"/>, if the conversion succeeded,
+            or <see langword="null"/> if the conversion failed. This parameter is passed uninitialized.
+            </param>
+            <returns>
+            <see langword="true"/> if the <paramref name="networkSpan"/> parameter was
+            converted successfully; otherwise <see langword="false"/>.
+            </returns>
+            <inheritdoc cref="M:Microsoft.AspNetCore.HttpOverrides.IPNetwork.TryParseComponents(System.ReadOnlySpan{System.Char},System.Net.IPAddress@,System.Int32@)"/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpOverrides.IPNetwork.TryParseComponents(System.ReadOnlySpan{System.Char},System.Net.IPAddress@,System.Int32@)">
+            <remarks>
+            <para>
+            The specified representation must be expressed using CIDR (Classless Inter-Domain Routing) notation, or 'slash notation',
+            which contains an IPv4 or IPv6 address and the subnet mask prefix length, separated by a forward slash.
+            </para>
+            <example>
+            e.g. <c>"192.168.0.1/31"</c> for IPv4, <c>"2001:db8:3c4d::1/127"</c> for IPv6
+            </example>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.CertificateForwardingServiceExtensions">
+            <summary>
+            Extension methods for using certificate fowarding.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.CertificateForwardingServiceExtensions.AddCertificateForwarding(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.HttpOverrides.CertificateForwardingOptions})">
+            <summary>
+            Adds certificate forwarding to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <param name="configure">An action delegate to configure the provided <see cref="T:Microsoft.AspNetCore.HttpOverrides.CertificateForwardingOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,166 @@
+{
+  "version": "8.0.3",
+  "workloads": {
+    "maui": {
+      "description": ".NET MAUI SDK for all platforms",
+      "extends": [ 
+        "maui-mobile",
+        "maui-desktop"
+      ]
+    },
+    "maui-mobile": {
+      "description": ".NET MAUI SDK for Mobile",
+      "extends": [ 
+        "maui-android",
+        "maui-ios",
+        "maui-tizen"
+      ]
+    },
+    "maui-desktop": {
+      "description": ".NET MAUI SDK for Desktop",
+      "extends": [ 
+        "maui-maccatalyst",
+        "maui-windows"
+      ]
+    },
+    "maui-core": {
+      "abstract": true,
+      "description": ".NET MAUI SDK Core Packages",
+      "packs": [
+          "Microsoft.Maui.Sdk.net8",
+          "Microsoft.Maui.Sdk.net7",
+          "Microsoft.Maui.Graphics",
+          "Microsoft.Maui.Resizetizer",
+          "Microsoft.Maui.Resizetizer.Sdk",
+          "Microsoft.Maui.Templates.net8",
+          "Microsoft.Maui.Templates.net7",
+          "Microsoft.Maui.Core",
+          "Microsoft.Maui.Controls",
+          "Microsoft.Maui.Controls.Build.Tasks",
+          "Microsoft.Maui.Controls.Core",
+          "Microsoft.Maui.Controls.Xaml",
+          "Microsoft.Maui.Controls.Compatibility",
+          "Microsoft.Maui.Essentials"
+      ]
+    },
+    "maui-blazor": {
+      "abstract": true,
+      "description": ".NET MAUI SDK Blazor Packages",
+      "extends": [ "maui-core" ],
+      "packs": [
+          "Microsoft.AspNetCore.Components.WebView.Maui"
+      ]
+    },
+    "maui-android": {
+      "description": ".NET MAUI SDK for Android",
+      "extends": [ 
+        "maui-blazor",
+        "android"
+      ]
+    },
+    "maui-maccatalyst": {
+      "description": ".NET MAUI SDK for Mac Catalyst",
+      "extends": [ 
+        "maui-blazor",
+        "maccatalyst"
+      ]
+    },
+    "maui-ios": {
+      "description": ".NET MAUI SDK for iOS",
+      "extends": [ 
+        "maui-blazor",
+        "ios"
+      ]
+    },
+    "maui-windows": {
+      "description": ".NET MAUI SDK for Windows",
+      "extends": [ "maui-blazor" ],
+      "packs": [
+          "Microsoft.Maui.Graphics.Windows"
+      ]
+    },
+    "maui-tizen": {
+      "description": ".NET MAUI SDK for Tizen",
+      "extends": [
+        "maui-blazor"
+      ]
+    }
+  },
+  "packs": {
+    "Microsoft.AspNetCore.Components.WebView.Maui": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Core": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Controls": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Controls.Build.Tasks": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Controls.Core": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Controls.Xaml": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Controls.Compatibility": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Essentials": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Graphics": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Graphics.Windows": {
+      "kind": "library",
+      "version": "8.0.3",
+      "alias-to": {
+        "win-x86": "Microsoft.Maui.Graphics.Win2D.WinUI.Desktop",
+        "win-x64": "Microsoft.Maui.Graphics.Win2D.WinUI.Desktop",
+        "win-arm64": "Microsoft.Maui.Graphics.Win2D.WinUI.Desktop"
+      }
+    },
+    "Microsoft.Maui.Resizetizer": {
+      "kind": "library",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Sdk.net8": {
+      "kind": "sdk",
+      "version": "8.0.3",
+      "alias-to": {
+        "any": "Microsoft.Maui.Sdk"
+      }
+    },
+    "Microsoft.Maui.Sdk.net7": {
+      "kind": "sdk",
+      "version": "7.0.101",
+      "alias-to": {
+        "any": "Microsoft.Maui.Sdk"
+      }
+    },
+    "Microsoft.Maui.Resizetizer.Sdk": {
+      "kind": "sdk",
+      "version": "7.0.101"
+    },
+    "Microsoft.Maui.Templates.net8": {
+      "kind": "template",
+      "version": "8.0.3"
+    },
+    "Microsoft.Maui.Templates.net7": {
+      "kind": "template",
+      "version": "7.0.101"
+    }
+  }
+}

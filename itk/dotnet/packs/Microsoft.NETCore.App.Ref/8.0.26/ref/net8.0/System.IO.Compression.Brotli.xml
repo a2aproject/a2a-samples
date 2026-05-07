@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.IO.Compression.Brotli</name>
+  </assembly>
+  <members>
+    <member name="T:System.IO.Compression.BrotliDecoder">
+      <summary>Provides non-allocating, performant Brotli decompression methods. The methods decompress in a single pass without using a <see cref="T:System.IO.Compression.BrotliStream" /> instance.</summary>
+    </member>
+    <member name="M:System.IO.Compression.BrotliDecoder.Decompress(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@,System.Int32@)">
+      <summary>Decompresses data that was compressed using the Brotli algorithm.</summary>
+      <param name="source">A buffer containing the compressed data.</param>
+      <param name="destination">When this method returns, a byte span containing the decompressed data.</param>
+      <param name="bytesConsumed">The total number of bytes that were read from <paramref name="source" />.</param>
+      <param name="bytesWritten">The total number of bytes that were written in the <paramref name="destination" />.</param>
+      <returns>One of the enumeration values that indicates the status of the decompression operation.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliDecoder.Dispose">
+      <summary>Releases all resources used by the current Brotli decoder instance.</summary>
+    </member>
+    <member name="M:System.IO.Compression.BrotliDecoder.TryDecompress(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@)">
+      <summary>Attempts to decompress data that was compressed with the Brotli algorithm.</summary>
+      <param name="source">A buffer containing the compressed data.</param>
+      <param name="destination">When this method returns, a byte span containing the decompressed data.</param>
+      <param name="bytesWritten">The total number of bytes that were written in the <paramref name="destination" />.</param>
+      <returns>
+        <see langword="true" /> on success; <see langword="false" /> otherwise.</returns>
+    </member>
+    <member name="T:System.IO.Compression.BrotliEncoder">
+      <summary>Provides methods and static methods to encode and decode data in a streamless, non-allocating, and performant manner using the Brotli data format specification.</summary>
+    </member>
+    <member name="M:System.IO.Compression.BrotliEncoder.#ctor(System.Int32,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.IO.Compression.BrotliEncoder" /> structure using the specified quality and window.</summary>
+      <param name="quality">A number representing quality of the Brotli compression. 0 is the minimum (no compression), 11 is the maximum.</param>
+      <param name="window">A number representing the encoder window bits. The minimum value is 10, and the maximum value is 24.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="quality" /> is not between the minimum value of 0 and the maximum value of 11.
+            -or-
+            <paramref name="window" /> is not between the minimum value of 10 and the maximum value of 24.</exception>
+      <exception cref="T:System.IO.IOException">Failed to create the <see cref="T:System.IO.Compression.BrotliEncoder" /> instance.</exception>
+    </member>
+    <member name="M:System.IO.Compression.BrotliEncoder.Compress(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@,System.Int32@,System.Boolean)">
+      <summary>Compresses a read-only byte span into a destination span.</summary>
+      <param name="source">A read-only span of bytes containing the source data to compress.</param>
+      <param name="destination">When this method returns, a byte span where the compressed is stored.</param>
+      <param name="bytesConsumed">When this method returns, the total number of bytes that were read from <paramref name="source" />.</param>
+      <param name="bytesWritten">When this method returns, the total number of bytes that were written to <paramref name="destination" />.</param>
+      <param name="isFinalBlock">
+        <see langword="true" /> to finalize the internal stream, which prevents adding more input data when this method returns; <see langword="false" /> to allow the encoder to postpone the production of output until it has processed enough input.</param>
+      <returns>One of the enumeration values that describes the status with which the span-based operation finished.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliEncoder.Dispose">
+      <summary>Frees and disposes unmanaged resources.</summary>
+    </member>
+    <member name="M:System.IO.Compression.BrotliEncoder.Flush(System.Span{System.Byte},System.Int32@)">
+      <summary>Compresses an empty read-only span of bytes into its destination, which ensures that output is produced for all the processed input. An actual flush is performed when the source is depleted and there is enough space in the destination for the remaining data.</summary>
+      <param name="destination">When this method returns, a span of bytes where the compressed data will be stored.</param>
+      <param name="bytesWritten">When this method returns, the total number of bytes that were written to <paramref name="destination" />.</param>
+      <returns>One of the enumeration values that describes the status with which the operation finished.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliEncoder.GetMaxCompressedLength(System.Int32)">
+      <summary>Gets the maximum expected compressed length for the provided input size.</summary>
+      <param name="inputSize">The input size to get the maximum expected compressed length from. Must be greater or equal than 0 and less or equal than <see cref="F:System.Int32.MaxValue">Int32.MaxValue</see> - 515.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="inputSize" /> is less than 0, the minimum allowed input size, or greater than <see cref="F:System.Int32.MaxValue">Int32.MaxValue</see> - 515, the maximum allowed input size.</exception>
+      <returns>A number representing the maximum compressed length for the provided input size.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliEncoder.TryCompress(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@)">
+      <summary>Tries to compress a source byte span into a destination span.</summary>
+      <param name="source">A read-only span of bytes containing the source data to compress.</param>
+      <param name="destination">When this method returns, a span of bytes where the compressed data is stored.</param>
+      <param name="bytesWritten">When this method returns, the total number of bytes that were written to <paramref name="destination" />.</param>
+      <returns>
+        <see langword="true" /> if the compression operation was successful; <see langword="false" /> otherwise.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliEncoder.TryCompress(System.ReadOnlySpan{System.Byte},System.Span{System.Byte},System.Int32@,System.Int32,System.Int32)">
+      <summary>Tries to compress a source byte span into a destination byte span, using the provided compression quality leven and encoder window bits.</summary>
+      <param name="source">A read-only span of bytes containing the source data to compress.</param>
+      <param name="destination">When this method returns, a span of bytes where the compressed data is stored.</param>
+      <param name="bytesWritten">When this method returns, the total number of bytes that were written to <paramref name="destination" />.</param>
+      <param name="quality">A number representing quality of the Brotli compression. 0 is the minimum (no compression), 11 is the maximum.</param>
+      <param name="window">A number representing the encoder window bits. The minimum value is 10, and the maximum value is 24.</param>
+      <returns>
+        <see langword="true" /> if the compression operation was successful; <see langword="false" /> otherwise.</returns>
+    </member>
+    <member name="T:System.IO.Compression.BrotliStream">
+      <summary>Provides methods and properties used to compress and decompress streams by using the Brotli data format specification.</summary>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.#ctor(System.IO.Stream,System.IO.Compression.CompressionLevel)">
+      <summary>Initializes a new instance of the <see cref="T:System.IO.Compression.BrotliStream" /> class by using the specified stream and compression level.</summary>
+      <param name="stream">The stream to which compressed data is written.</param>
+      <param name="compressionLevel">One of the enumeration values that indicates whether to emphasize speed or compression efficiency when compressing data to the stream.</param>
+      <exception cref="T:System.ArgumentException">.NET 7 and later: <paramref name="compressionLevel" /> is not defined in the <see cref="System.IO.Compression.CompressionLevel" /> enumeration.</exception>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.#ctor(System.IO.Stream,System.IO.Compression.CompressionLevel,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.IO.Compression.BrotliStream" /> class by using the specified stream and compression level, and optionally leaves the stream open.</summary>
+      <param name="stream">The stream to which compressed data is written.</param>
+      <param name="compressionLevel">One of the enumeration values that indicates whether to emphasize speed or compression efficiency when compressing data to the stream.</param>
+      <param name="leaveOpen">
+        <see langword="true" /> to leave the stream open after disposing the <see cref="T:System.IO.Compression.BrotliStream" /> object; otherwise, <see langword="false" />.</param>
+      <exception cref="T:System.ArgumentException">.NET 7 and later: <paramref name="compressionLevel" /> is not defined in the <see cref="System.IO.Compression.CompressionLevel" /> enumeration.</exception>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.#ctor(System.IO.Stream,System.IO.Compression.CompressionMode)">
+      <summary>Initializes a new instance of the <see cref="T:System.IO.Compression.BrotliStream" /> class by using the specified stream and compression mode.</summary>
+      <param name="stream">The stream to which compressed data is written or from which data to decompress is read.</param>
+      <param name="mode">One of the enumeration values that indicates whether to compress data to the stream or decompress data from the stream.</param>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.#ctor(System.IO.Stream,System.IO.Compression.CompressionMode,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.IO.Compression.BrotliStream" /> class by using the specified stream and compression mode, and optionally leaves the stream open.</summary>
+      <param name="stream">The stream to which compressed data is written or from which data to decompress is read.</param>
+      <param name="mode">One of the enumeration values that indicates whether to compress data to the stream or decompress data from the stream.</param>
+      <param name="leaveOpen">
+        <see langword="true" /> to leave the stream open after the <see cref="T:System.IO.Compression.BrotliStream" /> object is disposed; otherwise, <see langword="false" />.</param>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.BeginRead(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)">
+      <summary>Begins an asynchronous read operation. (Consider using the <see cref="M:System.IO.Stream.ReadAsync(System.Byte[],System.Int32,System.Int32)" /> method instead.)</summary>
+      <param name="buffer">The buffer from which data will be read.</param>
+      <param name="offset">The byte offset in <paramref name="buffer" /> at which to begin reading data from the stream.</param>
+      <param name="count">To maximum number of bytes to read.</param>
+      <param name="asyncCallback">An optional asynchronous callback, to be called when the read operation is complete.</param>
+      <param name="asyncState">A user-provided object that distinguishes this particular asynchronous read request from other requests.</param>
+      <exception cref="T:System.IO.IOException">The method tried to read asynchronously past the end of the stream, or a disk error occurred.</exception>
+      <exception cref="T:System.ArgumentException">One or more of the arguments is invalid.</exception>
+      <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+      <exception cref="T:System.NotSupportedException">The current <see cref="T:System.IO.Compression.BrotliStream" /> implementation does not support the read operation.</exception>
+      <exception cref="T:System.InvalidOperationException">This call cannot be completed.</exception>
+      <returns>An object that represents the asynchronous read operation, which could still be pending.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.BeginWrite(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)">
+      <summary>Begins an asynchronous write operation. (Consider using the <see cref="M:System.IO.Stream.WriteAsync(System.Byte[],System.Int32,System.Int32)" /> method instead.)</summary>
+      <param name="buffer">The buffer from which data will be written.</param>
+      <param name="offset">The byte offset in <paramref name="buffer" /> at which to begin writing data from the stream.</param>
+      <param name="count">The maximum number of bytes to write.</param>
+      <param name="asyncCallback">An optional asynchronous callback, to be called when the write operation is complete.</param>
+      <param name="asyncState">A user-provided object that distinguishes this particular asynchronous write request from other requests.</param>
+      <exception cref="T:System.IO.IOException">The method tried to write asynchronously past the end of the stream, or a disk error occurred.</exception>
+      <exception cref="T:System.ArgumentException">One or more of the arguments is invalid.</exception>
+      <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+      <exception cref="T:System.NotSupportedException">The current <see cref="T:System.IO.Compression.BrotliStream" /> implementation does not support the write operation.</exception>
+      <exception cref="T:System.InvalidOperationException">The write operation cannot be performed because the stream is closed.</exception>
+      <returns>An object that represents the asynchronous write operation, which could still be pending.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.DisposeAsync">
+      <summary>Asynchronously releases the unmanaged resources used by the <see cref="T:System.IO.Compression.BrotliStream" />.</summary>
+      <returns>A task that represents the asynchronous dispose operation.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.EndRead(System.IAsyncResult)">
+      <summary>Waits for the pending asynchronous read to complete. (Consider using the <see cref="M:System.IO.Stream.ReadAsync(System.Byte[],System.Int32,System.Int32)" /> method instead.)</summary>
+      <param name="asyncResult">The reference to the pending asynchronous request to finish.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="asyncResult" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="asyncResult" /> did not originate from a <see cref="M:System.IO.Compression.BrotliStream.BeginRead(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)" /> method on the current stream.</exception>
+      <exception cref="T:System.InvalidOperationException">The end operation cannot be performed because the stream is closed.</exception>
+      <returns>The number of bytes read from the stream, between 0 (zero) and the number of bytes you requested. <see cref="T:System.IO.Compression.BrotliStream" /> returns 0 only at the end of the stream; otherwise, it blocks until at least one byte is available.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.EndWrite(System.IAsyncResult)">
+      <summary>Handles the end of an asynchronous write operation. (Consider using the <see cref="M:System.IO.Stream.WriteAsync(System.Byte[],System.Int32,System.Int32)" /> method instead.)</summary>
+      <param name="asyncResult">The object that represents the asynchronous call.</param>
+      <exception cref="T:System.InvalidOperationException">The underlying stream is closed or <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.Flush">
+      <summary>If the stream is not disposed, and the compression mode is set to compress, writes all the remaining encoder's data into this stream.</summary>
+      <exception cref="T:System.IO.InvalidDataException">The encoder ran into invalid data.</exception>
+      <exception cref="T:System.ObjectDisposedException">The stream is disposed.</exception>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.FlushAsync(System.Threading.CancellationToken)">
+      <summary>Asynchronously clears all buffers for this Brotli stream, causes any buffered data to be written to the underlying device, and monitors cancellation requests.</summary>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <returns>A task that represents the asynchronous flush operation.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.Read(System.Byte[],System.Int32,System.Int32)">
+      <summary>Reads a number of decompressed bytes into the specified byte array.</summary>
+      <param name="buffer">The array used to store decompressed bytes.</param>
+      <param name="offset">The byte offset in <paramref name="buffer" /> at which the read bytes will be placed.</param>
+      <param name="count">The maximum number of decompressed bytes to read.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">The <see cref="T:System.IO.Compression.CompressionMode" /> value was <see langword="Compress" /> when the object was created, or there is already an active asynchronous operation on this stream.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="offset" /> or <paramref name="count" /> is less than zero.</exception>
+      <exception cref="T:System.ArgumentException">The <paramref name="buffer" /> length minus the index starting point is less than <paramref name="count" />.</exception>
+      <exception cref="T:System.IO.InvalidDataException">The data is in an invalid format.</exception>
+      <exception cref="T:System.ObjectDisposedException">The underlying stream is null or closed.</exception>
+      <returns>The number of bytes that were decompressed into the byte array. If the end of the stream has been reached, zero or the number of bytes read is returned.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.Read(System.Span{System.Byte})">
+      <summary>Reads a sequence of bytes from the current Brotli stream to a byte span and advances the position within the Brotli stream by the number of bytes read.</summary>
+      <param name="buffer">A region of memory. When this method returns, the contents of this region are replaced by the bytes read from the current source.</param>
+      <returns>The total number of bytes read into the buffer. This can be less than the number of bytes allocated in the buffer if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.ReadAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+      <summary>Asynchronously reads a sequence of bytes from the current Brotli stream, writes them to a byte array starting at a specified index, advances the position within the Brotli stream by the number of bytes read, and monitors cancellation requests.</summary>
+      <param name="buffer">The buffer to write the data into.</param>
+      <param name="offset">The byte offset in <paramref name="buffer" /> at which to begin writing data from the Brotli stream.</param>
+      <param name="count">The maximum number of bytes to read.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <returns>A task that represents the asynchronous read operation, which wraps the total number of bytes read into the <paramref name="buffer" />. The result value can be less than the number of bytes requested if the number of bytes currently available is less than the requested number, or it can be 0 (zero) if the end of the Brotli stream has been reached.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.ReadAsync(System.Memory{System.Byte},System.Threading.CancellationToken)">
+      <summary>Asynchronously reads a sequence of bytes from the current Brotli stream, writes them to a byte memory range, advances the position within the Brotli stream by the number of bytes read, and monitors cancellation requests.</summary>
+      <param name="buffer">The region of memory to write the data into.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <returns>A task that represents the asynchronous read operation, which wraps the total number of bytes read into the buffer. The result value can be less than the number of bytes allocated in the buffer if that many bytes are not currently available, or it can be 0 (zero) if the end of the Brotli stream has been reached.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.ReadByte">
+      <summary>
+            Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at the end of the stream.</summary>
+      <exception cref="T:System.InvalidOperationException">Cannot perform read operations on a <see cref="T:System.IO.Compression.BrotliStream" /> constructed with <see cref="F:System.IO.Compression.CompressionMode.Compress" />.
+            -or-
+            <see cref="P:System.IO.Compression.BrotliStream.BaseStream" /> returned more bytes than requested in read.</exception>
+      <returns>The unsigned byte cast to an <see cref="T:System.Int32" />, or -1 if at the end of the stream.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.Seek(System.Int64,System.IO.SeekOrigin)">
+      <summary>This property is not supported and always throws a <see cref="T:System.NotSupportedException" />.</summary>
+      <param name="offset">The location in the stream.</param>
+      <param name="origin">One of the <see cref="T:System.IO.SeekOrigin" /> values.</param>
+      <exception cref="T:System.NotSupportedException">This property is not supported on this stream.</exception>
+      <returns>A long value.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.SetLength(System.Int64)">
+      <summary>This property is not supported and always throws a <see cref="T:System.NotSupportedException" />.</summary>
+      <param name="value">The length of the stream.</param>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.Write(System.Byte[],System.Int32,System.Int32)">
+      <summary>Writes compressed bytes to the underlying stream from the specified byte array.</summary>
+      <param name="buffer">The buffer containing the data to compress.</param>
+      <param name="offset">The byte offset in <paramref name="buffer" /> from which the bytes will be read.</param>
+      <param name="count">The maximum number of bytes to write.</param>
+      <exception cref="T:System.ObjectDisposedException">The write operation cannot be performed because the stream is closed.</exception>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.Write(System.ReadOnlySpan{System.Byte})">
+      <summary>Writes a sequence of bytes to the current Brotli stream from a read-only byte span and advances the current position within this Brotli stream by the number of bytes written.</summary>
+      <param name="buffer">A region of memory. This method copies the contents of this region to the current Brotli stream.</param>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.WriteAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+      <summary>Asynchronously writes compressed bytes to the underlying Brotli stream from the specified byte array.</summary>
+      <param name="buffer">The buffer that contains the data to compress.</param>
+      <param name="offset">The zero-based byte offset in <paramref name="buffer" /> from which to begin copying bytes to the Brotli stream.</param>
+      <param name="count">The maximum number of bytes to write.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <returns>A task that represents the asynchronous write operation.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.WriteAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)">
+      <summary>Asynchronously writes compressed bytes to the underlying Brotli stream from the specified byte memory range.</summary>
+      <param name="buffer">The memory region to write data from.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+      <returns>A task that represents the asynchronous write operation.</returns>
+    </member>
+    <member name="M:System.IO.Compression.BrotliStream.WriteByte(System.Byte)">
+      <summary>
+            Writes a byte to the current position in the stream and advances the position within the stream by one byte.</summary>
+      <param name="value">The byte to write to the stream.</param>
+      <exception cref="T:System.InvalidOperationException">Cannot perform write operations on a <see cref="T:System.IO.Compression.BrotliStream" /> constructed with <see cref="F:System.IO.Compression.CompressionMode.Decompress" />.
+            -or-
+            The encoder ran into invalid data.</exception>
+    </member>
+    <member name="P:System.IO.Compression.BrotliStream.BaseStream">
+      <summary>Gets a reference to the underlying stream.</summary>
+      <exception cref="T:System.ObjectDisposedException">The underlying stream is closed.</exception>
+      <returns>A stream object that represents the underlying stream.</returns>
+    </member>
+    <member name="P:System.IO.Compression.BrotliStream.CanRead">
+      <summary>Gets a value indicating whether the stream supports reading while decompressing a file.</summary>
+      <returns>
+        <see langword="true" /> if the <see cref="T:System.IO.Compression.CompressionMode" /> value is <see langword="Decompress," /> and the underlying stream supports reading and is not closed; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.IO.Compression.BrotliStream.CanSeek">
+      <summary>Gets a value indicating whether the stream supports seeking.</summary>
+      <returns>
+        <see langword="false" /> in all cases.</returns>
+    </member>
+    <member name="P:System.IO.Compression.BrotliStream.CanWrite">
+      <summary>Gets a value indicating whether the stream supports writing.</summary>
+      <returns>
+        <see langword="true" /> if the <see cref="T:System.IO.Compression.CompressionMode" /> value is <see langword="Compress" />, and the underlying stream supports writing and is not closed; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.IO.Compression.BrotliStream.Length">
+      <summary>This property is not supported and always throws a <see cref="T:System.NotSupportedException" />.</summary>
+      <exception cref="T:System.NotSupportedException">This property is not supported on this stream.</exception>
+      <returns>A long value.</returns>
+    </member>
+    <member name="P:System.IO.Compression.BrotliStream.Position">
+      <summary>This property is not supported and always throws a <see cref="T:System.NotSupportedException" />.</summary>
+      <exception cref="T:System.NotSupportedException">This property is not supported on this stream.</exception>
+      <returns>A long value.</returns>
+    </member>
+  </members>
+</doc>

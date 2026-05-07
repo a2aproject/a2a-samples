@@ -1,0 +1,434 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Razor.Runtime</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.IRazorSourceChecksumMetadata">
+            <summary>
+            A metadata object containing the checksum of a source file that contributed to a compiled item.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.IRazorSourceChecksumMetadata.Checksum">
+            <summary>
+            Gets the checksum as string of hex-encoded bytes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.IRazorSourceChecksumMetadata.ChecksumAlgorithm">
+            <summary>
+            Gets the name of the algorithm used to create this checksum.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.IRazorSourceChecksumMetadata.Identifier">
+            <summary>
+            Gets the identifier of the source file associated with this checksum.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem">
+            <summary>
+            Identifies a compiled item that can be identified and loaded.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem.Identifier">
+            <summary>
+            Gets the identifier associated with the compiled item. The identifier is used programmatically to locate
+            a specific item of a specific kind and should be uniqure within the assembly.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem.Kind">
+            <summary>
+            Gets the kind of compiled item. The kind is used programmatically to associate behaviors and semantics
+            with the item.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem.Metadata">
+            <summary>
+            Gets a collection of arbitrary metadata associated with the item.
+            </summary>
+            <remarks>
+            For items loaded with the default implementation of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemLoader"/>, the
+            metadata collection will return all attributes defined on the <see cref="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem.Type"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem.Type">
+            <summary>
+            Gets the <see cref="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem.Type"/> of the compiled item.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute">
+            <summary>
+            Specifies that an assembly contains a compiled Razor asset.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute.#ctor(System.Type,System.String,System.String)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute"/>.
+            </summary>
+            <param name="type">The <see cref="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute.Type"/> of the compiled item.</param>
+            <param name="kind">
+            The kind of the compiled item. The kind is used programmatically to associate behaviors with the item.
+            </param>
+            <param name="identifier">
+            The identifier associated with the item. The identifier is used programmatically to locate
+            a specific item of a specific kind, and should be unique within the assembly.
+            </param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute.Kind">
+            <summary>
+            Gets the kind of compiled item. The kind is used programmatically to associate behaviors and semantics
+            with the item.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute.Identifier">
+            <summary>
+            Gets the identifier associated with the compiled item. The identifier is used programmatically to locate
+            a specific item of a specific kind and should be unique within the assembly.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute.Type">
+            <summary>
+            Gets the <see cref="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute.Type"/> of the compiled item. The type should be contained in the assembly associated
+            with this instance of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemExtensions.GetChecksumMetadata(Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem)">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.IRazorSourceChecksumMetadata"/> associated with <paramref name="item"/>.
+            </summary>
+            <param name="item">The <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/>.</param>
+            <returns>A list of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.IRazorSourceChecksumMetadata"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemLoader">
+            <summary>
+            A loader implementation that can load <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/> objects from an
+            <see cref="T:System.Reflection.Assembly"/> using reflection.
+            </summary>
+            <remarks>
+            <para>
+            Inherit from <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemLoader"/> to customize the behavior when loading
+            <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/> objects from an <see cref="T:System.Reflection.Assembly"/>. The default implementations of methods
+            defined by this class use reflection in a trivial way to load attributes from the assembly.
+            </para>
+            <para>
+            Inheriting from <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemLoader"/> is useful when an implementation needs to consider
+            additional configuration or data outside of the <see cref="T:System.Reflection.Assembly"/> being loaded.
+            </para>
+            <para>
+            Subclasses of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemLoader"/> can return subclasses of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/>
+            with additional data members by overriding <see cref="M:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemLoader.CreateItem(Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute)"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemLoader.LoadItems(System.Reflection.Assembly)">
+            <summary>
+            Loads a list of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/> objects from the provided <see cref="T:System.Reflection.Assembly"/>.
+            </summary>
+            <param name="assembly">The assembly to search.</param>
+            <returns>A list of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/> objects.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemLoader.CreateItem(Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/> from a <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute"/>.
+            </summary>
+            <param name="attribute">The <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute"/>.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/> created from <paramref name="attribute"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemLoader.LoadAttributes(System.Reflection.Assembly)">
+            <summary>
+            Retrieves the list of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute"/> attributes defined for the provided
+            <see cref="T:System.Reflection.Assembly"/>.
+            </summary>
+            <param name="assembly">The <see cref="T:System.Reflection.Assembly"/> to search.</param>
+            <returns>A list of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemAttribute"/> attributes.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemMetadataAttribute">
+            <summary>
+            Defines a key/value metadata pair for the decorated Razor type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemMetadataAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemMetadataAttribute"/>.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemMetadataAttribute.Key">
+            <summary>
+            Gets the key.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemMetadataAttribute.Value">
+            <summary>
+            Gets the value.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.RazorConfigurationNameAttribute">
+            <summary>
+            Specifies the name of a Razor configuration as defined by the Razor SDK.
+            </summary>
+            <remarks>
+            This attribute is applied to an application's entry point assembly by the Razor SDK during the build,
+            so that the Razor configuration can be loaded at runtime based on the settings provided by the project
+            file.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorConfigurationNameAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorConfigurationNameAttribute"/>.
+            </summary>
+            <param name="configurationName">The name of the Razor configuration.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorConfigurationNameAttribute.ConfigurationName">
+            <summary>
+            Gets the name of the Razor configuration.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.RazorExtensionAssemblyNameAttribute">
+            <summary>
+            Specifies the name of a Razor extension as defined by the Razor SDK.
+            </summary>
+            <remarks>
+            This attribute is applied to an application's entry point assembly by the Razor SDK during the build,
+            so that the Razor configuration can be loaded at runtime based on the settings provided by the project
+            file.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorExtensionAssemblyNameAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorExtensionAssemblyNameAttribute"/>.
+            </summary>
+            <param name="extensionName">The name of the extension.</param>
+            <param name="assemblyName">The assembly name of the extension.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorExtensionAssemblyNameAttribute.AssemblyName">
+            <summary>
+            Gets the assembly name of the extension.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorExtensionAssemblyNameAttribute.ExtensionName">
+            <summary>
+            Gets the name of the extension.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.RazorLanguageVersionAttribute">
+            <summary>
+            Specifies the name of a Razor configuration as defined by the Razor SDK.
+            </summary>
+            <remarks>
+            This attribute is part of a set of metadata attributes that can be applied to an assembly at build
+            time by the Razor SDK. These attributes allow the Razor configuration to be loaded at runtime based
+            on the settings originally provided by the project file.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorLanguageVersionAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorLanguageVersionAttribute"/>.
+            </summary>
+            <param name="languageVersion">The language version of Razor</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorLanguageVersionAttribute.LanguageVersion">
+            <summary>
+            Gets the Razor language version.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute">
+            <summary>
+            Specifies the checksum of a source file that contributed to a compiled item.
+            </summary>
+            <remarks>
+            <para>
+            These attributes are added by the Razor infrastructure when generating code to assist runtime
+            implementations to determine the integrity of compiled items.
+            </para>
+            <para>
+            Runtime implementations should access the checksum metadata for an item using
+            <see cref="M:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItemExtensions.GetChecksumMetadata(Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem)"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute"/>.
+            </summary>
+            <param name="checksumAlgorithm">The algorithm used to create this checksum.</param>
+            <param name="checksum">The checksum as a string of hex-encoded bytes.</param>
+            <param name="identifier">The identifier associated with this thumbprint.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute.Checksum">
+            <summary>
+            Gets the checksum as string of hex-encoded bytes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute.ChecksumAlgorithm">
+            <summary>
+            Gets the name of the algorithm used to create this checksum.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute.Identifier">
+            <summary>
+            Gets the identifier of the source file associated with this checksum.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext">
+            <summary>
+            Class used to store information about a <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>'s execution lifetime.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.#ctor(System.String,Microsoft.AspNetCore.Razor.TagHelpers.TagMode)">
+            <summary>
+            Internal for testing purposes only.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.#ctor(System.String,Microsoft.AspNetCore.Razor.TagHelpers.TagMode,System.Collections.Generic.IDictionary{System.Object,System.Object},System.String,System.Func{System.Threading.Tasks.Task},System.Action{System.Text.Encodings.Web.HtmlEncoder},System.Func{Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContent})">
+            <summary>
+            Instantiates a new <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext"/>.
+            </summary>
+            <param name="tagName">The HTML tag name in the Razor source.</param>
+            <param name="tagMode">HTML syntax of the element in the Razor source.</param>
+            <param name="items">The collection of items used to communicate with other
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>s</param>
+            <param name="uniqueId">An identifier unique to the HTML element this context is for.</param>
+            <param name="executeChildContentAsync">A delegate used to execute the child content asynchronously.</param>
+            <param name="startTagHelperWritingScope">
+            A delegate used to start a writing scope in a Razor page and optionally override the page's
+            <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> within that scope.
+            </param>
+            <param name="endTagHelperWritingScope">A delegate used to end a writing scope in a Razor page.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.ChildContentRetrieved">
+            <summary>
+            Indicates if <see cref="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.GetChildContentAsync(System.Boolean,System.Text.Encodings.Web.HtmlEncoder)"/> has been called.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.Items">
+            <summary>
+            Gets the collection of items used to communicate with other <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>s.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.TagHelpers">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>s that should be run.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.Output">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>'s output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.Context">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>'s context.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.Add(Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper)">
+            <summary>
+            Tracks the given <paramref name="tagHelper"/>.
+            </summary>
+            <param name="tagHelper">The tag helper to track.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.AddHtmlAttribute(System.String,System.Object,Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle)">
+            <summary>
+            Tracks the HTML attribute.
+            </summary>
+            <param name="name">The HTML attribute name.</param>
+            <param name="value">The HTML attribute value.</param>
+            <param name="valueStyle">The value style of the attribute.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.AddHtmlAttribute(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute)">
+            <summary>
+            Tracks the HTML attribute.
+            </summary>
+            <param name="attribute">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute"/> to track.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.AddTagHelperAttribute(System.String,System.Object,Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle)">
+            <summary>
+            Tracks the <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> bound attribute.
+            </summary>
+            <param name="name">The bound attribute name.</param>
+            <param name="value">The attribute value.</param>
+            <param name="valueStyle">The value style of the attribute.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.AddTagHelperAttribute(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute)">
+            <summary>
+            Tracks the <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> bound attribute.
+            </summary>
+            <param name="attribute">The bound attribute.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.Reinitialize(System.String,Microsoft.AspNetCore.Razor.TagHelpers.TagMode,System.Collections.Generic.IDictionary{System.Object,System.Object},System.String,System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Clears the <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext"/> and updates its state with the provided values.
+            </summary>
+            <param name="tagName">The tag name to use.</param>
+            <param name="tagMode">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagMode"/> to use.</param>
+            <param name="items">The <see cref="T:System.Collections.Generic.IDictionary`2"/> to use.</param>
+            <param name="uniqueId">The unique id to use.</param>
+            <param name="executeChildContentAsync">The <see cref="T:System.Func`1"/> to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.SetOutputContentAsync">
+            <summary>
+            Executes children asynchronously with the page's <see cref="T:System.Text.Encodings.Web.HtmlEncoder" /> in scope and
+            sets <see cref="P:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.Output"/>'s <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Content"/> to the rendered results.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that on completion sets <see cref="P:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.Output"/>'s
+            <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Content"/> to the children's rendered content.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperRunner">
+            <summary>
+            A class used to run <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>s.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperRunner.RunAsync(Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext)">
+            <summary>
+            Calls the <see cref="M:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)"/> method on <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>s.
+            </summary>
+            <param name="executionContext">Contains information associated with running <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>s.
+            </param>
+            <returns>Resulting <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput"/> from processing all of the
+            <paramref name="executionContext"/>'s <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>s.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeManager">
+            <summary>
+            Class that manages <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext"/> scopes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeManager.#ctor(System.Action{System.Text.Encodings.Web.HtmlEncoder},System.Func{Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContent})">
+            <summary>
+            Instantiates a new <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeManager"/>.
+            </summary>
+            <param name="startTagHelperWritingScope">
+            A delegate used to start a writing scope in a Razor page and optionally override the page's
+            <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> within that scope.
+            </param>
+            <param name="endTagHelperWritingScope">A delegate used to end a writing scope in a Razor page.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeManager.Begin(System.String,Microsoft.AspNetCore.Razor.TagHelpers.TagMode,System.String,System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Starts a <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext"/> scope.
+            </summary>
+            <param name="tagName">The HTML tag name that the scope is associated with.</param>
+            <param name="tagMode">HTML syntax of the element in the Razor source.</param>
+            <param name="uniqueId">An identifier unique to the HTML element this scope is for.</param>
+            <param name="executeChildContentAsync">A delegate used to execute the child content asynchronously.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext"/> to use.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeManager.End">
+            <summary>
+            Ends a <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext"/> scope.
+            </summary>
+            <returns>If the current scope is nested, the parent <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext"/>.
+            <c>null</c> otherwise.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Razor.Runtime.Resources.ScopeManager_EndCannotBeCalledWithoutACallToBegin">
+            <summary>Must call '{2}.{1}' before calling '{2}.{0}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Razor.Runtime.Resources.FormatScopeManager_EndCannotBeCalledWithoutACallToBegin(System.Object,System.Object,System.Object)">
+            <summary>Must call '{2}.{1}' before calling '{2}.{0}'.</summary>
+        </member>
+    </members>
+</doc>

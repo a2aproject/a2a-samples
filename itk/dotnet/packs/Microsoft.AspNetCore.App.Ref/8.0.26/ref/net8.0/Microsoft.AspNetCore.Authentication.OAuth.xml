@@ -1,0 +1,725 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Authentication.OAuth</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimAction">
+            <summary>
+            Infrastructure for mapping user data from a json structure to claims on the ClaimsIdentity.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimAction.#ctor(System.String,System.String)">
+            <summary>
+            Create a new claim manipulation action.
+            </summary>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="valueType">The value to use for Claim.ValueType when creating a Claim.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimAction.ClaimType">
+            <summary>
+            Gets the value to use for <see cref="P:System.Security.Claims.Claim.Value"/>when creating a Claim.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimAction.ValueType">
+            <summary>
+            Gets the value to use for <see cref="P:System.Security.Claims.Claim.ValueType"/> when creating a Claim.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimAction.Run(System.Text.Json.JsonElement,System.Security.Claims.ClaimsIdentity,System.String)">
+            <summary>
+            Examine the given userData JSON, determine if the requisite data is present, and optionally add it
+            as a new Claim on the ClaimsIdentity.
+            </summary>
+            <param name="userData">The source data to examine. This value may be null.</param>
+            <param name="identity">The identity to add Claims to.</param>
+            <param name="issuer">The value to use for Claim.Issuer when creating a Claim.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection">
+            <summary>
+            A collection of ClaimActions used when mapping user data to Claims.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection.Clear">
+            <summary>
+            Remove all claim actions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection.Remove(System.String)">
+            <summary>
+            Remove all claim actions for the given ClaimType.
+            </summary>
+            <param name="claimType">The ClaimType of maps to remove.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection.Add(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimAction)">
+            <summary>
+            Add a claim action to the collection.
+            </summary>
+            <param name="action">The claim action to add.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.CustomJsonClaimAction">
+            <summary>
+            A ClaimAction that selects the value from the JSON user data by running the given Func resolver.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.CustomJsonClaimAction.#ctor(System.String,System.String,System.Func{System.Text.Json.JsonElement,System.String})">
+            <summary>
+            Creates a new CustomJsonClaimAction.
+            </summary>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="valueType">The value to use for Claim.ValueType when creating a Claim.</param>
+            <param name="resolver">The Func that will be called to select value from the given JSON user data.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.Claims.CustomJsonClaimAction.Resolver">
+            <summary>
+            The Func that will be called to select value from the given JSON user data.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.CustomJsonClaimAction.Run(System.Text.Json.JsonElement,System.Security.Claims.ClaimsIdentity,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.DeleteClaimAction">
+            <summary>
+            A ClaimAction that deletes all claims from the given ClaimsIdentity with the given ClaimType.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.DeleteClaimAction.#ctor(System.String)">
+            <summary>
+            Creates a new DeleteClaimAction.
+            </summary>
+            <param name="claimType">The ClaimType of Claims to delete.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.DeleteClaimAction.Run(System.Text.Json.JsonElement,System.Security.Claims.ClaimsIdentity,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.JsonKeyClaimAction">
+            <summary>
+            A ClaimAction that selects a top level value from the json user data with the given key name and adds it as a Claim.
+            This no-ops if the key is not found or the value is empty.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.JsonKeyClaimAction.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Creates a new JsonKeyClaimAction.
+            </summary>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="valueType">The value to use for Claim.ValueType when creating a Claim.</param>
+            <param name="jsonKey">The top level key to look for in the json user data.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.Claims.JsonKeyClaimAction.JsonKey">
+            <summary>
+            The top level key to look for in the json user data.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.JsonKeyClaimAction.Run(System.Text.Json.JsonElement,System.Security.Claims.ClaimsIdentity,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.JsonSubKeyClaimAction">
+            <summary>
+            A ClaimAction that selects a second level value from the json user data with the given top level key
+            name and second level sub key name and add it as a Claim.
+            This no-ops if the keys are not found or the value is empty.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.JsonSubKeyClaimAction.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Creates a new JsonSubKeyClaimAction.
+            </summary>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="valueType">The value to use for Claim.ValueType when creating a Claim.</param>
+            <param name="jsonKey">The top level key to look for in the json user data.</param>
+            <param name="subKey">The second level key to look for in the json user data.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.Claims.JsonSubKeyClaimAction.SubKey">
+            <summary>
+            The second level key to look for in the json user data.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.JsonSubKeyClaimAction.Run(System.Text.Json.JsonElement,System.Security.Claims.ClaimsIdentity,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.MapAllClaimsAction">
+            <summary>
+            A ClaimAction that selects all top level values from the json user data and adds them as Claims.
+            This excludes duplicate sets of names and values.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.MapAllClaimsAction.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.MapAllClaimsAction"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Claims.MapAllClaimsAction.Run(System.Text.Json.JsonElement,System.Security.Claims.ClaimsIdentity,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext">
+            <summary>
+            Contains information about the login session as well as the user <see cref="T:System.Security.Claims.ClaimsIdentity"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.#ctor(System.Security.Claims.ClaimsPrincipal,Microsoft.AspNetCore.Authentication.AuthenticationProperties,Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Authentication.AuthenticationScheme,Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions,System.Net.Http.HttpClient,Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse,System.Text.Json.JsonElement)">
+            <summary>
+            Initializes a new <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext"/>.
+            </summary>
+            <param name="principal">The <see cref="T:System.Security.Claims.ClaimsPrincipal"/>.</param>
+            <param name="properties">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/>.</param>
+            <param name="context">The HTTP environment.</param>
+            <param name="scheme">The authentication scheme.</param>
+            <param name="options">The options used by the authentication middleware.</param>
+            <param name="backchannel">The HTTP client used by the authentication middleware</param>
+            <param name="tokens">The tokens returned from the token endpoint.</param>
+            <param name="user">The JSON-serialized user.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.User">
+            <summary>
+            Gets the JSON-serialized user or an empty
+            <see cref="T:System.Text.Json.JsonElement"/> if it is not available.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.TokenResponse">
+            <summary>
+            Gets the token response returned by the authentication service.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.AccessToken">
+            <summary>
+            Gets the access token provided by the authentication service.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.TokenType">
+            <summary>
+            Gets the access token type provided by the authentication service.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.RefreshToken">
+            <summary>
+            Gets the refresh token provided by the authentication service.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.ExpiresIn">
+            <summary>
+            Gets the access token expiration time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.Backchannel">
+            <summary>
+            Gets the backchannel used to communicate with the provider.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.Identity">
+            <summary>
+            Gets the main identity exposed by the authentication ticket.
+            This property returns <c>null</c> when the ticket is <c>null</c>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.RunClaimActions">
+            <summary>
+            Examines <see cref="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.User"/>, determine if the requisite data is present, and optionally add it
+            to <see cref="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.Identity"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.RunClaimActions(System.Text.Json.JsonElement)">
+            <summary>
+            Examines the specified <paramref name="userData"/>, determine if the requisite data is present, and optionally add it
+            to <see cref="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext.Identity"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents">
+            <summary>
+            Default implementation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents.OnCreatingTicket">
+            <summary>
+            Gets or sets the function that is invoked when the CreatingTicket method is invoked.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents.OnRedirectToAuthorizationEndpoint">
+            <summary>
+            Gets or sets the delegate that is invoked when the RedirectToAuthorizationEndpoint method is invoked.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents.CreatingTicket(Microsoft.AspNetCore.Authentication.OAuth.OAuthCreatingTicketContext)">
+            <summary>
+            Invoked after the provider successfully authenticates a user.
+            </summary>
+            <param name="context">Contains information about the login session as well as the user <see cref="T:System.Security.Claims.ClaimsIdentity"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the completed operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents.RedirectToAuthorizationEndpoint(Microsoft.AspNetCore.Authentication.RedirectContext{Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions})">
+            <summary>
+            Called when a Challenge causes a redirect to authorize endpoint in the OAuth handler.
+            </summary>
+            <param name="context">Contains redirect URI and <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/> of the challenge.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/> for an OAuth challenge.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties.ScopeKey">
+            <summary>
+            The parameter key for the "scope" argument being used for a challenge request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties.#ctor(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties" />.
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties.#ctor(System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties" />.
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties.Scope">
+            <summary>
+            The "scope" parameter value being used for a challenge request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthChallengeProperties.SetScope(System.String[])">
+            <summary>
+            Set the "scope" parameter value.
+            </summary>
+            <param name="scopes">List of scopes.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthCodeExchangeContext">
+            <summary>
+            Contains information used to perform the code exchange.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthCodeExchangeContext.#ctor(Microsoft.AspNetCore.Authentication.AuthenticationProperties,System.String,System.String)">
+            <summary>
+            Initializes a new <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthCodeExchangeContext"/>.
+            </summary>
+            <param name="properties">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/>.</param>
+            <param name="code">The code returned from the authorization endpoint.</param>
+            <param name="redirectUri">The redirect uri used in the authorization request.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCodeExchangeContext.Properties">
+            <summary>
+            State for the authentication flow.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCodeExchangeContext.Code">
+            <summary>
+            The code returned from the authorization endpoint.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthCodeExchangeContext.RedirectUri">
+            <summary>
+            The redirect uri used in the authorization request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthConstants">
+            <summary>
+            Constants used in the OAuth protocol
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Authentication.OAuth.OAuthConstants.CodeVerifierKey">
+            <summary>
+            code_verifier defined in <see href="https://tools.ietf.org/html/rfc7636"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Authentication.OAuth.OAuthConstants.CodeChallengeKey">
+            <summary>
+            code_challenge defined in <see href="https://tools.ietf.org/html/rfc7636"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Authentication.OAuth.OAuthConstants.CodeChallengeMethodKey">
+            <summary>
+            code_challenge_method defined in <see href="https://tools.ietf.org/html/rfc7636"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Authentication.OAuth.OAuthConstants.CodeChallengeMethodS256">
+            <summary>
+            S256 defined in <see href="https://tools.ietf.org/html/rfc7636"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthDefaults">
+            <summary>
+            Defaults for OAuth authentication.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Authentication.OAuth.OAuthDefaults.DisplayName">
+            <summary>
+            The default display name for OAuth authentication.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1">
+            <summary>
+            An authentication handler that supports OAuth.
+            </summary>
+            <typeparam name="TOptions">The type of options.</typeparam>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.Backchannel">
+            <summary>
+            Gets the <see cref="T:System.Net.Http.HttpClient"/> instance used to communicate with the remote authentication provider.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.Events">
+            <summary>
+            The handler calls methods on the events which give the application control at certain points where processing is occurring.
+            If it is not provided a default instance is supplied which does nothing when the methods are called.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.#ctor(Microsoft.Extensions.Options.IOptionsMonitor{`0},Microsoft.Extensions.Logging.ILoggerFactory,System.Text.Encodings.Web.UrlEncoder,Microsoft.AspNetCore.Authentication.ISystemClock)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1"/>.
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.#ctor(Microsoft.Extensions.Options.IOptionsMonitor{`0},Microsoft.Extensions.Logging.ILoggerFactory,System.Text.Encodings.Web.UrlEncoder)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1"/>.
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.CreateEventsAsync">
+            <summary>
+            Creates a new instance of the events instance.
+            </summary>
+            <returns>A new instance of the events instance.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.HandleRemoteAuthenticateAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.ExchangeCodeAsync(Microsoft.AspNetCore.Authentication.OAuth.OAuthCodeExchangeContext)">
+            <summary>
+            Exchanges the authorization code for a authorization token from the remote provider.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthCodeExchangeContext"/>.</param>
+            <returns>The response <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.CreateTicketAsync(System.Security.Claims.ClaimsIdentity,Microsoft.AspNetCore.Authentication.AuthenticationProperties,Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationTicket"/> from the specified <paramref name="tokens"/>.
+            </summary>
+            <param name="identity">The <see cref="T:System.Security.Claims.ClaimsIdentity"/>.</param>
+            <param name="properties">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/>.</param>
+            <param name="tokens">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationTicket"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.HandleChallengeAsync(Microsoft.AspNetCore.Authentication.AuthenticationProperties)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.BuildChallengeUrl(Microsoft.AspNetCore.Authentication.AuthenticationProperties,System.String)">
+            <summary>
+            Constructs the OAuth challenge url.
+            </summary>
+            <param name="properties">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationProperties"/>.</param>
+            <param name="redirectUri">The url to redirect to once the challenge is completed.</param>
+            <returns>The challenge url.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.FormatScope(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Format a list of OAuth scopes.
+            </summary>
+            <param name="scopes">List of scopes.</param>
+            <returns>Formatted scopes.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.FormatScope">
+            <summary>
+            Format the <see cref="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.Scope"/> property.
+            </summary>
+            <returns>Formatted scopes.</returns>
+            <remarks>Subclasses should rather override <see cref="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthHandler`1.FormatScope(System.Collections.Generic.IEnumerable{System.String})"/>.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions">
+            <summary>
+            Configuration options OAuth.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.Validate">
+            <summary>
+            Check that the options are valid. Should throw an exception if things are not ok.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.ClientId">
+            <summary>
+            Gets or sets the provider-assigned client id.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.ClientSecret">
+            <summary>
+            Gets or sets the provider-assigned client secret.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.AuthorizationEndpoint">
+            <summary>
+            Gets or sets the URI where the client will be redirected to authenticate.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.TokenEndpoint">
+            <summary>
+            Gets or sets the URI the middleware will access to exchange the OAuth token.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.UserInformationEndpoint">
+            <summary>
+            Gets or sets the URI the middleware will access to obtain the user information.
+            This value is not used in the default implementation, it is for use in custom implementations of
+            <see cref="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents.OnCreatingTicket" />.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.Events">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents"/> used to handle authentication events.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.ClaimActions">
+            <summary>
+            A collection of claim actions used to select values from the json user data and create Claims.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.Scope">
+            <summary>
+            Gets the list of permissions to request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.StateDataFormat">
+            <summary>
+            Gets or sets the type used to secure data handled by the middleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions.UsePkce">
+            <summary>
+            Enables or disables the use of the Proof Key for Code Exchange (PKCE) standard. See <see href="https://tools.ietf.org/html/rfc7636"/>.
+            The default value is `false` but derived handlers should enable this if their provider supports it.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse">
+            <summary>
+            Response from an provider for an OAuth token request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.#ctor(System.Text.Json.JsonDocument)">
+            <summary>
+            Initializes a new instance <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse"/>.
+            </summary>
+            <param name="response">The received JSON payload.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.Success(System.Text.Json.JsonDocument)">
+            <summary>
+            Creates a successful <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse"/>.
+            </summary>
+            <param name="response">The received JSON payload.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse"/> instance.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.Failed(System.Exception)">
+            <summary>
+            Creates a failed <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse"/>.
+            </summary>
+            <param name="error">The error associated with the failure.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse"/> instance.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.Response">
+            <summary>
+            Gets or sets the received JSON payload.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.AccessToken">
+            <summary>
+            Gets or sets the access token issued by the OAuth provider.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.TokenType">
+            <summary>
+            Gets or sets the token type.
+            </summary>
+            <remarks>
+            Typically the string “bearer”.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.RefreshToken">
+            <summary>
+            Gets or sets a refresh token that applications can use to obtain another access token if tokens can expire.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.ExpiresIn">
+            <summary>
+            Gets or sets the validatity lifetime of the token in seconds.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.OAuthTokenResponse.Error">
+            <summary>
+            The exception in the event the response was a failure.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.Resources.Exception_OptionMustBeProvided">
+            <summary>The '{0}' option must be provided.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.OAuth.Resources.FormatException_OptionMustBeProvided(System.Object)">
+            <summary>The '{0}' option must be provided.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Authentication.OAuth.Resources.Exception_ValidatorHandlerMismatch">
+            <summary>An ICertificateValidator cannot be specified at the same time as an HttpMessageHandler unless it is a WebRequestHandler.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.MapJsonKey(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection,System.String,System.String)">
+            <summary>
+            Select a top level value from the json user data with the given key name and add it as a Claim.
+            This no-ops if the key is not found or the value is empty.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="jsonKey">The top level key to look for in the json user data.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.MapJsonKey(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection,System.String,System.String,System.String)">
+            <summary>
+            Select a top level value from the json user data with the given key name and add it as a Claim.
+            This no-ops if the key is not found or the value is empty.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="jsonKey">The top level key to look for in the json user data.</param>
+            <param name="valueType">The value to use for Claim.ValueType when creating a Claim.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.MapJsonSubKey(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection,System.String,System.String,System.String)">
+            <summary>
+            Select a second level value from the json user data with the given top level key name and second level sub key name and add it as a Claim.
+            This no-ops if the keys are not found or the value is empty.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="jsonKey">The top level key to look for in the json user data.</param>
+            <param name="subKey">The second level key to look for in the json user data.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.MapJsonSubKey(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection,System.String,System.String,System.String,System.String)">
+            <summary>
+            Select a second level value from the json user data with the given top level key name and second level sub key name and add it as a Claim.
+            This no-ops if the keys are not found or the value is empty.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="jsonKey">The top level key to look for in the json user data.</param>
+            <param name="subKey">The second level key to look for in the json user data.</param>
+            <param name="valueType">The value to use for Claim.ValueType when creating a Claim.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.MapCustomJson(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection,System.String,System.Func{System.Text.Json.JsonElement,System.String})">
+            <summary>
+            Run the given resolver to select a value from the json user data to add as a claim.
+            This no-ops if the returned value is empty.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="resolver">The Func that will be called to select value from the given json user data.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.MapCustomJson(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection,System.String,System.String,System.Func{System.Text.Json.JsonElement,System.String})">
+            <summary>
+            Run the given resolver to select a value from the json user data to add as a claim.
+            This no-ops if the returned value is empty.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+            <param name="claimType">The value to use for Claim.Type when creating a Claim.</param>
+            <param name="valueType">The value to use for Claim.ValueType when creating a Claim.</param>
+            <param name="resolver">The Func that will be called to select value from the given json user data.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.MapAll(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection)">
+            <summary>
+            Clears any current ClaimsActions and maps all values from the json user data as claims, excluding duplicates.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.MapAllExcept(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection,System.String[])">
+            <summary>
+            Clears any current ClaimsActions and maps all values from the json user data as claims, excluding the specified types.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+            <param name="exclusions">The types to exclude.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.DeleteClaim(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection,System.String)">
+            <summary>
+            Delete all claims from the given ClaimsIdentity with the given ClaimType.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+            <param name="claimType">The claim type to delete</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Authentication.ClaimActionCollectionMapExtensions.DeleteClaims(Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection,System.String[])">
+            <summary>
+            Delete all claims from the ClaimsIdentity with the given claimTypes.
+            </summary>
+            <param name="collection">The <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.Claims.ClaimActionCollection"/>.</param>
+            <param name="claimTypes">The claim types to delete.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.OAuthExtensions">
+            <summary>
+            Extension methods to add OAuth authentication.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OAuthExtensions.AddOAuth(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.String,System.Action{Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions})">
+            <summary>
+            Adds OAuth 2.0 based authentication to <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> using the specified authentication scheme.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/>.</param>
+            <param name="authenticationScheme">The authentication scheme.</param>
+            <param name="configureOptions">A delegate to configure <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions"/>.</param>
+            <returns>A reference to <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OAuthExtensions.AddOAuth(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.String,System.String,System.Action{Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions})">
+            <summary>
+            Adds OAuth 2.0 based authentication to <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> using the specified authentication scheme.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/>.</param>
+            <param name="authenticationScheme">The authentication scheme.</param>
+            <param name="displayName">A display name for the authentication handler.</param>
+            <param name="configureOptions">A delegate to configure <see cref="T:Microsoft.AspNetCore.Authentication.OAuth.OAuthOptions"/>.</param>
+            <returns>A reference to <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OAuthExtensions.AddOAuth``2(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.String,System.Action{``0})">
+            <summary>
+            Adds OAuth 2.0 based authentication to <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> using the specified authentication scheme.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/>.</param>
+            <param name="authenticationScheme">The authentication scheme.</param>
+            <param name="configureOptions">A delegate to configure the handler specific options.</param>
+            <returns>A reference to <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OAuthExtensions.AddOAuth``2(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.String,System.String,System.Action{``0})">
+            <summary>
+            Adds OAuth 2.0 based authentication to <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/> using the specified authentication scheme.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Authentication.AuthenticationBuilder"/>.</param>
+            <param name="authenticationScheme">The authentication scheme.</param>
+            <param name="displayName">A display name for the authentication handler.</param>
+            <param name="configureOptions">A delegate to configure the handler specific options.</param>
+            <returns>A reference to <paramref name="builder"/> after the operation has completed.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.OAuthPostConfigureOptions`2">
+            <summary>
+            Used to setup defaults for the OAuthOptions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OAuthPostConfigureOptions`2.#ctor(Microsoft.AspNetCore.DataProtection.IDataProtectionProvider)">
+            <summary>
+            Initializes the <see cref="T:Microsoft.Extensions.DependencyInjection.OAuthPostConfigureOptions`2"/>.
+            </summary>
+            <param name="dataProtection">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OAuthPostConfigureOptions`2.PostConfigure(System.String,`0)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

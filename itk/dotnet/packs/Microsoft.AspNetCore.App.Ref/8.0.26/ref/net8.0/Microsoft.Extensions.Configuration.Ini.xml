@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Configuration.Ini</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Configuration.IniConfigurationExtensions">
+            <summary>
+            Extension methods for adding <see cref="T:Microsoft.Extensions.Configuration.Ini.IniConfigurationProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.IniConfigurationExtensions.AddIniFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.String)">
+            <summary>
+            Adds the INI configuration provider at <paramref name="path"/> to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="path">Path relative to the base path stored in
+            <see cref="P:Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.IniConfigurationExtensions.AddIniFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.String,System.Boolean)">
+            <summary>
+            Adds the INI configuration provider at <paramref name="path"/> to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="path">Path relative to the base path stored in
+            <see cref="P:Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
+            <param name="optional">Whether the file is optional.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.IniConfigurationExtensions.AddIniFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Adds the INI configuration provider at <paramref name="path"/> to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="path">Path relative to the base path stored in
+            <see cref="P:Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
+            <param name="optional">Whether the file is optional.</param>
+            <param name="reloadOnChange">Whether the configuration should be reloaded if the file changes.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.IniConfigurationExtensions.AddIniFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,Microsoft.Extensions.FileProviders.IFileProvider,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Adds a INI configuration source to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="provider">The <see cref="T:Microsoft.Extensions.FileProviders.IFileProvider"/> to use to access the file.</param>
+            <param name="path">Path relative to the base path stored in
+            <see cref="P:Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties"/> of <paramref name="builder"/>.</param>
+            <param name="optional">Whether the file is optional.</param>
+            <param name="reloadOnChange">Whether the configuration should be reloaded if the file changes.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.IniConfigurationExtensions.AddIniFile(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.Action{Microsoft.Extensions.Configuration.Ini.IniConfigurationSource})">
+            <summary>
+            Adds a INI configuration source to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="configureSource">Configures the source.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.IniConfigurationExtensions.AddIniStream(Microsoft.Extensions.Configuration.IConfigurationBuilder,System.IO.Stream)">
+            <summary>
+            Adds a INI configuration source to <paramref name="builder"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> to add to.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to read the ini configuration data from.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Ini.IniConfigurationProvider">
+            <summary>
+            An INI file based <see cref="T:Microsoft.Extensions.Configuration.ConfigurationProvider"/>.
+            Files are simple line structures (<a href="https://en.wikipedia.org/wiki/INI_file">INI Files on Wikipedia</a>)
+            </summary>
+            <examples>
+            [Section:Header]
+            key1=value1
+            key2 = " value2 "
+            ; comment
+            # comment
+            / comment
+            </examples>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Ini.IniConfigurationProvider.#ctor(Microsoft.Extensions.Configuration.Ini.IniConfigurationSource)">
+            <summary>
+            Initializes a new instance with the specified source.
+            </summary>
+            <param name="source">The source settings.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Ini.IniConfigurationProvider.Load(System.IO.Stream)">
+            <summary>
+            Loads the INI data from a stream.
+            </summary>
+            <param name="stream">The stream to read.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Ini.IniConfigurationSource">
+            <summary>
+            Represents an INI file as an <see cref="T:Microsoft.Extensions.Configuration.IConfigurationSource"/>.
+            Files are simple line structures (<a href="https://en.wikipedia.org/wiki/INI_file">INI Files on Wikipedia</a>)
+            </summary>
+            <examples>
+            [Section:Header]
+            key1=value1
+            key2 = " value2 "
+            ; comment
+            # comment
+            / comment
+            </examples>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Ini.IniConfigurationSource.Build(Microsoft.Extensions.Configuration.IConfigurationBuilder)">
+            <summary>
+            Builds the <see cref="T:Microsoft.Extensions.Configuration.Ini.IniConfigurationProvider"/> for this source.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.Configuration.Ini.IniConfigurationProvider"/></returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Ini.IniStreamConfigurationProvider">
+            <summary>
+            An INI file based <see cref="T:Microsoft.Extensions.Configuration.StreamConfigurationProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Ini.IniStreamConfigurationProvider.#ctor(Microsoft.Extensions.Configuration.Ini.IniStreamConfigurationSource)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="source">The <see cref="T:Microsoft.Extensions.Configuration.Ini.IniStreamConfigurationSource"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Ini.IniStreamConfigurationProvider.Read(System.IO.Stream)">
+            <summary>
+            Read a stream of INI values into a key/value dictionary.
+            </summary>
+            <param name="stream">The stream of INI data.</param>
+            <returns>The <see cref="T:System.Collections.Generic.IDictionary`2"/> which was read from the stream.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Ini.IniStreamConfigurationProvider.Load(System.IO.Stream)">
+            <summary>
+            Loads INI configuration key/values from a stream into a provider.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load ini configuration data from.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.Configuration.Ini.IniStreamConfigurationSource">
+            <summary>
+            Represents an INI file as an <see cref="T:Microsoft.Extensions.Configuration.IConfigurationSource"/>.
+            Files are simple line structures (<a href="https://en.wikipedia.org/wiki/INI_file">INI Files on Wikipedia</a>)
+            </summary>
+            <examples>
+            [Section:Header]
+            key1=value1
+            key2 = " value2 "
+            ; comment
+            # comment
+            / comment
+            </examples>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Ini.IniStreamConfigurationSource.Build(Microsoft.Extensions.Configuration.IConfigurationBuilder)">
+            <summary>
+            Builds the <see cref="T:Microsoft.Extensions.Configuration.Ini.IniConfigurationProvider"/> for this source.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.Configuration.Ini.IniConfigurationProvider"/></returns>
+        </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+        <member name="P:System.SR.Error_InvalidFilePath">
+            <summary>File path must be a non-empty string.</summary>
+        </member>
+        <member name="P:System.SR.Error_KeyIsDuplicated">
+            <summary>A duplicate key '{0}' was found.</summary>
+        </member>
+        <member name="P:System.SR.Error_UnrecognizedLineFormat">
+            <summary>Unrecognized line format: '{0}'.</summary>
+        </member>
+    </members>
+</doc>

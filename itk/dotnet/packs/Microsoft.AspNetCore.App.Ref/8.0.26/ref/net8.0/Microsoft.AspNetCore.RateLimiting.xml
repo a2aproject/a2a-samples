@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.RateLimiting</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.RateLimiting.DisableRateLimitingAttribute">
+            <summary>
+            Metadata that disables request rate limiting on an endpoint.
+            </summary>
+            <remarks>
+            Completely disables the rate limiting middleware from applying to this endpoint.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.RateLimiting.EnableRateLimitingAttribute">
+            <summary>
+            Metadata that provides endpoint-specific request rate limiting.
+            </summary>
+            <remarks>
+            Replaces any policies currently applied to the endpoint.
+            The global limiter will still run on endpoints with this attribute applied.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.EnableRateLimitingAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.RateLimiting.EnableRateLimitingAttribute"/> using the specified policy.
+            </summary>
+            <param name="policyName">The name of the policy which needs to be applied.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RateLimiting.EnableRateLimitingAttribute.PolicyName">
+            <summary>
+            The name of the policy which needs to be applied.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RateLimiting.EnableRateLimitingAttribute.Policy">
+            <summary>
+            The policy which needs to be applied, if present.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.RateLimiting.IRateLimiterPolicy`1">
+            <summary>
+            An interface which is used to represent a RateLimiter policy.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RateLimiting.IRateLimiterPolicy`1.OnRejected">
+            <summary>
+            Gets the <see cref="T:System.Func`3"/> that handles requests rejected by this middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.IRateLimiterPolicy`1.GetPartition(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Gets the <see cref="T:System.Threading.RateLimiting.RateLimitPartition`1"/> that applies to the given <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> to get the partition for.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.RateLimiting.OnRejectedContext">
+            <summary>
+            Holds state needed for the OnRejected callback in the RateLimitingMiddleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RateLimiting.OnRejectedContext.HttpContext">
+            <summary>
+            Gets or sets the <see cref="P:Microsoft.AspNetCore.RateLimiting.OnRejectedContext.HttpContext"/> that the OnRejected callback will have access to
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RateLimiting.OnRejectedContext.Lease">
+            <summary>
+            Gets or sets the failed <see cref="T:System.Threading.RateLimiting.RateLimitLease"/> that the OnRejected callback will have access to
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions">
+            <summary>
+            Specifies options for the rate limiting middleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions.GlobalLimiter">
+            <summary>
+            Gets or sets the global <see cref="T:System.Threading.RateLimiting.PartitionedRateLimiter`1"/> that will be applied on all requests.
+            The global limiter will be executed first, followed by the endpoint-specific limiter, if one exists.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions.OnRejected">
+            <summary>
+            Gets or sets a <see cref="T:System.Func`3"/> that handles requests rejected by this middleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions.RejectionStatusCode">
+            <summary>
+            Gets or sets the default status code to set on the response when a request is rejected.
+            Defaults to <see cref="F:Microsoft.AspNetCore.Http.StatusCodes.Status503ServiceUnavailable"/>.
+            </summary>
+            <remarks>
+            This status code will be set before <see cref="P:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions.OnRejected"/> is called, so any status code set by
+            <see cref="P:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions.OnRejected"/> will "win" over this default.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions.AddPolicy``1(System.String,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Threading.RateLimiting.RateLimitPartition{``0}})">
+            <summary>
+            Adds a new rate limiting policy with the given <paramref name="policyName"/>
+            </summary>
+            <param name="policyName">The name to be associated with the given <see cref="T:System.Threading.RateLimiting.RateLimiter"/>.</param>
+            <param name="partitioner">Method called every time an Acquire or WaitAsync call is made to determine what rate limiter to apply to the request.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions.AddPolicy``2(System.String)">
+            <summary>
+            Adds a new rate limiting policy with the given policyName.
+            </summary>
+            <param name="policyName">The name to be associated with the given TPolicy.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions.AddPolicy``1(System.String,Microsoft.AspNetCore.RateLimiting.IRateLimiterPolicy{``0})">
+            <summary>
+            Adds a new rate limiting policy with the given policyName.
+            </summary>
+            <param name="policyName">The name to be associated with the given <see cref="T:Microsoft.AspNetCore.RateLimiting.IRateLimiterPolicy`1"/>.</param>
+            <param name="policy">The <see cref="T:Microsoft.AspNetCore.RateLimiting.IRateLimiterPolicy`1"/> to be applied.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptionsExtensions">
+            <summary>
+            Extension methods for the RateLimiting middleware options.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.RateLimiterOptionsExtensions.AddTokenBucketLimiter(Microsoft.AspNetCore.RateLimiting.RateLimiterOptions,System.String,System.Action{System.Threading.RateLimiting.TokenBucketRateLimiterOptions})">
+            <summary>
+            Registers a new <see cref="T:System.Threading.RateLimiting.TokenBucketRateLimiter"/> with the given <see cref="T:System.Threading.RateLimiting.TokenBucketRateLimiterOptions"/> to the application.
+            The limiter can be added to an endpoint via <see cref="M:Microsoft.AspNetCore.Builder.RateLimiterEndpointConventionBuilderExtensions.RequireRateLimiting``1(``0,System.String)"/>,
+            or via the <see cref="T:Microsoft.AspNetCore.RateLimiting.EnableRateLimitingAttribute"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions"/> to add a limiter to.</param>
+            <param name="policyName">The name that will be associated with the limiter.</param>
+            <param name="configureOptions">A callback to configure the <see cref="T:System.Threading.RateLimiting.TokenBucketRateLimiterOptions"/> to be used for the limiter.</param>
+            <returns>This <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions"/>.</returns>
+            <remarks>
+            Setting <see cref="P:System.Threading.RateLimiting.TokenBucketRateLimiterOptions.AutoReplenishment"/> will have no effect here, as the <see cref="T:System.Threading.RateLimiting.PartitionedRateLimiter"/> that this limiter is added to
+            will control replenishing it.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.RateLimiterOptionsExtensions.AddFixedWindowLimiter(Microsoft.AspNetCore.RateLimiting.RateLimiterOptions,System.String,System.Action{System.Threading.RateLimiting.FixedWindowRateLimiterOptions})">
+            <summary>
+            Registers a new <see cref="T:System.Threading.RateLimiting.FixedWindowRateLimiter"/> with the given <see cref="T:System.Threading.RateLimiting.FixedWindowRateLimiterOptions"/> to the application.
+            The limiter can be added to an endpoint via <see cref="M:Microsoft.AspNetCore.Builder.RateLimiterEndpointConventionBuilderExtensions.RequireRateLimiting``1(``0,System.String)"/>,
+            or via the <see cref="T:Microsoft.AspNetCore.RateLimiting.EnableRateLimitingAttribute"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions"/> to add a limiter to.</param>
+            <param name="policyName">The name that will be associated with the limiter.</param>
+            <param name="configureOptions">A callback to configure the <see cref="T:System.Threading.RateLimiting.FixedWindowRateLimiterOptions"/> to be used for the limiter.</param>
+            <returns>This <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions"/>.</returns>
+            <remarks>
+            Setting <see cref="P:System.Threading.RateLimiting.FixedWindowRateLimiterOptions.AutoReplenishment"/> will have no effect here, as the <see cref="T:System.Threading.RateLimiting.PartitionedRateLimiter"/> that this limiter is added to
+            will control replenishing it.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.RateLimiterOptionsExtensions.AddSlidingWindowLimiter(Microsoft.AspNetCore.RateLimiting.RateLimiterOptions,System.String,System.Action{System.Threading.RateLimiting.SlidingWindowRateLimiterOptions})">
+            <summary>
+            Registers a new <see cref="T:System.Threading.RateLimiting.SlidingWindowRateLimiter"/> with the given <see cref="T:System.Threading.RateLimiting.SlidingWindowRateLimiterOptions"/> to the application.
+            The limiter can be added to an endpoint via <see cref="M:Microsoft.AspNetCore.Builder.RateLimiterEndpointConventionBuilderExtensions.RequireRateLimiting``1(``0,System.String)"/>,
+            or via the <see cref="T:Microsoft.AspNetCore.RateLimiting.EnableRateLimitingAttribute"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions"/> to add a limiter to.</param>
+            <param name="policyName">The name that will be associated with the limiter.</param>
+            <param name="configureOptions">A callback to configure the <see cref="T:System.Threading.RateLimiting.SlidingWindowRateLimiterOptions"/> to be used for the limiter.</param>
+            <returns>This <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions"/>.</returns>
+            <remarks>
+            Setting <see cref="P:System.Threading.RateLimiting.SlidingWindowRateLimiterOptions.AutoReplenishment"/> will have no effect here, as the <see cref="T:System.Threading.RateLimiting.PartitionedRateLimiter"/> that this limiter is added to
+            will control replenishing it.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.RateLimiterOptionsExtensions.AddConcurrencyLimiter(Microsoft.AspNetCore.RateLimiting.RateLimiterOptions,System.String,System.Action{System.Threading.RateLimiting.ConcurrencyLimiterOptions})">
+            <summary>
+            Registers a new <see cref="T:System.Threading.RateLimiting.ConcurrencyLimiter"/> with the given <see cref="T:System.Threading.RateLimiting.ConcurrencyLimiterOptions"/> to the application.
+            The limiter can be added to an endpoint via <see cref="M:Microsoft.AspNetCore.Builder.RateLimiterEndpointConventionBuilderExtensions.RequireRateLimiting``1(``0,System.String)"/>,
+            or via the <see cref="T:Microsoft.AspNetCore.RateLimiting.EnableRateLimitingAttribute"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions"/> to add a limiter to.</param>
+            <param name="policyName">The name that will be associated with the limiter.</param>
+            <param name="configureOptions">A callback to configure the <see cref="T:System.Threading.RateLimiting.ConcurrencyLimiterOptions"/> to be used for the limiter.</param>
+            <returns>This <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware">
+            <summary>
+            Limits the rate of requests allowed in the application, based on limits set by a user-provided <see cref="T:System.Threading.RateLimiting.PartitionedRateLimiter`1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware},Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.RateLimiting.RateLimiterOptions},System.IServiceProvider,Microsoft.AspNetCore.RateLimiting.RateLimitingMetrics)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware"/>.
+            </summary>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> used for logging.</param>
+            <param name="options">The options for the middleware.</param>
+            <param name="serviceProvider">The service provider.</param>
+            <param name="metrics">The rate limiting metrics.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the logic of the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that completes when the request leaves.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.RateLimiting.Resources.UnableToFindServices">
+            <summary>Unable to find the required services. Please add all the required services by calling '{0}.{1}' in the application startup code.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.RateLimiting.Resources.FormatUnableToFindServices(System.Object,System.Object)">
+            <summary>Unable to find the required services. Please add all the required services by calling '{0}.{1}' in the application startup code.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RateLimiterApplicationBuilderExtensions">
+            <summary>
+            Extension methods for the RateLimiting middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RateLimiterApplicationBuilderExtensions.UseRateLimiter(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Enables rate limiting for the application.
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RateLimiterApplicationBuilderExtensions.UseRateLimiter(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.RateLimiting.RateLimiterOptions)">
+            <summary>
+            Enables rate limiting for the application.
+            </summary>
+            <param name="app"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RateLimiterEndpointConventionBuilderExtensions">
+            <summary>
+            Rate limiter extension methods for <see cref="T:Microsoft.AspNetCore.Builder.IEndpointConventionBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RateLimiterEndpointConventionBuilderExtensions.RequireRateLimiting``1(``0,System.String)">
+            <summary>
+            Adds the specified rate limiting policy to the endpoint(s).
+            </summary>
+            <param name="builder">The endpoint convention builder.</param>
+            <param name="policyName">The name of the rate limiting policy to add to the endpoint.</param>
+            <returns>The original convention builder parameter.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RateLimiterEndpointConventionBuilderExtensions.RequireRateLimiting``2(``0,Microsoft.AspNetCore.RateLimiting.IRateLimiterPolicy{``1})">
+            <summary>
+            Adds the specified rate limiting policy to the endpoint(s).
+            </summary>
+            <param name="builder">The endpoint convention builder.</param>
+            <param name="policy">The rate limiting policy to add to the endpoint.</param>
+            <returns>The original convention builder parameter.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RateLimiterEndpointConventionBuilderExtensions.DisableRateLimiting``1(``0)">
+            <summary>
+            Disables rate limiting on the endpoint(s).
+            </summary>
+            <param name="builder">The endpoint convention builder.</param>
+            <returns>The original convention builder parameter.</returns>
+            <remarks>Will skip both the global limiter, and any endpoint-specific limiters that apply to the endpoint(s).</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RateLimiterServiceCollectionExtensions">
+            <summary>
+            Extension methods for the RateLimiting middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RateLimiterServiceCollectionExtensions.AddRateLimiter(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.RateLimiting.RateLimiterOptions})">
+            <summary>
+            Add rate limiting services and configure the related options.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configureOptions">A delegate to configure the <see cref="T:Microsoft.AspNetCore.RateLimiting.RateLimiterOptions"/>.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,595 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Routing.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Routing.IOutboundParameterTransformer">
+            <summary>
+            Defines the contract that a class must implement to transform route values while building
+            a URI.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.IOutboundParameterTransformer.TransformOutbound(System.Object)">
+            <summary>
+            Transforms the specified route value to a string for inclusion in a URI.
+            </summary>
+            <param name="value">The route value to transform.</param>
+            <returns>The transformed value.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.IParameterPolicy">
+            <summary>
+            A marker interface for types that are associated with route parameters.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.IRouteConstraint">
+            <summary>
+            Defines the contract that a class must implement in order to check whether a URL parameter
+            value is valid for a constraint.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.IRouteConstraint.Match(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Routing.IRouter,System.String,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Routing.RouteDirection)">
+            <summary>
+            Determines whether the URL parameter contains a valid value for this constraint.
+            </summary>
+            <param name="httpContext">An object that encapsulates information about the HTTP request.</param>
+            <param name="route">The router that this constraint belongs to.</param>
+            <param name="routeKey">The name of the parameter that is being checked.</param>
+            <param name="values">A dictionary that contains the parameters for the URL.</param>
+            <param name="routeDirection">
+            An object that indicates whether the constraint check is being performed
+            when an incoming request is being handled or when a URL is being generated.
+            </param>
+            <returns><c>true</c> if the URL parameter contains a valid value; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.IRouteHandler">
+            <summary>
+            Defines a contract for a handler of a route.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.IRouteHandler.GetRequestHandler(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Routing.RouteData)">
+            <summary>
+            Gets a <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> to handle the request, based on the provided
+            <paramref name="routeData"/>.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <param name="routeData">The <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> associated with the current routing match.</param>
+            <returns>
+            A <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/>, or <c>null</c> if the handler cannot handle this request.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.IRouter">
+            <summary>
+            Interface for implementing a router.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.IRouter.RouteAsync(Microsoft.AspNetCore.Routing.RouteContext)">
+            <summary>
+            Asynchronously routes based on the current <paramref name="context"/>.
+            </summary>
+            <param name="context">A <see cref="T:Microsoft.AspNetCore.Routing.RouteContext"/> instance.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.IRouter.GetVirtualPath(Microsoft.AspNetCore.Routing.VirtualPathContext)">
+            <summary>
+            Returns the URL that is associated with the route details provided in <paramref name="context"/>
+            </summary>
+            <param name="context">A <see cref="T:Microsoft.AspNetCore.Routing.VirtualPathContext"/> instance.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Routing.VirtualPathData"/> object. Can be null.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.IRoutingFeature">
+            <summary>
+            A feature interface for routing functionality.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.IRoutingFeature.RouteData">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> associated with the current request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.LinkGenerator">
+            <summary>
+            Defines a contract to generate absolute and related URIs based on endpoint routing.
+            </summary>
+            <remarks>
+            <para>
+            Generating URIs in endpoint routing occurs in two phases. First, an address is bound to a list of
+            endpoints that match the address. Secondly, each endpoint's <c>RoutePattern</c> is evaluated, until
+            a route pattern that matches the supplied values is found. The resulting output is combined with
+            the other URI parts supplied to the link generator and returned.
+            </para>
+            <para>
+            The methods provided by the <see cref="T:Microsoft.AspNetCore.Routing.LinkGenerator"/> type are general infrastructure, and support
+            the standard link generator functionality for any type of address. The most convenient way to use
+            <see cref="T:Microsoft.AspNetCore.Routing.LinkGenerator"/> is through extension methods that perform operations for a specific
+            address type.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.LinkGenerator.GetPathByAddress``1(Microsoft.AspNetCore.Http.HttpContext,``0,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Routing.RouteValueDictionary,System.Nullable{Microsoft.AspNetCore.Http.PathString},Microsoft.AspNetCore.Http.FragmentString,Microsoft.AspNetCore.Routing.LinkOptions)">
+            <summary>
+            Generates a URI with an absolute path based on the provided values and <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.
+            </summary>
+            <typeparam name="TAddress">The address type.</typeparam>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <param name="address">The address value. Used to resolve endpoints.</param>
+            <param name="values">The route values. Used to expand parameters in the route template.</param>
+            <param name="ambientValues">The values associated with the current request. Optional.</param>
+            <param name="pathBase">
+            An optional URI path base. Prepended to the path in the resulting URI. If not provided, the value of <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.PathBase"/> will be used.
+            </param>
+            <param name="fragment">An optional URI fragment. Appended to the resulting URI.</param>
+            <param name="options">
+            An optional <see cref="T:Microsoft.AspNetCore.Routing.LinkOptions"/>. Settings on provided object override the settings with matching
+            names from <c>RouteOptions</c>.
+            </param>
+            <returns>A URI with an absolute path, or <c>null</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.LinkGenerator.GetPathByAddress``1(``0,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Http.PathString,Microsoft.AspNetCore.Http.FragmentString,Microsoft.AspNetCore.Routing.LinkOptions)">
+            <summary>
+            Generates a URI with an absolute path based on the provided values.
+            </summary>
+            <typeparam name="TAddress">The address type.</typeparam>
+            <param name="address">The address value. Used to resolve endpoints.</param>
+            <param name="values">The route values. Used to expand parameters in the route template.</param>
+            <param name="pathBase">An optional URI path base. Prepended to the path in the resulting URI.</param>
+            <param name="fragment">An optional URI fragment. Appended to the resulting URI.</param>
+            <param name="options">
+            An optional <see cref="T:Microsoft.AspNetCore.Routing.LinkOptions"/>. Settings on provided object override the settings with matching
+            names from <c>RouteOptions</c>.
+            </param>
+            <returns>A URI with an absolute path, or <c>null</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.LinkGenerator.GetUriByAddress``1(Microsoft.AspNetCore.Http.HttpContext,``0,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Routing.RouteValueDictionary,System.String,System.Nullable{Microsoft.AspNetCore.Http.HostString},System.Nullable{Microsoft.AspNetCore.Http.PathString},Microsoft.AspNetCore.Http.FragmentString,Microsoft.AspNetCore.Routing.LinkOptions)">
+            <summary>
+            Generates an absolute URI based on the provided values and <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.
+            </summary>
+            <typeparam name="TAddress">The address type.</typeparam>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <param name="address">The address value. Used to resolve endpoints.</param>
+            <param name="values">The route values. Used to expand parameters in the route template.</param>
+            <param name="ambientValues">The values associated with the current request. Optional.</param>
+            <param name="scheme">
+            The URI scheme, applied to the resulting URI. Optional. If not provided, the value of <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Scheme"/> will be used.
+            </param>
+            <param name="host">
+            The URI host/authority, applied to the resulting URI. Optional. If not provided, the value <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Host"/> will be used.
+            See the remarks section for details about the security implications of the <paramref name="host"/>.
+            </param>
+            <param name="pathBase">
+            An optional URI path base. Prepended to the path in the resulting URI. If not provided, the value of <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.PathBase"/> will be used.
+            </param>
+            <param name="fragment">An optional URI fragment. Appended to the resulting URI.</param>
+            <param name="options">
+            An optional <see cref="T:Microsoft.AspNetCore.Routing.LinkOptions"/>. Settings on provided object override the settings with matching
+            names from <c>RouteOptions</c>.
+            </param>
+            <returns>A URI with an absolute path, or <c>null</c>.</returns>
+            <remarks>
+            <para>
+            The value of <paramref name="host" /> should be a trusted value. Relying on the value of the current request
+            can allow untrusted input to influence the resulting URI unless the <c>Host</c> header has been validated.
+            See the deployment documentation for instructions on how to properly validate the <c>Host</c> header in
+            your deployment environment.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.LinkGenerator.GetUriByAddress``1(``0,Microsoft.AspNetCore.Routing.RouteValueDictionary,System.String,Microsoft.AspNetCore.Http.HostString,Microsoft.AspNetCore.Http.PathString,Microsoft.AspNetCore.Http.FragmentString,Microsoft.AspNetCore.Routing.LinkOptions)">
+            <summary>
+            Generates an absolute URI based on the provided values.
+            </summary>
+            <typeparam name="TAddress">The address type.</typeparam>
+            <param name="address">The address value. Used to resolve endpoints.</param>
+            <param name="values">The route values. Used to expand parameters in the route template.</param>
+            <param name="scheme">The URI scheme, applied to the resulting URI.</param>
+            <param name="host">
+            The URI host/authority, applied to the resulting URI.
+            See the remarks section for details about the security implications of the <paramref name="host"/>.
+            </param>
+            <param name="pathBase">An optional URI path base. Prepended to the path in the resulting URI.</param>
+            <param name="fragment">An optional URI fragment. Appended to the resulting URI.</param>
+            <param name="options">
+            An optional <see cref="T:Microsoft.AspNetCore.Routing.LinkOptions"/>. Settings on provided object override the settings with matching
+            names from <c>RouteOptions</c>.
+            </param>
+            <returns>An absolute URI, or <c>null</c>.</returns>
+            <remarks>
+            <para>
+            The value of <paramref name="host" /> should be a trusted value. Relying on the value of the current request
+            can allow untrusted input to influence the resulting URI unless the <c>Host</c> header has been validated.
+            See the deployment documentation for instructions on how to properly validate the <c>Host</c> header in
+            your deployment environment.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.LinkOptions">
+            <summary>
+            Configures options for generated URLs.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.LinkOptions.LowercaseUrls">
+            <summary>
+            Gets or sets a value indicating whether all generated paths URLs are lowercase.
+            Use <see cref="P:Microsoft.AspNetCore.Routing.LinkOptions.LowercaseQueryStrings" /> to configure the behavior for query strings.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.LinkOptions.LowercaseQueryStrings">
+            <summary>
+            Gets or sets a value indicating whether a generated query strings are lowercase.
+            This property will be false unless <see cref="P:Microsoft.AspNetCore.Routing.LinkOptions.LowercaseUrls" /> is also <c>true</c>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.LinkOptions.AppendTrailingSlash">
+            <summary>
+            Gets or sets a value indicating whether a trailing slash should be appended to the generated URLs.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.RouteContext">
+            <summary>
+            A context object for <see cref="M:Microsoft.AspNetCore.Routing.IRouter.RouteAsync(Microsoft.AspNetCore.Routing.RouteContext)"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.RouteContext.#ctor(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Routing.RouteContext"/> for the provided <paramref name="httpContext"/>.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.RouteContext.Handler">
+            <summary>
+            Gets or sets the handler for the request. An <see cref="T:Microsoft.AspNetCore.Routing.IRouter"/> should set <see cref="P:Microsoft.AspNetCore.Routing.RouteContext.Handler"/>
+            when it matches.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.RouteContext.HttpContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.RouteContext.RouteData">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> associated with the current context.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.RouteData">
+            <summary>
+            Information about the current routing path.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.RouteData.#ctor">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.RouteData.#ctor(Microsoft.AspNetCore.Routing.RouteData)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> instance with values copied from <paramref name="other"/>.
+            </summary>
+            <param name="other">The other <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> instance to copy.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.RouteData.#ctor(Microsoft.AspNetCore.Routing.RouteValueDictionary)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> instance with the specified values.
+            </summary>
+            <param name="values">The <see cref="T:Microsoft.AspNetCore.Routing.RouteValueDictionary"/> values.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.RouteData.DataTokens">
+            <summary>
+            Gets the data tokens produced by routes on the current routing path.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.RouteData.Routers">
+            <summary>
+            Gets the list of <see cref="T:Microsoft.AspNetCore.Routing.IRouter"/> instances on the current routing path.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.RouteData.Values">
+            <summary>
+            Gets the values produced by routes on the current routing path.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.RouteData.PushState(Microsoft.AspNetCore.Routing.IRouter,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Routing.RouteValueDictionary)">
+            <summary>
+            <para>
+            Creates a snapshot of the current state of the <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> before appending
+            <paramref name="router"/> to <see cref="P:Microsoft.AspNetCore.Routing.RouteData.Routers"/>, merging <paramref name="values"/> into
+            <see cref="P:Microsoft.AspNetCore.Routing.RouteData.Values"/>, and merging <paramref name="dataTokens"/> into <see cref="P:Microsoft.AspNetCore.Routing.RouteData.DataTokens"/>.
+            </para>
+            <para>
+            Call <see cref="M:Microsoft.AspNetCore.Routing.RouteData.RouteDataSnapshot.Restore"/> to restore the state of this <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/>
+            to the state at the time of calling
+            <see cref="M:Microsoft.AspNetCore.Routing.RouteData.PushState(Microsoft.AspNetCore.Routing.IRouter,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Routing.RouteValueDictionary)"/>.
+            </para>
+            </summary>
+            <param name="router">
+            An <see cref="T:Microsoft.AspNetCore.Routing.IRouter"/> to append to <see cref="P:Microsoft.AspNetCore.Routing.RouteData.Routers"/>. If <c>null</c>, then <see cref="P:Microsoft.AspNetCore.Routing.RouteData.Routers"/>
+            will not be changed.
+            </param>
+            <param name="values">
+            A <see cref="T:Microsoft.AspNetCore.Routing.RouteValueDictionary"/> to merge into <see cref="P:Microsoft.AspNetCore.Routing.RouteData.Values"/>. If <c>null</c>, then
+            <see cref="P:Microsoft.AspNetCore.Routing.RouteData.Values"/> will not be changed.
+            </param>
+            <param name="dataTokens">
+            A <see cref="T:Microsoft.AspNetCore.Routing.RouteValueDictionary"/> to merge into <see cref="P:Microsoft.AspNetCore.Routing.RouteData.DataTokens"/>. If <c>null</c>, then
+            <see cref="P:Microsoft.AspNetCore.Routing.RouteData.DataTokens"/> will not be changed.
+            </param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Routing.RouteData.RouteDataSnapshot"/> that captures the current state.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.RouteData.RouteDataSnapshot">
+            <summary>
+            A snapshot of the state of a <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.RouteData.RouteDataSnapshot.#ctor(Microsoft.AspNetCore.Routing.RouteData,Microsoft.AspNetCore.Routing.RouteValueDictionary,System.Collections.Generic.IList{Microsoft.AspNetCore.Routing.IRouter},Microsoft.AspNetCore.Routing.RouteValueDictionary)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Routing.RouteData.RouteDataSnapshot"/> for <paramref name="routeData"/>.
+            </summary>
+            <param name="routeData">The <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/>.</param>
+            <param name="dataTokens">The data tokens.</param>
+            <param name="routers">The routers.</param>
+            <param name="values">The route values.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.RouteData.RouteDataSnapshot.Restore">
+            <summary>
+            Restores the <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> to the captured state.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.RouteDirection">
+            <summary>
+            Indicates whether ASP.NET routing is processing a URL from an HTTP request or generating a URL.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Routing.RouteDirection.IncomingRequest">
+            <summary>
+            A URL from a client is being processed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Routing.RouteDirection.UrlGeneration">
+            <summary>
+            A URL is being created based on the route definition.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.RoutingHttpContextExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> related to routing.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.RoutingHttpContextExtensions.GetRouteData(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/> associated with the provided <paramref name="httpContext"/>.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Routing.RouteData"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.RoutingHttpContextExtensions.GetRouteValue(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>
+            Gets a route value from <see cref="P:Microsoft.AspNetCore.Routing.RouteData.Values"/> associated with the provided
+            <paramref name="httpContext"/>.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <param name="key">The key of the route value.</param>
+            <returns>The corresponding route value, or null.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.VirtualPathContext">
+            <summary>
+            A context for virtual path generation operations.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.VirtualPathContext.#ctor(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Routing.RouteValueDictionary)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Routing.VirtualPathContext"/>.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <param name="ambientValues">The set of route values associated with the current request.</param>
+            <param name="values">The set of new values provided for virtual path generation.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.VirtualPathContext.#ctor(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Routing.RouteValueDictionary,Microsoft.AspNetCore.Routing.RouteValueDictionary,System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Routing.VirtualPathContext"/>.
+            </summary>
+            <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.</param>
+            <param name="ambientValues">The set of route values associated with the current request.</param>
+            <param name="values">The set of new values provided for virtual path generation.</param>
+            <param name="routeName">The name of the route to use for virtual path generation.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.VirtualPathContext.AmbientValues">
+            <summary>
+            Gets the set of route values associated with the current request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.VirtualPathContext.HttpContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> associated with the current request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.VirtualPathContext.RouteName">
+            <summary>
+            Gets the name of the route to use for virtual path generation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.VirtualPathContext.Values">
+            <summary>
+            Gets or sets the set of new values provided for virtual path generation.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Routing.VirtualPathData">
+            <summary>
+            Represents information about the route and virtual path that are the result of
+            generating a URL with the ASP.NET routing middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.VirtualPathData.#ctor(Microsoft.AspNetCore.Routing.IRouter,System.String)">
+            <summary>
+             Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Routing.VirtualPathData"/> class.
+            </summary>
+            <param name="router">The object that is used to generate the URL.</param>
+            <param name="virtualPath">The generated URL.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Routing.VirtualPathData.#ctor(Microsoft.AspNetCore.Routing.IRouter,System.String,Microsoft.AspNetCore.Routing.RouteValueDictionary)">
+            <summary>
+             Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Routing.VirtualPathData"/> class.
+            </summary>
+            <param name="router">The object that is used to generate the URL.</param>
+            <param name="virtualPath">The generated URL.</param>
+            <param name="dataTokens">The collection of custom values.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.VirtualPathData.DataTokens">
+            <summary>
+            Gets the collection of custom values for the <see cref="P:Microsoft.AspNetCore.Routing.VirtualPathData.Router"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.VirtualPathData.Router">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Routing.IRouter"/> that was used to generate the URL.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Routing.VirtualPathData.VirtualPath">
+            <summary>
+            Gets or sets the URL that was generated from the <see cref="P:Microsoft.AspNetCore.Routing.VirtualPathData.Router"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.#ctor(System.Reflection.PropertyInfo)">
+            <summary>
+            Initializes a fast <see cref="T:Microsoft.Extensions.Internal.PropertyHelper"/>.
+            This constructor does not cache the helper. For caching, use <see cref="M:Microsoft.Extensions.Internal.PropertyHelper.GetProperties(System.Type)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.PropertyHelper.Property">
+            <summary>
+            Gets the backing <see cref="T:System.Reflection.PropertyInfo"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.PropertyHelper.Name">
+            <summary>
+            Gets (or sets in derived types) the property name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.PropertyHelper.ValueGetter">
+            <summary>
+            Gets the property value getter.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Internal.PropertyHelper.ValueSetter">
+            <summary>
+            Gets the property value setter.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetValue(System.Object)">
+            <summary>
+            Returns the property value for the specified <paramref name="instance"/>.
+            </summary>
+            <param name="instance">The object whose property value will be returned.</param>
+            <returns>The property value.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.SetValue(System.Object,System.Object)">
+            <summary>
+            Sets the property value for the specified <paramref name="instance" />.
+            </summary>
+            <param name="instance">The object whose property value will be set.</param>
+            <param name="value">The property value.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetProperties(System.Type)">
+            <summary>
+            Creates and caches fast property helpers that expose getters for every public get property on the
+            specified type.
+            </summary>
+            <param name="type">The type to extract property accessors for.</param>
+            <returns>A cached array of all public properties of the specified type.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetVisibleProperties(System.Type)">
+            <summary>
+            <para>
+            Creates and caches fast property helpers that expose getters for every non-hidden get property
+            on the specified type.
+            </para>
+            <para>
+            <see cref="M:GetVisibleProperties"/> excludes properties defined on base types that have been
+            hidden by definitions using the <c>new</c> keyword.
+            </para>
+            </summary>
+            <param name="type">The type to extract property accessors for.</param>
+            <returns>
+            A cached array of all public properties of the specified type.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.MakeFastPropertyGetter(System.Reflection.PropertyInfo)">
+            <summary>
+            Creates a single fast property getter. The result is not cached.
+            </summary>
+            <param name="propertyInfo">propertyInfo to extract the getter for.</param>
+            <returns>a fast getter.</returns>
+            <remarks>
+            This method is more memory efficient than a dynamically compiled lambda, and about the
+            same speed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.MakeNullSafeFastPropertyGetter(System.Reflection.PropertyInfo)">
+            <summary>
+            Creates a single fast property getter which is safe for a null input object. The result is not cached.
+            </summary>
+            <param name="propertyInfo">propertyInfo to extract the getter for.</param>
+            <returns>a fast getter.</returns>
+            <remarks>
+            This method is more memory efficient than a dynamically compiled lambda, and about the
+            same speed.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.MakeFastPropertySetter(System.Reflection.PropertyInfo)">
+            <summary>
+            Creates a single fast property setter for reference types. The result is not cached.
+            </summary>
+            <param name="propertyInfo">propertyInfo to extract the setter for.</param>
+            <returns>a fast getter.</returns>
+            <remarks>
+            This method is more memory efficient than a dynamically compiled lambda, and about the
+            same speed. This only works for reference types.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.ObjectToDictionary(System.Object)">
+             <summary>
+             Given an object, adds each instance property with a public get method as a key and its
+             associated value to a dictionary.
+            
+             If the object is already an <see cref="T:System.Collections.Generic.IDictionary`2"/> instance, then a copy
+             is returned.
+             </summary>
+             <remarks>
+             The implementation of PropertyHelper will cache the property accessors per-type. This is
+             faster when the same type is used multiple times with ObjectToDictionary.
+             </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetVisibleProperties(System.Type,System.Collections.Concurrent.ConcurrentDictionary{System.Type,Microsoft.Extensions.Internal.PropertyHelper[]},System.Collections.Concurrent.ConcurrentDictionary{System.Type,Microsoft.Extensions.Internal.PropertyHelper[]})">
+            <summary>
+            <para>
+            Creates and caches fast property helpers that expose getters for every non-hidden get property
+            on the specified type.
+            </para>
+            <para>
+            <see cref="M:GetVisibleProperties"/> excludes properties defined on base types that have been
+            hidden by definitions using the <c>new</c> keyword.
+            </para>
+            </summary>
+            <param name="type">The type to extract property accessors for.</param>
+            <param name="allPropertiesCache">The cache to store results in. Use <see cref="F:Microsoft.Extensions.Internal.PropertyHelper.PropertiesCache"/> to use the default cache. Use <see langword="null"/> to avoid caching.</param>
+            <param name="visiblePropertiesCache">The cache to store results in. Use <see cref="F:Microsoft.Extensions.Internal.PropertyHelper.VisiblePropertiesCache"/> if the calling type does not have its own independent cache. Use <see langword="null"/> to avoid caching.</param>
+            <returns>
+            A cached array of all public properties of the specified type.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.GetProperties(System.Type,System.Collections.Concurrent.ConcurrentDictionary{System.Type,Microsoft.Extensions.Internal.PropertyHelper[]})">
+            <summary>
+            Creates and caches fast property helpers that expose getters for every public get property on the
+            specified type.
+            </summary>
+            <param name="type">The type to extract property accessors for.</param>
+            <param name="cache">The cache to store results in. Use <see cref="F:Microsoft.Extensions.Internal.PropertyHelper.PropertiesCache"/> to use the default cache. Use <see langword="null"/> to avoid caching.</param>
+            <returns>A cached array of all public properties of the specified type.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.PropertyHelper.MetadataUpdateHandler.ClearCache(System.Type[])">
+            <summary>
+            Invoked as part of <see cref="T:System.Reflection.Metadata.MetadataUpdateHandlerAttribute" /> contract for hot reload.
+            </summary>
+        </member>
+    </members>
+</doc>

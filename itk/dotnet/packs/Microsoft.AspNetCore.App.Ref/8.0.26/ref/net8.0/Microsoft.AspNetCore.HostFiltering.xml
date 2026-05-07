@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.HostFiltering</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Builder.HostFilteringBuilderExtensions">
+            <summary>
+            Extension methods for the HostFiltering middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HostFilteringBuilderExtensions.UseHostFiltering(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds middleware for filtering requests by allowed host headers. Invalid requests will be rejected with a
+            400 status code.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> instance this method extends.</param>
+            <returns>The original <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.HostFilteringServicesExtensions">
+            <summary>
+            Extension methods for the host filtering middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HostFilteringServicesExtensions.AddHostFiltering(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.HostFiltering.HostFilteringOptions})">
+            <summary>
+            Adds services and options for the host filtering middleware.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configureOptions">A delegate to configure the <see cref="T:Microsoft.AspNetCore.HostFiltering.HostFilteringOptions"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HostFiltering.HostFilteringMiddleware">
+            <summary>
+            A middleware used to filter requests by their Host header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HostFiltering.HostFilteringMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{Microsoft.AspNetCore.HostFiltering.HostFilteringMiddleware},Microsoft.Extensions.Options.IOptionsMonitor{Microsoft.AspNetCore.HostFiltering.HostFilteringOptions})">
+            <summary>
+            A middleware used to filter requests by their Host header.
+            </summary>
+            <param name="next"></param>
+            <param name="logger"></param>
+            <param name="optionsMonitor"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HostFiltering.HostFilteringMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Processes requests
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HostFiltering.HostFilteringOptions">
+            <summary>
+            Options for the HostFiltering middleware
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HostFiltering.HostFilteringOptions.AllowedHosts">
+            <summary>
+            The hosts headers that are allowed to access this site. At least one value is required.
+            </summary>
+            <remarks>
+            <list type="bullet">
+            <item><description>Port numbers must be excluded.</description></item>
+            <item><description>A top level wildcard "*" allows all non-empty hosts.</description></item>
+            <item><description>Subdomain wildcards are permitted. E.g. "*.example.com" matches subdomains like foo.example.com,
+               but not the parent domain example.com.</description></item>
+            <item><description>Unicode host names are allowed but will be converted to punycode for matching.</description></item>
+            <item><description>IPv6 addresses must include their bounding brackets and be in their normalized form.</description></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HostFiltering.HostFilteringOptions.AllowEmptyHosts">
+            <summary>
+            Indicates if requests without hosts are allowed. The default is true.
+            </summary>
+            <remarks>
+            HTTP/1.0 does not require a host header.
+            Http/1.1 requires a host header, but says the value may be empty.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HostFiltering.HostFilteringOptions.IncludeFailureMessage">
+            <summary>
+            Indicates if the 400 response should include a default message or be empty. This is enabled by default.
+            </summary>
+        </member>
+    </members>
+</doc>

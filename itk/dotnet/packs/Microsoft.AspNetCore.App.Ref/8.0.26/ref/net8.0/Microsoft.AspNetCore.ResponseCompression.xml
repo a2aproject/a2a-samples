@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.ResponseCompression</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider">
+            <summary>
+            Brotli compression provider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProviderOptions})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider"/> with options.
+            </summary>
+            <param name="options">The options for this instance.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider.EncodingName">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider.SupportsFlush">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider.CreateStream(System.IO.Stream)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProviderOptions">
+            <summary>
+            Options for the <see cref="T:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProvider"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProviderOptions.Level">
+            <summary>
+            What level of compression to use for the stream. The default is <see cref="F:System.IO.Compression.CompressionLevel.Fastest"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.BrotliCompressionProviderOptions.Microsoft#Extensions#Options#IOptions{Microsoft#AspNetCore#ResponseCompression#BrotliCompressionProviderOptions}#Value">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.CompressionProviderCollection">
+            <summary>
+            A Collection of ICompressionProvider's that also allows them to be instantiated from an <see cref="T:System.IServiceProvider" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.CompressionProviderCollection.Add``1">
+            <summary>
+            Adds a type representing an <see cref="T:Microsoft.AspNetCore.ResponseCompression.ICompressionProvider"/>.
+            </summary>
+            <remarks>
+            Provider instances will be created using an <see cref="T:System.IServiceProvider" />.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.CompressionProviderCollection.Add(System.Type)">
+            <summary>
+            Adds a type representing an <see cref="T:Microsoft.AspNetCore.ResponseCompression.ICompressionProvider"/>.
+            </summary>
+            <param name="providerType">Type representing an <see cref="T:Microsoft.AspNetCore.ResponseCompression.ICompressionProvider"/>.</param>
+            <remarks>
+            Provider instances will be created using an <see cref="T:System.IServiceProvider" />.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.CompressionProviderFactory">
+            <summary>
+            This is a placeholder for the CompressionProviderCollection that allows creating the given type via
+            an <see cref="T:System.IServiceProvider" />.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider">
+            <summary>
+            GZIP compression provider.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.ResponseCompression.GzipCompressionProviderOptions})">
+            <summary>
+            Creates a new instance of GzipCompressionProvider with options.
+            </summary>
+            <param name="options">The options for this instance.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider.EncodingName">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider.SupportsFlush">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider.CreateStream(System.IO.Stream)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.GzipCompressionProviderOptions">
+            <summary>
+            Options for the GzipCompressionProvider
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.GzipCompressionProviderOptions.Level">
+            <summary>
+            What level of compression to use for the stream. The default is Fastest.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.GzipCompressionProviderOptions.Microsoft#Extensions#Options#IOptions{Microsoft#AspNetCore#ResponseCompression#GzipCompressionProviderOptions}#Value">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.ICompressionProvider">
+            <summary>
+            Provides a specific compression implementation to compress HTTP responses.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.ICompressionProvider.EncodingName">
+            <summary>
+            The encoding name used in the 'Accept-Encoding' request header and 'Content-Encoding' response header.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.ICompressionProvider.SupportsFlush">
+            <summary>
+            Indicates if the given provider supports Flush and FlushAsync. If not, compression may be disabled in some scenarios.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.ICompressionProvider.CreateStream(System.IO.Stream)">
+            <summary>
+            Create a new compression stream.
+            </summary>
+            <param name="outputStream">The stream where the compressed data have to be written.</param>
+            <returns>The compression stream.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.IResponseCompressionProvider">
+            <summary>
+            Used to examine requests and responses to see if compression should be enabled.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.IResponseCompressionProvider.GetCompressionProvider(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Examines the request and selects an acceptable compression provider, if any.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns>A compression provider or null if compression should not be used.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.IResponseCompressionProvider.ShouldCompressResponse(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Examines the response on first write to see if compression should be used.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns><see langword="true" /> if the response should be compressed, otherwise <see langword="false" />.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.IResponseCompressionProvider.CheckRequestAcceptsCompression(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Examines the request to see if compression should be used for response.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns><see langword="true" /> if the request accepts compression, otherwise <see langword="false" />.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionBody">
+            <summary>
+            Stream wrapper that create specific compression stream only if necessary.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionBody.InitializeCompressionHeaders">
+            <summary>
+            Checks if the response should be compressed and sets the response headers.
+            </summary>
+            <returns>The compression provider to use if compression is enabled, otherwise null.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionDefaults">
+            <summary>
+            Defaults for the ResponseCompressionMiddleware
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionDefaults.MimeTypes">
+            <summary>
+            Default MIME types to compress responses for.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionMiddleware">
+            <summary>
+            Enable HTTP response compression.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.ResponseCompression.IResponseCompressionProvider)">
+            <summary>
+            Initialize the Response Compression middleware.
+            </summary>
+            <param name="next">The delegate representing the remaining middleware in the request pipeline.</param>
+            <param name="provider">The <see cref="T:Microsoft.AspNetCore.ResponseCompression.IResponseCompressionProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invoke the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns>A task that represents the execution of this middleware.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionOptions">
+            <summary>
+            Options for the HTTP response compression middleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionOptions.MimeTypes">
+            <summary>
+            Response Content-Type MIME types to compress.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionOptions.ExcludedMimeTypes">
+            <summary>
+            Response Content-Type MIME types to not compress.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionOptions.EnableForHttps">
+            <summary>
+            Indicates if responses over HTTPS connections should be compressed. The default is 'false'.
+            Enabling compression on HTTPS requests for remotely manipulable content may expose security problems.
+            </summary>
+            <remarks>
+            This can be overridden per request using <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpsCompressionFeature"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionOptions.Providers">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.ResponseCompression.ICompressionProvider"/> types to use for responses.
+            Providers are prioritized based on the order they are added.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionProvider">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionProvider.#ctor(System.IServiceProvider,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.ResponseCompression.ResponseCompressionOptions})">
+            <summary>
+            If no compression providers are specified then GZip is used by default.
+            </summary>
+            <param name="services">Services to use when instantiating compression providers.</param>
+            <param name="options">The options for this instance.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionProvider.GetCompressionProvider(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionProvider.ShouldCompressResponse(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionProvider.CheckRequestAcceptsCompression(Microsoft.AspNetCore.Http.HttpContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ResponseCompressionBuilderExtensions">
+            <summary>
+            Extension methods for the ResponseCompression middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ResponseCompressionBuilderExtensions.UseResponseCompression(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds middleware for dynamically compressing HTTP Responses.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> instance this method extends.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ResponseCompressionServicesExtensions">
+            <summary>
+            Extension methods for the ResponseCompression middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ResponseCompressionServicesExtensions.AddResponseCompression(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add response compression services.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ResponseCompressionServicesExtensions.AddResponseCompression(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.ResponseCompression.ResponseCompressionOptions})">
+            <summary>
+            Add response compression services and configure the related options.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configureOptions">A delegate to configure the <see cref="T:Microsoft.AspNetCore.ResponseCompression.ResponseCompressionOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm">
+            <summary>
+            Provides support for efficiently using Tasks to implement the APM (Begin/End) pattern.
+            </summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.Begin(System.Threading.Tasks.Task,System.AsyncCallback,System.Object)">
+            <summary>
+            Marshals the Task as an IAsyncResult, using the supplied callback and state
+            to implement the APM pattern.
+            </summary>
+            <param name="task">The Task to be marshaled.</param>
+            <param name="callback">The callback to be invoked upon completion.</param>
+            <param name="state">The state to be stored in the IAsyncResult.</param>
+            <returns>An IAsyncResult to represent the task's asynchronous operation.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End``1(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm.TaskAsyncResult">
+            <summary>Provides a simple IAsyncResult that wraps a Task.</summary>
+            <remarks>
+            We could use the Task as the IAsyncResult if the Task's AsyncState is the same as the object state,
+            but that's very rare, in particular in a situation where someone cares about allocation, and always
+            using TaskAsyncResult simplifies things and enables additional optimizations.
+            </remarks>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task">
+            <summary>The wrapped Task.</summary>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._callback">
+            <summary>Callback to invoke when the wrapped task completes.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.#ctor(System.Threading.Tasks.Task,System.Object,System.AsyncCallback)">
+            <summary>Initializes the IAsyncResult with the Task to wrap and the associated object state.</summary>
+            <param name="task">The Task to wrap.</param>
+            <param name="state">The new AsyncState value.</param>
+            <param name="callback">Callback to invoke when the wrapped task completes.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.InvokeCallback">
+            <summary>Invokes the callback.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncState">
+            <summary>Gets a user-defined object that qualifies or contains information about an asynchronous operation.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.CompletedSynchronously">
+            <summary>Gets a value that indicates whether the asynchronous operation completed synchronously.</summary>
+            <remarks>This is set lazily based on whether the <see cref="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task"/> has completed by the time this object is created.</remarks>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.IsCompleted">
+            <summary>Gets a value that indicates whether the asynchronous operation has completed.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncWaitHandle">
+            <summary>Gets a <see cref="T:System.Threading.WaitHandle"/> that is used to wait for an asynchronous operation to complete.</summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,1956 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Mvc.Razor</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyApplicationPartFactory">
+            <summary>
+            Configures an assembly as a <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyPart"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyApplicationPartFactory.GetDefaultApplicationParts(System.Reflection.Assembly)">
+            <summary>
+            Gets the sequence of <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart"/> instances that are created by this instance of <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.DefaultApplicationPartFactory"/>.
+            <para>
+            Applications may use this method to get the same behavior as this factory produces during MVC's default part discovery.
+            </para>
+            </summary>
+            <param name="assembly">The <see cref="T:System.Reflection.Assembly"/>.</param>
+            <returns>The sequence of <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart"/> instances.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyApplicationPartFactory.GetApplicationParts(System.Reflection.Assembly)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyPart">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart"/> for compiled Razor assemblies.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyPart.#ctor(System.Reflection.Assembly)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyPart"/>.
+            </summary>
+            <param name="assembly">The <see cref="T:System.Reflection.Assembly"/></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyPart.Assembly">
+            <summary>
+            Gets the <see cref="T:System.Reflection.Assembly"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyPart.Name">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ConsolidatedAssemblyApplicationPartFactory">
+            <summary>
+            Configures an <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart" /> that contains controllers, as well as Razor views and Pages.
+            <para>
+            Combines the results of <see cref="M:Microsoft.AspNetCore.Mvc.ApplicationParts.DefaultApplicationPartFactory.GetApplicationParts(System.Reflection.Assembly)"/> and
+            <see cref="M:Microsoft.AspNetCore.Mvc.ApplicationParts.CompiledRazorAssemblyApplicationPartFactory.GetApplicationParts(System.Reflection.Assembly)"/>. This part factory
+            may be used if Razor views or Razor Pages are compiled in to with other types including controllers.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.ApplicationParts.ConsolidatedAssemblyApplicationPartFactory.GetApplicationParts(System.Reflection.Assembly)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.ApplicationParts.IRazorCompiledItemProvider">
+            <summary>
+            Exposes one or more <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/> instances from an <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.ApplicationParts.IRazorCompiledItemProvider.CompiledItems">
+            <summary>
+            Gets a sequence of <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/> instances.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor">
+            <summary>
+            Represents a compiled Razor View or Page.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor.#ctor">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor.#ctor(Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor"/>.
+            </summary>
+            <param name="item">The <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor.#ctor(Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem,Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor"/>. At least one of <paramref name="attribute"/> or
+            <paramref name="item"/> must be non-<c>null</c>.
+            </summary>
+            <param name="item">The <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/>.</param>
+            <param name="attribute">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor.RelativePath">
+            <summary>
+            The normalized application relative path of the view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor.ViewAttribute">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute"/> decorating the view.
+            </summary>
+            <remarks>
+            May be <c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor.ExpirationTokens">
+            <summary>
+            <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> instances that indicate when this result has expired.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor.Item">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Razor.Hosting.RazorCompiledItem"/> descriptor for this view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor.Type">
+            <summary>
+            Gets the type of the compiled item.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.DefaultRazorPageFactoryProvider">
+            <summary>
+            Represents a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPageFactoryProvider"/> that creates <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPage"/> instances
+            from razor files in the file system.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Compilation.DefaultRazorPageFactoryProvider.#ctor(Microsoft.AspNetCore.Mvc.Razor.Compilation.IViewCompilerProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.DefaultRazorPageFactoryProvider"/>.
+            </summary>
+            <param name="viewCompilerProvider">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.IViewCompilerProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Compilation.DefaultRazorPageFactoryProvider.CreateFactory(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.DefaultViewCompiler">
+            <summary>
+            Caches the result of runtime compilation of Razor files for the duration of the application lifetime.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Compilation.DefaultViewCompiler.CompileAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.IViewCompiler">
+            <summary>
+            Represents a view compiler.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Compilation.IViewCompiler.CompileAsync(System.String)">
+            <summary>
+            Compile a view at the specified path.
+            </summary>
+            <param name="relativePath">The relative path to the view.</param>
+            <returns>A <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.IViewCompilerProvider">
+            <summary>
+            Provides a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.IViewCompiler"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Compilation.IViewCompilerProvider.GetCompiler">
+            <summary>
+            Gets a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.IViewCompiler"/>.
+            </summary>
+            <returns>The view compiler.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute">
+            <summary>
+            This class is replaced by RazorCompiledItem and will not be used by the runtime.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute.#ctor(System.String,System.Type)">
+            <summary>
+            This class is replaced by RazorCompiledItem and will not be used by the runtime.
+            </summary>
+            <param name="path">The path.</param>
+            <param name="viewType">The viewtype.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute.Path">
+            <summary>
+            Gets the path of the view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Compilation.RazorViewAttribute.ViewType">
+            <summary>
+            Gets the view type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.ViewsFeature">
+            <summary>
+            A feature that contains view descriptors.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Compilation.ViewsFeature.ViewDescriptors">
+            <summary>
+            A list of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.DefaultTagHelperFactory">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ITagHelperFactory"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.DefaultTagHelperFactory.#ctor(Microsoft.AspNetCore.Mvc.Razor.ITagHelperActivator)">
+            <summary>
+            Initializes a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.DefaultTagHelperFactory"/> instance.
+            </summary>
+            <param name="activator">
+            The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ITagHelperActivator"/> used to create tag helper instances.
+            </param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.DefaultTagHelperFactory.CreateTagHelper``1(Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.HelperResult">
+            <summary>
+            Represents a deferred write operation in a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPage"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.HelperResult.#ctor(System.Func{System.IO.TextWriter,System.Threading.Tasks.Task})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.HelperResult"/>.
+            </summary>
+            <param name="asyncAction">The asynchronous delegate to invoke when
+            <see cref="M:Microsoft.AspNetCore.Mvc.Razor.HelperResult.WriteTo(System.IO.TextWriter,System.Text.Encodings.Web.HtmlEncoder)"/> is called.</param>
+            <remarks>Calls to <see cref="M:Microsoft.AspNetCore.Mvc.Razor.HelperResult.WriteTo(System.IO.TextWriter,System.Text.Encodings.Web.HtmlEncoder)"/> result in a blocking invocation of
+            <paramref name="asyncAction"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.HelperResult.WriteAction">
+            <summary>
+            Gets the asynchronous delegate to invoke when <see cref="M:Microsoft.AspNetCore.Mvc.Razor.HelperResult.WriteTo(System.IO.TextWriter,System.Text.Encodings.Web.HtmlEncoder)"/> is called.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.HelperResult.WriteTo(System.IO.TextWriter,System.Text.Encodings.Web.HtmlEncoder)">
+            <summary>
+            Method invoked to produce content from the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.HelperResult"/>.
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+            <param name="encoder">The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> to encode the content.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Infrastructure.DefaultFileVersionProvider">
+            <summary>
+            Provides version hash for a specified file.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Infrastructure.DefaultTagHelperActivator">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ITagHelperActivator"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Infrastructure.DefaultTagHelperActivator.Create``1(Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Infrastructure.TagHelperMemoryCacheProvider">
+            <summary>
+            This API supports the MVC's infrastructure and is not intended to be used
+            directly from your code. This API may change in future releases.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Infrastructure.TagHelperMemoryCacheProvider.Cache">
+            <summary>
+            This API supports the MVC's infrastructure and is not intended to be used
+            directly from your code. This API may change in future releases.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.Internal.RazorInjectAttribute">
+            <summary>
+            Specifies that the attributed property should be bound using request services.
+            <para>
+            This attribute is used as the backing attribute for the <c>@inject</c>
+            Razor directive.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Internal.RazorInjectAttribute.Key">
+            <summary>
+            Gets or sets the object that specifies the key of the service to inject.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage">
+            <summary>
+            Represents properties and methods that are used by <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorView"/> for execution.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.ViewContext">
+            <summary>
+            Gets or sets the view context of the rendering view.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.BodyContent">
+            <summary>
+            Gets or sets the body content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.IsLayoutBeingRendered">
+            <summary>
+            Gets or sets a flag that determines if the layout of this page is being rendered.
+            </summary>
+            <remarks>
+            Sections defined in a page are deferred and executed as part of the layout page.
+            When this flag is set, all write operations performed by the page are part of a
+            section being rendered.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.Path">
+            <summary>
+            Gets the application base relative path to the page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.Layout">
+            <summary>
+            Gets or sets the path of a layout page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.PreviousSectionWriters">
+            <summary>
+            Gets or sets the sections that can be rendered by this page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.SectionWriters">
+            <summary>
+            Gets the sections that are defined by this page.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.ExecuteAsync">
+            <summary>
+            Renders the page and writes the output to the <see cref="P:Microsoft.AspNetCore.Mvc.Rendering.ViewContext.Writer"/>.
+            </summary>
+            <returns>A task representing the result of executing the page.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.EnsureRenderedBodyOrSections">
+            <summary>
+            Verifies that all sections defined in <see cref="P:Microsoft.AspNetCore.Mvc.Razor.IRazorPage.PreviousSectionWriters"/> were rendered, or
+            the body was rendered if no sections were defined.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">if one or more sections were not rendered or if no sections were
+            defined and the body was not rendered.</exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPageActivator">
+            <summary>
+            Provides methods to activate properties on a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.IRazorPageActivator.Activate(Microsoft.AspNetCore.Mvc.Razor.IRazorPage,Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <summary>
+            When implemented in a type, activates an instantiated page.
+            </summary>
+            <param name="page">The page to activate.</param>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> for the executing view.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPageFactoryProvider">
+            <summary>
+            Defines methods that are used for creating <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> instances at a given path.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.IRazorPageFactoryProvider.CreateFactory(System.String)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> factory for the specified path.
+            </summary>
+            <param name="relativePath">The path to locate the page.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageFactoryResult"/> instance.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.ViewEngines.IViewEngine"/> used to render pages that use the Razor syntax.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine.FindPage(Microsoft.AspNetCore.Mvc.ActionContext,System.String)">
+            <summary>
+            Finds the page with the given <paramref name="pageName"/> using view locations and information from the
+            <paramref name="context"/>.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.ActionContext"/>.</param>
+            <param name="pageName">The name or path of the page.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult"/> of locating the page.</returns>
+            <remarks>
+            <remarks>Use <see cref="M:Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine.GetPage(System.String,System.String)"/> when the absolute or relative
+            path of the page is known.</remarks>
+            <seealso cref="M:Microsoft.AspNetCore.Mvc.ViewEngines.IViewEngine.FindView(Microsoft.AspNetCore.Mvc.ActionContext,System.String,System.Boolean)"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine.GetPage(System.String,System.String)">
+            <summary>
+            Gets the page with the given <paramref name="pagePath"/>, relative to <paramref name="executingFilePath"/>
+            unless <paramref name="pagePath"/> is already absolute.
+            </summary>
+            <param name="executingFilePath">The absolute path to the currently-executing page, if any.</param>
+            <param name="pagePath">The path to the page.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult"/> of locating the page.</returns>
+            <remarks><seealso cref="M:Microsoft.AspNetCore.Mvc.ViewEngines.IViewEngine.GetView(System.String,System.String,System.Boolean)"/>.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine.GetAbsolutePath(System.String,System.String)">
+            <summary>
+            Converts the given <paramref name="pagePath"/> to be absolute, relative to
+            <paramref name="executingFilePath"/> unless <paramref name="pagePath"/> is already absolute.
+            </summary>
+            <param name="executingFilePath">The absolute path to the currently-executing page, if any.</param>
+            <param name="pagePath">The path to the page.</param>
+            <returns>
+            The combination of <paramref name="executingFilePath"/> and <paramref name="pagePath"/> if
+            <paramref name="pagePath"/> is a relative path. The <paramref name="pagePath"/> value (unchanged)
+            otherwise.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.ITagHelperActivator">
+            <summary>
+            Provides methods to create a tag helper.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ITagHelperActivator.Create``1(Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>.
+            </summary>
+            <typeparam name="TTagHelper">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> type.</typeparam>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> for the executing view.</param>
+            <returns>The tag helper.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.ITagHelperFactory">
+            <summary>
+            Provides methods to create and initialize tag helpers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ITagHelperFactory.CreateTagHelper``1(Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <summary>
+            Creates a new tag helper for the specified <paramref name="context"/>.
+            </summary>
+            <param name="context"><see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> for the executing view.</param>
+            <returns>The tag helper.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.ITagHelperInitializer`1">
+            <summary>
+            Initializes an <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> before it's executed.
+            </summary>
+            <typeparam name="TTagHelper">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> type.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ITagHelperInitializer`1.Initialize(`0,Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <summary>
+            Initializes the <typeparamref name="TTagHelper"/>.
+            </summary>
+            <param name="helper">The <typeparamref name="TTagHelper"/> to initialize.</param>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> for the executing view.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander">
+            <summary>
+            Specifies the contracts for a view location expander that is used by <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/> instances to
+            determine search paths for a view.
+            </summary>
+            <remarks>
+            Individual <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander"/>s are invoked in two steps:
+            (1) <see cref="M:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander.PopulateValues(Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext)"/> is invoked and each expander
+            adds values that it would later consume as part of
+            <see cref="M:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander.ExpandViewLocations(Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext,System.Collections.Generic.IEnumerable{System.String})"/>.
+            The populated values are used to determine a cache key - if all values are identical to the last time
+            <see cref="M:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander.PopulateValues(Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext)"/> was invoked, the cached result
+            is used as the view location.
+            (2) If no result was found in the cache or if a view was not found at the cached location,
+            <see cref="M:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander.ExpandViewLocations(Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext,System.Collections.Generic.IEnumerable{System.String})"/> is invoked to determine
+            all potential paths for a view.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander.PopulateValues(Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext)">
+            <summary>
+            Invoked by a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/> to determine the values that would be consumed by this instance
+            of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander"/>. The calculated values are used to determine if the view location
+            has changed since the last time it was located.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext"/> for the current view location
+            expansion operation.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander.ExpandViewLocations(Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Invoked by a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/> to determine potential locations for a view.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext"/> for the current view location
+            expansion operation.</param>
+            <param name="viewLocations">The sequence of view locations to expand.</param>
+            <returns>A list of expanded view locations.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpander">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander"/> that adds the language as an extension prefix to view names. Language
+            that is getting added as extension prefix comes from <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.
+            </summary>
+            <example>
+            For the default case with no areas, views are generated with the following patterns (assuming controller is
+            "Home", action is "Index" and language is "en")
+            Views/Home/en/Action
+            Views/Home/Action
+            Views/Shared/en/Action
+            Views/Shared/Action
+            </example>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpander.#ctor">
+            <summary>
+            Instantiates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpander"/> instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpander.#ctor(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat)">
+            <summary>
+            Instantiates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpander"/> instance.
+            </summary>
+            <param name="format">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpander.PopulateValues(Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpander.ExpandViewLocations(Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext,System.Collections.Generic.IEnumerable{System.String})">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat">
+            <summary>
+            Specifies the localized view format for <see cref="T:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpander"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.SubFolder">
+            <summary>
+            Locale is a subfolder under which the view exists.
+            </summary>
+            <example>
+            Home/Views/en-US/Index.chtml
+            </example>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix">
+            <summary>
+            Locale is part of the view name as a suffix.
+            </summary>
+            <example>
+            Home/Views/Index.en-US.chtml
+            </example>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RazorPage">
+            <summary>
+            Represents properties and methods that are needed in order to render a view that uses Razor syntax.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPage.Context">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> representing the current request execution.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.RenderBody">
+            <summary>
+            In a Razor layout page, renders the portion of a content page that is not within a named section.
+            </summary>
+            <returns>The HTML content to render.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.IgnoreBody">
+            <summary>
+            In a Razor layout page, ignores rendering the portion of a content page that is not within a named section.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.DefineSection(System.String,Microsoft.AspNetCore.Mvc.Razor.RenderAsyncDelegate)">
+            <summary>
+            Creates a named content section in the page that can be invoked in a Layout page using
+            <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.RenderSection(System.String)"/> or <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.RenderSectionAsync(System.String,System.Boolean)"/>.
+            </summary>
+            <param name="name">The name of the section to create.</param>
+            <param name="section">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RenderAsyncDelegate"/> to execute when rendering the section.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.IsSectionDefined(System.String)">
+            <summary>
+            Returns a value that indicates whether the specified section is defined in the content page.
+            </summary>
+            <param name="name">The section name to search for.</param>
+            <returns><c>true</c> if the specified section is defined in the content page; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.RenderSection(System.String)">
+            <summary>
+            In layout pages, renders the content of the section named <paramref name="name"/>.
+            </summary>
+            <param name="name">The name of the section to render.</param>
+            <returns>An empty <see cref="T:Microsoft.AspNetCore.Html.IHtmlContent"/>.</returns>
+            <remarks>The method writes to the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/> and the value returned is a token
+            value that allows the Write (produced due to @RenderSection(..)) to succeed. However the
+            value does not represent the rendered content.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.RenderSection(System.String,System.Boolean)">
+            <summary>
+            In layout pages, renders the content of the section named <paramref name="name"/>.
+            </summary>
+            <param name="name">The section to render.</param>
+            <param name="required">Indicates if this section must be rendered.</param>
+            <returns>An empty <see cref="T:Microsoft.AspNetCore.Html.IHtmlContent"/>.</returns>
+            <remarks>The method writes to the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/> and the value returned is a token
+            value that allows the Write (produced due to @RenderSection(..)) to succeed. However the
+            value does not represent the rendered content.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.RenderSectionAsync(System.String)">
+            <summary>
+            In layout pages, asynchronously renders the content of the section named <paramref name="name"/>.
+            </summary>
+            <param name="name">The section to render.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> that on completion returns an empty <see cref="T:Microsoft.AspNetCore.Html.IHtmlContent"/>.
+            </returns>
+            <remarks>The method writes to the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/> and the value returned is a token
+            value that allows the Write (produced due to @RenderSection(..)) to succeed. However the
+            value does not represent the rendered content.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.RenderSectionAsync(System.String,System.Boolean)">
+            <summary>
+            In layout pages, asynchronously renders the content of the section named <paramref name="name"/>.
+            </summary>
+            <param name="name">The section to render.</param>
+            <param name="required">Indicates the <paramref name="name"/> section must be registered
+            (using <c>@section</c>) in the page.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> that on completion returns an empty <see cref="T:Microsoft.AspNetCore.Html.IHtmlContent"/>.
+            </returns>
+            <remarks>The method writes to the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/> and the value returned is a token
+            value that allows the Write (produced due to @RenderSection(..)) to succeed. However the
+            value does not represent the rendered content.</remarks>
+            <exception cref="T:System.InvalidOperationException">if <paramref name="required"/> is <c>true</c> and the section
+            was not registered using the <c>@section</c> in the Razor page.</exception>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.IgnoreSection(System.String)">
+            <summary>
+            In layout pages, ignores rendering the content of the section named <paramref name="sectionName"/>.
+            </summary>
+            <param name="sectionName">The section to ignore.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.EnsureRenderedBodyOrSections">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.BeginContext(System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPage.EndContext">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageActivator">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageActivator.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.IModelMetadataProvider,Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory,Microsoft.AspNetCore.Mvc.Rendering.IJsonHelper,System.Diagnostics.DiagnosticSource,System.Text.Encodings.Web.HtmlEncoder,Microsoft.AspNetCore.Mvc.ViewFeatures.IModelExpressionProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageActivator"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageActivator.Activate(Microsoft.AspNetCore.Mvc.Razor.IRazorPage,Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase">
+            <summary>
+            Represents properties and methods that are needed in order to render a view that uses Razor syntax.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.ViewContext">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Layout">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output">
+            <summary>
+            Gets the <see cref="T:System.IO.TextWriter"/> that the page is writing output to.
+            </summary>
+            <summary>
+            Gets the <see cref="T:System.IO.TextWriter"/> that the page is writing output to.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Path">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.SectionWriters">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.ViewBag">
+            <summary>
+            Gets the dynamic view data dictionary.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.IsLayoutBeingRendered">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.BodyContent">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.PreviousSectionWriters">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.DiagnosticSource">
+            <summary>
+            Gets or sets a <see cref="T:System.Diagnostics.DiagnosticSource"/> instance used to instrument the page execution.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.HtmlEncoder">
+            <summary>
+            Gets the <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> to use when this <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPage"/>
+            handles non-<see cref="T:Microsoft.AspNetCore.Html.IHtmlContent"/> C# expressions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.User">
+            <summary>
+            Gets the <see cref="T:System.Security.Claims.ClaimsPrincipal"/> of the current logged in user.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.TempData">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ViewFeatures.ITempDataDictionary"/> from the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.ViewContext"/>.
+            </summary>
+            <remarks>Returns null if <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.ViewContext"/> is null.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.ExecuteAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.InvalidTagHelperIndexerAssignment(System.String,System.String,System.String)">
+            <summary>
+            Format an error message about using an indexer when the tag helper property is <c>null</c>.
+            </summary>
+            <param name="attributeName">Name of the HTML attribute associated with the indexer.</param>
+            <param name="tagHelperTypeName">Full name of the tag helper <see cref="T:System.Type"/>.</param>
+            <param name="propertyName">Dictionary property in the tag helper.</param>
+            <returns>An error message about using an indexer when the tag helper property is <c>null</c>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.CreateTagHelper``1">
+            <summary>
+            Creates and activates a <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>.
+            </summary>
+            <typeparam name="TTagHelper">A <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> type.</typeparam>
+            <returns>The activated <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>.</returns>
+            <remarks>
+            <typeparamref name="TTagHelper"/> must have a parameterless constructor.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.StartTagHelperWritingScope(System.Text.Encodings.Web.HtmlEncoder)">
+            <summary>
+            Starts a new writing scope and optionally overrides <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.HtmlEncoder"/> within that scope.
+            </summary>
+            <param name="encoder">
+            The <see cref="T:System.Text.Encodings.Web.HtmlEncoder"/> to use when this <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPage"/> handles
+            non-<see cref="T:Microsoft.AspNetCore.Html.IHtmlContent"/> C# expressions. If <c>null</c>, does not change <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.HtmlEncoder"/>.
+            </param>
+            <remarks>
+            All writes to the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/> or <see cref="P:Microsoft.AspNetCore.Mvc.Rendering.ViewContext.Writer"/> after calling this method will
+            be buffered until <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EndTagHelperWritingScope"/> is called.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EndTagHelperWritingScope">
+            <summary>
+            Ends the current writing scope that was started by calling <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.StartTagHelperWritingScope(System.Text.Encodings.Web.HtmlEncoder)"/>.
+            </summary>
+            <returns>The buffered <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContent"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.BeginWriteTagHelperAttribute">
+            <summary>
+            Starts a new scope for writing <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> attribute values.
+            </summary>
+            <remarks>
+            All writes to the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/> or <see cref="P:Microsoft.AspNetCore.Mvc.Rendering.ViewContext.Writer"/> after calling this method will
+            be buffered until <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EndWriteTagHelperAttribute"/> is called.
+            The content will be buffered using a shared <see cref="T:System.IO.StringWriter"/> within this <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPage"/>
+            Nesting of <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.BeginWriteTagHelperAttribute"/> and <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EndWriteTagHelperAttribute"/> method calls
+            is not supported.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EndWriteTagHelperAttribute">
+            <summary>
+            Ends the current writing scope that was started by calling <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.BeginWriteTagHelperAttribute"/>.
+            </summary>
+            <returns>The content buffered by the shared <see cref="T:System.IO.StringWriter"/> of this <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPage"/>.</returns>
+            <remarks>
+            This method assumes that there will be no nesting of <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.BeginWriteTagHelperAttribute"/>
+            and <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EndWriteTagHelperAttribute"/> method calls.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.PushWriter(System.IO.TextWriter)">
+            <summary>
+            Puts a text writer on the stack.
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.PopWriter">
+            <summary>
+            Return a text writer from the stack.
+            </summary>
+            <returns>The text writer.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Href(System.String)">
+            <summary>
+            Returns a href for the given content path.
+            </summary>
+            <param name="contentPath">The content path.</param>
+            <returns>The href for the contentPath.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.DefineSection(System.String,System.Func{System.Object,System.Threading.Tasks.Task})">
+            <summary>
+            Creates a named content section in the page that can be invoked in a Layout page using
+            <c>RenderSection</c> or <c>RenderSectionAsync</c>
+            </summary>
+            <param name="name">The name of the section to create.</param>
+            <param name="section">The delegate to execute when rendering the section.</param>
+            <remarks>This is a temporary placeholder method to support ASP.NET Core 2.0.0 editor code generation.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.DefineSection(System.String,Microsoft.AspNetCore.Mvc.Razor.RenderAsyncDelegate)">
+            <summary>
+            Creates a named content section in the page that can be invoked in a Layout page using
+            <c>RenderSection</c> or <c>RenderSectionAsync</c>
+            </summary>
+            <param name="name">The name of the section to create.</param>
+            <param name="section">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RenderAsyncDelegate"/> to execute when rendering the section.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Write(System.Object)">
+            <summary>
+            Writes the specified <paramref name="value"/> with HTML encoding to <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Write(System.String)">
+            <summary>
+            Writes the specified <paramref name="value"/> with HTML encoding to <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.WriteLiteral(System.Object)">
+            <summary>
+            Writes the specified <paramref name="value"/> without HTML encoding to <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.WriteLiteral(System.String)">
+            <summary>
+            Writes the specified <paramref name="value"/> without HTML encoding to <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.BeginWriteAttribute(System.String,System.String,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            Begins writing out an attribute.
+            </summary>
+            <param name="name">The name.</param>
+            <param name="prefix">The prefix.</param>
+            <param name="prefixOffset">The prefix offset.</param>
+            <param name="suffix">The suffix.</param>
+            <param name="suffixOffset">The suffix offset.</param>
+            <param name="attributeValuesCount">The attribute values count.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.WriteAttributeValue(System.String,System.Int32,System.Object,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Writes out an attribute value.
+            </summary>
+            <param name="prefix">The prefix.</param>
+            <param name="prefixOffset">The prefix offset.</param>
+            <param name="value">The value.</param>
+            <param name="valueOffset">The value offset.</param>
+            <param name="valueLength">The value length.</param>
+            <param name="isLiteral">Whether the attribute is a literal.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EndWriteAttribute">
+            <summary>
+            Ends writing an attribute.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.BeginAddHtmlAttributeValues(Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext,System.String,System.Int32,Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle)">
+            <summary>
+            Begins adding html attribute values.
+            </summary>
+            <param name="executionContext">The <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext"/>.</param>
+            <param name="attributeName">The name of the attribute.</param>
+            <param name="attributeValuesCount">The number of attribute values.</param>
+            <param name="attributeValueStyle">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.AddHtmlAttributeValue(System.String,System.Int32,System.Object,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Add an html attribute value.
+            </summary>
+            <param name="prefix">The prefix.</param>
+            <param name="prefixOffset">The prefix offset.</param>
+            <param name="value">The attribute value.</param>
+            <param name="valueOffset">The value offset.</param>
+            <param name="valueLength">The value length.</param>
+            <param name="isLiteral">Whether the attribute is a literal.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EndAddHtmlAttributeValues(Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext)">
+            <summary>
+            Ends adding html attribute values.
+            </summary>
+            <param name="executionContext">The <see cref="T:Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.FlushAsync">
+            <summary>
+            Invokes <see cref="M:System.IO.TextWriter.FlushAsync"/> on <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.Output"/> and <see cref="m:Stream.FlushAsync"/>
+            on the response stream, writing out any buffered content to the <see cref="P:Microsoft.AspNetCore.Http.HttpResponse.Body"/>.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task`1"/> that represents the asynchronous flush operation and on
+            completion returns an empty <see cref="T:Microsoft.AspNetCore.Html.IHtmlContent"/>.</returns>
+            <remarks>The value returned is a token value that allows FlushAsync to work directly in an HTML
+            section. However the value does not represent the rendered content.
+            This method also writes out headers, so any modifications to headers must be done before
+            <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.FlushAsync"/> is called. For example, call <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.SetAntiforgeryCookieAndHeader"/> to send
+            antiforgery cookie token and X-Frame-Options header to client before this method flushes headers out.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.SetAntiforgeryCookieAndHeader">
+            <summary>
+            Sets antiforgery cookie and X-Frame-Options header on the response.
+            </summary>
+            <returns>An empty <see cref="T:Microsoft.AspNetCore.Html.IHtmlContent"/>.</returns>
+            <remarks> Call this method to send antiforgery cookie token and X-Frame-Options header to client
+            before <see cref="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.FlushAsync"/> flushes the headers. </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.BeginContext(System.Int32,System.Int32,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EndContext">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.EnsureRenderedBodyOrSections">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageFactoryResult">
+            <summary>
+            Result of <see cref="M:Microsoft.AspNetCore.Mvc.Razor.IRazorPageFactoryProvider.CreateFactory(System.String)"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageFactoryResult.#ctor(Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor,System.Func{Microsoft.AspNetCore.Mvc.Razor.IRazorPage})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageFactoryResult"/> with the
+            specified <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> factory.
+            </summary>
+            <param name="razorPageFactory">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> factory.</param>
+            <param name="viewDescriptor">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageFactoryResult.RazorPageFactory">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> factory.
+            </summary>
+            <remarks>This property is <c>null</c> when <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageFactoryResult.Success"/> is <c>false</c>.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageFactoryResult.ViewDescriptor">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.Compilation.CompiledViewDescriptor"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageFactoryResult.Success">
+            <summary>
+            Gets a value that determines if the page was successfully located.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RazorPage`1">
+            <summary>
+            Represents the properties and methods that are needed in order to render a view that uses Razor syntax.
+            </summary>
+            <typeparam name="TModel">The type of the view data model.</typeparam>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPage`1.Model">
+            <summary>
+            Gets the Model property of the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPage`1.ViewData"/> property.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPage`1.ViewData">
+            <summary>
+            Gets or sets the dictionary for view data.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult">
+            <summary>
+            Result of locating a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult.#ctor(System.String,Microsoft.AspNetCore.Mvc.Razor.IRazorPage)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult"/> for a successful discovery.
+            </summary>
+            <param name="name">The name of the page that was found.</param>
+            <param name="page">The located <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult.#ctor(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult"/> for an unsuccessful discovery.
+            </summary>
+            <param name="name">The name of the page that was not found.</param>
+            <param name="searchedLocations">The locations that were searched.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult.Name">
+            <summary>
+            Gets the name or the path of the page being located.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult.Page">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> if found.
+            </summary>
+            <remarks>This property is <c>null</c> if the page was not found.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult.SearchedLocations">
+            <summary>
+            Gets the locations that were searched when <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorPageResult.Page"/> could not be found.
+            </summary>
+            <remarks>This property is <c>null</c> if the page was found.</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RazorView">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Mvc.ViewEngines.IView"/> that executes one or more <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/>
+            as parts of its execution.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorView.#ctor(Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine,Microsoft.AspNetCore.Mvc.Razor.IRazorPageActivator,System.Collections.Generic.IReadOnlyList{Microsoft.AspNetCore.Mvc.Razor.IRazorPage},Microsoft.AspNetCore.Mvc.Razor.IRazorPage,System.Text.Encodings.Web.HtmlEncoder,System.Diagnostics.DiagnosticListener)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorView"/>
+            </summary>
+            <param name="viewEngine">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine"/> used to locate Layout pages.</param>
+            <param name="pageActivator">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPageActivator"/> used to activate pages.</param>
+            <param name="viewStartPages">The sequence of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage" /> instances executed as _ViewStarts.
+            </param>
+            <param name="razorPage">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> instance to execute.</param>
+            <param name="htmlEncoder">The HTML encoder.</param>
+            <param name="diagnosticListener">The <see cref="T:System.Diagnostics.DiagnosticListener"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorView.Path">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorView.RazorPage">
+            <summary>
+            Gets <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> instance that the views executes on.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorView.ViewStartPages">
+            <summary>
+            Gets the sequence of _ViewStart <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> instances that are executed by this view.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorView.RenderAsync(Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine"/>.
+            </summary>
+            <remarks>
+            For <c>ViewResults</c> returned from controllers, views should be located in
+            <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions.ViewLocationFormats"/>
+            by default. For the controllers in an area, views should exist in
+            <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions.AreaViewLocationFormats"/>.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.ViewExtension">
+            <summary>
+            The view extension
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.#ctor(Microsoft.AspNetCore.Mvc.Razor.IRazorPageFactoryProvider,Microsoft.AspNetCore.Mvc.Razor.IRazorPageActivator,System.Text.Encodings.Web.HtmlEncoder,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions},Microsoft.Extensions.Logging.ILoggerFactory,System.Diagnostics.DiagnosticListener)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine" />.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.ViewLookupCache">
+            <summary>
+            A cache for results of view lookups.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.GetNormalizedRouteValue(Microsoft.AspNetCore.Mvc.ActionContext,System.String)">
+            <summary>
+            Gets the case-normalized route value for the specified route <paramref name="key"/>.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.ActionContext"/>.</param>
+            <param name="key">The route key to lookup.</param>
+            <returns>The value corresponding to the key.</returns>
+            <remarks>
+            The casing of a route value in <see cref="P:Microsoft.AspNetCore.Mvc.ActionContext.RouteData"/> is determined by the client.
+            This making constructing paths for view locations in a case sensitive file system unreliable. Using the
+            <see cref="P:Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor.RouteValues"/> to get route values
+            produces consistently cased results.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.FindPage(Microsoft.AspNetCore.Mvc.ActionContext,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.GetPage(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.FindView(Microsoft.AspNetCore.Mvc.ActionContext,System.String,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.GetView(System.String,System.String,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.GetAbsolutePath(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions">
+            <summary>
+            Provides programmatic configuration for the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions.ViewLocationExpanders">
+            <summary>
+            Gets a <see cref="T:System.Collections.Generic.IList`1"/> used by the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions.ViewLocationFormats">
+            <summary>
+            Gets the locations where <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/> will search for views.
+            </summary>
+            <remarks>
+            <para>
+            The locations of the views returned from controllers that do not belong to an area.
+            Locations are format strings (see <see href="https://msdn.microsoft.com/en-us/library/txafckwd.aspx"/>) which may contain
+            the following format items:
+            </para>
+            <list type="bullet">
+            <item>
+            <description>{0} - Action Name</description>
+            </item>
+            <item>
+            <description>{1} - Controller Name</description>
+            </item>
+            </list>
+            <para>
+            The values for these locations are case-sensitive on case-sensitive file systems.
+            For example, the view for the <c>Test</c> action of <c>HomeController</c> should be located at
+            <c>/Views/Home/Test.cshtml</c>. Locations such as <c>/views/home/test.cshtml</c> would not be discovered.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions.AreaViewLocationFormats">
+            <summary>
+            Gets the locations where <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/> will search for views within an
+            area.
+            </summary>
+            <remarks>
+            <para>
+            The locations of the views returned from controllers that belong to an area.
+            Locations are format strings (see <see href="https://msdn.microsoft.com/en-us/library/txafckwd.aspx"/>) which may contain
+            the following format items:
+            </para>
+            <list type="bullet">
+            <item>
+            <description>{0} - Action Name</description>
+            </item>
+            <item>
+            <description>{1} - Controller Name</description>
+            </item>
+            <item>
+            <description>{2} - Area Name</description>
+            </item>
+            </list>
+            <para>
+            The values for these locations are case-sensitive on case-sensitive file systems.
+            For example, the view for the <c>Test</c> action of <c>HomeController</c> under <c>Admin</c> area should
+            be located at <c>/Areas/Admin/Views/Home/Test.cshtml</c>.
+            Locations such as <c>/areas/admin/views/home/test.cshtml</c> would not be discovered.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions.PageViewLocationFormats">
+             <summary>
+             Gets the locations where <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/> will search for views (such as layouts and partials)
+             when searched from the context of rendering a Razor Page.
+             </summary>
+             <remarks>
+             <para>
+             Locations are format strings (see <see href="https://msdn.microsoft.com/en-us/library/txafckwd.aspx"/>) which may contain
+             the following format items:
+             </para>
+             <list type="bullet">
+             <item>
+             <description>{0} - View Name</description>
+             </item>
+             <item>
+             <description>{1} - Page Name</description>
+             </item>
+             </list>
+             <para>
+             <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions.PageViewLocationFormats"/> work in tandem with a view location expander to perform hierarchical
+             path lookups. For instance, given a Page like /Account/Manage/Index using /Pages as the root, the view engine
+             will search for views in the following locations:
+            
+              /Pages/Account/Manage/{0}.cshtml
+              /Pages/Account/{0}.cshtml
+              /Pages/{0}.cshtml
+              /Pages/Shared/{0}.cshtml
+              /Views/Shared/{0}.cshtml
+             </para>
+             </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions.AreaPageViewLocationFormats">
+             <summary>
+             Gets the locations where <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/> will search for views (such as layouts and partials)
+             when searched from the context of rendering a Razor Page within an area.
+             </summary>
+             <remarks>
+             <para>
+             Locations are format strings (see <see href="https://msdn.microsoft.com/en-us/library/txafckwd.aspx"/>) which may contain
+             the following format items:
+             </para>
+             <list type="bullet">
+             <item>
+             <description>{0} - View Name</description>
+             </item>
+             <item>
+             <description>{1} - Page Name</description>
+             </item>
+             <item>
+             <description>{2} - Area Name</description>
+             </item>
+             </list>
+             <para>
+             <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions.AreaPageViewLocationFormats"/> work in tandem with a view location expander to perform hierarchical
+             path lookups. For instance, given a Page like /Areas/Account/Pages/Manage/User.cshtml using /Areas as the area pages root and
+             /Pages as the root, the view engine will search for views in the following locations:
+            
+              /Areas/Accounts/Pages/Manage/{0}.cshtml
+              /Areas/Accounts/Pages/{0}.cshtml
+              /Areas/Accounts/Pages/Shared/{0}.cshtml
+              /Areas/Accounts/Views/Shared/{0}.cshtml
+              /Pages/Shared/{0}.cshtml
+              /Views/Shared/{0}.cshtml
+             </para>
+             </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.RenderAsyncDelegate">
+            <summary>
+            A delegate for RenderAsync.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.ServiceBasedTagHelperActivator">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ITagHelperActivator"/> that retrieves tag helpers as services from the request's
+            <see cref="T:System.IServiceProvider"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ServiceBasedTagHelperActivator.Create``1(Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelperComponentManager">
+            <summary>
+            The default implementation of the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelperComponentManager.#ctor(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent})">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelperComponentManager"/>.
+            </summary>
+            <param name="tagHelperComponents">The collection of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.TagHelperComponentManager.Components">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelperInitializer`1">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelperInitializer`1.#ctor(System.Action{`0,Microsoft.AspNetCore.Mvc.Rendering.ViewContext})">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelperInitializer`1"/>.
+            </summary>
+            <param name="action">The initialization delegate.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelperInitializer`1.Initialize(`0,Microsoft.AspNetCore.Mvc.Rendering.ViewContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.BodyTagHelper">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper"/> targeting the &lt;body&gt; HTML element.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.BodyTagHelper.#ctor(Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.BodyTagHelper"/>.
+            </summary>
+            <param name="manager">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager"/> which contains the collection
+            of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.HeadTagHelper">
+            <summary>
+            A <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper"/> targeting the &lt;head&gt; HTML element.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.HeadTagHelper.#ctor(Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.HeadTagHelper"/>.
+            </summary>
+            <param name="manager">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager"/> which contains the collection
+            of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager">
+            <summary>
+            An implementation of this interface provides the collection of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s
+            that will be used by <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper"/>s.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager.Components">
+            <summary>
+            Gets the collection of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s that will be used by
+            <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper"/>s.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentPropertyActivator">
+            <summary>
+            Provides methods to activate properties of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentPropertyActivator.Activate(Microsoft.AspNetCore.Mvc.Rendering.ViewContext,Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent)">
+            <summary>
+            Activates properties of the <paramref name="tagHelperComponent"/>.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Rendering.ViewContext"/> for the executing view.</param>
+            <param name="tagHelperComponent">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/> to activate properties of.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentPropertyActivator">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentPropertyActivator"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentPropertyActivator.Activate(Microsoft.AspNetCore.Mvc.Rendering.ViewContext,Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper">
+            <summary>
+            Initializes and processes the <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s added to the
+            <see cref="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager.Components"/> in the specified order.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper.#ctor(Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper"/> and orders the
+            the collection of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s in <see cref="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager.Components"/>.
+            </summary>
+            <param name="manager">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager"/> which contains the collection
+            of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+            <remarks>The <see cref="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager.Components"/> are ordered after the
+            creation of the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager"/> to position the <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent"/>s
+            added from controllers and views correctly.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper.PropertyActivator">
+            <summary>
+            Activates the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper.ViewContext"/> property of all the <see cref="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.ITagHelperComponentManager.Components"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper.ViewContext">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper.ViewContext"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper.Init(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperComponentTagHelper.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperFeature">
+            <summary>
+            The list of tag helper types in an MVC application. The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperFeature"/> can be populated
+            using the <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPartManager"/> that is available during startup at <see cref="P:Microsoft.Extensions.DependencyInjection.IMvcBuilder.PartManager"/>
+            and <see cref="P:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder.PartManager"/> or at a later stage by requiring the <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPartManager"/>
+            as a dependency in a component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperFeature.TagHelpers">
+            <summary>
+            Gets the list of tag helper types in an MVC application.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperFeatureProvider">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.ApplicationParts.IApplicationFeatureProvider"/> for the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperFeatureProvider.PopulateFeature(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart},Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperFeature)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperFeatureProvider.IncludePart(Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPart)">
+            <summary>
+            Include a part.
+            </summary>
+            <param name="part">The part to include.</param>
+            <returns>True if included.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.TagHelperFeatureProvider.IncludeType(System.Reflection.TypeInfo)">
+            <summary>
+            Include a type.
+            </summary>
+            <param name="type">The type to include.</param>
+            <returns>True if included.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> implementation targeting elements containing attributes with URL expected values.
+            </summary>
+            <remarks>Resolves URLs starting with '~/' (relative to the application's 'webroot' setting) that are not
+            targeted by other <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>s. Runs prior to other <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/>s to ensure
+            application-relative URLs are resolved.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.#ctor(Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory,System.Text.Encodings.Web.HtmlEncoder)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper"/>.
+            </summary>
+            <param name="urlHelperFactory">The <see cref="T:Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory"/>.</param>
+            <param name="htmlEncoder">The <see cref="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.HtmlEncoder"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.UrlHelperFactory">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Mvc.Routing.IUrlHelperFactory"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.HtmlEncoder">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.HtmlEncoder"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.ViewContext">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.ViewContext"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.Process(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.ProcessUrlAttribute(System.String,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)">
+            <summary>
+            Resolves and updates URL values starting with '~/' (relative to the application's 'webroot' setting) for
+            <paramref name="output"/>'s <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput.Attributes"/> whose
+            <see cref="P:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute.Name"/> is <paramref name="attributeName"/>.
+            </summary>
+            <param name="attributeName">The attribute name used to lookup values to resolve.</param>
+            <param name="output">The <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.TryResolveUrl(System.String,System.String@)">
+            <summary>
+            Tries to resolve the given <paramref name="url"/> value relative to the application's 'webroot' setting.
+            </summary>
+            <param name="url">The URL to resolve.</param>
+            <param name="resolvedUrl">Absolute URL beginning with the application's virtual root. <c>null</c> if
+            <paramref name="url"/> could not be resolved.</param>
+            <returns><c>true</c> if the <paramref name="url"/> could be resolved; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper.TryResolveUrl(System.String,Microsoft.AspNetCore.Html.IHtmlContent@)">
+            <summary>
+            Tries to resolve the given <paramref name="url"/> value relative to the application's 'webroot' setting.
+            </summary>
+            <param name="url">The URL to resolve.</param>
+            <param name="resolvedUrl">
+            Absolute URL beginning with the application's virtual root. <c>null</c> if <paramref name="url"/> could
+            not be resolved.
+            </param>
+            <returns><c>true</c> if the <paramref name="url"/> could be resolved; <c>false</c> otherwise.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem">
+            <summary>
+            An item in <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem.#ctor(System.Func{Microsoft.AspNetCore.Mvc.Razor.IRazorPage},System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem"/>.
+            </summary>
+            <param name="razorPageFactory">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> factory.</param>
+            <param name="location">The application relative path of the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem.Location">
+            <summary>
+            Gets the application relative path of the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem.PageFactory">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/> factory.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey">
+            <summary>
+            Key for entries in <see cref="P:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.ViewLookupCache"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey"/>.
+            </summary>
+            <param name="viewName">The view name or path.</param>
+            <param name="isMainPage">Determines if the page being found is the main page for an action.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.#ctor(System.String,System.String,System.String,System.String,System.Boolean,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey"/>.
+            </summary>
+            <param name="viewName">The view name.</param>
+            <param name="controllerName">The controller name.</param>
+            <param name="areaName">The area name.</param>
+            <param name="pageName">The page name.</param>
+            <param name="isMainPage">Determines if the page being found is the main page for an action.</param>
+            <param name="values">Values from <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander"/> instances.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.ViewName">
+            <summary>
+            Gets the view name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.ControllerName">
+            <summary>
+            Gets the controller name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.AreaName">
+            <summary>
+            Gets the area name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.PageName">
+            <summary>
+            Gets the page name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.IsMainPage">
+            <summary>
+            Determines if the page being found is the main page for an action.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.ViewLocationExpanderValues">
+            <summary>
+            Gets the values populated by <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.Equals(Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheKey.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult">
+            <summary>
+            Result of view location cache lookup.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.#ctor(Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem,System.Collections.Generic.IReadOnlyList{Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult"/>
+            for a view that was successfully found at the specified location.
+            </summary>
+            <param name="view">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem"/> for the found view.</param>
+            <param name="viewStarts"><see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem"/>s for applicable _ViewStarts.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult"/> for a
+            failed view lookup.
+            </summary>
+            <param name="searchedLocations">Locations that were searched.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.ViewEntry">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem"/> for the located view.
+            </summary>
+            <remarks>Uninitialized when <see cref="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.Success"/> is <c>false</c>.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.ViewStartEntries">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheItem"/>s for applicable _ViewStarts.
+            </summary>
+            <remarks><c>null</c> if <see cref="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.Success"/> is <c>false</c>.</remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.SearchedLocations">
+            <summary>
+            The sequence of locations that were searched.
+            </summary>
+            <remarks>
+            When <see cref="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.Success"/> is <c>true</c> this includes all paths that were search prior to finding
+            a view at <see cref="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.ViewEntry"/>. When <see cref="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.Success"/> is <c>false</c>, this includes
+            all search paths.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationCacheResult.Success">
+            <summary>
+            Gets a value that indicates whether the view was successfully found.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext">
+            <summary>
+            A context for containing information for <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext.#ctor(Microsoft.AspNetCore.Mvc.ActionContext,System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext"/>.
+            </summary>
+            <param name="actionContext">The <see cref="T:Microsoft.AspNetCore.Mvc.ActionContext"/> for the current executing action.</param>
+            <param name="viewName">The view name.</param>
+            <param name="controllerName">The controller name.</param>
+            <param name="areaName">The area name.</param>
+            <param name="pageName">The page name.</param>
+            <param name="isMainPage">Determines if the page being found is the main page for an action.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext.ActionContext">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Mvc.ActionContext"/> for the current executing action.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext.ViewName">
+            <summary>
+            Gets the view name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext.ControllerName">
+            <summary>
+            Gets the controller name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext.PageName">
+            <summary>
+            Gets the page name. This will be the value of the <c>page</c> route value when rendering a Page from the
+            Razor Pages framework. This value will be <c>null</c> if rendering a view as the result of a controller.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext.AreaName">
+            <summary>
+            Gets the area name.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext.IsMainPage">
+            <summary>
+            Determines if the page being found is the main page for an action.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext.Values">
+            <summary>
+            Gets or sets the <see cref="T:System.Collections.Generic.IDictionary`2"/> that is populated with values as part of
+            <see cref="M:Microsoft.AspNetCore.Mvc.Razor.IViewLocationExpander.PopulateValues(Microsoft.AspNetCore.Mvc.Razor.ViewLocationExpanderContext)"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.ArgumentCannotBeNullOrEmpty">
+            <summary>Value cannot be null or empty.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.CompilationFailed">
+            <summary>One or more compilation failures occurred:</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.FlushPointCannotBeInvoked">
+            <summary>'{0}' cannot be invoked when a Layout page is set to be executed.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatFlushPointCannotBeInvoked(System.Object)">
+            <summary>'{0}' cannot be invoked when a Layout page is set to be executed.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.LayoutCannotBeLocated">
+            <summary>The layout view '{0}' could not be located. The following locations were searched:{1}</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatLayoutCannotBeLocated(System.Object,System.Object)">
+            <summary>The layout view '{0}' could not be located. The following locations were searched:{1}</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.LayoutCannotBeRendered">
+            <summary>Layout page '{0}' cannot be rendered after '{1}' has been invoked.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatLayoutCannotBeRendered(System.Object,System.Object)">
+            <summary>Layout page '{0}' cannot be rendered after '{1}' has been invoked.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.RazorPage_ThereIsNoActiveWritingScopeToEnd">
+            <summary>There is no active writing scope to end.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.RazorPage_CannotFlushWhileInAWritingScope">
+            <summary>The {0} operation cannot be performed while inside a writing scope in '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatRazorPage_CannotFlushWhileInAWritingScope(System.Object,System.Object)">
+            <summary>The {0} operation cannot be performed while inside a writing scope in '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.RazorPage_MethodCannotBeCalled">
+            <summary>{0} invocation in '{1}' is invalid. {0} can only be called from a layout page.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatRazorPage_MethodCannotBeCalled(System.Object,System.Object)">
+            <summary>{0} invocation in '{1}' is invalid. {0} can only be called from a layout page.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.RenderBodyNotCalled">
+            <summary>{0} has not been called for the page at '{1}'. To ignore call {2}().</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatRenderBodyNotCalled(System.Object,System.Object,System.Object)">
+            <summary>{0} has not been called for the page at '{1}'. To ignore call {2}().</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.SectionAlreadyDefined">
+            <summary>Section '{0}' is already defined.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatSectionAlreadyDefined(System.Object)">
+            <summary>Section '{0}' is already defined.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.SectionAlreadyRendered">
+            <summary>{0} invocation in '{1}' is invalid. The section '{2}' has already been rendered.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatSectionAlreadyRendered(System.Object,System.Object,System.Object)">
+            <summary>{0} invocation in '{1}' is invalid. The section '{2}' has already been rendered.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.SectionNotDefined">
+            <summary>The layout page '{0}' cannot find the section '{1}' in the content page '{2}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatSectionNotDefined(System.Object,System.Object,System.Object)">
+            <summary>The layout page '{0}' cannot find the section '{1}' in the content page '{2}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.SectionsNotRendered">
+            <summary>The following sections have been defined but have not been rendered by the page at '{0}': '{1}'. To ignore an unrendered section call {2}("sectionName").</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatSectionsNotRendered(System.Object,System.Object,System.Object)">
+            <summary>The following sections have been defined but have not been rendered by the page at '{0}': '{1}'. To ignore an unrendered section call {2}("sectionName").</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.ViewContextMustBeSet">
+            <summary>'{0} must be set to access '{1}'.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatViewContextMustBeSet(System.Object,System.Object)">
+            <summary>'{0} must be set to access '{1}'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.GeneratedCodeFileName">
+            <summary>Generated Code</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.RazorPage_InvalidTagHelperIndexerAssignment">
+            <summary>Unable to perform '{0}' assignment. Tag helper property '{1}.{2}' must not be null.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatRazorPage_InvalidTagHelperIndexerAssignment(System.Object,System.Object,System.Object)">
+            <summary>Unable to perform '{0}' assignment. Tag helper property '{1}.{2}' must not be null.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.CouldNotResolveApplicationRelativeUrl_TagHelper">
+            <summary>Unexpected return value from '{1}.{2}' for URL '{0}'. If the '{1}' service has been overridden, change '{2}' to replace only the '~/' prefix. Otherwise, add the following directive to the Razor page to disable URL resolution relative to the application's ' ...</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatCouldNotResolveApplicationRelativeUrl_TagHelper(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>Unexpected return value from '{1}.{2}' for URL '{0}'. If the '{1}' service has been overridden, change '{2}' to replace only the '~/' prefix. Otherwise, add the following directive to the Razor page to disable URL resolution relative to the application's ' ...</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.LayoutHasCircularReference">
+            <summary>A circular layout reference was detected when rendering '{0}'. The layout page '{1}' has already been rendered.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatLayoutHasCircularReference(System.Object,System.Object)">
+            <summary>A circular layout reference was detected when rendering '{0}'. The layout page '{1}' has already been rendered.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.Compilation_MissingReferences">
+            <summary>One or more compilation references may be missing. If you're seeing this in a published application, set '{0}' to true in your project file to ensure files in the refs directory are published.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatCompilation_MissingReferences(System.Object)">
+            <summary>One or more compilation references may be missing. If you're seeing this in a published application, set '{0}' to true in your project file to ensure files in the refs directory are published.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.ViewLocationFormatsIsRequired">
+            <summary>'{0}' cannot be empty. These locations are required to locate a view for rendering.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatViewLocationFormatsIsRequired(System.Object)">
+            <summary>'{0}' cannot be empty. These locations are required to locate a view for rendering.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.RazorPage_NestingAttributeWritingScopesNotSupported">
+            <summary>Nesting of TagHelper attribute writing scopes is not supported.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.FileProvidersAreRequired">
+            <summary>'{0}.{1}' must not be empty. At least one '{2}' is required to locate a view for rendering.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatFileProvidersAreRequired(System.Object,System.Object,System.Object)">
+            <summary>'{0}.{1}' must not be empty. At least one '{2}' is required to locate a view for rendering.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.RazorProject_PathMustStartWithForwardSlash">
+            <summary>Path must begin with a forward slash '/'.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.PropertyMustBeSet">
+            <summary>The property '{0}' of '{1}' must not be null.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatPropertyMustBeSet(System.Object,System.Object)">
+            <summary>The property '{0}' of '{1}' must not be null.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.RazorViewCompiler_ViewPathsDifferOnlyInCase">
+            <summary>The following precompiled view paths differ only in case, which is not supported:</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.UnsupportedDebugInformationFormat">
+            <summary>The debug type specified in the dependency context could be parsed. The debug type value '{0}' is not supported.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatUnsupportedDebugInformationFormat(System.Object)">
+            <summary>The debug type specified in the dependency context could be parsed. The debug type value '{0}' is not supported.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.CompiledViewDescriptor_NoData">
+            <summary>At least one of the '{0}' or '{1}' values must be non-null.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatCompiledViewDescriptor_NoData(System.Object,System.Object)">
+            <summary>At least one of the '{0}' or '{1}' values must be non-null.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Razor.Resources.AsyncDisposableViewsNotSupported">
+            <summary>Views implementing '{0}' are not supported.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Razor.Resources.FormatAsyncDisposableViewsNotSupported(System.Object)">
+            <summary>Views implementing '{0}' are not supported.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.Diagnostics.EventData"/> that occurs before a view page.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.EventName">
+            <summary>
+            The name of the event.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.#ctor(Microsoft.AspNetCore.Mvc.Razor.IRazorPage,Microsoft.AspNetCore.Mvc.Rendering.ViewContext,Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor,Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData"/>.
+            </summary>
+            <param name="page">The page.</param>
+            <param name="viewContext">The view context.</param>
+            <param name="actionDescriptor">The action.</param>
+            <param name="httpContext">The http context.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.Page">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.ViewContext">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.ViewContext"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.ActionDescriptor">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.ActionDescriptor"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.HttpContext">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.HttpContext"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.Count">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.BeforeViewPageEventData.Item(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.Diagnostics.EventData"/> that occurs after a view page.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.EventName">
+            <summary>
+            The name of the event.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.#ctor(Microsoft.AspNetCore.Mvc.Razor.IRazorPage,Microsoft.AspNetCore.Mvc.Rendering.ViewContext,Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor,Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData"/>.
+            </summary>
+            <param name="page">The page.</param>
+            <param name="viewContext">The view context.</param>
+            <param name="actionDescriptor">The action.</param>
+            <param name="httpContext">The http context.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.Page">
+            <summary>
+            The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorPage"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.ViewContext">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.ViewContext"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.ActionDescriptor">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.ActionDescriptor"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.HttpContext">
+            <summary>
+            The <see cref="P:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.HttpContext"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.Count">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Mvc.Diagnostics.AfterViewPageEventData.Item(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcRazorMvcBuilderExtensions">
+            <summary>
+            Extensions methods for configuring MVC via an <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcBuilderExtensions.AddRazorOptions(Microsoft.Extensions.DependencyInjection.IMvcBuilder,System.Action{Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions})">
+            <summary>
+            Configures a set of <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions"/> for the application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</param>
+            <param name="setupAction">An action to configure the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcBuilderExtensions.AddTagHelpersAsServices(Microsoft.Extensions.DependencyInjection.IMvcBuilder)">
+            <summary>
+            Registers tag helpers as services and replaces the existing <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ITagHelperActivator"/>
+            with an <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ServiceBasedTagHelperActivator"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> instance this method extends.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> instance this method extends.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcBuilderExtensions.InitializeTagHelper``1(Microsoft.Extensions.DependencyInjection.IMvcBuilder,System.Action{``0,Microsoft.AspNetCore.Mvc.Rendering.ViewContext})">
+            <summary>
+            Adds an initialization callback for a given <typeparamref name="TTagHelper"/>.
+            </summary>
+            <remarks>
+            The callback will be invoked on any <typeparamref name="TTagHelper"/> instance before the
+            <see cref="M:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)"/> method is called.
+            </remarks>
+            <typeparam name="TTagHelper">The type of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> being initialized.</typeparam>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> instance this method extends.</param>
+            <param name="initialize">An action to initialize the <typeparamref name="TTagHelper"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder"/> instance this method extends.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcRazorMvcCoreBuilderExtensions">
+            <summary>
+            Static class that adds RazorViewEngine methods to <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)">
+            <summary>
+            Registers Razor view engine services.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcCoreBuilderExtensions.AddRazorViewEngine(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Action{Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions})">
+            <summary>
+            Registers Razor view engine services.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</param>
+            <param name="setupAction">A setup action that configures the <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcCoreBuilderExtensions.AddTagHelpersAsServices(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder)">
+            <summary>
+            Registers discovered tag helpers as services and changes the existing <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ITagHelperActivator"/>
+            for an <see cref="T:Microsoft.AspNetCore.Mvc.Razor.ServiceBasedTagHelperActivator"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/> instance this method extends.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/> instance this method extends.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcCoreBuilderExtensions.InitializeTagHelper``1(Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder,System.Action{``0,Microsoft.AspNetCore.Mvc.Rendering.ViewContext})">
+            <summary>
+            Adds an initialization callback for a given <typeparamref name="TTagHelper"/>.
+            </summary>
+            <remarks>
+            The callback will be invoked on any <typeparamref name="TTagHelper"/> instance before the
+            <see cref="M:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelperComponent.ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext,Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)"/> method is called.
+            </remarks>
+            <typeparam name="TTagHelper">The type of <see cref="T:Microsoft.AspNetCore.Razor.TagHelpers.ITagHelper"/> being initialized.</typeparam>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/> instance this method extends.</param>
+            <param name="initialize">An action to initialize the <typeparamref name="TTagHelper"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder"/> instance this method extends.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.MvcRazorMvcViewOptionsSetup">
+            <summary>
+            Configures <see cref="T:Microsoft.AspNetCore.Mvc.MvcViewOptions"/> to use <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcViewOptionsSetup.#ctor(Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Extensions.DependencyInjection.MvcRazorMvcViewOptionsSetup"/>.
+            </summary>
+            <param name="razorViewEngine">The <see cref="T:Microsoft.AspNetCore.Mvc.Razor.IRazorViewEngine"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.MvcRazorMvcViewOptionsSetup.Configure(Microsoft.AspNetCore.Mvc.MvcViewOptions)">
+            <summary>
+            Configures <paramref name="options"/> to use <see cref="T:Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine"/>.
+            </summary>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Mvc.MvcViewOptions"/> to configure.</param>
+        </member>
+    </members>
+</doc>

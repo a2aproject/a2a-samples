@@ -1,0 +1,915 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.HttpLogging</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute">
+            <summary>
+            Metadata that provides endpoint-specific settings for the HttpLogging middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.#ctor(Microsoft.AspNetCore.HttpLogging.HttpLoggingFields)">
+            <summary>
+            Initializes an instance of the <see cref="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute"/> class.
+            </summary>
+            <param name="loggingFields">Specifies what fields to log for the endpoint.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.LoggingFields">
+            <summary>
+            Specifies what fields to log.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.IsRequestBodyLogLimitSet">
+            <summary>
+            Indicates whether <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.RequestBodyLogLimit"/> has been set.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.RequestBodyLogLimit">
+            <summary>
+            Specifies the maximum number of bytes to be logged for the request body.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.RequestBodyLogLimit"/> set to a value less than <c>0</c>.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when getting <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.RequestBodyLogLimit"/> if it hasn't been set to a value. Check <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.IsRequestBodyLogLimitSet"/> first.</exception>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.IsResponseBodyLogLimitSet">
+            <summary>
+            Indicates whether <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.ResponseBodyLogLimit"/> has been set.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.ResponseBodyLogLimit">
+            <summary>
+            Specifies the maximum number of bytes to be logged for the response body.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.ResponseBodyLogLimit"/> set to a value less than <c>0</c>.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when getting <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.ResponseBodyLogLimit"/> if it hasn't been set to a value. Check <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.IsResponseBodyLogLimitSet"/> first.</exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields">
+            <summary>
+            Flags used to control which parts of the
+            request and response are logged.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.None">
+            <summary>
+            No logging.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPath">
+            <summary>
+            Flag for logging the HTTP Request Path, which includes both the <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Path"/>
+            and <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.PathBase"/>.
+            <para>
+            For example:
+            Path: /index
+            PathBase: /app
+            </para>
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestQuery">
+            <summary>
+            Flag for logging the HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.QueryString"/>.
+            <para>
+            For example:
+            Query: ?index=1
+            </para>
+            RequestQuery contents can contain private information
+            which may have regulatory concerns under GDPR
+            and other laws. RequestQuery should not be logged
+            unless logs are secure and access controlled
+            and the privacy impact assessed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestProtocol">
+            <summary>
+            Flag for logging the HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Protocol"/>.
+            <para>
+            For example:
+            Protocol: HTTP/1.1
+            </para>
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestMethod">
+            <summary>
+            Flag for logging the HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Method"/>.
+            <para>
+            For example:
+            Method: GET
+            </para>
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestScheme">
+            <summary>
+            Flag for logging the HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Scheme"/>.
+            <para>
+            For example:
+            Scheme: https
+            </para>
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponseStatusCode">
+            <summary>
+            Flag for logging the HTTP Response <see cref="P:Microsoft.AspNetCore.Http.HttpResponse.StatusCode"/>.
+            <para>
+            For example:
+            StatusCode: 200
+            </para>
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestHeaders">
+            <summary>
+            Flag for logging the HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Headers"/>.
+            Request Headers are logged as soon as the middleware is invoked.
+            Headers are redacted by default with the character '[Redacted]' unless specified in
+            the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestHeaders"/>.
+            <para>
+            For example:
+            Connection: keep-alive
+            My-Custom-Request-Header: [Redacted]
+            </para>
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponseHeaders">
+            <summary>
+            Flag for logging the HTTP Response <see cref="P:Microsoft.AspNetCore.Http.HttpResponse.Headers"/>.
+            Response Headers are logged when the <see cref="P:Microsoft.AspNetCore.Http.HttpResponse.Body"/> is written to
+            or when <see cref="M:Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature.StartAsync(System.Threading.CancellationToken)"/>
+            is called.
+            <para>
+            Headers are redacted by default with the character '[Redacted]' unless specified in
+            the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseHeaders"/>.
+            </para>
+            <para>
+            For example:
+            Content-Length: 16
+            My-Custom-Response-Header: [Redacted]
+            </para>
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestTrailers">
+            <summary>
+            Flag for logging the HTTP Request <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpRequestTrailersFeature.Trailers"/>.
+            Request Trailers are currently not logged.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponseTrailers">
+            <summary>
+            Flag for logging the HTTP Response <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpResponseTrailersFeature.Trailers"/>.
+            Response Trailers are currently not logged.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestBody">
+            <summary>
+            Flag for logging the HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Body"/>.
+            Logging the request body has performance implications, as it requires buffering
+            the entire request body up to <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestBodyLogLimit"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponseBody">
+            <summary>
+            Flag for logging the HTTP Response <see cref="P:Microsoft.AspNetCore.Http.HttpResponse.Body"/>.
+            Logging the response body has performance implications, as it requires buffering
+            the entire response body up to <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseBodyLogLimit"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Duration">
+            <summary>
+            Flag for logging how long it took to process the request and response in milliseconds.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestProperties">
+            <summary>
+            Flag for logging a collection of HTTP Request properties,
+            including <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPath"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestProtocol"/>,
+            <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestMethod"/>, and <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestScheme"/>.
+            </summary>
+            <remarks>
+            The HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.QueryString"/> is not included with this flag as it may contain private information.
+            If desired, it should be explicitly specified with <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestQuery"/>.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders">
+            <summary>
+            Flag for logging HTTP Request properties and headers.
+            Includes <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestProperties"/> and <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestHeaders"/>
+            </summary>
+            <remarks>
+            The HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.QueryString"/> is not included with this flag as it may contain private information.
+            If desired, it should be explicitly specified with <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestQuery"/>.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders">
+            <summary>
+            Flag for logging HTTP Response properties and headers.
+            Includes <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponseStatusCode"/> and <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponseHeaders"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Request">
+            <summary>
+            Flag for logging the entire HTTP Request.
+            Includes <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders"/> and <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestBody"/>.
+            Logging the request body has performance implications, as it requires buffering
+            the entire request body up to <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestBodyLogLimit"/>.
+            </summary>
+            <remarks>
+            The HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.QueryString"/> is not included with this flag as it may contain private information.
+            If desired, it should be explicitly specified with <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestQuery"/>.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Response">
+            <summary>
+            Flag for logging the entire HTTP Response.
+            Includes <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders"/> and <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponseBody"/>.
+            Logging the response body has performance implications, as it requires buffering
+            the entire response body up to <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseBodyLogLimit"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All">
+            <summary>
+            Flag for logging both the HTTP Request and Response.
+            Includes <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Request"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Response"/>, and <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.Duration"/>.
+            Logging the request and response body has performance implications, as it requires buffering
+            the entire request and response body up to the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestBodyLogLimit"/>
+            and <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseBodyLogLimit"/>.
+            </summary>
+            <remarks>
+            The HTTP Request <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.QueryString"/> is not included with this flag as it may contain private information.
+            If desired, it should be explicitly specified with <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestQuery"/>.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext">
+            <summary>
+            The context used for <see cref="T:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor"/>.
+            </summary>
+            <remarks>
+            Settings will be pre-initialized with the relevant values from <see cref="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions" /> and updated with endpoint specific
+            values from <see cref="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute"/> or
+            <see cref="M:Microsoft.AspNetCore.Builder.HttpLoggingEndpointConventionBuilderExtensions.WithHttpLogging``1(``0,Microsoft.AspNetCore.HttpLogging.HttpLoggingFields,System.Nullable{System.Int32},System.Nullable{System.Int32})" />.
+            All settings can be modified per request. All settings will carry over from
+            <see cref="M:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor.OnRequestAsync(Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext)"/>
+            to <see cref="M:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor.OnResponseAsync(Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext)"/> except the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Parameters"/>
+            which are cleared after logging the request.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.HttpContext">
+            <summary>
+            The request context.
+            </summary>
+            <remarks>
+            This property should not be set by user code except for testing purposes.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.LoggingFields">
+            <summary>
+            Gets or sets which parts of the request and response to log.
+            </summary>
+            <remarks>
+            This is pre-populated with the value from <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.LoggingFields"/>,
+            <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.LoggingFields"/>, or
+            <see cref="M:Microsoft.AspNetCore.Builder.HttpLoggingEndpointConventionBuilderExtensions.WithHttpLogging``1(``0,Microsoft.AspNetCore.HttpLogging.HttpLoggingFields,System.Nullable{System.Int32},System.Nullable{System.Int32})"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.RequestBodyLogLimit">
+            <summary>
+            Gets or sets the maximum number of bytes of the request body to log.
+            </summary>
+            <remarks>
+            This is pre-populated with the value from <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestBodyLogLimit"/>,
+            <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.RequestBodyLogLimit"/>, or
+            <see cref="M:Microsoft.AspNetCore.Builder.HttpLoggingEndpointConventionBuilderExtensions.WithHttpLogging``1(``0,Microsoft.AspNetCore.HttpLogging.HttpLoggingFields,System.Nullable{System.Int32},System.Nullable{System.Int32})"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.ResponseBodyLogLimit">
+            <summary>
+            Gets or sets the maximum number of bytes of the response body to log.
+            </summary>
+            <remarks>
+            This is pre-populated with the value from <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseBodyLogLimit"/>,
+            <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingAttribute.ResponseBodyLogLimit"/>, or
+            <see cref="M:Microsoft.AspNetCore.Builder.HttpLoggingEndpointConventionBuilderExtensions.WithHttpLogging``1(``0,Microsoft.AspNetCore.HttpLogging.HttpLoggingFields,System.Nullable{System.Int32},System.Nullable{System.Int32})"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Parameters">
+            <summary>
+            Gets a list of parameters that will be logged as part of the request or response. Values specified in <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.LoggingFields"/>
+            will be added automatically after all interceptors run. All values are cleared after logging the request.
+            All other relevant settings will carry over to the response.
+            </summary>
+            <remarks>
+            If <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.CombineLogs"/> is enabled, the parameters will be logged as part of the combined log.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.AddParameter(System.String,System.Object)">
+            <summary>
+            Adds data that will be logged as part of the request or response. See <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Parameters"/>.
+            </summary>
+            <param name="key">The parameter name.</param>
+            <param name="value">The parameter value.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Enable(Microsoft.AspNetCore.HttpLogging.HttpLoggingFields)">
+            <summary>
+            Adds the given fields to what's currently enabled in <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.LoggingFields"/>.
+            </summary>
+            <param name="fields">Additional fields to enable.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.IsAnyEnabled(Microsoft.AspNetCore.HttpLogging.HttpLoggingFields)">
+            <summary>
+            Checks if any of the given fields are currently enabled in <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.LoggingFields"/>.
+            </summary>
+            <param name="fields">One or more field flags to check.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Disable(Microsoft.AspNetCore.HttpLogging.HttpLoggingFields)">
+            <summary>
+            Removes the given fields from what's currently enabled in <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.LoggingFields"/>.
+            </summary>
+            <param name="fields">Fields to disable.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.TryDisable(Microsoft.AspNetCore.HttpLogging.HttpLoggingFields)">
+            <summary>
+            Disables the given fields if any are currently enabled in <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.LoggingFields"/>.
+            </summary>
+            <param name="fields">One or more field flags to disable if present.</param>
+            <returns><see langword="true" /> if any of the fields were previously enabled.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware">
+            <summary>
+            Middleware that logs HTTP requests and HTTP responses.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the <see cref="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware" />.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>HttpResponseLog.cs
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions">
+            <summary>
+            Options for the <see cref="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.LoggingFields">
+            <summary>
+            Fields to log for the Request and Response. Defaults to logging request and response properties and headers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestHeaders">
+            <summary>
+            Request header values that are allowed to be logged.
+            <para>
+            If a request header is not present in the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestHeaders"/>,
+            the header name will be logged with a redacted value.
+            Request headers can contain authentication tokens,
+            or private information which may have regulatory concerns
+            under GDPR and other laws. Arbitrary request headers
+            should not be logged unless logs are secure and
+            access controlled and the privacy impact assessed.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseHeaders">
+            <summary>
+            Response header values that are allowed to be logged.
+            <para>
+            If a response header is not present in the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseHeaders"/>,
+            the header name will be logged with a redacted value.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.MediaTypeOptions">
+            <summary>
+            Options for configuring encodings for a specific media type.
+            <para>
+            If the request or response do not match the supported media type,
+            the response body will not be logged.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestBodyLogLimit">
+            <summary>
+            Maximum request body size to log (in bytes). Defaults to 32 KB.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseBodyLogLimit">
+            <summary>
+            Maximum response body size to log (in bytes). Defaults to 32 KB.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.CombineLogs">
+            <summary>
+            Gets or sets if the middleware will combine the request, request body, response, response body,
+            and duration logs into a single log entry. The default is <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor">
+            <summary>
+            Callbacks used to extend the HttpLogging middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor.OnRequestAsync(Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext)">
+            <summary>
+            A callback to customize the logging of the request and response.
+            </summary>
+            <remarks>
+            This is called when the request is first received and can be used to configure both request and response options. All settings will carry over to
+            <see cref="M:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor.OnResponseAsync(Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext)"/> except the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Parameters"/>
+            will be cleared after logging the request. <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.LoggingFields"/> may be changed per request to control the logging behavior.
+            If no request fields are enabled, and the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Parameters"/> collection is empty, no request logging will occur.
+            If <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.CombineLogs"/> is enabled then <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Parameters"/> will carry over from the request to response
+            and be logged together.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor.OnResponseAsync(Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext)">
+            <summary>
+            A callback to customize the logging of the response.
+            </summary>
+            <remarks>
+            This is called when the first write to the response happens, or the response ends without a write, just before anything is sent to the client. Settings are carried
+            over from <see cref="M:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor.OnRequestAsync(Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext)"/> (except the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Parameters"/>) and response settings may
+            still be modified. Changes to request settings will have no effect. If no response fields are enabled, and the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Parameters"/>
+            collection is empty, no response logging will occur.
+            If <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.CombineLogs"/> is enabled then <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingInterceptorContext.Parameters"/> will carry over from the request to response
+            and be logged together. <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestBody"/> and <see cref="F:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponseBody"/>  can also be disabled in OnResponseAsync to prevent
+            logging any buffered body data.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.ISystemDateTime.Now">
+            <summary> 
+            Retrieves the date and time currently set for this machine.
+            </summary> 
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.MediaTypeOptions">
+            <summary>
+            Options for HttpLogging to configure which encoding to use for each media type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.MediaTypeOptions.AddText(System.String)">
+            <summary>
+            Adds a contentType to be used for logging as text.
+            </summary>
+            <remarks>
+            If charset is not specified in the contentType, the encoding will default to UTF-8.
+            </remarks>
+            <param name="contentType">The content type to add.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.MediaTypeOptions.AddText(System.String,System.Text.Encoding)">
+            <summary>
+            Adds a contentType to be used for logging as text.
+            </summary>
+            <param name="contentType">The content type to add.</param>
+            <param name="encoding">The encoding to use.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.MediaTypeOptions.AddBinary(Microsoft.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Adds a <see cref="T:Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> to be used for logging as binary.
+            </summary>
+            <param name="mediaType">The MediaType to add.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.MediaTypeOptions.AddBinary(System.String)">
+            <summary>
+            Adds a content to be used for logging as text.
+            </summary>
+            <param name="contentType">The content type to add.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.MediaTypeOptions.Clear">
+            <summary>
+            Clears all MediaTypes.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.RequestBufferingStream.BodyStatus.None">
+            <summary>
+            The body was not read.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.RequestBufferingStream.BodyStatus.Incomplete">
+            <summary>
+            The body was partially read.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.RequestBufferingStream.BodyStatus.Complete">
+            <summary>
+            The body was completely read.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.RequestBufferingStream.BodyStatus.Truncated">
+            <summary>
+            The body was read and truncated.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions">
+            <summary>
+            Options for the <see cref="T:Microsoft.AspNetCore.HttpLogging.W3CLogger"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions.FileSizeLimit">
+            <summary>
+            Gets or sets a strictly positive value representing the maximum log size in bytes or null for no limit.
+            Once the log is full, no more messages will be appended.
+            Defaults to <c>10MiB</c>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions.RetainedFileCountLimit">
+            <summary>
+            Gets or sets a strictly positive value representing the maximum retained file count.
+            Defaults to <c>4</c>.
+            Must be between 1 and 10,000, inclusive.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions.FileName">
+            <summary>
+            Gets or sets a string representing the prefix of the file name used to store the logging information.
+            The current date plus a file number (in the format {YYYYMMDD.X} will be appended to the given value.
+            Defaults to <c>w3clog-</c>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions.LogDirectory">
+            <summary>
+            Gets or sets a string representing the directory where the log file will be written to.
+            Defaults to <c>./logs/</c> relative to the app directory (ContentRoot).
+            If a full path is given, that full path will be used. If a relative path is given,
+            the full path will be that path relative to ContentRoot.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions.FlushInterval">
+            <summary>
+            Gets or sets the period after which logs will be flushed to the store.
+            Defaults to 1 second.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions.AdditionalRequestHeaders">
+            <summary>
+            List of additional request header values to log.
+            <para>
+            Request headers can contain authentication tokens,
+            or private information which may have regulatory concerns
+            under GDPR and other laws. Arbitrary request headers
+            should not be logged unless logs are secure and
+            access controlled and the privacy impact assessed.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions.LoggingFields">
+            <summary>
+            Fields to log. Defaults to logging request and response properties and headers,
+            plus date/time info and server name.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields">
+            <summary>
+            Flags used to control which parts of the
+            request and response are logged in W3C format.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.None">
+            <summary>
+            No logging.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Date">
+            <summary>
+            Flag for logging the date
+            that the activity occurred.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Time">
+            <summary>
+            Flag for logging the time
+            that the activity occurred.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ClientIpAddress">
+            <summary>
+            Flag for logging the IP address
+            of the client that accessed the server.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UserName">
+            <summary>
+            Flag for logging the name of the
+            authenticated user that accessed the server.
+            UserName contents can contain private information
+            which may have regulatory concerns under GDPR
+            and other laws. UserName should not be logged
+            unless logs are secure and access controlled
+            and the privacy impact assessed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ServerName">
+            <summary>
+            Flag for logging the name of the
+            server on which the log entry was generated.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ServerIpAddress">
+            <summary>
+            Flag for logging the IP address of the
+            server on which the log entry was generated.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ServerPort">
+            <summary>
+            Flag for logging the port number
+            the client is connected to.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Method">
+            <summary>
+            Flag for logging the action
+            the client was trying to perform.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UriStem">
+            <summary>
+            Flag for logging the resource accessed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UriQuery">
+            <summary>
+            Flag for logging the query, if any,
+            the client was trying to perform.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ProtocolStatus">
+            <summary>
+            Flag for logging the HTTP response status code.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.TimeTaken">
+            <summary>
+            Flag for logging the duration of time,
+            in milliseconds, that the action consumed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ProtocolVersion">
+            <summary>
+            Flag for logging the protocol (HTTP, FTP) version
+            used by the client. For HTTP this will be either
+            HTTP 1.0 or HTTP 1.1.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Host">
+            <summary>
+            Flag for logging the content of the host header.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UserAgent">
+            <summary>
+            Flag for logging the requesting user agent.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Cookie">
+            <summary>
+            Flag for logging the content of the cookie
+            sent by the client, if any.
+            Cookie contents can contain authentication tokens,
+            or private information which may have regulatory concerns
+            under GDPR and other laws. Cookies should not be logged
+            unless logs are secure and access controlled
+            and the privacy impact assessed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Referer">
+            <summary>
+            Flag for logging the previous site visited by the user,
+            which provided a link to the current site, if any.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ConnectionInfoFields">
+            <summary>
+            Flag for logging properties that are part of the <see cref="T:Microsoft.AspNetCore.Http.ConnectionInfo"/>
+            Includes <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ClientIpAddress"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ServerIpAddress"/> and <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ServerPort"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.RequestHeaders">
+            <summary>
+            Flag for logging properties that are part of the <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Headers"/>
+            Includes <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Host"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Referer"/>, and <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UserAgent"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Request">
+            <summary>
+            Flag for logging properties that are part of the <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/>
+            Includes <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UriStem"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UriQuery"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ProtocolVersion"/>,
+            <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Method"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Host"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Referer"/>,
+            and <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UserAgent"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.All">
+            <summary>
+            Flag for logging all possible fields.
+            Includes <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Date"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Time"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ClientIpAddress"/>,
+            <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ServerName"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ServerIpAddress"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ServerPort"/>,
+            <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Method"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UriStem"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UriQuery"/>,
+            <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ProtocolStatus"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.TimeTaken"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.ProtocolVersion"/>,
+            <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Host"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UserAgent"/>, <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Referer"/>,
+            <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.UserName"/>, and <see cref="F:Microsoft.AspNetCore.HttpLogging.W3CLoggingFields.Cookie"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.HttpLogging.W3CLoggingMiddleware">
+            <summary>
+            Middleware that logs HTTP requests and HTTP responses.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.W3CLoggingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Options.IOptionsMonitor{Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions},Microsoft.AspNetCore.HttpLogging.W3CLogger)">
+            <summary>
+            Initializes <see cref="T:Microsoft.AspNetCore.HttpLogging.W3CLoggingMiddleware" />.
+            </summary>
+            <param name="next"></param>
+            <param name="options"></param>
+            <param name="w3cLogger"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.HttpLogging.W3CLoggingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the <see cref="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware" />.
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.HttpLoggingBuilderExtensions">
+            <summary>
+            Extension methods for the HttpLogging middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HttpLoggingBuilderExtensions.UseHttpLogging(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds a middleware that can log HTTP requests and responses.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> instance this method extends.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HttpLoggingBuilderExtensions.UseW3CLogging(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds a middleware that can log HTTP requests and responses for server logs in W3C format.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> instance this method extends.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.HttpLoggingEndpointConventionBuilderExtensions">
+            <summary>
+            HttpLogging middleware extension methods for <see cref="T:Microsoft.AspNetCore.Builder.IEndpointConventionBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.HttpLoggingEndpointConventionBuilderExtensions.WithHttpLogging``1(``0,Microsoft.AspNetCore.HttpLogging.HttpLoggingFields,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Adds endpoint specific settings for the HttpLogging middleware.
+            </summary>
+            <typeparam name="TBuilder">The type of endpoint convention builder.</typeparam>
+            <param name="builder">The endpoint convention builder.</param>
+            <param name="loggingFields">The <see cref="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields"/> to apply to this endpoint.</param>
+            <param name="requestBodyLogLimit">Sets the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestBodyLogLimit"/> for this endpoint. A value of <c>-1</c> means use the default setting in <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.RequestBodyLogLimit"/>.</param>
+            <param name="responseBodyLogLimit">Sets the <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseBodyLogLimit"/> for this endpoint. A value of <c>-1</c> means use the default setting in <see cref="P:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.ResponseBodyLogLimit"/>.</param>
+            <returns>The original convention builder parameter.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when <paramref name="requestBodyLogLimit"/> or <paramref name="responseBodyLogLimit"/> is less than <c>0</c>.</exception>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.HttpLoggingServicesExtensions">
+            <summary>
+            Extension methods for the HttpLogging middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpLoggingServicesExtensions.AddHttpLogging(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions})">
+            <summary>
+            Adds HTTP Logging services.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configureOptions">A delegate to configure the <see cref="T:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions"/>.</param>
+            <returns>The original service collection for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpLoggingServicesExtensions.AddHttpLoggingInterceptor``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registers the given type as a <see cref="T:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor"/> in the DI container.
+            </summary>
+            <typeparam name="T">A type that implements <see cref="T:Microsoft.AspNetCore.HttpLogging.IHttpLoggingInterceptor"/>.</typeparam>
+            <param name="services">The service collection.</param>
+            <returns>The original service collection for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpLoggingServicesExtensions.AddW3CLogging(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions})">
+            <summary>
+            Adds W3C Logging services.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configureOptions">A delegate to configure the <see cref="T:Microsoft.AspNetCore.HttpLogging.W3CLoggerOptions"/>.</param>
+            <returns>The original service collection for chaining.</returns>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm">
+            <summary>
+            Provides support for efficiently using Tasks to implement the APM (Begin/End) pattern.
+            </summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.Begin(System.Threading.Tasks.Task,System.AsyncCallback,System.Object)">
+            <summary>
+            Marshals the Task as an IAsyncResult, using the supplied callback and state
+            to implement the APM pattern.
+            </summary>
+            <param name="task">The Task to be marshaled.</param>
+            <param name="callback">The callback to be invoked upon completion.</param>
+            <param name="state">The state to be stored in the IAsyncResult.</param>
+            <returns>An IAsyncResult to represent the task's asynchronous operation.</returns>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.End``1(System.IAsyncResult)">
+            <summary>Processes an IAsyncResult returned by Begin.</summary>
+            <param name="asyncResult">The IAsyncResult to unwrap.</param>
+        </member>
+        <member name="T:System.Threading.Tasks.TaskToApm.TaskAsyncResult">
+            <summary>Provides a simple IAsyncResult that wraps a Task.</summary>
+            <remarks>
+            We could use the Task as the IAsyncResult if the Task's AsyncState is the same as the object state,
+            but that's very rare, in particular in a situation where someone cares about allocation, and always
+            using TaskAsyncResult simplifies things and enables additional optimizations.
+            </remarks>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task">
+            <summary>The wrapped Task.</summary>
+        </member>
+        <member name="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._callback">
+            <summary>Callback to invoke when the wrapped task completes.</summary>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.#ctor(System.Threading.Tasks.Task,System.Object,System.AsyncCallback)">
+            <summary>Initializes the IAsyncResult with the Task to wrap and the associated object state.</summary>
+            <param name="task">The Task to wrap.</param>
+            <param name="state">The new AsyncState value.</param>
+            <param name="callback">Callback to invoke when the wrapped task completes.</param>
+        </member>
+        <member name="M:System.Threading.Tasks.TaskToApm.TaskAsyncResult.InvokeCallback">
+            <summary>Invokes the callback.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncState">
+            <summary>Gets a user-defined object that qualifies or contains information about an asynchronous operation.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.CompletedSynchronously">
+            <summary>Gets a value that indicates whether the asynchronous operation completed synchronously.</summary>
+            <remarks>This is set lazily based on whether the <see cref="F:System.Threading.Tasks.TaskToApm.TaskAsyncResult._task"/> has completed by the time this object is created.</remarks>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.IsCompleted">
+            <summary>Gets a value that indicates whether the asynchronous operation has completed.</summary>
+        </member>
+        <member name="P:System.Threading.Tasks.TaskToApm.TaskAsyncResult.AsyncWaitHandle">
+            <summary>Gets a <see cref="T:System.Threading.WaitHandle"/> that is used to wait for an asynchronous operation to complete.</summary>
+        </member>
+        <member name="P:System.IO.Pipelines.BufferSegment.End">
+            <summary>
+            The End represents the offset into AvailableMemory where the range of "active" bytes ends. At the point when the block is leased
+            the End is guaranteed to be equal to Start. The value of Start may be assigned anywhere between 0 and
+            Buffer.Length, and must be equal to or less than End.
+            </summary>
+        </member>
+        <member name="P:System.IO.Pipelines.BufferSegment.NextSegment">
+            <summary>
+            Reference to the next block of data when the overall "active" bytes spans multiple blocks. At the point when the block is
+            leased Next is guaranteed to be null. Start, End, and Next are used together in order to create a linked-list of discontiguous
+            working memory. The "active" memory is grown when bytes are copied in, End is increased, and Next is assigned. The "active"
+            memory is shrunk when bytes are consumed, Start is increased, and blocks are returned to the pool.
+            </summary>
+        </member>
+        <member name="T:System.IO.Pipelines.BufferSegmentStack.SegmentAsValueType">
+            <summary>
+            A simple struct we wrap reference types inside when storing in arrays to
+            bypass the CLR's covariant checks when writing to arrays.
+            </summary>
+            <remarks>
+            We use <see cref="T:System.IO.Pipelines.BufferSegmentStack.SegmentAsValueType"/> as a wrapper to avoid paying the cost of covariant checks whenever
+            the underlying array that the <see cref="T:System.IO.Pipelines.BufferSegmentStack"/> class uses is written to.
+            We've recognized this as a perf win in ETL traces for these stack frames:
+            clr!JIT_Stelem_Ref
+              clr!ArrayStoreCheck
+                clr!ObjIsInstanceOf
+            </remarks>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.GetPinnableReference">
+            <summary>
+            Get a pinnable reference to the builder.
+            Does not ensure there is a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/>
+            This overload is pattern matched in the C# 7.3+ compiler so you can omit
+            the explicit method call, and write eg "fixed (char* c = builder)"
+            </summary>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.GetPinnableReference(System.Boolean)">
+            <summary>
+            Get a pinnable reference to the builder.
+            </summary>
+            <param name="terminate">Ensures that the builder has a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/></param>
+        </member>
+        <member name="P:System.Text.ValueStringBuilder.RawChars">
+            <summary>Returns the underlying storage of the builder.</summary>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.AsSpan(System.Boolean)">
+            <summary>
+            Returns a span around the contents of the builder.
+            </summary>
+            <param name="terminate">Ensures that the builder has a null char after <see cref="P:System.Text.ValueStringBuilder.Length"/></param>
+        </member>
+        <member name="M:System.Text.ValueStringBuilder.Grow(System.Int32)">
+            <summary>
+            Resize the internal buffer either by doubling current buffer size or
+            by adding <paramref name="additionalCapacityBeyondPos"/> to
+            <see cref="F:System.Text.ValueStringBuilder._pos"/> whichever is greater.
+            </summary>
+            <param name="additionalCapacityBeyondPos">
+            Number of chars requested beyond current position.
+            </param>
+        </member>
+    </members>
+</doc>

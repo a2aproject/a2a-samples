@@ -1,0 +1,413 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Net.Quic</name>
+  </assembly>
+  <members>
+    <member name="T:System.Net.Quic.QuicAbortDirection">
+      <summary>Specifies the direction of the <see cref="T:System.Net.Quic.QuicStream" /> which is to be <see cref="M:System.Net.Quic.QuicStream.Abort(System.Net.Quic.QuicAbortDirection,System.Int64)">aborted</see>.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicAbortDirection.Both">
+      <summary>Abort both sides of the stream, that is, <see cref="F:System.Net.Quic.QuicAbortDirection.Read" /> and <see cref="F:System.Net.Quic.QuicAbortDirection.Write" />, at the same time.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicAbortDirection.Read">
+      <summary>Abort the read side of the stream.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicAbortDirection.Write">
+      <summary>Abort the write side of the stream.</summary>
+    </member>
+    <member name="T:System.Net.Quic.QuicClientConnectionOptions">
+      <summary>Options for client (outbound) <see cref="T:System.Net.Quic.QuicConnection">Quic connections</see>.</summary>
+    </member>
+    <member name="M:System.Net.Quic.QuicClientConnectionOptions.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Quic.QuicClientConnectionOptions" /> class.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicClientConnectionOptions.ClientAuthenticationOptions">
+      <summary>Gets or sets the client authentication options to use when establishing a new connection.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicClientConnectionOptions.LocalEndPoint">
+      <summary>Gets or sets the optional local endpoint that will be bound to.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicClientConnectionOptions.RemoteEndPoint">
+      <summary>Gets or sets the remote endpoint to connect to. May be a <see cref="T:System.Net.DnsEndPoint" />, which will get resolved to an IP before connecting, or an <see cref="T:System.Net.IPEndPoint" />.</summary>
+    </member>
+    <member name="T:System.Net.Quic.QuicConnection">
+      <summary>Represents a QUIC connection, which doesn't send or receive data itself but rather allows opening or accepting multiple <see cref="T:System.Net.Quic.QuicStream">streams</see>.</summary>
+    </member>
+    <member name="M:System.Net.Quic.QuicConnection.AcceptInboundStreamAsync(System.Threading.CancellationToken)">
+      <summary>Accepts an inbound <see cref="T:System.Net.Quic.QuicStream" />.</summary>
+      <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation.</param>
+      <returns>An asynchronous task that completes with the accepted <see cref="T:System.Net.Quic.QuicStream" />.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicConnection.CloseAsync(System.Int64,System.Threading.CancellationToken)">
+      <summary>Closes the connection with the application provided-code.</summary>
+      <param name="errorCode">An application-provided code with the reason for closure.</param>
+      <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation.</param>
+      <returns>An asynchronous task that completes when the connection is closed.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicConnection.ConnectAsync(System.Net.Quic.QuicClientConnectionOptions,System.Threading.CancellationToken)">
+      <summary>Creates a new <see cref="T:System.Net.Quic.QuicConnection" /> and connects it to the peer.</summary>
+      <param name="options">Options for the connection.</param>
+      <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation.</param>
+      <returns>An asynchronous task that completes with the connected connection.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicConnection.DisposeAsync">
+      <summary>If not closed explicitly by <see cref="M:System.Net.Quic.QuicConnection.CloseAsync(System.Int64,System.Threading.CancellationToken)" />, closes the connection silently (leading to idle timeout on the peer side) and releases all resources associated with the connection.</summary>
+      <returns>A task that represents the asynchronous dispose operation.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicConnection.OpenOutboundStreamAsync(System.Net.Quic.QuicStreamType,System.Threading.CancellationToken)">
+      <summary>Creates an outbound unidirectional or bidirectional <see cref="T:System.Net.Quic.QuicStream" />.</summary>
+      <param name="type">The type of the stream, either unidirectional or bidirectional.</param>
+      <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation.</param>
+      <returns>An asynchronous task that completes with the opened <see cref="T:System.Net.Quic.QuicStream" />.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicConnection.ToString">
+      <summary>Returns a string that represents the current object.</summary>
+      <returns>A string that represents the current object.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnection.IsSupported">
+      <summary>Gets a value that indicates whether QUIC is supported for client scenarios on the current machine.</summary>
+      <returns>
+        <see langword="true" /> if QUIC is supported on the current machine and can be used; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnection.LocalEndPoint">
+      <summary>Gets the local endpoint used for this connection.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnection.NegotiatedApplicationProtocol">
+      <summary>Gets the final, negotiated application protocol.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnection.RemoteCertificate">
+      <summary>Gets the certificate provided by the peer.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnection.RemoteEndPoint">
+      <summary>Gets the remote endpoint used for this connection.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnection.TargetHostName">
+      <summary>Gets the name of the server the client is trying to connect to. That name is used for server certificate validation. It can be a DNS name or an IP address.</summary>
+      <returns>The name of the server the client is trying to connect to.</returns>
+    </member>
+    <member name="T:System.Net.Quic.QuicConnectionOptions">
+      <summary>Shared options for both client (outbound) and server (inbound) <see cref="T:System.Net.Quic.QuicConnection">Quic connections</see>.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnectionOptions.DefaultCloseErrorCode">
+      <summary>Gets or sets the error code used for <see cref="M:System.Net.Quic.QuicConnection.CloseAsync(System.Int64,System.Threading.CancellationToken)" /> when the connection is disposed.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnectionOptions.DefaultStreamErrorCode">
+      <summary>Gets or sets the error code used when the stream needs to abort the read or write side of the stream internally.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnectionOptions.IdleTimeout">
+      <summary>Gets or sets the idle timeout for connections. The idle timeout is the time after which the connection will be closed.
+            Default <see cref="F:System.TimeSpan.Zero" /> means underlying implementation default idle timeout.</summary>
+      <returns>The idle timeout for connections. The default is <see cref="F:System.TimeSpan.Zero" />, which means that the default idle timeout of the underlying implementation is used.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnectionOptions.MaxInboundBidirectionalStreams">
+      <summary>Gets or sets the maximum number of concurrent bidirectional streams that the remote peer connection can create on an open connection.</summary>
+      <returns>The limit on the number of bidirectional streams the remote peer connection can create on an open connection. The default is 0 for client connections and 100 for server connections.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicConnectionOptions.MaxInboundUnidirectionalStreams">
+      <summary>Gets or sets the maximum number of concurrent unidirectional streams that the remote peer connection can create on an open connection.</summary>
+      <returns>The limit on the number of unidirectional streams the remote peer connection can create on an open connection. The default is 0 for client connections and 10 for server connections.</returns>
+    </member>
+    <member name="T:System.Net.Quic.QuicError">
+      <summary>Defines the various error conditions for <see cref="T:System.Net.Quic.QuicListener" />, <see cref="T:System.Net.Quic.QuicConnection" />, and <see cref="T:System.Net.Quic.QuicStream" /> operations.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.AlpnInUse">
+      <summary>Another QUIC listener is already listening on one of the requested application protocols on the same port.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.CallbackError">
+      <summary>An error occurred in the user provided callback.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.ConnectionAborted">
+      <summary>The connection was aborted by the peer. This error is associated with an application-level error code.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.ConnectionIdle">
+      <summary>The connection timed out from inactivity.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.ConnectionRefused">
+      <summary>The server refused the connection.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.ConnectionTimeout">
+      <summary>The connection timed out waiting for a response from the peer.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.InternalError">
+      <summary>An internal implementation error occurred.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.OperationAborted">
+      <summary>The operation has been aborted.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.StreamAborted">
+      <summary>The read or write direction of the stream was aborted by the peer. This error is associated with an application-level error code.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.Success">
+      <summary>No error.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.TransportError">
+      <summary>The operation failed because a peer transport error occurred.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicError.VersionNegotiationError">
+      <summary>A version negotiation error occurred.</summary>
+    </member>
+    <member name="T:System.Net.Quic.QuicException">
+      <summary>The exception that is thrown when a QUIC error occurs.</summary>
+    </member>
+    <member name="M:System.Net.Quic.QuicException.#ctor(System.Net.Quic.QuicError,System.Nullable{System.Int64},System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Quic.QuicException" /> class.</summary>
+      <param name="error">The error associated with the exception.</param>
+      <param name="applicationErrorCode">The application protocol error code associated with the error.</param>
+      <param name="message">The message for the exception.</param>
+    </member>
+    <member name="P:System.Net.Quic.QuicException.ApplicationErrorCode">
+      <summary>Gets the application protocol error code associated with the error.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicException.QuicError">
+      <summary>Gets the error that's associated with this exception.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicException.TransportErrorCode">
+      <summary>The transport protocol error code associated with the error.</summary>
+    </member>
+    <member name="T:System.Net.Quic.QuicListener">
+      <summary>Represents a listener that listens for incoming QUIC connections. <see cref="T:System.Net.Quic.QuicListener" /> can accept multiple <see cref="T:System.Net.Quic.QuicConnection">Quic connections</see>.</summary>
+    </member>
+    <member name="M:System.Net.Quic.QuicListener.AcceptConnectionAsync(System.Threading.CancellationToken)">
+      <summary>Accepts an inbound <see cref="T:System.Net.Quic.QuicConnection" />.</summary>
+      <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation.</param>
+      <returns>A task that contains a fully connected <see cref="T:System.Net.Quic.QuicConnection" /> that successfully finished the handshake and is ready to be used.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicListener.DisposeAsync">
+      <summary>Stops listening for new connections and releases all resources associated with the listener.</summary>
+      <returns>A task that represents the asynchronous dispose operation.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicListener.ListenAsync(System.Net.Quic.QuicListenerOptions,System.Threading.CancellationToken)">
+      <summary>Creates a new <see cref="T:System.Net.Quic.QuicListener" /> and starts listening for new connections.</summary>
+      <param name="options">Options for the listener.</param>
+      <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation.</param>
+      <returns>An asynchronous task that completes with the started listener.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicListener.ToString">
+      <summary>Returns a string that represents the current object.</summary>
+      <returns>A string that represents the current object.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicListener.IsSupported">
+      <summary>Gets a value that indicates whether QUIC is supported for server scenarios on the current machine.</summary>
+      <returns>
+        <see langword="true" /> if QUIC is supported on the current machine and can be used; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicListener.LocalEndPoint">
+      <summary>Gets the actual listening endpoint.</summary>
+    </member>
+    <member name="T:System.Net.Quic.QuicListenerOptions">
+      <summary>Options to provide to a <see cref="T:System.Net.Quic.QuicListener" />.</summary>
+    </member>
+    <member name="M:System.Net.Quic.QuicListenerOptions.#ctor">
+      <summary>Creates a new instance of the <see cref="T:System.Net.Quic.QuicListenerOptions" /> class.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicListenerOptions.ApplicationProtocols">
+      <summary>Gets or sets the list of application protocols that the listener will accept. At least one must be specified.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicListenerOptions.ConnectionOptionsCallback">
+      <summary>Gets or sets the selection callback to choose inbound connection options dynamically.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicListenerOptions.ListenBacklog">
+      <summary>Gets or sets the number of connections to be held without accepting any of them, that is, the maximum size of the pending connection queue.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicListenerOptions.ListenEndPoint">
+      <summary>Gets or sets the endpoint to listen on.</summary>
+    </member>
+    <member name="T:System.Net.Quic.QuicServerConnectionOptions">
+      <summary>Options for server (inbound) <see cref="T:System.Net.Quic.QuicConnection">Quic connections</see>. These options are provided by <see cref="P:System.Net.Quic.QuicListenerOptions.ConnectionOptionsCallback" />.</summary>
+    </member>
+    <member name="M:System.Net.Quic.QuicServerConnectionOptions.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Net.Quic.QuicServerConnectionOptions" /> class.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicServerConnectionOptions.ServerAuthenticationOptions">
+      <summary>Gets or sets the server authentication options to use when accepting a new connection.</summary>
+    </member>
+    <member name="T:System.Net.Quic.QuicStream">
+      <summary>Represents a QUIC stream. <see cref="T:System.Net.Quic.QuicStream" /> can be <see cref="F:System.Net.Quic.QuicStreamType.Unidirectional">unidirectional</see>, that is, write-only for the opening side, or <see cref="F:System.Net.Quic.QuicStreamType.Bidirectional">bidirectional</see>, which allows both sides to write.</summary>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.Abort(System.Net.Quic.QuicAbortDirection,System.Int64)">
+      <summary>Aborts either the <see cref="F:System.Net.Quic.QuicAbortDirection.Read">reading</see>, <see cref="F:System.Net.Quic.QuicAbortDirection.Write">writing</see>, or <see cref="F:System.Net.Quic.QuicAbortDirection.Both">both</see> sides of the stream.</summary>
+      <param name="abortDirection">The direction of the stream to abort.</param>
+      <param name="errorCode">The error code with which to abort the stream. This value is application-protocol (which is the layer above QUIC) dependent.</param>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.BeginRead(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)">
+      <summary>Begins an asynchronous read operation. (Consider using <xref data-throw-if-not-resolved="true" uid="System.IO.Stream.ReadAsync(System.Byte[],System.Int32,System.Int32)"></xref> instead.)</summary>
+      <param name="buffer">The buffer to read the data into.</param>
+      <param name="offset">The byte offset in <code data-dev-comment-type="paramref">buffer</code> at which to begin writing data read from the stream.</param>
+      <param name="count">The maximum number of bytes to read.</param>
+      <param name="callback">An optional asynchronous callback, to be called when the read is complete.</param>
+      <param name="state">A user-provided object that distinguishes this particular asynchronous read request from other requests.</param>
+      <returns>An <xref data-throw-if-not-resolved="true" uid="System.IAsyncResult"></xref> that represents the asynchronous read, which could still be pending.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.BeginWrite(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)">
+      <summary>Begins an asynchronous write operation. (Consider using <xref data-throw-if-not-resolved="true" uid="System.IO.Stream.WriteAsync(System.Byte[],System.Int32,System.Int32)"></xref> instead.)</summary>
+      <param name="buffer">The buffer to write data from.</param>
+      <param name="offset">The byte offset in <code data-dev-comment-type="paramref">buffer</code> from which to begin writing.</param>
+      <param name="count">The maximum number of bytes to write.</param>
+      <param name="callback">An optional asynchronous callback, to be called when the write is complete.</param>
+      <param name="state">A user-provided object that distinguishes this particular asynchronous write request from other requests.</param>
+      <returns>An <code data-dev-comment-type="langword">IAsyncResult</code> that represents the asynchronous write, which could still be pending.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.CompleteWrites">
+      <summary>Gracefully completes the writing side of the stream.</summary>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.DisposeAsync">
+      <summary>If the read side is not fully consumed, that is, <see cref="P:System.Net.Quic.QuicStream.ReadsClosed" /> is not completed or <see cref="M:System.Net.Quic.QuicStream.ReadAsync(System.Memory{System.Byte},System.Threading.CancellationToken)" /> hasn't returned <c>0</c>, aborts the read side with provided <see cref="P:System.Net.Quic.QuicConnectionOptions.DefaultStreamErrorCode" />. If the write side hasn't been closed, closes it gracefully as if <see cref="M:System.Net.Quic.QuicStream.CompleteWrites" /> was called. Finally, all resources associated with the stream will be released.</summary>
+      <returns>A task that represents the asynchronous dispose operation.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.EndRead(System.IAsyncResult)">
+      <summary>Waits for the pending asynchronous read to complete. (Consider using <xref data-throw-if-not-resolved="true" uid="System.IO.Stream.ReadAsync(System.Byte[],System.Int32,System.Int32)"></xref> instead.)</summary>
+      <param name="asyncResult">The reference to the pending asynchronous request to finish.</param>
+      <returns>The number of bytes read from the stream, between zero (0) and the number of bytes requested.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.EndWrite(System.IAsyncResult)">
+      <summary>Ends an asynchronous write operation. (Consider using <xref data-throw-if-not-resolved="true" uid="System.IO.Stream.WriteAsync(System.Byte[],System.Int32,System.Int32)"></xref> instead.)</summary>
+      <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.Flush">
+      <summary>When overridden in a derived class, clears all buffers for this stream and causes any buffered data to be written to the underlying device.</summary>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.FlushAsync(System.Threading.CancellationToken)">
+      <summary>Asynchronously clears all buffers for this stream, causes any buffered data to be written to the underlying device, and monitors cancellation requests.</summary>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <xref data-throw-if-not-resolved="true" uid="System.Threading.CancellationToken.None"></xref>.</param>
+      <returns>A task that represents the asynchronous flush operation.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.Read(System.Byte[],System.Int32,System.Int32)">
+      <summary>When overridden in a derived class, reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.</summary>
+      <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between <code data-dev-comment-type="paramref">offset</code> and (<code data-dev-comment-type="paramref">offset</code> + <code data-dev-comment-type="paramref">count</code> - 1) replaced by the bytes read from the current source.</param>
+      <param name="offset">The zero-based byte offset in <code data-dev-comment-type="paramref">buffer</code> at which to begin storing the data read from the current stream.</param>
+      <param name="count">The maximum number of bytes to be read from the current stream.</param>
+      <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if <code data-dev-comment-type="paramref">count</code> is 0 or the end of the stream has been reached.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.Read(System.Span{System.Byte})">
+      <summary>When overridden in a derived class, reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.</summary>
+      <param name="buffer">A region of memory. When this method returns, the contents of this region are replaced by the bytes read from the current source.</param>
+      <returns>The total number of bytes read into the buffer. This can be less than the size of the buffer if that many bytes are not currently available, or zero (0) if the buffer's length is zero or the end of the stream has been reached.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.ReadAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+      <summary>Asynchronously reads a sequence of bytes from the current stream, advances the position within the stream by the number of bytes read, and monitors cancellation requests.</summary>
+      <param name="buffer">The buffer to write the data into.</param>
+      <param name="offset">The byte offset in <code data-dev-comment-type="paramref">buffer</code> at which to begin writing data from the stream.</param>
+      <param name="count">The maximum number of bytes to read.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <xref data-throw-if-not-resolved="true" uid="System.Threading.CancellationToken.None"></xref>.</param>
+      <returns>A task that represents the asynchronous read operation.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.ReadAsync(System.Memory{System.Byte},System.Threading.CancellationToken)">
+      <summary>Asynchronously reads a sequence of bytes from the current stream, advances the position within the stream by the number of bytes read, and monitors cancellation requests.</summary>
+      <param name="buffer">The region of memory to write the data into.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <xref data-throw-if-not-resolved="true" uid="System.Threading.CancellationToken.None"></xref>.</param>
+      <returns>A task that represents the asynchronous read operation.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.ReadByte">
+      <summary>Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at the end of the stream.</summary>
+      <returns>The unsigned byte cast to an <xref data-throw-if-not-resolved="true" uid="System.Int32"></xref>, or -1 if at the end of the stream.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.Seek(System.Int64,System.IO.SeekOrigin)">
+      <summary>Sets the current position of the stream to the given value. This method is not currently supported and always throws a <xref data-throw-if-not-resolved="true" uid="System.NotSupportedException"></xref>.</summary>
+      <param name="offset">A byte offset relative to the <code data-dev-comment-type="paramref">origin</code> parameter.</param>
+      <param name="origin">A value of type <xref data-throw-if-not-resolved="true" uid="System.IO.SeekOrigin"></xref> indicating the reference point used to obtain the new position.</param>
+      <returns>The new position within the current stream.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.SetLength(System.Int64)">
+      <summary>Sets the length of the stream. This method is not currently supported and always throws a <xref data-throw-if-not-resolved="true" uid="System.NotSupportedException"></xref>.</summary>
+      <param name="value">The desired length of the current stream in bytes.</param>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.ToString">
+      <summary>Returns a string that represents the current object.</summary>
+      <returns>A string that represents the current object.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.Write(System.Byte[],System.Int32,System.Int32)">
+      <summary>When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.</summary>
+      <param name="buffer">An array of bytes. This method copies <code data-dev-comment-type="paramref">count</code> bytes from <code data-dev-comment-type="paramref">buffer</code> to the current stream.</param>
+      <param name="offset">The zero-based byte offset in <code data-dev-comment-type="paramref">buffer</code> at which to begin copying bytes to the current stream.</param>
+      <param name="count">The number of bytes to be written to the current stream.</param>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.Write(System.ReadOnlySpan{System.Byte})">
+      <summary>When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.</summary>
+      <param name="buffer">A region of memory. This method copies the contents of this region to the current stream.</param>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.WriteAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+      <summary>Asynchronously writes a sequence of bytes to the current stream, advances the current position within this stream by the number of bytes written, and monitors cancellation requests.</summary>
+      <param name="buffer">The buffer to write data from.</param>
+      <param name="offset">The zero-based byte offset in <code data-dev-comment-type="paramref">buffer</code> from which to begin copying bytes to the stream.</param>
+      <param name="count">The maximum number of bytes to write.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <xref data-throw-if-not-resolved="true" uid="System.Threading.CancellationToken.None"></xref>.</param>
+      <returns>A task that represents the asynchronous write operation.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.WriteAsync(System.ReadOnlyMemory{System.Byte},System.Boolean,System.Threading.CancellationToken)">
+      <summary>Asynchronously writes a sequence of bytes to the current stream, advances the current position within this stream by the number of bytes written, and monitors cancellation requests.</summary>
+      <param name="buffer">The region of memory to write data from.</param>
+      <param name="completeWrites">
+        <code data-dev-comment-type="langword">true</code> to notify the peer about gracefully closing the write side, that is, to send the FIN flag with the data; otherwise, <code data-dev-comment-type="langword">false</code>.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <xref data-throw-if-not-resolved="true" uid="System.Threading.CancellationToken.None"></xref>.</param>
+      <returns>A task that represents the asynchronous write operation.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.WriteAsync(System.ReadOnlyMemory{System.Byte},System.Threading.CancellationToken)">
+      <summary>Asynchronously writes a sequence of bytes to the current stream, advances the current position within this stream by the number of bytes written, and monitors cancellation requests.</summary>
+      <param name="buffer">The region of memory to write data from.</param>
+      <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <xref data-throw-if-not-resolved="true" uid="System.Threading.CancellationToken.None"></xref>.</param>
+      <returns>A task that represents the asynchronous write operation.</returns>
+    </member>
+    <member name="M:System.Net.Quic.QuicStream.WriteByte(System.Byte)">
+      <summary>Writes a byte to the current position in the stream and advances the position within the stream by one byte.</summary>
+      <param name="value">The byte to write to the stream.</param>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.CanRead">
+      <summary>Gets a value indicating whether the <xref data-throw-if-not-resolved="true" uid="System.Net.Quic.QuicStream"></xref> supports reading.</summary>
+      <returns>
+        <code data-dev-comment-type="langword">true</code> if the stream supports reading; otherwise, <code data-dev-comment-type="langword">false</code>.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.CanSeek">
+      <summary>Gets a value indicating whether the <xref data-throw-if-not-resolved="true" uid="System.Net.Quic.QuicStream"></xref> supports seeking.</summary>
+      <returns>
+        <code data-dev-comment-type="langword">true</code> if the stream supports seeking; otherwise, <code data-dev-comment-type="langword">false</code>.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.CanTimeout">
+      <summary>Gets a value that indicates whether the <xref data-throw-if-not-resolved="true" uid="System.Net.Quic.QuicStream"></xref> can timeout.</summary>
+      <returns>
+        <code data-dev-comment-type="langword">true</code> if the current stream can time out; otherwise, <code data-dev-comment-type="langword">false</code>.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.CanWrite">
+      <summary>Gets a value indicating whether the <xref data-throw-if-not-resolved="true" uid="System.Net.Quic.QuicStream"></xref> supports writing.</summary>
+      <returns>
+        <code data-dev-comment-type="langword">true</code> if the stream supports writing; otherwise, <code data-dev-comment-type="langword">false</code>.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.Id">
+      <summary>Gets the stream ID.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.Length">
+      <summary>Gets the length of the data available on the stream. This property is not currently supported and always throws a <xref data-throw-if-not-resolved="true" uid="System.NotSupportedException"></xref>.</summary>
+      <returns>A long value representing the length of the stream in bytes.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.Position">
+      <summary>Gets or sets the position within the current stream. This property is not currently supported and always throws a <xref data-throw-if-not-resolved="true" uid="System.NotSupportedException"></xref>.</summary>
+      <returns>The current position within the stream.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.ReadsClosed">
+      <summary>Gets a <see cref="T:System.Threading.Tasks.Task" /> that will complete once the reading side has been closed.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.ReadTimeout">
+      <summary>Gets or sets a value, in milliseconds, that determines how long the stream will attempt to read before timing out.</summary>
+      <returns>A value, in milliseconds, that determines how long the stream will attempt to read before timing out.</returns>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.Type">
+      <summary>Gets the stream type.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.WritesClosed">
+      <summary>Gets a <see cref="T:System.Threading.Tasks.Task" /> that will complete when the writing side has been closed.</summary>
+    </member>
+    <member name="P:System.Net.Quic.QuicStream.WriteTimeout">
+      <summary>Gets or sets a value, in milliseconds, that determines how long the stream will attempt to write before timing out.</summary>
+      <returns>The number of milliseconds that the stream will spend attempting to write before timing out.</returns>
+    </member>
+    <member name="T:System.Net.Quic.QuicStreamType">
+      <summary>Represents the type of a stream.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicStreamType.Bidirectional">
+      <summary>Both peers are read and write capable.</summary>
+    </member>
+    <member name="F:System.Net.Quic.QuicStreamType.Unidirectional">
+      <summary>Write-only for the peer that opened the stream. Read-only for the peer that accepted the stream.</summary>
+    </member>
+  </members>
+</doc>

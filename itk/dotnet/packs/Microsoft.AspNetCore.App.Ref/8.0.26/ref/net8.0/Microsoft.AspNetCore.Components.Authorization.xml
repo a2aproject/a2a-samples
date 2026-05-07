@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Components.Authorization</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationState">
+            <summary>
+            Provides information about the currently authenticated user, if any.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthenticationState.#ctor(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationState"/>.
+            </summary>
+            <param name="user">A <see cref="T:System.Security.Claims.ClaimsPrincipal"/> representing the user.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthenticationState.User">
+            <summary>
+            Gets a <see cref="T:System.Security.Claims.ClaimsPrincipal"/> that describes the current user.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider">
+            <summary>
+            Provides information about the authentication state of the current user.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider.GetAuthenticationStateAsync">
+            <summary>
+            Asynchronously gets an <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationState"/> that describes the current user.
+            </summary>
+            <returns>A task that, when resolved, gives an <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationState"/> instance that describes the current user.</returns>
+        </member>
+        <member name="E:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider.AuthenticationStateChanged">
+            <summary>
+            An event that provides notification when the <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationState"/>
+            has changed. For example, this event may be raised if a user logs in or out.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider.NotifyAuthenticationStateChanged(System.Threading.Tasks.Task{Microsoft.AspNetCore.Components.Authorization.AuthenticationState})">
+            <summary>
+            Raises the <see cref="E:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider.AuthenticationStateChanged"/> event.
+            </summary>
+            <param name="task">A <see cref="T:System.Threading.Tasks.Task"/> that supplies the updated <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationState"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateChangedHandler">
+            <summary>
+            A handler for the <see cref="E:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider.AuthenticationStateChanged"/> event.
+            </summary>
+            <param name="task">A <see cref="T:System.Threading.Tasks.Task"/> that supplies the updated <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationState"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView">
+             <summary>
+             Combines the behaviors of <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthorizeView"/> and <see cref="T:Microsoft.AspNetCore.Components.RouteView"/>,
+             so that it displays the page matching the specified route but only if the user
+             is authorized to see it.
+            
+             Additionally, this component supplies a cascading parameter of type <see cref="T:System.Threading.Tasks.Task`1"/>,
+             which makes the user's current authentication state available to descendants.
+             </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView.#ctor">
+            <summary>
+            Initialize a new instance of a <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView.NotAuthorized">
+            <summary>
+            The content that will be displayed if the user is not authorized.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView.Authorizing">
+            <summary>
+            The content that will be displayed while asynchronous authorization is in progress.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView.Resource">
+            <summary>
+            The resource to which access is being controlled.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView.Render(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Authorization.AuthorizeView">
+            <summary>
+            Displays differing content depending on the user's authorization status.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthorizeView.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthorizeView"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeView.Policy">
+            <summary>
+            The policy name that determines whether the content can be displayed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeView.Roles">
+            <summary>
+            A comma delimited list of roles that are allowed to display the content.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthorizeView.GetAuthorizeData">
+            <summary>
+            Gets the data used for authorization.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore">
+            <summary>
+            A base class for components that display differing content depending on the user's authorization status.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore.ChildContent">
+            <summary>
+            The content that will be displayed if the user is authorized.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore.NotAuthorized">
+            <summary>
+            The content that will be displayed if the user is not authorized.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore.Authorized">
+            <summary>
+            The content that will be displayed if the user is authorized.
+            If you specify a value for this parameter, do not also specify a value for <see cref="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore.ChildContent"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore.Authorizing">
+            <summary>
+            The content that will be displayed while asynchronous authorization is in progress.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore.Resource">
+            <summary>
+            The resource to which access is being controlled.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore.OnParametersSetAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.AuthorizeViewCore.GetAuthorizeData">
+            <summary>
+            Gets the data required to apply authorization rules.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Components.Authorization.IHostEnvironmentAuthenticationStateProvider">
+            <summary>
+            An interface implemented by <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider"/> classes that can receive authentication
+            state information from the host environment.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Components.Authorization.IHostEnvironmentAuthenticationStateProvider.SetAuthenticationState(System.Threading.Tasks.Task{Microsoft.AspNetCore.Components.Authorization.AuthenticationState})">
+            <summary>
+            Supplies updated authentication state data to the <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider"/>.
+            </summary>
+            <param name="authenticationStateTask">A task that resolves with the updated <see cref="T:Microsoft.AspNetCore.Components.Authorization.AuthenticationState"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState.ChildContent">
+            <summary>
+            The content to which the authentication state should be provided.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.CascadingAuthenticationStateServiceCollectionExtensions">
+            <summary>
+            Extension methods for configuring cascading authentication state on a service collection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.CascadingAuthenticationStateServiceCollectionExtensions.AddCascadingAuthenticationState(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds cascading authentication state to the <paramref name="serviceCollection"/>. This is equivalent to
+            having a <see cref="T:Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState"/> component at the root of your component hierarchy.
+            </summary>
+            <param name="serviceCollection">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+    </members>
+</doc>

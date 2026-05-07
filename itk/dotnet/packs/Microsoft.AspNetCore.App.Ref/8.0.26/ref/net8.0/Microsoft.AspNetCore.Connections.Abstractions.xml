@@ -1,0 +1,1044 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Connections.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Connections.BaseConnectionContext">
+            <summary>
+            Represents the context for a connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.BaseConnectionContext.ConnectionId">
+            <summary>
+            Gets or sets a unique identifier to represent this connection in trace logs.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.BaseConnectionContext.Features">
+            <summary>
+            Gets the collection of features provided by the server and middleware available on this connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.BaseConnectionContext.Items">
+            <summary>
+            Gets or sets a key/value collection that can be used to share data within the scope of this connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.BaseConnectionContext.ConnectionClosed">
+            <summary>
+            Triggered when the client connection is closed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.BaseConnectionContext.LocalEndPoint">
+            <summary>
+            Gets or sets the local endpoint for this connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.BaseConnectionContext.RemoteEndPoint">
+            <summary>
+            Gets or sets the remote endpoint for this connection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.BaseConnectionContext.Abort">
+            <summary>
+            Aborts the underlying connection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.BaseConnectionContext.Abort(Microsoft.AspNetCore.Connections.ConnectionAbortedException)">
+            <summary>
+            Aborts the underlying connection.
+            </summary>
+            <param name="abortReason">A <see cref="T:Microsoft.AspNetCore.Connections.ConnectionAbortedException"/> describing the reason the connection is being terminated.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.BaseConnectionContext.DisposeAsync">
+            <summary>
+            Releases resources for the underlying connection.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> that completes when resources have been released.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.ConnectionBuilder">
+            <summary>
+            A default implementation for <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.ConnectionBuilder.ApplicationServices">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionBuilder.#ctor(System.IServiceProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.ConnectionBuilder"/>.
+            </summary>
+            <param name="applicationServices">The application services <see cref="T:System.IServiceProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionBuilder.Use(System.Func{Microsoft.AspNetCore.Connections.ConnectionDelegate,Microsoft.AspNetCore.Connections.ConnectionDelegate})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionBuilder.Build">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.ConnectionBuilderExtensions">
+            <summary>
+            <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/> extensions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionBuilderExtensions.UseConnectionHandler``1(Microsoft.AspNetCore.Connections.IConnectionBuilder)">
+            <summary>
+            Use the given <typeparamref name="TConnectionHandler"/> <see cref="T:Microsoft.AspNetCore.Connections.ConnectionHandler"/>.
+            </summary>
+            <typeparam name="TConnectionHandler">The <see cref="T:System.Type"/> of the <see cref="T:Microsoft.AspNetCore.Connections.ConnectionHandler"/>.</typeparam>
+            <param name="connectionBuilder">The <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionBuilderExtensions.Use(Microsoft.AspNetCore.Connections.IConnectionBuilder,System.Func{Microsoft.AspNetCore.Connections.ConnectionContext,System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task})">
+            <summary>
+            Add the given <paramref name="middleware"/> to the connection.
+            If you aren't calling the next function, use <see cref="M:Microsoft.AspNetCore.Connections.ConnectionBuilderExtensions.Run(Microsoft.AspNetCore.Connections.IConnectionBuilder,System.Func{Microsoft.AspNetCore.Connections.ConnectionContext,System.Threading.Tasks.Task})"/> instead.
+            <para>
+            Prefer using <see cref="M:Microsoft.AspNetCore.Connections.ConnectionBuilderExtensions.Use(Microsoft.AspNetCore.Connections.IConnectionBuilder,System.Func{Microsoft.AspNetCore.Connections.ConnectionContext,Microsoft.AspNetCore.Connections.ConnectionDelegate,System.Threading.Tasks.Task})"/> for better performance as shown below:
+            <code>
+            builder.Use((context, next) =>
+            {
+                return next(context);
+            });
+            </code>
+            </para>
+            </summary>
+            <param name="connectionBuilder">The <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</param>
+            <param name="middleware">The middleware to add to the <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionBuilderExtensions.Use(Microsoft.AspNetCore.Connections.IConnectionBuilder,System.Func{Microsoft.AspNetCore.Connections.ConnectionContext,Microsoft.AspNetCore.Connections.ConnectionDelegate,System.Threading.Tasks.Task})">
+            <summary>
+            Add the given <paramref name="middleware"/> to the connection.
+            If you aren't calling the next function, use <see cref="M:Microsoft.AspNetCore.Connections.ConnectionBuilderExtensions.Run(Microsoft.AspNetCore.Connections.IConnectionBuilder,System.Func{Microsoft.AspNetCore.Connections.ConnectionContext,System.Threading.Tasks.Task})"/> instead.
+            </summary>
+            <param name="connectionBuilder">The <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</param>
+            <param name="middleware">The middleware to add to the <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionBuilderExtensions.Run(Microsoft.AspNetCore.Connections.IConnectionBuilder,System.Func{Microsoft.AspNetCore.Connections.ConnectionContext,System.Threading.Tasks.Task})">
+            <summary>
+            Add the given <paramref name="middleware"/> to the connection.
+            </summary>
+            <param name="connectionBuilder">The <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</param>
+            <param name="middleware">The middleware to add to the <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.ConnectionContext">
+            <summary>
+            Encapsulates all information about an individual connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.ConnectionContext.Transport">
+            <summary>
+            Gets or sets the <see cref="T:System.IO.Pipelines.IDuplexPipe"/> that can be used to read or write data on this connection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionContext.Abort(Microsoft.AspNetCore.Connections.ConnectionAbortedException)">
+            <summary>
+            Aborts the underlying connection.
+            </summary>
+            <param name="abortReason">A <see cref="T:Microsoft.AspNetCore.Connections.ConnectionAbortedException"/> describing the reason the connection is being terminated.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionContext.Abort">
+            <summary>
+            Aborts the underlying connection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.ConnectionDelegate">
+            <summary>
+            A function that can process a connection.
+            </summary>
+            <param name="connection">A <see cref="T:Microsoft.AspNetCore.Connections.ConnectionContext" /> representing the connection.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that represents the connection lifetime. When the task completes, the connection will be closed.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.ConnectionHandler">
+            <summary>
+            Represents an endpoint that multiple connections connect to. For HTTP, endpoints are URLs, for non-HTTP it can be a TCP listener (or similar).
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionHandler.OnConnectedAsync(Microsoft.AspNetCore.Connections.ConnectionContext)">
+            <summary>
+            Called when a new connection is accepted to the endpoint.
+            </summary>
+            <param name="connection">The new <see cref="T:Microsoft.AspNetCore.Connections.ConnectionContext"/></param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that represents the connection lifetime. When the task completes, the connection is complete.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.ConnectionItems">
+            <summary>
+            The items associated with a given connection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionItems.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.ConnectionItems"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionItems.#ctor(System.Collections.Generic.IDictionary{System.Object,System.Object})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.ConnectionItems"/> with <paramref name="items"/>.
+            </summary>
+            <param name="items">The items for the connection.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.ConnectionItems.Items">
+            <summary>
+            Gets or sets the items for the connection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.DefaultConnectionContext">
+            <summary>
+            The default implementation for the <see cref="T:Microsoft.AspNetCore.Connections.ConnectionContext"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.DefaultConnectionContext.#ctor">
+            <summary>
+            Creates the <see cref="T:Microsoft.AspNetCore.Connections.DefaultConnectionContext"/> without Pipes to avoid upfront allocations.
+            The caller is expected to set the <see cref="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Transport"/> and <see cref="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Application"/> pipes manually.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.DefaultConnectionContext.#ctor(System.String)">
+            <summary>
+            Creates the <see cref="T:Microsoft.AspNetCore.Connections.DefaultConnectionContext"/> without Pipes to avoid upfront allocations.
+            The caller is expected to set the <see cref="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Transport"/> and <see cref="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Application"/> pipes manually.
+            </summary>
+            <param name="id">The <see cref="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.ConnectionId"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.DefaultConnectionContext.#ctor(System.String,System.IO.Pipelines.IDuplexPipe,System.IO.Pipelines.IDuplexPipe)">
+            <summary>
+            Creates the DefaultConnectionContext with the given <paramref name="transport"/> and <paramref name="application"/> pipes.
+            </summary>
+            <param name="id">The <see cref="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.ConnectionId"/>.</param>
+            <param name="transport">The <see cref="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Transport"/>.</param>
+            <param name="application">The <see cref="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Application"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.ConnectionId">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Features">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.User">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Items">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Application">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Transport">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.ConnectionClosed">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.LocalEndPoint">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.DefaultConnectionContext.RemoteEndPoint">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.DefaultConnectionContext.Abort(Microsoft.AspNetCore.Connections.ConnectionAbortedException)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.DefaultConnectionContext.DisposeAsync">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.AddressInUseException">
+            <summary>
+            An exception that is thrown when there the current address Kestrel is trying to bind to is in use.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.AddressInUseException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.AddressInUseException"/>.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.AddressInUseException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.AddressInUseException"/>.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="inner">The underlying <see cref="T:System.Exception"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.ConnectionAbortedException">
+            <summary>
+            An exception that is thrown when a connection is aborted by the server.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionAbortedException.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.ConnectionAbortedException"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionAbortedException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.ConnectionAbortedException"/>.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionAbortedException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.ConnectionAbortedException"/>.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="inner">The underlying <see cref="T:System.Exception"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.ConnectionResetException">
+            <summary>
+            An exception thrown when the connection is reset.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionResetException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.ConnectionResetException"/>.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.ConnectionResetException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.ConnectionResetException"/>.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="inner">The underlying <see cref="T:System.Exception"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionCompleteFeature">
+            <summary>
+            Represents the completion action for a connection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.Features.IConnectionCompleteFeature.OnCompleted(System.Func{System.Object,System.Threading.Tasks.Task},System.Object)">
+            <summary>
+            Registers a callback to be invoked after a connection has fully completed processing. This is
+            intended for resource cleanup.
+            </summary>
+            <param name="callback">The callback to invoke after the connection has completed processing.</param>
+            <param name="state">The state to pass into the callback.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionEndPointFeature">
+            <summary>
+            A feature that represents a connection endpoints.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionEndPointFeature.LocalEndPoint">
+            <summary>
+            Gets or sets the local <see cref="T:System.Net.EndPoint"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionEndPointFeature.RemoteEndPoint">
+            <summary>
+            Gets or sets the remote <see cref="T:System.Net.EndPoint"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionHeartbeatFeature">
+            <summary>
+            A feature that represents the connection heartbeat.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.Features.IConnectionHeartbeatFeature.OnHeartbeat(System.Action{System.Object},System.Object)">
+            <summary>
+            Registers the given <paramref name="action"/> to be called with the associated <paramref name="state"/> on each heartbeat of the connection.
+            </summary>
+            <param name="action">The <see cref="T:System.Action`1"/> to invoke.</param>
+            <param name="state">The state for the <paramref name="action"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionIdFeature">
+            <summary>
+            The unique identifier for a given connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionIdFeature.ConnectionId">
+            <summary>
+            Gets or sets the connection identifier.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionInherentKeepAliveFeature">
+            <summary>
+            Indicates if the connection transport has an "inherent keep-alive", which means that the transport will automatically
+            inform the client that it is still present.
+            </summary>
+            <remarks>
+            The most common example of this feature is the Long Polling HTTP transport, which must (due to HTTP limitations) terminate
+            each poll within a particular interval and return a signal indicating "the server is still here, but there is no data yet".
+            This feature allows applications to add keep-alive functionality, but limit it only to transports that don't have some kind
+            of inherent keep-alive.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionInherentKeepAliveFeature.HasInherentKeepAlive">
+            <summary>
+            Gets whether or not the connection has an inherent keep-alive concept.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionItemsFeature">
+            <summary>
+            A bag of items associated with a given connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionItemsFeature.Items">
+            <summary>
+            Gets or sets the items associated with the connection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionLifetimeFeature">
+            <summary>
+            Represents the lifetime of the connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionLifetimeFeature.ConnectionClosed">
+            <summary>
+            Gets or sets the <see cref="T:System.Threading.CancellationToken"/> that is triggered when the connection is closed.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.Features.IConnectionLifetimeFeature.Abort">
+            <summary>
+            Terminates the current connection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionLifetimeNotificationFeature">
+            <summary>
+            Enables graceful termination of the connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionLifetimeNotificationFeature.ConnectionClosedRequested">
+            <summary>
+            Gets or set an <see cref="T:System.Threading.CancellationToken"/> that will be triggered when closing the connection has been requested.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.Features.IConnectionLifetimeNotificationFeature.RequestClose">
+            <summary>
+            Requests the connection to be closed.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionMetricsTagsFeature">
+            <summary>
+            Provides access to tags added to the metrics connection counter. This feature isn't set if the counter isn't enabled.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionMetricsTagsFeature.Tags">
+            <summary>
+            Gets the tag collection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionNamedPipeFeature">
+            <summary>
+            Provides access to the connection's underlying <see cref="T:System.IO.Pipes.NamedPipeServerStream"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionNamedPipeFeature.NamedPipe">
+            <summary>
+            Gets the underlying <see cref="T:System.IO.Pipes.NamedPipeServerStream"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionSocketFeature">
+            <summary>
+            Provides access to the connection's underlying <see cref="P:Microsoft.AspNetCore.Connections.Features.IConnectionSocketFeature.Socket"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionSocketFeature.Socket">
+            <summary>
+            Gets the underlying <see cref="P:Microsoft.AspNetCore.Connections.Features.IConnectionSocketFeature.Socket"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionTransportFeature">
+            <summary>
+            The transport for the connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionTransportFeature.Transport">
+            <summary>
+            Gets or sets the transport for the connection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IConnectionUserFeature">
+            <summary>
+            The user associated with the connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IConnectionUserFeature.User">
+            <summary>
+            Gets or sets the user associated with the connection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IMemoryPoolFeature">
+            <summary>
+            The <see cref="T:System.Buffers.MemoryPool`1"/> used by the connection.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IMemoryPoolFeature.MemoryPool">
+            <summary>
+            Gets the <see cref="T:System.Buffers.MemoryPool`1"/> used by the connection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IPersistentStateFeature">
+            <summary>
+            Provides access to a key/value collection that can be used to persist state between connections and requests.
+            Whether a transport supports persisting state depends on the implementation. The transport must support
+            pooling and reusing connection instances for state to be persisted.
+            <para>
+            Because values added to persistent state can live in memory until a connection is no longer pooled,
+            use caution when adding items to this collection to avoid excessive memory use.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IPersistentStateFeature.State">
+            <summary>
+            Gets a key/value collection that can be used to persist state between connections and requests.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IProtocolErrorCodeFeature">
+            <summary>
+            The error code for the protocol being used.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IProtocolErrorCodeFeature.Error">
+            <summary>
+            Gets or sets the error code. The property returns -1 if the error code hasn't been set.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IStreamAbortFeature">
+            <summary>
+            Supports aborting individual sides of a connection stream.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.Features.IStreamAbortFeature.AbortRead(System.Int64,Microsoft.AspNetCore.Connections.ConnectionAbortedException)">
+            <summary>
+            Abort the read side of the connection stream.
+            </summary>
+            <param name="errorCode">The error code to send with the abort.</param>
+            <param name="abortReason">A <see cref="T:Microsoft.AspNetCore.Connections.ConnectionAbortedException"/> describing the reason to abort the read side of the connection stream.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.Features.IStreamAbortFeature.AbortWrite(System.Int64,Microsoft.AspNetCore.Connections.ConnectionAbortedException)">
+            <summary>
+            Abort the write side of the connection stream.
+            </summary>
+            <param name="errorCode">The error code to send with the abort.</param>
+            <param name="abortReason">A <see cref="T:Microsoft.AspNetCore.Connections.ConnectionAbortedException"/> describing the reason to abort the write side of the connection stream.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IStreamClosedFeature">
+            <summary>
+            Represents the close action for a stream.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.Features.IStreamClosedFeature.OnClosed(System.Action{System.Object},System.Object)">
+            <summary>
+            Registers a callback to be invoked when a stream is closed.
+            If the stream is already in a closed state, the callback will be run immediately.
+            </summary>
+            <param name="callback">The callback to invoke after the stream is closed.</param>
+            <param name="state">The state to pass into the callback.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IStreamDirectionFeature">
+            <summary>
+            The direction of a connection stream
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IStreamDirectionFeature.CanRead">
+            <summary>
+            Gets whether or not the connection stream can be read.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IStreamDirectionFeature.CanWrite">
+            <summary>
+            Gets whether or not the connection stream can be written.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.IStreamIdFeature">
+            <summary>
+            Represents the identifier for the stream.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.IStreamIdFeature.StreamId">
+            <summary>
+            Gets the stream identifier.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature">
+            <summary>
+            Represents the details about the TLS handshake.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.Protocol">
+            <summary>
+            Gets the <see cref="T:System.Security.Authentication.SslProtocols"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.NegotiatedCipherSuite">
+            <summary>
+            Gets the <see cref="T:System.Net.Security.TlsCipherSuite"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.HostName">
+            <summary>
+            Gets the host name from the "server_name" (SNI) extension of the client hello if present.
+            See <see href="https://www.rfc-editor.org/rfc/rfc6066#section-3">RFC 6066</see>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.CipherAlgorithm">
+            <summary>
+            Gets the <see cref="T:System.Security.Authentication.CipherAlgorithmType"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.CipherStrength">
+            <summary>
+            Gets the cipher strength.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.HashAlgorithm">
+            <summary>
+            Gets the <see cref="T:System.Security.Authentication.HashAlgorithmType"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.HashStrength">
+            <summary>
+            Gets the hash strength.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.KeyExchangeAlgorithm">
+            <summary>
+            Gets the <see cref="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.KeyExchangeAlgorithm"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITlsHandshakeFeature.KeyExchangeStrength">
+            <summary>
+            Gets the key exchange algorithm strength.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Features.ITransferFormatFeature">
+            <summary>
+            Gets the transfer format of the protocol.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITransferFormatFeature.SupportedFormats">
+            <summary>
+            Gets the supported <see cref="T:Microsoft.AspNetCore.Connections.TransferFormat"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.Features.ITransferFormatFeature.ActiveFormat">
+            <summary>
+            Gets or sets the active <see cref="T:Microsoft.AspNetCore.Connections.TransferFormat"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.Abstractions.IStatefulReconnectFeature">
+            <summary>
+            Provides access to connection reconnect operations.
+            </summary>
+            <remarks>This feature is experimental.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.Abstractions.IStatefulReconnectFeature.OnReconnected(System.Func{System.IO.Pipelines.PipeWriter,System.Threading.Tasks.Task})">
+            <summary>
+            Called when a connection reconnects. The new <see cref="T:System.IO.Pipelines.PipeWriter"/> that application code should write to is passed in.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.Abstractions.IStatefulReconnectFeature.DisableReconnect">
+            <summary>
+            Allows disabling the reconnect feature so a reconnecting connection will not be allowed anymore.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.FileHandleEndPoint">
+            <summary>
+            An endpoint backed by an OS file handle.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.FileHandleEndPoint.#ctor(System.UInt64,Microsoft.AspNetCore.Connections.FileHandleType)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.FileHandleEndPoint"/>.
+            </summary>
+            <param name="fileHandle">The file handle.</param>
+            <param name="fileHandleType">The file handle type.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.FileHandleEndPoint.FileHandle">
+            <summary>
+            Gets the file handle.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.FileHandleEndPoint.FileHandleType">
+            <summary>
+            Gets the file handle type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.FileHandleType">
+            <summary>
+            Enumerates the <see cref="T:Microsoft.AspNetCore.Connections.FileHandleEndPoint"/> types.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Connections.FileHandleType.Auto">
+            <summary>
+            This API is unused and no longer supported.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Connections.FileHandleType.Tcp">
+            <summary>
+            This API is unused and no longer supported.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Connections.FileHandleType.Pipe">
+            <summary>
+            This API is unused and no longer supported.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.IConnectionBuilder">
+            <summary>
+            Defines an interface that provides the mechanisms to configure a connection pipeline.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.IConnectionBuilder.ApplicationServices">
+            <summary>
+            Gets the <see cref="T:System.IServiceProvider"/> that provides access to the application's service container.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IConnectionBuilder.Use(System.Func{Microsoft.AspNetCore.Connections.ConnectionDelegate,Microsoft.AspNetCore.Connections.ConnectionDelegate})">
+            <summary>
+            Adds a middleware delegate to the application's connection pipeline.
+            </summary>
+            <param name="middleware">The middleware delegate.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Connections.IConnectionBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IConnectionBuilder.Build">
+            <summary>
+            Builds the delegate used by this application to process connections.
+            </summary>
+            <returns>The connection handling delegate.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.IConnectionFactory">
+            <summary>
+            A factory abstraction for creating connections to an endpoint.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IConnectionFactory.ConnectAsync(System.Net.EndPoint,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new connection to an endpoint.
+            </summary>
+            <param name="endpoint">The <see cref="T:System.Net.EndPoint"/> to connect to.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.ValueTask`1" /> that represents the asynchronous connect, yielding the <see cref="T:Microsoft.AspNetCore.Connections.ConnectionContext" /> for the new connection when completed.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.IConnectionListener">
+            <summary>
+            Defines an interface that represents a listener bound to a specific <see cref="P:Microsoft.AspNetCore.Connections.IConnectionListener.EndPoint"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.IConnectionListener.EndPoint">
+            <summary>
+            The endpoint that was bound. This may differ from the requested endpoint, such as when the caller requested that any free port be selected.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IConnectionListener.AcceptAsync(System.Threading.CancellationToken)">
+            <summary>
+            Begins an asynchronous operation to accept an incoming connection.
+            </summary>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask`1"/> that completes when a connection is accepted, yielding the <see cref="T:Microsoft.AspNetCore.Connections.ConnectionContext" /> representing the connection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IConnectionListener.UnbindAsync(System.Threading.CancellationToken)">
+            <summary>
+            Stops listening for incoming connections.
+            </summary>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> that represents the un-bind operation.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.IConnectionListenerFactory">
+            <summary>
+            Defines an interface that provides the mechanisms for binding to various types of <see cref="T:System.Net.EndPoint"/>s.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IConnectionListenerFactory.BindAsync(System.Net.EndPoint,System.Threading.CancellationToken)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Connections.IConnectionListener"/> bound to the specified <see cref="T:System.Net.EndPoint"/>.
+            </summary>
+            <param name="endpoint">The <see cref="T:System.Net.EndPoint" /> to bind to.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask`1"/> that completes when the listener has been bound, yielding a <see cref="T:Microsoft.AspNetCore.Connections.IConnectionListener" /> representing the new listener.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.IConnectionListenerFactorySelector">
+            <summary>
+            Defines an interface that determines whether the listener factory supports binding to the specified <see cref="T:System.Net.EndPoint"/>.
+            </summary>
+            <remarks>
+            This interface should be implemented by <see cref="T:Microsoft.AspNetCore.Connections.IConnectionListenerFactory"/> and <see cref="T:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListenerFactory"/>
+            types that want to control want endpoint instances they can bind to.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IConnectionListenerFactorySelector.CanBind(System.Net.EndPoint)">
+            <summary>
+            Returns a value that indicates whether the listener factory supports binding to the specified <see cref="T:System.Net.EndPoint"/>.
+            </summary>
+            <param name="endpoint">The <see cref="T:System.Net.EndPoint" /> to bind to.</param>
+            <returns>A value that indicates whether the listener factory supports binding to the specified <see cref="T:System.Net.EndPoint"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListener">
+            <summary>
+            Defines an interface that represents a listener bound to a specific <see cref="P:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListener.EndPoint"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListener.EndPoint">
+            <summary>
+            The endpoint that was bound. This may differ from the requested endpoint, such as when the caller requested that any free port be selected.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListener.UnbindAsync(System.Threading.CancellationToken)">
+            <summary>
+            Stops listening for incoming connections.
+            </summary>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask"/> that represents the un-bind operation.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListener.AcceptAsync(Microsoft.AspNetCore.Http.Features.IFeatureCollection,System.Threading.CancellationToken)">
+            <summary>
+            Begins an asynchronous operation to accept an incoming connection.
+            </summary>
+            <param name="features">A feature collection to pass options when accepting a connection.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask`1"/> that completes when a connection is accepted, yielding the <see cref="T:Microsoft.AspNetCore.Connections.MultiplexedConnectionContext" /> representing the connection.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.IMultiplexedConnectionBuilder">
+            <summary>
+            Defines an interface that provides the mechanisms to configure a connection pipeline.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.IMultiplexedConnectionBuilder.ApplicationServices">
+            <summary>
+            Gets the <see cref="T:System.IServiceProvider"/> that provides access to the application's service container.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IMultiplexedConnectionBuilder.Use(System.Func{Microsoft.AspNetCore.Connections.MultiplexedConnectionDelegate,Microsoft.AspNetCore.Connections.MultiplexedConnectionDelegate})">
+            <summary>
+            Adds a middleware delegate to the application's connection pipeline.
+            </summary>
+            <param name="middleware">The middleware delegate.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Connections.IMultiplexedConnectionBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IMultiplexedConnectionBuilder.Build">
+            <summary>
+            Builds the delegate used by this application to process connections.
+            </summary>
+            <returns>The connection handling delegate.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.IMultiplexedConnectionFactory">
+            <summary>
+            A factory abstraction for creating connections to an endpoint.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IMultiplexedConnectionFactory.ConnectAsync(System.Net.EndPoint,Microsoft.AspNetCore.Http.Features.IFeatureCollection,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new connection to an endpoint.
+            </summary>
+            <param name="endpoint">The <see cref="T:System.Net.EndPoint"/> to connect to.</param>
+            <param name="features">A feature collection to pass options when connecting.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.ValueTask`1" /> that represents the asynchronous connect, yielding the <see cref="T:Microsoft.AspNetCore.Connections.MultiplexedConnectionContext" /> for the new connection when completed.
+            </returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListenerFactory">
+            <summary>
+            Defines an interface that provides the mechanisms for binding to various types of <see cref="T:System.Net.EndPoint"/>s.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListenerFactory.BindAsync(System.Net.EndPoint,Microsoft.AspNetCore.Http.Features.IFeatureCollection,System.Threading.CancellationToken)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListener"/> bound to the specified <see cref="T:System.Net.EndPoint"/>.
+            </summary>
+            <param name="endpoint">The <see cref="T:System.Net.EndPoint" /> to bind to.</param>
+            <param name="features">A feature collection to pass options when binding.</param>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.ValueTask`1"/> that completes when the listener has been bound, yielding a <see cref="T:Microsoft.AspNetCore.Connections.IMultiplexedConnectionListener" /> representing the new listener.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.MultiplexedConnectionBuilder">
+            <summary>
+            A default implementation for <see cref="T:Microsoft.AspNetCore.Connections.IMultiplexedConnectionBuilder"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.MultiplexedConnectionBuilder.ApplicationServices">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.MultiplexedConnectionBuilder.#ctor(System.IServiceProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Connections.MultiplexedConnectionBuilder"/>.
+            </summary>
+            <param name="applicationServices">The application services <see cref="T:System.IServiceProvider"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.MultiplexedConnectionBuilder.Use(System.Func{Microsoft.AspNetCore.Connections.MultiplexedConnectionDelegate,Microsoft.AspNetCore.Connections.MultiplexedConnectionDelegate})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.MultiplexedConnectionBuilder.Build">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.MultiplexedConnectionContext">
+            <summary>
+            Encapsulates all information about a multiplexed connection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.MultiplexedConnectionContext.AcceptAsync(System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously accept an incoming stream on the connection.
+            </summary>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.MultiplexedConnectionContext.ConnectAsync(Microsoft.AspNetCore.Http.Features.IFeatureCollection,System.Threading.CancellationToken)">
+            <summary>
+            Creates an outbound connection
+            </summary>
+            <param name="features"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.MultiplexedConnectionDelegate">
+            <summary>
+            A function that can process a connection.
+            </summary>
+            <param name="connection">A <see cref="T:Microsoft.AspNetCore.Connections.MultiplexedConnectionContext" /> representing the connection.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that represents the connection lifetime. When the task completes, the connection will be closed.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.NamedPipeEndPoint">
+            <summary>
+            Represents a Named Pipe endpoint.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.NamedPipeEndPoint.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Connections.NamedPipeEndPoint"/> class.
+            </summary>
+            <param name="pipeName">The name of the pipe.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.NamedPipeEndPoint.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Connections.NamedPipeEndPoint"/> class.
+            </summary>
+            <param name="pipeName">The name of the pipe.</param>
+            <param name="serverName">The name of the remote computer to connect to, or "." to specify the local computer.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.NamedPipeEndPoint.ServerName">
+            <summary>
+            Gets the name of the remote computer. The server name must be ".", the local computer, when creating a server.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.NamedPipeEndPoint.PipeName">
+            <summary>
+            Gets the name of the pipe.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.NamedPipeEndPoint.ToString">
+            <summary>
+            Gets the pipe name represented by this <see cref="T:Microsoft.AspNetCore.Connections.NamedPipeEndPoint"/> instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.NamedPipeEndPoint.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.NamedPipeEndPoint.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.TlsConnectionCallbackContext">
+            <summary>
+            Per connection state used to determine the TLS options.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.TlsConnectionCallbackContext.ClientHelloInfo">
+            <summary>
+            Information from the Client Hello message.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.TlsConnectionCallbackContext.State">
+            <summary>
+            The information that was passed when registering the callback.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.TlsConnectionCallbackContext.Connection">
+            <summary>
+            Information about an individual connection.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.TlsConnectionCallbackOptions">
+            <summary>
+            Options used to configure a per connection callback for TLS configuration.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.TlsConnectionCallbackOptions.OnConnection">
+            <summary>
+            The callback to invoke per connection. This property is required.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.TlsConnectionCallbackOptions.OnConnectionState">
+            <summary>
+            Optional application state to flow to the <see cref="P:Microsoft.AspNetCore.Connections.TlsConnectionCallbackOptions.OnConnection"/> callback.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.TlsConnectionCallbackOptions.ApplicationProtocols">
+            <summary>
+            Gets or sets a list of ALPN protocols.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.TransferFormat">
+            <summary>
+            Represents the possible transfer formats.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Connections.TransferFormat.Binary">
+            <summary>
+            A binary transport format.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Connections.TransferFormat.Text">
+            <summary>
+            A text transport format.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Connections.UriEndPoint">
+            <summary>
+            An <see cref="T:System.Net.EndPoint"/> defined by a <see cref="T:System.Uri"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.UriEndPoint.#ctor(System.Uri)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Connections.UriEndPoint"/> class.
+            </summary>
+            <param name="uri">The <see cref="T:System.Uri"/> defining the <see cref="T:System.Net.EndPoint"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Connections.UriEndPoint.Uri">
+            <summary>
+            The <see cref="T:System.Uri"/> defining the <see cref="T:System.Net.EndPoint"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Connections.UriEndPoint.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(System.IServiceProvider,System.Type,System.Object[])">
+            <summary>
+            Instantiate a type with constructor arguments provided directly and/or from an <see cref="T:System.IServiceProvider"/>.
+            </summary>
+            <param name="provider">The service provider used to resolve dependencies</param>
+            <param name="instanceType">The type to activate</param>
+            <param name="parameters">Constructor arguments not provided by the <paramref name="provider"/>.</param>
+            <returns>An activated object of type instanceType</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance``1(System.IServiceProvider,System.Object[])">
+            <summary>
+            Instantiate a type with constructor arguments provided directly and/or from an <see cref="T:System.IServiceProvider"/>.
+            </summary>
+            <typeparam name="T">The type to activate</typeparam>
+            <param name="provider">The service provider used to resolve dependencies</param>
+            <param name="parameters">Constructor arguments not provided by the <paramref name="provider"/>.</param>
+            <returns>An activated object of type T</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.ActivatorUtilities.GetServiceOrCreateInstance``1(System.IServiceProvider)">
+            <summary>
+            Retrieve an instance of the given type from the service provider. If one is not found then instantiate it directly.
+            </summary>
+            <typeparam name="T">The type of the service</typeparam>
+            <param name="provider">The service provider used to resolve dependencies</param>
+            <returns>The resolved service or created instance</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.ActivatorUtilities.GetServiceOrCreateInstance(System.IServiceProvider,System.Type)">
+            <summary>
+            Retrieve an instance of the given type from the service provider. If one is not found then instantiate it directly.
+            </summary>
+            <param name="provider">The service provider</param>
+            <param name="type">The type of the service</param>
+            <returns>The resolved service or created instance</returns>
+        </member>
+    </members>
+</doc>

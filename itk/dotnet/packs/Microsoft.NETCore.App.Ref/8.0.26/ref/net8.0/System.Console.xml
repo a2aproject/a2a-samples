@@ -1,0 +1,1288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Console</name>
+  </assembly>
+  <members>
+    <member name="T:System.Console">
+      <summary>Represents the standard input, output, and error streams for console applications. This class cannot be inherited.</summary>
+    </member>
+    <member name="E:System.Console.CancelKeyPress">
+      <summary>Occurs when the <see cref="F:System.ConsoleModifiers.Control" /> modifier key (Ctrl) and either the <see cref="F:System.ConsoleKey.C" /> console key (C) or the Break key are pressed simultaneously (Ctrl+C or Ctrl+Break).</summary>
+    </member>
+    <member name="M:System.Console.Beep">
+      <summary>Plays the sound of a beep through the console speaker.</summary>
+      <exception cref="T:System.Security.HostProtectionException">This method was executed on a server, such as SQL Server, that does not permit access to a user interface.</exception>
+    </member>
+    <member name="M:System.Console.Beep(System.Int32,System.Int32)">
+      <summary>Plays the sound of a beep of a specified frequency and duration through the console speaker.</summary>
+      <param name="frequency">The frequency of the beep, ranging from 37 to 32767 hertz.</param>
+      <param name="duration">The duration of the beep measured in milliseconds.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="frequency" /> is less than 37 or more than 32767 hertz.
+
+ -or-
+
+ <paramref name="duration" /> is less than or equal to zero.</exception>
+      <exception cref="T:System.Security.HostProtectionException">This method was executed on a server, such as SQL Server, that does not permit access to the console.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The current operating system is not Windows.</exception>
+    </member>
+    <member name="M:System.Console.Clear">
+      <summary>Clears the console buffer and corresponding console window of display information.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.GetCursorPosition">
+      <summary>Gets the position of the cursor.</summary>
+      <returns>The column and row position of the cursor.</returns>
+    </member>
+    <member name="M:System.Console.MoveBufferArea(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary>Copies a specified source area of the screen buffer to a specified destination area.</summary>
+      <param name="sourceLeft">The leftmost column of the source area.</param>
+      <param name="sourceTop">The topmost row of the source area.</param>
+      <param name="sourceWidth">The number of columns in the source area.</param>
+      <param name="sourceHeight">The number of rows in the source area.</param>
+      <param name="targetLeft">The leftmost column of the destination area.</param>
+      <param name="targetTop">The topmost row of the destination area.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">One or more of the parameters is less than zero.
+
+ -or-
+
+ <paramref name="sourceLeft" /> or <paramref name="targetLeft" /> is greater than or equal to <see cref="P:System.Console.BufferWidth" />.
+
+ -or-
+
+ <paramref name="sourceTop" /> or <paramref name="targetTop" /> is greater than or equal to <see cref="P:System.Console.BufferHeight" />.
+
+ -or-
+
+ <paramref name="sourceTop" /> + <paramref name="sourceHeight" /> is greater than or equal to <see cref="P:System.Console.BufferHeight" />.
+
+ -or-
+
+ <paramref name="sourceLeft" /> + <paramref name="sourceWidth" /> is greater than or equal to <see cref="P:System.Console.BufferWidth" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The current operating system is not Windows.</exception>
+    </member>
+    <member name="M:System.Console.MoveBufferArea(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Char,System.ConsoleColor,System.ConsoleColor)">
+      <summary>Copies a specified source area of the screen buffer to a specified destination area.</summary>
+      <param name="sourceLeft">The leftmost column of the source area.</param>
+      <param name="sourceTop">The topmost row of the source area.</param>
+      <param name="sourceWidth">The number of columns in the source area.</param>
+      <param name="sourceHeight">The number of rows in the source area.</param>
+      <param name="targetLeft">The leftmost column of the destination area.</param>
+      <param name="targetTop">The topmost row of the destination area.</param>
+      <param name="sourceChar">The character used to fill the source area.</param>
+      <param name="sourceForeColor">The foreground color used to fill the source area.</param>
+      <param name="sourceBackColor">The background color used to fill the source area.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">One or more of the parameters is less than zero.
+
+ -or-
+
+ <paramref name="sourceLeft" /> or <paramref name="targetLeft" /> is greater than or equal to <see cref="P:System.Console.BufferWidth" />.
+
+ -or-
+
+ <paramref name="sourceTop" /> or <paramref name="targetTop" /> is greater than or equal to <see cref="P:System.Console.BufferHeight" />.
+
+ -or-
+
+ <paramref name="sourceTop" /> + <paramref name="sourceHeight" /> is greater than or equal to <see cref="P:System.Console.BufferHeight" />.
+
+ -or-
+
+ <paramref name="sourceLeft" /> + <paramref name="sourceWidth" /> is greater than or equal to <see cref="P:System.Console.BufferWidth" />.</exception>
+      <exception cref="T:System.ArgumentException">One or both of the color parameters is not a member of the <see cref="T:System.ConsoleColor" /> enumeration.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The current operating system is not Windows.</exception>
+    </member>
+    <member name="M:System.Console.OpenStandardError">
+      <summary>Acquires the standard error stream.</summary>
+      <returns>The standard error stream.</returns>
+    </member>
+    <member name="M:System.Console.OpenStandardError(System.Int32)">
+      <summary>Acquires the standard error stream, which is set to a specified buffer size.</summary>
+      <param name="bufferSize">This parameter has no effect, but its value must be greater than or equal to zero.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="bufferSize" /> is less than or equal to zero.</exception>
+      <returns>The standard error stream.</returns>
+    </member>
+    <member name="M:System.Console.OpenStandardInput">
+      <summary>Acquires the standard input stream.</summary>
+      <returns>The standard input stream.</returns>
+    </member>
+    <member name="M:System.Console.OpenStandardInput(System.Int32)">
+      <summary>Acquires the standard input stream, which is set to a specified buffer size.</summary>
+      <param name="bufferSize">This parameter has no effect, but its value must be greater than or equal to zero.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="bufferSize" /> is less than or equal to zero.</exception>
+      <returns>The standard input stream.</returns>
+    </member>
+    <member name="M:System.Console.OpenStandardOutput">
+      <summary>Acquires the standard output stream.</summary>
+      <returns>The standard output stream.</returns>
+    </member>
+    <member name="M:System.Console.OpenStandardOutput(System.Int32)">
+      <summary>Acquires the standard output stream, which is set to a specified buffer size.</summary>
+      <param name="bufferSize">This parameter has no effect, but its value must be greater than or equal to zero.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="bufferSize" /> is less than or equal to zero.</exception>
+      <returns>The standard output stream.</returns>
+    </member>
+    <member name="M:System.Console.Read">
+      <summary>Reads the next character from the standard input stream.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <returns>The next character from the input stream, or negative one (-1) if there are currently no more characters to be read.</returns>
+    </member>
+    <member name="M:System.Console.ReadKey">
+      <summary>Obtains the next character or function key pressed by the user. The pressed key is displayed in the console window.</summary>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Console.In" /> property is redirected from some stream other than the console.</exception>
+      <returns>An object that describes the <see cref="T:System.ConsoleKey" /> constant and Unicode character, if any, that correspond to the pressed console key. The <see cref="T:System.ConsoleKeyInfo" /> object also describes, in a bitwise combination of <see cref="T:System.ConsoleModifiers" /> values, whether one or more Shift, Alt, or Ctrl modifier keys was pressed simultaneously with the console key.</returns>
+    </member>
+    <member name="M:System.Console.ReadKey(System.Boolean)">
+      <summary>Obtains the next character or function key pressed by the user. The pressed key is optionally displayed in the console window.</summary>
+      <param name="intercept">Determines whether to display the pressed key in the console window. <see langword="true" /> to not display the pressed key; otherwise, <see langword="false" />.</param>
+      <exception cref="T:System.InvalidOperationException">The <see cref="P:System.Console.In" /> property is redirected from some stream other than the console.</exception>
+      <returns>An object that describes the <see cref="T:System.ConsoleKey" /> constant and Unicode character, if any, that correspond to the pressed console key. The <see cref="T:System.ConsoleKeyInfo" /> object also describes, in a bitwise combination of <see cref="T:System.ConsoleModifiers" /> values, whether one or more Shift, Alt, or Ctrl modifier keys was pressed simultaneously with the console key.</returns>
+    </member>
+    <member name="M:System.Console.ReadLine">
+      <summary>Reads the next line of characters from the standard input stream.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.OutOfMemoryException">There is insufficient memory to allocate a buffer for the returned string.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">The number of characters in the next line of characters is greater than <see cref="F:System.Int32.MaxValue">Int32.MaxValue</see>.</exception>
+      <returns>The next line of characters from the input stream, or <see langword="null" /> if no more lines are available.</returns>
+    </member>
+    <member name="M:System.Console.ResetColor">
+      <summary>Sets the foreground and background console colors to their defaults.</summary>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.SetBufferSize(System.Int32,System.Int32)">
+      <summary>Sets the height and width of the screen buffer area to the specified values.</summary>
+      <param name="width">The width of the buffer area measured in columns.</param>
+      <param name="height">The height of the buffer area measured in rows.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="height" /> or <paramref name="width" /> is less than or equal to zero.
+
+ -or-
+
+ <paramref name="height" /> or <paramref name="width" /> is greater than or equal to <see cref="F:System.Int16.MaxValue">Int16.MaxValue</see>.
+
+ -or-
+
+ <paramref name="width" /> is less than <see cref="P:System.Console.WindowLeft" /> + <see cref="P:System.Console.WindowWidth" />.
+
+ -or-
+
+ <paramref name="height" /> is less than <see cref="P:System.Console.WindowTop" /> + <see cref="P:System.Console.WindowHeight" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The current operating system is not Windows.</exception>
+    </member>
+    <member name="M:System.Console.SetCursorPosition(System.Int32,System.Int32)">
+      <summary>Sets the position of the cursor.</summary>
+      <param name="left">The column position of the cursor. Columns are numbered from left to right starting at 0.</param>
+      <param name="top">The row position of the cursor. Rows are numbered from top to bottom starting at 0.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="left" /> or <paramref name="top" /> is less than zero.
+
+ -or-
+
+ <paramref name="left" /> is greater than or equal to <see cref="P:System.Console.BufferWidth" />.
+
+ -or-
+
+ <paramref name="top" /> is greater than or equal to <see cref="P:System.Console.BufferHeight" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.SetError(System.IO.TextWriter)">
+      <summary>Sets the <see cref="P:System.Console.Error" /> property to the specified <see cref="T:System.IO.TextWriter" /> object.</summary>
+      <param name="newError">A stream that is the new standard error output.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="newError" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+    </member>
+    <member name="M:System.Console.SetIn(System.IO.TextReader)">
+      <summary>Sets the <see cref="P:System.Console.In" /> property to the specified <see cref="T:System.IO.TextReader" /> object.</summary>
+      <param name="newIn">A stream that is the new standard input.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="newIn" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+    </member>
+    <member name="M:System.Console.SetOut(System.IO.TextWriter)">
+      <summary>Sets the <see cref="P:System.Console.Out" /> property to target the <see cref="T:System.IO.TextWriter" /> object.</summary>
+      <param name="newOut">A text writer to be used as the new standard output.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="newOut" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+    </member>
+    <member name="M:System.Console.SetWindowPosition(System.Int32,System.Int32)">
+      <summary>Sets the position of the console window relative to the screen buffer.</summary>
+      <param name="left">The column position of the upper left  corner of the console window.</param>
+      <param name="top">The row position of the upper left corner of the console window.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="left" /> or <paramref name="top" /> is less than zero.
+
+ -or-
+
+ <paramref name="left" /> + <see cref="P:System.Console.WindowWidth" /> is greater than <see cref="P:System.Console.BufferWidth" />.
+
+ -or-
+
+ <paramref name="top" /> + <see cref="P:System.Console.WindowHeight" /> is greater than <see cref="P:System.Console.BufferHeight" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The current operating system is not Windows.</exception>
+    </member>
+    <member name="M:System.Console.SetWindowSize(System.Int32,System.Int32)">
+      <summary>Sets the height and width of the console window to the specified values.</summary>
+      <param name="width">The width of the console window measured in columns.</param>
+      <param name="height">The height of the console window measured in rows.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="width" /> or <paramref name="height" /> is less than or equal to zero.
+
+ -or-
+
+ <paramref name="width" /> plus <see cref="P:System.Console.WindowLeft" /> or <paramref name="height" /> plus <see cref="P:System.Console.WindowTop" /> is greater than or equal to <see cref="F:System.Int16.MaxValue">Int16.MaxValue</see>.
+
+ -or-
+
+ <paramref name="width" /> or <paramref name="height" /> is greater than the largest possible window width or height for the current screen resolution and console font.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The current operating system is not Windows.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Boolean)">
+      <summary>Writes the text representation of the specified Boolean value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Char)">
+      <summary>Writes the specified Unicode character value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Char[])">
+      <summary>Writes the specified array of Unicode characters to the standard output stream.</summary>
+      <param name="buffer">A Unicode character array.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Char[],System.Int32,System.Int32)">
+      <summary>Writes the specified subarray of Unicode characters to the standard output stream.</summary>
+      <param name="buffer">An array of Unicode characters.</param>
+      <param name="index">The starting position in <paramref name="buffer" />.</param>
+      <param name="count">The number of characters to write.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="index" /> or <paramref name="count" /> is less than zero.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="index" /> plus <paramref name="count" /> specify a position that is not within <paramref name="buffer" />.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Decimal)">
+      <summary>Writes the text representation of the specified <see cref="T:System.Decimal" /> value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Double)">
+      <summary>Writes the text representation of the specified double-precision floating-point value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Int32)">
+      <summary>Writes the text representation of the specified 32-bit signed integer value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Int64)">
+      <summary>Writes the text representation of the specified 64-bit signed integer value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Object)">
+      <summary>Writes the text representation of the specified object to the standard output stream.</summary>
+      <param name="value">The value to write, or <see langword="null" />.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.Single)">
+      <summary>Writes the text representation of the specified single-precision floating-point value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.String)">
+      <summary>Writes the specified string value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.String,System.Object)">
+      <summary>Writes the text representation of the specified object to the standard output stream using the specified format information.</summary>
+      <param name="format">A composite format string.</param>
+      <param name="arg0">An object to write using <paramref name="format" />.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="format" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.FormatException">The format specification in <paramref name="format" /> is invalid.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.String,System.Object,System.Object)">
+      <summary>Writes the text representation of the specified objects to the standard output stream using the specified format information.</summary>
+      <param name="format">A composite format string.</param>
+      <param name="arg0">The first object to write using <paramref name="format" />.</param>
+      <param name="arg1">The second object to write using <paramref name="format" />.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="format" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.FormatException">The format specification in <paramref name="format" /> is invalid.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.String,System.Object,System.Object,System.Object)">
+      <summary>Writes the text representation of the specified objects to the standard output stream using the specified format information.</summary>
+      <param name="format">A composite format string.</param>
+      <param name="arg0">The first object to write using <paramref name="format" />.</param>
+      <param name="arg1">The second object to write using <paramref name="format" />.</param>
+      <param name="arg2">The third object to write using <paramref name="format" />.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="format" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.FormatException">The format specification in <paramref name="format" /> is invalid.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.String,System.Object[])">
+      <summary>Writes the text representation of the specified array of objects to the standard output stream using the specified format information.</summary>
+      <param name="format">A composite format string.</param>
+      <param name="arg">An array of objects to write using <paramref name="format" />.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="format" /> or <paramref name="arg" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.FormatException">The format specification in <paramref name="format" /> is invalid.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.UInt32)">
+      <summary>Writes the text representation of the specified 32-bit unsigned integer value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.Write(System.UInt64)">
+      <summary>Writes the text representation of the specified 64-bit unsigned integer value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine">
+      <summary>Writes the current line terminator to the standard output stream.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Boolean)">
+      <summary>Writes the text representation of the specified Boolean value, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Char)">
+      <summary>Writes the specified Unicode character, followed by the current line terminator, value to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Char[])">
+      <summary>Writes the specified array of Unicode characters, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="buffer">A Unicode character array.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Char[],System.Int32,System.Int32)">
+      <summary>Writes the specified subarray of Unicode characters, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="buffer">An array of Unicode characters.</param>
+      <param name="index">The starting position in <paramref name="buffer" />.</param>
+      <param name="count">The number of characters to write.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="buffer" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">
+        <paramref name="index" /> or <paramref name="count" /> is less than zero.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="index" /> plus <paramref name="count" /> specify a position that is not within <paramref name="buffer" />.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Decimal)">
+      <summary>Writes the text representation of the specified <see cref="T:System.Decimal" /> value, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Double)">
+      <summary>Writes the text representation of the specified double-precision floating-point value, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Int32)">
+      <summary>Writes the text representation of the specified 32-bit signed integer value, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Int64)">
+      <summary>Writes the text representation of the specified 64-bit signed integer value, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Object)">
+      <summary>Writes the text representation of the specified object, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.Single)">
+      <summary>Writes the text representation of the specified single-precision floating-point value, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.String)">
+      <summary>Writes the specified string value, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.String,System.Object)">
+      <summary>Writes the text representation of the specified object, followed by the current line terminator, to the standard output stream using the specified format information.</summary>
+      <param name="format">A composite format string.</param>
+      <param name="arg0">An object to write using <paramref name="format" />.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="format" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.FormatException">The format specification in <paramref name="format" /> is invalid.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.String,System.Object,System.Object)">
+      <summary>Writes the text representation of the specified objects, followed by the current line terminator, to the standard output stream using the specified format information.</summary>
+      <param name="format">A composite format string.</param>
+      <param name="arg0">The first object to write using <paramref name="format" />.</param>
+      <param name="arg1">The second object to write using <paramref name="format" />.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="format" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.FormatException">The format specification in <paramref name="format" /> is invalid.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.String,System.Object,System.Object,System.Object)">
+      <summary>Writes the text representation of the specified objects, followed by the current line terminator, to the standard output stream using the specified format information.</summary>
+      <param name="format">A composite format string.</param>
+      <param name="arg0">The first object to write using <paramref name="format" />.</param>
+      <param name="arg1">The second object to write using <paramref name="format" />.</param>
+      <param name="arg2">The third object to write using <paramref name="format" />.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="format" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.FormatException">The format specification in <paramref name="format" /> is invalid.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.String,System.Object[])">
+      <summary>Writes the text representation of the specified array of objects, followed by the current line terminator, to the standard output stream using the specified format information.</summary>
+      <param name="format">A composite format string.</param>
+      <param name="arg">An array of objects to write using <paramref name="format" />.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="format" /> or <paramref name="arg" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.FormatException">The format specification in <paramref name="format" /> is invalid.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.UInt32)">
+      <summary>Writes the text representation of the specified 32-bit unsigned integer value, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="M:System.Console.WriteLine(System.UInt64)">
+      <summary>Writes the text representation of the specified 64-bit unsigned integer value, followed by the current line terminator, to the standard output stream.</summary>
+      <param name="value">The value to write.</param>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+    </member>
+    <member name="P:System.Console.BackgroundColor">
+      <summary>Gets or sets the background color of the console.</summary>
+      <exception cref="T:System.ArgumentException">The color specified in a set operation is not a valid member of <see cref="T:System.ConsoleColor" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <returns>A value that specifies the background color of the console; that is, the color that appears behind each character. The default is black.</returns>
+    </member>
+    <member name="P:System.Console.BufferHeight">
+      <summary>Gets or sets the height of the buffer area.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value in a set operation is less than or equal to zero.
+
+ -or-
+
+ The value in a set operation is greater than or equal to <see cref="F:System.Int16.MaxValue">Int16.MaxValue</see>.
+
+ -or-
+
+ The value in a set operation is less than <see cref="P:System.Console.WindowTop" /> + <see cref="P:System.Console.WindowHeight" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The set operation is invoked on an operating system other than Windows.</exception>
+      <returns>The current height, in rows, of the buffer area.</returns>
+    </member>
+    <member name="P:System.Console.BufferWidth">
+      <summary>Gets or sets the width of the buffer area.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value in a set operation is less than or equal to zero.
+
+ -or-
+
+ The value in a set operation is greater than or equal to <see cref="F:System.Int16.MaxValue">Int16.MaxValue</see>.
+
+ -or-
+
+ The value in a set operation is less than <see cref="P:System.Console.WindowLeft" /> + <see cref="P:System.Console.WindowWidth" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The set operation is invoked on an operating system other than Windows.</exception>
+      <returns>The current width, in columns, of the buffer area.</returns>
+    </member>
+    <member name="P:System.Console.CapsLock">
+      <summary>Gets a value indicating whether the CAPS LOCK keyboard toggle is turned on or turned off.</summary>
+      <exception cref="T:System.PlatformNotSupportedException">The get operation is invoked on an operating system other than Windows.</exception>
+      <returns>
+        <see langword="true" /> if CAPS LOCK is turned on; <see langword="false" /> if CAPS LOCK is turned off.</returns>
+    </member>
+    <member name="P:System.Console.CursorLeft">
+      <summary>Gets or sets the column position of the cursor within the buffer area.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value in a set operation is less than zero.
+
+ -or-
+
+ The value in a set operation is greater than or equal to <see cref="P:System.Console.BufferWidth" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <returns>The current position, in columns, of the cursor.</returns>
+    </member>
+    <member name="P:System.Console.CursorSize">
+      <summary>Gets or sets the height of the cursor within a character cell.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value specified in a set operation is less than 1 or greater than 100.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The set operation is invoked on an operating system other than Windows.</exception>
+      <returns>The size of the cursor expressed as a percentage of the height of a character cell. The property value ranges from 1 to 100.</returns>
+    </member>
+    <member name="P:System.Console.CursorTop">
+      <summary>Gets or sets the row position of the cursor within the buffer area.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value in a set operation is less than zero.
+
+ -or-
+
+ The value in a set operation is greater than or equal to <see cref="P:System.Console.BufferHeight" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <returns>The current position, in rows, of the cursor.</returns>
+    </member>
+    <member name="P:System.Console.CursorVisible">
+      <summary>Gets or sets a value indicating whether the cursor is visible.</summary>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The get operation is invoked on an operating system other than Windows.</exception>
+      <returns>
+        <see langword="true" /> if the cursor is visible; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Console.Error">
+      <summary>Gets the standard error output stream.</summary>
+      <returns>A <see cref="T:System.IO.TextWriter" /> that represents the standard error output stream.</returns>
+    </member>
+    <member name="P:System.Console.ForegroundColor">
+      <summary>Gets or sets the foreground color of the console.</summary>
+      <exception cref="T:System.ArgumentException">The color specified in a set operation is not a valid member of <see cref="T:System.ConsoleColor" />.</exception>
+      <exception cref="T:System.Security.SecurityException">The user does not have permission to perform this action.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <returns>A <see cref="T:System.ConsoleColor" /> that specifies the foreground color of the console; that is, the color of each character that is displayed. The default is gray.</returns>
+    </member>
+    <member name="P:System.Console.In">
+      <summary>Gets the standard input stream.</summary>
+      <returns>A <see cref="T:System.IO.TextReader" /> that represents the standard input stream.</returns>
+    </member>
+    <member name="P:System.Console.InputEncoding">
+      <summary>Gets or sets the encoding the console uses to read input.</summary>
+      <exception cref="T:System.ArgumentNullException">The property value in a set operation is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.IOException">An error occurred during the execution of this operation.</exception>
+      <exception cref="T:System.Security.SecurityException">Your application does not have permission to perform this operation.</exception>
+      <returns>The encoding used to read console input.</returns>
+    </member>
+    <member name="P:System.Console.IsErrorRedirected">
+      <summary>Gets a value that indicates whether the error output stream has been redirected from the standard error stream.</summary>
+      <returns>
+        <see langword="true" /> if error output is redirected; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Console.IsInputRedirected">
+      <summary>Gets a value that indicates whether input has been redirected from the standard input stream.</summary>
+      <returns>
+        <see langword="true" /> if input is redirected; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Console.IsOutputRedirected">
+      <summary>Gets a value that indicates whether output has been redirected from the standard output stream.</summary>
+      <returns>
+        <see langword="true" /> if output is redirected; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Console.KeyAvailable">
+      <summary>Gets a value indicating whether a key press is available in the input stream.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.InvalidOperationException">Standard input is redirected to a file instead of the keyboard.</exception>
+      <returns>
+        <see langword="true" /> if a key press is available; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Console.LargestWindowHeight">
+      <summary>Gets the largest possible number of console window rows, based on the current font and screen resolution.</summary>
+      <returns>The height of the largest possible console window measured in rows.</returns>
+    </member>
+    <member name="P:System.Console.LargestWindowWidth">
+      <summary>Gets the largest possible number of console window columns, based on the current font and screen resolution.</summary>
+      <returns>The width of the largest possible console window measured in columns.</returns>
+    </member>
+    <member name="P:System.Console.NumberLock">
+      <summary>Gets a value indicating whether the NUM LOCK keyboard toggle is turned on or turned off.</summary>
+      <exception cref="T:System.PlatformNotSupportedException">The get operation is invoked on an operating system other than Windows.</exception>
+      <returns>
+        <see langword="true" /> if NUM LOCK is turned on; <see langword="false" /> if NUM LOCK is turned off.</returns>
+    </member>
+    <member name="P:System.Console.Out">
+      <summary>Gets the standard output stream.</summary>
+      <returns>A <see cref="T:System.IO.TextWriter" /> that represents the standard output stream.</returns>
+    </member>
+    <member name="P:System.Console.OutputEncoding">
+      <summary>Gets or sets the encoding the console uses to write output.</summary>
+      <exception cref="T:System.ArgumentNullException">The property value in a set operation is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.IOException">An error occurred during the execution of this operation.</exception>
+      <exception cref="T:System.Security.SecurityException">Your application does not have permission to perform this operation.</exception>
+      <returns>The encoding used to write console output.</returns>
+    </member>
+    <member name="P:System.Console.Title">
+      <summary>Gets or sets the title to display in the console title bar.</summary>
+      <exception cref="T:System.InvalidOperationException">In a get operation, the retrieved title is longer than 24500 characters.</exception>
+      <exception cref="T:System.ArgumentOutOfRangeException">In a set operation, the specified title is longer than 24500 characters.</exception>
+      <exception cref="T:System.ArgumentNullException">In a set operation, the specified title is <see langword="null" />.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The get operation is invoked on an operating system other than Windows.</exception>
+      <returns>The string to be displayed in the title bar of the console. The maximum length of the title string is 24500 characters.</returns>
+    </member>
+    <member name="P:System.Console.TreatControlCAsInput">
+      <summary>Gets or sets a value indicating whether the combination of the <see cref="F:System.ConsoleModifiers.Control" /> modifier key and <see cref="F:System.ConsoleKey.C" /> console key (Ctrl+C) is treated as ordinary input or as an interruption that is handled by the operating system.</summary>
+      <exception cref="T:System.IO.IOException">Unable to get or set the input mode of the console input buffer.</exception>
+      <returns>
+        <see langword="true" /> if Ctrl+C is treated as ordinary input; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Console.WindowHeight">
+      <summary>Gets or sets the height of the console window area.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value of the <see cref="P:System.Console.WindowWidth" /> property or the value of the <see cref="P:System.Console.WindowHeight" /> property is less than or equal to 0.
+
+ -or-
+
+ The value of the <see cref="P:System.Console.WindowHeight" /> property plus the value of the <see cref="P:System.Console.WindowTop" /> property is greater than or equal to <see cref="F:System.Int16.MaxValue">Int16.MaxValue</see>.
+
+ -or-
+
+ The value of the <see cref="P:System.Console.WindowWidth" /> property or the value of the <see cref="P:System.Console.WindowHeight" /> property is greater than the largest possible window width or height for the current screen resolution and console font.</exception>
+      <exception cref="T:System.IO.IOException">Error reading or writing information.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The set operation is invoked on an operating system other than Windows.</exception>
+      <returns>The height of the console window measured in rows.</returns>
+    </member>
+    <member name="P:System.Console.WindowLeft">
+      <summary>Gets or sets the leftmost position of the console window area relative to the screen buffer.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">In a set operation, the value to be assigned is less than zero.
+
+ -or-
+
+ As a result of the assignment, <see cref="P:System.Console.WindowLeft" /> plus <see cref="P:System.Console.WindowWidth" /> would exceed <see cref="P:System.Console.BufferWidth" />.</exception>
+      <exception cref="T:System.IO.IOException">Error reading or writing information.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The set operation is invoked on an operating system other than Windows.</exception>
+      <returns>The leftmost console window position measured in columns.</returns>
+    </member>
+    <member name="P:System.Console.WindowTop">
+      <summary>Gets or sets the top position of the console window area relative to the screen buffer.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">In a set operation, the value to be assigned is less than zero.
+
+ -or-
+
+ As a result of the assignment, <see cref="P:System.Console.WindowTop" /> plus <see cref="P:System.Console.WindowHeight" /> would exceed <see cref="P:System.Console.BufferHeight" />.</exception>
+      <exception cref="T:System.IO.IOException">Error reading or writing information.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The set operation is invoked on an operating system other than Windows.</exception>
+      <returns>The uppermost console window position measured in rows.</returns>
+    </member>
+    <member name="P:System.Console.WindowWidth">
+      <summary>Gets or sets the width of the console window.</summary>
+      <exception cref="T:System.ArgumentOutOfRangeException">The value of the <see cref="P:System.Console.WindowWidth" /> property or the value of the <see cref="P:System.Console.WindowHeight" /> property is less than or equal to 0.
+
+ -or-
+
+ The value of the <see cref="P:System.Console.WindowHeight" /> property plus the value of the <see cref="P:System.Console.WindowTop" /> property is greater than or equal to <see cref="F:System.Int16.MaxValue">Int16.MaxValue</see>.
+
+ -or-
+
+ The value of the <see cref="P:System.Console.WindowWidth" /> property or the value of the <see cref="P:System.Console.WindowHeight" /> property is greater than the largest possible window width or height for the current screen resolution and console font.</exception>
+      <exception cref="T:System.IO.IOException">Error reading or writing information.</exception>
+      <exception cref="T:System.PlatformNotSupportedException">The set operation is invoked on an operating system other than Windows.</exception>
+      <returns>The width of the console window measured in columns.</returns>
+    </member>
+    <member name="T:System.ConsoleCancelEventArgs">
+      <summary>Provides data for the <see cref="E:System.Console.CancelKeyPress" /> event. This class cannot be inherited.</summary>
+    </member>
+    <member name="P:System.ConsoleCancelEventArgs.Cancel">
+      <summary>Gets or sets a value that indicates whether simultaneously pressing the <see cref="F:System.ConsoleModifiers.Control" /> modifier key and the <see cref="F:System.ConsoleKey.C" /> console key (Ctrl+C) or the Ctrl+Break keys terminates the current process. The default is <see langword="false" />, which terminates the current process.</summary>
+      <returns>
+        <see langword="true" /> if the current process should resume when the event handler concludes; <see langword="false" /> if the current process should terminate. The default value is <see langword="false" />; the current process terminates when the event handler returns. If <see langword="true" />, the current process continues.</returns>
+    </member>
+    <member name="P:System.ConsoleCancelEventArgs.SpecialKey">
+      <summary>Gets the combination of modifier and console keys that interrupted the current process.</summary>
+      <returns>One of the enumeration values that specifies the key combination that interrupted the current process. There is no default value.</returns>
+    </member>
+    <member name="T:System.ConsoleCancelEventHandler">
+      <summary>Represents the method that will handle the <see cref="E:System.Console.CancelKeyPress" /> event of a <see cref="T:System.Console" />.</summary>
+      <param name="sender">The source of the event.</param>
+      <param name="e">A <see cref="T:System.ConsoleCancelEventArgs" /> object that contains the event data.</param>
+    </member>
+    <member name="T:System.ConsoleColor">
+      <summary>Specifies constants that define foreground and background colors for the console.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.Black">
+      <summary>The color black.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.Blue">
+      <summary>The color blue.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.Cyan">
+      <summary>The color cyan (blue-green).</summary>
+    </member>
+    <member name="F:System.ConsoleColor.DarkBlue">
+      <summary>The color dark blue.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.DarkCyan">
+      <summary>The color dark cyan (dark blue-green).</summary>
+    </member>
+    <member name="F:System.ConsoleColor.DarkGray">
+      <summary>The color dark gray.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.DarkGreen">
+      <summary>The color dark green.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.DarkMagenta">
+      <summary>The color dark magenta (dark purplish-red).</summary>
+    </member>
+    <member name="F:System.ConsoleColor.DarkRed">
+      <summary>The color dark red.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.DarkYellow">
+      <summary>The color dark yellow (ochre).</summary>
+    </member>
+    <member name="F:System.ConsoleColor.Gray">
+      <summary>The color gray.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.Green">
+      <summary>The color green.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.Magenta">
+      <summary>The color magenta (purplish-red).</summary>
+    </member>
+    <member name="F:System.ConsoleColor.Red">
+      <summary>The color red.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.White">
+      <summary>The color white.</summary>
+    </member>
+    <member name="F:System.ConsoleColor.Yellow">
+      <summary>The color yellow.</summary>
+    </member>
+    <member name="T:System.ConsoleKey">
+      <summary>Specifies the standard keys on a console.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.A">
+      <summary>The A key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Add">
+      <summary>The Add key (the addition key on the numeric keypad).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Applications">
+      <summary>The Application key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Attention">
+      <summary>The ATTN key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.B">
+      <summary>The B key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Backspace">
+      <summary>The BACKSPACE key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.BrowserBack">
+      <summary>The Browser Back key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.BrowserFavorites">
+      <summary>The Browser Favorites key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.BrowserForward">
+      <summary>The Browser Forward key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.BrowserHome">
+      <summary>The Browser Home key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.BrowserRefresh">
+      <summary>The Browser Refresh key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.BrowserSearch">
+      <summary>The Browser Search key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.BrowserStop">
+      <summary>The Browser Stop key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.C">
+      <summary>The C key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Clear">
+      <summary>The CLEAR key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.CrSel">
+      <summary>The CRSEL (CURSOR SELECT) key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D">
+      <summary>The D key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D0">
+      <summary>The 0 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D1">
+      <summary>The 1 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D2">
+      <summary>The 2 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D3">
+      <summary>The 3 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D4">
+      <summary>The 4 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D5">
+      <summary>The 5 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D6">
+      <summary>The 6 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D7">
+      <summary>The 7 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D8">
+      <summary>The 8 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.D9">
+      <summary>The 9 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Decimal">
+      <summary>The Decimal key (the decimal key on the numeric keypad).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Delete">
+      <summary>The DEL (DELETE) key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Divide">
+      <summary>The Divide key (the division key on the numeric keypad).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.DownArrow">
+      <summary>The DOWN ARROW key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.E">
+      <summary>The E key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.End">
+      <summary>The END key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Enter">
+      <summary>The ENTER key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.EraseEndOfFile">
+      <summary>The ERASE EOF key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Escape">
+      <summary>The ESC (ESCAPE) key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Execute">
+      <summary>The EXECUTE key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.ExSel">
+      <summary>The EXSEL (EXTEND SELECTION) key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F">
+      <summary>The F key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F1">
+      <summary>The F1 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F10">
+      <summary>The F10 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F11">
+      <summary>The F11 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F12">
+      <summary>The F12 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F13">
+      <summary>The F13 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F14">
+      <summary>The F14 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F15">
+      <summary>The F15 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F16">
+      <summary>The F16 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F17">
+      <summary>The F17 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F18">
+      <summary>The F18 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F19">
+      <summary>The F19 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F2">
+      <summary>The F2 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F20">
+      <summary>The F20 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F21">
+      <summary>The F21 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F22">
+      <summary>The F22 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F23">
+      <summary>The F23 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F24">
+      <summary>The F24 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F3">
+      <summary>The F3 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F4">
+      <summary>The F4 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F5">
+      <summary>The F5 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F6">
+      <summary>The F6 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F7">
+      <summary>The F7 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F8">
+      <summary>The F8 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.F9">
+      <summary>The F9 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.G">
+      <summary>The G key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.H">
+      <summary>The H key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Help">
+      <summary>The HELP key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Home">
+      <summary>The HOME key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.I">
+      <summary>The I key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Insert">
+      <summary>The INS (INSERT) key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.J">
+      <summary>The J key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.K">
+      <summary>The K key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.L">
+      <summary>The L key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.LaunchApp1">
+      <summary>The Start Application 1 key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.LaunchApp2">
+      <summary>The Start Application 2 key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.LaunchMail">
+      <summary>The Start Mail key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.LaunchMediaSelect">
+      <summary>The Select Media key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.LeftArrow">
+      <summary>The LEFT ARROW key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.LeftWindows">
+      <summary>The left Windows logo key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.M">
+      <summary>The M key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.MediaNext">
+      <summary>The Media Next Track key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.MediaPlay">
+      <summary>The Media Play/Pause key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.MediaPrevious">
+      <summary>The Media Previous Track key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.MediaStop">
+      <summary>The Media Stop key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Multiply">
+      <summary>The Multiply key (the multiplication key on the numeric keypad).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.N">
+      <summary>The N key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NoName">
+      <summary>A constant reserved for future use.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.None" />
+    <member name="F:System.ConsoleKey.NumPad0">
+      <summary>The 0 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NumPad1">
+      <summary>The 1 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NumPad2">
+      <summary>The 2 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NumPad3">
+      <summary>The 3 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NumPad4">
+      <summary>The 4 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NumPad5">
+      <summary>The 5 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NumPad6">
+      <summary>The 6 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NumPad7">
+      <summary>The 7 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NumPad8">
+      <summary>The 8 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.NumPad9">
+      <summary>The 9 key on the numeric keypad.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.O">
+      <summary>The O key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Oem1">
+      <summary>The OEM 1 key (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Oem102">
+      <summary>The OEM 102 key (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Oem2">
+      <summary>The OEM 2 key (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Oem3">
+      <summary>The OEM 3 key (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Oem4">
+      <summary>The OEM 4 key (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Oem5">
+      <summary>The OEM 5 (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Oem6">
+      <summary>The OEM 6 key (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Oem7">
+      <summary>The OEM 7 key (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Oem8">
+      <summary>The OEM 8 key (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.OemClear">
+      <summary>The CLEAR key (OEM specific).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.OemComma">
+      <summary>The OEM Comma key on any country/region keyboard.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.OemMinus">
+      <summary>The OEM Minus key on any country/region keyboard.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.OemPeriod">
+      <summary>The OEM Period key on any country/region keyboard.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.OemPlus">
+      <summary>The OEM Plus key on any country/region keyboard.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.P">
+      <summary>The P key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Pa1">
+      <summary>The PA1 key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Packet">
+      <summary>The PACKET key (used to pass Unicode characters with keystrokes).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.PageDown">
+      <summary>The PAGE DOWN key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.PageUp">
+      <summary>The PAGE UP key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Pause">
+      <summary>The PAUSE key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Play">
+      <summary>The PLAY key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Print">
+      <summary>The PRINT key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.PrintScreen">
+      <summary>The PRINT SCREEN key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Process">
+      <summary>The IME PROCESS key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Q">
+      <summary>The Q key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.R">
+      <summary>The R key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.RightArrow">
+      <summary>The RIGHT ARROW key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.RightWindows">
+      <summary>The right Windows logo key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.S">
+      <summary>The S key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Select">
+      <summary>The SELECT key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Separator">
+      <summary>The Separator key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Sleep">
+      <summary>The Computer Sleep key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Spacebar">
+      <summary>The SPACEBAR key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Subtract">
+      <summary>The Subtract key (the subtraction key on the numeric keypad).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.T">
+      <summary>The T key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Tab">
+      <summary>The TAB key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.U">
+      <summary>The U key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.UpArrow">
+      <summary>The UP ARROW key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.V">
+      <summary>The V key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.VolumeDown">
+      <summary>The Volume Down key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.VolumeMute">
+      <summary>The Volume Mute key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.VolumeUp">
+      <summary>The Volume Up key (Microsoft Natural Keyboard).</summary>
+    </member>
+    <member name="F:System.ConsoleKey.W">
+      <summary>The W key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.X">
+      <summary>The X key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Y">
+      <summary>The Y key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Z">
+      <summary>The Z key.</summary>
+    </member>
+    <member name="F:System.ConsoleKey.Zoom">
+      <summary>The ZOOM key.</summary>
+    </member>
+    <member name="T:System.ConsoleKeyInfo">
+      <summary>Describes the console key that was pressed, including the character represented by the console key and the state of the SHIFT, ALT, and CTRL modifier keys.</summary>
+    </member>
+    <member name="M:System.ConsoleKeyInfo.#ctor(System.Char,System.ConsoleKey,System.Boolean,System.Boolean,System.Boolean)">
+      <summary>Initializes a new instance of the <see cref="T:System.ConsoleKeyInfo" /> structure using the specified character, console key, and modifier keys.</summary>
+      <param name="keyChar">The Unicode character that corresponds to the <paramref name="key" /> parameter.</param>
+      <param name="key">The console key that corresponds to the <paramref name="keyChar" /> parameter.</param>
+      <param name="shift">
+        <see langword="true" /> to indicate that a SHIFT key was pressed; otherwise, <see langword="false" />.</param>
+      <param name="alt">
+        <see langword="true" /> to indicate that an ALT key was pressed; otherwise, <see langword="false" />.</param>
+      <param name="control">
+        <see langword="true" /> to indicate that a CTRL key was pressed; otherwise, <see langword="false" />.</param>
+      <exception cref="T:System.ArgumentOutOfRangeException">The numeric value of the <paramref name="key" /> parameter is less than 0 or greater than 255.</exception>
+    </member>
+    <member name="M:System.ConsoleKeyInfo.Equals(System.ConsoleKeyInfo)">
+      <summary>Gets a value indicating whether the specified <see cref="T:System.ConsoleKeyInfo" /> object is equal to the current <see cref="T:System.ConsoleKeyInfo" /> object.</summary>
+      <param name="obj">An object to compare to the current <see cref="T:System.ConsoleKeyInfo" /> object.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="obj" /> is equal to the current <see cref="T:System.ConsoleKeyInfo" /> object; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.ConsoleKeyInfo.Equals(System.Object)">
+      <summary>Gets a value indicating whether the specified object is equal to the current <see cref="T:System.ConsoleKeyInfo" /> object.</summary>
+      <param name="value">An object to compare to the current <see cref="T:System.ConsoleKeyInfo" /> object.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="value" /> is a <see cref="T:System.ConsoleKeyInfo" /> object and is equal to the current <see cref="T:System.ConsoleKeyInfo" /> object; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.ConsoleKeyInfo.GetHashCode">
+      <summary>Returns the hash code for the current <see cref="T:System.ConsoleKeyInfo" /> object.</summary>
+      <returns>A 32-bit signed integer hash code.</returns>
+    </member>
+    <member name="M:System.ConsoleKeyInfo.op_Equality(System.ConsoleKeyInfo,System.ConsoleKeyInfo)">
+      <summary>Indicates whether the specified <see cref="T:System.ConsoleKeyInfo" /> objects are equal.</summary>
+      <param name="a">The first object to compare.</param>
+      <param name="b">The second object to compare.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="a" /> is equal to <paramref name="b" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.ConsoleKeyInfo.op_Inequality(System.ConsoleKeyInfo,System.ConsoleKeyInfo)">
+      <summary>Indicates whether the specified <see cref="T:System.ConsoleKeyInfo" /> objects are not equal.</summary>
+      <param name="a">The first object to compare.</param>
+      <param name="b">The second object to compare.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="a" /> is not equal to <paramref name="b" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.ConsoleKeyInfo.Key">
+      <summary>Gets the console key represented by the current <see cref="T:System.ConsoleKeyInfo" /> object.</summary>
+      <returns>A value that identifies the console key that was pressed.</returns>
+    </member>
+    <member name="P:System.ConsoleKeyInfo.KeyChar">
+      <summary>Gets the Unicode character represented by the current <see cref="T:System.ConsoleKeyInfo" /> object.</summary>
+      <returns>An object that corresponds to the console key represented by the current <see cref="T:System.ConsoleKeyInfo" /> object.</returns>
+    </member>
+    <member name="P:System.ConsoleKeyInfo.Modifiers">
+      <summary>Gets a bitwise combination of <see cref="T:System.ConsoleModifiers" /> values that specifies one or more modifier keys pressed simultaneously with the console key.</summary>
+      <returns>A bitwise combination of the enumeration values. There is no default value.</returns>
+    </member>
+    <member name="T:System.ConsoleModifiers">
+      <summary>Represents the SHIFT, ALT, and CTRL modifier keys on a keyboard.</summary>
+    </member>
+    <member name="F:System.ConsoleModifiers.Alt">
+      <summary>The left or right ALT modifier key.</summary>
+    </member>
+    <member name="F:System.ConsoleModifiers.Control">
+      <summary>The left or right CTRL modifier key.</summary>
+    </member>
+    <member name="F:System.ConsoleModifiers.None" />
+    <member name="F:System.ConsoleModifiers.Shift">
+      <summary>The left or right SHIFT modifier key.</summary>
+    </member>
+    <member name="T:System.ConsoleSpecialKey">
+      <summary>Specifies combinations of modifier and console keys that can interrupt the current process.</summary>
+    </member>
+    <member name="F:System.ConsoleSpecialKey.ControlBreak">
+      <summary>The <see cref="F:System.ConsoleModifiers.Control" /> modifier key plus the BREAK console key.</summary>
+    </member>
+    <member name="F:System.ConsoleSpecialKey.ControlC">
+      <summary>The <see cref="F:System.ConsoleModifiers.Control" /> modifier key plus the <see cref="F:System.ConsoleKey.C" /> console key.</summary>
+    </member>
+  </members>
+</doc>

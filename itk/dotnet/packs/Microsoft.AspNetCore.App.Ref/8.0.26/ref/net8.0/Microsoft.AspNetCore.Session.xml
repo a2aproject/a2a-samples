@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Session</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Session.DistributedSession">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Http.ISession"/> backed by an <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.DistributedSession.#ctor(Microsoft.Extensions.Caching.Distributed.IDistributedCache,System.String,System.TimeSpan,System.TimeSpan,System.Func{System.Boolean},Microsoft.Extensions.Logging.ILoggerFactory,System.Boolean)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Session.DistributedSession"/>.
+            </summary>
+            <param name="cache">The <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/> used to store the session data.</param>
+            <param name="sessionKey">A unique key used to lookup the session.</param>
+            <param name="idleTimeout">How long the session can be inactive (e.g. not accessed) before it will expire.</param>
+            <param name="ioTimeout">
+            The maximum amount of time <see cref="M:Microsoft.AspNetCore.Session.DistributedSession.LoadAsync(System.Threading.CancellationToken)"/> and <see cref="M:Microsoft.AspNetCore.Session.DistributedSession.CommitAsync(System.Threading.CancellationToken)"/> are allowed take.
+            </param>
+            <param name="tryEstablishSession">
+            A callback invoked during <see cref="M:Microsoft.AspNetCore.Session.DistributedSession.Set(System.String,System.Byte[])"/> to verify that modifying the session is currently valid.
+            If the callback returns <see langword="false"/>, <see cref="M:Microsoft.AspNetCore.Session.DistributedSession.Set(System.String,System.Byte[])"/> throws an <see cref="T:System.InvalidOperationException"/>.
+            <see cref="T:Microsoft.AspNetCore.Session.SessionMiddleware"/> provides a callback that returns <see langword="false"/> if the session was not established
+            prior to sending the response.
+            </param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+            <param name="isNewSessionKey"><see langword="true"/> if establishing a new session; <see langword="false"/> if resuming a session.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.DistributedSession.IsAvailable">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.DistributedSession.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.DistributedSession.Keys">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.DistributedSession.TryGetValue(System.String,System.Byte[]@)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.DistributedSession.Set(System.String,System.Byte[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.DistributedSession.Remove(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.DistributedSession.Clear">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.DistributedSession.LoadAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.DistributedSession.CommitAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Session.DistributedSessionStore">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Session.ISessionStore"/> backed by an <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.DistributedSessionStore.#ctor(Microsoft.Extensions.Caching.Distributed.IDistributedCache,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Session.DistributedSessionStore"/>.
+            </summary>
+            <param name="cache">The <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/> used to store the session data.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.DistributedSessionStore.Create(System.String,System.TimeSpan,System.TimeSpan,System.Func{System.Boolean},System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Session.ISessionStore">
+            <summary>
+            Storage for sessions that maintain user data while the user browses a web application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.ISessionStore.Create(System.String,System.TimeSpan,System.TimeSpan,System.Func{System.Boolean},System.Boolean)">
+            <summary>
+            Create a new or resume an <see cref="T:Microsoft.AspNetCore.Http.ISession"/>.
+            </summary>
+            <param name="sessionKey">A unique key used to lookup the session.</param>
+            <param name="idleTimeout">How long the session can be inactive (e.g. not accessed) before it will expire.</param>
+            <param name="ioTimeout">
+            The maximum amount of time <see cref="M:Microsoft.AspNetCore.Http.ISession.LoadAsync(System.Threading.CancellationToken)"/> and
+            <see cref="M:Microsoft.AspNetCore.Http.ISession.CommitAsync(System.Threading.CancellationToken)"/> are allowed take.
+            </param>
+            <param name="tryEstablishSession">
+            A callback invoked during <see cref="M:Microsoft.AspNetCore.Http.ISession.Set(System.String,System.Byte[])"/> to verify that modifying the session is currently valid.
+            If the callback returns <see langword="false"/>, <see cref="M:Microsoft.AspNetCore.Http.ISession.Set(System.String,System.Byte[])"/> should throw an <see cref="T:System.InvalidOperationException"/>.
+            <see cref="T:Microsoft.AspNetCore.Session.SessionMiddleware"/> provides a callback that returns <see langword="false"/> if the session was not established
+            prior to sending the response.
+            </param>
+            <param name="isNewSessionKey"><see langword="true"/> if establishing a new session; <see langword="false"/> if resuming a session.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.ISession"/> that was created or resumed.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Session.SessionDefaults">
+            <summary>
+            Represents defaults for the Session.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Session.SessionDefaults.CookieName">
+            <summary>
+            Represent the default cookie name, which is ".AspNetCore.Session".
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Session.SessionDefaults.CookiePath">
+            <summary>
+            Represents the default path used to create the cookie, which is "/".
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Session.SessionFeature">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.SessionFeature.Session">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Session.SessionMiddleware">
+            <summary>
+            Enables the session state for the application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.SessionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.AspNetCore.DataProtection.IDataProtectionProvider,Microsoft.AspNetCore.Session.ISessionStore,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Builder.SessionOptions})">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Session.SessionMiddleware"/>.
+            </summary>
+            <param name="next">The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> representing the next middleware in the pipeline.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> representing the factory that used to create logger instances.</param>
+            <param name="dataProtectionProvider">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/> used to protect and verify the cookie.</param>
+            <param name="sessionStore">The <see cref="T:Microsoft.AspNetCore.Session.ISessionStore"/> representing the session store.</param>
+            <param name="options">The session configuration options.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the logic of the middleware.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that completes when the middleware has completed processing.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.Resources.Exception_KeyLengthIsExceeded">
+            <summary>The key cannot be longer than '{0}' when encoded with UTF-8.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Session.Resources.FormatException_KeyLengthIsExceeded(System.Object)">
+            <summary>The key cannot be longer than '{0}' when encoded with UTF-8.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.Resources.Exception_InvalidSessionEstablishment">
+            <summary>The session cannot be established after the response has started.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.Resources.Exception_InvalidToSerializeIn2Bytes">
+            <summary>The value cannot be serialized in two bytes.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.Resources.Exception_InvalidToSerializeIn3Bytes">
+            <summary>The value cannot be serialized in three bytes.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.Resources.Exception_NumberShouldNotBeNegative">
+            <summary>The value cannot be negative.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Session.Resources.ArgumentCannotBeNullOrEmpty">
+            <summary>Argument cannot be null or empty string.</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.SessionMiddlewareExtensions">
+            <summary>
+            Extension methods for adding the <see cref="T:Microsoft.AspNetCore.Session.SessionMiddleware"/> to an application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.SessionMiddlewareExtensions.UseSession(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds the <see cref="T:Microsoft.AspNetCore.Session.SessionMiddleware"/> to automatically enable session state for the application.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.SessionMiddlewareExtensions.UseSession(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.SessionOptions)">
+            <summary>
+            Adds the <see cref="T:Microsoft.AspNetCore.Session.SessionMiddleware"/> to automatically enable session state for the application.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <param name="options">The <see cref="T:Microsoft.AspNetCore.Builder.SessionOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.SessionOptions">
+            <summary>
+            Represents the session state options for the application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.SessionOptions.Cookie">
+            <summary>
+            Determines the settings used to create the cookie.
+            </summary>
+            <remarks>
+            <list type="bullet">
+            <item><description><see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.Name"/> defaults to <see cref="F:Microsoft.AspNetCore.Session.SessionDefaults.CookieName"/>.</description></item>
+            <item><description><see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.Path"/> defaults to <see cref="F:Microsoft.AspNetCore.Session.SessionDefaults.CookiePath"/>.</description></item>
+            <item><description><see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.SameSite"/> defaults to <see cref="F:Microsoft.AspNetCore.Http.SameSiteMode.Lax"/>.</description></item>
+            <item><description><see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.HttpOnly"/> defaults to <c>true</c>.</description></item>
+            <item><description><see cref="P:Microsoft.AspNetCore.Http.CookieBuilder.IsEssential"/> defaults to <c>false</c>.</description></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.SessionOptions.IdleTimeout">
+            <summary>
+            The IdleTimeout indicates how long the session can be idle before its contents are abandoned. Each session access
+            resets the timeout. Note this only applies to the content of the session, not the cookie.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.SessionOptions.IOTimeout">
+            <summary>
+            The maximum amount of time allowed to load a session from the store or to commit it back to the store.
+            Note this may only apply to asynchronous operations. This timeout can be disabled using <see cref="F:System.Threading.Timeout.InfiniteTimeSpan"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.SessionServiceCollectionExtensions">
+            <summary>
+            Extension methods for adding session services to the DI container.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.SessionServiceCollectionExtensions.AddSession(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds services required for application session state.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.SessionServiceCollectionExtensions.AddSession(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Builder.SessionOptions})">
+            <summary>
+            Adds services required for application session state.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <param name="configure">The session options to configure the middleware with.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+    </members>
+</doc>

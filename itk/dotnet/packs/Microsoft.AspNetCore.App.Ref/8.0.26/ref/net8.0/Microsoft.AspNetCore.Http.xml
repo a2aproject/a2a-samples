@@ -1,0 +1,1800 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Http</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Http.BindingAddress">
+            <summary>
+            An address that a HTTP server may bind to.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.BindingAddress.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.BindingAddress"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.BindingAddress.Host">
+            <summary>
+            Gets the host component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.BindingAddress.PathBase">
+            <summary>
+            Gets the path component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.BindingAddress.Port">
+            <summary>
+            Gets the port.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.BindingAddress.Scheme">
+            <summary>
+            Gets the scheme component.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.BindingAddress.IsUnixPipe">
+            <summary>
+            Gets a value that determines if this instance represents a Unix pipe.
+            <para>
+            Returns <see langword="true"/> if <see cref="P:Microsoft.AspNetCore.Http.BindingAddress.Host"/> starts with <c>unix://</c> prefix.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.BindingAddress.IsNamedPipe">
+            <summary>
+            Gets a value that determines if this instance represents a named pipe.
+            <para>
+            Returns <see langword="true"/> if <see cref="P:Microsoft.AspNetCore.Http.BindingAddress.Host"/> starts with <c>pipe:/</c> prefix.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.BindingAddress.UnixPipePath">
+            <summary>
+            Gets the unix pipe path if this instance represents a Unix pipe.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.BindingAddress.NamedPipeName">
+            <summary>
+            Gets the named pipe name if this instance represents a named pipe.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.BindingAddress.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.BindingAddress.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.BindingAddress.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.BindingAddress.Parse(System.String)">
+            <summary>
+            Parses the specified <paramref name="address"/> as a <see cref="T:Microsoft.AspNetCore.Http.BindingAddress"/>.
+            </summary>
+            <param name="address">The address to parse.</param>
+            <returns>The parsed address.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.DefaultHttpContext">
+            <summary>
+            Represents an implementation of the HTTP Context class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.DefaultHttpContext.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Http.DefaultHttpContext"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.DefaultHttpContext.#ctor(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Http.DefaultHttpContext"/> class with provided features.
+            </summary>
+            <param name="features">Initial set of features for the <see cref="T:Microsoft.AspNetCore.Http.DefaultHttpContext"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.DefaultHttpContext.Initialize(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Reinitialize  the current instant of the class with features passed in.
+            </summary>
+            <remarks>
+            This method allows the consumer to re-use the <see cref="T:Microsoft.AspNetCore.Http.DefaultHttpContext" /> for another request, rather than having to allocate a new instance.
+            </remarks>
+            <param name="features">The new set of features for the <see cref="T:Microsoft.AspNetCore.Http.DefaultHttpContext" />.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.DefaultHttpContext.Uninitialize">
+            <summary>
+            Uninitialize all the features in the <see cref="T:Microsoft.AspNetCore.Http.DefaultHttpContext" />.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.FormOptions">
+            <summary>
+            Gets or set the <see cref="P:Microsoft.AspNetCore.Http.DefaultHttpContext.FormOptions" /> for this instance.
+            </summary>
+            <returns>
+            <see cref="P:Microsoft.AspNetCore.Http.DefaultHttpContext.FormOptions"/>
+            </returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.ServiceScopeFactory">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceScopeFactory" /> for this instance.
+            </summary>
+            <returns>
+            <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceScopeFactory"/>
+            </returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.Features">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.Request">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.Response">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.Connection">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.WebSockets">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.User">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.Items">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.RequestServices">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.RequestAborted">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.TraceIdentifier">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.Session">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultHttpContext.HttpContext">
+            <summary>
+            This API is used by ASP.NET Core's infrastructure and should not be used by application code.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.DefaultHttpContext.Abort">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HttpRequestRewindExtensions">
+            <summary>
+            Extension methods for enabling buffering in an <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestRewindExtensions.EnableBuffering(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Ensure the <paramref name="request"/> <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Body"/> can be read multiple times. Normally
+            buffers request bodies in memory; writes requests larger than 30K bytes to disk.
+            </summary>
+            <param name="request">The <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/> to prepare.</param>
+            <remarks>
+            Temporary files for larger requests are written to the location named in the <c>ASPNETCORE_TEMP</c>
+            environment variable, if any. If that environment variable is not defined, these files are written to the
+            current user's temporary folder. Files are automatically deleted at the end of their associated requests.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestRewindExtensions.EnableBuffering(Microsoft.AspNetCore.Http.HttpRequest,System.Int32)">
+            <summary>
+            Ensure the <paramref name="request"/> <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Body"/> can be read multiple times. Normally
+            buffers request bodies in memory; writes requests larger than <paramref name="bufferThreshold"/> bytes to
+            disk.
+            </summary>
+            <param name="request">The <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/> to prepare.</param>
+            <param name="bufferThreshold">
+            The maximum size in bytes of the in-memory <see cref="T:System.Buffers.ArrayPool`1"/> used to buffer the
+            stream. Larger request bodies are written to disk.
+            </param>
+            <remarks>
+            Temporary files for larger requests are written to the location named in the <c>ASPNETCORE_TEMP</c>
+            environment variable, if any. If that environment variable is not defined, these files are written to the
+            current user's temporary folder. Files are automatically deleted at the end of their associated requests.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestRewindExtensions.EnableBuffering(Microsoft.AspNetCore.Http.HttpRequest,System.Int64)">
+            <summary>
+            Ensure the <paramref name="request"/> <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Body"/> can be read multiple times. Normally
+            buffers request bodies in memory; writes requests larger than 30K bytes to disk.
+            </summary>
+            <param name="request">The <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/> to prepare.</param>
+            <param name="bufferLimit">
+            The maximum size in bytes of the request body. An attempt to read beyond this limit will cause an
+            <see cref="T:System.IO.IOException"/>.
+            </param>
+            <remarks>
+            Temporary files for larger requests are written to the location named in the <c>ASPNETCORE_TEMP</c>
+            environment variable, if any. If that environment variable is not defined, these files are written to the
+            current user's temporary folder. Files are automatically deleted at the end of their associated requests.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HttpRequestRewindExtensions.EnableBuffering(Microsoft.AspNetCore.Http.HttpRequest,System.Int32,System.Int64)">
+            <summary>
+            Ensure the <paramref name="request"/> <see cref="P:Microsoft.AspNetCore.Http.HttpRequest.Body"/> can be read multiple times. Normally
+            buffers request bodies in memory; writes requests larger than <paramref name="bufferThreshold"/> bytes to
+            disk.
+            </summary>
+            <param name="request">The <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/> to prepare.</param>
+            <param name="bufferThreshold">
+            The maximum size in bytes of the in-memory <see cref="T:System.Buffers.ArrayPool`1"/> used to buffer the
+            stream. Larger request bodies are written to disk.
+            </param>
+            <param name="bufferLimit">
+            The maximum size in bytes of the request body. An attempt to read beyond this limit will cause an
+            <see cref="T:System.IO.IOException"/>.
+            </param>
+            <remarks>
+            Temporary files for larger requests are written to the location named in the <c>ASPNETCORE_TEMP</c>
+            environment variable, if any. If that environment variable is not defined, these files are written to the
+            current user's temporary folder. Files are automatically deleted at the end of their associated requests.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.Authentication.HttpAuthenticationFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.Authentication.IHttpAuthenticationFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.Authentication.HttpAuthenticationFeature.User">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.DefaultConnectionLifetimeNotificationFeature">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.AspNetCore.Connections.Features.IConnectionLifetimeNotificationFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.DefaultConnectionLifetimeNotificationFeature.#ctor(Microsoft.AspNetCore.Http.Features.IHttpResponseFeature)">
+             <summary>
+            
+             </summary>
+             <param name="httpResponseFeature"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.DefaultConnectionLifetimeNotificationFeature.ConnectionClosedRequested">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.DefaultConnectionLifetimeNotificationFeature.RequestClose">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.DefaultSessionFeature">
+            <summary>
+            This type exists only for the purpose of unit testing where the user can directly set the
+            <see cref="P:Microsoft.AspNetCore.Http.HttpContext.Session"/> property without the need for creating a <see cref="T:Microsoft.AspNetCore.Http.Features.ISessionFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.DefaultSessionFeature.Session">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.FormFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IFormFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FormFeature.#ctor(Microsoft.AspNetCore.Http.IFormCollection)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.FormFeature"/>.
+            </summary>
+            <param name="form">The <see cref="T:Microsoft.AspNetCore.Http.IFormCollection"/> to use as the backing store.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FormFeature.#ctor(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.FormFeature"/>.
+            </summary>
+            <param name="request">The <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FormFeature.#ctor(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.AspNetCore.Http.Features.FormOptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.FormFeature"/>.
+            </summary>
+            <param name="request">The <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/>.</param>
+            <param name="options">The <see cref="P:Microsoft.AspNetCore.Http.Features.FormFeature.FormOptions"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormFeature.HasFormContentType">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormFeature.Form">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FormFeature.ReadForm">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FormFeature.ReadFormAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.FormFeature.ReadFormAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.FormOptions">
+            <summary>
+            Options to configure reading the request body as a HTTP form.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.FormOptions.DefaultMemoryBufferThreshold">
+            <summary>
+            Default value for <see cref="P:Microsoft.AspNetCore.Http.Features.FormOptions.MemoryBufferThreshold"/>.
+            Defaults to 65,536 bytes, which is approximately 64KB.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.FormOptions.DefaultBufferBodyLengthLimit">
+            <summary>
+            Default value for <see cref="P:Microsoft.AspNetCore.Http.Features.FormOptions.BufferBodyLengthLimit"/>.
+            Defaults to 134,217,728 bytes, which is 128MB.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.FormOptions.DefaultMultipartBoundaryLengthLimit">
+            <summary>
+            Default value for <see cref="P:Microsoft.AspNetCore.Http.Features.FormOptions.MultipartBoundaryLengthLimit"/>.
+            Defaults to 128 bytes.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.FormOptions.DefaultMultipartBodyLengthLimit">
+            <summary>
+            Default value for <see cref="P:Microsoft.AspNetCore.Http.Features.FormOptions.MultipartBodyLengthLimit"/>.
+            Defaults to 134,217,728 bytes, which is approximately 128MB.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.BufferBody">
+            <summary>
+            Enables full request body buffering. Use this if multiple components need to read the raw stream.
+            Defaults to <c>false</c>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.MemoryBufferThreshold">
+            <summary>
+            If <see cref="P:Microsoft.AspNetCore.Http.Features.FormOptions.BufferBody"/> is enabled, this many bytes of the body will be buffered in memory.
+            If this threshold is exceeded then the buffer will be moved to a temp file on disk instead.
+            This also applies when buffering individual multipart section bodies.
+            Defaults to 65,536 bytes, which is approximately 64KB.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.BufferBodyLengthLimit">
+            <summary>
+            If <see cref="P:Microsoft.AspNetCore.Http.Features.FormOptions.BufferBody"/> is enabled, this is the limit for the total number of bytes that will
+            be buffered. Forms that exceed this limit will throw an <see cref="T:System.IO.InvalidDataException"/> when parsed.
+            Defaults to 134,217,728 bytes, which is approximately 128MB.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.ValueCountLimit">
+            <summary>
+            A limit for the number of form entries to allow.
+            Forms that exceed this limit will throw an <see cref="T:System.IO.InvalidDataException"/> when parsed.
+            Defaults to 1024.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.KeyLengthLimit">
+            <summary>
+            A limit on the length of individual keys. Forms containing keys that exceed this limit will
+            throw an <see cref="T:System.IO.InvalidDataException"/> when parsed.
+            Defaults to 2,048 bytes, which is approximately 2KB.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.ValueLengthLimit">
+            <summary>
+            A limit on the length of individual form values. Forms containing values that exceed this
+            limit will throw an <see cref="T:System.IO.InvalidDataException"/> when parsed.
+            Defaults to 4,194,304 bytes, which is approximately 4MB.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.MultipartBoundaryLengthLimit">
+            <summary>
+            A limit for the length of the boundary identifier. Forms with boundaries that exceed this
+            limit will throw an <see cref="T:System.IO.InvalidDataException"/> when parsed.
+            Defaults to 128 bytes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.MultipartHeadersCountLimit">
+            <summary>
+            A limit for the number of headers to allow in each multipart section. Headers with the same name will
+            be combined. Form sections that exceed this limit will throw an <see cref="T:System.IO.InvalidDataException"/>
+            when parsed.
+            Defaults to 16.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.MultipartHeadersLengthLimit">
+            <summary>
+            A limit for the total length of the header keys and values in each multipart section.
+            Form sections that exceed this limit will throw an <see cref="T:System.IO.InvalidDataException"/> when parsed.
+            Defaults to 16,384 bytes, which is approximately 16KB.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.FormOptions.MultipartBodyLengthLimit">
+            <summary>
+            A limit for the length of each multipart body. Forms sections that exceed this limit will throw an
+            <see cref="T:System.IO.InvalidDataException"/> when parsed.
+            Defaults to 134,217,728 bytes, which is approximately 128MB.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.HttpConnectionFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpConnectionFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpConnectionFeature.ConnectionId">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpConnectionFeature.LocalIpAddress">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpConnectionFeature.LocalPort">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpConnectionFeature.RemoteIpAddress">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpConnectionFeature.RemotePort">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.HttpRequestFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpRequestFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.HttpRequestFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.Protocol">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.Scheme">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.Method">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.PathBase">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.Path">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.QueryString">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.RawTarget">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.Headers">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestFeature.Body">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.HttpRequestIdentifierFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpRequestIdentifierFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestIdentifierFeature.TraceIdentifier">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.HttpRequestLifetimeFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpRequestLifetimeFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpRequestLifetimeFeature.RequestAborted">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.HttpRequestLifetimeFeature.Abort">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.HttpResponseFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.HttpResponseFeature.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.HttpResponseFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpResponseFeature.StatusCode">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpResponseFeature.ReasonPhrase">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpResponseFeature.Headers">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpResponseFeature.Body">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.HttpResponseFeature.HasStarted">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.HttpResponseFeature.OnStarting(System.Func{System.Object,System.Threading.Tasks.Task},System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.HttpResponseFeature.OnCompleted(System.Func{System.Object,System.Threading.Tasks.Task},System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.IHttpActivityFeature">
+            <summary>
+            Feature to access the <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpActivityFeature.Activity"/> associated with a request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.IHttpActivityFeature.Activity">
+            <summary>
+            Returns the <see cref="P:Microsoft.AspNetCore.Http.Features.IHttpActivityFeature.Activity"/> associated with the current request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.ItemsFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IItemsFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.ItemsFeature.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.ItemsFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.ItemsFeature.Items">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.QueryFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IQueryFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.QueryFeature.#ctor(Microsoft.AspNetCore.Http.IQueryCollection)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.QueryFeature"/>.
+            </summary>
+            <param name="query">The <see cref="T:Microsoft.AspNetCore.Http.IQueryCollection"/> to use as a backing store.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.QueryFeature.#ctor(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.QueryFeature"/>.
+            </summary>
+            <param name="features">The <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> to initialize.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.QueryFeature.Query">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.QueryFeature.ParseNullableQueryInternal(System.String)">
+            <summary>
+            Parse a query string into its component key and value parts.
+            </summary>
+            <param name="queryString">The raw query string value, with or without the leading '?'.</param>
+            <returns>A collection of parsed keys and values, null if there are no entries.</returns>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.Features.QueryFeature.KvpAccumulator._accumulator">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.QueryFeature.KvpAccumulator.Append(System.String,System.String)">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.QueryFeature.KvpAccumulator.HasValues">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.QueryFeature.KvpAccumulator.KeyCount">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.QueryFeature.KvpAccumulator.ValueCount">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.QueryFeature.KvpAccumulator.GetResults">
+            <summary>
+            This API supports infrastructure and is not intended to be used
+            directly from your code. This API may change or be removed in future releases.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.RequestBodyPipeFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IRequestBodyPipeFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.RequestBodyPipeFeature.#ctor(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.IRequestBodyPipeFeature"/>.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.RequestBodyPipeFeature.Reader">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.RequestCookiesFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IRequestCookiesFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.RequestCookiesFeature.#ctor(Microsoft.AspNetCore.Http.IRequestCookieCollection)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.RequestCookiesFeature"/>.
+            </summary>
+            <param name="cookies">The <see cref="T:Microsoft.AspNetCore.Http.IRequestCookieCollection"/> to use as backing store.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.RequestCookiesFeature.#ctor(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.RequestCookiesFeature"/>.
+            </summary>
+            <param name="features">The <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> to initialize.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.RequestCookiesFeature.Cookies">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.RequestServicesFeature">
+            <summary>
+            An implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IServiceProvidersFeature"/> for accessing request services.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.RequestServicesFeature.#ctor(Microsoft.AspNetCore.Http.HttpContext,Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.Features.RequestServicesFeature"/>.
+            </summary>
+            <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.</param>
+            <param name="scopeFactory">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceScopeFactory"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.RequestServicesFeature.RequestServices">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.RequestServicesFeature.DisposeAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.RequestServicesFeature.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.ResponseCookiesFeature">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.AspNetCore.Http.Features.IResponseCookiesFeature"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.ResponseCookiesFeature.#ctor(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Initializes a new <see cref="T:Microsoft.AspNetCore.Http.Features.ResponseCookiesFeature"/> instance.
+            </summary>
+            <param name="features">
+            <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> containing all defined features, including this
+            <see cref="T:Microsoft.AspNetCore.Http.Features.IResponseCookiesFeature"/> and the <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature"/>.
+            </param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.ResponseCookiesFeature.#ctor(Microsoft.AspNetCore.Http.Features.IFeatureCollection,Microsoft.Extensions.ObjectPool.ObjectPool{System.Text.StringBuilder})">
+            <summary>
+            Initializes a new <see cref="T:Microsoft.AspNetCore.Http.Features.ResponseCookiesFeature"/> instance.
+            </summary>
+            <param name="features">
+            <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> containing all defined features, including this
+            <see cref="T:Microsoft.AspNetCore.Http.Features.IResponseCookiesFeature"/> and the <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpResponseFeature"/>.
+            </param>
+            <param name="builderPool">The <see cref="T:Microsoft.Extensions.ObjectPool.ObjectPool`1"/>, if available.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.ResponseCookiesFeature.Cookies">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.RouteValuesFeature">
+            <summary>
+            A feature for routing values. Use <see cref="P:Microsoft.AspNetCore.Http.HttpContext.Features"/>
+            to access the values associated with the current request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.RouteValuesFeature.RouteValues">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.AspNetCore.Routing.RouteValueDictionary"/> associated with the currrent
+            request.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.ServiceProvidersFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IServiceProvidersFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.ServiceProvidersFeature.RequestServices">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Features.TlsConnectionFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.TlsConnectionFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Features.TlsConnectionFeature.ClientCertificate">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Features.TlsConnectionFeature.GetClientCertificateAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.FormCollection">
+            <summary>
+            Contains the parsed HTTP form values.
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.FormCollection.Empty">
+            <summary>
+            An empty <see cref="T:Microsoft.AspNetCore.Http.FormCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormCollection.#ctor(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues},Microsoft.AspNetCore.Http.IFormFileCollection)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.FormCollection"/>.
+            </summary>
+            <param name="fields">The backing fields.</param>
+            <param name="files">The files associated with the form.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormCollection.Files">
+            <summary>
+            Gets the files associated with the HTTP form.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormCollection.Item(System.String)">
+            <summary>
+            Get or sets the associated value from the collection as a single string.
+            </summary>
+            <param name="key">The header name.</param>
+            <returns>the associated value from the collection as a <see cref="T:Microsoft.Extensions.Primitives.StringValues"/>
+            or <see cref="F:Microsoft.Extensions.Primitives.StringValues.Empty"/> if the key is not present.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormCollection.Count">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormCollection.Keys">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormCollection.ContainsKey(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormCollection.TryGetValue(System.String,Microsoft.Extensions.Primitives.StringValues@)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormCollection.GetEnumerator">
+            <summary>
+            Returns an struct enumerator that iterates through a collection without boxing and
+            is also used via the <see cref="T:Microsoft.AspNetCore.Http.IFormCollection" /> interface.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Http.FormCollection.Enumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormCollection.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,Microsoft#Extensions#Primitives#StringValues}}#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection, boxes in non-empty path.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormCollection.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection, boxes in non-empty path.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.FormCollection.Enumerator">
+            <summary>
+            Enumerates a <see cref="T:Microsoft.AspNetCore.Http.FormCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormCollection.Enumerator.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the <see cref="T:Microsoft.AspNetCore.Http.FormCollection"/>.
+            </summary>
+            <returns><see langword="true"/> if the enumerator was successfully advanced to the next element;
+            <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormCollection.Enumerator.Current">
+            <summary>
+            Gets the element at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormCollection.Enumerator.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.FormFile">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.AspNetCore.Http.IFormFile"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormFile.#ctor(System.IO.Stream,System.Int64,System.Int64,System.String,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.FormFile"/>.
+            </summary>
+            <param name="baseStream">The <see cref="T:System.IO.Stream"/> containing the form file.</param>
+            <param name="baseStreamOffset">The offset at which the form file begins.</param>
+            <param name="length">The length of the form file.</param>
+            <param name="name">The name of the form file from the <c>Content-Disposition</c> header.</param>
+            <param name="fileName">The file name from the <c>Content-Disposition</c> header.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormFile.ContentDisposition">
+            <summary>
+            Gets the raw Content-Disposition header of the uploaded file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormFile.ContentType">
+            <summary>
+            Gets the raw Content-Type header of the uploaded file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormFile.Headers">
+            <summary>
+            Gets the header dictionary of the uploaded file.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormFile.Length">
+            <summary>
+            Gets the file length in bytes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormFile.Name">
+            <summary>
+            Gets the name from the Content-Disposition header.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormFile.FileName">
+            <summary>
+            Gets the file name from the Content-Disposition header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormFile.OpenReadStream">
+            <summary>
+            Opens the request stream for reading the uploaded file.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormFile.CopyTo(System.IO.Stream)">
+            <summary>
+            Copies the contents of the uploaded file to the <paramref name="target"/> stream.
+            </summary>
+            <param name="target">The stream to copy the file contents to.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormFile.CopyToAsync(System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously copies the contents of the uploaded file to the <paramref name="target"/> stream.
+            </summary>
+            <param name="target">The stream to copy the file contents to.</param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.FormFileCollection">
+            <summary>
+            Default implementation of <see cref="T:Microsoft.AspNetCore.Http.IFormFileCollection"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.FormFileCollection.Item(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormFileCollection.GetFile(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.FormFileCollection.GetFiles(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HeaderDictionary">
+            <summary>
+            Represents a wrapper for RequestHeaders and ResponseHeaders.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.#ctor(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary"/>.
+            </summary>
+            <param name="store">The value to use as the backing store.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary"/>.
+            </summary>
+            <param name="capacity">The initial number of headers that this instance can contain.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HeaderDictionary.Item(System.String)">
+            <summary>
+            Get or sets the associated value from the collection as a single string.
+            </summary>
+            <param name="key">The header name.</param>
+            <returns>the associated value from the collection as a StringValues or StringValues.Empty if the key is not present.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HeaderDictionary.ContentLength">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HeaderDictionary.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary" />;.
+            </summary>
+            <returns>The number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary" />.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HeaderDictionary.IsReadOnly">
+            <summary>
+            Gets a value that indicates whether the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary" /> is in read-only mode.
+            </summary>
+            <returns>true if the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary" /> is in read-only mode; otherwise, false.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HeaderDictionary.Keys">
+            <summary>
+            Gets the collection of HTTP header names in this instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HeaderDictionary.Values">
+            <summary>
+            Gets the collection of HTTP header values in this instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.Add(System.Collections.Generic.KeyValuePair{System.String,Microsoft.Extensions.Primitives.StringValues})">
+            <summary>
+            Adds a new header item to the collection.
+            </summary>
+            <param name="item">The item to add.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.Add(System.String,Microsoft.Extensions.Primitives.StringValues)">
+            <summary>
+            Adds the given header and values to the collection.
+            </summary>
+            <param name="key">The header name.</param>
+            <param name="value">The header values.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.Clear">
+            <summary>
+            Clears the entire list of objects.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.Contains(System.Collections.Generic.KeyValuePair{System.String,Microsoft.Extensions.Primitives.StringValues})">
+            <summary>
+            Returns a value indicating whether the specified object occurs within this collection.
+            </summary>
+            <param name="item">The item.</param>
+            <returns>true if the specified object occurs within this collection; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.ContainsKey(System.String)">
+            <summary>
+            Determines whether the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary" /> contains a specific key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>true if the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary" /> contains a specific key; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.CopyTo(System.Collections.Generic.KeyValuePair{System.String,Microsoft.Extensions.Primitives.StringValues}[],System.Int32)">
+            <summary>
+            Copies the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary" /> elements to a one-dimensional Array instance at the specified index.
+            </summary>
+            <param name="array">The one-dimensional Array that is the destination of the specified objects copied from the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary" />.</param>
+            <param name="arrayIndex">The zero-based index in <paramref name="array" /> at which copying begins.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.Remove(System.Collections.Generic.KeyValuePair{System.String,Microsoft.Extensions.Primitives.StringValues})">
+            <summary>
+            Removes the given item from the the collection.
+            </summary>
+            <param name="item">The item.</param>
+            <returns>true if the specified object was removed from the collection; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.Remove(System.String)">
+            <summary>
+            Removes the given header from the collection.
+            </summary>
+            <param name="key">The header name.</param>
+            <returns>true if the specified object was removed from the collection; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.TryGetValue(System.String,Microsoft.Extensions.Primitives.StringValues@)">
+            <summary>
+            Retrieves a value from the dictionary.
+            </summary>
+            <param name="key">The header name.</param>
+            <param name="value">The value.</param>
+            <returns>true if the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary" /> contains the key; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary.Enumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,Microsoft#Extensions#Primitives#StringValues}}#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HeaderDictionary.Enumerator">
+            <summary>
+            Enumerates a <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.Enumerator.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary"/>.
+            </summary>
+            <returns><see langword="true"/> if the enumerator was successfully advanced to the next element;
+            <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HeaderDictionary.Enumerator.Current">
+            <summary>
+            Gets the element at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.HeaderDictionary.Enumerator.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.HttpContextAccessor">
+            <summary>
+            Provides an implementation of <see cref="T:Microsoft.AspNetCore.Http.IHttpContextAccessor" /> based on the current execution context.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.HttpContextAccessor.HttpContext">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.DefaultConnectionInfo.Id">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.ReferenceReadStream">
+            <summary>
+            A Stream that wraps another stream starting at a certain offset and reading for the given length.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.RequestCookieCollection.GetEnumerator">
+            <summary>
+            Returns an struct enumerator that iterates through a collection without boxing.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Http.RequestCookieCollection.Enumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.RequestCookieCollection.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,System#String}}#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection, boxes in non-empty path.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.RequestCookieCollection.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection, boxes in non-empty path.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.ResponseCookies">
+            <summary>
+            A wrapper for the response Set-Cookie header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ResponseCookies.#ctor(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Create a new wrapper.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ResponseCookies.Append(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ResponseCookies.Append(System.String,System.String,Microsoft.AspNetCore.Http.CookieOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ResponseCookies.Append(System.ReadOnlySpan{System.Collections.Generic.KeyValuePair{System.String,System.String}},Microsoft.AspNetCore.Http.CookieOptions)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ResponseCookies.Delete(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.ResponseCookies.Delete(System.String,Microsoft.AspNetCore.Http.CookieOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.MiddlewareFactory">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.IMiddlewareFactory"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.MiddlewareFactory.#ctor(System.IServiceProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.MiddlewareFactory"/>.
+            </summary>
+            <param name="serviceProvider">The application services.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.MiddlewareFactory.Create(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.MiddlewareFactory.Release(Microsoft.AspNetCore.Http.IMiddleware)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.QueryCollection">
+            <summary>
+            The HttpRequest query string collection
+            </summary>
+        </member>
+        <member name="F:Microsoft.AspNetCore.Http.QueryCollection.Empty">
+            <summary>
+            Gets an empty <see cref="T:Microsoft.AspNetCore.Http.QueryCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.QueryCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.#ctor(System.Collections.Generic.Dictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.QueryCollection"/>.
+            </summary>
+            <param name="store">The backing store.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.#ctor(Microsoft.AspNetCore.Http.QueryCollection)">
+            <summary>
+            Creates a shallow copy of the specified <paramref name="store"/>.
+            </summary>
+            <param name="store">The <see cref="T:Microsoft.AspNetCore.Http.QueryCollection"/> to clone.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.QueryCollection"/>.
+            </summary>
+            <param name="capacity">The initial number of query items that this instance can contain.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.QueryCollection.Item(System.String)">
+            <summary>
+            Gets the associated set of values from the collection.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>the associated value from the collection as a StringValues or StringValues.Empty if the key is not present.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.QueryCollection.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" />;.
+            </summary>
+            <returns>The number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" />.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.QueryCollection.Keys">
+            <summary>
+            Gets the collection of query names in this instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.ContainsKey(System.String)">
+            <summary>
+            Determines whether the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" /> contains a specific key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>true if the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" /> contains a specific key; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.TryGetValue(System.String,Microsoft.Extensions.Primitives.StringValues@)">
+            <summary>
+            Retrieves a value from the collection.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+            <returns>true if the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" /> contains the key; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Http.QueryCollection.Enumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,Microsoft#Extensions#Primitives#StringValues}}#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.QueryCollection.Enumerator">
+            <summary>
+            Enumerates a <see cref="T:Microsoft.AspNetCore.Http.QueryCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.Enumerator.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary"/>.
+            </summary>
+            <returns><see langword="true"/> if the enumerator was successfully advanced to the next element;
+            <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.QueryCollection.Enumerator.Current">
+            <summary>
+            Gets the element at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollection.Enumerator.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.QueryCollectionInternal">
+            <summary>
+            The HttpRequest query string collection
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollectionInternal.#ctor(Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary{System.String,Microsoft.Extensions.Primitives.StringValues})">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Http.QueryCollection"/>.
+            </summary>
+            <param name="store">The backing store.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.QueryCollectionInternal.Item(System.String)">
+            <summary>
+            Gets the associated set of values from the collection.
+            </summary>
+            <param name="key">The key name.</param>
+            <returns>the associated value from the collection as a StringValues or StringValues.Empty if the key is not present.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.QueryCollectionInternal.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" />;.
+            </summary>
+            <returns>The number of elements contained in the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" />.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.QueryCollectionInternal.Keys">
+            <summary>
+            Gets the collection of query names in this instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollectionInternal.ContainsKey(System.String)">
+            <summary>
+            Determines whether the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" /> contains a specific key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns>true if the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" /> contains a specific key; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollectionInternal.TryGetValue(System.String,Microsoft.Extensions.Primitives.StringValues@)">
+            <summary>
+            Retrieves a value from the collection.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+            <returns>true if the <see cref="T:Microsoft.AspNetCore.Http.QueryCollection" /> contains the key; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollectionInternal.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Http.QueryCollectionInternal.Enumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollectionInternal.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,Microsoft#Extensions#Primitives#StringValues}}#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollectionInternal.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.QueryCollectionInternal.Enumerator">
+            <summary>
+            Enumerates a <see cref="T:Microsoft.AspNetCore.Http.QueryCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollectionInternal.Enumerator.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the <see cref="T:Microsoft.AspNetCore.Http.HeaderDictionary"/>.
+            </summary>
+            <returns><see langword="true"/> if the enumerator was successfully advanced to the next element;
+            <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.QueryCollectionInternal.Enumerator.Current">
+            <summary>
+            Gets the element at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.QueryCollectionInternal.Enumerator.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.RequestFormReaderExtensions">
+            <summary>
+            Extension for <see cref="T:Microsoft.AspNetCore.Http.HttpRequest"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.RequestFormReaderExtensions.ReadFormAsync(Microsoft.AspNetCore.Http.HttpRequest,Microsoft.AspNetCore.Http.Features.FormOptions,System.Threading.CancellationToken)">
+            <summary>
+            Read the request body as a form with the given options. These options will only be used
+            if the form has not already been read.
+            </summary>
+            <param name="request">The request.</param>
+            <param name="options">Options for reading the form.</param>
+            <param name="cancellationToken"></param>
+            <returns>The parsed form.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.SendFileFallback">
+            <summary>
+            Helper type that allows copying a file to a Stream.
+            <para>
+            This type is part of ASP.NET Core's infrastructure and should not used by application code.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.SendFileFallback.SendFileAsync(System.IO.Stream,System.String,System.Int64,System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Copies the segment of the file to the destination stream.
+            </summary>
+            <param name="destination">The stream to write the file segment to.</param>
+            <param name="filePath">The full disk path to the file.</param>
+            <param name="offset">The offset in the file to start at.</param>
+            <param name="count">The number of bytes to send, or null to send the remainder of the file.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to abort the transmission.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.StreamResponseBodyFeature">
+            <summary>
+            An implementation of <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature"/> that aproximates all of the APIs over the given Stream.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.#ctor(System.IO.Stream)">
+            <summary>
+            Wraps the given stream.
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.#ctor(System.IO.Stream,Microsoft.AspNetCore.Http.Features.IHttpResponseBodyFeature)">
+            <summary>
+            Wraps the given stream and tracks the prior feature instance.
+            </summary>
+            <param name="stream"></param>
+            <param name="priorFeature"></param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.Stream">
+            <summary>
+            The original response body stream.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.PriorFeature">
+            <summary>
+            The prior feature, if any.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.Writer">
+            <summary>
+            A PipeWriter adapted over the given stream.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.DisableBuffering">
+            <summary>
+            Opts out of write buffering for the response.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.SendFileAsync(System.String,System.Int64,System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Copies the specified file segment to the given response stream.
+            This calls StartAsync if it has not previously been called.
+            </summary>
+            <param name="path">The full disk path to the file.</param>
+            <param name="offset">The offset in the file to start at.</param>
+            <param name="count">The number of bytes to send, or null to send the remainder of the file.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> used to abort the transmission.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.StartAsync(System.Threading.CancellationToken)">
+            <summary>
+            Flushes the given stream if this has not previously been called.
+            </summary>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.CompleteAsync">
+            <summary>
+            This calls StartAsync if it has not previously been called.
+            It will complete the adapted pipe if it exists.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamResponseBodyFeature.Dispose">
+            <summary>
+            Prevents CompleteAsync from operating.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Timeouts.DisableRequestTimeoutAttribute">
+            <summary>
+            Metadata that disables request timeouts on an endpoint.
+            </summary>
+            <remarks>
+            Completely disables the request timeouts middleware from applying to this endpoint.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Timeouts.IHttpRequestTimeoutFeature">
+            <summary>
+            Used to control timeouts on the current request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Timeouts.IHttpRequestTimeoutFeature.RequestTimeoutToken">
+            <summary>
+            A <see cref="T:System.Threading.CancellationToken" /> that will trigger when the request times out.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Timeouts.IHttpRequestTimeoutFeature.DisableTimeout">
+            <summary>
+            Disables the request timeout if it hasn't already expired. This does not
+            trigger the <see cref="P:Microsoft.AspNetCore.Http.Timeouts.IHttpRequestTimeoutFeature.RequestTimeoutToken"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutAttribute">
+            <summary>
+            Metadata that provides endpoint-specific request timeouts.
+            </summary>
+            <remarks>
+            The default policy will be ignored with this attribute applied.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutAttribute.Timeout">
+            <summary>
+            The timeout to apply for this endpoint.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutAttribute.PolicyName">
+            <summary>
+            The name of the policy which needs to be applied.
+            This value is case-insensitive.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutAttribute.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutAttribute"/> using the specified timeout.
+            </summary>
+            <param name="milliseconds">The duration, in milliseconds, of the timeout for this endpoint.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutAttribute"/> using the specified policy.
+            </summary>
+            <param name="policyName">The name of the policy which needs to be applied (case-insensitive).</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutOptions">
+            <summary>
+            Specifies options for the request timeouts middleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutOptions.DefaultPolicy">
+            <summary>
+            Applied to any request without a policy set via endpoint metadata. No value by default.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutOptions.Policies">
+            <summary>
+            Dictionary of policies that would be applied per endpoint.
+            Policy names are case-insensitive.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutOptions.AddPolicy(System.String,System.TimeSpan)">
+            <summary>
+            Adds a new policy.
+            </summary>
+            <param name="policyName">The name of the policy (case-insensitive).</param>
+            <param name="timeout">The timeout to apply for this policy.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutOptions.AddPolicy(System.String,Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutPolicy)">
+            <summary>
+            Adds a new policy.
+            </summary>
+            <param name="policyName">The name of the policy (case-insensitive).</param>
+            <param name="policy">The <see cref="T:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutPolicy"/> policy to be added.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutPolicy">
+            <summary>
+            Defines the policy for request timeouts middleware.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutPolicy.Timeout">
+            <summary>
+            The timeout to apply.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutPolicy.TimeoutStatusCode">
+            <summary>
+            Status code to be set in response when a timeout results in an <see cref="T:System.OperationCanceledException" /> being caught by the middleware.
+            The status code cannot be applied if the response has already started.
+            504 will be used if none is specified.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutPolicy.WriteTimeoutResponse">
+            <summary>
+            A callback for creating a timeout response.
+            This is called if a timeout results in an <see cref="T:System.OperationCanceledException" /> being caught by the middleware.
+            The status code will be set first.
+            The status code and callback cannot be applied if the response has already started.
+            The default behavior is an empty response with only the status code.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamCopyOperationInternal.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Nullable{System.Int64},System.Threading.CancellationToken)">
+            <summary>Asynchronously reads the given number of bytes from the source stream and writes them to another stream.</summary>
+            <returns>A task that represents the asynchronous copy operation.</returns>
+            <param name="source">The stream from which the contents will be copied.</param>
+            <param name="destination">The stream to which the contents of the current stream will be copied.</param>
+            <param name="count">The count of bytes to be copied.</param>
+            <param name="cancel">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.StreamCopyOperationInternal.CopyToAsync(System.IO.Stream,System.IO.Stream,System.Nullable{System.Int64},System.Int32,System.Threading.CancellationToken)">
+            <summary>Asynchronously reads the given number of bytes from the source stream and writes them to another stream, using a specified buffer size.</summary>
+            <returns>A task that represents the asynchronous copy operation.</returns>
+            <param name="source">The stream from which the contents will be copied.</param>
+            <param name="destination">The stream to which the contents of the current stream will be copied.</param>
+            <param name="count">The count of bytes to be copied.</param>
+            <param name="bufferSize">The size, in bytes, of the buffer. This value must be greater than zero. The default size is 4096.</param>
+            <param name="cancel">The token to monitor for cancellation requests. The default value is <see cref="P:System.Threading.CancellationToken.None" />.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.ApplicationBuilder">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ApplicationBuilder.#ctor(System.IServiceProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Builder.ApplicationBuilder"/>.
+            </summary>
+            <param name="serviceProvider">The <see cref="T:System.IServiceProvider"/> for application services.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ApplicationBuilder.#ctor(System.IServiceProvider,System.Object)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.AspNetCore.Builder.ApplicationBuilder"/>.
+            </summary>
+            <param name="serviceProvider">The <see cref="T:System.IServiceProvider"/> for application services.</param>
+            <param name="server">The server instance that hosts the application.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ApplicationBuilder.ApplicationServices">
+            <summary>
+            Gets the <see cref="T:System.IServiceProvider"/> for application services.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ApplicationBuilder.ServerFeatures">
+            <summary>
+            Gets the <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> for server features.
+            </summary>
+            <remarks>
+            An empty collection is returned if a server wasn't specified for the application builder.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Builder.ApplicationBuilder.Properties">
+            <summary>
+            Gets a set of properties for <see cref="T:Microsoft.AspNetCore.Builder.ApplicationBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ApplicationBuilder.Use(System.Func{Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.RequestDelegate})">
+            <summary>
+            Adds the middleware to the application request pipeline.
+            </summary>
+            <param name="middleware">The middleware.</param>
+            <returns>An instance of <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> after the operation has completed.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ApplicationBuilder.New">
+            <summary>
+            Creates a copy of this application builder.
+            <para>
+            The created clone has the same properties as the current instance, but does not copy
+            the request pipeline.
+            </para>
+            </summary>
+            <returns>The cloned instance.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.ApplicationBuilder.Build">
+            <summary>
+            Produces a <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/> that executes added middlewares.
+            </summary>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Http.RequestDelegate"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RequestTimeoutsIApplicationBuilderExtensions">
+            <summary>
+            Extension methods for the request timeouts middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RequestTimeoutsIApplicationBuilderExtensions.UseRequestTimeouts(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Enables request timeouts for the application.
+            <para>
+            No timeouts are configured by default. They must be configured in <see cref="T:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutOptions"/>,
+            the <see cref="T:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutAttribute"/> on endpoints, or using the WithRequestTimeout routing extensions.
+            </para>
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.RequestTimeoutsIEndpointConventionBuilderExtensions">
+            <summary>
+            Request timeouts extension methods for <see cref="T:Microsoft.AspNetCore.Builder.IEndpointConventionBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RequestTimeoutsIEndpointConventionBuilderExtensions.WithRequestTimeout(Microsoft.AspNetCore.Builder.IEndpointConventionBuilder,System.TimeSpan)">
+            <summary>
+            Specifies a timeout for the endpoint(s).
+            </summary>
+            <param name="builder">The endpoint convention builder.</param>
+            <param name="timeout">The timeout to apply for the endpoint(s).</param>
+            <returns>The original convention builder parameter.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RequestTimeoutsIEndpointConventionBuilderExtensions.WithRequestTimeout(Microsoft.AspNetCore.Builder.IEndpointConventionBuilder,System.String)">
+            <summary>
+            Specifies a timeout policy for to the endpoint(s).
+            </summary>
+            <param name="builder">The endpoint convention builder.</param>
+            <param name="policyName">The name (case-insensitive) of the policy to apply for the endpoint(s).</param>
+            <returns>The original convention builder parameter.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RequestTimeoutsIEndpointConventionBuilderExtensions.WithRequestTimeout(Microsoft.AspNetCore.Builder.IEndpointConventionBuilder,Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutPolicy)">
+            <summary>
+            Specifies a timeout policy for to the endpoint(s).
+            </summary>
+            <param name="builder">The endpoint convention builder.</param>
+            <param name="policy">The request timeout policy.</param>
+            <returns>The original convention builder parameter.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.RequestTimeoutsIEndpointConventionBuilderExtensions.DisableRequestTimeout(Microsoft.AspNetCore.Builder.IEndpointConventionBuilder)">
+            <summary>
+            Disables request timeout on the endpoint(s).
+            </summary>
+            <param name="builder">The endpoint convention builder.</param>
+            <returns>The original convention builder parameter.</returns>
+            <remarks>Will skip both the default timeout, and any endpoint-specific timeout that apply to the endpoint(s).</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.CancellationTokenSourcePool.PooledCancellationTokenSource">
+            <summary>
+            A <see cref="T:System.Threading.CancellationTokenSource"/> with a back pointer to the pool it came from.
+            Dispose will return it to the pool.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2">
+            <summary>
+            An <see cref="T:System.Collections.Generic.IDictionary`2"/> type to hold a small amount of items (10 or less in the common case).
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.#ctor">
+            <summary>
+            Creates an empty <see cref="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2"/>.
+            </summary>
+            <param name="comparer">Equality comparison.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.#ctor(System.Int32)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2"/>.
+            </summary>
+            <param name="capacity">Initial capacity.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.#ctor(System.Int32,System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2"/>.
+            </summary>
+            <param name="capacity">Initial capacity.</param>
+            <param name="comparer">Equality comparison.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.#ctor(System.Collections.Generic.Dictionary{`0,`1})">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2"/> initialized with the specified <paramref name="dict"/>.
+            </summary>
+            <param name="dict">A dictionary to use.
+            </param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Item(`0)">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Count">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Comparer">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#IsReadOnly">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Keys">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Values">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#Add(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Add(`0,`1)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Clear">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#Contains(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.ContainsKey(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{TKey,TValue}}#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.System#Collections#Generic#ICollection{System#Collections#Generic#KeyValuePair{TKey,TValue}}#Remove(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Remove(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Remove(`0,`1@)">
+            <summary>
+            Attempts to remove and return the value that has the specified key from the <see cref="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2"/>.
+            </summary>
+            <param name="key">The key of the element to remove and return.</param>
+            <param name="value">When this method returns, contains the object removed from the <see cref="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2"/>, or <c>null</c> if key does not exist.</param>
+            <returns>
+            <c>true</c> if the object was removed successfully; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.TryAdd(`0,`1)">
+            <summary>
+            Attempts to the add the provided <paramref name="key"/> and <paramref name="value"/> to the dictionary.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+            <returns>Returns <c>true</c> if the value was added. Returns <c>false</c> if the key was already present.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.TryGetValue(`0,`1@)">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Enumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Enumerator.#ctor(Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary{`0,`1})">
+            <summary>
+            Instantiates a new enumerator with the values provided in <paramref name="dictionary"/>.
+            </summary>
+            <param name="dictionary">A <see cref="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2"/>.</param>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Enumerator.Current">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Enumerator.Dispose">
+            <summary>
+            Releases resources used by the <see cref="T:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Enumerator"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Enumerator.MoveNext">
+            <inheritdoc />
+        </member>
+        <member name="M:Microsoft.AspNetCore.Internal.AdaptiveCapacityDictionary`2.Enumerator.Reset">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.HttpServiceCollectionExtensions">
+            <summary>
+            Extension methods for configuring HttpContext services.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpServiceCollectionExtensions.AddHttpContextAccessor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds a default implementation for the <see cref="T:Microsoft.AspNetCore.Http.IHttpContextAccessor"/> service.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <returns>The service collection.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.RequestTimeoutsIServiceCollectionExtensions">
+            <summary>
+            Extension methods for the request timeouts middleware.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.RequestTimeoutsIServiceCollectionExtensions.AddRequestTimeouts(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add request timeout services.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.RequestTimeoutsIServiceCollectionExtensions.AddRequestTimeouts(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutOptions})">
+            <summary>
+            Add request timeout services and configure the related options.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for adding services.</param>
+            <param name="configure">A delegate to configure the <see cref="T:Microsoft.AspNetCore.Http.Timeouts.RequestTimeoutOptions"/>.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

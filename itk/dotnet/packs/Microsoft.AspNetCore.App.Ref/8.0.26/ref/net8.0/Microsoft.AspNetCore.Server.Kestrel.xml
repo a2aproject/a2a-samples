@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Server.Kestrel</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions">
+            <summary>
+            Kestrel <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> extensions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrelHttpsConfiguration(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+             <summary>
+             In <see cref="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrelCore(Microsoft.AspNetCore.Hosting.IWebHostBuilder)"/> scenarios, it may be necessary to explicitly
+             opt in to certain HTTPS functionality.  For example, if <code>ASPNETCORE_URLS</code> includes
+             an <code>https://</code> address, <see cref="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrelHttpsConfiguration(Microsoft.AspNetCore.Hosting.IWebHostBuilder)"/> will enable configuration
+             of HTTPS on that endpoint.
+            
+             Has no effect in <see cref="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrel(Microsoft.AspNetCore.Hosting.IWebHostBuilder)"/> scenarios.
+             </summary>
+             <param name="hostBuilder">
+             The Microsoft.AspNetCore.Hosting.IWebHostBuilder to configure.
+             </param>
+             <returns>
+             The Microsoft.AspNetCore.Hosting.IWebHostBuilder.
+             </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrel(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Specify Kestrel as the server to be used by the web host.
+            </summary>
+            <param name="hostBuilder">
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder to configure.
+            </param>
+            <returns>
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrelCore(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Specify Kestrel as the server to be used by the web host.
+            Includes less automatic functionality than <see cref="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrel(Microsoft.AspNetCore.Hosting.IWebHostBuilder)"/> to make trimming more effective
+            (e.g. for <see href="https://aka.ms/aspnet/nativeaot">Native AOT</see> scenarios).  If the host ends up depending on
+            some of the absent functionality, a best-effort attempt will be made to enable it on-demand.  Failing that, an
+            exception with an informative error message will be raised when the host is started.
+            </summary>
+            <param name="hostBuilder">
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder to configure.
+            </param>
+            <returns>
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrel(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions})">
+            <summary>
+            Specify Kestrel as the server to be used by the web host.
+            </summary>
+            <param name="hostBuilder">
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder to configure.
+            </param>
+            <param name="options">
+            A callback to configure Kestrel options.
+            </param>
+            <returns>
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.ConfigureKestrel(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions})">
+            <summary>
+            Configures Kestrel options but does not register an IServer. See <see cref="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrel(Microsoft.AspNetCore.Hosting.IWebHostBuilder)"/>.
+            </summary>
+            <param name="hostBuilder">
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder to configure.
+            </param>
+            <param name="options">
+            A callback to configure Kestrel options.
+            </param>
+            <returns>
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrel(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions})">
+            <summary>
+            Specify Kestrel as the server to be used by the web host.
+            </summary>
+            <param name="hostBuilder">
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder to configure.
+            </param>
+            <param name="configureOptions">A callback to configure Kestrel options.</param>
+            <returns>
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder.
+            </returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.ConfigureKestrel(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions})">
+            <summary>
+            Configures Kestrel options but does not register an IServer. See <see cref="M:Microsoft.AspNetCore.Hosting.WebHostBuilderKestrelExtensions.UseKestrel(Microsoft.AspNetCore.Hosting.IWebHostBuilder)"/>.
+            </summary>
+            <param name="hostBuilder">
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder to configure.
+            </param>
+            <param name="configureOptions">A callback to configure Kestrel options.</param>
+            <returns>
+            The Microsoft.AspNetCore.Hosting.IWebHostBuilder.
+            </returns>
+        </member>
+    </members>
+</doc>

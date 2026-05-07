@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Diagnostics.FileVersionInfo</name>
+  </assembly>
+  <members>
+    <member name="T:System.Diagnostics.FileVersionInfo">
+      <summary>Provides version information for a physical file on disk.</summary>
+    </member>
+    <member name="M:System.Diagnostics.FileVersionInfo.GetVersionInfo(System.String)">
+      <summary>Returns a <see cref="T:System.Diagnostics.FileVersionInfo" /> representing the version information associated with the specified file.</summary>
+      <param name="fileName">The fully qualified path and name of the file to retrieve the version information for.</param>
+      <exception cref="T:System.IO.FileNotFoundException">The file specified cannot be found.</exception>
+      <returns>A <see cref="T:System.Diagnostics.FileVersionInfo" /> containing information about the file. If the file did not contain version information, the <see cref="T:System.Diagnostics.FileVersionInfo" /> contains only the name of the file requested.</returns>
+    </member>
+    <member name="M:System.Diagnostics.FileVersionInfo.ToString">
+      <summary>Returns a partial list of properties in the <see cref="T:System.Diagnostics.FileVersionInfo" /> and their values.</summary>
+      <returns>A list of the following properties in this class and their values:  
+  
+ <see cref="P:System.Diagnostics.FileVersionInfo.FileName" />, <see cref="P:System.Diagnostics.FileVersionInfo.InternalName" />, <see cref="P:System.Diagnostics.FileVersionInfo.OriginalFilename" />, <see cref="P:System.Diagnostics.FileVersionInfo.FileVersion" />, <see cref="P:System.Diagnostics.FileVersionInfo.FileDescription" />, <see cref="P:System.Diagnostics.FileVersionInfo.ProductName" />, <see cref="P:System.Diagnostics.FileVersionInfo.ProductVersion" />, <see cref="P:System.Diagnostics.FileVersionInfo.IsDebug" />, <see cref="P:System.Diagnostics.FileVersionInfo.IsPatched" />, <see cref="P:System.Diagnostics.FileVersionInfo.IsPreRelease" />, <see cref="P:System.Diagnostics.FileVersionInfo.IsPrivateBuild" />, <see cref="P:System.Diagnostics.FileVersionInfo.IsSpecialBuild" />,  
+  
+ <see cref="P:System.Diagnostics.FileVersionInfo.Language" />.  
+  
+ If the file did not contain version information, this list will contain only the name of the requested file. Boolean values will be <see langword="false" />, and all other entries will be <see langword="null" />.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.Comments">
+      <summary>Gets the comments associated with the file.</summary>
+      <returns>The comments associated with the file or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.CompanyName">
+      <summary>Gets the name of the company that produced the file.</summary>
+      <returns>The name of the company that produced the file or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.FileBuildPart">
+      <summary>Gets the build number of the file.</summary>
+      <returns>A value representing the build number of the file or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.FileDescription">
+      <summary>Gets the description of the file.</summary>
+      <returns>The description of the file or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.FileMajorPart">
+      <summary>Gets the major part of the version number.</summary>
+      <returns>A value representing the major part of the version number or 0 (zero) if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.FileMinorPart">
+      <summary>Gets the minor part of the version number of the file.</summary>
+      <returns>A value representing the minor part of the version number of the file or 0 (zero) if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.FileName">
+      <summary>Gets the name of the file that this instance of <see cref="T:System.Diagnostics.FileVersionInfo" /> describes.</summary>
+      <returns>The name of the file described by this instance of <see cref="T:System.Diagnostics.FileVersionInfo" />.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.FilePrivatePart">
+      <summary>Gets the file private part number.</summary>
+      <returns>A value representing the file private part number or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.FileVersion">
+      <summary>Gets the file version number.</summary>
+      <returns>The version number of the file or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.InternalName">
+      <summary>Gets the internal name of the file, if one exists.</summary>
+      <returns>The internal name of the file. If none exists, this property will contain the original name of the file without the extension.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.IsDebug">
+      <summary>Gets a value that specifies whether the file contains debugging information or is compiled with debugging features enabled.</summary>
+      <returns>
+        <see langword="true" /> if the file contains debugging information or is compiled with debugging features enabled; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.IsPatched">
+      <summary>Gets a value that specifies whether the file has been modified and is not identical to the original shipping file of the same version number.</summary>
+      <returns>
+        <see langword="true" /> if the file is patched; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.IsPreRelease">
+      <summary>Gets a value that specifies whether the file is a development version, rather than a commercially released product.</summary>
+      <returns>
+        <see langword="true" /> if the file is prerelease; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.IsPrivateBuild">
+      <summary>Gets a value that specifies whether the file was built using standard release procedures.</summary>
+      <returns>
+        <see langword="true" /> if the file is a private build; <see langword="false" /> if the file was built using standard release procedures or if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.IsSpecialBuild">
+      <summary>Gets a value that specifies whether the file is a special build.</summary>
+      <returns>
+        <see langword="true" /> if the file is a special build; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.Language">
+      <summary>Gets the default language string for the version info block.</summary>
+      <returns>The description string for the Microsoft Language Identifier in the version resource or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.LegalCopyright">
+      <summary>Gets all copyright notices that apply to the specified file.</summary>
+      <returns>The copyright notices that apply to the specified file.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.LegalTrademarks">
+      <summary>Gets the trademarks and registered trademarks that apply to the file.</summary>
+      <returns>The trademarks and registered trademarks that apply to the file or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.OriginalFilename">
+      <summary>Gets the name the file was created with.</summary>
+      <returns>The name the file was created with or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.PrivateBuild">
+      <summary>Gets information about a private version of the file.</summary>
+      <returns>Information about a private version of the file or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.ProductBuildPart">
+      <summary>Gets the build number of the product this file is associated with.</summary>
+      <returns>A value representing the build number of the product this file is associated with or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.ProductMajorPart">
+      <summary>Gets the major part of the version number for the product this file is associated with.</summary>
+      <returns>A value representing the major part of the product version number or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.ProductMinorPart">
+      <summary>Gets the minor part of the version number for the product the file is associated with.</summary>
+      <returns>A value representing the minor part of the product version number or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.ProductName">
+      <summary>Gets the name of the product this file is distributed with.</summary>
+      <returns>The name of the product this file is distributed with or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.ProductPrivatePart">
+      <summary>Gets the private part number of the product this file is associated with.</summary>
+      <returns>A value representing the private part number of the product this file is associated with or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.ProductVersion">
+      <summary>Gets the version of the product this file is distributed with.</summary>
+      <returns>The version of the product this file is distributed with or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+    <member name="P:System.Diagnostics.FileVersionInfo.SpecialBuild">
+      <summary>Gets the special build information for the file.</summary>
+      <returns>The special build information for the file or <see langword="null" /> if the file did not contain version information.</returns>
+    </member>
+  </members>
+</doc>

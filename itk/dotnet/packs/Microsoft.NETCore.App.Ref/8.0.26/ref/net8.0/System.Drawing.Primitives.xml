@@ -1,0 +1,2319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Drawing.Primitives</name>
+  </assembly>
+  <members>
+    <member name="T:System.Drawing.Color">
+      <summary>Represents an ARGB (alpha, red, green, blue) color.</summary>
+    </member>
+    <member name="F:System.Drawing.Color.Empty">
+      <summary>Represents a color that is <see langword="null" />.</summary>
+    </member>
+    <member name="M:System.Drawing.Color.Equals(System.Drawing.Color)">
+      <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+      <param name="other">An object to compare with this object.</param>
+      <returns>
+        <see langword="true" /> if the current object is equal to <paramref name="other" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.Equals(System.Object)">
+      <summary>Tests whether the specified object is a <see cref="T:System.Drawing.Color" /> structure and is equivalent to this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <param name="obj">The object to test.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="obj" /> is a <see cref="T:System.Drawing.Color" /> structure equivalent to this <see cref="T:System.Drawing.Color" /> structure; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.FromArgb(System.Int32)">
+      <summary>Creates a <see cref="T:System.Drawing.Color" /> structure from a 32-bit ARGB value.</summary>
+      <param name="argb">A value specifying the 32-bit ARGB value.</param>
+      <returns>The <see cref="T:System.Drawing.Color" /> structure that this method creates.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.FromArgb(System.Int32,System.Drawing.Color)">
+      <summary>Creates a <see cref="T:System.Drawing.Color" /> structure from the specified <see cref="T:System.Drawing.Color" /> structure, but with the new specified alpha value. Although this method allows a 32-bit value to be passed for the alpha value, the value is limited to 8 bits.</summary>
+      <param name="alpha">The alpha value for the new <see cref="T:System.Drawing.Color" />. Valid values are 0 through 255.</param>
+      <param name="baseColor">The <see cref="T:System.Drawing.Color" /> from which to create the new <see cref="T:System.Drawing.Color" />.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="alpha" /> is less than 0 or greater than 255.</exception>
+      <returns>The <see cref="T:System.Drawing.Color" /> that this method creates.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.FromArgb(System.Int32,System.Int32,System.Int32)">
+      <summary>Creates a <see cref="T:System.Drawing.Color" /> structure from the specified 8-bit color values (red, green, and blue). The alpha value is implicitly 255 (fully opaque). Although this method allows a 32-bit value to be passed for each color component, the value of each component is limited to 8 bits.</summary>
+      <param name="red">The red component value for the new <see cref="T:System.Drawing.Color" />. Valid values are 0 through 255.</param>
+      <param name="green">The green component value for the new <see cref="T:System.Drawing.Color" />. Valid values are 0 through 255.</param>
+      <param name="blue">The blue component value for the new <see cref="T:System.Drawing.Color" />. Valid values are 0 through 255.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="red" />, <paramref name="green" />, or <paramref name="blue" /> is less than 0 or greater than 255.</exception>
+      <returns>The <see cref="T:System.Drawing.Color" /> that this method creates.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.FromArgb(System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary>Creates a <see cref="T:System.Drawing.Color" /> structure from the four ARGB component (alpha, red, green, and blue) values. Although this method allows a 32-bit value to be passed for each component, the value of each component is limited to 8 bits.</summary>
+      <param name="alpha">The alpha component. Valid values are 0 through 255.</param>
+      <param name="red">The red component. Valid values are 0 through 255.</param>
+      <param name="green">The green component. Valid values are 0 through 255.</param>
+      <param name="blue">The blue component. Valid values are 0 through 255.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="alpha" />, <paramref name="red" />, <paramref name="green" />, or <paramref name="blue" /> is less than 0 or greater than 255.</exception>
+      <returns>The <see cref="T:System.Drawing.Color" /> that this method creates.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.FromKnownColor(System.Drawing.KnownColor)">
+      <summary>Creates a <see cref="T:System.Drawing.Color" /> structure from the specified predefined color.</summary>
+      <param name="color">An element of the <see cref="T:System.Drawing.KnownColor" /> enumeration.</param>
+      <returns>The <see cref="T:System.Drawing.Color" /> that this method creates.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.FromName(System.String)">
+      <summary>Creates a <see cref="T:System.Drawing.Color" /> structure from the specified name of a predefined color.</summary>
+      <param name="name">A string that is the name of a predefined color. Valid names are the same as the names of the elements of the <see cref="T:System.Drawing.KnownColor" /> enumeration.</param>
+      <returns>The <see cref="T:System.Drawing.Color" /> that this method creates.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.GetBrightness">
+      <summary>Gets the hue-saturation-lightness (HSL) lightness value for this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>The lightness of this <see cref="T:System.Drawing.Color" />. The lightness ranges from 0.0 through 1.0, where 0.0 represents black and 1.0 represents white.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.GetHashCode">
+      <summary>Returns a hash code for this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>An integer value that specifies the hash code for this <see cref="T:System.Drawing.Color" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.GetHue">
+      <summary>Gets the hue-saturation-lightness (HSL) hue value, in degrees, for this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>The hue, in degrees, of this <see cref="T:System.Drawing.Color" />. The hue is measured in degrees, ranging from 0.0 through 360.0, in HSL color space.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.GetSaturation">
+      <summary>Gets the hue-saturation-lightness (HSL) saturation value for this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>The saturation of this <see cref="T:System.Drawing.Color" />. The saturation ranges from 0.0 through 1.0, where 0.0 is grayscale and 1.0 is the most saturated.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.op_Equality(System.Drawing.Color,System.Drawing.Color)">
+      <summary>Tests whether two specified <see cref="T:System.Drawing.Color" /> structures are equivalent.</summary>
+      <param name="left">The <see cref="T:System.Drawing.Color" /> that is to the left of the equality operator.</param>
+      <param name="right">The <see cref="T:System.Drawing.Color" /> that is to the right of the equality operator.</param>
+      <returns>
+        <see langword="true" /> if the two <see cref="T:System.Drawing.Color" /> structures are equal; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.op_Inequality(System.Drawing.Color,System.Drawing.Color)">
+      <summary>Tests whether two specified <see cref="T:System.Drawing.Color" /> structures are different.</summary>
+      <param name="left">The <see cref="T:System.Drawing.Color" /> that is to the left of the inequality operator.</param>
+      <param name="right">The <see cref="T:System.Drawing.Color" /> that is to the right of the inequality operator.</param>
+      <returns>
+        <see langword="true" /> if the two <see cref="T:System.Drawing.Color" /> structures are different; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.ToArgb">
+      <summary>Gets the 32-bit ARGB value of this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>The 32-bit ARGB value of this <see cref="T:System.Drawing.Color" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.ToKnownColor">
+      <summary>Gets the <see cref="T:System.Drawing.KnownColor" /> value of this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>An element of the <see cref="T:System.Drawing.KnownColor" /> enumeration, if the <see cref="T:System.Drawing.Color" /> is created from a predefined color by using either the <see cref="M:System.Drawing.Color.FromName(System.String)" /> method or the <see cref="M:System.Drawing.Color.FromKnownColor(System.Drawing.KnownColor)" /> method; otherwise, 0.</returns>
+    </member>
+    <member name="M:System.Drawing.Color.ToString">
+      <summary>Converts this <see cref="T:System.Drawing.Color" /> structure to a human-readable string.</summary>
+      <returns>A string that is the name of this <see cref="T:System.Drawing.Color" />, if the <see cref="T:System.Drawing.Color" /> is created from a predefined color by using either the <see cref="M:System.Drawing.Color.FromName(System.String)" /> method or the <see cref="M:System.Drawing.Color.FromKnownColor(System.Drawing.KnownColor)" /> method; otherwise, a string that consists of the ARGB component names and their values.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.A">
+      <summary>Gets the alpha component value of this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>The alpha component value of this <see cref="T:System.Drawing.Color" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.AliceBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF0F8FF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.AntiqueWhite">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFAEBD7</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Aqua">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF00FFFF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Aquamarine">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF7FFFD4</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Azure">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF0FFFF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.B">
+      <summary>Gets the blue component value of this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>The blue component value of this <see cref="T:System.Drawing.Color" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Beige">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF5F5DC</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Bisque">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFE4C4</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Black">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF000000</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.BlanchedAlmond">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFEBCD</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Blue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF0000FF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.BlueViolet">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF8A2BE2</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Brown">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFA52A2A</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.BurlyWood">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFDEB887</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.CadetBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF5F9EA0</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Chartreuse">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF7FFF00</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Chocolate">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFD2691E</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Coral">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFF7F50</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.CornflowerBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF6495ED</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Cornsilk">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFF8DC</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Crimson">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFDC143C</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Cyan">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF00FFFF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF00008B</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkCyan">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF008B8B</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkGoldenrod">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFB8860B</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkGray">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFA9A9A9</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF006400</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkKhaki">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFBDB76B</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkMagenta">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF8B008B</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkOliveGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF556B2F</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkOrange">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFF8C00</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkOrchid">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF9932CC</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkRed">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF8B0000</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkSalmon">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFE9967A</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkSeaGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF8FBC8B</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkSlateBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF483D8B</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkSlateGray">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF2F4F4F</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkTurquoise">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF00CED1</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DarkViolet">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF9400D3</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DeepPink">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFF1493</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DeepSkyBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF00BFFF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DimGray">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF696969</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.DodgerBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF1E90FF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Firebrick">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFB22222</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.FloralWhite">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFFAF0</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.ForestGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF228B22</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Fuchsia">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFF00FF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.G">
+      <summary>Gets the green component value of this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>The green component value of this <see cref="T:System.Drawing.Color" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Gainsboro">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFDCDCDC</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.GhostWhite">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF8F8FF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Gold">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFD700</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Goldenrod">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFDAA520</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Gray">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF808080</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> structure representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Green">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF008000</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.GreenYellow">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFADFF2F</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Honeydew">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF0FFF0</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.HotPink">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFF69B4</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.IndianRed">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFCD5C5C</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Indigo">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF4B0082</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.IsEmpty">
+      <summary>Specifies whether this <see cref="T:System.Drawing.Color" /> structure is uninitialized.</summary>
+      <returns>This property returns <see langword="true" /> if this color is uninitialized; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.IsKnownColor">
+      <summary>Gets a value indicating whether this <see cref="T:System.Drawing.Color" /> structure is a predefined color. Predefined colors are represented by the elements of the <see cref="T:System.Drawing.KnownColor" /> enumeration.</summary>
+      <returns>
+        <see langword="true" /> if this <see cref="T:System.Drawing.Color" /> was created from a predefined color by using either the <see cref="M:System.Drawing.Color.FromName(System.String)" /> method or the <see cref="M:System.Drawing.Color.FromKnownColor(System.Drawing.KnownColor)" /> method; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.IsNamedColor">
+      <summary>Gets a value indicating whether this <see cref="T:System.Drawing.Color" /> structure is a named color or a member of the <see cref="T:System.Drawing.KnownColor" /> enumeration.</summary>
+      <returns>
+        <see langword="true" /> if this <see cref="T:System.Drawing.Color" /> was created by using either the <see cref="M:System.Drawing.Color.FromName(System.String)" /> method or the <see cref="M:System.Drawing.Color.FromKnownColor(System.Drawing.KnownColor)" /> method; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.IsSystemColor">
+      <summary>Gets a value indicating whether this <see cref="T:System.Drawing.Color" /> structure is a system color. A system color is a color that is used in a Windows display element. System colors are represented by elements of the <see cref="T:System.Drawing.KnownColor" /> enumeration.</summary>
+      <returns>
+        <see langword="true" /> if this <see cref="T:System.Drawing.Color" /> was created from a system color by using either the <see cref="M:System.Drawing.Color.FromName(System.String)" /> method or the <see cref="M:System.Drawing.Color.FromKnownColor(System.Drawing.KnownColor)" /> method; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Ivory">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFFFF0</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Khaki">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF0E68C</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Lavender">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFE6E6FA</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LavenderBlush">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFF0F5</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LawnGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF7CFC00</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LemonChiffon">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFFACD</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFADD8E6</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightCoral">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF08080</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightCyan">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFE0FFFF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightGoldenrodYellow">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFAFAD2</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightGray">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFD3D3D3</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF90EE90</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightPink">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFB6C1</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightSalmon">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFA07A</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightSeaGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF20B2AA</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightSkyBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF87CEFA</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightSlateGray">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF778899</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightSteelBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFB0C4DE</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LightYellow">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFFFE0</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Lime">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF00FF00</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.LimeGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF32CD32</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Linen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFAF0E6</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Magenta">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFF00FF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Maroon">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF800000</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MediumAquamarine">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF66CDAA</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MediumBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF0000CD</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MediumOrchid">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFBA55D3</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MediumPurple">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF9370DB</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MediumSeaGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF3CB371</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MediumSlateBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF7B68EE</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MediumSpringGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF00FA9A</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MediumTurquoise">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF48D1CC</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MediumVioletRed">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFC71585</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MidnightBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF191970</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MintCream">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF5FFFA</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.MistyRose">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFE4E1</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Moccasin">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFE4B5</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Name">
+      <summary>Gets the name of this <see cref="T:System.Drawing.Color" />.</summary>
+      <returns>The name of this <see cref="T:System.Drawing.Color" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.NavajoWhite">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFDEAD</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Navy">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF000080</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.OldLace">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFDF5E6</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Olive">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF808000</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.OliveDrab">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF6B8E23</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Orange">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFA500</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.OrangeRed">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFF4500</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Orchid">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFDA70D6</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.PaleGoldenrod">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFEEE8AA</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.PaleGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF98FB98</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.PaleTurquoise">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFAFEEEE</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.PaleVioletRed">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFDB7093</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.PapayaWhip">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFEFD5</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.PeachPuff">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFDAB9</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Peru">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFCD853F</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Pink">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFC0CB</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Plum">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFDDA0DD</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.PowderBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFB0E0E6</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Purple">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF800080</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.R">
+      <summary>Gets the red component value of this <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <returns>The red component value of this <see cref="T:System.Drawing.Color" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.RebeccaPurple">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#663399</c>.</summary>
+      <returns>A system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Red">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFF0000</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.RosyBrown">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFBC8F8F</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.RoyalBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF4169E1</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.SaddleBrown">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF8B4513</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Salmon">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFA8072</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.SandyBrown">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF4A460</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.SeaGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF2E8B57</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.SeaShell">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFF5EE</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Sienna">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFA0522D</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Silver">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFC0C0C0</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.SkyBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF87CEEB</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.SlateBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF6A5ACD</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.SlateGray">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF708090</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Snow">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFFAFA</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.SpringGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF00FF7F</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.SteelBlue">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF4682B4</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Tan">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFD2B48C</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Teal">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF008080</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Thistle">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFD8BFD8</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Tomato">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFF6347</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Transparent">
+      <summary>Gets a system-defined color.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Turquoise">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF40E0D0</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Violet">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFEE82EE</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Wheat">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF5DEB3</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.White">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFFFFF</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.WhiteSmoke">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFF5F5F5</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.Yellow">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FFFFFF00</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="P:System.Drawing.Color.YellowGreen">
+      <summary>Gets a system-defined color that has an ARGB value of <c>#FF9ACD32</c>.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> representing a system-defined color.</returns>
+    </member>
+    <member name="T:System.Drawing.ColorTranslator">
+      <summary>Translates colors to and from GDI+ <see cref="T:System.Drawing.Color" /> structures. This class cannot be inherited.</summary>
+    </member>
+    <member name="M:System.Drawing.ColorTranslator.FromHtml(System.String)">
+      <summary>Translates an HTML color representation to a GDI+ <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <param name="htmlColor">The string representation of the Html color to translate.</param>
+      <exception cref="T:System.Exception">
+        <paramref name="htmlColor" /> is not a valid HTML color name.</exception>
+      <returns>The <see cref="T:System.Drawing.Color" /> structure that represents the translated HTML color or <see cref="F:System.Drawing.Color.Empty" /> if <paramref name="htmlColor" /> is <see langword="null" />.</returns>
+    </member>
+    <member name="M:System.Drawing.ColorTranslator.FromOle(System.Int32)">
+      <summary>Translates an OLE color value to a GDI+ <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <param name="oleColor">The OLE color to translate.</param>
+      <returns>The <see cref="T:System.Drawing.Color" /> structure that represents the translated OLE color.</returns>
+    </member>
+    <member name="M:System.Drawing.ColorTranslator.FromWin32(System.Int32)">
+      <summary>Translates a Windows color value to a GDI+ <see cref="T:System.Drawing.Color" /> structure.</summary>
+      <param name="win32Color">The Windows color to translate.</param>
+      <returns>The <see cref="T:System.Drawing.Color" /> structure that represents the translated Windows color.</returns>
+    </member>
+    <member name="M:System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color)">
+      <summary>Translates the specified <see cref="T:System.Drawing.Color" /> structure to an HTML string color representation.</summary>
+      <param name="c">The <see cref="T:System.Drawing.Color" /> structure to translate.</param>
+      <returns>The string that represents the HTML color.</returns>
+    </member>
+    <member name="M:System.Drawing.ColorTranslator.ToOle(System.Drawing.Color)">
+      <summary>Translates the specified <see cref="T:System.Drawing.Color" /> structure to an OLE color.</summary>
+      <param name="c">The <see cref="T:System.Drawing.Color" /> structure to translate.</param>
+      <returns>The OLE color value.</returns>
+    </member>
+    <member name="M:System.Drawing.ColorTranslator.ToWin32(System.Drawing.Color)">
+      <summary>Translates the specified <see cref="T:System.Drawing.Color" /> structure to a Windows color.</summary>
+      <param name="c">The <see cref="T:System.Drawing.Color" /> structure to translate.</param>
+      <returns>The Windows color value.</returns>
+    </member>
+    <member name="T:System.Drawing.KnownColor">
+      <summary>Specifies the known system colors.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ActiveBorder">
+      <summary>The system-defined color of the active window's border.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ActiveCaption">
+      <summary>The system-defined color of the background of the active window's title bar.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ActiveCaptionText">
+      <summary>The system-defined color of the text in the active window's title bar.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.AliceBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.AntiqueWhite">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.AppWorkspace">
+      <summary>The system-defined color of the application workspace. The application workspace is the area in a multiple-document view that is not being occupied by documents.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Aqua">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Aquamarine">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Azure">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Beige">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Bisque">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Black">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.BlanchedAlmond">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Blue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.BlueViolet">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Brown">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.BurlyWood">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ButtonFace">
+      <summary>The system-defined face color of a 3-D element.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ButtonHighlight">
+      <summary>The system-defined color that is the highlight color of a 3-D element. This color is applied to parts of a 3-D element that face the light source.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ButtonShadow">
+      <summary>The system-defined color that is the shadow color of a 3-D element. This color is applied to parts of a 3-D element that face away from the light source.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.CadetBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Chartreuse">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Chocolate">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Control">
+      <summary>The system-defined face color of a 3-D element.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ControlDark">
+      <summary>The system-defined shadow color of a 3-D element. The shadow color is applied to parts of a 3-D element that face away from the light source.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ControlDarkDark">
+      <summary>The system-defined color that is the dark shadow color of a 3-D element. The dark shadow color is applied to the parts of a 3-D element that are the darkest color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ControlLight">
+      <summary>The system-defined color that is the light color of a 3-D element. The light color is applied to parts of a 3-D element that face the light source.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ControlLightLight">
+      <summary>The system-defined highlight color of a 3-D element. The highlight color is applied to the parts of a 3-D element that are the lightest color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ControlText">
+      <summary>The system-defined color of text in a 3-D element.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Coral">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.CornflowerBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Cornsilk">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Crimson">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Cyan">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkCyan">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkGoldenrod">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkGray">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkKhaki">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkMagenta">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkOliveGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkOrange">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkOrchid">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkRed">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkSalmon">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkSeaGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkSlateBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkSlateGray">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkTurquoise">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DarkViolet">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DeepPink">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DeepSkyBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Desktop">
+      <summary>The system-defined color of the desktop.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DimGray">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.DodgerBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Firebrick">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.FloralWhite">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ForestGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Fuchsia">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Gainsboro">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.GhostWhite">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Gold">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Goldenrod">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.GradientActiveCaption">
+      <summary>The system-defined color of the lightest color in the color gradient of an active window's title bar.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.GradientInactiveCaption">
+      <summary>The system-defined color of the lightest color in the color gradient of an inactive window's title bar.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Gray">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.GrayText">
+      <summary>The system-defined color of dimmed text. Items in a list that are disabled are displayed in dimmed text.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Green">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.GreenYellow">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Highlight">
+      <summary>The system-defined color of the background of selected items. This includes selected menu items as well as selected text.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.HighlightText">
+      <summary>The system-defined color of the text of selected items.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Honeydew">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.HotPink">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.HotTrack">
+      <summary>The system-defined color used to designate a hot-tracked item. Single-clicking a hot-tracked item executes the item.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.InactiveBorder">
+      <summary>The system-defined color of an inactive window's border.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.InactiveCaption">
+      <summary>The system-defined color of the background of an inactive window's title bar.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.InactiveCaptionText">
+      <summary>The system-defined color of the text in an inactive window's title bar.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.IndianRed">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Indigo">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Info">
+      <summary>The system-defined color of the background of a ToolTip.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.InfoText">
+      <summary>The system-defined color of the text of a ToolTip.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Ivory">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Khaki">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Lavender">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LavenderBlush">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LawnGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LemonChiffon">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightCoral">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightCyan">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightGoldenrodYellow">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightGray">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightPink">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightSalmon">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightSeaGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightSkyBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightSlateGray">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightSteelBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LightYellow">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Lime">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.LimeGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Linen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Magenta">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Maroon">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MediumAquamarine">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MediumBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MediumOrchid">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MediumPurple">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MediumSeaGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MediumSlateBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MediumSpringGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MediumTurquoise">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MediumVioletRed">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Menu">
+      <summary>The system-defined color of a menu's background.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MenuBar">
+      <summary>The system-defined color of the background of a menu bar.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MenuHighlight">
+      <summary>The system-defined color used to highlight menu items when the menu appears as a flat menu.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MenuText">
+      <summary>The system-defined color of a menu's text.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MidnightBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MintCream">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.MistyRose">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Moccasin">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.NavajoWhite">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Navy">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.OldLace">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Olive">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.OliveDrab">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Orange">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.OrangeRed">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Orchid">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.PaleGoldenrod">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.PaleGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.PaleTurquoise">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.PaleVioletRed">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.PapayaWhip">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.PeachPuff">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Peru">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Pink">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Plum">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.PowderBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Purple">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.RebeccaPurple">
+      <summary>A system-defined color representing the ARGB value <c>#663399</c>.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Red">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.RosyBrown">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.RoyalBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.SaddleBrown">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Salmon">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.SandyBrown">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.ScrollBar">
+      <summary>The system-defined color of the background of a scroll bar.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.SeaGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.SeaShell">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Sienna">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Silver">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.SkyBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.SlateBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.SlateGray">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Snow">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.SpringGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.SteelBlue">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Tan">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Teal">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Thistle">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Tomato">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Transparent">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Turquoise">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Violet">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Wheat">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.White">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.WhiteSmoke">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Window">
+      <summary>The system-defined color of the background in the client area of a window.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.WindowFrame">
+      <summary>The system-defined color of a window frame.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.WindowText">
+      <summary>The system-defined color of the text in the client area of a window.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.Yellow">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="F:System.Drawing.KnownColor.YellowGreen">
+      <summary>A system-defined color.</summary>
+    </member>
+    <member name="T:System.Drawing.Point">
+      <summary>Represents an ordered pair of integer x- and y-coordinates that defines a point in a two-dimensional plane.</summary>
+    </member>
+    <member name="F:System.Drawing.Point.Empty">
+      <summary>Represents a <see cref="T:System.Drawing.Point" /> that has <see cref="P:System.Drawing.Point.X" /> and <see cref="P:System.Drawing.Point.Y" /> values set to zero.</summary>
+    </member>
+    <member name="M:System.Drawing.Point.#ctor(System.Drawing.Size)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.Point" /> struct from a <see cref="T:System.Drawing.Size" />.</summary>
+      <param name="sz">A <see cref="T:System.Drawing.Size" /> that specifies the coordinates for the new <see cref="T:System.Drawing.Point" />.</param>
+    </member>
+    <member name="M:System.Drawing.Point.#ctor(System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.Point" /> struct using coordinates specified by an integer value.</summary>
+      <param name="dw">A 32-bit integer that specifies the coordinates for the new <see cref="T:System.Drawing.Point" />.</param>
+    </member>
+    <member name="M:System.Drawing.Point.#ctor(System.Int32,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.Point" /> struct with the specified coordinates.</summary>
+      <param name="x">The horizontal position of the point.</param>
+      <param name="y">The vertical position of the point.</param>
+    </member>
+    <member name="M:System.Drawing.Point.Add(System.Drawing.Point,System.Drawing.Size)">
+      <summary>Adds the specified <see cref="T:System.Drawing.Size" /> to the specified <see cref="T:System.Drawing.Point" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.Point" /> to add.</param>
+      <param name="sz">The <see cref="T:System.Drawing.Size" /> to add.</param>
+      <returns>The <see cref="T:System.Drawing.Point" /> that is the result of the addition operation.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.Ceiling(System.Drawing.PointF)">
+      <summary>Converts the specified <see cref="T:System.Drawing.PointF" /> to a <see cref="T:System.Drawing.Point" /> by rounding the values of the <see cref="T:System.Drawing.PointF" /> to the next higher integer values.</summary>
+      <param name="value">The <see cref="T:System.Drawing.PointF" /> to convert.</param>
+      <returns>The <see cref="T:System.Drawing.Point" /> this method converts to.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.Equals(System.Drawing.Point)">
+      <summary>Specifies whether this point instance contains the same coordinates as another point.</summary>
+      <param name="other">The point to test for equality.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="other" /> has the same coordinates as this point instance.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.Equals(System.Object)">
+      <summary>Specifies whether this point instance contains the same coordinates as the specified object.</summary>
+      <param name="obj">The <see cref="T:System.Object" /> to test for equality.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="obj" /> is a <see cref="T:System.Drawing.Point" /> and has the same coordinates as this point instance.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.GetHashCode">
+      <summary>Returns a hash code for this <see cref="T:System.Drawing.Point" />.</summary>
+      <returns>An integer value that specifies a hash value for this <see cref="T:System.Drawing.Point" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.Offset(System.Drawing.Point)">
+      <summary>Translates this <see cref="T:System.Drawing.Point" /> by the specified <see cref="T:System.Drawing.Point" />.</summary>
+      <param name="p">The <see cref="T:System.Drawing.Point" /> used offset this <see cref="T:System.Drawing.Point" />.</param>
+    </member>
+    <member name="M:System.Drawing.Point.Offset(System.Int32,System.Int32)">
+      <summary>Translates this <see cref="T:System.Drawing.Point" /> by the specified amount.</summary>
+      <param name="dx">The amount to offset the x-coordinate.</param>
+      <param name="dy">The amount to offset the y-coordinate.</param>
+    </member>
+    <member name="M:System.Drawing.Point.op_Addition(System.Drawing.Point,System.Drawing.Size)">
+      <summary>Translates a <see cref="T:System.Drawing.Point" /> by a given <see cref="T:System.Drawing.Size" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.Point" /> to translate.</param>
+      <param name="sz">A <see cref="T:System.Drawing.Size" /> that specifies the pair of numbers to add to the coordinates of <paramref name="pt" />.</param>
+      <returns>The translated <see cref="T:System.Drawing.Point" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.op_Equality(System.Drawing.Point,System.Drawing.Point)">
+      <summary>Compares two <see cref="T:System.Drawing.Point" /> objects. The result specifies whether the values of the <see cref="P:System.Drawing.Point.X" /> and <see cref="P:System.Drawing.Point.Y" /> properties of the two <see cref="T:System.Drawing.Point" /> objects are equal.</summary>
+      <param name="left">A <see cref="T:System.Drawing.Point" /> to compare.</param>
+      <param name="right">A <see cref="T:System.Drawing.Point" /> to compare.</param>
+      <returns>
+        <see langword="true" /> if the <see cref="P:System.Drawing.Point.X" /> and <see cref="P:System.Drawing.Point.Y" /> values of <paramref name="left" /> and <paramref name="right" /> are equal; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.op_Explicit(System.Drawing.Point)~System.Drawing.Size">
+      <summary>Converts the specified <see cref="T:System.Drawing.Point" /> structure to a <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <param name="p">The <see cref="T:System.Drawing.Point" /> to be converted.</param>
+      <returns>The <see cref="T:System.Drawing.Size" /> that results from the conversion.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.op_Implicit(System.Drawing.Point)~System.Drawing.PointF">
+      <summary>Converts the specified <see cref="T:System.Drawing.Point" /> structure to a <see cref="T:System.Drawing.PointF" /> structure.</summary>
+      <param name="p">The <see cref="T:System.Drawing.Point" /> to be converted.</param>
+      <returns>The <see cref="T:System.Drawing.PointF" /> that results from the conversion.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.op_Inequality(System.Drawing.Point,System.Drawing.Point)">
+      <summary>Compares two <see cref="T:System.Drawing.Point" /> objects. The result specifies whether the values of the <see cref="P:System.Drawing.Point.X" /> or <see cref="P:System.Drawing.Point.Y" /> properties of the two <see cref="T:System.Drawing.Point" /> objects are unequal.</summary>
+      <param name="left">A <see cref="T:System.Drawing.Point" /> to compare.</param>
+      <param name="right">A <see cref="T:System.Drawing.Point" /> to compare.</param>
+      <returns>
+        <see langword="true" /> if the values of either the <see cref="P:System.Drawing.Point.X" /> properties or the <see cref="P:System.Drawing.Point.Y" /> properties of <paramref name="left" /> and <paramref name="right" /> differ; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.op_Subtraction(System.Drawing.Point,System.Drawing.Size)">
+      <summary>Translates a <see cref="T:System.Drawing.Point" /> by the negative of a given <see cref="T:System.Drawing.Size" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.Point" /> to translate.</param>
+      <param name="sz">A <see cref="T:System.Drawing.Size" /> that specifies the pair of numbers to subtract from the coordinates of <paramref name="pt" />.</param>
+      <returns>A <see cref="T:System.Drawing.Point" /> structure that is translated by the negative of a given <see cref="T:System.Drawing.Size" /> structure.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.Round(System.Drawing.PointF)">
+      <summary>Converts the specified <see cref="T:System.Drawing.PointF" /> to a <see cref="T:System.Drawing.Point" /> object by rounding the <see cref="T:System.Drawing.PointF" /> values to the nearest integer.</summary>
+      <param name="value">The <see cref="T:System.Drawing.PointF" /> to convert.</param>
+      <returns>The <see cref="T:System.Drawing.Point" /> this method converts to.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.Subtract(System.Drawing.Point,System.Drawing.Size)">
+      <summary>Returns the result of subtracting specified <see cref="T:System.Drawing.Size" /> from the specified <see cref="T:System.Drawing.Point" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.Point" /> to be subtracted from.</param>
+      <param name="sz">The <see cref="T:System.Drawing.Size" /> to subtract from the <see cref="T:System.Drawing.Point" />.</param>
+      <returns>The <see cref="T:System.Drawing.Point" /> that is the result of the subtraction operation.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.ToString">
+      <summary>Converts this <see cref="T:System.Drawing.Point" /> to a human-readable string.</summary>
+      <returns>A string that represents this <see cref="T:System.Drawing.Point" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Point.Truncate(System.Drawing.PointF)">
+      <summary>Converts the specified <see cref="T:System.Drawing.PointF" /> to a <see cref="T:System.Drawing.Point" /> by truncating the values of the <see cref="T:System.Drawing.PointF" />.</summary>
+      <param name="value">The <see cref="T:System.Drawing.PointF" /> to convert.</param>
+      <returns>The <see cref="T:System.Drawing.Point" /> this method converts to.</returns>
+    </member>
+    <member name="P:System.Drawing.Point.IsEmpty">
+      <summary>Gets a value indicating whether this <see cref="T:System.Drawing.Point" /> is empty.</summary>
+      <returns>
+        <see langword="true" /> if both <see cref="P:System.Drawing.Point.X" /> and <see cref="P:System.Drawing.Point.Y" /> are 0; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Point.X">
+      <summary>Gets or sets the x-coordinate of this <see cref="T:System.Drawing.Point" />.</summary>
+      <returns>The x-coordinate of this <see cref="T:System.Drawing.Point" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Point.Y">
+      <summary>Gets or sets the y-coordinate of this <see cref="T:System.Drawing.Point" />.</summary>
+      <returns>The y-coordinate of this <see cref="T:System.Drawing.Point" />.</returns>
+    </member>
+    <member name="T:System.Drawing.PointF">
+      <summary>Represents an ordered pair of floating-point x- and y-coordinates that defines a point in a two-dimensional plane.</summary>
+    </member>
+    <member name="F:System.Drawing.PointF.Empty">
+      <summary>Represents a new instance of the <see cref="T:System.Drawing.PointF" /> class with member data left uninitialized.</summary>
+    </member>
+    <member name="M:System.Drawing.PointF.#ctor(System.Numerics.Vector2)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.PointF" /> struct from the specified <see cref="T:System.Numerics.Vector2" />.</summary>
+      <param name="vector">The source vector.</param>
+    </member>
+    <member name="M:System.Drawing.PointF.#ctor(System.Single,System.Single)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.PointF" /> class with the specified coordinates.</summary>
+      <param name="x">The horizontal position of the point.</param>
+      <param name="y">The vertical position of the point.</param>
+    </member>
+    <member name="M:System.Drawing.PointF.Add(System.Drawing.PointF,System.Drawing.Size)">
+      <summary>Translates a given <see cref="T:System.Drawing.PointF" /> by the specified <see cref="T:System.Drawing.Size" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> to translate.</param>
+      <param name="sz">The <see cref="T:System.Drawing.Size" /> that specifies the numbers to add to the coordinates of <paramref name="pt" />.</param>
+      <returns>The translated <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.Add(System.Drawing.PointF,System.Drawing.SizeF)">
+      <summary>Translates a given <see cref="T:System.Drawing.PointF" /> by a specified <see cref="T:System.Drawing.SizeF" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> to translate.</param>
+      <param name="sz">The <see cref="T:System.Drawing.SizeF" /> that specifies the numbers to add to the coordinates of <paramref name="pt" />.</param>
+      <returns>The translated <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.Equals(System.Drawing.PointF)">
+      <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+      <param name="other">An object to compare with this object.</param>
+      <returns>
+        <see langword="true" /> if the current object is equal to <paramref name="other" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.Equals(System.Object)">
+      <summary>Specifies whether this <see cref="T:System.Drawing.PointF" /> contains the same coordinates as the specified <see cref="T:System.Object" />.</summary>
+      <param name="obj">The <see cref="T:System.Object" /> to test.</param>
+      <returns>This method returns <see langword="true" /> if <paramref name="obj" /> is a <see cref="T:System.Drawing.PointF" /> and has the same coordinates as this <see cref="T:System.Drawing.Point" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.GetHashCode">
+      <summary>Returns a hash code for this <see cref="T:System.Drawing.PointF" /> structure.</summary>
+      <returns>An integer value that specifies a hash value for this <see cref="T:System.Drawing.PointF" /> structure.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.op_Addition(System.Drawing.PointF,System.Drawing.Size)">
+      <summary>Translates a <see cref="T:System.Drawing.PointF" /> by a given <see cref="T:System.Drawing.Size" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> to translate.</param>
+      <param name="sz">A <see cref="T:System.Drawing.Size" /> that specifies the pair of numbers to add to the coordinates of <paramref name="pt" />.</param>
+      <returns>The translated <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.op_Addition(System.Drawing.PointF,System.Drawing.SizeF)">
+      <summary>Translates the <see cref="T:System.Drawing.PointF" /> by the specified <see cref="T:System.Drawing.SizeF" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> to translate.</param>
+      <param name="sz">The <see cref="T:System.Drawing.SizeF" /> that specifies the numbers to add to the x- and y-coordinates of the <see cref="T:System.Drawing.PointF" />.</param>
+      <returns>The translated <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.op_Equality(System.Drawing.PointF,System.Drawing.PointF)">
+      <summary>Compares two <see cref="T:System.Drawing.PointF" /> structures. The result specifies whether the values of the <see cref="P:System.Drawing.PointF.X" /> and <see cref="P:System.Drawing.PointF.Y" /> properties of the two <see cref="T:System.Drawing.PointF" /> structures are equal.</summary>
+      <param name="left">A <see cref="T:System.Drawing.PointF" /> to compare.</param>
+      <param name="right">A <see cref="T:System.Drawing.PointF" /> to compare.</param>
+      <returns>
+        <see langword="true" /> if the <see cref="P:System.Drawing.PointF.X" /> and <see cref="P:System.Drawing.PointF.Y" /> values of the left and right <see cref="T:System.Drawing.PointF" /> structures are equal; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.op_Explicit(System.Drawing.PointF)~System.Numerics.Vector2">
+      <summary>Converts the specified <see cref="T:System.Drawing.PointF" /> to a <see cref="T:System.Numerics.Vector2" />.</summary>
+      <param name="point">The point to convert from.</param>
+      <returns>The vector that represents the converted <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.op_Explicit(System.Numerics.Vector2)~System.Drawing.PointF">
+      <summary>Converts the specified <see cref="T:System.Numerics.Vector2" /> to a <see cref="T:System.Drawing.PointF" />.</summary>
+      <param name="vector">The vector to convert.</param>
+      <returns>The pair of coordinates that represents the converted <see cref="T:System.Numerics.Vector2" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.op_Inequality(System.Drawing.PointF,System.Drawing.PointF)">
+      <summary>Determines whether the coordinates of the specified points are not equal.</summary>
+      <param name="left">A <see cref="T:System.Drawing.PointF" /> to compare.</param>
+      <param name="right">A <see cref="T:System.Drawing.PointF" /> to compare.</param>
+      <returns>
+        <see langword="true" /> to indicate the <see cref="P:System.Drawing.PointF.X" /> and <see cref="P:System.Drawing.PointF.Y" /> values of <paramref name="left" /> and <paramref name="right" /> are not equal; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.op_Subtraction(System.Drawing.PointF,System.Drawing.Size)">
+      <summary>Translates a <see cref="T:System.Drawing.PointF" /> by the negative of a given <see cref="T:System.Drawing.Size" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> to translate.</param>
+      <param name="sz">The <see cref="T:System.Drawing.Size" /> that specifies the numbers to subtract from the coordinates of <paramref name="pt" />.</param>
+      <returns>The translated <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.op_Subtraction(System.Drawing.PointF,System.Drawing.SizeF)">
+      <summary>Translates a <see cref="T:System.Drawing.PointF" /> by the negative of a specified <see cref="T:System.Drawing.SizeF" />.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> to translate.</param>
+      <param name="sz">The <see cref="T:System.Drawing.SizeF" /> that specifies the numbers to subtract from the coordinates of <paramref name="pt" />.</param>
+      <returns>The translated <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.Subtract(System.Drawing.PointF,System.Drawing.Size)">
+      <summary>Translates a <see cref="T:System.Drawing.PointF" /> by the negative of a specified size.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> to translate.</param>
+      <param name="sz">The <see cref="T:System.Drawing.Size" /> that specifies the numbers to subtract from the coordinates of <paramref name="pt" />.</param>
+      <returns>The translated <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.Subtract(System.Drawing.PointF,System.Drawing.SizeF)">
+      <summary>Translates a <see cref="T:System.Drawing.PointF" /> by the negative of a specified size.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> to translate.</param>
+      <param name="sz">The <see cref="T:System.Drawing.SizeF" /> that specifies the numbers to subtract from the coordinates of <paramref name="pt" />.</param>
+      <returns>The translated <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.ToString">
+      <summary>Converts this <see cref="T:System.Drawing.PointF" /> to a human readable string.</summary>
+      <returns>A string that represents this <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.PointF.ToVector2">
+      <summary>Creates a new <see cref="T:System.Numerics.Vector2" /> from this <see cref="T:System.Drawing.PointF" />.</summary>
+      <returns>The vector that was created from this <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="P:System.Drawing.PointF.IsEmpty">
+      <summary>Gets a value indicating whether this <see cref="T:System.Drawing.PointF" /> is empty.</summary>
+      <returns>
+        <see langword="true" /> if both <see cref="P:System.Drawing.PointF.X" /> and <see cref="P:System.Drawing.PointF.Y" /> are 0; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.PointF.X">
+      <summary>Gets or sets the x-coordinate of this <see cref="T:System.Drawing.PointF" />.</summary>
+      <returns>The x-coordinate of this <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="P:System.Drawing.PointF.Y">
+      <summary>Gets or sets the y-coordinate of this <see cref="T:System.Drawing.PointF" />.</summary>
+      <returns>The y-coordinate of this <see cref="T:System.Drawing.PointF" />.</returns>
+    </member>
+    <member name="T:System.Drawing.Rectangle">
+      <summary>Stores a set of four integers that represent the location and size of a rectangle.</summary>
+    </member>
+    <member name="F:System.Drawing.Rectangle.Empty">
+      <summary>Represents a <see cref="T:System.Drawing.Rectangle" /> structure with its properties left uninitialized.</summary>
+    </member>
+    <member name="M:System.Drawing.Rectangle.#ctor(System.Drawing.Point,System.Drawing.Size)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.Rectangle" /> class with the specified location and size.</summary>
+      <param name="location">A <see cref="T:System.Drawing.Point" /> that represents the upper-left corner of the rectangular region.</param>
+      <param name="size">A <see cref="T:System.Drawing.Size" /> that represents the width and height of the rectangular region.</param>
+    </member>
+    <member name="M:System.Drawing.Rectangle.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.Rectangle" /> class with the specified location and size.</summary>
+      <param name="x">The x-coordinate of the upper-left corner of the rectangle.</param>
+      <param name="y">The y-coordinate of the upper-left corner of the rectangle.</param>
+      <param name="width">The width of the rectangle.</param>
+      <param name="height">The height of the rectangle.</param>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Ceiling(System.Drawing.RectangleF)">
+      <summary>Converts the specified <see cref="T:System.Drawing.RectangleF" /> structure to a <see cref="T:System.Drawing.Rectangle" /> structure by rounding the <see cref="T:System.Drawing.RectangleF" /> values to the next higher integer values.</summary>
+      <param name="value">The <see cref="T:System.Drawing.RectangleF" /> structure to be converted.</param>
+      <returns>Returns a <see cref="T:System.Drawing.Rectangle" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Contains(System.Drawing.Point)">
+      <summary>Determines if the specified point is contained within this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.Point" /> to test.</param>
+      <returns>This method returns <see langword="true" /> if the point represented by <paramref name="pt" /> is contained within this <see cref="T:System.Drawing.Rectangle" /> structure; otherwise <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Contains(System.Drawing.Rectangle)">
+      <summary>Determines if the rectangular region represented by <paramref name="rect" /> is entirely contained within this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <param name="rect">The <see cref="T:System.Drawing.Rectangle" /> to test.</param>
+      <returns>This method returns <see langword="true" /> if the rectangular region represented by <paramref name="rect" /> is entirely contained within this <see cref="T:System.Drawing.Rectangle" /> structure; otherwise <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Contains(System.Int32,System.Int32)">
+      <summary>Determines if the specified point is contained within this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <param name="x">The x-coordinate of the point to test.</param>
+      <param name="y">The y-coordinate of the point to test.</param>
+      <returns>This method returns <see langword="true" /> if the point defined by <paramref name="x" /> and <paramref name="y" /> is contained within this <see cref="T:System.Drawing.Rectangle" /> structure; otherwise <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Equals(System.Drawing.Rectangle)">
+      <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+      <param name="other">An object to compare with this object.</param>
+      <returns>
+        <see langword="true" /> if the current object is equal to <paramref name="other" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Equals(System.Object)">
+      <summary>Tests whether <paramref name="obj" /> is a <see cref="T:System.Drawing.Rectangle" /> structure with the same location and size of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <param name="obj">The <see cref="T:System.Object" /> to test.</param>
+      <returns>This method returns <see langword="true" /> if <paramref name="obj" /> is a <see cref="T:System.Drawing.Rectangle" /> structure and its <see cref="P:System.Drawing.Rectangle.X" />, <see cref="P:System.Drawing.Rectangle.Y" />, <see cref="P:System.Drawing.Rectangle.Width" />, and <see cref="P:System.Drawing.Rectangle.Height" /> properties are equal to the corresponding properties of this <see cref="T:System.Drawing.Rectangle" /> structure; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.FromLTRB(System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary>Creates a <see cref="T:System.Drawing.Rectangle" /> structure with the specified edge locations.</summary>
+      <param name="left">The x-coordinate of the upper-left corner of this <see cref="T:System.Drawing.Rectangle" /> structure.</param>
+      <param name="top">The y-coordinate of the upper-left corner of this <see cref="T:System.Drawing.Rectangle" /> structure.</param>
+      <param name="right">The x-coordinate of the lower-right corner of this <see cref="T:System.Drawing.Rectangle" /> structure.</param>
+      <param name="bottom">The y-coordinate of the lower-right corner of this <see cref="T:System.Drawing.Rectangle" /> structure.</param>
+      <returns>The new <see cref="T:System.Drawing.Rectangle" /> that this method creates.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.GetHashCode">
+      <summary>Returns the hash code for this <see cref="T:System.Drawing.Rectangle" /> structure. For information about the use of hash codes, see <see cref="M:System.Object.GetHashCode" /> .</summary>
+      <returns>An integer that represents the hash code for this rectangle.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Inflate(System.Drawing.Rectangle,System.Int32,System.Int32)">
+      <summary>Creates and returns an enlarged copy of the specified <see cref="T:System.Drawing.Rectangle" /> structure. The copy is enlarged by the specified amount. The original <see cref="T:System.Drawing.Rectangle" /> structure remains unmodified.</summary>
+      <param name="rect">The <see cref="T:System.Drawing.Rectangle" /> with which to start. This rectangle is not modified.</param>
+      <param name="x">The amount to inflate this <see cref="T:System.Drawing.Rectangle" /> horizontally.</param>
+      <param name="y">The amount to inflate this <see cref="T:System.Drawing.Rectangle" /> vertically.</param>
+      <returns>The enlarged <see cref="T:System.Drawing.Rectangle" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Inflate(System.Drawing.Size)">
+      <summary>Enlarges this <see cref="T:System.Drawing.Rectangle" /> by the specified amount.</summary>
+      <param name="size">The amount to inflate this rectangle.</param>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Inflate(System.Int32,System.Int32)">
+      <summary>Enlarges this <see cref="T:System.Drawing.Rectangle" /> by the specified amount.</summary>
+      <param name="width">The amount to inflate this <see cref="T:System.Drawing.Rectangle" /> horizontally.</param>
+      <param name="height">The amount to inflate this <see cref="T:System.Drawing.Rectangle" /> vertically.</param>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Intersect(System.Drawing.Rectangle)">
+      <summary>Replaces this <see cref="T:System.Drawing.Rectangle" /> with the intersection of itself and the specified <see cref="T:System.Drawing.Rectangle" />.</summary>
+      <param name="rect">The <see cref="T:System.Drawing.Rectangle" /> with which to intersect.</param>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Intersect(System.Drawing.Rectangle,System.Drawing.Rectangle)">
+      <summary>Returns a third <see cref="T:System.Drawing.Rectangle" /> structure that represents the intersection of two other <see cref="T:System.Drawing.Rectangle" /> structures. If there is no intersection, an empty <see cref="T:System.Drawing.Rectangle" /> is returned.</summary>
+      <param name="a">A rectangle to intersect.</param>
+      <param name="b">A rectangle to intersect.</param>
+      <returns>A <see cref="T:System.Drawing.Rectangle" /> that represents the intersection of <paramref name="a" /> and <paramref name="b" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.IntersectsWith(System.Drawing.Rectangle)">
+      <summary>Determines if this rectangle intersects with <paramref name="rect" />.</summary>
+      <param name="rect">The rectangle to test.</param>
+      <returns>This method returns <see langword="true" /> if there is any intersection, otherwise <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Offset(System.Drawing.Point)">
+      <summary>Adjusts the location of this rectangle by the specified amount.</summary>
+      <param name="pos">Amount to offset the location.</param>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Offset(System.Int32,System.Int32)">
+      <summary>Adjusts the location of this rectangle by the specified amount.</summary>
+      <param name="x">The horizontal offset.</param>
+      <param name="y">The vertical offset.</param>
+    </member>
+    <member name="M:System.Drawing.Rectangle.op_Equality(System.Drawing.Rectangle,System.Drawing.Rectangle)">
+      <summary>Tests whether two <see cref="T:System.Drawing.Rectangle" /> structures have equal location and size.</summary>
+      <param name="left">The <see cref="T:System.Drawing.Rectangle" /> structure that is to the left of the equality operator.</param>
+      <param name="right">The <see cref="T:System.Drawing.Rectangle" /> structure that is to the right of the equality operator.</param>
+      <returns>This operator returns <see langword="true" /> if the two <see cref="T:System.Drawing.Rectangle" /> structures have equal <see cref="P:System.Drawing.Rectangle.X" />, <see cref="P:System.Drawing.Rectangle.Y" />, <see cref="P:System.Drawing.Rectangle.Width" />, and <see cref="P:System.Drawing.Rectangle.Height" /> properties.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.op_Inequality(System.Drawing.Rectangle,System.Drawing.Rectangle)">
+      <summary>Tests whether two <see cref="T:System.Drawing.Rectangle" /> structures differ in location or size.</summary>
+      <param name="left">The <see cref="T:System.Drawing.Rectangle" /> structure that is to the left of the inequality operator.</param>
+      <param name="right">The <see cref="T:System.Drawing.Rectangle" /> structure that is to the right of the inequality operator.</param>
+      <returns>This operator returns <see langword="true" /> if any of the <see cref="P:System.Drawing.Rectangle.X" />, <see cref="P:System.Drawing.Rectangle.Y" />, <see cref="P:System.Drawing.Rectangle.Width" /> or <see cref="P:System.Drawing.Rectangle.Height" /> properties of the two <see cref="T:System.Drawing.Rectangle" /> structures are unequal; otherwise <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Round(System.Drawing.RectangleF)">
+      <summary>Converts the specified <see cref="T:System.Drawing.RectangleF" /> to a <see cref="T:System.Drawing.Rectangle" /> by rounding the <see cref="T:System.Drawing.RectangleF" /> values to the nearest integer values.</summary>
+      <param name="value">The <see cref="T:System.Drawing.RectangleF" /> to be converted.</param>
+      <returns>The rounded integer value of the <see cref="T:System.Drawing.Rectangle" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.ToString">
+      <summary>Converts the attributes of this <see cref="T:System.Drawing.Rectangle" /> to a human-readable string.</summary>
+      <returns>A string that contains the position, width, and height of this <see cref="T:System.Drawing.Rectangle" /> structure ¾ for example, {X=20, Y=20, Width=100, Height=50}.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Truncate(System.Drawing.RectangleF)">
+      <summary>Converts the specified <see cref="T:System.Drawing.RectangleF" /> to a <see cref="T:System.Drawing.Rectangle" /> by truncating the <see cref="T:System.Drawing.RectangleF" /> values.</summary>
+      <param name="value">The <see cref="T:System.Drawing.RectangleF" /> to be converted.</param>
+      <returns>The truncated value of the  <see cref="T:System.Drawing.Rectangle" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Rectangle.Union(System.Drawing.Rectangle,System.Drawing.Rectangle)">
+      <summary>Gets a <see cref="T:System.Drawing.Rectangle" /> structure that contains the union of two <see cref="T:System.Drawing.Rectangle" /> structures.</summary>
+      <param name="a">A rectangle to union.</param>
+      <param name="b">A rectangle to union.</param>
+      <returns>A <see cref="T:System.Drawing.Rectangle" /> structure that bounds the union of the two <see cref="T:System.Drawing.Rectangle" /> structures.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.Bottom">
+      <summary>Gets the y-coordinate that is the sum of the <see cref="P:System.Drawing.Rectangle.Y" /> and <see cref="P:System.Drawing.Rectangle.Height" /> property values of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <returns>The y-coordinate that is the sum of <see cref="P:System.Drawing.Rectangle.Y" /> and <see cref="P:System.Drawing.Rectangle.Height" /> of this <see cref="T:System.Drawing.Rectangle" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.Height">
+      <summary>Gets or sets the height of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <returns>The height of this <see cref="T:System.Drawing.Rectangle" /> structure. The default is 0.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.IsEmpty">
+      <summary>Tests whether all numeric properties of this <see cref="T:System.Drawing.Rectangle" /> have values of zero.</summary>
+      <returns>This property returns <see langword="true" /> if the <see cref="P:System.Drawing.Rectangle.Width" />, <see cref="P:System.Drawing.Rectangle.Height" />, <see cref="P:System.Drawing.Rectangle.X" />, and <see cref="P:System.Drawing.Rectangle.Y" /> properties of this <see cref="T:System.Drawing.Rectangle" /> all have values of zero; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.Left">
+      <summary>Gets the x-coordinate of the left edge of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <returns>The x-coordinate of the left edge of this <see cref="T:System.Drawing.Rectangle" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.Location">
+      <summary>Gets or sets the coordinates of the upper-left corner of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <returns>A <see cref="T:System.Drawing.Point" /> that represents the upper-left corner of this <see cref="T:System.Drawing.Rectangle" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.Right">
+      <summary>Gets the x-coordinate that is the sum of <see cref="P:System.Drawing.Rectangle.X" /> and <see cref="P:System.Drawing.Rectangle.Width" /> property values of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <returns>The x-coordinate that is the sum of <see cref="P:System.Drawing.Rectangle.X" /> and <see cref="P:System.Drawing.Rectangle.Width" /> of this <see cref="T:System.Drawing.Rectangle" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.Size">
+      <summary>Gets or sets the size of this <see cref="T:System.Drawing.Rectangle" />.</summary>
+      <returns>A <see cref="T:System.Drawing.Size" /> that represents the width and height of this <see cref="T:System.Drawing.Rectangle" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.Top">
+      <summary>Gets the y-coordinate of the top edge of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <returns>The y-coordinate of the top edge of this <see cref="T:System.Drawing.Rectangle" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.Width">
+      <summary>Gets or sets the width of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <returns>The width of this <see cref="T:System.Drawing.Rectangle" /> structure. The default is 0.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.X">
+      <summary>Gets or sets the x-coordinate of the upper-left corner of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <returns>The x-coordinate of the upper-left corner of this <see cref="T:System.Drawing.Rectangle" /> structure. The default is 0.</returns>
+    </member>
+    <member name="P:System.Drawing.Rectangle.Y">
+      <summary>Gets or sets the y-coordinate of the upper-left corner of this <see cref="T:System.Drawing.Rectangle" /> structure.</summary>
+      <returns>The y-coordinate of the upper-left corner of this <see cref="T:System.Drawing.Rectangle" /> structure. The default is 0.</returns>
+    </member>
+    <member name="T:System.Drawing.RectangleF">
+      <summary>Stores a set of four floating-point numbers that represent the location and size of a rectangle. For more advanced region functions, use a <see cref="T:System.Drawing.Region" /> object.</summary>
+    </member>
+    <member name="F:System.Drawing.RectangleF.Empty">
+      <summary>Represents an instance of the <see cref="T:System.Drawing.RectangleF" /> class with its members uninitialized.</summary>
+    </member>
+    <member name="M:System.Drawing.RectangleF.#ctor(System.Drawing.PointF,System.Drawing.SizeF)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.RectangleF" /> class with the specified location and size.</summary>
+      <param name="location">A <see cref="T:System.Drawing.PointF" /> that represents the upper-left corner of the rectangular region.</param>
+      <param name="size">A <see cref="T:System.Drawing.SizeF" /> that represents the width and height of the rectangular region.</param>
+    </member>
+    <member name="M:System.Drawing.RectangleF.#ctor(System.Numerics.Vector4)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.RectangleF" /> struct from the specified <see cref="T:System.Numerics.Vector4" />.</summary>
+      <param name="vector">The source vector.</param>
+    </member>
+    <member name="M:System.Drawing.RectangleF.#ctor(System.Single,System.Single,System.Single,System.Single)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.RectangleF" /> class with the specified location and size.</summary>
+      <param name="x">The x-coordinate of the upper-left corner of the rectangle.</param>
+      <param name="y">The y-coordinate of the upper-left corner of the rectangle.</param>
+      <param name="width">The width of the rectangle.</param>
+      <param name="height">The height of the rectangle.</param>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Contains(System.Drawing.PointF)">
+      <summary>Determines if the specified point is contained within this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> to test.</param>
+      <returns>
+        <see langword="true" /> if the point represented by the <paramref name="pt" /> parameter is contained within this <see cref="T:System.Drawing.RectangleF" /> structure; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Contains(System.Drawing.RectangleF)">
+      <summary>Determines if the rectangular region represented by <paramref name="rect" /> is entirely contained within this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <param name="rect">The <see cref="T:System.Drawing.RectangleF" /> to test.</param>
+      <returns>
+        <see langword="true" /> if the rectangular region represented by <paramref name="rect" /> is entirely contained within the rectangular region represented by this <see cref="T:System.Drawing.RectangleF" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Contains(System.Single,System.Single)">
+      <summary>Determines if the specified point is contained within this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <param name="x">The x-coordinate of the point to test.</param>
+      <param name="y">The y-coordinate of the point to test.</param>
+      <returns>
+        <see langword="true" /> if the point defined by <paramref name="x" /> and <paramref name="y" /> is contained within this <see cref="T:System.Drawing.RectangleF" /> structure; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Equals(System.Drawing.RectangleF)">
+      <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+      <param name="other">An object to compare with this object.</param>
+      <returns>
+        <see langword="true" /> if the current object is equal to <paramref name="other" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Equals(System.Object)">
+      <summary>Tests whether <paramref name="obj" /> is a <see cref="T:System.Drawing.RectangleF" /> with the same location and size of this <see cref="T:System.Drawing.RectangleF" />.</summary>
+      <param name="obj">The <see cref="T:System.Object" /> to test.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="obj" /> is a <see cref="T:System.Drawing.RectangleF" /> and its <see langword="X" />, <see langword="Y" />, <see langword="Width" />, and <see langword="Height" /> properties are equal to the corresponding properties of this <see cref="T:System.Drawing.RectangleF" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.FromLTRB(System.Single,System.Single,System.Single,System.Single)">
+      <summary>Creates a <see cref="T:System.Drawing.RectangleF" /> structure with upper-left corner and lower-right corner at the specified locations.</summary>
+      <param name="left">The x-coordinate of the upper-left corner of the rectangular region.</param>
+      <param name="top">The y-coordinate of the upper-left corner of the rectangular region.</param>
+      <param name="right">The x-coordinate of the lower-right corner of the rectangular region.</param>
+      <param name="bottom">The y-coordinate of the lower-right corner of the rectangular region.</param>
+      <returns>The new <see cref="T:System.Drawing.RectangleF" /> that this method creates.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.GetHashCode">
+      <summary>Gets the hash code for this <see cref="T:System.Drawing.RectangleF" /> structure. For information about the use of hash codes, see <see langword="Object.GetHashCode" />.</summary>
+      <returns>The hash code for this <see cref="T:System.Drawing.RectangleF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Inflate(System.Drawing.RectangleF,System.Single,System.Single)">
+      <summary>Creates and returns an enlarged copy of the specified <see cref="T:System.Drawing.RectangleF" /> structure. The copy is enlarged by the specified amount and the original rectangle remains unmodified.</summary>
+      <param name="rect">The <see cref="T:System.Drawing.RectangleF" /> to be copied. This rectangle is not modified.</param>
+      <param name="x">The amount to enlarge the copy of the rectangle horizontally.</param>
+      <param name="y">The amount to enlarge the copy of the rectangle vertically.</param>
+      <returns>The enlarged <see cref="T:System.Drawing.RectangleF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Inflate(System.Drawing.SizeF)">
+      <summary>Enlarges this <see cref="T:System.Drawing.RectangleF" /> by the specified amount.</summary>
+      <param name="size">The amount to inflate this rectangle.</param>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Inflate(System.Single,System.Single)">
+      <summary>Enlarges this <see cref="T:System.Drawing.RectangleF" /> structure by the specified amount.</summary>
+      <param name="x">The amount to inflate this <see cref="T:System.Drawing.RectangleF" /> structure horizontally.</param>
+      <param name="y">The amount to inflate this <see cref="T:System.Drawing.RectangleF" /> structure vertically.</param>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Intersect(System.Drawing.RectangleF)">
+      <summary>Replaces this <see cref="T:System.Drawing.RectangleF" /> structure with the intersection of itself and the specified <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <param name="rect">The rectangle to intersect.</param>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Intersect(System.Drawing.RectangleF,System.Drawing.RectangleF)">
+      <summary>Returns a <see cref="T:System.Drawing.RectangleF" /> structure that represents the intersection of two rectangles. If there is no intersection, and empty <see cref="T:System.Drawing.RectangleF" /> is returned.</summary>
+      <param name="a">A rectangle to intersect.</param>
+      <param name="b">A rectangle to intersect.</param>
+      <returns>A third <see cref="T:System.Drawing.RectangleF" /> structure the size of which represents the overlapped area of the two specified rectangles.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.IntersectsWith(System.Drawing.RectangleF)">
+      <summary>Determines if this rectangle intersects with <paramref name="rect" />.</summary>
+      <param name="rect">The rectangle to test.</param>
+      <returns>
+        <see langword="true" /> if there is any intersection; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Offset(System.Drawing.PointF)">
+      <summary>Adjusts the location of this rectangle by the specified amount.</summary>
+      <param name="pos">The amount to offset the location.</param>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Offset(System.Single,System.Single)">
+      <summary>Adjusts the location of this rectangle by the specified amount.</summary>
+      <param name="x">The amount to offset the location horizontally.</param>
+      <param name="y">The amount to offset the location vertically.</param>
+    </member>
+    <member name="M:System.Drawing.RectangleF.op_Equality(System.Drawing.RectangleF,System.Drawing.RectangleF)">
+      <summary>Tests whether two <see cref="T:System.Drawing.RectangleF" /> structures have equal location and size.</summary>
+      <param name="left">The <see cref="T:System.Drawing.RectangleF" /> structure that is to the left of the equality operator.</param>
+      <param name="right">The <see cref="T:System.Drawing.RectangleF" /> structure that is to the right of the equality operator.</param>
+      <returns>
+        <see langword="true" /> if the two specified <see cref="T:System.Drawing.RectangleF" /> structures have equal <see cref="P:System.Drawing.RectangleF.X" />, <see cref="P:System.Drawing.RectangleF.Y" />, <see cref="P:System.Drawing.RectangleF.Width" />, and <see cref="P:System.Drawing.RectangleF.Height" /> properties; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.op_Explicit(System.Drawing.RectangleF)~System.Numerics.Vector4">
+      <summary>Converts the specified <see cref="T:System.Drawing.RectangleF" /> to a <see cref="T:System.Numerics.Vector4" />.</summary>
+      <param name="rectangle">The rectangle to convert.</param>
+      <returns>The vector that represents the converted <see cref="T:System.Drawing.RectangleF" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.op_Explicit(System.Numerics.Vector4)~System.Drawing.RectangleF">
+      <summary>Converts the specified <see cref="T:System.Numerics.Vector4" /> to a <see cref="T:System.Drawing.RectangleF" />.</summary>
+      <param name="vector">The vector to convert.</param>
+      <returns>The rectangle that represents the converted <see cref="T:System.Numerics.Vector4" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.op_Implicit(System.Drawing.Rectangle)~System.Drawing.RectangleF">
+      <summary>Converts the specified <see cref="T:System.Drawing.Rectangle" /> structure to a <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <param name="r">The <see cref="T:System.Drawing.Rectangle" /> structure to convert.</param>
+      <returns>The <see cref="T:System.Drawing.RectangleF" /> structure that is converted from the specified <see cref="T:System.Drawing.Rectangle" /> structure.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.op_Inequality(System.Drawing.RectangleF,System.Drawing.RectangleF)">
+      <summary>Tests whether two <see cref="T:System.Drawing.RectangleF" /> structures differ in location or size.</summary>
+      <param name="left">The <see cref="T:System.Drawing.RectangleF" /> structure that is to the left of the inequality operator.</param>
+      <param name="right">The <see cref="T:System.Drawing.RectangleF" /> structure that is to the right of the inequality operator.</param>
+      <returns>
+        <see langword="true" /> if any of the <see cref="P:System.Drawing.RectangleF.X" /> , <see cref="P:System.Drawing.RectangleF.Y" />, <see cref="P:System.Drawing.RectangleF.Width" />, or <see cref="P:System.Drawing.RectangleF.Height" /> properties of the two <see cref="T:System.Drawing.Rectangle" /> structures are unequal; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.ToString">
+      <summary>Converts the <see langword="Location" /> and <see cref="T:System.Drawing.Size" /> of this <see cref="T:System.Drawing.RectangleF" /> to a human-readable string.</summary>
+      <returns>A string that contains the position, width, and height of this <see cref="T:System.Drawing.RectangleF" /> structure. For example, "{X=20, Y=20, Width=100, Height=50}".</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.ToVector4">
+      <summary>Creates a new <see cref="T:System.Numerics.Vector4" /> from this <see cref="T:System.Drawing.RectangleF" />.</summary>
+      <returns>The rectangle, converted into a new <see cref="T:System.Numerics.Vector4" /> instance.</returns>
+    </member>
+    <member name="M:System.Drawing.RectangleF.Union(System.Drawing.RectangleF,System.Drawing.RectangleF)">
+      <summary>Creates the smallest possible third rectangle that can contain both of two rectangles that form a union.</summary>
+      <param name="a">A rectangle to union.</param>
+      <param name="b">A rectangle to union.</param>
+      <returns>A third <see cref="T:System.Drawing.RectangleF" /> structure that contains both of the two rectangles that form the union.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.Bottom">
+      <summary>Gets the y-coordinate that is the sum of <see cref="P:System.Drawing.RectangleF.Y" /> and <see cref="P:System.Drawing.RectangleF.Height" /> of this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <returns>The y-coordinate that is the sum of <see cref="P:System.Drawing.RectangleF.Y" /> and <see cref="P:System.Drawing.RectangleF.Height" /> of this <see cref="T:System.Drawing.RectangleF" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.Height">
+      <summary>Gets or sets the height of this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <returns>The height of this <see cref="T:System.Drawing.RectangleF" /> structure. The default is 0.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.IsEmpty">
+      <summary>Gets a value that indicates whether the <see cref="P:System.Drawing.RectangleF.Width" /> or <see cref="P:System.Drawing.RectangleF.Height" /> property of this <see cref="T:System.Drawing.RectangleF" /> has a value of zero.</summary>
+      <returns>
+        <see langword="true" /> if the <see cref="P:System.Drawing.RectangleF.Width" /> or <see cref="P:System.Drawing.RectangleF.Height" /> property of this <see cref="T:System.Drawing.RectangleF" /> has a value of zero; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.Left">
+      <summary>Gets the x-coordinate of the left edge of this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <returns>The x-coordinate of the left edge of this <see cref="T:System.Drawing.RectangleF" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.Location">
+      <summary>Gets or sets the coordinates of the upper-left corner of this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <returns>A <see cref="T:System.Drawing.PointF" /> that represents the upper-left corner of this <see cref="T:System.Drawing.RectangleF" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.Right">
+      <summary>Gets the x-coordinate that is the sum of <see cref="P:System.Drawing.RectangleF.X" /> and <see cref="P:System.Drawing.RectangleF.Width" /> of this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <returns>The x-coordinate that is the sum of <see cref="P:System.Drawing.RectangleF.X" /> and <see cref="P:System.Drawing.RectangleF.Width" /> of this <see cref="T:System.Drawing.RectangleF" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.Size">
+      <summary>Gets or sets the size of this <see cref="T:System.Drawing.RectangleF" />.</summary>
+      <returns>A <see cref="T:System.Drawing.SizeF" /> that represents the width and height of this <see cref="T:System.Drawing.RectangleF" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.Top">
+      <summary>Gets the y-coordinate of the top edge of this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <returns>The y-coordinate of the top edge of this <see cref="T:System.Drawing.RectangleF" /> structure.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.Width">
+      <summary>Gets or sets the width of this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <returns>The width of this <see cref="T:System.Drawing.RectangleF" /> structure. The default is 0.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.X">
+      <summary>Gets or sets the x-coordinate of the upper-left corner of this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <returns>The x-coordinate of the upper-left corner of this <see cref="T:System.Drawing.RectangleF" /> structure. The default is 0.</returns>
+    </member>
+    <member name="P:System.Drawing.RectangleF.Y">
+      <summary>Gets or sets the y-coordinate of the upper-left corner of this <see cref="T:System.Drawing.RectangleF" /> structure.</summary>
+      <returns>The y-coordinate of the upper-left corner of this <see cref="T:System.Drawing.RectangleF" /> structure. The default is 0.</returns>
+    </member>
+    <member name="T:System.Drawing.Size">
+      <summary>Stores an ordered pair of integers, which specify a <see cref="P:System.Drawing.Size.Height" /> and <see cref="P:System.Drawing.Size.Width" />.</summary>
+    </member>
+    <member name="F:System.Drawing.Size.Empty">
+      <summary>Gets a <see cref="T:System.Drawing.Size" /> structure that has a <see cref="P:System.Drawing.Size.Height" /> and <see cref="P:System.Drawing.Size.Width" /> value of 0.</summary>
+    </member>
+    <member name="M:System.Drawing.Size.#ctor(System.Drawing.Point)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.Size" /> structure from the specified <see cref="T:System.Drawing.Point" /> structure.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.Point" /> structure from which to initialize this <see cref="T:System.Drawing.Size" /> structure.</param>
+    </member>
+    <member name="M:System.Drawing.Size.#ctor(System.Int32,System.Int32)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.Size" /> structure from the specified dimensions.</summary>
+      <param name="width">The width component of the new <see cref="T:System.Drawing.Size" />.</param>
+      <param name="height">The height component of the new <see cref="T:System.Drawing.Size" />.</param>
+    </member>
+    <member name="M:System.Drawing.Size.Add(System.Drawing.Size,System.Drawing.Size)">
+      <summary>Adds the width and height of one <see cref="T:System.Drawing.Size" /> structure to the width and height of another <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <param name="sz1">The first <see cref="T:System.Drawing.Size" /> structure to add.</param>
+      <param name="sz2">The second <see cref="T:System.Drawing.Size" /> structure to add.</param>
+      <returns>A <see cref="T:System.Drawing.Size" /> structure that is the result of the addition operation.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.Ceiling(System.Drawing.SizeF)">
+      <summary>Converts the specified <see cref="T:System.Drawing.SizeF" /> structure to a <see cref="T:System.Drawing.Size" /> structure by rounding the values of the <see cref="T:System.Drawing.Size" /> structure to the next higher integer values.</summary>
+      <param name="value">The <see cref="T:System.Drawing.SizeF" /> structure to convert.</param>
+      <returns>The <see cref="T:System.Drawing.Size" /> structure this method converts to.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.Equals(System.Drawing.Size)">
+      <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+      <param name="other">An object to compare with this object.</param>
+      <returns>
+        <see langword="true" /> if the current object is equal to <paramref name="other" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.Equals(System.Object)">
+      <summary>Tests to see whether the specified object is a <see cref="T:System.Drawing.Size" /> structure with the same dimensions as this <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <param name="obj">The <see cref="T:System.Object" /> to test.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="obj" /> is a <see cref="T:System.Drawing.Size" /> and has the same width and height as this <see cref="T:System.Drawing.Size" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.GetHashCode">
+      <summary>Returns a hash code for this <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <returns>An integer value that specifies a hash value for this <see cref="T:System.Drawing.Size" /> structure.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Addition(System.Drawing.Size,System.Drawing.Size)">
+      <summary>Adds the width and height of one <see cref="T:System.Drawing.Size" /> structure to the width and height of another <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <param name="sz1">The first <see cref="T:System.Drawing.Size" /> to add.</param>
+      <param name="sz2">The second <see cref="T:System.Drawing.Size" /> to add.</param>
+      <returns>A <see cref="T:System.Drawing.Size" /> structure that is the result of the addition operation.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Division(System.Drawing.Size,System.Int32)">
+      <summary>Divides the specified <see cref="T:System.Drawing.Size" /> by the specified integer.</summary>
+      <param name="left">The dividend.</param>
+      <param name="right">The divisor.</param>
+      <returns>A new <see cref="T:System.Drawing.Size" />, which contains the result of dividing <paramref name="left" />'s height by <paramref name="right" /> and <paramref name="left" />'s width by <paramref name="right" />, respectively.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Division(System.Drawing.Size,System.Single)">
+      <summary>Divides the specified <see cref="T:System.Drawing.Size" /> by the specified single-precision floating-point number.</summary>
+      <param name="left">The dividend.</param>
+      <param name="right">The divisor.</param>
+      <returns>The result of dividing <paramref name="left" />'s width and height by <paramref name="right" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Equality(System.Drawing.Size,System.Drawing.Size)">
+      <summary>Tests whether two <see cref="T:System.Drawing.Size" /> structures are equal.</summary>
+      <param name="sz1">The <see cref="T:System.Drawing.Size" /> structure on the left side of the equality operator.</param>
+      <param name="sz2">The <see cref="T:System.Drawing.Size" /> structure on the right of the equality operator.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="sz1" /> and <paramref name="sz2" /> have equal width and height; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Explicit(System.Drawing.Size)~System.Drawing.Point">
+      <summary>Converts the specified <see cref="T:System.Drawing.Size" /> structure to a <see cref="T:System.Drawing.Point" /> structure.</summary>
+      <param name="size">The <see cref="T:System.Drawing.Size" /> structure to convert.</param>
+      <returns>The <see cref="T:System.Drawing.Point" /> structure to which this operator converts.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Implicit(System.Drawing.Size)~System.Drawing.SizeF">
+      <summary>Converts the specified <see cref="T:System.Drawing.Size" /> structure to a <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <param name="p">The <see cref="T:System.Drawing.Size" /> structure to convert.</param>
+      <returns>The <see cref="T:System.Drawing.SizeF" /> structure to which this operator converts.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Inequality(System.Drawing.Size,System.Drawing.Size)">
+      <summary>Tests whether two <see cref="T:System.Drawing.Size" /> structures are different.</summary>
+      <param name="sz1">The <see cref="T:System.Drawing.Size" /> structure on the left of the inequality operator.</param>
+      <param name="sz2">The <see cref="T:System.Drawing.Size" /> structure on the right of the inequality operator.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="sz1" /> and <paramref name="sz2" /> differ either in width or height; <see langword="false" /> if <paramref name="sz1" /> and <paramref name="sz2" /> are equal.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Multiply(System.Drawing.Size,System.Int32)">
+      <summary>Multiplies the specified <see cref="T:System.Drawing.Size" /> by the specified integer.</summary>
+      <param name="left">The multiplicand.</param>
+      <param name="right">The multiplier.</param>
+      <returns>The result of multiplying <paramref name="left" />'s width and height by <paramref name="right" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Multiply(System.Drawing.Size,System.Single)">
+      <summary>Multiplies the specified <see cref="T:System.Drawing.Size" /> by the specified single-precision floating-point number.</summary>
+      <param name="left">The multiplicand.</param>
+      <param name="right">The multiplier.</param>
+      <returns>The result of multiplying <paramref name="left" />'s width and height by <paramref name="right" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Multiply(System.Int32,System.Drawing.Size)">
+      <summary>Multiplies the specified integer by the specified <see cref="T:System.Drawing.Size" />.</summary>
+      <param name="left">The multiplier.</param>
+      <param name="right">The multiplicand.</param>
+      <returns>The result of multiplying <paramref name="right" />'s width and height by <paramref name="left" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Multiply(System.Single,System.Drawing.Size)">
+      <summary>Multiplies the specified single-precision floating-point number by the specified <see cref="T:System.Drawing.Size" />.</summary>
+      <param name="left">The multiplier.</param>
+      <param name="right">The multiplicand.</param>
+      <returns>The result of multiplying <paramref name="right" />'s width and height by <paramref name="left" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.op_Subtraction(System.Drawing.Size,System.Drawing.Size)">
+      <summary>Subtracts the width and height of one <see cref="T:System.Drawing.Size" /> structure from the width and height of another <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <param name="sz1">The <see cref="T:System.Drawing.Size" /> structure on the left side of the subtraction operator.</param>
+      <param name="sz2">The <see cref="T:System.Drawing.Size" /> structure on the right side of the subtraction operator.</param>
+      <returns>A <see cref="T:System.Drawing.Size" /> structure that is the result of the subtraction operation.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.Round(System.Drawing.SizeF)">
+      <summary>Converts the specified <see cref="T:System.Drawing.SizeF" /> structure to a <see cref="T:System.Drawing.Size" /> structure by rounding the values of the <see cref="T:System.Drawing.SizeF" /> structure to the nearest integer values.</summary>
+      <param name="value">The <see cref="T:System.Drawing.SizeF" /> structure to convert.</param>
+      <returns>The <see cref="T:System.Drawing.Size" /> structure this method converts to.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.Subtract(System.Drawing.Size,System.Drawing.Size)">
+      <summary>Subtracts the width and height of one <see cref="T:System.Drawing.Size" /> structure from the width and height of another <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <param name="sz1">The <see cref="T:System.Drawing.Size" /> structure on the left side of the subtraction operator.</param>
+      <param name="sz2">The <see cref="T:System.Drawing.Size" /> structure on the right side of the subtraction operator.</param>
+      <returns>A <see cref="T:System.Drawing.Size" /> structure that is a result of the subtraction operation.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.ToString">
+      <summary>Creates a human-readable string that represents this <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <returns>A string that represents this <see cref="T:System.Drawing.Size" />.</returns>
+    </member>
+    <member name="M:System.Drawing.Size.Truncate(System.Drawing.SizeF)">
+      <summary>Converts the specified <see cref="T:System.Drawing.SizeF" /> structure to a <see cref="T:System.Drawing.Size" /> structure by truncating the values of the <see cref="T:System.Drawing.SizeF" /> structure to the next lower integer values.</summary>
+      <param name="value">The <see cref="T:System.Drawing.SizeF" /> structure to convert.</param>
+      <returns>The <see cref="T:System.Drawing.Size" /> structure this method converts to.</returns>
+    </member>
+    <member name="P:System.Drawing.Size.Height">
+      <summary>Gets or sets the vertical component of this <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <returns>The vertical component of this <see cref="T:System.Drawing.Size" /> structure, typically measured in pixels.</returns>
+    </member>
+    <member name="P:System.Drawing.Size.IsEmpty">
+      <summary>Tests whether this <see cref="T:System.Drawing.Size" /> structure has width and height of 0.</summary>
+      <returns>This property returns <see langword="true" /> when this <see cref="T:System.Drawing.Size" /> structure has both a width and height of 0; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.Size.Width">
+      <summary>Gets or sets the horizontal component of this <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <returns>The horizontal component of this <see cref="T:System.Drawing.Size" /> structure, typically measured in pixels.</returns>
+    </member>
+    <member name="T:System.Drawing.SizeF">
+      <summary>Stores an ordered pair of floating-point numbers, typically the width and height of a rectangle.</summary>
+    </member>
+    <member name="F:System.Drawing.SizeF.Empty">
+      <summary>Gets a <see cref="T:System.Drawing.SizeF" /> structure that has a <see cref="P:System.Drawing.SizeF.Height" /> and <see cref="P:System.Drawing.SizeF.Width" /> value of 0.</summary>
+    </member>
+    <member name="M:System.Drawing.SizeF.#ctor(System.Drawing.PointF)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.SizeF" /> structure from the specified <see cref="T:System.Drawing.PointF" /> structure.</summary>
+      <param name="pt">The <see cref="T:System.Drawing.PointF" /> structure from which to initialize this <see cref="T:System.Drawing.SizeF" /> structure.</param>
+    </member>
+    <member name="M:System.Drawing.SizeF.#ctor(System.Drawing.SizeF)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.SizeF" /> structure from the specified existing <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <param name="size">The <see cref="T:System.Drawing.SizeF" /> structure from which to create the new <see cref="T:System.Drawing.SizeF" /> structure.</param>
+    </member>
+    <member name="M:System.Drawing.SizeF.#ctor(System.Numerics.Vector2)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.SizeF" /> struct from the specified <see cref="T:System.Numerics.Vector2" />.</summary>
+      <param name="vector">The source vector.</param>
+    </member>
+    <member name="M:System.Drawing.SizeF.#ctor(System.Single,System.Single)">
+      <summary>Initializes a new instance of the <see cref="T:System.Drawing.SizeF" /> structure from the specified dimensions.</summary>
+      <param name="width">The width component of the new <see cref="T:System.Drawing.SizeF" /> structure.</param>
+      <param name="height">The height component of the new <see cref="T:System.Drawing.SizeF" /> structure.</param>
+    </member>
+    <member name="M:System.Drawing.SizeF.Add(System.Drawing.SizeF,System.Drawing.SizeF)">
+      <summary>Adds the width and height of one <see cref="T:System.Drawing.SizeF" /> structure to the width and height of another <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <param name="sz1">The first <see cref="T:System.Drawing.SizeF" /> structure to add.</param>
+      <param name="sz2">The second <see cref="T:System.Drawing.SizeF" /> structure to add.</param>
+      <returns>A <see cref="T:System.Drawing.SizeF" /> structure that is the result of the addition operation.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.Equals(System.Drawing.SizeF)">
+      <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+      <param name="other">An object to compare with this object.</param>
+      <returns>
+        <see langword="true" /> if the current object is equal to <paramref name="other" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.Equals(System.Object)">
+      <summary>Tests to see whether the specified object is a <see cref="T:System.Drawing.SizeF" /> structure with the same dimensions as this <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <param name="obj">The <see cref="T:System.Object" /> to test.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="obj" /> is a <see cref="T:System.Drawing.SizeF" /> and has the same width and height as this <see cref="T:System.Drawing.SizeF" />; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.GetHashCode">
+      <summary>Returns a hash code for this <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <returns>An integer value that specifies a hash value for this <see cref="T:System.Drawing.Size" /> structure.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Addition(System.Drawing.SizeF,System.Drawing.SizeF)">
+      <summary>Adds the width and height of one <see cref="T:System.Drawing.SizeF" /> structure to the width and height of another <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <param name="sz1">The first <see cref="T:System.Drawing.SizeF" /> structure to add.</param>
+      <param name="sz2">The second <see cref="T:System.Drawing.SizeF" /> structure to add.</param>
+      <returns>A <see cref="T:System.Drawing.Size" /> structure that is the result of the addition operation.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Division(System.Drawing.SizeF,System.Single)">
+      <summary>Divides the specified <see cref="T:System.Drawing.SizeF" /> by the specified single-precision floating-point number.</summary>
+      <param name="left">The dividend.</param>
+      <param name="right">The divisor.</param>
+      <returns>The result of dividing <paramref name="left" />'s width and height by <paramref name="right" />.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Equality(System.Drawing.SizeF,System.Drawing.SizeF)">
+      <summary>Tests whether two <see cref="T:System.Drawing.SizeF" /> structures are equal.</summary>
+      <param name="sz1">The <see cref="T:System.Drawing.SizeF" /> structure on the left side of the equality operator.</param>
+      <param name="sz2">The <see cref="T:System.Drawing.SizeF" /> structure on the right of the equality operator.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="sz1" /> and <paramref name="sz2" /> have equal width and height; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Explicit(System.Drawing.SizeF)~System.Drawing.PointF">
+      <summary>Converts the specified <see cref="T:System.Drawing.SizeF" /> structure to a <see cref="T:System.Drawing.PointF" /> structure.</summary>
+      <param name="size">The <see cref="T:System.Drawing.SizeF" /> structure to be converted.</param>
+      <returns>The <see cref="T:System.Drawing.PointF" /> structure to which this operator converts.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Explicit(System.Drawing.SizeF)~System.Numerics.Vector2">
+      <summary>Converts the specified <see cref="T:System.Drawing.SizeF" /> to a <see cref="T:System.Numerics.Vector2" />.</summary>
+      <param name="size">The pair of numbers to convert.</param>
+      <returns>The size, converted into a <see cref="T:System.Numerics.Vector2" /> instance.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Explicit(System.Numerics.Vector2)~System.Drawing.SizeF">
+      <summary>Converts the specified <see cref="T:System.Numerics.Vector2" /> to a <see cref="T:System.Drawing.SizeF" />.</summary>
+      <param name="vector">The vector to convert.</param>
+      <returns>The vector, converted into a <see cref="T:System.Drawing.SizeF" /> instance.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Inequality(System.Drawing.SizeF,System.Drawing.SizeF)">
+      <summary>Tests whether two <see cref="T:System.Drawing.SizeF" /> structures are different.</summary>
+      <param name="sz1">The <see cref="T:System.Drawing.SizeF" /> structure on the left of the inequality operator.</param>
+      <param name="sz2">The <see cref="T:System.Drawing.SizeF" /> structure on the right of the inequality operator.</param>
+      <returns>
+        <see langword="true" /> if <paramref name="sz1" /> and <paramref name="sz2" /> differ either in width or height; <see langword="false" /> if <paramref name="sz1" /> and <paramref name="sz2" /> are equal.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Multiply(System.Drawing.SizeF,System.Single)">
+      <summary>Multiplies the specified <see cref="T:System.Drawing.SizeF" /> by the specified single-precision floating-point number.</summary>
+      <param name="left">The multiplicand.</param>
+      <param name="right">The multiplier.</param>
+      <returns>The result of multiplying <paramref name="left" />'s width and height by <paramref name="right" />.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Multiply(System.Single,System.Drawing.SizeF)">
+      <summary>Multiplies the specified single-precision floating-point number by the specified <see cref="T:System.Drawing.SizeF" />.</summary>
+      <param name="left">The multiplier.</param>
+      <param name="right">The multiplicand.</param>
+      <returns>The result of multiplying <paramref name="right" />'s width and height by <paramref name="left" />.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.op_Subtraction(System.Drawing.SizeF,System.Drawing.SizeF)">
+      <summary>Subtracts the width and height of one <see cref="T:System.Drawing.SizeF" /> structure from the width and height of another <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <param name="sz1">The <see cref="T:System.Drawing.SizeF" /> structure on the left side of the subtraction operator.</param>
+      <param name="sz2">The <see cref="T:System.Drawing.SizeF" /> structure on the right side of the subtraction operator.</param>
+      <returns>A <see cref="T:System.Drawing.SizeF" /> that is the result of the subtraction operation.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.Subtract(System.Drawing.SizeF,System.Drawing.SizeF)">
+      <summary>Subtracts the width and height of one <see cref="T:System.Drawing.SizeF" /> structure from the width and height of another <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <param name="sz1">The <see cref="T:System.Drawing.SizeF" /> structure on the left side of the subtraction operator.</param>
+      <param name="sz2">The <see cref="T:System.Drawing.SizeF" /> structure on the right side of the subtraction operator.</param>
+      <returns>A <see cref="T:System.Drawing.SizeF" /> structure that is a result of the subtraction operation.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.ToPointF">
+      <summary>Converts a <see cref="T:System.Drawing.SizeF" /> structure to a <see cref="T:System.Drawing.PointF" /> structure.</summary>
+      <returns>A <see cref="T:System.Drawing.PointF" /> structure.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.ToSize">
+      <summary>Converts a <see cref="T:System.Drawing.SizeF" /> structure to a <see cref="T:System.Drawing.Size" /> structure.</summary>
+      <returns>A <see cref="T:System.Drawing.Size" /> structure.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.ToString">
+      <summary>Creates a human-readable string that represents this <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <returns>A string that represents this <see cref="T:System.Drawing.SizeF" /> structure.</returns>
+    </member>
+    <member name="M:System.Drawing.SizeF.ToVector2">
+      <summary>Creates a new <see cref="T:System.Numerics.Vector2" /> from this <see cref="T:System.Drawing.SizeF" />.</summary>
+      <returns>The vector that was created from this <see cref="T:System.Drawing.SizeF" />.</returns>
+    </member>
+    <member name="P:System.Drawing.SizeF.Height">
+      <summary>Gets or sets the vertical component of this <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <returns>The vertical component of this <see cref="T:System.Drawing.SizeF" /> structure, typically measured in pixels.</returns>
+    </member>
+    <member name="P:System.Drawing.SizeF.IsEmpty">
+      <summary>Gets a value that indicates whether this <see cref="T:System.Drawing.SizeF" /> structure has zero width and height.</summary>
+      <returns>
+        <see langword="true" /> when this <see cref="T:System.Drawing.SizeF" /> structure has both a width and height of zero; otherwise, <see langword="false" />.</returns>
+    </member>
+    <member name="P:System.Drawing.SizeF.Width">
+      <summary>Gets or sets the horizontal component of this <see cref="T:System.Drawing.SizeF" /> structure.</summary>
+      <returns>The horizontal component of this <see cref="T:System.Drawing.SizeF" /> structure, typically measured in pixels.</returns>
+    </member>
+    <member name="T:System.Drawing.SystemColors">
+      <summary>Each property of the <see cref="T:System.Drawing.SystemColors" /> class is a <see cref="T:System.Drawing.Color" /> structure that is the color of a Windows display element.</summary>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ActiveBorder">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the active window's border.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the active window's border.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ActiveCaption">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the background of the active window's title bar.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the active window's title bar.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ActiveCaptionText">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the text in the active window's title bar.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the text in the active window's title bar.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.AppWorkspace">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the application workspace.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the application workspace.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ButtonFace">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the face color of a 3-D element.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the face color of a 3-D element.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ButtonHighlight">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the highlight color of a 3-D element.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the highlight color of a 3-D element.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ButtonShadow">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the shadow color of a 3-D element.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the shadow color of a 3-D element.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.Control">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the face color of a 3-D element.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the face color of a 3-D element.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ControlDark">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the shadow color of a 3-D element.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the shadow color of a 3-D element.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ControlDarkDark">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the dark shadow color of a 3-D element.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the dark shadow color of a 3-D element.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ControlLight">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the light color of a 3-D element.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the light color of a 3-D element.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ControlLightLight">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the highlight color of a 3-D element.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the highlight color of a 3-D element.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ControlText">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of text in a 3-D element.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of text in a 3-D element.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.Desktop">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the desktop.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the desktop.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.GradientActiveCaption">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the lightest color in the color gradient of an active window's title bar.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the lightest color in the color gradient of an active window's title bar.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.GradientInactiveCaption">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the lightest color in the color gradient of an inactive window's title bar.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the lightest color in the color gradient of an inactive window's title bar.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.GrayText">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of dimmed text.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of dimmed text.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.Highlight">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the background of selected items.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the background of selected items.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.HighlightText">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the text of selected items.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the text of selected items.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.HotTrack">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color used to designate a hot-tracked item.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color used to designate a hot-tracked item.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.InactiveBorder">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of an inactive window's border.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of an inactive window's border.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.InactiveCaption">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the background of an inactive window's title bar.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the background of an inactive window's title bar.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.InactiveCaptionText">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the text in an inactive window's title bar.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the text in an inactive window's title bar.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.Info">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the background of a ToolTip.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the background of a ToolTip.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.InfoText">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the text of a ToolTip.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the text of a ToolTip.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.Menu">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of a menu's background.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of a menu's background.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.MenuBar">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the background of a menu bar.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the background of a menu bar.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.MenuHighlight">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color used to highlight menu items when the menu appears as a flat menu.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color used to highlight menu items when the menu appears as a flat menu.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.MenuText">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of a menu's text.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of a menu's text.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.ScrollBar">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the background of a scroll bar.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the background of a scroll bar.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.Window">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the background in the client area of a window.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the background in the client area of a window.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.WindowFrame">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of a window frame.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of a window frame.</returns>
+    </member>
+    <member name="P:System.Drawing.SystemColors.WindowText">
+      <summary>Gets a <see cref="T:System.Drawing.Color" /> structure that is the color of the text in the client area of a window.</summary>
+      <returns>A <see cref="T:System.Drawing.Color" /> that is the color of the text in the client area of a window.</returns>
+    </member>
+  </members>
+</doc>

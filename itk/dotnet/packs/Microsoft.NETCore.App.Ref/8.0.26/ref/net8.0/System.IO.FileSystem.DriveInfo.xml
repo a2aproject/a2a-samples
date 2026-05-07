@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.IO.FileSystem.DriveInfo</name>
+  </assembly>
+  <members>
+    <member name="T:System.IO.DriveInfo">
+      <summary>Provides access to information on a drive.</summary>
+    </member>
+    <member name="M:System.IO.DriveInfo.#ctor(System.String)">
+      <summary>Creates a new instance of the <see cref="T:System.IO.DriveInfo" /> class.</summary>
+      <param name="driveName">A valid drive letter or fully qualified path.</param>
+      <exception cref="T:System.ArgumentNullException">The drive letter cannot be <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="driveName" /> does not refer to a valid drive.</exception>
+    </member>
+    <member name="M:System.IO.DriveInfo.GetDrives">
+      <summary>Retrieves the drive names of all logical drives on a computer.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error occurred (for example, a disk error or a drive was not ready).</exception>
+      <exception cref="T:System.UnauthorizedAccessException">The caller does not have the required permission.</exception>
+      <returns>An array of type <see cref="T:System.IO.DriveInfo" /> that represents the logical drives on a computer.</returns>
+    </member>
+    <member name="M:System.IO.DriveInfo.System#Runtime#Serialization#ISerializable#GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> object with the data needed to serialize the target object.</summary>
+      <param name="info">The object to populate with data.</param>
+      <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+    </member>
+    <member name="M:System.IO.DriveInfo.ToString">
+      <summary>Returns a drive name as a string.</summary>
+      <returns>The name of the drive.</returns>
+    </member>
+    <member name="P:System.IO.DriveInfo.AvailableFreeSpace">
+      <summary>Indicates the amount of available free space on a drive, in bytes.</summary>
+      <exception cref="T:System.UnauthorizedAccessException">Access to the drive information is denied.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred (for example, a disk error or a drive was not ready).</exception>
+      <returns>The amount of free space available on the drive, in bytes.</returns>
+    </member>
+    <member name="P:System.IO.DriveInfo.DriveFormat">
+      <summary>Gets the name of the file system, such as NTFS or FAT32.</summary>
+      <exception cref="T:System.UnauthorizedAccessException">Access to the drive information is denied.</exception>
+      <exception cref="T:System.IO.DriveNotFoundException">The drive does not exist or is not mapped.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred (for example, a disk error or a drive was not ready).</exception>
+      <returns>The name of the file system on the specified drive.</returns>
+    </member>
+    <member name="P:System.IO.DriveInfo.DriveType">
+      <summary>Gets the drive type, such as CD-ROM, removable, network, or fixed.</summary>
+      <returns>One of the enumeration values that specifies a drive type.</returns>
+    </member>
+    <member name="P:System.IO.DriveInfo.IsReady">
+      <summary>Gets a value that indicates whether a drive is ready.</summary>
+      <returns>
+        <see langword="true" /> if the drive is ready; <see langword="false" /> if the drive is not ready.</returns>
+    </member>
+    <member name="P:System.IO.DriveInfo.Name">
+      <summary>Gets the name of a drive, such as C:\.</summary>
+      <returns>The name of the drive.</returns>
+    </member>
+    <member name="P:System.IO.DriveInfo.RootDirectory">
+      <summary>Gets the root directory of a drive.</summary>
+      <returns>An object that contains the root directory of the drive.</returns>
+    </member>
+    <member name="P:System.IO.DriveInfo.TotalFreeSpace">
+      <summary>Gets the total amount of free space available on a drive, in bytes.</summary>
+      <exception cref="T:System.UnauthorizedAccessException">Access to the drive information is denied.</exception>
+      <exception cref="T:System.IO.DriveNotFoundException">The drive is not mapped or does not exist.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred (for example, a disk error or a drive was not ready).</exception>
+      <returns>The total free space available on a drive, in bytes.</returns>
+    </member>
+    <member name="P:System.IO.DriveInfo.TotalSize">
+      <summary>Gets the total size of storage space on a drive, in bytes.</summary>
+      <exception cref="T:System.UnauthorizedAccessException">Access to the drive information is denied.</exception>
+      <exception cref="T:System.IO.DriveNotFoundException">The drive is not mapped or does not exist.</exception>
+      <exception cref="T:System.IO.IOException">An I/O error occurred (for example, a disk error or a drive was not ready).</exception>
+      <returns>The total size of the drive, in bytes.</returns>
+    </member>
+    <member name="P:System.IO.DriveInfo.VolumeLabel">
+      <summary>Gets or sets the volume label of a drive.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error occurred (for example, a disk error or a drive was not ready).</exception>
+      <exception cref="T:System.IO.DriveNotFoundException">The drive is not mapped or does not exist.</exception>
+      <exception cref="T:System.Security.SecurityException">The caller does not have the required permission.</exception>
+      <exception cref="T:System.UnauthorizedAccessException">The volume label is being set on a network or CD-ROM drive.  
+  
+ -or-  
+  
+ Access to the drive information is denied.</exception>
+      <returns>The volume label.</returns>
+    </member>
+    <member name="T:System.IO.DriveNotFoundException">
+      <summary>The exception that is thrown when trying to access a drive or share that is not available.</summary>
+    </member>
+    <member name="M:System.IO.DriveNotFoundException.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.IO.DriveNotFoundException" /> class with its message string set to a system-supplied message and its HRESULT set to COR_E_DIRECTORYNOTFOUND.</summary>
+    </member>
+    <member name="M:System.IO.DriveNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>Initializes a new instance of the <see cref="T:System.IO.DriveNotFoundException" /> class with the specified serialization and context information.</summary>
+      <param name="info">A <see cref="T:System.Runtime.Serialization.SerializationInfo" /> object that contains the serialized object data about the exception being thrown.</param>
+      <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext" /> object that contains contextual information about the source or destination of the exception being thrown.</param>
+    </member>
+    <member name="M:System.IO.DriveNotFoundException.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.IO.DriveNotFoundException" /> class with the specified message string and the HRESULT set to COR_E_DIRECTORYNOTFOUND.</summary>
+      <param name="message">A <see cref="T:System.String" /> object that describes the error. The caller of this constructor is required to ensure that this string has been localized for the current system culture.</param>
+    </member>
+    <member name="M:System.IO.DriveNotFoundException.#ctor(System.String,System.Exception)">
+      <summary>Initializes a new instance of the <see cref="T:System.IO.DriveNotFoundException" /> class with the specified error message and a reference to the inner exception that is the cause of this exception.</summary>
+      <param name="message">The error message that explains the reason for the exception.</param>
+      <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException" /> parameter is not <see langword="null" />, the current exception is raised in a <see langword="catch" /> block that handles the inner exception.</param>
+    </member>
+    <member name="T:System.IO.DriveType">
+      <summary>Defines constants for drive types, including CDRom, Fixed, Network, NoRootDirectory, Ram, Removable, and Unknown.</summary>
+    </member>
+    <member name="F:System.IO.DriveType.CDRom">
+      <summary>The drive is an optical disc device, such as a CD or DVD-ROM.</summary>
+    </member>
+    <member name="F:System.IO.DriveType.Fixed">
+      <summary>The drive is a fixed disk.</summary>
+    </member>
+    <member name="F:System.IO.DriveType.Network">
+      <summary>The drive is a network drive.</summary>
+    </member>
+    <member name="F:System.IO.DriveType.NoRootDirectory">
+      <summary>The drive does not have a root directory.</summary>
+    </member>
+    <member name="F:System.IO.DriveType.Ram">
+      <summary>The drive is a RAM disk.</summary>
+    </member>
+    <member name="F:System.IO.DriveType.Removable">
+      <summary>The drive is a removable storage device, such as a USB flash drive.</summary>
+    </member>
+    <member name="F:System.IO.DriveType.Unknown">
+      <summary>The type of drive is unknown.</summary>
+    </member>
+  </members>
+</doc>

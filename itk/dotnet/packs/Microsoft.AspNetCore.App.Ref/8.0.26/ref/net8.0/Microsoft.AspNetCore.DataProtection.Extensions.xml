@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.DataProtection.Extensions</name>
+    </assembly>
+    <members>
+        <member name="M:Microsoft.AspNetCore.DataProtection.BitHelpers.ReadUInt64(System.Byte[],System.Int32)">
+            <summary>
+            Reads an unsigned 64-bit integer from <paramref name="buffer"/>
+            starting at offset <paramref name="offset"/>. Data is read big-endian.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.BitHelpers.WriteUInt64(System.Byte[],System.Int32,System.UInt64)">
+            <summary>
+            Writes an unsigned 64-bit integer to <paramref name="buffer"/> starting at
+            offset <paramref name="offset"/>. Data is written big-endian.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.DataProtectionAdvancedExtensions">
+            <summary>
+            Helpful extension methods for data protection APIs.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionAdvancedExtensions.Protect(Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector,System.Byte[],System.TimeSpan)">
+            <summary>
+            Cryptographically protects a piece of plaintext data, expiring the data after
+            the specified amount of time has elapsed.
+            </summary>
+            <param name="protector">The protector to use.</param>
+            <param name="plaintext">The plaintext data to protect.</param>
+            <param name="lifetime">The amount of time after which the payload should no longer be unprotectable.</param>
+            <returns>The protected form of the plaintext data.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionAdvancedExtensions.Protect(Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector,System.String,System.DateTimeOffset)">
+            <summary>
+            Cryptographically protects a piece of plaintext data, expiring the data at
+            the chosen time.
+            </summary>
+            <param name="protector">The protector to use.</param>
+            <param name="plaintext">The plaintext data to protect.</param>
+            <param name="expiration">The time when this payload should expire.</param>
+            <returns>The protected form of the plaintext data.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionAdvancedExtensions.Protect(Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector,System.String,System.TimeSpan)">
+            <summary>
+            Cryptographically protects a piece of plaintext data, expiring the data after
+            the specified amount of time has elapsed.
+            </summary>
+            <param name="protector">The protector to use.</param>
+            <param name="plaintext">The plaintext data to protect.</param>
+            <param name="lifetime">The amount of time after which the payload should no longer be unprotectable.</param>
+            <returns>The protected form of the plaintext data.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionAdvancedExtensions.ToTimeLimitedDataProtector(Microsoft.AspNetCore.DataProtection.IDataProtector)">
+            <summary>
+            Converts an <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> into an <see cref="T:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector"/>
+            so that payloads can be protected with a finite lifetime.
+            </summary>
+            <param name="protector">The <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> to convert to a time-limited protector.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionAdvancedExtensions.Unprotect(Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector,System.String,System.DateTimeOffset@)">
+            <summary>
+            Cryptographically unprotects a piece of protected data.
+            </summary>
+            <param name="protector">The protector to use.</param>
+            <param name="protectedData">The protected data to unprotect.</param>
+            <param name="expiration">An 'out' parameter which upon a successful unprotect
+            operation receives the expiration date of the payload.</param>
+            <returns>The plaintext form of the protected data.</returns>
+            <exception cref="T:System.Security.Cryptography.CryptographicException">
+            Thrown if <paramref name="protectedData"/> is invalid, malformed, or expired.
+            </exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.DataProtectionProvider">
+            <summary>
+            Contains factory methods for creating an <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionProvider"/> where keys are stored
+            at a particular location on the file system.
+            </summary>
+            <remarks>Use these methods when not using dependency injection to provide the service to the application.</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionProvider.Create(System.String)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.DataProtection.DataProtectionProvider"/> that store keys in a location based on
+            the platform and operating system.
+            </summary>
+            <param name="applicationName">An identifier that uniquely discriminates this application from all other
+            applications on the machine.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionProvider.Create(System.IO.DirectoryInfo)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.DataProtectionProvider"/> given a location at which to store keys.
+            </summary>
+            <param name="keyDirectory">The <see cref="T:System.IO.DirectoryInfo"/> in which keys should be stored. This may
+            represent a directory on a local disk or a UNC share.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionProvider.Create(System.IO.DirectoryInfo,System.Action{Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder})">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.DataProtectionProvider"/> given a location at which to store keys and an
+            optional configuration callback.
+            </summary>
+            <param name="keyDirectory">The <see cref="T:System.IO.DirectoryInfo"/> in which keys should be stored. This may
+            represent a directory on a local disk or a UNC share.</param>
+            <param name="setupAction">An optional callback which provides further configuration of the data protection
+            system. See <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/> for more information.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionProvider.Create(System.String,System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Creates a <see cref="T:Microsoft.AspNetCore.DataProtection.DataProtectionProvider"/> that store keys in a location based on
+            the platform and operating system and uses the given <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> to encrypt the keys.
+            </summary>
+            <param name="applicationName">An identifier that uniquely discriminates this application from all other
+            applications on the machine.</param>
+            <param name="certificate">The <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> to be used for encryption.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionProvider.Create(System.IO.DirectoryInfo,System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.DataProtectionProvider"/> given a location at which to store keys
+            and a <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> used to encrypt the keys.
+            </summary>
+            <param name="keyDirectory">The <see cref="T:System.IO.DirectoryInfo"/> in which keys should be stored. This may
+            represent a directory on a local disk or a UNC share.</param>
+            <param name="certificate">The <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> to be used for encryption.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.DataProtectionProvider.Create(System.IO.DirectoryInfo,System.Action{Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder},System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.DataProtectionProvider"/> given a location at which to store keys, an
+            optional configuration callback and a <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> used to encrypt the keys.
+            </summary>
+            <param name="keyDirectory">The <see cref="T:System.IO.DirectoryInfo"/> in which keys should be stored. This may
+            represent a directory on a local disk or a UNC share.</param>
+            <param name="setupAction">An optional callback which provides further configuration of the data protection
+            system. See <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder"/> for more information.</param>
+            <param name="certificate">The <see cref="T:System.Security.Cryptography.X509Certificates.X509Certificate2"/> to be used for encryption.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector">
+            <summary>
+            An interface that can provide data protection services where payloads have
+            a finite lifetime.
+            </summary>
+            <remarks>
+            It is intended that payload lifetimes be somewhat short. Payloads protected
+            via this mechanism are not intended for long-term persistence (e.g., longer
+            than a few weeks).
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector.CreateProtector(System.String)">
+            <summary>
+            Creates an <see cref="T:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector"/> given a purpose.
+            </summary>
+            <param name="purpose">
+            The purpose to be assigned to the newly-created <see cref="T:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector"/>.
+            </param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector"/> tied to the provided purpose.</returns>
+            <remarks>
+            The <paramref name="purpose"/> parameter must be unique for the intended use case; two
+            different <see cref="T:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector"/> instances created with two different <paramref name="purpose"/>
+            values will not be able to decipher each other's payloads. The <paramref name="purpose"/> parameter
+            value is not intended to be kept secret.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector.Protect(System.Byte[],System.DateTimeOffset)">
+            <summary>
+            Cryptographically protects a piece of plaintext data, expiring the data at
+            the chosen time.
+            </summary>
+            <param name="plaintext">The plaintext data to protect.</param>
+            <param name="expiration">The time when this payload should expire.</param>
+            <returns>The protected form of the plaintext data.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.ITimeLimitedDataProtector.Unprotect(System.Byte[],System.DateTimeOffset@)">
+            <summary>
+            Cryptographically unprotects a piece of protected data.
+            </summary>
+            <param name="protectedData">The protected data to unprotect.</param>
+            <param name="expiration">An 'out' parameter which upon a successful unprotect
+            operation receives the expiration date of the payload.</param>
+            <returns>The plaintext form of the protected data.</returns>
+            <exception cref="T:System.Security.Cryptography.CryptographicException">
+            Thrown if <paramref name="protectedData"/> is invalid, malformed, or expired.
+            </exception>
+        </member>
+        <member name="T:Microsoft.AspNetCore.DataProtection.TimeLimitedDataProtector">
+            <summary>
+            Wraps an existing <see cref="T:Microsoft.AspNetCore.DataProtection.IDataProtector"/> and appends a purpose that allows
+            protecting data with a finite lifetime.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.ExceptionExtensions.RequiresHomogenization(System.Exception)">
+            <summary>
+            Determines whether an exception must be homogenized by being wrapped inside a
+            CryptographicException before being rethrown.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Extensions.Resources.CryptCommon_GenericError">
+            <summary>An error occurred during a cryptographic operation. Refer to the inner exception for more information.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Extensions.Resources.TimeLimitedDataProtector_PayloadExpired">
+            <summary>The payload expired at {0}.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.DataProtection.Extensions.Resources.FormatTimeLimitedDataProtector_PayloadExpired(System.Object)">
+            <summary>The payload expired at {0}.</summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.DataProtection.Extensions.Resources.TimeLimitedDataProtector_PayloadInvalid">
+            <summary>The payload is invalid. For more information go to https://aka.ms/aspnet/dataprotectionwarning</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null or an <see cref="T:System.ArgumentException"/> if it is empty.</summary>
+            <param name="argument">The reference type argument to validate as neither null nor empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Shared.ArgumentNullThrowHelper.ThrowIfNullOrEmpty(System.String,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentException"/> if <paramref name="argument"/> is null or empty.</summary>
+            <param name="argument">The <see cref="T:System.String"/> argument to validate as non-null and non-empty.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+    </members>
+</doc>

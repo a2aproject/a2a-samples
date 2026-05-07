@@ -1,0 +1,762 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.AspNetCore.Hosting</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.AspNetCore.Hosting.Builder.ApplicationBuilderFactory">
+            <summary>
+            A factory for creating <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" /> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.Builder.ApplicationBuilderFactory.#ctor(System.IServiceProvider)">
+            <summary>
+            Initialize a new factory instance with an <see cref="T:System.IServiceProvider" />.
+            </summary>
+            <param name="serviceProvider">The <see cref="T:System.IServiceProvider"/> used to resolve dependencies and initialize components.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.Builder.ApplicationBuilderFactory.CreateBuilder(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Create an <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" /> builder given a <paramref name="serverFeatures" />.
+            </summary>
+            <param name="serverFeatures">An <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> of HTTP features.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> configured with <paramref name="serverFeatures"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.Builder.IApplicationBuilderFactory">
+            <summary>
+            Provides an interface for implementing a factory that produces <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.Builder.IApplicationBuilderFactory.CreateBuilder(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Create an <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder" /> builder given a <paramref name="serverFeatures" />
+            </summary>
+            <param name="serverFeatures">An <see cref="T:Microsoft.AspNetCore.Http.Features.IFeatureCollection"/> of HTTP features.</param>
+            <returns>An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> configured with <paramref name="serverFeatures"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.Infrastructure.ISupportsConfigureWebHost">
+            <summary>
+            An interface implemented by IWebHostBuilders that handle <see cref="M:Microsoft.Extensions.Hosting.GenericHostWebHostBuilderExtensions.ConfigureWebHost(Microsoft.Extensions.Hosting.IHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.IWebHostBuilder})"/>
+            directly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.Infrastructure.ISupportsConfigureWebHost.ConfigureWebHost(System.Action{Microsoft.AspNetCore.Hosting.IWebHostBuilder},System.Action{Microsoft.Extensions.Hosting.WebHostBuilderOptions})">
+            <summary>
+            Adds and configures an ASP.NET Core web application.
+            </summary>
+            <param name="configure">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</param>
+            <param name="configureOptions">The delegate that configures the <see cref="T:Microsoft.Extensions.Hosting.WebHostBuilderOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.Infrastructure.ISupportsStartup">
+            <summary>
+            An interface implemented by IWebHostBuilders that handle <see cref="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.Configure(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})"/>,
+            <see cref="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.UseStartup(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Type)"/> and <see cref="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.UseStartup``1(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Func{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,``0})"/>
+            directly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.Infrastructure.ISupportsStartup.Configure(System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})">
+            <summary>
+            Specify the startup method to be used to configure the web application.
+            </summary>
+            <param name="configure">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.Infrastructure.ISupportsStartup.Configure(System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.AspNetCore.Builder.IApplicationBuilder})">
+            <summary>
+            Specify the startup method to be used to configure the web application.
+            </summary>
+            <param name="configure">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.Infrastructure.ISupportsStartup.UseStartup(System.Type)">
+            <summary>
+            Specify the startup type to be used by the web host.
+            </summary>
+            <param name="startupType">The <see cref="T:System.Type"/> to be used.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.Infrastructure.ISupportsStartup.UseStartup``1(System.Func{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,``0})">
+            <summary>
+            Specify a factory that creates the startup instance to be used by the web host.
+            </summary>
+            <param name="startupFactory">A delegate that specifies a factory for the startup class.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+            <remarks>When in a trimmed app, all public methods of <typeparamref name="TStartup"/> are preserved. This should match the Startup type directly (and not a base type).</remarks>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.ApplicationLifetime">
+            <summary>
+            Allows consumers to perform cleanup during a graceful shutdown.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Hosting.ApplicationLifetime.ApplicationStarted">
+            <summary>
+            Triggered when the application host has fully started and is about to wait
+            for a graceful shutdown.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Hosting.ApplicationLifetime.ApplicationStopping">
+            <summary>
+            Triggered when the application host is performing a graceful shutdown.
+            Request may still be in flight. Shutdown will block until this event completes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Hosting.ApplicationLifetime.ApplicationStopped">
+            <summary>
+            Triggered when the application host is performing a graceful shutdown.
+            All requests should be complete at this point. Shutdown will block
+            until this event completes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.ApplicationLifetime.StopApplication">
+            <summary>
+            Signals the ApplicationStopping event and blocks until it completes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.ApplicationLifetime.NotifyStarted">
+            <summary>
+            Signals the ApplicationStarted event and blocks until it completes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.ApplicationLifetime.NotifyStopped">
+            <summary>
+            Signals the ApplicationStopped event and blocks until it completes.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.HttpActivityFeature">
+            <summary>
+            Default implementation for <see cref="T:Microsoft.AspNetCore.Http.Features.IHttpActivityFeature"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Hosting.HttpActivityFeature.Activity">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.Server.Features.ServerAddressesFeature">
+            <summary>
+            Specifies the address used by the server.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Hosting.Server.Features.ServerAddressesFeature.Addresses">
+            <inheritdoc />
+        </member>
+        <member name="P:Microsoft.AspNetCore.Hosting.Server.Features.ServerAddressesFeature.PreferHostingUrls">
+            <inheritdoc />
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.DelegateStartup">
+            <summary>
+            Used for initializing services and middlewares used by an application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.DelegateStartup.#ctor(Microsoft.Extensions.DependencyInjection.IServiceProviderFactory{Microsoft.Extensions.DependencyInjection.IServiceCollection},System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})">
+            <summary>
+            Creates a new <see cref="T:Microsoft.AspNetCore.Hosting.DelegateStartup" /> instance.
+            </summary>
+            <param name="factory">A factory for creating <see cref="T:System.IServiceProvider"/> instances.</param>
+            <param name="configureApp">An <see cref="T:System.Action"/> for configuring the application.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.DelegateStartup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Configures the <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> with the initialized <see cref="T:System.Action"/>.
+            </summary>
+            <param name="app">The <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.StartupBase">
+            <summary>
+            Base class for initializing services and middlewares used by an application.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.StartupBase.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Configures the application.
+            </summary>
+            <param name="app">An <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/> for the app to configure.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.StartupBase.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Register services into the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.StartupBase.CreateServiceProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Creates an <see cref="T:System.IServiceProvider" /> instance for a given <see cref="M:Microsoft.AspNetCore.Hosting.StartupBase.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <returns>The <see cref="T:System.IServiceProvider"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.StartupBase`1">
+            <summary>
+            Base class for initializing services and middlewares used for configuring a <typeparamref name="TBuilder"/>.
+            </summary>
+            <typeparam name="TBuilder">The type of builder associated with the startup configuration.</typeparam>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.StartupBase`1.#ctor(Microsoft.Extensions.DependencyInjection.IServiceProviderFactory{`0})">
+            <summary>
+            Constructor for StartupBase class.
+            </summary>
+            <param name="factory">A factory used to generate <see cref="T:System.IServiceProvider"/> instances.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.StartupBase`1.CreateServiceProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Creates an <see cref="T:System.IServiceProvider" /> instance for a given <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <returns>The <see cref="T:System.IServiceProvider"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.StartupBase`1.ConfigureContainer(`0)">
+            <summary>
+            Sets up the service container.
+            </summary>
+            <param name="builder">The builder associated with the container to configure.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.StaticWebAssets.StaticWebAssetsLoader">
+            <summary>
+            Loader for static web assets
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.StaticWebAssets.StaticWebAssetsLoader.UseStaticWebAssets(Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Configure the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/> to use static web assets.
+            </summary>
+            <param name="environment">The application <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostEnvironment"/>.</param>
+            <param name="configuration">The host <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/>.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.WebHostBuilder">
+            <summary>
+            A builder for <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilder"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilder.GetSetting(System.String)">
+            <summary>
+            Get the setting value from the configuration.
+            </summary>
+            <param name="key">The key of the setting to look up.</param>
+            <returns>The value the setting currently contains.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilder.UseSetting(System.String,System.String)">
+            <summary>
+            Add or replace a setting in the configuration.
+            </summary>
+            <param name="key">The key of the setting to add or replace.</param>
+            <param name="value">The value of the setting to add or replace.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilder.ConfigureServices(System.Action{Microsoft.Extensions.DependencyInjection.IServiceCollection})">
+            <summary>
+            Adds a delegate for configuring additional services for the host or web application. This may be called
+            multiple times.
+            </summary>
+            <param name="configureServices">A delegate for configuring the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilder.ConfigureServices(System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.Extensions.DependencyInjection.IServiceCollection})">
+            <summary>
+            Adds a delegate for configuring additional services for the host or web application. This may be called
+            multiple times.
+            </summary>
+            <param name="configureServices">A delegate for configuring the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilder.ConfigureAppConfiguration(System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.Extensions.Configuration.IConfigurationBuilder})">
+            <summary>
+            Adds a delegate for configuring the <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> that will construct an <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/>.
+            </summary>
+            <param name="configureDelegate">The delegate for configuring the <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder" /> that will be used to construct an <see cref="T:Microsoft.Extensions.Configuration.IConfiguration" />.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+            <remarks>
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> and <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> on the <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilderContext"/> are uninitialized at this stage.
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> is pre-populated with the settings of the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilder.Build">
+            <summary>
+            Builds the required services and an <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> which hosts a web application.
+            </summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions">
+            <summary>
+            Contains extensions for configuring an <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder" />.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.Configure(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})">
+            <summary>
+            Specify the startup method to be used to configure the web application.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <param name="configureApp">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.Configure(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.AspNetCore.Builder.IApplicationBuilder})">
+            <summary>
+            Specify the startup method to be used to configure the web application.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <param name="configureApp">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Builder.IApplicationBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.UseStartup``1(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Func{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,``0})">
+            <summary>
+            Specify a factory that creates the startup instance to be used by the web host.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <param name="startupFactory">A delegate that specifies a factory for the startup class.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+            <remarks>When in a trimmed app, all public methods of <typeparamref name="TStartup"/> are preserved. This should match the Startup type directly (and not a base type).</remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.UseStartup(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Type)">
+            <summary>
+            Specify the startup type to be used by the web host.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <param name="startupType">The <see cref="T:System.Type"/> to be used.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.UseStartup``1(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Specify the startup type to be used by the web host.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <typeparam name ="TStartup">The type containing the startup methods for the application.</typeparam>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.UseDefaultServiceProvider(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.Extensions.DependencyInjection.ServiceProviderOptions})">
+            <summary>
+            Configures the default service provider
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <param name="configure">A callback used to configure the <see cref="T:Microsoft.Extensions.DependencyInjection.ServiceProviderOptions"/> for the default <see cref="T:System.IServiceProvider"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.UseDefaultServiceProvider(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.Extensions.DependencyInjection.ServiceProviderOptions})">
+            <summary>
+            Configures the default service provider
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <param name="configure">A callback used to configure the <see cref="T:Microsoft.Extensions.DependencyInjection.ServiceProviderOptions"/> for the default <see cref="T:System.IServiceProvider"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.ConfigureAppConfiguration(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.Extensions.Configuration.IConfigurationBuilder})">
+            <summary>
+            Adds a delegate for configuring the <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> that will construct an <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/>.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to configure.</param>
+            <param name="configureDelegate">The delegate for configuring the <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder" /> that will be used to construct an <see cref="T:Microsoft.Extensions.Configuration.IConfiguration" />.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+            <remarks>
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> and <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> on the <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilderContext"/> are uninitialized at this stage.
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfigurationBuilder"/> is pre-populated with the settings of the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.ConfigureLogging(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.Extensions.Logging.ILoggingBuilder})">
+            <summary>
+            Adds a delegate for configuring the provided <see cref="T:Microsoft.Extensions.Logging.ILoggingBuilder"/>. This may be called multiple times.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder" /> to configure.</param>
+            <param name="configureLogging">The delegate that configures the <see cref="T:Microsoft.Extensions.Logging.ILoggingBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.ConfigureLogging(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.WebHostBuilderContext,Microsoft.Extensions.Logging.ILoggingBuilder})">
+            <summary>
+            Adds a delegate for configuring the provided <see cref="T:Microsoft.Extensions.Logging.LoggerFactory"/>. This may be called multiple times.
+            </summary>
+            <param name="hostBuilder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder" /> to configure.</param>
+            <param name="configureLogging">The delegate that configures the <see cref="T:Microsoft.Extensions.Logging.LoggerFactory"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostBuilderExtensions.UseStaticWebAssets(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Configures the <see cref="P:Microsoft.AspNetCore.Hosting.IWebHostEnvironment.WebRootFileProvider"/> to use static web assets
+            defined by referenced projects and packages.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.WebHostExtensions">
+            <summary>
+            Contains extensions for managing the lifecycle of an <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostExtensions.StopAsync(Microsoft.AspNetCore.Hosting.IWebHost,System.TimeSpan)">
+            <summary>
+            Attempts to gracefully stop the host with the given timeout.
+            </summary>
+            <param name="host"></param>
+            <param name="timeout">The timeout for stopping gracefully. Once expired the
+            server may terminate any remaining active connections.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that completes when the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> stops.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostExtensions.WaitForShutdown(Microsoft.AspNetCore.Hosting.IWebHost)">
+            <summary>
+            Block the calling thread until shutdown is triggered via Ctrl+C or SIGTERM.
+            </summary>
+            <param name="host">The running <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/>.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostExtensions.WaitForShutdownAsync(Microsoft.AspNetCore.Hosting.IWebHost,System.Threading.CancellationToken)">
+            <summary>
+            Returns a Task that completes when shutdown is triggered via the given token, Ctrl+C or SIGTERM.
+            </summary>
+            <param name="host">The running <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/>.</param>
+            <param name="token">The token to trigger shutdown.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> that completes when shutdown is triggered via Ctrl+C or SIGTERM.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostExtensions.Run(Microsoft.AspNetCore.Hosting.IWebHost)">
+            <summary>
+            Runs a web application and block the calling thread until host shutdown.
+            </summary>
+            <param name="host">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> to run.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Hosting.WebHostExtensions.RunAsync(Microsoft.AspNetCore.Hosting.IWebHost,System.Threading.CancellationToken)">
+            <summary>
+            Runs a web application and returns a Task that only completes when the token is triggered or shutdown is triggered.
+            </summary>
+            <param name="host">The <see cref="T:Microsoft.AspNetCore.Hosting.IWebHost"/> to run.</param>
+            <param name="token">The token to trigger shutdown.</param>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Hosting.Views.ErrorPageModel">
+            <summary>
+            Holds data to be displayed on the error page.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Hosting.Views.ErrorPageModel.ErrorDetails">
+            <summary>
+            Detailed information about each exception in the stack.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.Hosting.Resources.WebHostBuilder_SingleInstance">
+            <summary>WebHostBuilder allows creation only of a single instance of WebHost</summary>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Http.DefaultHttpContextFactory">
+            <summary>
+            A factory for creating <see cref="T:Microsoft.AspNetCore.Http.HttpContext" /> instances.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.DefaultHttpContextFactory.#ctor(System.IServiceProvider)">
+            <summary>
+            Creates a factory for creating <see cref="T:Microsoft.AspNetCore.Http.HttpContext" /> instances.
+            </summary>
+            <param name="serviceProvider">The <see cref="T:System.IServiceProvider"/> to be used when retrieving services.</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.DefaultHttpContextFactory.Create(Microsoft.AspNetCore.Http.Features.IFeatureCollection)">
+            <summary>
+            Create an <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> instance given an <paramref name="featureCollection" />.
+            </summary>
+            <param name="featureCollection"></param>
+            <returns>An initialized <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> object.</returns>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Http.DefaultHttpContextFactory.Dispose(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Clears the current <see cref="T:Microsoft.AspNetCore.Http.HttpContext" />.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.StaticWebAssetManifest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.StaticWebAssetMatch">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.StaticWebAssetNode">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.StaticWebAssetPattern">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.StaticWebAssetPatternArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.DictionaryStringStaticWebAssetNode">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.IDictionaryStringStaticWebAssetNode">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.Int32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.StringArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.AspNetCore.StaticWebAssets.ManifestStaticWebAssetFileProvider.SourceGenerationContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.Extensions.Hosting.GenericHostWebHostBuilderExtensions">
+            <summary>
+            Contains extensions for an <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.GenericHostWebHostBuilderExtensions.ConfigureWebHost(Microsoft.Extensions.Hosting.IHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.IWebHostBuilder})">
+            <summary>
+            Adds and configures an ASP.NET Core web application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/> to add the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to.</param>
+            <param name="configure">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.GenericHostWebHostBuilderExtensions.ConfigureWebHost(Microsoft.Extensions.Hosting.IHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.IWebHostBuilder},System.Action{Microsoft.Extensions.Hosting.WebHostBuilderOptions})">
+            <summary>
+            Adds and configures an ASP.NET Core web application.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/> to add the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to.</param>
+            <param name="configure">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</param>
+            <param name="configureWebHostBuilder">The delegate that configures the <see cref="T:Microsoft.Extensions.Hosting.WebHostBuilderOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Hosting.GenericHostWebHostBuilderExtensions.ConfigureSlimWebHost(Microsoft.Extensions.Hosting.IHostBuilder,System.Action{Microsoft.AspNetCore.Hosting.IWebHostBuilder},System.Action{Microsoft.Extensions.Hosting.WebHostBuilderOptions})">
+            <summary>
+            Adds and configures an ASP.NET Core web application with minimal dependencies.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/> to add the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/> to.</param>
+            <param name="configure">The delegate that configures the <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder"/>.</param>
+            <param name="configureWebHostBuilder">The delegate that configures the <see cref="T:Microsoft.Extensions.Hosting.WebHostBuilderOptions"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Hosting.IHostBuilder"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Hosting.WebHostBuilderOptions">
+            <summary>
+            Builder options for use with ConfigureWebHost.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.Hosting.WebHostBuilderOptions.SuppressEnvironmentConfiguration">
+            <summary>
+            Indicates if "ASPNETCORE_" prefixed environment variables should be added to configuration.
+            They are added by default.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.RazorViews.BaseView">
+            <summary>
+            Infrastructure
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Context">
+            <summary>
+            The request context
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Request">
+            <summary>
+            The request
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Response">
+            <summary>
+            The response
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.Output">
+            <summary>
+            The output stream
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.HtmlEncoder">
+            <summary>
+            Html encoder used to encode content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.UrlEncoder">
+            <summary>
+            Url encoder used to encode content.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.RazorViews.BaseView.JavaScriptEncoder">
+            <summary>
+            JavaScript encoder used to encode content.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync(System.IO.Stream)">
+            <summary>
+            Execute an individual request
+            </summary>
+            <param name="stream">The stream to write to</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Execute an individual request
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync">
+            <summary>
+            Execute an individual request
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.WriteLiteral(System.Object)">
+            <summary>
+            Write the given value without HTML encoding directly to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.WriteLiteral(System.String)">
+            <summary>
+            Write the given value without HTML encoding directly to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.WriteAttribute(System.String,System.String,System.String,Microsoft.Extensions.RazorViews.AttributeValue[])">
+            <summary>
+            Writes the given attribute to the given writer
+            </summary>
+            <param name="name">The name of the attribute to write</param>
+            <param name="leader">The value of the prefix</param>
+            <param name="trailer">The value of the suffix</param>
+            <param name="values">The <see cref="T:Microsoft.Extensions.RazorViews.AttributeValue"/>s to write.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.Write(Microsoft.Extensions.RazorViews.HelperResult)">
+            <summary>
+            <see cref="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)"/> is invoked
+            </summary>
+            <param name="result">The <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/> to invoke</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.Write(System.Object)">
+            <summary>
+            Writes the specified <paramref name="value"/> to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.Object"/> to write.</param>
+            <remarks>
+            <see cref="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)"/> is invoked for <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/> types.
+            For all other types, the encoded result of <see cref="M:System.Object.ToString"/> is written to
+            <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.BaseView.Write(System.String)">
+            <summary>
+            Writes the specified <paramref name="value"/> with HTML encoding to <see cref="P:Microsoft.Extensions.RazorViews.BaseView.Output"/>.
+            </summary>
+            <param name="value">The <see cref="T:System.String"/> to write.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.RazorViews.HelperResult">
+            <summary>
+            Represents a deferred write operation in a <see cref="T:Microsoft.Extensions.RazorViews.BaseView"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.HelperResult.#ctor(System.Action{System.IO.TextWriter})">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/>.
+            </summary>
+            <param name="action">The delegate to invoke when <see cref="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)"/> is called.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.RazorViews.HelperResult.WriteTo(System.IO.TextWriter)">
+            <summary>
+            Method invoked to produce content from the <see cref="T:Microsoft.Extensions.RazorViews.HelperResult"/>.
+            </summary>
+            <param name="writer">The <see cref="T:System.IO.TextWriter"/> instance to write to.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails">
+            <summary>
+            Contains details for individual exception messages.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails.Error">
+            <summary>
+            An individual exception
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails.StackFrames">
+            <summary>
+            The generated stack frames
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.ExceptionDetails.ErrorMessage">
+            <summary>
+            Gets or sets the summary message.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo">
+            <summary>
+            Contains the source code where the exception occurred.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.Function">
+            <summary>
+            Function containing instruction
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.File">
+            <summary>
+            File containing the instruction
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.Line">
+            <summary>
+            The line number of the instruction
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.PreContextLine">
+            <summary>
+            The line preceding the frame line
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.PreContextCode">
+            <summary>
+            Lines of code before the actual error line(s).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.ContextCode">
+            <summary>
+            Line(s) of code responsible for the error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.PostContextCode">
+            <summary>
+            Lines of code after the actual error line(s).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.StackTrace.Sources.StackFrameSourceCodeInfo.ErrorDetails">
+            <summary>
+            Specific error details for this stack frame.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Internal.TypeNameHelper.GetTypeDisplayName(System.Type,System.Boolean,System.Boolean,System.Boolean,System.Char)">
+            <summary>
+            Pretty print a type name.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/>.</param>
+            <param name="fullName"><c>true</c> to print a fully qualified name.</param>
+            <param name="includeGenericParameterNames"><c>true</c> to include generic parameter names.</param>
+            <param name="includeGenericParameters"><c>true</c> to include generic parameters.</param>
+            <param name="nestedTypeDelimiter">Character to use as a delimiter in nested type names</param>
+            <returns>The pretty printed type name.</returns>
+        </member>
+    </members>
+</doc>

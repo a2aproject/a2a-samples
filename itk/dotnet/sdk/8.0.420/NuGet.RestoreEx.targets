@@ -1,0 +1,61 @@
+<!--
+***********************************************************************************************
+NuGet.RestoreEx.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (c) .NET Foundation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="NuGet.Build.Tasks.RestoreTaskEx" AssemblyFile="$(RestoreTaskAssemblyFile)" />
+  <UsingTask TaskName="NuGet.Build.Tasks.GenerateRestoreGraphFileTask" AssemblyFile="$(RestoreTaskAssemblyFile)" />
+  <Target Name="Restore">
+    <!-- Restore using MSBuild's Static Graph Evaluation -->
+    <RestoreTaskEx
+        CleanupAssetsForUnsupportedProjects="$([MSBuild]::ValueOrDefault('$(RestoreCleanupAssetsForUnsupportedProjects)', 'true'))"
+        DisableParallel="$(RestoreDisableParallel)"
+        Force="$(RestoreForce)"
+        ForceEvaluate="$(RestoreForceEvaluate)"
+        HideWarningsAndErrors="$(HideWarningsAndErrors)"
+        IgnoreFailedSources="$(RestoreIgnoreFailedSources)"
+        Interactive="$([MSBuild]::ValueOrDefault('$(NuGetInteractive)', '$(MSBuildInteractive)'))"
+        MSBuildBinPath="$(MSBuildBinPath)"
+        NoCache="$(RestoreNoCache)"
+        NoHttpCache="$(RestoreNoHttpCache)"
+        ProjectFullPath="$(MSBuildProjectFullPath)"
+        Recursive="$([MSBuild]::ValueOrDefault('$(RestoreRecursive)', 'true'))"
+        RestorePackagesConfig="$(RestorePackagesConfig)"
+        SolutionPath="$(SolutionPath)"
+        ProcessFileName="$(NuGetConsoleProcessFileName)"
+        SerializeGlobalProperties="$(RestoreSerializeGlobalProperties)"
+        MSBuildStartupDirectory="$(MSBuildStartupDirectory)"
+        EmbedFilesInBinlog="$(RestoreEmbedFilesInBinlog)">
+      <Output TaskParameter="EmbedInBinlog" ItemName="EmbedInBinlog" />
+    </RestoreTaskEx>
+  </Target>
+
+ <!--
+    ============================================================
+    GenerateRestoreGraphFile
+    Writes the output the dg spec generation by static graph restore.
+    ============================================================
+  -->
+  <Target Name="GenerateRestoreGraphFile">
+    <Error Condition="$(RestoreGraphOutputPath) == ''" Text="Missing RestoreGraphOutputPath property!" />
+      <GenerateRestoreGraphFileTask
+        MSBuildBinPath="$(MSBuildBinPath)"
+        ProjectFullPath="$(MSBuildProjectFullPath)"
+        Recursive="$([MSBuild]::ValueOrDefault('$(RestoreRecursive)', 'true'))"
+        SolutionPath="$(SolutionPath)"
+        RestoreGraphOutputPath="$(RestoreGraphOutputPath)"
+        ProcessFileName="$(NuGetConsoleProcessFileName)"
+        MSBuildStartupDirectory="$(MSBuildStartupDirectory)"
+        />
+  </Target>
+
+</Project>

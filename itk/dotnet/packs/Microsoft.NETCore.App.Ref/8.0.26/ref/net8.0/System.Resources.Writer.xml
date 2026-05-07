@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>System.Resources.Writer</name>
+  </assembly>
+  <members>
+    <member name="T:System.Resources.IResourceWriter">
+      <summary>Provides the base functionality for writing resources to an output file or stream.</summary>
+    </member>
+    <member name="M:System.Resources.IResourceWriter.AddResource(System.String,System.Byte[])">
+      <summary>Adds an 8-bit unsigned integer array as a named resource to the list of resources to be written.</summary>
+      <param name="name">Name of a resource.</param>
+      <param name="value">Value of a resource as an 8-bit unsigned integer array.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="name" /> parameter is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Resources.IResourceWriter.AddResource(System.String,System.Object)">
+      <summary>Adds a named resource of type <see cref="T:System.Object" /> to the list of resources to be written.</summary>
+      <param name="name">The name of the resource.</param>
+      <param name="value">The value of the resource.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="name" /> parameter is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Resources.IResourceWriter.AddResource(System.String,System.String)">
+      <summary>Adds a named resource of type <see cref="T:System.String" /> to the list of resources to be written.</summary>
+      <param name="name">The name of the resource.</param>
+      <param name="value">The value of the resource.</param>
+      <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Resources.IResourceWriter.Close">
+      <summary>Closes the underlying resource file or stream, ensuring all the data has been written to the file.</summary>
+    </member>
+    <member name="M:System.Resources.IResourceWriter.Generate">
+      <summary>Writes all the resources added by the <see cref="M:System.Resources.IResourceWriter.AddResource(System.String,System.String)" /> method to the output file or stream.</summary>
+    </member>
+    <member name="T:System.Resources.ResourceWriter">
+      <summary>Writes resources in the system-default format to an output file or an output stream. This class cannot be inherited.</summary>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.#ctor(System.IO.Stream)">
+      <summary>Initializes a new instance of the <see cref="T:System.Resources.ResourceWriter" /> class that writes the resources to the provided stream.</summary>
+      <param name="stream">The output stream.</param>
+      <exception cref="T:System.ArgumentException">The <paramref name="stream" /> parameter is not writable.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="stream" /> parameter is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.#ctor(System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Resources.ResourceWriter" /> class that writes the resources to the specified file.</summary>
+      <param name="fileName">The output file name.</param>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="fileName" /> parameter is <see langword="null" />.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.AddResource(System.String,System.Byte[])">
+      <summary>Adds a named resource specified as a byte array to the list of resources to be written.</summary>
+      <param name="name">The name of the resource.</param>
+      <param name="value">Value of the resource as an 8-bit unsigned integer array.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="name" /> (or a name that varies only by capitalization) has already been added to this <see cref="T:System.Resources.ResourceWriter" />.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="name" /> parameter is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">This <see cref="T:System.Resources.ResourceWriter" /> has been closed and its hash table is unavailable.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.AddResource(System.String,System.IO.Stream)">
+      <summary>Adds a named resource specified as a stream to the list of resources to be written.</summary>
+      <param name="name">The name of the resource to add.</param>
+      <param name="value">The value of the resource to add. The resource must support the <see cref="P:System.IO.Stream.Length" /> property.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="name" /> (or a name that varies only by capitalization) has already been added to this <see cref="T:System.Resources.ResourceWriter" />.
+
+ -or-
+
+ The stream does not support the <see cref="P:System.IO.Stream.Length" /> property.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="name" /> or <paramref name="value" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">This <see cref="T:System.Resources.ResourceWriter" /> has been closed.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.AddResource(System.String,System.IO.Stream,System.Boolean)">
+      <summary>Adds a named resource specified as a stream to the list of resources to be written, and specifies whether the stream should be closed after the <see cref="M:System.Resources.ResourceWriter.Generate" /> method is called.</summary>
+      <param name="name">The name of the resource to add.</param>
+      <param name="value">The value of the resource to add. The resource must support the <see cref="P:System.IO.Stream.Length" /> property.</param>
+      <param name="closeAfterWrite">
+        <see langword="true" /> to close the stream after the <see cref="M:System.Resources.ResourceWriter.Generate" /> method is called; otherwise, <see langword="false" />.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="name" /> (or a name that varies only by capitalization) has already been added to this <see cref="T:System.Resources.ResourceWriter" />.
+
+ -or-
+
+ The stream does not support the <see cref="P:System.IO.Stream.Length" /> property.</exception>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="name" /> or <paramref name="value" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">This <see cref="T:System.Resources.ResourceWriter" /> has been closed.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.AddResource(System.String,System.Object)">
+      <summary>Adds a named resource specified as an object to the list of resources to be written.</summary>
+      <param name="name">The name of the resource.</param>
+      <param name="value">The value of the resource.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="name" /> (or a name that varies only by capitalization) has already been added to this <see cref="T:System.Resources.ResourceWriter" />.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="name" /> parameter is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">This <see cref="T:System.Resources.ResourceWriter" /> has been closed and its hash table is unavailable.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.AddResource(System.String,System.String)">
+      <summary>Adds a string resource to the list of resources to be written.</summary>
+      <param name="name">The name of the resource.</param>
+      <param name="value">The value of the resource.</param>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="name" /> (or a name that varies only by capitalization) has already been added to this ResourceWriter.</exception>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="name" /> parameter is <see langword="null" />.</exception>
+      <exception cref="T:System.InvalidOperationException">This <see cref="T:System.Resources.ResourceWriter" /> has been closed and its hash table is unavailable.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.AddResourceData(System.String,System.String,System.Byte[])">
+      <summary>Adds a unit of data as a resource to the list of resources to be written.</summary>
+      <param name="name">A name that identifies the resource that contains the added data.</param>
+      <param name="typeName">The type name of the added data.</param>
+      <param name="serializedData">A byte array that contains the binary representation of the added data.</param>
+      <exception cref="T:System.ArgumentNullException">
+        <paramref name="name" />, <paramref name="typeName" />, or <paramref name="serializedData" /> is <see langword="null" />.</exception>
+      <exception cref="T:System.ArgumentException">
+        <paramref name="name" /> (or a name that varies only by capitalization) has already been added to this <see cref="T:System.Resources.ResourceWriter" /> object.</exception>
+      <exception cref="T:System.InvalidOperationException">The current <see cref="T:System.Resources.ResourceWriter" /> object is not initialized. The probable cause is that the <see cref="T:System.Resources.ResourceWriter" /> object is closed.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.Close">
+      <summary>Saves the resources to the output stream and then closes it.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error has occurred.</exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">An error has occurred during serialization of the object.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.Dispose">
+      <summary>Allows users to close the resource file or stream, explicitly releasing resources.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error has occurred.</exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">An error has occurred during serialization of the object.</exception>
+    </member>
+    <member name="M:System.Resources.ResourceWriter.Generate">
+      <summary>Saves all resources to the output stream in the system default format.</summary>
+      <exception cref="T:System.IO.IOException">An I/O error occurred.</exception>
+      <exception cref="T:System.Runtime.Serialization.SerializationException">An error occurred during serialization of the object.</exception>
+      <exception cref="T:System.InvalidOperationException">This <see cref="T:System.Resources.ResourceWriter" /> has been closed and its hash table is unavailable.</exception>
+    </member>
+    <member name="P:System.Resources.ResourceWriter.TypeNameConverter">
+      <summary>Gets or sets a delegate that enables resource assemblies to be written that target versions of .NET Framework prior to .NET Framework 4 by using qualified assembly names.</summary>
+      <returns>The type that is encapsulated by the delegate.</returns>
+    </member>
+  </members>
+</doc>

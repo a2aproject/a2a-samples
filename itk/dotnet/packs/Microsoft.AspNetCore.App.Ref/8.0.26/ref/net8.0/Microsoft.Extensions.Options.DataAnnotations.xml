@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.Options.DataAnnotations</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.Options.DataAnnotationValidateOptions`1">
+            <summary>
+            Implementation of <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1"/> that uses DataAnnotation's <see cref="T:System.ComponentModel.DataAnnotations.Validator"/> for validation.
+            </summary>
+            <typeparam name="TOptions">The instance being validated.</typeparam>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.DataAnnotationValidateOptions`1.#ctor(System.String)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="name">The name of the option.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.Options.DataAnnotationValidateOptions`1.Name">
+            <summary>
+            The options name.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.DataAnnotationValidateOptions`1.Validate(System.String,`0)">
+            <summary>
+            Validates a specific named options instance (or all when <paramref name="name"/> is null).
+            </summary>
+            <param name="name">The name of the options instance being validated.</param>
+            <param name="options">The options instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/> result.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.OptionsBuilderDataAnnotationsExtensions">
+            <summary>
+            Extension methods for adding configuration related options services to the DI container via <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OptionsBuilderDataAnnotationsExtensions.ValidateDataAnnotations``1(Microsoft.Extensions.Options.OptionsBuilder{``0})">
+            <summary>
+            Register this options instance for validation of its DataAnnotations.
+            </summary>
+            <typeparam name="TOptions">The options type to be configured.</typeparam>
+            <param name="optionsBuilder">The options builder to add the services to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+    </members>
+</doc>
