@@ -88,6 +88,22 @@ def wrap_instruction_to_request(
     )
 
 
+def _get_text_from_part(part: Any) -> str | None:
+    """Safely extracts text string from a Part object supporting protobuf, pydantic, and raw dict."""
+    if not part:
+        return None
+    if hasattr(part, 'HasField'):
+        try:
+            if part.HasField('text'):
+                return part.text
+        except ValueError:
+            pass
+    root = getattr(part, 'root', part)
+    if isinstance(root, dict):
+        return root.get('text')
+    return getattr(root, 'text', None)
+
+
 def _extract_text_from_event(event: Any) -> list[str]:
     """Extracts text parts from an event's message in v0.3."""
     text_parts = []
@@ -149,6 +165,7 @@ async def _handle_call_agent_with_resubscribe(
     resub_agen = client.resubscribe(TaskIdParams(id=task_id))
 
     task_obj = None
+    finished = False
     async for event in resub_agen:
         logger.info('Event after re-subscribe: %s', event)
         if (
@@ -157,6 +174,21 @@ async def _handle_call_agent_with_resubscribe(
             and hasattr(event[0], 'history')
         ):
             task_obj = event[0]
+
+        if task_obj and hasattr(task_obj, 'history'):
+            for msg in task_obj.history:
+                if str(msg.role) == '2' or 'agent' in str(msg.role).lower():
+                    for part in msg.parts:
+                        t = _get_text_from_part(part)
+                        if t and 'task-finished' in t:
+                            logger.info('Found task-finished in history, breaking loop.')
+                            results.append(t.replace('task-finished', ''))
+                            finished = True
+                            break
+                if finished:
+                    break
+        if finished:
+            break
 
         extracted_text = _extract_text_from_event(event)
         for text in extracted_text:
@@ -167,15 +199,15 @@ async def _handle_call_agent_with_resubscribe(
             logger.info(
                 'Received task-finished after re-subscribe, breaking loop.'
             )
+            finished = True
             break
 
     if not results and task_obj and hasattr(task_obj, 'history'):
         logger.info('Results empty after loop, reading from history.')
         for msg in task_obj.history:
-            if msg.role == Role.agent or msg.role == 'agent':
+            if str(msg.role) == '2' or 'agent' in str(msg.role).lower():
                 for part in msg.parts:
-                    p_root = getattr(part, 'root', part)
-                    t = getattr(p_root, 'text', None)
+                    t = _get_text_from_part(part)
                     if t:
                         results.append(t.replace('task-finished', ''))
 
@@ -425,23 +457,20 @@ class V03AgentExecutor(AgentExecutor):
                 await task_updater.update_status(
                     TaskState.working, message=finnished_msg
                 )
-                await asyncio.sleep(2)
-
-                # Periodically emit events to satisfy resubscribing clients
-                # and keep the queue open.
+                # Periodically emit status updates for up to 5 iterations (10 seconds total)
+                # to satisfy resubscribing clients, then auto-complete to prevent resource leaks!
                 try:
-                    while True:
+                    for _ in range(5):
                         logger.info(
                             'Emitting periodic status update for held task %s',
                             task_updater.task_id,
                         )
-                        # In v0.3, re-subscribing creates a new child event queue that only receives new events.
-                        # We must re-emit the message along with the status so that any client that
-                        # re-subscribes immediately receives the latest task status and the response text.
                         await task_updater.update_status(
                             TaskState.working, message=finnished_msg
                         )
                         await asyncio.sleep(2)
+                    
+                    logger.info('Held task %s timed out, auto-completing', task_updater.task_id)
                 except asyncio.CancelledError:
                     logger.info(
                         'Task %s cancelled, closing event queue.',

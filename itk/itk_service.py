@@ -24,11 +24,11 @@ class TestCase(BaseModel):
 
     name: str
     sdks: list[str]
-    traversal: str
     behavior: str
     edges: list[str] | None = None
     protocols: list[str] | None = None
     streaming: bool = False
+    build_subtests: bool = False
 
 
 class RunTestsRequest(BaseModel):
@@ -37,10 +37,18 @@ class RunTestsRequest(BaseModel):
     tests: list[TestCase]
 
 
+class TestResultDetails(BaseModel):
+    """Details representing the outcome and topology of a single test run."""
+
+    passed: bool
+    sdks: list[str]
+    edges: list[str] | None = None
+
+
 class RunTestsResponse(BaseModel):
     """Response model for the /run endpoint."""
 
-    results: dict[str, bool]
+    results: dict[str, TestResultDetails]
     all_passed: bool
 
 
@@ -96,34 +104,34 @@ async def _test(request: RunTestsRequest) -> RunTestsResponse:
         ) from e
 
     try:
-        # 3. Define the test tasks
-        tasks = [
-            execute_itk_test(
+        # 3. Run all scenarios sequentially to prevent overwhelming the shared cluster
+        logger.info('Starting sequential scenario execution...')
+        results_list = []
+        for case in request.tests:
+            logger.info("Executing parent scenario '%s'...", case.name)
+            res_dict = await execute_itk_test(
                 sdks=case.sdks,
-                traversal=case.traversal,
                 behavior=case.behavior,
                 edges=case.edges,
                 scenario_name=case.name,
                 protocols=case.protocols,
                 streaming=case.streaming,
+                build_subtests=case.build_subtests,
             )
-            for case in request.tests
-        ]
-
-        # 4. Run all scenarios concurrently against the shared cluster
-        logger.info('Starting concurrent scenario execution...')
-        results_list = await asyncio.gather(*tasks)
+            results_list.append(res_dict)
 
         # 5. Prepare results
         results_map = {}
         all_passed = True
-        for case, passed in zip(request.tests, results_list, strict=True):
-            results_map[case.name] = passed
+        for res_dict in results_list:
+            results_map.update(res_dict)
+
+        for name, details in results_map.items():
+            passed = details['passed']
             if not passed:
                 all_passed = False
-
             status = 'PASSED' if passed else 'FAILED'
-            logger.info("Scenario '%s': %s", case.name, status)
+            logger.info("Scenario '%s': %s", name, status)
 
         return RunTestsResponse(results=results_map, all_passed=all_passed)
 

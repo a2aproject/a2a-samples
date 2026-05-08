@@ -3,6 +3,7 @@ import base64
 import json
 import logging
 import socket
+from typing import Any
 import subprocess
 import time
 import uuid
@@ -505,32 +506,29 @@ async def _read_sync_response(
     return response_json.get('result', {})
 
 
-async def execute_itk_test(  # noqa: PLR0913
+async def _execute_single_itk_test(  # noqa: PLR0913
     sdks: list[str],
-    traversal: str,
     behavior: str,
     edges: list[str] | None = None,
     scenario_name: str | None = None,
     protocols: list[str] | None = None,
     streaming: bool = False,
-    notification_server_url: str | None = None,
 ) -> bool:
     """Executes a traversal test against an ALREADY RUNNING cluster.
 
     Args:
         sdks: List of SDK identifiers to include in the test.
-        traversal: Name of the graph traversal algorithm.
         edges: Optional custom edges.
         scenario_name: Optional label for logging.
         protocols: Optional list of protocols to test.
         streaming: Whether to use streaming.
         behavior: The behavior to test ('send_message' or 'push_notification').
-        notification_server_url: URL of the notification server (required for push_notification).
     """
-    label = scenario_name or traversal
+    label = scenario_name or 'euler'
 
     notif_server_process = None
     notif_port = None
+    notification_server_url = ''
     if behavior == 'push_notification':
         notif_port = _get_free_port()
         notification_server_url = f'http://127.0.0.1:{notif_port}'
@@ -550,7 +548,6 @@ async def execute_itk_test(  # noqa: PLR0913
         ) = test_suite.create_test_suite(
             sdks,
             logger,
-            traversal,
             edges=edges,
             protocols=protocols,
             streaming=streaming,
@@ -601,7 +598,7 @@ async def execute_itk_test(  # noqa: PLR0913
         else:
             headers['A2A-Version'] = '1.0'
 
-        async with httpx.AsyncClient(timeout=120) as http_client:
+        async with httpx.AsyncClient(timeout=15) as http_client:
             if streaming:
                 result = await _read_stream_response(
                     http_client,
@@ -645,9 +642,87 @@ async def execute_itk_test(  # noqa: PLR0913
     return test_result
 
 
+
+
+async def execute_itk_test(  # noqa: PLR0913
+    sdks: list[str],
+    behavior: str,
+    edges: list[str] | None = None,
+    scenario_name: str | None = None,
+    protocols: list[str] | None = None,
+    streaming: bool = False,
+    build_subtests: bool = False,
+) -> dict[str, dict[str, Any]]:
+    """Executes a traversal test against an ALREADY RUNNING cluster, optionally expanding subtests."""
+    label = scenario_name or 'euler'
+
+    if not build_subtests:
+        res = await _execute_single_itk_test(
+            sdks=sdks,
+            behavior=behavior,
+            edges=edges,
+            scenario_name=label,
+            protocols=protocols,
+            streaming=streaming,
+        )
+        return {label: {'passed': res, 'sdks': sdks, 'edges': edges}}
+
+    from test_suite import _get_valid_subgraphs
+
+    subgraphs = _get_valid_subgraphs(
+        sdks=sdks,
+        edges=edges,
+        behavior=behavior,
+        protocols=protocols,
+        streaming=streaming,
+    )
+
+    results = []
+    subtest_names = []
+    subtest_sdks = []
+    subtest_edges = []
+
+    logger.info('Running %d subtests for scenario %s sequentially...', len(subgraphs), label)
+    for subgraph in subgraphs:
+        sub_sdks = subgraph['sdks']
+        sub_edges = subgraph['edges']
+
+        if len(sub_sdks) == len(sdks):
+            sub_name = label
+        else:
+            sub_name = f"{label}-sub-{'-'.join(sub_sdks)}"
+
+        subtest_names.append(sub_name)
+        subtest_sdks.append(sub_sdks)
+        subtest_edges.append(sub_edges)
+
+        try:
+            passed = await _execute_single_itk_test(
+                sdks=sub_sdks,
+                behavior=behavior,
+                edges=sub_edges,
+                scenario_name=sub_name,
+                protocols=protocols,
+                streaming=streaming,
+            )
+        except Exception as e:
+            logger.exception('Subtest %s failed with exception: %s', sub_name, e)
+            passed = False
+        results.append(passed)
+
+    res_map = {}
+    for name, passed, s_sdks, s_edges in zip(subtest_names, results, subtest_sdks, subtest_edges, strict=True):
+        res_map[name] = {
+            'passed': passed,
+            'sdks': s_sdks,
+            'edges': s_edges,
+        }
+    return res_map
+
+
+
 async def run_itk_test(
     sdks: list[str],
-    traversal: str,
     behavior: str,
     edges: list[str] | None = None,
     scenario_name: str | None = None,
@@ -656,7 +731,6 @@ async def run_itk_test(
 
     Args:
         sdks: List of SDK identifiers to include in the test cluster.
-        traversal: Name of the graph traversal algorithm to use.
         behavior: The behavior to test ('send_message' or 'push_notification').
         edges: Optional list of custom graph edges (e.g., "0->1").
         scenario_name: Optional human-readable name for logging.
@@ -666,16 +740,16 @@ async def run_itk_test(
     """
     procs, _, ports = await start_itk_cluster(sdks)
     try:
-        return await execute_itk_test(
+        res_dict = await execute_itk_test(
             sdks=sdks,
-            traversal=traversal,
             behavior=behavior,
             edges=edges,
             scenario_name=scenario_name,
         )
+        return all(res_dict.values())
     finally:
         logger.info(
-            'Decommissioning agents for %s...', scenario_name or traversal
+            'Decommissioning agents for %s...', scenario_name or 'euler'
         )
         for proc in procs:
             proc.terminate()
