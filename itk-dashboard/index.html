@@ -26,18 +26,6 @@
                         </p>
                     </div>
                 </div>
-                <div class="run-meta" id="run-meta-header">
-                    <div class="meta-item">
-                        <span class="label">Last Nightly Run</span>
-                        <span class="value" id="last-run-time">Loading...</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="label">Commit SHA</span>
-                        <span class="value mono" id="last-commit"
-                            >Loading...</span
-                        >
-                    </div>
-                </div>
             </div>
         </header>
 
@@ -110,16 +98,25 @@
 
                 <!-- Main Content: Topologies and Compatibility Matrices -->
                 <section class="main-dashboard-panes">
-                    <div class="pane-header">
-                        <h2>Active Compatibility Profiles</h2>
-                        <p>
-                            Visual topology graphs and corresponding
-                            compatibility matrices for protocols and behaviors.
-                        </p>
-                    </div>
+                    <!-- Static Summary & Pairwise Layout -->
+                    <div class="dashboard-unified-layout">
+                        <div class="summary-section">
+                            <h3 class="section-title-unified">SUMMARY</h3>
+                            <div id="summary-container">
+                                <!-- Dynamically injected full star topology summary card -->
+                            </div>
+                        </div>
 
-                    <div class="topologies-container" id="topologies-list">
-                        <!-- Filled dynamically by JS -->
+                        <div class="pairwise-section">
+                            <h3 class="section-title-unified">
+                                Pairwise Interoperability Matrices
+                            </h3>
+                            <div
+                                id="pairwise-list"
+                                class="pairwise-grid-layout">
+                                <!-- Dynamically injected pairwise matrices -->
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
