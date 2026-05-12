@@ -125,65 +125,21 @@ func (e *V03AgentExecutor) Execute(ctx context.Context, reqCtx *a2asrv.RequestCo
 			return err
 		}
 		
-		select {
-		case <-ctx.Done():
-			log.Info(ctx, "Task cancelled during sleep", "taskId", reqCtx.Message.ID)
-			event := a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateCanceled, nil)
-			event.Final = true
-			queue.Write(context.Background(), event)
-			return nil
-		case <-time.After(2 * time.Second):
-		}
-		
-		select {
-		case <-ctx.Done():
-			log.Info(ctx, "Task cancelled during second sleep", "taskId", reqCtx.Message.ID)
-			event := a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateCanceled, nil)
-			event.Final = true
-			queue.Write(context.Background(), event)
-			return nil
-		case <-time.After(2 * time.Second):
-		}
-		
-		// Continue emitting "task-finished" every 2 seconds
+		// Continue emitting periodic updates
 		ticker := time.NewTicker(2 * time.Second)
 		defer ticker.Stop()
-		
-		holdCtx, cancelHold := context.WithTimeout(ctx, 10*time.Second)
-		defer cancelHold()
-		
-		for {
-			if holdCtx.Err() != nil {
-				if holdCtx.Err() == context.DeadlineExceeded {
-					log.Info(ctx, "Hold timeout, exiting hold loop", "taskId", reqCtx.Message.ID)
-					event := a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateFailed, nil)
-					event.Final = true
-					queue.Write(context.Background(), event)
-				} else {
-					log.Info(ctx, "Task cancelled, exiting hold loop", "taskId", reqCtx.Message.ID)
-					event := a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateCanceled, nil)
-					event.Final = true
-					queue.Write(context.Background(), event)
-				}
-				return nil
-			}
+
+		for i := 0; i < 5; i++ {
 			select {
-			case <-holdCtx.Done():
-				if holdCtx.Err() == context.DeadlineExceeded {
-					log.Info(ctx, "Hold timeout, exiting hold loop", "taskId", reqCtx.Message.ID)
-				} else {
-					log.Info(ctx, "Task cancelled, exiting hold loop", "taskId", reqCtx.Message.ID)
-					event := a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateCanceled, nil)
-					event.Final = true
-					queue.Write(context.Background(), event)
-				}
+			case <-ctx.Done():
+				log.Info(ctx, "Task cancelled, exiting hold loop", "taskId", reqCtx.Message.ID)
+				event := a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateCanceled, nil)
+				event.Final = true
+				queue.Write(context.Background(), event)
 				return nil
 			case <-ticker.C:
 				log.Info(ctx, "Emitting periodic status update with response", "taskId", reqCtx.Message.ID)
 				bgCtx, cancelWrite := context.WithTimeout(context.Background(), 1*time.Second)
-				// In v0.3, re-subscribing creates a new child event queue that only receives new events.
-				// We must re-emit the message along with the status so that any client that
-				// re-subscribes immediately receives the latest task status and the response text.
 				err := queue.Write(bgCtx, a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateWorking, finnishedMsg))
 				cancelWrite()
 				if err != nil {
@@ -191,6 +147,11 @@ func (e *V03AgentExecutor) Execute(ctx context.Context, reqCtx *a2asrv.RequestCo
 				}
 			}
 		}
+		log.Info(ctx, "Held task timed out, auto-completing", "taskId", reqCtx.Message.ID)
+		event := a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateFailed, nil)
+		event.Final = true
+		queue.Write(context.Background(), event)
+		return nil
 	} else {
 		msg := a2a.NewMessageForTask(a2a.MessageRoleAgent, reqCtx, a2a.TextPart{Text: response})
 		event := a2a.NewStatusUpdateEvent(reqCtx, a2a.TaskStateCompleted, msg)
@@ -371,6 +332,34 @@ func (e *V03AgentExecutor) handleCallAgentWithResubscribe(ctx context.Context, c
 		switch r := ev.(type) {
 		case *a2a.Task:
 			taskObj = r
+			if r.Status.Message != nil {
+				for _, part := range r.Status.Message.Parts {
+					if textPart, ok := part.(a2a.TextPart); ok {
+						t := textPart.Text
+						t = strings.ReplaceAll(t, "task-finished", "")
+						responses = append(responses, t)
+						if strings.Contains(textPart.Text, "task-finished") {
+							log.Info(ctx, "Found task-finished in Status.Message during loop, breaking.")
+							goto EndLoop
+						}
+					}
+				}
+			}
+			for _, msg := range r.History {
+				if msg.Role == a2a.MessageRoleAgent {
+					for _, part := range msg.Parts {
+						if textPart, ok := part.(a2a.TextPart); ok {
+							t := textPart.Text
+							t = strings.ReplaceAll(t, "task-finished", "")
+							responses = append(responses, t)
+							if strings.Contains(textPart.Text, "task-finished") {
+								log.Info(ctx, "Found task-finished in history during loop, breaking.")
+								goto EndLoop
+							}
+						}
+					}
+				}
+			}
 		case *a2a.TaskStatusUpdateEvent:
 			if r.Status.Message != nil {
 				for _, part := range r.Status.Message.Parts {

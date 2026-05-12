@@ -74,17 +74,10 @@ func (e *V10AgentExecutor) Execute(ctx context.Context, execCtx *a2asrv.Executor
 				return
 			}
 			
-			select {
-			case <-ctx.Done():
-				log.Info(ctx, "Task cancelled during sleep", "taskId", string(execCtx.TaskID))
-				return
-			case <-time.After(2 * time.Second):
-			}
-
 			ticker := time.NewTicker(2 * time.Second)
 			defer ticker.Stop()
 
-			for {
+			for i := 0; i < 5; i++ {
 				select {
 				case <-ctx.Done():
 					log.Info(ctx, "Task cancelled, exiting hold loop", "taskId", string(execCtx.TaskID))
@@ -96,6 +89,7 @@ func (e *V10AgentExecutor) Execute(ctx context.Context, execCtx *a2asrv.Executor
 					}
 				}
 			}
+			log.Info(ctx, "Held task timed out, auto-completing", "taskId", string(execCtx.TaskID))
 		} else {
 			if !yield(a2a.NewStatusUpdateEvent(execCtx, a2a.TaskStateCompleted, a2a.NewMessage(a2a.MessageRoleAgent, a2a.NewTextPart(response))), nil) {
 				return
@@ -291,6 +285,20 @@ func (e *V10AgentExecutor) handleCallAgentWithResubscribe(ctx context.Context, c
 		}
 		if r, ok := ev.(*a2a.Task); ok {
 			taskObj = r
+			for _, msg := range r.History {
+				if msg.Role == "ROLE_AGENT" || msg.Role == "agent" {
+					for _, part := range msg.Parts {
+						if t := part.Text(); t != "" {
+							t = strings.ReplaceAll(t, "task-finished", "")
+							responses = append(responses, t)
+							if strings.Contains(part.Text(), "task-finished") {
+								log.Info(ctx, "Found task-finished in history during loop, breaking.")
+								goto EndLoop
+							}
+						}
+					}
+				}
+			}
 		}
 		resps := extractResponses(ctx, ev)
 		if len(resps) > 0 {

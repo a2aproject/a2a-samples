@@ -103,7 +103,20 @@ def extract_instruction(
                 continue
             else:
                 return inst
-    return None
+def _get_text_from_part(part: Any) -> str | None:
+    """Safely extracts text string from a Part object supporting protobuf, pydantic, and raw dict."""
+    if not part:
+        return None
+    if hasattr(part, 'HasField'):
+        try:
+            if part.HasField('text'):
+                return part.text
+        except ValueError:
+            pass
+    root = getattr(part, 'root', part)
+    if isinstance(root, dict):
+        return root.get('text')
+    return getattr(root, 'text', None)
 
 
 def _extract_text_from_event(event: Any) -> list[str]:
@@ -157,10 +170,25 @@ async def _handle_call_agent_with_resubscribe(
     finished = False
     async for event in resub_agen:
         logger.info('Event after re-subscribe: %s', event)
-        if hasattr(event, 'task'):
-            task_obj = event.task
+        if isinstance(event, Task):
+            task_obj = event
         elif hasattr(event, 'HasField') and event.HasField('task'):
             task_obj = event.task
+
+        if task_obj and hasattr(task_obj, 'history'):
+            for msg in task_obj.history:
+                if str(msg.role) == '2' or 'agent' in str(msg.role).lower():
+                    for part in msg.parts:
+                        text = _get_text_from_part(part)
+                        if text and 'task-finished' in text:
+                            logger.info('Found task-finished in history, breaking loop.')
+                            results.append(text.replace('task-finished', ''))
+                            finished = True
+                            break
+                if finished:
+                    break
+        if finished:
+            break
 
         extracted_text = _extract_text_from_event(event)
         for text in extracted_text:
@@ -176,10 +204,11 @@ async def _handle_call_agent_with_resubscribe(
     if not results and task_obj and hasattr(task_obj, 'history'):
         logger.info('Results empty after loop, reading from history.')
         for msg in task_obj.history:
-            if msg.role == 'ROLE_AGENT' or msg.role == 'agent':
+            if str(msg.role) == '2' or 'agent' in str(msg.role).lower():
                 for part in msg.parts:
-                    if part.text:
-                        results.append(part.text.replace('task-finished', ''))
+                    text = _get_text_from_part(part)
+                    if text:
+                        results.append(text.replace('task-finished', ''))
 
     if not finished:
         logger.info('Canceling task %s after retrieval.', task_id)
@@ -367,11 +396,10 @@ class V10AgentExecutor(AgentExecutor):
                         [Part(text=response_text + '\ntask-finished')]
                     ),
                 )
-                await asyncio.sleep(2)
-
-                # Continue emitting "task-finished" every 2 seconds
+                # Periodically emit status updates for up to 5 iterations (10 seconds total)
+                # to satisfy resubscribing clients, then auto-complete to prevent resource leaks!
                 try:
-                    while True:
+                    for _ in range(5):
                         logger.info(
                             'Emitting periodic status update for held task %s',
                             context.task_id,
@@ -381,6 +409,8 @@ class V10AgentExecutor(AgentExecutor):
                             message=None,
                         )
                         await asyncio.sleep(2)
+                    
+                    logger.info('Held task %s timed out, auto-completing', context.task_id)
                 except asyncio.CancelledError:
                     logger.info('Task %s cancelled', context.task_id)
                     return

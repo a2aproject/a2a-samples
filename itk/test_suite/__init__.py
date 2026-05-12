@@ -1,3 +1,4 @@
+import itertools
 import logging
 import socket
 import subprocess
@@ -21,17 +22,7 @@ _AGENT_DEFS = {
 }
 
 
-_TRAVERSAL_FUNCTIONS = {}
 
-
-def register_traversal(name: str):
-    """Decorator to register a traversal function."""
-
-    def decorator(func):
-        _TRAVERSAL_FUNCTIONS[name] = func
-        return func
-
-    return decorator
 
 
 _HOST = '127.0.0.1'
@@ -272,7 +263,6 @@ def _traversal_to_instruction(
 def create_test_suite(  # noqa: PLR0913
     sdks: list[str],
     logger: logging.Logger,
-    traversal_name: str = 'euler',
     edges: list[str] | None = None,
     protocols: list[str] | None = None,
     streaming: bool = False,
@@ -287,9 +277,6 @@ def create_test_suite(  # noqa: PLR0913
     testing_instruction.steps.response_generator = (
         instruction_pb2.SeriesOfSteps.RESPONSE_GENERATOR_CONCAT
     )
-    traversal_function = _TRAVERSAL_FUNCTIONS.get(traversal_name)
-    if not traversal_function:
-        raise ValueError(f'Unknown traversal: {traversal_name}')
 
     parsed_edges = _parse_edge_strings(edges, sdks) if edges else None
 
@@ -299,7 +286,7 @@ def create_test_suite(  # noqa: PLR0913
 
     expected_end_tokens = []
     for transport in transports_to_test:
-        circuits = traversal_function(
+        circuits = _euler_traversal_with_hierholzer(
             sdks[0],
             sdks,
             transport,
@@ -328,7 +315,6 @@ def create_test_suite(  # noqa: PLR0913
     )
 
 
-@register_traversal('euler')
 def _euler_traversal_with_hierholzer(
     current_sdk: str,
     all_sdks: list[str],
@@ -413,3 +399,88 @@ def _euler_traversal_with_hierholzer(
         circuits.append(comp_circuit)
 
     return circuits
+
+
+def _map_edges_to_subgraph(
+    original_edges: list[str], original_sdks: list[str], sub_sdks: list[str]
+) -> list[str]:
+    """Maps original edge strings to new indices in the sub_sdks subgraph."""
+    name_to_new_idx = {name: idx for idx, name in enumerate(sub_sdks)}
+    mapped_edges = []
+    expected_edge_parts = 2
+    for edge_str in original_edges:
+        parts = edge_str.split('->')
+        if len(parts) != expected_edge_parts:
+            raise ValueError(f'Invalid edge format: {edge_str}')
+        u_s, v_s = parts[0].strip(), parts[1].strip()
+        if not (u_s.isdigit() and v_s.isdigit()):
+            raise ValueError(f'Invalid edge format or index: {edge_str}')
+        u_idx, v_idx = int(u_s), int(v_s)
+        if u_idx < 0 or u_idx >= len(original_sdks) or v_idx < 0 or v_idx >= len(original_sdks):
+            raise ValueError(f'Invalid edge index: {edge_str}')
+
+        u_name = original_sdks[u_idx]
+        v_name = original_sdks[v_idx]
+
+        if u_name in name_to_new_idx and v_name in name_to_new_idx:
+            new_u = name_to_new_idx[u_name]
+            new_v = name_to_new_idx[v_name]
+            mapped_edges.append(f'{new_u}->{new_v}')
+
+    return mapped_edges
+
+
+def _get_valid_subgraphs(
+    sdks: list[str],
+    edges: list[str] | None,
+    behavior: str,
+    protocols: list[str] | None = None,
+    streaming: bool = False,
+) -> list[dict]:
+    """Generates all valid traversable induced subgraphs containing the root node of size >= 2."""
+    if not sdks:
+        return []
+
+    root = sdks[0]
+    remaining = sdks[1:]
+
+    valid_subgraphs = []
+
+    # Generate subsets of remaining nodes
+    for r in range(len(remaining) + 1):
+        for combo in itertools.combinations(remaining, r):
+            sub_sdks = [root] + list(combo)
+
+            if len(sub_sdks) < 2:
+                continue
+
+            # Map custom edges
+            new_edges = None
+            if edges is not None:
+                try:
+                    new_edges = _map_edges_to_subgraph(edges, sdks, sub_sdks)
+                except ValueError:
+                    continue
+
+            # Validate traversability
+            dummy_logger = logging.getLogger('test_suite.validation')
+            try:
+                create_test_suite(
+                    sdks=sub_sdks,
+                    logger=dummy_logger,
+                    edges=new_edges,
+                    protocols=protocols,
+                    streaming=streaming,
+                    behavior=behavior,
+                )
+            except ValueError:
+                # Invalid subgraph, skip
+                continue
+
+            valid_subgraphs.append({
+                'sdks': sub_sdks,
+                'edges': new_edges,
+            })
+
+    return valid_subgraphs
+
