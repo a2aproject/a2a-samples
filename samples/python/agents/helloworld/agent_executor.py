@@ -1,25 +1,21 @@
 from a2a.helpers import (
     new_task_from_user_message,
-    new_text_artifact,
     new_text_message,
+    new_text_part,
 )
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
-from a2a.types.a2a_pb2 import (
-    TaskArtifactUpdateEvent,
-    TaskState,
-    TaskStatus,
-    TaskStatusUpdateEvent,
-)
+from a2a.server.tasks import TaskUpdater
+from a2a.types.a2a_pb2 import TaskState
 
 
 # --8<-- [start:HelloWorldAgent]
 class HelloWorldAgent:
     """Hello World Agent."""
 
-    async def invoke(self) -> str:
+    async def invoke(self, user_request: str) -> str:
         """Invoke the Hello World agent to generate a response."""
-        return 'Hello, World!'
+        return f'Hello, World! I have received your request ({user_request})'
 
 
 # --8<-- [end:HelloWorldAgent]
@@ -40,46 +36,46 @@ class HelloWorldAgentExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ) -> None:
-        """Execute the agent process and enqueue the final response."""
-        task = context.current_task or new_task_from_user_message(
-            context.message
-        )
-        await event_queue.enqueue_event(task)
+        """Process user request."""
+        # Collect a task from request context
+        if context.current_task:
+            task = context.current_task
+        else:
+            # If there is no task, create one and add it event queue
+            task = new_task_from_user_message(context.message)
+            await event_queue.enqueue_event(task)
 
-        await event_queue.enqueue_event(
-            TaskStatusUpdateEvent(
-                task_id=context.task_id,
-                context_id=context.context_id,
-                status=TaskStatus(
-                    state=TaskState.TASK_STATE_WORKING,
-                    message=new_text_message('Processing request...'),
-                ),
-            )
+        # Update task status in EventQueue using TaskUpdater class object
+        task_updater = TaskUpdater(
+            event_queue=event_queue, task_id=task.id, context_id=task.context_id
+        )
+        await task_updater.update_status(
+            state=TaskState.TASK_STATE_WORKING,
+            message=new_text_message('Processing request...'),
         )
 
-        result = await self.agent.invoke()
+        # collect user request from content and invoke your agent to generate content
+        query = ''
+        for part in context.message.parts:
+            if part.text:
+                query += part.text
+        result = await self.agent.invoke(user_request=query)
 
-        await event_queue.enqueue_event(
-            TaskArtifactUpdateEvent(
-                task_id=context.task_id,
-                context_id=context.context_id,
-                artifact=new_text_artifact(name='result', text=result),
-            )
+        # All generated results are added to EventQueue as artifacts
+        await task_updater.add_artifact(
+            parts=[new_text_part(text=result, media_type='text/plain')]
         )
-        await event_queue.enqueue_event(
-            TaskStatusUpdateEvent(
-                task_id=context.task_id,
-                context_id=context.context_id,
-                status=TaskStatus(state=TaskState.TASK_STATE_COMPLETED),
-            )
+
+        # Add the result as a task artifact and update the task status to completed
+        await task_updater.update_status(
+            state=TaskState.TASK_STATE_COMPLETED,
+            message=new_text_message('Request is completed!'),
         )
 
     # --8<-- [end:HelloWorldAgentExecutor_execute]
 
     # --8<-- [start:HelloWorldAgentExecutor_cancel]
-    async def cancel(
-        self, context: RequestContext, event_queue: EventQueue
-    ) -> None:
+    async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Raise exception as cancel is not supported."""
         raise Exception('cancel not supported')
 
