@@ -7,7 +7,7 @@ Demonstrates a foundational Agent-to-Agent (A2A) server and client implementatio
 The sample codebase is structured around three core components.
 
 * `__main__.py`: Configures and launches the Starlette ASGI web server using Uvicorn, defines the public and extended `AgentCard` configurations, and sets up the A2A routes and request handler.
-* `agent_executor.py`: Implements the `AgentExecutor` interface (`HelloWorldAgentExecutor`) to process incoming requests, manage task lifecycle states, stream progress updates, and attach generated text artifacts. 
+* `agent_executor.py`: Implements the `AgentExecutor` interface (`HelloWorldAgentExecutor`) to process incoming requests, manage task lifecycle states, stream progress updates, and attach generated text artifacts.
 * `test_client.py`: Provides an asynchronous test client demonstrating how to fetch agent cards and interact with the server via both streaming and non-streaming message requests.
 
 ## Prerequisites
