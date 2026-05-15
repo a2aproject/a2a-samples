@@ -54,19 +54,18 @@ class HelloWorldAgentExecutor(AgentExecutor):
             message=new_text_message('Processing request...'),
         )
 
-        # 3. Collect user request from content and invoke your agent to generate content
-        query = ''
-        for part in context.message.parts:
-            if part.text:
-                query += part.text
+        # 3. Collect user request from request content and invoke LLM agent to generate content
+        query = ' '.join(
+            part.text for part in context.message.parts if part.text
+        )
         result = await self.agent.invoke(user_request=query)
 
-        # 4. All generated results are added to EventQueue as artifacts
+        # 4. Add generated response as an artifact to EventQueue
         await task_updater.add_artifact(
             parts=[new_text_part(text=result, media_type='text/plain')]
         )
 
-        # 5. Add the result as a task artifact and update the task status to completed
+        # 5. Update task status to completed
         await task_updater.update_status(
             state=TaskState.TASK_STATE_COMPLETED,
             message=new_text_message('Request is completed!'),
@@ -77,6 +76,6 @@ class HelloWorldAgentExecutor(AgentExecutor):
     # --8<-- [start:HelloWorldAgentExecutor_cancel]
     async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Raise exception as cancel is not supported."""
-        raise Exception('cancel not supported')
+        raise NotImplementedError('Cancel is not supported.')
 
     # --8<-- [end:HelloWorldAgentExecutor_cancel]
