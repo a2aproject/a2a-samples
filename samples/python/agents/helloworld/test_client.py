@@ -29,11 +29,7 @@ async def main() -> None:
         # --8<-- [start:message_send]
         from a2a.client import ClientConfig, create_client  # noqa: PLC0415
         from a2a.helpers import new_text_message  # noqa: PLC0415
-        from a2a.types.a2a_pb2 import (  # noqa: PLC0415
-            GetExtendedAgentCardRequest,
-            Role,
-            SendMessageRequest,
-        )
+        from a2a.types.a2a_pb2 import Role, SendMessageRequest  # noqa: PLC0415
 
         print('\nInitializing a non-streaming client.')
         config = ClientConfig(streaming=False)
@@ -62,8 +58,9 @@ async def main() -> None:
         async for chunk in streaming_client.send_message(request):
             print(chunk)
         # --8<-- [end:message_stream]
-
         await streaming_client.close()
+
+        from a2a.types.a2a_pb2 import GetExtendedAgentCardRequest  # noqa: I001, PLC0415
 
         print('\n--- Extended Agent Card - Non-Streaming Call ---')
         extended_card = await client.get_extended_agent_card(
@@ -76,5 +73,4 @@ async def main() -> None:
 
 
 if __name__ == '__main__':
-
     asyncio.run(main())

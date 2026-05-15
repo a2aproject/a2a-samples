@@ -37,15 +37,15 @@ class HelloWorldAgentExecutor(AgentExecutor):
         event_queue: EventQueue,
     ) -> None:
         """Process user request."""
-        # Collect a task from request context
+        # 1. Collect a task from request context
         if context.current_task:
             task = context.current_task
         else:
-            # If there is no task, create one and add it event queue
+            # 1.1 If there is no task, create one and add it event queue
             task = new_task_from_user_message(context.message)
             await event_queue.enqueue_event(task)
 
-        # Update task status in EventQueue using TaskUpdater class object
+        # 2. Update task status in EventQueue using TaskUpdater class object
         task_updater = TaskUpdater(
             event_queue=event_queue, task_id=task.id, context_id=task.context_id
         )
@@ -54,19 +54,19 @@ class HelloWorldAgentExecutor(AgentExecutor):
             message=new_text_message('Processing request...'),
         )
 
-        # collect user request from content and invoke your agent to generate content
+        # 3. Collect user request from content and invoke your agent to generate content
         query = ''
         for part in context.message.parts:
             if part.text:
                 query += part.text
         result = await self.agent.invoke(user_request=query)
 
-        # All generated results are added to EventQueue as artifacts
+        # 4. All generated results are added to EventQueue as artifacts
         await task_updater.add_artifact(
             parts=[new_text_part(text=result, media_type='text/plain')]
         )
 
-        # Add the result as a task artifact and update the task status to completed
+        # 5. Add the result as a task artifact and update the task status to completed
         await task_updater.update_status(
             state=TaskState.TASK_STATE_COMPLETED,
             message=new_text_message('Request is completed!'),
