@@ -51,7 +51,7 @@ We use `uv` for dependency management, linting, formatting, type checking, and t
 
 ### Formatting and Linting
 
-All code **must** be formatted and linted using `ruff` tool. Check its [.ruff.toml](.ruff.toml) configration for more details.
+All code **must** be formatted and linted using `ruff` tool. Check its [.ruff.toml](.ruff.toml) configuration for more details.
 
 To check and automatically fix linting errors across the workspace:
 
@@ -85,26 +85,16 @@ uv run mypy samples/python
 uv run pyright samples/python
 ```
 
-### Testing and Coverage
+### Testing
 
-Run the tests using `pytest`. Use `--verbose` for more detailed output.
+Build and run your tests using `pytest`. Use `--verbose` for more detailed output.
 
 ```bash
 uv run pytest --verbose
 ```
 
-#### Testing a Specific Sample
-
 To run tests for a specific agent sample or extension:
 
 ```bash
 uv run pytest tests/python/agents/<sample-name>/
-```
-
-#### Checking Test Coverage
-
-When adding new source code or features, verify test coverage before committing:
-
-```bash
-uv run pytest --cov=samples/python --cov-report=term-missing
 ```

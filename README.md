@@ -53,19 +53,13 @@ In a world of diverse AI frameworks and ecosystems, agents need a common languag
 
 Our samples demonstrate how easily complex multi-agent problems can be solved across different languages and host applications.
 
-## Key Features Demonstrations
-
-- **Multi-Agent Orchestration**: Shows orchestrator agents delegating tasks to specialized remote agents.
-- **Cross-Language Interoperability**: Demonstrates seamless communication across Python, Go, Java, JavaScript, C#, and Rust.
-- **Framework Flexibility**: Features agent implementations built with CrewAI, LangGraph, Semantic Kernel, LlamaIndex, and more.
-- **Rich Host Interfaces**: Includes command-line hosts, web applications, and monitoring dashboards.
-
 ## Quick Start
 
 Get up and running immediately by launching a Helloworld agent and communicating with it via our Python CLI host.
 
 1. **Start the Agent Server**:
    Open a terminal and start the Helloworld agent server:
+
    ```bash
    cd samples/python/agents/helloworld
    uv run .
@@ -73,6 +67,7 @@ Get up and running immediately by launching a Helloworld agent and communicating
 
 2. **Run the Host Client**:
    Open a second terminal and run the CLI client to send a task to the agent:
+
    ```bash
    cd samples/python/agents/helloworld
    uv run test_client.py
@@ -83,7 +78,7 @@ Get up and running immediately by launching a Helloworld agent and communicating
 The repository is organized into several key directories by language:
 
 | Directory | Description |
-|---|---|
+| --- | --- |
 | [samples](/samples) | Core A2A samples organized by programming language. |
 | [samples/python](/samples/python) | Demonstrates Python agent implementations using the A2A Python SDK. |
 | [samples/go](/samples/go) | Demonstrates Go agent implementations using the A2A Go SDK. |
@@ -102,7 +97,7 @@ We are dedicated to providing a welcoming and supportive community. If you have 
 ## Related Repositories
 
 | Repository | Category | Description |
-|---|---|---|
+| --- | --- | --- |
 | [A2A](https://github.com/a2aproject/A2A) | Core Specification | A2A Specification and documentation. |
 | [a2a-inspector](https://github.com/a2aproject/a2a-inspector) | Tooling | UI tool for inspecting A2A enabled agents. |
 | [a2a-tck](https://github.com/a2aproject/a2a-tck) | Testing | Test suite for validating A2A Protocol compliance. |
