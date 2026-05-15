@@ -127,16 +127,4 @@ if __name__ == '__main__':
     # Run the app
     # Uvicorn is a production-ready ASGI HTTP server
     uvicorn.run(app, host='127.0.0.1', port=9999)
-
-    # Create routes for the JSONRPC protocol
-    routes.extend(create_jsonrpc_routes(request_handler, '/'))
-
-    # Create a web app with the defined routes
-    # Here we are using Starlette, a lightweight ASGI web framework to serve the agent
-    # Alternatively, you can choose FastAPI or other ASGI frameworks
-    app = Starlette(routes=routes)
-
-    # Run the app
-    # Uvicorn is a production-ready ASGI HTTP server
-    uvicorn.run(app, host='127.0.0.1', port=9999)
     # --8<-- [end:AppServer]
