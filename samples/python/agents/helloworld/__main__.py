@@ -25,7 +25,7 @@ if __name__ == '__main__':
         id='echo_bot',
         name='Echo Bot',
         description='An example agent that acknowledges client request and responds with a "Hello World" message.',
-        input_modes =['text/plain'],
+        input_modes=['text/plain'],
         output_modes=['text/plain'],
         tags=['a2a', 'echo-example'],
         examples=['hi', 'how are you'],
@@ -44,19 +44,16 @@ if __name__ == '__main__':
     # Define a public-facing agent card that allows clients to discover your agent's capabilities.
     public_agent_card = AgentCard(
         # Basic identity information of A2A server
-        name='Hello World Agent', # Identity
+        name='Hello World Agent',  # Identity
         description='Just a hello world agent',
         version='0.0.1',
-
         # Default Media Types for the agent's interactions
-        default_input_modes=['text/plain'], # Supported media types
+        default_input_modes=['text/plain'],  # Supported media types
         default_output_modes=['text/plain'],
-
         # Supported A2A features (like streaming or extended config)
         capabilities=AgentCapabilities(
             streaming=True, extended_agent_card=True
         ),
-
         # Ordered list of endpoints and protocols where the service can be reached
         supported_interfaces=[
             AgentInterface(
@@ -64,10 +61,8 @@ if __name__ == '__main__':
                 url='http://127.0.0.1:9999',
             )
         ],
-
         # The list of AgentSkill objects that this agent offers
         skills=[skill],
-
         # Optional attributes (omitted here for simplicity):
         # icon_url                         -> A URL to an icon representing the agent
     )
@@ -98,16 +93,12 @@ if __name__ == '__main__':
     # --8<-- [start:RequestHandler]
     # The RequestHandler processes incoming requests and manages tasks
     request_handler = DefaultRequestHandler(
-
         # Agent executor handles the execution of the client requests
         agent_executor=HelloWorldAgentExecutor(),
-
         # The task_store is used to store and manage tasks
         task_store=InMemoryTaskStore(),
-
         # Public agent card for unauthenticated users
         agent_card=public_agent_card,
-
         # Extended agent card for authenticated users
         extended_agent_card=extended_agent_card,
     )

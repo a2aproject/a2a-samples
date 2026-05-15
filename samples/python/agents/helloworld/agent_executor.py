@@ -74,7 +74,9 @@ class HelloWorldAgentExecutor(AgentExecutor):
     # --8<-- [end:HelloWorldAgentExecutor_execute]
 
     # --8<-- [start:HelloWorldAgentExecutor_cancel]
-    async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
+    async def cancel(
+        self, context: RequestContext, event_queue: EventQueue
+    ) -> None:
         """Raise exception as cancel is not supported."""
         raise NotImplementedError('Cancel is not supported.')
 
