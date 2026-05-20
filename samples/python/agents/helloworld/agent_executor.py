@@ -57,13 +57,17 @@ class HelloWorldAgentExecutor(AgentExecutor):
         # 3. Collect user request from request content and invoke LLM agent to generate content
         query = ' '.join(
             part.text for part in context.message.parts if part.text
-        )
-        result = await self.agent.invoke(user_request=query)
+        ).strip()
+        if query:
+            result = await self.agent.invoke(user_request=query)
+        else:
+            result = 'No text input is provided!'
 
         # 4. Add generated response as an artifact to EventQueue
         await task_updater.add_artifact(
             parts=[new_text_part(text=result, media_type='text/plain')]
         )
+        print('Result: ', result)
 
         # 5. Update task status to completed
         await task_updater.update_status(
