@@ -94,9 +94,7 @@ async def send_steaming_message(text_query: str = 'Hi there'):
     # --8<-- [start:message_stream]
     print('\nInitializing a streaming client.')
     client_config = ClientConfig(streaming=True)  # Streaming
-    client = await create_client(
-        agent=public_agent_card, client_config=client_config
-    )
+    client = await create_client(agent=public_agent_card, client_config=client_config)
 
     print('Response:')
     async for chunk in client.send_message(request):
@@ -114,9 +112,7 @@ async def show_extended_card():
     client = await create_client(agent=public_agent_card, client_config=config)
 
     print('\n--- Extended Agent Card - Non-Streaming Call ---')
-    extended_card = await client.get_extended_agent_card(
-        GetExtendedAgentCardRequest()
-    )
+    extended_card = await client.get_extended_agent_card(GetExtendedAgentCardRequest())
     print('\nSuccessfully fetched the authenticated extended agent card:')
     display_agent_card(extended_card)
     await client.close()
@@ -134,10 +130,7 @@ def test_client_workflow(text_query: str = 'Hi there!'):
 
 
 def main():
-    print(
-        '\nStarting an internactive session with '
-        'A2A Server [http://127.0.0.1:9999]'
-    )
+    print('\nStarting an internactive session with A2A Server [http://127.0.0.1:9999]')
     print('Use `exit` to quit.')
     prompt = input('user > ')
     while prompt and prompt != 'exit':

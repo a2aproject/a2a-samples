@@ -51,9 +51,7 @@ if __name__ == '__main__':
         default_input_modes=['text/plain'],  # Supported media types
         default_output_modes=['text/plain'],
         # Supported A2A features (like streaming or extended config)
-        capabilities=AgentCapabilities(
-            streaming=True, extended_agent_card=True
-        ),
+        capabilities=AgentCapabilities(streaming=True, extended_agent_card=True),
         # Ordered list of endpoints and protocols where the service can be reached
         supported_interfaces=[
             AgentInterface(
@@ -76,9 +74,7 @@ if __name__ == '__main__':
         version='0.0.2',
         default_input_modes=['text/plain'],
         default_output_modes=['text/plain'],
-        capabilities=AgentCapabilities(
-            streaming=True, extended_agent_card=True
-        ),
+        capabilities=AgentCapabilities(streaming=True, extended_agent_card=True),
         supported_interfaces=[
             AgentInterface(
                 protocol_binding='JSONRPC',
