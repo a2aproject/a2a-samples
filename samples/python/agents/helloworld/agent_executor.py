@@ -1,4 +1,5 @@
 from a2a.helpers import (
+    get_message_text,
     new_task_from_user_message,
     new_text_message,
     new_text_part,
@@ -55,9 +56,7 @@ class HelloWorldAgentExecutor(AgentExecutor):
         )
 
         # 3. Collect user request from request content and invoke LLM agent to generate content
-        query = ' '.join(
-            part.text for part in context.message.parts if part.text
-        ).strip()
+        query = get_message_text(context.message)
         if query:
             result = await self.agent.invoke(user_request=query)
         else:
