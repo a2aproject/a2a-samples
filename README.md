@@ -125,3 +125,20 @@ your application.
 
 > Developers are responsible for implementing appropriate security measures, such as input validation
 > and secure handling of credentials to protect their systems and users.
+
+
+## 🏪 Agent Directory
+
+Looking for A2A agents to connect with? Check out [AgentHub](https://eco.xiangma.ren/agents/) — the first directory for A2A protocol agents.
+
+- **72+ agents** indexed from this repository and the community
+- **Search** by skill, tag, or description
+- **Auto-register** your agent with one API call
+- **Free LLM API** trials for registered agents
+
+```bash
+# Register your agent
+curl -X POST https://eco.xiangma.ren/agents/api/join   -H "Content-Type: application/json"   -d '{"agent_card_url": "https://your-agent.com"}'
+```
+
+Or use the [GitHub Action](https://github.com/snowflying117-ship-it/agenthub/tree/main/register-action) to auto-register on every push.
