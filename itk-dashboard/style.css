@@ -484,7 +484,6 @@ a:hover {
     stroke: rgb(255 255 255 / 10%);
     stroke-width: 2px;
     fill: none;
-    marker-end: url("#arrow");
     transition: all 0.3s;
 }
 
@@ -703,4 +702,62 @@ a:hover {
 .legend-color.node {
     background: #1e293b;
     border: 1px solid var(--primary);
+}
+
+/* --- UNIFIED SINGLE-PAGE STATIC LAYOUT STYLES --- */
+
+.dashboard-unified-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 24px;
+    width: 100%;
+}
+
+.section-title-unified {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--primary);
+    margin-bottom: 16px;
+    padding-left: 8px;
+    border-left: 3px solid var(--primary);
+    text-shadow: 0 0 10px rgb(129 140 248 / 30%);
+}
+
+.summary-section {
+    width: 100%;
+}
+
+.pairwise-section {
+    width: 100%;
+}
+
+.pairwise-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 24px;
+    width: 100%;
+}
+
+/* Make sure the top summary card stretches wide */
+#summary-container .topology-card {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Pairwise graphs and tables stack vertically inside cards for maximum clarity and visibility */
+.pairwise-grid-layout .topology-visual-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.pairwise-grid-layout .topology-graph-canvas {
+    min-height: 220px;
+    padding: 8px;
+}
+
+.pairwise-grid-layout .topology-graph-canvas svg {
+    height: 220px;
 }
