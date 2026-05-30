@@ -156,7 +156,8 @@ async def test_from_message_maps_text_and_data(
     ],
 )
 async def test_reject_unsafe_url_blocks_internal_targets(url: str) -> None:
-    reason = await content._reject_unsafe_url(url)
+    ip, reason = await content._safe_fetch_target(url)
+    assert ip is None
     assert reason is not None
 
 
@@ -198,7 +199,9 @@ async def test_fetch_url_through_transport(
     expected_type: str,
     expected_substr: str | None,
 ) -> None:
-    monkeypatch.setattr(content, '_reject_unsafe_url', mock.AsyncMock(return_value=None))
+    monkeypatch.setattr(
+        content, '_safe_fetch_target', mock.AsyncMock(return_value=('93.184.216.34', None))
+    )
     runtime.fetch_http = _mock_transport(body, status=status)
     builder = content.ContentBuilder(runtime, signer=None)
     item = await builder._fetch_url('a.png', 'https://x/a.png', '')
@@ -207,3 +210,36 @@ async def test_fetch_url_through_transport(
         assert expected_substr in item['text']
     if expected_type == 'image':
         assert item['mime_type'] == 'image/png'
+
+
+@pytest.mark.asyncio
+async def test_fetch_url_pins_validated_ip(
+    runtime: runtime_mod.Runtime,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SSRF: the fetch connects to the validated IP, preserving host + TLS SNI.
+
+    Pinning the connection to the address resolved during validation (rather
+    than letting httpx re-resolve) is what closes the DNS-rebinding window.
+    """
+    captured: dict[str, object] = {}
+
+    def handler(req: httpx.Request) -> httpx.Response:
+        captured['target'] = req.url.host
+        captured['path'] = req.url.path
+        captured['host_header'] = req.headers.get('host')
+        captured['sni'] = req.extensions.get('sni_hostname')
+        return httpx.Response(200, content=b'\x89PNG', headers={'content-type': 'image/png'})
+
+    monkeypatch.setattr(
+        content, '_safe_fetch_target', mock.AsyncMock(return_value=('93.184.216.34', None))
+    )
+    runtime.fetch_http = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    builder = content.ContentBuilder(runtime, signer=None)
+    item = await builder._fetch_url('a.png', 'https://example.com/a.png', '')
+
+    assert item['type'] == 'image'
+    assert captured['target'] == '93.184.216.34'  # connected to the validated IP
+    assert captured['path'] == '/a.png'
+    assert captured['host_header'] == 'example.com'  # original host preserved
+    assert captured['sni'] == 'example.com'  # TLS verified against the real host

@@ -224,7 +224,8 @@ class InteractionsAgentExecutor(agent_execution.AgentExecutor):
         session_key = self._session_key(user, context_id, agent_key)
         session = await self._sessions.get_or_create(session_key)
         owner = user.identity if user else None
-        if session.owner and session.owner != owner:
+        owner_mismatch = bool(session.owner and session.owner != owner)
+        if owner_mismatch:
             # Persisted under a different caller (e.g. pre-identity-keyed Firestore
             # doc); refuse to reattach to someone else's sandbox/conversation.
             logger.warning('session owner mismatch for %s; starting a fresh chain', session_key)
@@ -233,6 +234,10 @@ class InteractionsAgentExecutor(agent_execution.AgentExecutor):
         session.owner = owner
         session.agent_key = agent_key
         session.context_id = context_id
+        if owner_mismatch:
+            # Overwrite the stale document now so a later turn failure can't
+            # leave the previous owner's pointer in the store.
+            await self._sessions.persist(session_key, session)
 
         async with session.lock:
             content_items, preamble = await asyncio.gather(

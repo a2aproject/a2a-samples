@@ -54,8 +54,12 @@ _TOKENINFO_URL = 'https://oauth2.googleapis.com/tokeninfo'
 
 
 def _digest(value: str) -> str:
-    """Returns a 16-hex-char SHA-256 digest, used for pseudonymous keys."""
-    return hashlib.sha256(value.encode()).hexdigest()[:16]
+    """Returns a 32-hex-char (128-bit) SHA-256 digest for pseudonymous keys.
+
+    128 bits keeps accidental collisions negligible even at large user counts,
+    so two callers never share a session-owner key.
+    """
+    return hashlib.sha256(value.encode()).hexdigest()[:32]
 
 
 class GoogleUser(authentication.SimpleUser, a2a_user.User):
@@ -193,7 +197,10 @@ class GoogleIdentityBackend(authentication.AuthenticationBackend):
         host = conn.headers.get('host')
         if not host:
             return None
-        scheme = conn.headers.get('x-forwarded-proto') or conn.url.scheme
+        # X-Forwarded-Proto may be a comma-separated list across multiple
+        # proxies; the originating scheme is the first entry.
+        forwarded = (conn.headers.get('x-forwarded-proto') or '').split(',')[0].strip()
+        scheme = forwarded or conn.url.scheme
         return f'{scheme}://{host}'
 
     async def _tokeninfo(self, token: str) -> dict[str, Any]:

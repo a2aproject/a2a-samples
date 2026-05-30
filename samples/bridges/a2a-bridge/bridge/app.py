@@ -129,7 +129,10 @@ def _request_base_url(request: st_requests.Request) -> str:
     host = request.headers.get('host')
     if not host:
         raise st_exceptions.HTTPException(status_code=400, detail='missing Host header')
-    scheme = request.headers.get('x-forwarded-proto') or request.url.scheme
+    # X-Forwarded-Proto may be a comma-separated list across multiple proxies;
+    # the originating scheme is the first entry.
+    forwarded = (request.headers.get('x-forwarded-proto') or '').split(',')[0].strip()
+    scheme = forwarded or request.url.scheme
     return f'{scheme}://{host}'
 
 

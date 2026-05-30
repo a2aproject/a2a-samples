@@ -50,6 +50,7 @@ class InteractionsClient:
         """Opens an httpx client; ADC credentials are lazily refreshed."""
         self._settings = settings
         self._creds = auth.adc_credentials()
+        self._refresh_lock = asyncio.Lock()
         self._http = httpx.AsyncClient(
             timeout=httpx.Timeout(
                 None,
@@ -72,7 +73,11 @@ class InteractionsClient:
 
     async def _headers(self) -> dict[str, str]:
         if not self._creds.valid:
-            await asyncio.to_thread(self._creds.refresh, auth_requests.Request())
+            # google-auth refresh is not coroutine-safe; serialize concurrent
+            # turns and re-check under the lock so we refresh at most once.
+            async with self._refresh_lock:
+                if not self._creds.valid:
+                    await asyncio.to_thread(self._creds.refresh, auth_requests.Request())
         return {
             'Authorization': f'Bearer {self._creds.token}',
             'Content-Type': 'application/json',

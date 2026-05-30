@@ -34,7 +34,7 @@ install:
 bootstrap: tf-init tf-apply build deploy setup-agent
 
 lint:
-	ruff check .
+	ruff check . --config ../../../.ruff.toml
 	mypy bridge cli
 
 test:

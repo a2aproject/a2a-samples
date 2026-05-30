@@ -75,24 +75,31 @@ def _is_public_ip(value: str) -> bool:
     return ip.is_global and not ip.is_multicast
 
 
-async def _reject_unsafe_url(url: str) -> str | None:
-    """Returns a refusal reason if *url* must not be fetched server-side."""
+async def _safe_fetch_target(url: str) -> tuple[str | None, str | None]:
+    """Validates *url* for a server-side fetch and resolves it to one IP.
+
+    Returns ``(ip, None)`` for an allowed URL, where *ip* is a validated public
+    address the caller must connect to directly, or ``(None, reason)`` if the
+    URL must not be fetched. Pinning the connection to the returned IP closes
+    the DNS-rebinding / TOCTOU gap between this check and the actual request
+    (the address validated here is exactly the one connected to).
+    """
     parsed = urllib.parse.urlsplit(url)
     if parsed.scheme not in _ALLOWED_SCHEMES:
-        return f'scheme {parsed.scheme!r} not allowed'
+        return None, f'scheme {parsed.scheme!r} not allowed'
     host = (parsed.hostname or '').lower()
     if not host or host in _BLOCKED_HOSTS:
-        return f'host {host!r} not allowed'
+        return None, f'host {host!r} not allowed'
     loop = asyncio.get_running_loop()
     try:
         infos = await loop.getaddrinfo(host, None, type=socket.SOCK_STREAM)
     except socket.gaierror as err:
-        return f'host {host!r} did not resolve ({err})'
-    for info in infos:
-        address = info[4][0]
+        return None, f'host {host!r} did not resolve ({err})'
+    addresses = [info[4][0] for info in infos]
+    for address in addresses:
         if not _is_public_ip(address):
-            return f'host {host!r} resolves to a non-public address'
-    return None
+            return None, f'host {host!r} resolves to a non-public address'
+    return addresses[0], None
 
 
 class ContentBuilder:
@@ -213,14 +220,38 @@ class ContentBuilder:
             f"curl -fsSL -o {_UPLOADS_DIR}/{name} '{url}'"
         )
 
+    def _pinned_request(self, url: str, ip: str) -> httpx.Request:
+        """Builds a GET request pinned to the validated *ip*.
+
+        The connection targets *ip* directly so the hostname cannot be
+        re-resolved to an internal address after validation. The original host
+        is preserved in the ``Host`` header and, for HTTPS, as the TLS SNI and
+        certificate-verification name.
+        """
+        parsed = urllib.parse.urlsplit(url)
+        host = parsed.hostname or ''
+        port = parsed.port or (443 if parsed.scheme == 'https' else 80)
+        netloc = f'[{ip}]:{port}' if ':' in ip else f'{ip}:{port}'
+        pinned = urllib.parse.urlunsplit((parsed.scheme, netloc, parsed.path, parsed.query, ''))
+        host_header = parsed.netloc.rsplit('@', 1)[-1]
+        request = self._runtime.fetch_http.build_request(
+            'GET', pinned, headers={'Host': host_header}
+        )
+        if parsed.scheme == 'https':
+            request.extensions['sni_hostname'] = host
+        return request
+
     async def _fetch_url(self, name: str, url: str, media_type: str) -> ContentItem:
-        if reason := await _reject_unsafe_url(url):
+        ip, reason = await _safe_fetch_target(url)
+        if ip is None:
             logger.warning('refusing to fetch %s: %s', url, reason)
             return _text(f'[attachment] {name}: refused to fetch {url} ({reason}).')
+        request = self._pinned_request(url, ip)
         chunks: list[bytes] = []
         total = 0
         try:
-            async with self._runtime.fetch_http.stream('GET', url) as resp:
+            resp = await self._runtime.fetch_http.send(request, stream=True)
+            try:
                 resp.raise_for_status()
                 media_type = media_type or (resp.headers.get('content-type') or '').split(';', 1)[0]
                 async for chunk in resp.aiter_bytes(64 * 1024):
@@ -228,6 +259,8 @@ class ContentBuilder:
                     if total > _MAX_FETCH_BYTES:
                         return _text(f'[attachment] {name}: too large (> {_MAX_FETCH_BYTES} bytes)')
                     chunks.append(chunk)
+            finally:
+                await resp.aclose()
         except httpx.HTTPError as err:
             logger.warning('attachment fetch failed for %s: %s', url, err)
             return _text(f'[attachment] {name} could not be fetched from {url}.')
