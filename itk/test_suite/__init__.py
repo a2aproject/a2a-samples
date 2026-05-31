@@ -4,6 +4,7 @@ import subprocess
 import sys
 
 from agents.python.v03.pyproto import instruction_pb2
+from test_suite.elixir_v10 import spawn_agent as spawn_agent_elixir_v10
 from test_suite.go_v03 import spawn_agent as spawn_agent_go_v03
 from test_suite.go_v10 import spawn_agent as spawn_agent_go_v10
 from test_suite.python_v03 import spawn_agent as spawn_agent_python_v03
@@ -11,6 +12,7 @@ from test_suite.python_v10 import spawn_agent as spawn_agent_python_v10
 
 
 _AGENT_DEFS = {
+    'elixir_v10': {'launcher': spawn_agent_elixir_v10},
     'go_v03': {'launcher': spawn_agent_go_v03},
     'python_v03': {'launcher': spawn_agent_python_v03},
     'go_v10': {'launcher': spawn_agent_go_v10},
@@ -32,6 +34,7 @@ def register_traversal(name: str):
 
 
 _SUPPORTED_TRANSPORTS_PER_SDK = {
+    'elixir_v10': {'jsonrpc'},
     'go_v03': {'jsonrpc', 'grpc'},
     'python_v03': {'jsonrpc', 'grpc', 'http_json'},
     'go_v10': {'jsonrpc', 'grpc'},
