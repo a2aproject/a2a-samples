@@ -230,7 +230,7 @@ func TestA2AServer_HandleTaskCancel(t *testing.T) {
 		},
 	}
 
-	reqBody, _ := json.Marshal(models.JSONRPCRequest{
+	reqBody, _ := json.Marshal(models.JSONRPCRequest{ //nolint:errcheck
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 			JSONRPCMessageIdentifier: models.JSONRPCMessageIdentifier{
@@ -252,7 +252,7 @@ func TestA2AServer_HandleTaskCancel(t *testing.T) {
 		ID: "test-task-1",
 	}
 
-	reqBody, _ = json.Marshal(models.JSONRPCRequest{
+	reqBody, _ = json.Marshal(models.JSONRPCRequest{ //nolint:errcheck
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 			JSONRPCMessageIdentifier: models.JSONRPCMessageIdentifier{
@@ -348,7 +348,7 @@ func TestA2AServer_HandleStreamingTask(t *testing.T) { //nolint:gocyclo
 		},
 	}
 
-	reqBody, _ := json.Marshal(models.JSONRPCRequest{
+	reqBody, _ := json.Marshal(models.JSONRPCRequest{ //nolint:errcheck
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 			JSONRPCMessageIdentifier: models.JSONRPCMessageIdentifier{
@@ -471,7 +471,7 @@ func TestA2AServer_HandleStreamingTaskError(t *testing.T) { //nolint:gocyclo
 		},
 	}
 
-	reqBody, _ := json.Marshal(models.JSONRPCRequest{
+	reqBody, _ := json.Marshal(models.JSONRPCRequest{ //nolint:errcheck
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 			JSONRPCMessageIdentifier: models.JSONRPCMessageIdentifier{
@@ -588,7 +588,7 @@ func TestA2AServer_HandleStreamingTaskNoFlusher(t *testing.T) {
 		},
 	}
 
-	reqBody, _ := json.Marshal(models.JSONRPCRequest{
+	reqBody, _ := json.Marshal(models.JSONRPCRequest{ //nolint:errcheck
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 			JSONRPCMessageIdentifier: models.JSONRPCMessageIdentifier{

@@ -100,10 +100,10 @@ func TestOutbox_RelaysToNATS(t *testing.T) {
 
 	// Verify the outbox table is drained (retry because the delete runs
 	// asynchronously after the NATS publish).
-	waitForOutboxDrain(t, ctx, db)
+	waitForOutboxDrain(ctx, t, db)
 }
 
-func waitForOutboxDrain(t *testing.T, ctx context.Context, db *sql.DB) {
+func waitForOutboxDrain(ctx context.Context, t *testing.T, db *sql.DB) {
 	t.Helper()
 	deadline := time.After(2 * time.Second)
 	for {
