@@ -123,7 +123,7 @@ func (s *Index) Query(ctx context.Context, req *IndexQueryParams) (*IndexQueryRe
 		args = append(args, req.ContextID)
 	}
 	if req.State != a2a.TaskStateUnspecified {
-		where += " AND `status` = ?"
+		where += " AND `state` = ?"
 		args = append(args, string(req.State))
 	}
 	if req.UpdatedAfter != nil {

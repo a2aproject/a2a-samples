@@ -1,6 +1,6 @@
 # Deep Research
 
-A multi-agent system that performs deep research on a given topic. The project showcases way of implementing the standard SDK interfaces for integrating with various popular infra components like MySQL and NATS.
+A multi-agent system that performs deep research on a given topic. The project showcases a way of implementing the standard SDK interfaces for integrating with various popular infra components like MySQL and NATS.
 
 Built using [a2a-go](https://github.com/a2aproject/a2a-go) and [adk](https://github.com/google/adk-go).
 
@@ -35,7 +35,7 @@ Orchestrator agents handle client requests:
 
 If an orchestrator crashes, the state machine replays its event stream from the NATS STATES stream to recover which stages were dispatched and which completed, then resumes from where it left off.
 
-Orchestrator never loads large task contents into memory and instead uses task references when communicating with synthesizer and analyzer. The final report is returned to a user a reference.
+Orchestrator never loads large task contents into memory and instead uses task references when communicating with synthesizer and analyzer. The final report is returned to a user as a reference.
 
 Push notifications allow orchestrator to limit the number of open long-lived connections and avoid subtask status polling.
 

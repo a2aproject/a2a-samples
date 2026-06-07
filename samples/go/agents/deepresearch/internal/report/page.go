@@ -270,11 +270,12 @@ body{
 
 {{if .HasContent}}
 <script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 <script>
 (function(){
   var raw = {{.Content}};
   marked.setOptions({gfm:true,breaks:false});
-  document.getElementById('report').innerHTML = marked.parse(raw);
+  document.getElementById('report').innerHTML = DOMPurify.sanitize(marked.parse(raw));
 })();
 </script>
 {{end}}

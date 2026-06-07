@@ -165,25 +165,19 @@ func (s *Store) Load(ctx context.Context, ids []a2a.TaskID) ([]*a2a.Task, error)
 
 func (s *Store) materializeAll(ctx context.Context, indexedTasks []*IndexedTask) ([]*a2a.Task, error) {
 	var group errgroup.Group
-	taskChan := make(chan *a2a.Task, len(indexedTasks))
-	for _, indexedTask := range indexedTasks {
+	tasks := make([]*a2a.Task, len(indexedTasks))
+	for i, indexedTask := range indexedTasks {
 		group.Go(func() error {
 			task, err := s.materialize(ctx, indexedTask.ID, indexedTask.Version)
 			if err != nil {
 				return fmt.Errorf("task loading failed: %w", err)
 			}
-			taskChan <- task
+			tasks[i] = task
 			return nil
 		})
 	}
 	if err := group.Wait(); err != nil {
 		return nil, err
-	}
-	close(taskChan)
-
-	tasks := make([]*a2a.Task, 0, len(indexedTasks))
-	for task := range taskChan {
-		tasks = append(tasks, task)
 	}
 	return tasks, nil
 }

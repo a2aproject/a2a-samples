@@ -76,6 +76,9 @@ Write a brief, user-facing summary (1–2 sentences) describing what the plan co
 		}
 		event = ev
 	}
+	if event == nil || event.Content == nil || len(event.Content.Parts) == 0 {
+		return nil, fmt.Errorf("no content returned from planner")
+	}
 	var plan researchPlan
 	if err := json.Unmarshal([]byte(event.Content.Parts[0].Text), &plan); err != nil {
 		return nil, err

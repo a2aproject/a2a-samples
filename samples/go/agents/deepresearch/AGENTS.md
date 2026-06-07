@@ -65,20 +65,20 @@ deepresearch/
 
 ## Coding Rules
 
-## Testing
+### Testing
 
 - Test observable behavior, not the internal state.
 - Use table-driven tests where applicable.
 - Name test functions `TestFunctionName_scenario`.
 
-## Comments
+### Comments
 
 - **Prefer self-explanatory code**.
 - **Doc comments**: `// SymbolName does X.` directly above the symbol. Start with the symbol name per Go convention. Add for all exported symbols, but be brief.
 - **Inline comments**: Use sparingly, be brief, explain *why* not *what*.
 - **References**: Use Go doc-link syntax `[a2a.Client]` when referencing other symbols.
 
-## Logging
+### Logging
 
 Use `github.com/a2aproject/a2a-go/v2/log` exclusively. Do not use `log/slog` or `fmt.Println` for application logging.
 

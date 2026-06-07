@@ -175,6 +175,9 @@ func (o *orchestrator) research(ctx context.Context, e *orchestratorRun, prevSta
 	if err != nil {
 		return fmt.Errorf("planner: %w", err)
 	}
+	if len(plan.Subtasks) == 0 {
+		return fmt.Errorf("planner returned 0 subtasks")
+	}
 
 	if !e.yieldArtifact(a2a.NewTextPart(plan.Summary)) {
 		return statemachine.ErrStopped

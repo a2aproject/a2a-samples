@@ -114,6 +114,7 @@ func SetupMySQL(t *testing.T) {
 			id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			task_id    CHAR(36) NOT NULL,
+			agent      VARCHAR(255) NOT NULL,
 			event_data TEXT NOT NULL
 		) ENGINE=InnoDB`,
 	} {
