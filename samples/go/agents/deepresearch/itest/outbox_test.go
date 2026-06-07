@@ -26,7 +26,7 @@ func TestOutbox_RelaysToNATS(t *testing.T) {
 	if err != nil {
 		t.Fatalf("mysql open: %v", err)
 	}
-	t.Cleanup(func() { db.Close() })
+	t.Cleanup(func() { _ = db.Close() })
 
 	ctx, cancel := context.WithCancel(context.Background())
 	t.Cleanup(cancel)

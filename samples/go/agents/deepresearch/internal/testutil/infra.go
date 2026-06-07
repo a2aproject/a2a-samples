@@ -86,7 +86,7 @@ func SetupMySQL(t *testing.T) {
 	if err != nil {
 		t.Fatalf("MySQL open: %v", err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	deadline := time.Now().Add(15 * time.Second)
 	for time.Now().Before(deadline) {

@@ -190,8 +190,8 @@ func Start(ctx context.Context, cfg Config) *Server {
 		Addr: ln.Addr().String(),
 		close: func() {
 			cancelOutbox()
-			ln.Close()
-			db.Close()
+			_ = ln.Close()
+			_ = db.Close()
 			nc.Close()
 		},
 	}

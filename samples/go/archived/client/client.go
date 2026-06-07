@@ -120,7 +120,7 @@ func (c *Client) SendTaskStreaming(params models.TaskSendParams, eventChan chan<
 	if err != nil {
 		return fmt.Errorf("failed to send request: %w", err)
 	}
-	defer httpResp.Body.Close()
+	defer func() { _ = httpResp.Body.Close() }()
 
 	if httpResp.StatusCode != http.StatusOK {
 		return fmt.Errorf("unexpected status code: %d", httpResp.StatusCode)
@@ -171,7 +171,7 @@ func (c *Client) doRequest(req interface{}, resp *models.JSONRPCResponse) error 
 	if err != nil {
 		return fmt.Errorf("failed to send request: %w", err)
 	}
-	defer httpResp.Body.Close()
+	defer func() { _ = httpResp.Body.Close() }()
 
 	if httpResp.StatusCode != http.StatusOK {
 		return fmt.Errorf("unexpected status code: %d", httpResp.StatusCode)

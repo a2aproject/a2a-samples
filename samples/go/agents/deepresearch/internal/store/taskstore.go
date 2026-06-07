@@ -188,7 +188,7 @@ func (s *Store) materialize(ctx context.Context, tid a2a.TaskID, v taskstore.Tas
 	if err != nil {
 		return nil, fmt.Errorf("event replay initiation: %w", err)
 	}
-	defer reader.Close()
+	defer func() { _ = reader.Close() }()
 
 	task := &a2a.Task{}
 	for {

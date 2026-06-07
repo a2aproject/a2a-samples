@@ -178,7 +178,7 @@ func (s *Index) rawQuery(ctx context.Context, rqp rawQueryParts, args []any) ([]
 	if err != nil {
 		return nil, fmt.Errorf("query tasks: %w", err)
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	var tasks []*IndexedTask
 	for rows.Next() {
