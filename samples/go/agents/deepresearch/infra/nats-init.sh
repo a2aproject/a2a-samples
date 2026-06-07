@@ -19,7 +19,7 @@ sleep 2
 # --- Clean up previous state ---
 
 nats -s "${NATS_URL}" stream rm EVENTS -f 2>/dev/null || true
-nats -s "${NATS_URL}" stream rm WORK   -f 2>/dev/null || true
+nats -s "${NATS_URL}" stream rm WORK -f 2>/dev/null || true
 nats -s "${NATS_URL}" stream rm STATES -f 2>/dev/null || true
 nats -s "${NATS_URL}" kv rm OUTBOX_LOCK -f 2>/dev/null || true
 
@@ -27,48 +27,48 @@ nats -s "${NATS_URL}" kv rm OUTBOX_LOCK -f 2>/dev/null || true
 
 # Event log — durable, per-task subject.
 nats -s "${NATS_URL}" stream add EVENTS \
-  --subjects="events.>" \
-  --retention=limits --storage=file --discard=old \
-  --defaults
+	--subjects="events.>" \
+	--retention=limits --storage=file --discard=old \
+	--defaults
 
 # Work queue — per-node-type subjects with filtered consumers.
 nats -s "${NATS_URL}" stream add WORK \
-  --subjects="work.>" \
-  --retention=work --storage=file --discard=old \
-  --defaults
+	--subjects="work.>" \
+	--retention=work --storage=file --discard=old \
+	--defaults
 
 # Push notifications — ephemeral signaling stream with TTL.
 nats -s "${NATS_URL}" stream add STATES \
-  --subjects="states.>" \
-  --retention=limits --max-age=24h --storage=memory --discard=old \
-  --defaults
+	--subjects="states.>" \
+	--retention=limits --max-age=24h --storage=memory --discard=old \
+	--defaults
 
 # --- Consumers (one per agent type, filtered by subject) ---
 
 nats -s "${NATS_URL}" consumer add WORK orchestrator \
-  --filter="work.orchestrator" \
-  --ack=explicit --deliver=all --replay=instant --pull \
-  --defaults
+	--filter="work.orchestrator" \
+	--ack=explicit --deliver=all --replay=instant --pull \
+	--defaults
 
 nats -s "${NATS_URL}" consumer add WORK researcher \
-  --filter="work.researcher" \
-  --ack=explicit --deliver=all --replay=instant --pull \
-  --defaults
+	--filter="work.researcher" \
+	--ack=explicit --deliver=all --replay=instant --pull \
+	--defaults
 
 nats -s "${NATS_URL}" consumer add WORK analyzer \
-  --filter="work.analyzer" \
-  --ack=explicit --deliver=all --replay=instant --pull \
-  --defaults
+	--filter="work.analyzer" \
+	--ack=explicit --deliver=all --replay=instant --pull \
+	--defaults
 
 nats -s "${NATS_URL}" consumer add WORK synthesizer \
-  --filter="work.synthesizer" \
-  --ack=explicit --deliver=all --replay=instant --pull \
-  --defaults
+	--filter="work.synthesizer" \
+	--ack=explicit --deliver=all --replay=instant --pull \
+	--defaults
 
 # --- KV buckets ---
 
 # Outbox leader election.
 nats -s "${NATS_URL}" kv add OUTBOX_LOCK \
-  --ttl=10s --storage=memory
+	--ttl=10s --storage=memory
 
 echo "NATS streams, consumers, and KV buckets ready."

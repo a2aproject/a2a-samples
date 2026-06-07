@@ -57,8 +57,8 @@ func Run[E, S any](ctx context.Context, stream jetstream.Stream, spec Spec[E, S]
 			}
 			events = append(events, event)
 
-			if err := spec.Evolve(ctx, spec.State, event); err != nil {
-				return err
+			if evolveErr := spec.Evolve(ctx, spec.State, event); evolveErr != nil {
+				return evolveErr
 			}
 			meta, err := msg.Metadata()
 			if err != nil {

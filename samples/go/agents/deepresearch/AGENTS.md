@@ -7,7 +7,7 @@ This is a **multi-agent deep research system** built on the A2A (Agent-to-Agent)
 ### Key dependencies
 
 | Dependency | Purpose |
-|---|---|
+| --- | --- |
 | `github.com/a2aproject/a2a-go/v2` | A2A protocol SDK (server, client, types, push, queues, stores) |
 | `google.golang.org/adk` | Google Agent Development Kit (LLM agents, runners, sessions, tools) |
 | `google.golang.org/genai` | Google GenAI SDK (Gemini model, content types) |
@@ -18,7 +18,7 @@ This is a **multi-agent deep research system** built on the A2A (Agent-to-Agent)
 
 ## Architecture
 
-```
+```text
 Client → Orchestrator (state machine)
            ├── Researcher  (Google Search grounding)
            ├── Analyzer    (referenced-task injection)
@@ -36,7 +36,7 @@ Infrastructure: MySQL (task index + outbox) · NATS JetStream (events, work, sta
 
 ## Project Layout
 
-```
+```text
 deepresearch/
 ├── main.go                         # Entry point, config, server wiring
 ├── internal/

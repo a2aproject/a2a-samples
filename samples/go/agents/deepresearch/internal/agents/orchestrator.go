@@ -74,7 +74,7 @@ func (o *orchestrator) Execute(ctx context.Context, execCtx *a2asrv.ExecutorCont
 			State:   exec.state,
 			Decode:  parseOrchestratorEvent,
 			Evolve:  evolveOrchestratorState,
-			Act: func(ctx context.Context, s *orchestratorState, events []*orchestratorEvent) error {
+			Act: func(ctx context.Context, s *orchestratorState, _ []*orchestratorEvent) error {
 				stage := s.activeStage()
 				switch {
 				case stage == nil: // initial state
@@ -134,15 +134,15 @@ func (o *orchestrator) runNextStage(ctx context.Context, exec *orchestratorRun, 
 	case stageResearch:
 		if stage.message.PrevStageID == "" { // analyze initial research findings
 			return o.analyze(ctx, exec, stage)
-		} else { // follow-up research finished, synthesize all findings
-			return o.synthesize(ctx, exec)
 		}
+		// follow-up research finished, synthesize all findings
+		return o.synthesize(ctx, exec)
 	case stageAnalysis: // start follow-up research
 		return o.research(ctx, exec, stage)
 	case stageSynthesiz: // deliver final result
 		return o.complete(ctx, exec, stage)
 	default:
-		return fmt.Errorf("unknown uncommited stage %q", stage.message.Type)
+		return fmt.Errorf("unknown uncommitted stage %q", stage.message.Type)
 	}
 }
 

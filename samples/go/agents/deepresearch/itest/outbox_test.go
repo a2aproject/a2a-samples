@@ -64,15 +64,15 @@ func TestOutbox_RelaysToNATS(t *testing.T) {
 	if err != nil {
 		t.Fatalf("begin tx: %v", err)
 	}
-	if err := outbox.Insert(ctx, tx, msg); err != nil {
-		t.Fatalf("outbox insert: %v", err)
+	if insertErr := outbox.Insert(ctx, tx, msg); insertErr != nil {
+		t.Fatalf("outbox insert: %v", insertErr)
 	}
-	if err := tx.Commit(); err != nil {
-		t.Fatalf("commit: %v", err)
+	if commitErr := tx.Commit(); commitErr != nil {
+		t.Fatalf("commit: %v", commitErr)
 	}
 
 	// Start outbox relay.
-	go outbox.Run(ctx)
+	go outbox.Run(ctx) //nolint:errcheck // test background goroutine
 
 	// Verify the event appears in NATS.
 	eventsStream, err := js.Stream(ctx, "EVENTS")
@@ -100,6 +100,11 @@ func TestOutbox_RelaysToNATS(t *testing.T) {
 
 	// Verify the outbox table is drained (retry because the delete runs
 	// asynchronously after the NATS publish).
+	waitForOutboxDrain(t, ctx, db)
+}
+
+func waitForOutboxDrain(t *testing.T, ctx context.Context, db *sql.DB) {
+	t.Helper()
 	deadline := time.After(2 * time.Second)
 	for {
 		var remaining int
@@ -107,7 +112,7 @@ func TestOutbox_RelaysToNATS(t *testing.T) {
 			t.Fatalf("count outbox rows: %v", err)
 		}
 		if remaining == 0 {
-			break
+			return
 		}
 		select {
 		case <-deadline:

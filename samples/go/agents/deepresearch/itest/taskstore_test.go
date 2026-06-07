@@ -51,7 +51,7 @@ func TestTaskStore_CreateAndGet(t *testing.T) {
 	if err != nil {
 		t.Fatalf("create outbox: %v", err)
 	}
-	go func() { _ = outbox.Run(ctx) }()
+	go outbox.Run(ctx) //nolint:errcheck // test background goroutine
 
 	replayMgr, err := msgstream.CreateEventReplayManager(ctx, js)
 	if err != nil {

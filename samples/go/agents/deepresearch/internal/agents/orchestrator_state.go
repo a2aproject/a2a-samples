@@ -18,11 +18,6 @@ const (
 	stageSynthesiz stageType = "synthesiz"
 )
 
-type taskState struct {
-	ID    a2a.TaskID
-	State a2a.TaskState
-}
-
 type messagePrepare struct {
 	Type        stageType      `json:"type"`
 	Messages    []*a2a.Message `json:"messages"`
@@ -81,8 +76,7 @@ func (p *deepresearchStage) finished() bool {
 }
 
 type orchestratorState struct {
-	stages        []*deepresearchStage
-	summarization *taskState
+	stages []*deepresearchStage
 }
 
 func (s *orchestratorState) previousStage(stage *deepresearchStage) *deepresearchStage {

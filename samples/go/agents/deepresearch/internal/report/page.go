@@ -58,13 +58,18 @@ func NewServer(s *store.Store) http.Handler {
 		}
 
 		markdown := extractMarkdown(task.Task)
-		contentJSON, _ := json.Marshal(markdown)
+		contentJSON, err := json.Marshal(markdown)
+		if err != nil {
+			log.Warn(ctx, "json marshal failed", "cause", err)
+			http.Error(w, "Internal error", http.StatusInternalServerError)
+			return
+		}
 		state := task.Task.Status.State
 		data := reportData{
 			TaskID:     id,
 			State:      stateLabel(state),
 			BadgeClass: badgeClass(state),
-			Content:    template.JS(contentJSON),
+			Content:    template.JS(contentJSON), //nolint:gosec // contentJSON is JSON-encoded markdown, safe for JS embedding
 			HasContent: markdown != "",
 			IsWorking:  !state.Terminal(),
 		}
@@ -73,7 +78,9 @@ func NewServer(s *store.Store) http.Handler {
 		if data.IsWorking {
 			w.Header().Set("Refresh", "5")
 		}
-		tmpl.Execute(w, data)
+		if err := tmpl.Execute(w, data); err != nil {
+			log.Warn(ctx, "template execution failed", "cause", err)
+		}
 	})
 }
 

@@ -13,13 +13,13 @@ import (
 )
 
 // mockTaskHandler is a simple task handler for testing
-func mockTaskHandler(task *models.Task, message *models.Message) (*models.Task, error) {
+func mockTaskHandler(task *models.Task, _ *models.Message) (*models.Task, error) {
 	task.Status.State = models.TaskStateCompleted
 	return task, nil
 }
 
 // mockErrorTaskHandler is a task handler that returns an error for testing
-func mockErrorTaskHandler(task *models.Task, message *models.Message) (*models.Task, error) {
+func mockErrorTaskHandler(_ *models.Task, _ *models.Message) (*models.Task, error) {
 	return nil, fmt.Errorf("test error")
 }
 
@@ -78,7 +78,7 @@ func TestA2AServer_HandleTaskSend(t *testing.T) {
 		},
 	}
 
-	reqBody, _ := json.Marshal(models.JSONRPCRequest{
+	reqBody, _ := json.Marshal(models.JSONRPCRequest{ //nolint:errcheck
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 			JSONRPCMessageIdentifier: models.JSONRPCMessageIdentifier{
@@ -144,7 +144,7 @@ func TestA2AServer_HandleTaskGet(t *testing.T) {
 		},
 	}
 
-	reqBody, _ := json.Marshal(models.JSONRPCRequest{
+	reqBody, _ := json.Marshal(models.JSONRPCRequest{ //nolint:errcheck
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 			JSONRPCMessageIdentifier: models.JSONRPCMessageIdentifier{
@@ -168,7 +168,7 @@ func TestA2AServer_HandleTaskGet(t *testing.T) {
 		},
 	}
 
-	reqBody, _ = json.Marshal(models.JSONRPCRequest{
+	reqBody, _ = json.Marshal(models.JSONRPCRequest{ //nolint:errcheck
 		JSONRPCMessage: models.JSONRPCMessage{
 			JSONRPC: "2.0",
 			JSONRPCMessageIdentifier: models.JSONRPCMessageIdentifier{
@@ -332,7 +332,7 @@ func TestErrorResponse(t *testing.T) {
 	}
 }
 
-func TestA2AServer_HandleStreamingTask(t *testing.T) {
+func TestA2AServer_HandleStreamingTask(t *testing.T) { //nolint:gocyclo
 	server := NewA2AServer(mockAgentCard, mockTaskHandler)
 	server.port = 8080
 	server.basePath = "/"
@@ -399,14 +399,14 @@ func TestA2AServer_HandleStreamingTask(t *testing.T) {
 	}
 
 	// Check that the result is a TaskStatusUpdateEvent
-	initialResultBytes, err := json.Marshal(initialResponse.Result)
-	if err != nil {
-		t.Fatalf("Failed to marshal initial result: %v", err)
+	initialResultBytes, marshalErr := json.Marshal(initialResponse.Result)
+	if marshalErr != nil {
+		t.Fatalf("Failed to marshal initial result: %v", marshalErr)
 	}
 
 	var initialEvent models.TaskStatusUpdateEvent
-	if err := json.Unmarshal(initialResultBytes, &initialEvent); err != nil {
-		t.Fatalf("Failed to unmarshal initial event: %v", err)
+	if unmarshalErr := json.Unmarshal(initialResultBytes, &initialEvent); unmarshalErr != nil {
+		t.Fatalf("Failed to unmarshal initial event: %v", unmarshalErr)
 	}
 
 	if initialEvent.ID != "test-task-1" {
@@ -423,8 +423,8 @@ func TestA2AServer_HandleStreamingTask(t *testing.T) {
 
 	// Check the final status update
 	var finalResponse models.SendTaskStreamingResponse
-	if err := json.Unmarshal([]byte(responseLines[len(responseLines)-1]), &finalResponse); err != nil {
-		t.Fatalf("Failed to unmarshal final response: %v", err)
+	if unmarshalErr := json.Unmarshal([]byte(responseLines[len(responseLines)-1]), &finalResponse); unmarshalErr != nil {
+		t.Fatalf("Failed to unmarshal final response: %v", unmarshalErr)
 	}
 
 	if finalResponse.Error != nil {
@@ -432,14 +432,14 @@ func TestA2AServer_HandleStreamingTask(t *testing.T) {
 	}
 
 	// Check that the result is a TaskStatusUpdateEvent
-	finalResultBytes, err := json.Marshal(finalResponse.Result)
-	if err != nil {
-		t.Fatalf("Failed to marshal final result: %v", err)
+	finalResultBytes, marshalErr := json.Marshal(finalResponse.Result)
+	if marshalErr != nil {
+		t.Fatalf("Failed to marshal final result: %v", marshalErr)
 	}
 
 	var finalEvent models.TaskStatusUpdateEvent
-	if err := json.Unmarshal(finalResultBytes, &finalEvent); err != nil {
-		t.Fatalf("Failed to unmarshal final event: %v", err)
+	if unmarshalErr := json.Unmarshal(finalResultBytes, &finalEvent); unmarshalErr != nil {
+		t.Fatalf("Failed to unmarshal final event: %v", unmarshalErr)
 	}
 
 	if finalEvent.ID != "test-task-1" {
@@ -455,7 +455,7 @@ func TestA2AServer_HandleStreamingTask(t *testing.T) {
 	}
 }
 
-func TestA2AServer_HandleStreamingTaskError(t *testing.T) {
+func TestA2AServer_HandleStreamingTaskError(t *testing.T) { //nolint:gocyclo
 	server := NewA2AServer(mockAgentCard, mockErrorTaskHandler)
 	server.port = 8080
 	server.basePath = "/"
@@ -516,14 +516,14 @@ func TestA2AServer_HandleStreamingTaskError(t *testing.T) {
 	}
 
 	// Check that the result is a TaskStatusUpdateEvent
-	initialResultBytes, err := json.Marshal(initialResponse.Result)
-	if err != nil {
-		t.Fatalf("Failed to marshal initial result: %v", err)
+	initialResultBytes, marshalErr := json.Marshal(initialResponse.Result)
+	if marshalErr != nil {
+		t.Fatalf("Failed to marshal initial result: %v", marshalErr)
 	}
 
 	var initialEvent models.TaskStatusUpdateEvent
-	if err := json.Unmarshal(initialResultBytes, &initialEvent); err != nil {
-		t.Fatalf("Failed to unmarshal initial event: %v", err)
+	if unmarshalErr := json.Unmarshal(initialResultBytes, &initialEvent); unmarshalErr != nil {
+		t.Fatalf("Failed to unmarshal initial event: %v", unmarshalErr)
 	}
 
 	if initialEvent.ID != "test-task-1" {
@@ -540,8 +540,8 @@ func TestA2AServer_HandleStreamingTaskError(t *testing.T) {
 
 	// Check the error status update
 	var finalResponse models.SendTaskStreamingResponse
-	if err := json.Unmarshal([]byte(responseLines[len(responseLines)-1]), &finalResponse); err != nil {
-		t.Fatalf("Failed to unmarshal final response: %v", err)
+	if unmarshalErr := json.Unmarshal([]byte(responseLines[len(responseLines)-1]), &finalResponse); unmarshalErr != nil {
+		t.Fatalf("Failed to unmarshal final response: %v", unmarshalErr)
 	}
 
 	if finalResponse.Error != nil {
@@ -549,14 +549,14 @@ func TestA2AServer_HandleStreamingTaskError(t *testing.T) {
 	}
 
 	// Check that the result is a TaskStatusUpdateEvent
-	finalResultBytes, err := json.Marshal(finalResponse.Result)
-	if err != nil {
-		t.Fatalf("Failed to marshal final result: %v", err)
+	finalResultBytes, marshalErr := json.Marshal(finalResponse.Result)
+	if marshalErr != nil {
+		t.Fatalf("Failed to marshal final result: %v", marshalErr)
 	}
 
 	var finalEvent models.TaskStatusUpdateEvent
-	if err := json.Unmarshal(finalResultBytes, &finalEvent); err != nil {
-		t.Fatalf("Failed to unmarshal final event: %v", err)
+	if unmarshalErr := json.Unmarshal(finalResultBytes, &finalEvent); unmarshalErr != nil {
+		t.Fatalf("Failed to unmarshal final event: %v", unmarshalErr)
 	}
 
 	if finalEvent.ID != "test-task-1" {
@@ -615,12 +615,4 @@ func TestA2AServer_HandleStreamingTaskNoFlusher(t *testing.T) {
 	if w.body.String() != "Streaming not supported\n" {
 		t.Errorf("Expected error message 'Streaming not supported', got '%s'", w.body.String())
 	}
-}
-
-func testStringPtr(s string) *string {
-	return &s
-}
-
-func testBoolPtr(b bool) *bool {
-	return &b
 }

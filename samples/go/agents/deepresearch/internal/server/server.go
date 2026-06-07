@@ -178,8 +178,9 @@ func Start(ctx context.Context, cfg Config) *Server {
 	mux.Handle("/reports/{id}", report.NewServer(taskStore))
 	mux.Handle("/", a2asrv.NewRESTHandler(handler))
 
+	srv := &http.Server{Handler: mux, ReadHeaderTimeout: 30 * time.Second}
 	go func() {
-		if err := http.Serve(ln, mux); err != nil {
+		if err := srv.Serve(ln); err != nil {
 			log.Error(ctx, "http server stopped", err)
 		}
 	}()

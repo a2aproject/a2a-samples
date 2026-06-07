@@ -44,7 +44,7 @@ type interceptor struct {
 }
 
 // Before implements [a2asrv.CallInterceptor.Before].
-func (i *interceptor) Before(ctx context.Context, callCtx *a2asrv.CallContext, req *a2asrv.Request) (context.Context, any, error) {
+func (i *interceptor) Before(ctx context.Context, _ *a2asrv.CallContext, _ *a2asrv.Request) (context.Context, any, error) {
 	return context.WithValue(ctx, nodeInfoKeyType{}, i.nodeInfo), nil, nil
 }
 

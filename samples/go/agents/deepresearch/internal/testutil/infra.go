@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" // MySQL driver registration
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 )
@@ -46,9 +46,9 @@ func SetupNATS(t *testing.T) {
 
 	// Clean slate.
 	for _, name := range []string{"EVENTS", "WORK", "STATES"} {
-		_ = js.DeleteStream(ctx, name)
+		js.DeleteStream(ctx, name) //nolint:errcheck // cleanup, may not exist
 	}
-	_ = js.DeleteKeyValue(ctx, "OUTBOX")
+	js.DeleteKeyValue(ctx, "OUTBOX") //nolint:errcheck // cleanup, may not exist
 
 	// Streams.
 	for _, cfg := range []jetstream.StreamConfig{
@@ -56,8 +56,8 @@ func SetupNATS(t *testing.T) {
 		{Name: "WORK", Subjects: []string{"work.>"}, Retention: jetstream.WorkQueuePolicy, Storage: jetstream.FileStorage},
 		{Name: "STATES", Subjects: []string{"states.>"}, Retention: jetstream.LimitsPolicy, MaxAge: 24 * time.Hour, Storage: jetstream.MemoryStorage},
 	} {
-		if _, err := js.CreateStream(ctx, cfg); err != nil {
-			t.Fatalf("create stream %s: %v", cfg.Name, err)
+		if _, createErr := js.CreateStream(ctx, cfg); createErr != nil {
+			t.Fatalf("create stream %s: %v", cfg.Name, createErr)
 		}
 	}
 
@@ -123,7 +123,7 @@ func SetupMySQL(t *testing.T) {
 	}
 
 	for _, table := range []string{"outbox", "tasks"} {
-		if _, err := db.Exec("DELETE FROM " + table); err != nil {
+		if _, err := db.Exec("DELETE FROM " + table); err != nil { //nolint:gosec // table names are hardcoded constants
 			t.Fatalf("truncate %s: %v", table, err)
 		}
 	}

@@ -20,22 +20,22 @@ func newExecutorFrom(a agent.Agent) a2asrv.AgentExecutor {
 	return adka2a.NewExecutor(adka2a.ExecutorConfig{
 		RunnerConfig: runner.Config{Agent: a, AppName: a.Name(), SessionService: session.InMemoryService()},
 		RunConfig:    agent.RunConfig{StreamingMode: agent.StreamingModeSSE},
-		BeforeExecuteCallback: func(ctx context.Context, reqCtx *a2asrv.ExecutorContext) (context.Context, error) {
+		BeforeExecuteCallback: func(ctx context.Context, _ *a2asrv.ExecutorContext) (context.Context, error) {
 			log.Info(ctx, "agent invoked", "name", a.Name())
 			return ctx, nil
 		},
-		AfterEventCallback: func(ctx adka2a.ExecutorContext, event *session.Event, processed *a2a.TaskArtifactUpdateEvent) error {
+		AfterEventCallback: func(ctx adka2a.ExecutorContext, _ *session.Event, processed *a2a.TaskArtifactUpdateEvent) error {
 			if processed.LastChunk && len(ctx.RequestContext().Message.Parts) > 0 {
 				description := fmt.Sprintf("Research results: %q", ctx.RequestContext().Message.Parts[0].Text())
 				processed.Artifact.Description = description
 			}
 			return nil
 		},
-		AfterExecuteCallback: func(ctx adka2a.ExecutorContext, finalEvent *a2a.TaskStatusUpdateEvent, err error) error {
+		AfterExecuteCallback: func(ctx adka2a.ExecutorContext, finalEvent *a2a.TaskStatusUpdateEvent, _ error) error {
 			log.Info(ctx, "agent finished", "name", a.Name(), "status", finalEvent.Status.State)
 			return nil
 		},
-		GenAIPartConverter: func(ctx context.Context, adkEvent *session.Event, part *genai.Part) (*a2a.Part, error) {
+		GenAIPartConverter: func(_ context.Context, adkEvent *session.Event, part *genai.Part) (*a2a.Part, error) {
 			if part.Text == "" || part.Thought { // only expose text outputs
 				return nil, nil
 			}
@@ -68,9 +68,7 @@ func (e *referencedTaskLoader) Execute(ctx context.Context, execCtx *a2asrv.Exec
 		for _, task := range tasks {
 			for _, artifact := range task.Artifacts {
 				execCtx.Message.Parts = append(execCtx.Message.Parts, a2a.NewTextPart(artifact.Description+":\n"))
-				for _, part := range artifact.Parts {
-					execCtx.Message.Parts = append(execCtx.Message.Parts, part)
-				}
+				execCtx.Message.Parts = append(execCtx.Message.Parts, artifact.Parts...)
 			}
 		}
 		for ev, err := range e.AgentExecutor.Execute(ctx, execCtx) {

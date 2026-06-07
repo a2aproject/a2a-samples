@@ -61,7 +61,7 @@ func (rw *natsWorkReadWriter) Read(ctx context.Context) (workqueue.Message, erro
 		for msg := range batch.Messages() {
 			var p workqueue.Payload
 			if err := json.Unmarshal(msg.Data(), &p); err != nil {
-				_ = msg.Nak()
+				msg.Nak() //nolint:errcheck // best-effort nak before returning the unmarshal error
 				return nil, fmt.Errorf("unmarshal payload: %w", err)
 			}
 
@@ -92,7 +92,7 @@ var (
 func (m *natsWorkMsg) Payload() *workqueue.Payload { return m.payload }
 
 // Complete implements [workqueue.Message.Complete].
-func (m *natsWorkMsg) Complete(ctx context.Context) error { return m.msg.Ack() }
+func (m *natsWorkMsg) Complete(_ context.Context) error { return m.msg.Ack() }
 
 // Return implements [workqueue.Message.Return].
 func (m *natsWorkMsg) Return(ctx context.Context, cause error) error {
