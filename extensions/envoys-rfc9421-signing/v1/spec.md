@@ -72,8 +72,16 @@ the following profile (full normative detail in the
   ([RFC 9530](https://www.rfc-editor.org/rfc/rfc9530); SHA-256, or SHA-512 for
   bodies of 4096 bytes or more) is always signed.
 - **keyid resolution:** `keyid` is an HTTPS URL that returns the signer's public
-  key, as either an Envoys-native `{ address, public_key }` object or a W3C DID
-  Document (`application/did+json`).
+  key, as either an Envoys-native JSON object (`address`: the agent's
+  identifier string; `public_key`: the Ed25519 public key as a PEM-encoded
+  SubjectPublicKeyInfo per [RFC 8410](https://www.rfc-editor.org/rfc/rfc8410))
+  or a W3C DID Document (`application/did+json`, key carried as an OKP/Ed25519
+  `publicKeyJwk`).
+- **Query strings:** RFC 9421 `@path` excludes the query string. This profile
+  relies on request semantics travelling in the signed body (the JSON-RPC
+  envelope or REST JSON body, covered by `content-digest`); receivers **MUST
+  NOT** derive request semantics from unsigned query parameters. A future
+  revision may add `@query` coverage for transports that require it.
 
 The signature is carried in the standard `Signature`, `Signature-Input`, and
 `Content-Digest` HTTP headers. It applies to every A2A transport with HTTP
@@ -93,10 +101,14 @@ A verifier that has activated this extension **MUST**, for each signed request:
 3. Resolve the `keyid` URL to obtain the signer's Ed25519 public key.
 4. Verify the RFC 9421 signature over the covered components. When
    `"@authority"` is covered, reconstruct its value from the verifier's own
-   authority (configuration or the `Host` header) — never from a
-   sender-controlled field.
+   configured authority — or from the request's `Host` header only after
+   validating it against the set of authorities the server actually serves —
+   never from an unvalidated, sender-controlled field.
 5. Reject signatures whose `created` timestamp falls outside an acceptable
-   freshness window (replay protection).
+   freshness window (the reference implementations use 300 seconds past /
+   30 seconds future), **and** reject any signature already accepted within
+   that window (deduplication by signature value, per the wire
+   specification's replay-protection requirement).
 
 A successful verification establishes the sender's cryptographic identity (the
 `keyid` / address). Authorization — deciding whether that identity may perform
@@ -120,10 +132,10 @@ share one wire format and a common set of reference test vectors:
 
 | Language | Package | Role |
 | --- | --- | --- |
-| Node   | [`@envoys/sdk`](https://www.npmjs.com/package/@envoys/sdk)   | signing + verification |
-| Node   | [`@envoys/a2a`](https://www.npmjs.com/package/@envoys/a2a)   | A2A adapter (signed JSON-RPC over RFC 9421) |
-| Python | [`envoys`](https://pypi.org/project/envoys/)                 | signing + verification |
-| Python | [`envoys-mcp`](https://pypi.org/project/envoys-mcp/)         | MCP Streamable-HTTP integration |
+| Node | [`@envoys/sdk`](https://www.npmjs.com/package/@envoys/sdk) | signing + verification |
+| Node | [`@envoys/a2a`](https://www.npmjs.com/package/@envoys/a2a) | A2A adapter (signed JSON-RPC over RFC 9421) |
+| Python | [`envoys`](https://pypi.org/project/envoys/) | signing + verification |
+| Python | [`envoys-mcp`](https://pypi.org/project/envoys-mcp/) | MCP Streamable-HTTP integration |
 
 ## Security Considerations
 
@@ -132,8 +144,12 @@ share one wire format and a common set of reference test vectors:
 - **Key-resolution trust.** The `keyid` URL **MUST** be fetched over HTTPS.
   Verifiers **SHOULD** pin the first-seen `(address, public_key)` pair and treat
   a changed key as a rotation event requiring re-validation.
-- **Replay.** The `created` timestamp and `nonce` bound replay; verifiers
-  **MUST** enforce a freshness window.
+- **Replay.** A freshness window alone is insufficient — a captured request
+  could be re-presented within it. Verifiers **MUST** enforce a freshness
+  window on `created` (reference: 300 seconds past, 30 seconds future) and
+  **MUST** also reject signatures already accepted within that window
+  (dedup cache keyed by signature value; the `nonce` makes each signature
+  unique even for otherwise-identical requests).
 - **Cross-host relay.** A signature that does not cover `"@authority"` is valid
   for the same method and path on any host within the freshness window, and
   per-receiver replay caches cannot detect the relay. Covering `"@authority"`
