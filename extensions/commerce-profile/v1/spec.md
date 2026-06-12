@@ -40,7 +40,7 @@ An agent that supports this profile SHOULD declare it in the Agent Card
     "params": {
         "descriptorUrl": "https://seller.example.com/.well-known/commerce-profile.json",
         "supportedSettlement": ["x402", "usdc-base", "invoice"],
-        "receiptUrl": "https://seller.example.com/receipts/{receiptId}"
+        "receiptUrlTemplate": "https://seller.example.com/receipts/{receiptId}"
     }
 }
 ```
@@ -76,18 +76,18 @@ After settlement or authorization happens out of band, the buyer attaches a
 payment proof to the A2A message metadata. The metadata key for this extension
 is:
 
-`github.com/a2aproject/a2a-samples/extensions/commerce-profile/v1/paymentProof`
+`https://github.com/a2aproject/a2a-samples/extensions/commerce-profile/v1/paymentProof`
 
 The value SHOULD include:
 
-| Field              | Required | Description                                 |
-| ------------------ | -------- | ------------------------------------------- |
-| `serviceId`        | Yes      | Service identifier from the descriptor.     |
-| `settlementMethod` | Yes      | Settlement method used by the buyer.        |
-| `proofType`        | Yes      | Proof type, for example `x402`.             |
-| `proof`            | Yes      | Provider-specific proof token or reference. |
-| `amount`           | Yes      | Amount authorized or paid.                  |
-| `currency`         | Yes      | Settlement currency or unit.                |
+| Field              | Req | Description                                 |
+| ------------------ | --- | ------------------------------------------- |
+| `serviceId`        | Yes | Service identifier from the descriptor.     |
+| `settlementMethod` | Yes | Settlement method used by the buyer.        |
+| `proofType`        | Yes | Proof type, e.g. `x402-payment-header`.     |
+| `proof`            | Yes | Provider-specific proof token or reference. |
+| `amount`           | Yes | Amount authorized or paid.                  |
+| `currency`         | Yes | Settlement currency or unit.                |
 
 Sellers MUST validate the payment proof before executing paid work. Buyers and
 sellers SHOULD bind the proof to the requested `serviceId`, amount, and

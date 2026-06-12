@@ -32,10 +32,14 @@
         }
     ],
     "paymentProof": {
-        "metadataKey": "github.com/a2aproject/a2a-samples/extensions/commerce-profile/v1/paymentProof",
-        "acceptedProofTypes": ["x402", "receipt-ref", "transaction-ref"]
+        "metadataKey": "https://github.com/a2aproject/a2a-samples/extensions/commerce-profile/v1/paymentProof",
+        "acceptedProofTypes": [
+            "x402-payment-header",
+            "transaction-reference",
+            "buyer-account-reference"
+        ]
     },
     "receipts": {
-        "statusUrlTemplate": "https://seller.example.com/receipts/{receiptId}"
+        "receiptUrlTemplate": "https://seller.example.com/receipts/{receiptId}"
     }
 }
