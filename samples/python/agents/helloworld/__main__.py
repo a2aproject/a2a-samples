@@ -57,6 +57,7 @@ if __name__ == '__main__':
             AgentInterface(
                 protocol_binding='JSONRPC',
                 url='http://127.0.0.1:9999',
+                protocol_version='1.0',
             )
         ],
         # The list of AgentSkill objects that this agent offers
