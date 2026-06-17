@@ -2,10 +2,11 @@ package com.samples.a2a.client;
 
 import com.samples.a2a.client.util.CachedToken;
 import com.samples.a2a.client.util.KeycloakUtil;
-import io.a2a.client.transport.spi.interceptors.ClientCallContext;
-import io.a2a.client.transport.spi.interceptors.auth.CredentialService;
+import org.a2aproject.sdk.client.transport.spi.interceptors.ClientCallContext;
+import org.a2aproject.sdk.client.transport.spi.interceptors.auth.CredentialService;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import org.a2aproject.sdk.spec.OAuth2SecurityScheme;
 import org.keycloak.authorization.client.AuthzClient;
 
 /**
@@ -16,7 +17,7 @@ import org.keycloak.authorization.client.AuthzClient;
 public final class KeycloakOAuth2CredentialService implements CredentialService {
 
   /** OAuth2 scheme name. */
-  private static final String OAUTH2_SCHEME_NAME = "oauth2";
+  private static final String OAUTH2_SCHEME_NAME = OAuth2SecurityScheme.TYPE;
 
   /** Token cache. */
   private final ConcurrentMap<String, CachedToken> tokenCache
