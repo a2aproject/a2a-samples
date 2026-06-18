@@ -7,7 +7,7 @@ from a2a.helpers import (
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events import EventQueue
 from a2a.server.tasks import TaskUpdater
-from a2a.types.a2a_pb2 import TaskState
+from a2a.types import TaskState
 
 
 # --8<-- [start:HelloWorldAgent]
