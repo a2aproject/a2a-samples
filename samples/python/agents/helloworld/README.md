@@ -13,24 +13,34 @@ The sample codebase is structured around three core components.
 ## Prerequisites
 
 - **Python**: Version 3.10 or higher.
-- **Package Manager**: Install [uv](https://github.com/astral-sh/uv) for dependency management and execution.
 
 ## Quick Start
 
-1. **Start the Server**
+1. **Set up a Virtual Environment and Install Dependencies**
+
+   Create and activate a virtual environment, then install the required packages:
+
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+2. **Start the Server**
 
    Run the A2A agent server locally on port `9999`:
 
    ```bash
-   uv run .
+   python __main__.py
    ```
 
-2. **Run the Test Client**
+3. **Run the Test Client**
 
-   In a separate terminal, execute the test client to verify communication with the agent:
+   In a separate terminal, activate the virtual environment and execute the test client to verify communication with the agent:
 
    ```bash
-   uv run test_client.py
+   source .venv/bin/activate
+   python test_client.py
    ```
 
    **Expected Output Snippet**:
