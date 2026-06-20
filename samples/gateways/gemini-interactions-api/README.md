@@ -1,27 +1,30 @@
 # a2a-bridge
 
 > [!NOTE]
-> **Preview.** The bridge tracks the Vertex Interactions API at
+> **Preview.** The bridge tracks the Interactions API at
 > `Api-Revision: 2026-05-20`. Event names and tool-type values upstream
 > are still moving; expect minor breaking changes.
 
 **a2a-bridge** is a self-hosted Cloud Run service that exposes the
-[Managed Agents API](https://cloud.google.com/vertex-ai) over the
+[Managed Agents API](https://cloud.google.com/products/gemini-enterprise-agent-platform) over the
 [A2A protocol](https://a2a-protocol.org/). Deploy one container in your own
-project and any A2A client (Gemini Enterprise, ADK's `RemoteA2aAgent`, the
+project and any A2A client (Gemini Enterprise app, ADK's `RemoteA2aAgent`, the
 A2A CLI, a third-party orchestrator) can drive a Managed Agent's persistent
 Linux sandbox, with code execution and per-user MCP tool access, against your
 own data.
+
+A Google-hosted A2A endpoint for Managed Agents API is expected this summer
+([interest form](https://forms.gle/Zt9E89BJnuR5SZeu5)).
 
 ## Overview
 
 ```mermaid
 graph LR
-    GE["Gemini Enterprise"]
+    GE["Gemini Enterprise app"]
     ADK["ADK RemoteA2aAgent"]
     CLI["A2A CLI / curl"]
     Bridge["a2a-bridge<br/>(Cloud Run)"]
-    IX["Vertex Interactions API"]
+    IX["Interactions API"]
     SBX["Linux sandbox<br/>(code_execution, filesystem)"]
     MCP["MCP servers<br/>(BigQuery, Drive, ...)"]
     FS[("Firestore<br/>bridge_sessions")]
@@ -58,7 +61,7 @@ What you get:
   next to the rendered text, so an orchestrating agent can branch on raw
   values instead of parsing markdown.
 - **Cross-client resume.** The Firestore session store and `GET /sessions` let
-  a CLI pick up a conversation that started in Gemini Enterprise.
+  a CLI pick up a conversation that started in the Gemini Enterprise app.
 - **File in / file out.** Inbound attachments arrive in `/workspace/uploads/`;
   outbound artifacts leave the sandbox through a per-turn signed `PUT`.
 - **Customer-controlled.** Runs in your project, inside your VPC-SC perimeter,
@@ -66,7 +69,8 @@ What you get:
 
 ## Quickstart
 
-Three commands stand up the bridge and send it a turn.
+Three commands stand up the bridge, create an agent to experiment with, and
+send it a turn.
 
 ```bash
 pip install -e '.[dev]'        # installs the `a2a-bridge` CLI (serve + admin)
@@ -118,9 +122,35 @@ curl -fsS "$URL/sessions" \
 Direct callers need `roles/run.invoker`. Project owners have it implicitly;
 grant it to anyone else who should call the bridge.
 
-## Publish to Gemini Enterprise (optional)
+## Pricing
 
-Gemini Enterprise forwards the end user's access token only when the agent
+The hosting components below run in `us-central1` at list price
+([Cloud Run](https://cloud.google.com/run/pricing),
+[Firestore](https://cloud.google.com/firestore/pricing),
+[Artifact Registry](https://cloud.google.com/artifact-registry/pricing),
+[Cloud Storage](https://cloud.google.com/storage/pricing)). The Gemini
+Enterprise Agent Platform usage the bridge drives is billed separately and is
+the dominant cost.
+
+| Component | Rate | First hour |
+| --- | --- | --- |
+| **Cloud Run** (1 vCPU, 512 MiB) | $0.000024/vCPU-s and $0.0000025/GiB-s while a turn runs, $0.40/M requests. The deployment keeps one instance warm (`min_instance_count = 1`), billed at the idle rate ($0.0000025/vCPU-s and /GiB-s) when not serving. | < $0.01 |
+| **Firestore** (Native, session store) | $0.09/100k writes, $0.03/100k reads; ~1–2 writes and a read per turn. | < $0.01 |
+| **Artifact Registry** (1 image) | $0.10/GiB-month; first 0.5 GiB/account free. The `bridge` image is ~0.4 GiB. | < $0.01 |
+| **Cloud Storage** (attachments) | Standard US storage at $0.026/GiB-month; created but only used when `enable_artifact_export = true`. | < $0.01 |
+| **Gemini Enterprise Agent Platform** | Interactions API sandbox plus Gemini token usage. Managed Agents is in preview with no published pricing; the Interactions API is billed by Gemini token usage. | the remainder |
+
+Running the README walkthrough and the full test suite once stays under **$3**
+for the first hour, almost entirely Gemini Enterprise Agent Platform token
+usage; the hosting components above total under **$0.05**. Left deployed, the
+warm Cloud Run instance is the main standing cost at roughly **$8–9/month**
+(idle rate, after the monthly free tier), plus the Artifact Registry image
+(~$0.04/month) and stored Firestore session documents (a few KB). Tear it down
+after testing to stop those charges (see [After testing](#after-testing)).
+
+## Publish to the Gemini Enterprise app (optional)
+
+The Gemini Enterprise app forwards the end user's access token only when the agent
 registration references a DiscoveryEngine `Authorization`, which needs a
 classic Web OAuth client. There's no API or Terraform resource for that kind
 of client (`google_iam_oauth_client` is Workforce-Identity only), so create it
@@ -130,7 +160,7 @@ client ID > Web application, redirect URI
 client id and secret.
 
 ```bash
-export GE_APP_ID=my-ge-app_123          # GE console > your app > Settings
+export GE_APP_ID=my-ge-app_123          # Gemini Enterprise app console > your app > Settings
 export OAUTH_CLIENT_ID=123-abc.apps.googleusercontent.com
 
 # Create the Authorization (secret read from stdin, never in shell history)
@@ -139,12 +169,12 @@ a2a-bridge --project $PROJECT_ID create-authorization \
   --oauth-client-id $OAUTH_CLIENT_ID \
   --client-secret-stdin            # paste the secret, then Ctrl-D
 
-# Register the agent in the GE app
+# Register the agent in the Gemini Enterprise app
 make register-ge AGENT_KEY=business-analyst GE_APP_ID=$GE_APP_ID \
   URL=$URL GE_AUTHZ=business-analyst
 ```
 
-The agent then shows up in GE chat with the starter prompts from `agents.json`.
+The agent then shows up in Gemini Enterprise app chat with the starter prompts from `agents.json`.
 If the secret already lives in Secret Manager, use
 `--secret-from-secret-manager SECRET_ID` instead of `--client-secret-stdin`.
 
@@ -157,17 +187,20 @@ its flags.
 | Command | What it does |
 | --- | --- |
 | `serve` | Run the A2A server on `$PORT`, configured by [environment variables](#environment-variables). |
-| `setup-agent` | Create or update `agents/{KEY}` on Vertex and sync `agent-template/` to GCS. |
-| `create-authorization` | Create the DiscoveryEngine `Authorization` GE uses to mint per-user tokens. |
-| `register-ge` | Register (or update) the GE agent pointing at the bridge's card. |
+| `setup-agent` | Create or update `agents/{KEY}` on the Gemini Enterprise Agent Platform and sync `agent-template/` to GCS. |
+| `create-authorization` | Create the DiscoveryEngine `Authorization` the Gemini Enterprise app uses to mint per-user tokens. |
+| `register-ge` | Register (or update) the Gemini Enterprise app agent pointing at the bridge's card. |
 | `card` | Print the A2A agent card JSON (`--key` for one agent, else the catalogue). |
 | `sync-template` | Upload the sandbox seed (`agent-template/`) to GCS. |
-| `publish-skills` | Zip each skill directory and upsert it to the Vertex Skill Registry. |
+| `publish-skills` | Zip each skill directory and upsert it to the Skill Registry. |
 
 For an agent the registry can't express, `setup-agent --body-file FILE` applies
 a hand-authored body verbatim (after `${PROJECT_ID}` / `${BUCKET}`
 substitution). The body's `id` is ignored; the resource id always comes from
 `agents.json`, so the control plane can't drift from what the bridge serves.
+
+To tear the deployment back down, use `make tf-destroy` (see
+[After testing](#after-testing)).
 
 ## Configuration
 
@@ -217,7 +250,7 @@ Every non-public path needs `Authorization: Bearer <token>` unless
   available.
 - An **OAuth 2.0 access token**, validated via `oauth2.googleapis.com/tokeninfo`
   and cached until the token expires (or a short default if it reports no
-  expiry). This is what GE sends with `authorizationConfig`, and what
+  expiry). This is what the Gemini Enterprise app sends with `authorizationConfig`, and what
   `forward_user_auth` injects into MCP tool headers.
 
 The verified `sub` (or `email`) is hashed into the session owner key, so two
@@ -246,7 +279,7 @@ lists.
 `GET /sessions` returns the caller's sessions newest-first. A client lists
 them, picks the `context_id` for the agent it wants, and sends the next turn
 with that `context_id` to land back in the same sandbox. This is how a CLI
-resumes a conversation that began in GE.
+resumes a conversation that began in the Gemini Enterprise app.
 
 > The bridge runs as a single Cloud Run instance (`max_instance_count = 1`);
 > session turns are serialized by a process-local lock. Running multiple
@@ -311,6 +344,24 @@ make lint     # ruff + mypy
 make test     # pytest (no network)
 make serve    # local uvicorn against ADC
 ```
+
+## After testing
+
+The deployment keeps one Cloud Run instance warm (`min_instance_count = 1`), so
+it keeps costing roughly $8–9/month while it exists. If you are done, tear it
+down. `make tf-destroy` removes everything Terraform created — the Cloud Run
+service, its service account and IAM, the Artifact Registry repo, the GCS
+bucket, and the Firestore database:
+
+```bash
+make tf-destroy PROJECT_ID=$PROJECT_ID
+```
+
+Managed agents created with `setup-agent` are not Terraform-managed, so delete
+them on the Gemini Enterprise Agent Platform separately if you no longer need
+them. To keep the deployment but stop the warm-instance charge, set
+`min_instance_count = 0` in `terraform/main.tf` and re-apply; the first turn
+after idle then pays a cold start.
 
 ## License
 

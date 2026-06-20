@@ -22,7 +22,7 @@ TF_VARS = \
   -var vertex_endpoint=$(VERTEX_ENDPOINT)
 
 .PHONY: install lint test serve card bootstrap \
-        tf-init tf-plan tf-apply build deploy \
+        tf-init tf-plan tf-apply tf-destroy build deploy \
         setup-agent publish-skills sync-template register-ge smoke
 
 install:
@@ -55,6 +55,12 @@ tf-plan:
 
 tf-apply:
 	terraform -chdir=terraform apply $(TF_VARS)
+
+# Tear down everything Terraform created (Cloud Run service, service account,
+# IAM, Artifact Registry, bucket, Firestore). Managed agents created via
+# `setup-agent` are not Terraform-managed; delete them on Vertex separately.
+tf-destroy:
+	terraform -chdir=terraform destroy $(TF_VARS)
 
 build:
 	gcloud builds submit \
