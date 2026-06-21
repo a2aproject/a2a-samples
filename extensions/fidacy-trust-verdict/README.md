@@ -6,7 +6,7 @@ Trust-Verdict Extension v1** for the Agent2Agent (A2A) protocol.
 ## Purpose
 
 The Trust-Verdict extension lets an A2A agent carry a **signed, independently verifiable trust
-verdict** (`approve` / `review` / `deny`) about whether an agent action, typically a payment, 
+verdict** (`approve` / `review` / `deny`) about whether an agent action, typically a payment,
 should be trusted. It is the complement to **x402** (settlement) and **AP2** (authorization): it
 fills the neutral risk decision the AP2 `risk_data` slot was reserved for.
 

@@ -43,26 +43,26 @@ The extension does not invent a new container. The verdict travels in existing f
 - **Plain A2A flows:** in `Task.metadata` as `{ "fidacy_assessment": { … } }`, where the signed JWS
   is at `fidacy_assessment.risk_payload.jws`. The decision also maps to an official A2A Task state:
 
-  | `decision` | recommended Task state    |
-  | ---------- | ------------------------- |
-  | `approve`  | `TASK_STATE_WORKING`      |
-  | `review`   | `TASK_STATE_AUTH_REQUIRED`|
-  | `deny`     | `TASK_STATE_REJECTED`     |
+  | `decision` | recommended Task state     |
+  | ---------- | -------------------------- |
+  | `approve`  | `TASK_STATE_WORKING`       |
+  | `review`   | `TASK_STATE_AUTH_REQUIRED` |
+  | `deny`     | `TASK_STATE_REJECTED`      |
 
 ## 3. The signed verdict (source of truth)
 
 The JWS (`vc_jws` / `risk_payload.jws`) is a compact **EdDSA** JWS, `typ: application/vc+jws`, whose
 verified claims are the verdict:
 
-| Claim           | Meaning                                                  |
-| --------------- | -------------------------------------------------------- |
-| `issuer`        | `did:web:fidacy.com#<kid>` (kid = JWKS key id)           |
-| `subject`       | the agent/mandate assessed                               |
-| `decision`      | `approve` \| `review` \| `deny`                          |
-| `score`         | 0-100                                                    |
-| `model_version` | scoring model id                                         |
-| `assessed_at`   | ISO 8601                                                 |
-| `signals`       | opaque advisory signals (not normative)                 |
+| Claim           | Meaning                                                  |            |        |
+| --------------- | -------------------------------------------------------- |            |        |
+| `issuer`        | `did:web:fidacy.com#<kid>` (kid = JWKS key id)           |            |        |
+| `subject`       | the agent/mandate assessed                               |            |        |
+| `decision`      | `approve` \                                              | `review` \ | `deny` |
+| `score`         | 0-100                                                    |            |        |
+| `model_version` | scoring model id                                         |            |        |
+| `assessed_at`   | ISO 8601                                                 |            |        |
+| `signals`       | opaque advisory signals (not normative)                  |            |        |
 
 ## 4. Verification (normative)
 
