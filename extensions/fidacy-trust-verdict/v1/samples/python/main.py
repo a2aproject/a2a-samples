@@ -50,7 +50,9 @@ result = resp.json()
 
 a2a = result.get("a2a", {})
 fidacy_assessment = a2a.get("task_metadata", {}).get("fidacy_assessment", {})
-jws = fidacy_assessment.get("risk_payload", {}).get("jws") or result["riskPayloadJws"]
+jws = fidacy_assessment.get("risk_payload", {}).get("jws") or result.get("riskPayloadJws")
+if not jws:
+    sys.exit("JWS not found in the assessment response.")
 print("A2A recommended task state:", a2a.get("recommended_task_state"))
 print("Verdict rides in Task.metadata.fidacy_assessment:", bool(fidacy_assessment))
 
@@ -58,7 +60,9 @@ print("Verdict rides in Task.metadata.fidacy_assessment:", bool(fidacy_assessmen
 # signature; jwt.decode raises if the signature is invalid OR the alg isn't EdDSA.
 jwks = requests.get(f"{API}/.well-known/jwks.json", timeout=15).json()
 kid = jwt.get_unverified_header(jws)["kid"]
-jwk = next(k for k in jwks["keys"] if k["kid"] == kid)
+jwk = next((k for k in jwks["keys"] if k["kid"] == kid), None)
+if not jwk:
+    sys.exit(f"Key id '{kid}' not found in the JWKS.")
 public_key = PyJWK.from_dict(jwk).key  # OKP / Ed25519
 claims = jwt.decode(
     jws,
@@ -68,5 +72,5 @@ claims = jwt.decode(
 )
 
 print("signature valid: True")
-print("decision (verified):", claims["decision"], "· score:", claims["score"])
-print("decisions match:", claims["decision"] == result["decision"])
+print("decision (verified):", claims.get("decision"), "score:", claims.get("score"))
+print("decisions match:", claims.get("decision") == result.get("decision"))
