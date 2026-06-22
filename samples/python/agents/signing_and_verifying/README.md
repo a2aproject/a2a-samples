@@ -6,16 +6,24 @@ Read more about signing and verifying AgentCards here: [Agent Card Signing](http
 
 ## Getting started
 
-1. Start the server
+1. Setup the virtual environment and install dependencies:
 
    ```bash
-   uv run .
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
    ```
 
-2. Run the test client
+2. Start the server:
 
    ```bash
-   uv run test_client.py
+   python3 __main__.py
+   ```
+
+3. Run the test client:
+
+   ```bash
+   python3 test_client.py
    ```
 
 ## Build Container Image
@@ -45,11 +53,16 @@ Agent can also be built using a container file.
 
 ## Validate
 
-To validate in a separate terminal, run the A2A client:
+To validate in a separate terminal, run the A2A CLI host:
 
 ```bash
-cd samples/python/hosts/cli
-uv run . --agent http://localhost:9999
+cd ../../hosts/cli
+# Setup the CLI host's environment if you haven't already:
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+# Run the CLI host pointing to our agent:
+python3 __main__.py --agent http://localhost:9999
 ```
 
 
