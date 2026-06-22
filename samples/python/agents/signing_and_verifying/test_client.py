@@ -3,10 +3,8 @@ import logging
 
 import httpx
 
-from a2a.client import A2ACardResolver
-from a2a.client.client import ClientConfig
-from a2a.client.client_factory import ClientFactory
-from a2a.types.a2a_pb2 import GetExtendedAgentCardRequest
+from a2a.client import A2ACardResolver, ClientConfig, create_client
+from a2a.types import GetExtendedAgentCardRequest
 from a2a.utils.constants import (
     AGENT_CARD_WELL_KNOWN_PATH,
 )
@@ -69,11 +67,11 @@ async def main() -> None:
             )
             raise RuntimeError from e
 
-        # Create Client Factory
-        client_factory = ClientFactory(config=ClientConfig(streaming=False))
-
-        # Create Base Client
-        client = client_factory.create(public_card)
+        # Create Base Client directly via unified factory
+        client = await create_client(
+            agent=public_card,
+            client_config=ClientConfig(streaming=False),
+        )
 
         get_card_response = await client.get_extended_agent_card(
             GetExtendedAgentCardRequest(), signature_verifier=signature_verifier

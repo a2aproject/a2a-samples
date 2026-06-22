@@ -4,9 +4,13 @@ from pathlib import Path
 
 import uvicorn
 
-from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import (
+    create_agent_card_routes,
+    create_jsonrpc_routes,
+)
 from a2a.server.tasks import InMemoryTaskStore
+from starlette.applications import Starlette
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
@@ -94,11 +98,6 @@ if __name__ == '__main__':
         ],
     )
 
-    request_handler = DefaultRequestHandler(
-        agent_executor=SignedAgentExecutor(),
-        task_store=InMemoryTaskStore(),
-    )
-
     # Create singer function which will be used for AgentCard signing
     signer = create_agent_card_signer(
         signing_key=private_key,
@@ -109,17 +108,25 @@ if __name__ == '__main__':
         },
     )
 
-    server = A2AStarletteApplication(
+    async def async_signer(card):
+        return signer(card)
+
+    async def async_extended_signer(card, _):
+        return signer(card)
+
+    request_handler = DefaultRequestHandler(
+        agent_executor=SignedAgentExecutor(),
+        task_store=InMemoryTaskStore(),
         agent_card=public_agent_card,
-        http_handler=request_handler,
-        card_modifier=signer,  # The signer function is used to sign the public Agent Card
         extended_agent_card=extended_agent_card,
-        extended_card_modifier=lambda card, _: signer(
-            card
-        ),  # The signer function is also used to sign the extended Agent Card
+        extended_card_modifier=async_extended_signer,
     )
 
-    app = server.build()
+    routes = []
+    routes.extend(create_agent_card_routes(public_agent_card, card_modifier=async_signer))
+    routes.extend(create_jsonrpc_routes(request_handler, '/'))
+
+    app = Starlette(routes=routes)
     # Expose the public key for verification purposes
     # Contents of public_keys.json will be fetched on the client side during AgentCard signatures verification
     app.routes.append(
