@@ -14,11 +14,9 @@ class SignedAgentExecutor(AgentExecutor):
     ) -> None:
         """Execute the agent."""
         await event_queue.enqueue_event(
-            new_text_message('Verify me!', role=Role.ROLE_AGENT)
+            new_text_message("Verify me!", role=Role.ROLE_AGENT)
         )
 
-    async def cancel(
-        self, context: RequestContext, event_queue: EventQueue
-    ) -> None:
+    async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Cancel method is not supported."""
-        print('Cancel not supported.')
+        print("Cancel not supported.")
