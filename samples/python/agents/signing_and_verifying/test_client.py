@@ -15,7 +15,7 @@ from jwt.api_jwk import PyJWK
 
 def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
     if not kid or not jku:
-        print("kid or jku missing")
+        print('kid or jku missing')
         raise ValueError
 
     response = httpx.get(jku)
@@ -23,12 +23,12 @@ def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
 
     pem_data_str = keys.get(kid)
     if pem_data_str:
-        pem_data = pem_data_str.encode("utf-8")
+        pem_data = pem_data_str.encode('utf-8')
         return serialization.load_pem_public_key(pem_data)
     raise ValueError
 
 
-signature_verifier = create_signature_verifier(_key_provider, ["ES256"])
+signature_verifier = create_signature_verifier(_key_provider, ['ES256'])
 
 
 async def main() -> None:
@@ -37,7 +37,7 @@ async def main() -> None:
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 
-    base_url = "http://localhost:9999"
+    base_url = 'http://localhost:9999'
 
     async with httpx.AsyncClient() as httpx_client:
         # Initialize A2ACardResolver
@@ -48,22 +48,20 @@ async def main() -> None:
 
         try:
             logger.info(
-                "Attempting to fetch public agent card from: %s%s",
+                'Attempting to fetch public agent card from: %s%s',
                 base_url,
                 AGENT_CARD_WELL_KNOWN_PATH,
             )
             public_card = await resolver.get_agent_card(
                 signature_verifier=signature_verifier,
             )  # Verifies the AgentCard using signature_verifier function before returning it
-            logger.info("Successfully fetched public agent card:")
+            logger.info('Successfully fetched public agent card:')
             logger.info(public_card)
-            logger.info(
-                "\nUsing PUBLIC agent card for client initialization (default)."
-            )
+            logger.info('\nUsing PUBLIC agent card for client initialization (default).')
 
         except Exception as e:
             logger.exception(
-                "Critical error fetching public agent card.",
+                'Critical error fetching public agent card.',
             )
             raise RuntimeError from e
 
@@ -76,9 +74,9 @@ async def main() -> None:
         get_card_response = await client.get_extended_agent_card(
             GetExtendedAgentCardRequest(), signature_verifier=signature_verifier
         )  # Verifies the AgentCard using signature_verifier function before returning it
-        print("Fetched extended card:")
+        print('Fetched extended card:')
         print(get_card_response)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     asyncio.run(main())
