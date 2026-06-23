@@ -1,6 +1,7 @@
 import json
 
 from pathlib import Path
+from typing import Any
 
 import uvicorn
 
@@ -104,10 +105,12 @@ if __name__ == '__main__':
         },
     )
 
-    async def async_signer(card):
+    async def async_signer(card: AgentCard) -> AgentCard:
+        """Sign the public agent card."""
         return signer(card)
 
-    async def async_extended_signer(card, _):
+    async def async_extended_signer(card: AgentCard, _: Any) -> AgentCard:
+        """Sign the extended agent card."""
         return signer(card)
 
     request_handler = DefaultRequestHandler(
