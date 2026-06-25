@@ -104,11 +104,10 @@ if __name__ == '__main__':
         agent_card=card,
     )
 
-    app = Starlette(
-        routes=[
-            *create_agent_card_routes(card),
-            *create_jsonrpc_routes(handler, rpc_url='/'),
-        ]
-    )
+    routes = []
+    routes.extend(create_agent_card_routes(card))
+    routes.extend(create_jsonrpc_routes(handler, rpc_url='/'))
+
+    app = Starlette(routes=routes)
 
     uvicorn.run(app, host='127.0.0.1', port=9998)
