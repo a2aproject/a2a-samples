@@ -59,7 +59,7 @@ ext = TimestampExtension()
 
 # 2. Wrap the client factory
 factory = wrap_client_factory(
-    factory=ClientFactory(client_config=ClientConfig(httpx_client=httpx_client)),
+    factory=ClientFactory(config=ClientConfig(httpx_client=httpx_client)),
     ext=ext
 )
 client = factory.create(card=card)
