@@ -28,7 +28,9 @@ class TimestampExtension:
 
     def __init__(self, now_fn: Callable[[], float] | None = None):
         self._now_fn = now_fn or time.time
-        self._agent_extension = AgentExtension(uri=URI, description='Adds timestamps to messages and artifacts.')
+        self._agent_extension = AgentExtension(
+            uri=URI, description='Adds timestamps to messages and artifacts.'
+        )
 
     def add_to_card(self, card: AgentCard) -> AgentCard:
         """Add this extension to an AgentCard."""
@@ -67,12 +69,8 @@ class TimestampExtension:
         """Returns whether a message or artifact has a timestamp."""
         return TIMESTAMP_FIELD in o.metadata
 
-    def _get_messages_in_event(
-        self, event: Event
-    ) -> Iterable[Message | Artifact]:
-        if isinstance(event, TaskStatusUpdateEvent) and event.status.HasField(
-            'message'
-        ):
+    def _get_messages_in_event(self, event: Event) -> Iterable[Message | Artifact]:
+        if isinstance(event, TaskStatusUpdateEvent) and event.status.HasField('message'):
             return [event.status.message]
         if isinstance(event, TaskArtifactUpdateEvent):
             return [event.artifact]
@@ -82,9 +80,7 @@ class TimestampExtension:
             return self._get_artifacts_and_messages_in_task(event)
         return []
 
-    def _get_artifacts_and_messages_in_task(
-        self, t: Task
-    ) -> Iterable[Message | Artifact]:
+    def _get_artifacts_and_messages_in_task(self, t: Task) -> Iterable[Message | Artifact]:
         yield from t.artifacts
         yield from (m for m in t.history if m.role == Role.ROLE_AGENT)
         if t.status.HasField('message'):

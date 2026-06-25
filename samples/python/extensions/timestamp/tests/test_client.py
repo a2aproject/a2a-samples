@@ -1,3 +1,4 @@
+# ruff: noqa: S101
 import datetime
 import os
 import subprocess
@@ -33,7 +34,7 @@ def start_server():
     server_path = Path(__file__).parent / '__main__.py'
     env = os.environ.copy()
     env['TIMESTAMP_EXT_FIXED_CLOCK'] = str(_FIXED_TS)
-    process = subprocess.Popen(
+    process = subprocess.Popen(  # noqa: S603
         [sys.executable, str(server_path)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -50,9 +51,7 @@ def start_server():
 
 @pytest.mark.asyncio
 async def test_timestamp_extension_round_trip():
-    expected_iso = datetime.datetime.fromtimestamp(
-        _FIXED_TS, datetime.timezone.utc
-    ).isoformat()
+    expected_iso = datetime.datetime.fromtimestamp(_FIXED_TS, datetime.timezone.utc).isoformat()
     ext = TimestampExtension(now_fn=lambda: _FIXED_TS)
 
     # Recreate the card on the client side for discovery
@@ -76,9 +75,7 @@ async def test_timestamp_extension_round_trip():
 
     async with httpx.AsyncClient(base_url=_AGENT_URL) as httpx_client:
         factory = wrap_client_factory(
-            factory=ClientFactory(
-                config=ClientConfig(httpx_client=httpx_client, streaming=True)
-            ),
+            factory=ClientFactory(config=ClientConfig(httpx_client=httpx_client, streaming=True)),
             ext=ext,
         )
         client = factory.create(card=card)
@@ -99,9 +96,7 @@ async def test_timestamp_extension_round_trip():
             if chunk.HasField('artifact_update'):
                 art = chunk.artifact_update.artifact
                 artifacts.append(art)
-                print(
-                    f'  artifact "{art.name}" @ {art.metadata[TIMESTAMP_FIELD]}'
-                )
+                print(f'  artifact "{art.name}" @ {art.metadata[TIMESTAMP_FIELD]}')
             elif chunk.HasField('status_update'):
                 status = chunk.status_update.status
                 if status.HasField('message'):

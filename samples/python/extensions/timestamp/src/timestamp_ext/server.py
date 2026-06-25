@@ -14,13 +14,12 @@ class _TimestampingAgentExecutor(AgentExecutor):
         self._delegate_agent_executor = delegate_agent_executor
         self._ext = ext
 
-    async def execute(
-        self, context: RequestContext, event_queue: EventQueue
-    ) -> None:
+    async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         # Wrap the EventQueue so that all outgoing messages/status updates have
         # timestamps.
         return await self._delegate_agent_executor.execute(
-            context, event_queue=self._wrap_queue_if_requested(context=context, event_queue=event_queue)
+            context,
+            event_queue=self._wrap_queue_if_requested(context=context, event_queue=event_queue),
         )
 
     def _wrap_queue_if_requested(
@@ -30,9 +29,7 @@ class _TimestampingAgentExecutor(AgentExecutor):
             return _TimestampingEventQueue(delegate_event_queue=event_queue, ext=self._ext)
         return event_queue
 
-    async def cancel(
-        self, context: RequestContext, event_queue: EventQueue
-    ) -> None:
+    async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         return await self._delegate_agent_executor.cancel(context, event_queue)
 
 

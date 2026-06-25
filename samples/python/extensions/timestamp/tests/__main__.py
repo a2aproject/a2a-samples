@@ -33,13 +33,9 @@ _AGENT_URL = 'http://127.0.0.1:9998'
 class EchoExecutor(AgentExecutor):
     """Emits one artifact then completes."""
 
-    async def execute(
-        self, context: RequestContext, event_queue: EventQueue
-    ) -> None:
+    async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Execute the task by echoing a text artifact and completing."""
-        task = context.current_task or new_task_from_user_message(
-            context.message
-        )
+        task = context.current_task or new_task_from_user_message(context.message)
         await event_queue.enqueue_event(task)
         await event_queue.enqueue_event(
             TaskStatusUpdateEvent(
@@ -66,9 +62,7 @@ class EchoExecutor(AgentExecutor):
             )
         )
 
-    async def cancel(
-        self, context: RequestContext, event_queue: EventQueue
-    ) -> None:
+    async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Cancel the execution of the task."""
         raise NotImplementedError
 

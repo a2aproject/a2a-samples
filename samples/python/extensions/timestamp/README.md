@@ -1,6 +1,6 @@
 # A2A Timestamp Extension Showcase
 
-This package implements the **Timestamp Extension** for the A2A SDK in Python. 
+This package implements the **Timestamp Extension** for the A2A SDK in Python.
 
 The extension showcases how to enrich outgoing A2A messages and artifacts with compliance timestamps in a modular, decoupled, and highly automated manner.
 
