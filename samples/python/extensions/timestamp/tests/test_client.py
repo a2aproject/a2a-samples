@@ -51,7 +51,7 @@ def start_server():
 @pytest.mark.asyncio
 async def test_timestamp_extension_round_trip():
     expected_iso = datetime.datetime.fromtimestamp(
-        _FIXED_TS, datetime.UTC
+        _FIXED_TS, datetime.timezone.utc
     ).isoformat()
     ext = TimestampExtension(now_fn=lambda: _FIXED_TS)
 
