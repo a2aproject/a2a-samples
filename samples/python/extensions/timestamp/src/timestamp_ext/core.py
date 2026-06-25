@@ -1,5 +1,6 @@
 import datetime
 import time
+
 from collections.abc import Callable, Iterable
 
 from a2a.extensions.common import find_extension_by_uri
@@ -16,6 +17,7 @@ from a2a.types.a2a_pb2 import (
     TaskStatusUpdateEvent,
 )
 
+
 _CORE_PATH = 'github.com/a2aproject/a2a-samples/extensions/timestamp/v1'
 URI = f'https://{_CORE_PATH}'
 TIMESTAMP_FIELD = f'{_CORE_PATH}/timestamp'
@@ -26,17 +28,11 @@ class TimestampExtension:
 
     def __init__(self, now_fn: Callable[[], float] | None = None):
         self._now_fn = now_fn or time.time
-
-    def agent_extension(self) -> AgentExtension:
-        """Get the AgentExtension representing this extension."""
-        return AgentExtension(
-            uri=URI,
-            description='Adds timestamps to messages and artifacts.',
-        )
+        self._agent_extension = AgentExtension(uri=URI, description='Adds timestamps to messages and artifacts.')
 
     def add_to_card(self, card: AgentCard) -> AgentCard:
         """Add this extension to an AgentCard."""
-        card.capabilities.extensions.append(self.agent_extension())
+        card.capabilities.extensions.append(self._agent_extension)
         return card
 
     def is_supported(self, card: AgentCard | None) -> bool:

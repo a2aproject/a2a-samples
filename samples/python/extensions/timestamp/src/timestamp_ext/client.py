@@ -1,5 +1,4 @@
 from collections.abc import AsyncIterator, Callable
-from typing import Any
 
 from a2a.client import (
     Client,
@@ -24,26 +23,27 @@ from a2a.types.a2a_pb2 import (
     ListTaskPushNotificationConfigsResponse,
     ListTasksRequest,
     ListTasksResponse,
-    Message,
     SendMessageRequest,
     StreamResponse,
     SubscribeToTaskRequest,
     Task,
     TaskPushNotificationConfig,
 )
+
 from timestamp_ext.core import URI, TimestampExtension
+
 
 _MESSAGING_METHODS = {'send_message', 'send_message_streaming'}
 
 
 def wrap_client(client: Client, ext: TimestampExtension) -> Client:
     """Returns a Client that ensures all outgoing messages have timestamps."""
-    return _TimestampingClient(delegate=client, ext=ext)
+    return _TimestampingClient(delegate_client=client, ext=ext)
 
 
 def wrap_client_factory(factory: ClientFactory, ext: TimestampExtension) -> ClientFactory:
     """Returns a ClientFactory that handles this extension."""
-    return _TimestampingClientFactory(delegate=factory, ext=ext)
+    return _TimestampingClientFactory(delegate_client_factory=factory, ext=ext)
 
 
 def client_interceptor(ext: TimestampExtension) -> ClientCallInterceptor:
@@ -58,12 +58,12 @@ class _TimestampingClientFactory(ClientFactory):
     so, ensures that outgoing messages have timestamps.
     """
 
-    def __init__(self, delegate: ClientFactory, ext: TimestampExtension):
-        self._delegate = delegate
+    def __init__(self, delegate_client_factory: ClientFactory, ext: TimestampExtension):
+        self._delegate_client_factory = delegate_client_factory
         self._ext = ext
 
     def register(self, label: str, generator: TransportProducer) -> None:
-        self._delegate.register(label, generator)
+        self._delegate_client_factory.register(label, generator)
 
     def create(
         self,
@@ -72,15 +72,15 @@ class _TimestampingClientFactory(ClientFactory):
     ) -> Client:
         interceptors = list(interceptors or [])
         interceptors.append(client_interceptor(ext=self._ext))
-        return self._delegate.create(card, interceptors)
+        return self._delegate_client_factory.create(card, interceptors)
 
 
 class _TimestampingClient(Client):
     """A Client decorator that adds timestamps to outgoing messages."""
 
-    def __init__(self, delegate: Client, ext: TimestampExtension):
+    def __init__(self, delegate_client: Client, ext: TimestampExtension):
         super().__init__()
-        self._delegate = delegate
+        self._delegate_client = delegate_client
         self._ext = ext
 
     async def send_message(
@@ -90,7 +90,7 @@ class _TimestampingClient(Client):
         context: ClientCallContext | None = None,
     ) -> AsyncIterator[StreamResponse]:
         self._ext.apply_timestamp(request.message)
-        async for e in self._delegate.send_message(request, context=context):
+        async for e in self._delegate_client.send_message(request, context=context):
             yield e
 
     async def get_task(
@@ -99,7 +99,7 @@ class _TimestampingClient(Client):
         *,
         context: ClientCallContext | None = None,
     ) -> Task:
-        return await self._delegate.get_task(request, context=context)
+        return await self._delegate_client.get_task(request, context=context)
 
     async def list_tasks(
         self,
@@ -107,7 +107,7 @@ class _TimestampingClient(Client):
         *,
         context: ClientCallContext | None = None,
     ) -> ListTasksResponse:
-        return await self._delegate.list_tasks(request, context=context)
+        return await self._delegate_client.list_tasks(request, context=context)
 
     async def cancel_task(
         self,
@@ -115,7 +115,7 @@ class _TimestampingClient(Client):
         *,
         context: ClientCallContext | None = None,
     ) -> Task:
-        return await self._delegate.cancel_task(request, context=context)
+        return await self._delegate_client.cancel_task(request, context=context)
 
     async def create_task_push_notification_config(
         self,
@@ -123,7 +123,7 @@ class _TimestampingClient(Client):
         *,
         context: ClientCallContext | None = None,
     ) -> TaskPushNotificationConfig:
-        return await self._delegate.create_task_push_notification_config(
+        return await self._delegate_client.create_task_push_notification_config(
             request, context=context
         )
 
@@ -133,7 +133,7 @@ class _TimestampingClient(Client):
         *,
         context: ClientCallContext | None = None,
     ) -> TaskPushNotificationConfig:
-        return await self._delegate.get_task_push_notification_config(
+        return await self._delegate_client.get_task_push_notification_config(
             request, context=context
         )
 
@@ -143,7 +143,7 @@ class _TimestampingClient(Client):
         *,
         context: ClientCallContext | None = None,
     ) -> ListTaskPushNotificationConfigsResponse:
-        return await self._delegate.list_task_push_notification_configs(
+        return await self._delegate_client.list_task_push_notification_configs(
             request, context=context
         )
 
@@ -153,7 +153,7 @@ class _TimestampingClient(Client):
         *,
         context: ClientCallContext | None = None,
     ) -> None:
-        return await self._delegate.delete_task_push_notification_config(
+        return await self._delegate_client.delete_task_push_notification_config(
             request, context=context
         )
 
@@ -163,7 +163,7 @@ class _TimestampingClient(Client):
         *,
         context: ClientCallContext | None = None,
     ) -> AsyncIterator[StreamResponse]:
-        async for e in self._delegate.subscribe(request, context=context):
+        async for e in self._delegate_client.subscribe(request, context=context):
             yield e
 
     async def get_extended_agent_card(
@@ -173,19 +173,20 @@ class _TimestampingClient(Client):
         context: ClientCallContext | None = None,
         signature_verifier: Callable[[AgentCard], None] | None = None,
     ) -> AgentCard:
-        return await self._delegate.get_extended_agent_card(
+        return await self._delegate_client.get_extended_agent_card(
             request,
             context=context,
             signature_verifier=signature_verifier,
         )
 
     async def close(self) -> None:
-        await self._delegate.close()
+        await self._delegate_client.close()
 
 
 class _TimestampingClientInterceptor(ClientCallInterceptor):
     """A client interceptor that adds timestamps to outgoing messages and
-    requests the timestamp extension via the A2A-Extensions header."""
+    requests the timestamp extension via the A2A-Extensions header.
+    """
 
     def __init__(self, ext: TimestampExtension):
         self._ext = ext
