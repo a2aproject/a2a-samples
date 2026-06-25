@@ -1,9 +1,9 @@
-import asyncio
 import datetime
 import os
 import subprocess
 import sys
 import time
+
 from pathlib import Path
 
 import httpx
@@ -23,6 +23,7 @@ from a2a.types.a2a_pb2 import (
 from a2a.utils.constants import TransportProtocol
 from timestamp_ext.client import wrap_client_factory
 from timestamp_ext.core import TIMESTAMP_FIELD, TimestampExtension
+
 
 _AGENT_URL = 'http://127.0.0.1:9998'
 _FIXED_TS = 1_700_000_000.0

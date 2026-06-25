@@ -1,4 +1,5 @@
 import os
+
 import uvicorn
 
 from a2a.helpers.proto_helpers import (
@@ -23,9 +24,9 @@ from a2a.types.a2a_pb2 import (
 )
 from a2a.utils.constants import TransportProtocol
 from starlette.applications import Starlette
-
 from timestamp_ext.core import TimestampExtension
 from timestamp_ext.server import wrap_executor
+
 
 _AGENT_URL = 'http://127.0.0.1:9998'
 
