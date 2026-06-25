@@ -55,7 +55,7 @@ class TimestampExtension:
         if self.has_timestamp(o):
             return
         now = self._now_fn()
-        dt = datetime.datetime.fromtimestamp(now, datetime.UTC)
+        dt = datetime.datetime.fromtimestamp(now, datetime.timezone.utc)
         o.metadata[TIMESTAMP_FIELD] = dt.isoformat()
 
     def timestamp_event(self, event: Event) -> None:
