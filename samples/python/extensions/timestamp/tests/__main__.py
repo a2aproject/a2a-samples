@@ -36,6 +36,7 @@ class EchoExecutor(AgentExecutor):
     async def execute(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
+        """Execute the task by echoing a text artifact and completing."""
         task = context.current_task or new_task_from_user_message(
             context.message
         )
@@ -68,6 +69,7 @@ class EchoExecutor(AgentExecutor):
     async def cancel(
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
+        """Cancel the execution of the task."""
         raise NotImplementedError
 
 

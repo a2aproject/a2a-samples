@@ -184,8 +184,9 @@ class _TimestampingClient(Client):
 
 
 class _TimestampingClientInterceptor(ClientCallInterceptor):
-    """A client interceptor that adds timestamps to outgoing messages and
-    requests the timestamp extension via the A2A-Extensions header.
+    """A client interceptor that adds timestamps to outgoing messages.
+
+    It also requests the timestamp extension via the A2A-Extensions header.
     """
 
     def __init__(self, ext: TimestampExtension):
