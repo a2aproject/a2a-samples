@@ -2,7 +2,7 @@ import os
 
 import uvicorn
 
-from a2a.helpers.proto_helpers import (
+from a2a.helpers import (
     new_task_from_user_message,
     new_text_artifact,
     new_text_message,
@@ -13,7 +13,7 @@ from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.routes.agent_card_routes import create_agent_card_routes
 from a2a.server.routes.jsonrpc_routes import create_jsonrpc_routes
 from a2a.server.tasks import InMemoryTaskStore
-from a2a.types.a2a_pb2 import (
+from a2a.types import (
     AgentCapabilities,
     AgentCard,
     AgentInterface,
@@ -22,7 +22,6 @@ from a2a.types.a2a_pb2 import (
     TaskStatus,
     TaskStatusUpdateEvent,
 )
-from a2a.utils.constants import TransportProtocol
 from starlette.applications import Starlette
 from timestamp_ext.core import TimestampExtension
 from timestamp_ext.server import wrap_executor
@@ -90,7 +89,7 @@ if __name__ == '__main__':
             capabilities=AgentCapabilities(streaming=True),
             supported_interfaces=[
                 AgentInterface(
-                    protocol_binding=TransportProtocol.JSONRPC,
+                    protocol_binding='JSONRPC',
                     url=_AGENT_URL,
                     protocol_version='1.0',
                 )

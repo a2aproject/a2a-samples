@@ -10,7 +10,7 @@ import httpx
 import pytest
 
 from a2a.client import ClientConfig, ClientFactory
-from a2a.types.a2a_pb2 import (
+from a2a.types import (
     AgentCapabilities,
     AgentCard,
     AgentInterface,
@@ -20,7 +20,6 @@ from a2a.types.a2a_pb2 import (
     SendMessageRequest,
     TaskState,
 )
-from a2a.utils.constants import TransportProtocol
 from timestamp_ext.client import wrap_client_factory
 from timestamp_ext.core import TIMESTAMP_FIELD, TimestampExtension
 
@@ -66,7 +65,7 @@ async def test_timestamp_extension_round_trip():
         capabilities=AgentCapabilities(streaming=True),
         supported_interfaces=[
             AgentInterface(
-                protocol_binding=TransportProtocol.JSONRPC,
+                protocol_binding='JSONRPC',
                 url=_AGENT_URL,
                 protocol_version='1.0',
             )

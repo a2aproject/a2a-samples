@@ -6,7 +6,7 @@ from collections.abc import Callable, Iterable
 from a2a.extensions.common import find_extension_by_uri
 from a2a.server.agent_execution import RequestContext
 from a2a.server.events.event_queue import Event
-from a2a.types.a2a_pb2 import (
+from a2a.types import (
     AgentCard,
     AgentExtension,
     Artifact,

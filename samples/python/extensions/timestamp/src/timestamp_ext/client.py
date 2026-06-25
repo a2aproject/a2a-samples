@@ -12,7 +12,7 @@ from a2a.client.service_parameters import (
     ServiceParametersFactory,
     with_a2a_extensions,
 )
-from a2a.types.a2a_pb2 import (
+from a2a.types import (
     AgentCard,
     CancelTaskRequest,
     DeleteTaskPushNotificationConfigRequest,
