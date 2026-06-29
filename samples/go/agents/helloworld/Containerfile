@@ -1,0 +1,23 @@
+# Build stage
+FROM golang:1.24-alpine AS builder
+
+WORKDIR /app
+
+COPY go.mod ./
+# COPY go.sum ./ (if exists)
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o helloworld-server main.go agent_executor.go
+
+# Final runnable image
+FROM alpine:latest
+
+WORKDIR /app
+
+COPY --from=builder /app/helloworld-server .
+
+EXPOSE 9999
+
+CMD ["./helloworld-server"]
