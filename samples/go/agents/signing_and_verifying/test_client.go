@@ -22,6 +22,7 @@ func keyProvider(kid, jku string) (any, error) {
 		return nil, fmt.Errorf("kid or jku missing")
 	}
 
+	//nolint:gosec // JKU URL is dynamic by design per RFC 7515
 	resp, err := http.Get(jku)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch jku: %w", err)
@@ -38,8 +39,8 @@ func keyProvider(kid, jku string) (any, error) {
 	}
 
 	var keys map[string]string
-	if err := json.Unmarshal(body, &keys); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal keys JSON: %w", err)
+	if unmarshalErr := json.Unmarshal(body, &keys); unmarshalErr != nil {
+		return nil, fmt.Errorf("failed to unmarshal keys JSON: %w", unmarshalErr)
 	}
 
 	pemStr, ok := keys[kid]
@@ -62,9 +63,9 @@ func keyProvider(kid, jku string) (any, error) {
 
 func runTestClient() {
 	ctx := context.Background()
-	signatureVerifier := createSignatureVerifier(keyProvider, []string{"ES256"})
+	signatureVerifier := createSignatureVerifier(keyProvider, []string{es256Alg})
 
-	baseURL := "http://localhost:9999"
+	baseURL := serverURL
 
 	log.Printf("Attempting to fetch public agent card from: %s%s", baseURL, a2asrv.WellKnownAgentCardPath)
 
@@ -76,12 +77,15 @@ func runTestClient() {
 	}
 
 	// Verifies the AgentCard using signature_verifier function before returning it
-	if err := signatureVerifier(publicCard); err != nil {
-		log.Fatalf("Failed to verify public agent card signature: %v", err)
+	if verifyErr := signatureVerifier(publicCard); verifyErr != nil {
+		log.Fatalf("Failed to verify public agent card signature: %v", verifyErr)
 	}
 
 	log.Println("Successfully fetched public agent card:")
-	cardJSON, _ := json.MarshalIndent(publicCard, "", "  ")
+	cardJSON, err := json.MarshalIndent(publicCard, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to marshal public agent card: %v", err)
+	}
 	log.Println(string(cardJSON))
 	log.Println("\nUsing PUBLIC agent card for client initialization (default).")
 
@@ -97,11 +101,14 @@ func runTestClient() {
 	}
 
 	// Verifies the AgentCard using signature_verifier function before returning it
-	if err := signatureVerifier(extendedCard); err != nil {
-		log.Fatalf("Failed to verify extended agent card signature: %v", err)
+	if verifyErr := signatureVerifier(extendedCard); verifyErr != nil {
+		log.Fatalf("Failed to verify extended agent card signature: %v", verifyErr)
 	}
 
 	fmt.Println("Fetched extended card:")
-	extJSON, _ := json.MarshalIndent(extendedCard, "", "  ")
+	extJSON, err := json.MarshalIndent(extendedCard, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to marshal extended agent card: %v", err)
+	}
 	fmt.Println(string(extJSON))
 }

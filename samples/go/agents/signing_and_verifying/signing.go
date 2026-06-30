@@ -14,7 +14,7 @@ import (
 // Sentinel errors for signature verification matching Python SDK exception types.
 var (
 	ErrNoSignature       = errors.New("AgentCard has no signatures to verify")
-	ErrInvalidSignatures = errors.New("No valid signature found")
+	ErrInvalidSignatures = errors.New("no valid signature found")
 )
 
 // ProtectedHeader defines the protected header parameters for JWS (RFC 7515).
@@ -84,7 +84,7 @@ func canonicalizeAgentCard(card *a2a.AgentCard) ([]byte, error) {
 // createAgentCardSigner creates a function that signs an AgentCard and appends the signature.
 func createAgentCardSigner(privateKey *ecdsa.PrivateKey, protectedHeader ProtectedHeader) func(card *a2a.AgentCard) (*a2a.AgentCard, error) {
 	if protectedHeader.Alg == "" {
-		protectedHeader.Alg = "ES256"
+		protectedHeader.Alg = es256Alg
 	}
 
 	method := jwt.GetSigningMethod(protectedHeader.Alg)
@@ -145,7 +145,7 @@ func createSignatureVerifier(keyProvider KeyProvider, allowedAlgs []string) func
 				continue
 			}
 			var protectedHeader ProtectedHeader
-			if err := json.Unmarshal(protectedBytes, &protectedHeader); err != nil {
+			if unmarshalErr := json.Unmarshal(protectedBytes, &protectedHeader); unmarshalErr != nil {
 				continue
 			}
 

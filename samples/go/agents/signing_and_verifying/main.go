@@ -17,6 +17,12 @@ import (
 	"github.com/a2aproject/a2a-go/a2asrv"
 )
 
+const (
+	modeText  = "text"
+	serverURL = "http://localhost:9999"
+	es256Alg  = "ES256"
+)
+
 func main() {
 	runClientFlag := flag.Bool("client", false, "Run the test client instead of starting server only")
 	flag.Parse()
@@ -44,8 +50,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to marshal keys JSON: %v", err)
 	}
-	if err := os.WriteFile("public_keys.json", keysJSON, 0644); err != nil {
-		log.Fatalf("Failed to save public_keys.json: %v", err)
+	if writeErr := os.WriteFile("public_keys.json", keysJSON, 0600); writeErr != nil {
+		log.Fatalf("Failed to save public_keys.json: %v", writeErr)
 	}
 
 	skill := a2a.AgentSkill{
@@ -67,16 +73,16 @@ func main() {
 	publicAgentCard := &a2a.AgentCard{
 		Name:               "Signed Agent",
 		Description:        "An Agent that is signed",
-		IconURL:            "http://localhost:9999/",
+		IconURL:            serverURL + "/",
 		Version:            "1.0.0",
-		DefaultInputModes:  []string{"text"},
-		DefaultOutputModes: []string{"text"},
+		DefaultInputModes:  []string{modeText},
+		DefaultOutputModes: []string{modeText},
 		Capabilities:       a2a.AgentCapabilities{Streaming: true, ExtendedAgentCard: true},
 		SupportedInterfaces: []*a2a.AgentInterface{
 			{
 				ProtocolBinding: a2a.TransportProtocolJSONRPC,
 				ProtocolVersion: a2a.Version,
-				URL:             "http://localhost:9999",
+				URL:             serverURL,
 			},
 		},
 		Skills: []a2a.AgentSkill{skill},
@@ -85,16 +91,16 @@ func main() {
 	extendedAgentCard := &a2a.AgentCard{
 		Name:               "Signed Agent - Extended Edition",
 		Description:        "The full-featured signed agent for authenticated users.",
-		IconURL:            "http://localhost:9999/",
+		IconURL:            serverURL + "/",
 		Version:            "1.0.1",
-		DefaultInputModes:  []string{"text"},
-		DefaultOutputModes: []string{"text"},
+		DefaultInputModes:  []string{modeText},
+		DefaultOutputModes: []string{modeText},
 		Capabilities:       a2a.AgentCapabilities{Streaming: true, ExtendedAgentCard: true},
 		SupportedInterfaces: []*a2a.AgentInterface{
 			{
 				ProtocolBinding: a2a.TransportProtocolJSONRPC,
 				ProtocolVersion: a2a.Version,
-				URL:             "http://localhost:9999",
+				URL:             serverURL,
 			},
 		},
 		Skills: []a2a.AgentSkill{
@@ -108,8 +114,8 @@ func main() {
 		privateKey,
 		ProtectedHeader{
 			Kid: kid,
-			Alg: "ES256",
-			Jku: "http://localhost:9999/public_keys.json",
+			Alg: es256Alg,
+			Jku: serverURL + "/public_keys.json",
 		},
 	)
 
