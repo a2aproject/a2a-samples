@@ -9,6 +9,8 @@ import (
 	"github.com/a2aproject/a2a-go/a2asrv"
 )
 
+const textPlain = "text/plain"
+
 func main() {
 	// --8<-- [start:AgentSkill]
 	// Defines the abilities or functions that agent can perform.
@@ -16,8 +18,8 @@ func main() {
 		ID:          "echo_bot",
 		Name:        "Echo Bot",
 		Description: "An example agent that acknowledges client request and responds with a \"Hello World\" message.",
-		InputModes:  []string{"text/plain"},
-		OutputModes: []string{"text/plain"},
+		InputModes:  []string{textPlain},
+		OutputModes: []string{textPlain},
 		Tags:        []string{"a2a", "echo-example"},
 		Examples:    []string{"hi", "how are you"},
 	}
@@ -40,8 +42,8 @@ func main() {
 		Description: "Just a hello world agent",
 		Version:     "0.0.1",
 		// Default Media Types for the agent's interactions
-		DefaultInputModes:  []string{"text/plain"}, // Supported media types
-		DefaultOutputModes: []string{"text/plain"},
+		DefaultInputModes:  []string{textPlain}, // Supported media types
+		DefaultOutputModes: []string{textPlain},
 		// Supported A2A features (like streaming or extended config)
 		Capabilities: a2a.AgentCapabilities{Streaming: true, ExtendedAgentCard: true},
 		// Ordered list of endpoints and protocols where the service can be reached
@@ -63,8 +65,8 @@ func main() {
 		Name:               "Hello World Agent - Extended Edition",
 		Description:        "The full-featured hello world agent for authenticated users.",
 		Version:            "0.0.2",
-		DefaultInputModes:  []string{"text/plain"},
-		DefaultOutputModes: []string{"text/plain"},
+		DefaultInputModes:  []string{textPlain},
+		DefaultOutputModes: []string{textPlain},
 		Capabilities:       a2a.AgentCapabilities{Streaming: true, ExtendedAgentCard: true},
 		SupportedInterfaces: []*a2a.AgentInterface{
 			{
@@ -101,9 +103,15 @@ func main() {
 	// --8<-- [end:ServerRoutes]
 
 	// --8<-- [start:AppServer]
+	server := &http.Server{
+		Addr:              "127.0.0.1:9999",
+		Handler:           mux,
+		ReadHeaderTimeout: 3 * time.Second,
+	}
+
 	go func() {
 		log.Println("Starting A2A server on http://127.0.0.1:9999...")
-		if err := http.ListenAndServe("127.0.0.1:9999", mux); err != nil && err != http.ErrServerClosed {
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Server failed: %v", err)
 		}
 	}()

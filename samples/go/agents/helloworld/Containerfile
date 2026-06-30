@@ -12,7 +12,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o helloworld-server main.go agent_executor.go
 
 # Final runnable image
-FROM alpine:latest
+FROM alpine:3.21
 
 WORKDIR /app
 

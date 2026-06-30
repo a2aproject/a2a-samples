@@ -51,6 +51,7 @@ func getAgentCard(ctx context.Context) (*a2a.AgentCard, error) {
 	return &card, nil
 }
 
+//nolint:unused
 func displayAgentCard(card *a2a.AgentCard) {
 	fmt.Println("====================================================")
 	fmt.Println("                    AgentCard                      ")
@@ -69,6 +70,7 @@ func displayAgentCard(card *a2a.AgentCard) {
 	fmt.Printf("Extended agent card : %t\n", card.Capabilities.ExtendedAgentCard)
 }
 
+//nolint:unused
 func showAgentCard(ctx context.Context) {
 	card, err := getAgentCard(ctx)
 	if err != nil {
@@ -102,6 +104,7 @@ func sendMessage(ctx context.Context, textQuery string) {
 	fmt.Printf("%+v\n", res)
 }
 
+//nolint:unused
 func sendStreamingMessage(ctx context.Context, textQuery string) {
 	card, err := getAgentCard(ctx)
 	if err != nil {
@@ -129,6 +132,7 @@ func sendStreamingMessage(ctx context.Context, textQuery string) {
 	}
 }
 
+//nolint:unused
 func showExtendedCard(ctx context.Context) {
 	card, err := getAgentCard(ctx)
 	if err != nil {
@@ -149,6 +153,14 @@ func showExtendedCard(ctx context.Context) {
 	displayAgentCard(extendedCard)
 }
 
+//nolint:unused
+func testClientWorkflow(ctx context.Context, textQuery string) {
+	showAgentCard(ctx)
+	sendMessage(ctx, textQuery)
+	sendStreamingMessage(ctx, textQuery)
+	showExtendedCard(ctx)
+}
+
 func runInteractiveClient() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
@@ -158,13 +170,19 @@ func runInteractiveClient() {
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("user > ")
-	prompt, _ := reader.ReadString('\n')
+	prompt, err := reader.ReadString('\n')
+	if err != nil {
+		return
+	}
 	prompt = strings.TrimSpace(prompt)
 
 	for prompt != "" && prompt != "exit" {
 		sendMessage(ctx, prompt)
 		fmt.Print("--\nuser > ")
-		prompt, _ = reader.ReadString('\n')
+		prompt, err = reader.ReadString('\n')
+		if err != nil {
+			return
+		}
 		prompt = strings.TrimSpace(prompt)
 	}
 }

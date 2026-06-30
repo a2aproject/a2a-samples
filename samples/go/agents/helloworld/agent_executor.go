@@ -41,7 +41,7 @@ func NewHelloWorldAgentExecutor() *HelloWorldAgentExecutor {
 // --8<-- [start:HelloWorldAgentExecutor_execute]
 
 // Execute processes the incoming user request.
-func (e *HelloWorldAgentExecutor) Execute(ctx context.Context, execCtx *a2asrv.ExecutorContext) iter.Seq2[a2a.Event, error] {
+func (e *HelloWorldAgentExecutor) Execute(_ context.Context, execCtx *a2asrv.ExecutorContext) iter.Seq2[a2a.Event, error] {
 	return func(yield func(a2a.Event, error) bool) {
 		// 1. Collect a task from request context / yield submitted task event if new
 		if execCtx.StoredTask == nil {
@@ -85,7 +85,7 @@ func (e *HelloWorldAgentExecutor) Execute(ctx context.Context, execCtx *a2asrv.E
 // --8<-- [start:HelloWorldAgentExecutor_cancel]
 
 // Cancel handles task cancellation (not supported in this sample).
-func (e *HelloWorldAgentExecutor) Cancel(ctx context.Context, execCtx *a2asrv.ExecutorContext) iter.Seq2[a2a.Event, error] {
+func (e *HelloWorldAgentExecutor) Cancel(_ context.Context, _ *a2asrv.ExecutorContext) iter.Seq2[a2a.Event, error] {
 	return func(yield func(a2a.Event, error) bool) {
 		yield(nil, fmt.Errorf("cancel is not supported"))
 	}
