@@ -27,18 +27,32 @@ from starlette.responses import FileResponse
 from starlette.routing import Route
 
 
+def create_public_private_keys() -> tuple[str, str]:
+    """Generate EC private and public key pair as PEM-encoded strings."""
+    private_key = asymmetric.ec.generate_private_key(asymmetric.ec.SECP256R1())
+    private_pem = private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption(),
+    ).decode('utf-8')
+    public_pem = (
+        private_key.public_key()
+        .public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
+        )
+        .decode('utf-8')
+    )
+    return private_pem, public_pem
+
+
 if __name__ == '__main__':
     # Generate a private, public key pair
-    private_key = asymmetric.ec.generate_private_key(asymmetric.ec.SECP256R1())
-    public_key = private_key.public_key()
+    private_key, public_key = create_public_private_keys()
 
     # Save public key to a file
-    pem = public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo,
-    ).decode('utf-8')
     kid = 'my-key'
-    keys = {kid: pem}
+    keys = {kid: public_key}
     with Path('public_keys.json').open('w') as f:
         json.dump(keys, f, indent=2)
 

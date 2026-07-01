@@ -4,6 +4,7 @@ import logging
 import httpx
 
 from a2a.client import A2ACardResolver, ClientConfig, create_client
+from a2a.helpers import display_agent_card
 from a2a.types import GetExtendedAgentCardRequest
 from a2a.utils.constants import (
     AGENT_CARD_WELL_KNOWN_PATH,
@@ -13,22 +14,37 @@ from cryptography.hazmat.primitives import serialization
 from jwt.api_jwk import PyJWK
 
 
-def _key_provider(kid: str | None, jku: str | None) -> PyJWK | str | bytes:
+def _key_provider(kid: str, jku: str) -> PyJWK | str | bytes:
+    """Fetch and parse public key from JKU URL given key ID (kid) and JKU URL."""
     if not kid or not jku:
-        print('kid or jku missing')
-        raise ValueError
+        raise ValueError('Both key ID (kid) and JKU URL (jku) must be provided.')
 
-    response = httpx.get(jku)
-    keys = response.json()
+    try:
+        response = httpx.get(jku)
+        response.raise_for_status()
+    except httpx.HTTPError as e:
+        raise ValueError(f'Failed to fetch public key from JKU URL ({jku}): {e}') from e
+
+    try:
+        keys = response.json()
+    except ValueError as e:
+        raise ValueError(f'Invalid JSON response from JKU URL ({jku}): {e}') from e
+
+    if not isinstance(keys, dict):
+        raise TypeError(f'Expected JSON object from JKU URL ({jku}), got {type(keys).__name__}.')
 
     pem_data_str = keys.get(kid)
-    if pem_data_str:
-        pem_data = pem_data_str.encode('utf-8')
-        return serialization.load_pem_public_key(pem_data)
-    raise ValueError
+    if not pem_data_str:
+        raise ValueError(f'Key ID "{kid}" not found in JKU response from {jku}.')
+
+    try:
+        return serialization.load_pem_public_key(pem_data_str.encode('utf-8'))
+    except Exception as e:
+        raise ValueError(f'Failed to parse public key for kid "{kid}": {e}') from e
 
 
-signature_verifier = create_signature_verifier(_key_provider, ['ES256'])
+# Create a verifier function to validate AgentCard JWS signatures
+verify_card_signature = create_signature_verifier(_key_provider, ['ES256'])
 
 
 async def main() -> None:
@@ -52,12 +68,11 @@ async def main() -> None:
                 base_url,
                 AGENT_CARD_WELL_KNOWN_PATH,
             )
+            # Pass verify_card_signature to validate the signature on the public Agent Card
             public_card = await resolver.get_agent_card(
-                signature_verifier=signature_verifier,
-            )  # Verifies the AgentCard using signature_verifier function before returning it
+                signature_verifier=verify_card_signature,
+            )
             logger.info('Successfully fetched public agent card:')
-            logger.info(public_card)
-            logger.info('\nUsing PUBLIC agent card for client initialization (default).')
 
         except Exception as e:
             logger.exception(
@@ -71,11 +86,21 @@ async def main() -> None:
             client_config=ClientConfig(streaming=False),
         )
 
-        get_card_response = await client.get_extended_agent_card(
-            GetExtendedAgentCardRequest(), signature_verifier=signature_verifier
-        )  # Verifies the AgentCard using signature_verifier function before returning it
-        print('Fetched extended card:')
-        print(get_card_response)
+        # Pass verify_card_signature to validate the signature on the extended Agent Card
+        extended_card_with_signature = await client.get_extended_agent_card(
+            GetExtendedAgentCardRequest(),
+            signature_verifier=verify_card_signature,
+        )
+        logger.info('Successfully fetched extended agent card with signature:')
+        display_agent_card(extended_card_with_signature)
+        logger.info('Signature:')
+        logger.info(extended_card_with_signature.signatures)
+
+        extended_card_without_signature = await client.get_extended_agent_card(
+            GetExtendedAgentCardRequest()
+        )
+        logger.info('Successfully fetched extended agent card without signature:') #Signature is only for client-side verification purpose
+        display_agent_card(extended_card_without_signature)
 
 
 if __name__ == '__main__':
