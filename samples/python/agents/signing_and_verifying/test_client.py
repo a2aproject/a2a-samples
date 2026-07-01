@@ -99,7 +99,9 @@ async def main() -> None:
         extended_card_without_signature = await client.get_extended_agent_card(
             GetExtendedAgentCardRequest()
         )
-        logger.info('Successfully fetched extended agent card without signature:') #Signature is only for client-side verification purpose
+        logger.info(
+            'Successfully fetched extended agent card without signature:'
+        )  # Signature is only for client-side verification purpose
         display_agent_card(extended_card_without_signature)
 
 
