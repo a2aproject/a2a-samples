@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -23,29 +24,39 @@ const (
 	es256Alg  = "ES256"
 )
 
+// createPublicPrivateKeys generates EC private and public key pair as PEM-encoded strings.
+func createPublicPrivateKeys() (*ecdsa.PrivateKey, string, error) {
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		return nil, "", fmt.Errorf("failed to generate private key: %w", err)
+	}
+
+	pubBytes, err := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
+	if err != nil {
+		return nil, "", fmt.Errorf("failed to marshal public key: %w", err)
+	}
+
+	pemBlock := &pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: pubBytes,
+	}
+	publicPEM := string(pem.EncodeToMemory(pemBlock))
+	return privateKey, publicPEM, nil
+}
+
 func main() {
 	runClientFlag := flag.Bool("client", false, "Run the test client instead of starting server only")
 	flag.Parse()
 
 	// Generate a private, public key pair
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	privateKey, publicKeyPEM, err := createPublicPrivateKeys()
 	if err != nil {
-		log.Fatalf("Failed to generate private key: %v", err)
+		log.Fatalf("Failed to generate keys: %v", err)
 	}
-	publicKey := &privateKey.PublicKey
 
 	// Save public key to a file
-	pubBytes, err := x509.MarshalPKIXPublicKey(publicKey)
-	if err != nil {
-		log.Fatalf("Failed to marshal public key: %v", err)
-	}
-	pemBlock := &pem.Block{
-		Type:  "PUBLIC KEY",
-		Bytes: pubBytes,
-	}
-	pemStr := string(pem.EncodeToMemory(pemBlock))
 	kid := "my-key"
-	keys := map[string]string{kid: pemStr}
+	keys := map[string]string{kid: publicKeyPEM}
 	keysJSON, err := json.MarshalIndent(keys, "", "  ")
 	if err != nil {
 		log.Fatalf("Failed to marshal keys JSON: %v", err)
