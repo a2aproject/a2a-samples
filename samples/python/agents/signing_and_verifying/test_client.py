@@ -16,31 +16,24 @@ from jwt.api_jwk import PyJWK
 
 def _key_provider(kid: str, jku: str) -> PyJWK | str | bytes:
     """Fetch and parse public key from JKU URL given key ID (kid) and JKU URL."""
-    if not kid or not jku:
-        raise ValueError('Both key ID (kid) and JKU URL (jku) must be provided.')
+    if not isinstance(kid, str) or not kid:
+        raise TypeError(f'Expected kid: str, but got: {type(kid).__name__} ({kid!r})')
+    if not isinstance(jku, str) or not jku:
+        raise TypeError(f'Expected jku: str, but got: {type(jku).__name__} ({jku!r})')
 
     try:
         response = httpx.get(jku)
         response.raise_for_status()
-    except httpx.HTTPError as e:
-        raise ValueError(f'Failed to fetch public key from JKU URL ({jku}): {e}') from e
+    except httpx.HTTPError as err:
+        raise ValueError(f'Failed to fetch public key from JKU URL ({jku}): {err}') from err
 
-    try:
-        keys = response.json()
-    except ValueError as e:
-        raise ValueError(f'Invalid JSON response from JKU URL ({jku}): {e}') from e
-
-    if not isinstance(keys, dict):
-        raise TypeError(f'Expected JSON object from JKU URL ({jku}), got {type(keys).__name__}.')
-
+    keys = response.json()
     pem_data_str = keys.get(kid)
-    if not pem_data_str:
-        raise ValueError(f'Key ID "{kid}" not found in JKU response from {jku}.')
 
-    try:
-        return serialization.load_pem_public_key(pem_data_str.encode('utf-8'))
-    except Exception as e:
-        raise ValueError(f'Failed to parse public key for kid "{kid}": {e}') from e
+    if not pem_data_str:
+        raise ValueError('Invalid JWK Key ID.')
+    
+    return serialization.load_pem_public_key(pem_data_str.encode('utf-8'))
 
 
 # Create a verifier function to validate AgentCard JWS signatures
