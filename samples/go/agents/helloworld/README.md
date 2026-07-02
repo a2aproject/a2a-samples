@@ -12,7 +12,7 @@ The sample codebase is structured around three core components.
 
 ## Prerequisites
 
-- **Go**: Version 1.24 or higher.
+- **Go**: Version 1.25 or higher.
 
 ## Quick Start
 
