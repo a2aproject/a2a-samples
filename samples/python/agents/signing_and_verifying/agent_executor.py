@@ -34,10 +34,7 @@ class SignedAgentExecutor(AgentExecutor):
         )
 
         query = get_message_text(context.message)
-        if query:
-            result = f'Verify me! ({query})'
-        else:
-            result = 'Verify me!'
+        result = f'Verify me! ({query})' if query else 'Verify me!'
 
         await task_updater.add_artifact(parts=[new_text_part(text=result, media_type='text/plain')])
 

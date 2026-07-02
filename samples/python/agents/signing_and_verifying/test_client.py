@@ -32,7 +32,7 @@ def _key_provider(kid: str, jku: str) -> PyJWK | str | bytes:
 
     if not pem_data_str:
         raise ValueError('Invalid JWK Key ID.')
-    
+
     return serialization.load_pem_public_key(pem_data_str.encode('utf-8'))
 
 
