@@ -16,9 +16,13 @@ import (
 	"github.com/a2aproject/a2a-go/a2asrv"
 )
 
+// keyProvider fetches and parses public key from JKU URL given key ID (kid) and JKU URL.
 func keyProvider(kid, jku string) (any, error) {
-	if kid == "" || jku == "" {
-		return nil, fmt.Errorf("both key ID (kid) and JKU URL (jku) must be provided")
+	if kid == "" {
+		return nil, fmt.Errorf("expected kid: string, but got empty string")
+	}
+	if jku == "" {
+		return nil, fmt.Errorf("expected jku: string, but got empty string")
 	}
 
 	//nolint:gosec // JKU URL is dynamic by design per RFC 7515
@@ -29,32 +33,32 @@ func keyProvider(kid, jku string) (any, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("JKU request failed with status: %d", resp.StatusCode)
+		return nil, fmt.Errorf("failed to fetch public key from JKU URL (%s): status code %d", jku, resp.StatusCode)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read JKU body: %w", err)
+		return nil, fmt.Errorf("failed to fetch public key from JKU URL (%s): failed to read body: %w", jku, err)
 	}
 
 	var keys map[string]string
 	if unmarshalErr := json.Unmarshal(body, &keys); unmarshalErr != nil {
-		return nil, fmt.Errorf("invalid JSON response from JKU URL (%s): %w", jku, unmarshalErr)
+		return nil, fmt.Errorf("failed to fetch public key from JKU URL (%s): invalid JSON response: %w", jku, unmarshalErr)
 	}
 
 	pemStr, ok := keys[kid]
-	if !ok {
-		return nil, fmt.Errorf("key ID %q not found in JKU response from %s", kid, jku)
+	if !ok || pemStr == "" {
+		return nil, fmt.Errorf("invalid JWK Key ID.")
 	}
 
 	block, _ := pem.Decode([]byte(pemStr))
 	if block == nil {
-		return nil, fmt.Errorf("failed to decode PEM block for kid %q", kid)
+		return nil, fmt.Errorf("failed to decode PEM block for key ID %q", kid)
 	}
 
 	pubKey, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse PKIX public key for kid %q: %w", kid, err)
+		return nil, fmt.Errorf("failed to parse PKIX public key for key ID %q: %w", kid, err)
 	}
 
 	return pubKey, nil
@@ -78,7 +82,7 @@ func runTestClient() {
 
 	// Initialize A2ACardResolver using SDK helper
 	resolver := agentcard.NewResolver(http.DefaultClient)
-	publicCard, err := resolver.Resolve(ctx, baseURL+a2asrv.WellKnownAgentCardPath)
+	publicCard, err := resolver.Resolve(ctx, baseURL)
 	if err != nil {
 		log.Fatalf("Critical error fetching public agent card: %v", err)
 	}
@@ -89,7 +93,6 @@ func runTestClient() {
 	}
 
 	log.Println("Successfully fetched public agent card:")
-	displayAgentCard(publicCard)
 
 	// Create A2A Client directly via unified card
 	client, err := a2aclient.NewFromCard(ctx, publicCard)
