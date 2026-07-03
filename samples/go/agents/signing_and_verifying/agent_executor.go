@@ -59,4 +59,3 @@ func (e *SignedAgentExecutor) Cancel(_ context.Context, _ *a2asrv.ExecutorContex
 		yield(nil, fmt.Errorf("cancel is not supported"))
 	}
 }
-

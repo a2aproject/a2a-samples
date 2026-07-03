@@ -48,7 +48,7 @@ func keyProvider(kid, jku string) (any, error) {
 
 	pemStr, ok := keys[kid]
 	if !ok || pemStr == "" {
-		return nil, fmt.Errorf("invalid JWK Key ID.")
+		return nil, fmt.Errorf("invalid JWK key ID")
 	}
 
 	block, _ := pem.Decode([]byte(pemStr))
