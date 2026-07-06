@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/a2aproject/a2a-go/a2a"
+	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/golang-jwt/jwt/v5"
 )
 

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"iter"
 
-	"github.com/a2aproject/a2a-go/a2a"
-	"github.com/a2aproject/a2a-go/a2asrv"
+	"github.com/a2aproject/a2a-go/v2/a2a"
+	"github.com/a2aproject/a2a-go/v2/a2asrv"
 )
 
 type SignedAgentExecutor struct{}
