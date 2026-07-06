@@ -93,9 +93,7 @@ def populated_agp_table(all_available_routes) -> AGPTable:
 @pytest.fixture
 def gateway(populated_agp_table) -> AgentGatewayProtocol:
     """Provides a configured Gateway Agent instance for testing."""
-    return AgentGatewayProtocol(
-        squad_name='Test_Gateway', agp_table=populated_agp_table
-    )
+    return AgentGatewayProtocol(squad_name='Test_Gateway', agp_table=populated_agp_table)
 
 
 # --- Test Scenarios (19 Total Tests) ---
@@ -143,9 +141,7 @@ def test_02_policy_filtering_sensitive_data(gateway: AgentGatewayProtocol):
 
 def test_03_route_not_found(gateway: AgentGatewayProtocol):
     """Tests routing failure when the target capability is not in the AGPTable."""
-    intent = IntentPayload(
-        target_capability='unknown:capability', payload={'data': 'test'}
-    )
+    intent = IntentPayload(target_capability='unknown:capability', payload={'data': 'test'})
     best_route = gateway.route_intent(intent)
     assert best_route is None
 

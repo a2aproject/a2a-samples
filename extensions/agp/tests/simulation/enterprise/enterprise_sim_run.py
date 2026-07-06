@@ -75,9 +75,7 @@ def setup_enterprise_agp_table(gateway: AgentGatewayProtocol):
     Refactored to be data-driven.
     """
     # CORRECTED: Replaced print() with logging.info()
-    logging.info(
-        '--- 1. Announcing Capabilities (Building AGP Routing Table) ---'
-    )
+    logging.info('--- 1. Announcing Capabilities (Building AGP Routing Table) ---')
 
     for item in ENTERPRISE_CAPABILITIES:
         announcement = CapabilityAnnouncement(
@@ -95,16 +93,12 @@ def run_enterprise_simulation():
     """
     # Initialize the AGP Gateway
     agp_table = AGPTable()
-    central_gateway = AgentGatewayProtocol(
-        squad_name='Central_AGP_Router', agp_table=agp_table
-    )
+    central_gateway = AgentGatewayProtocol(squad_name='Central_AGP_Router', agp_table=agp_table)
 
     # Build the routing table
     setup_enterprise_agp_table(central_gateway)
 
-    logging.info(
-        '\n--- 2. Building Delegation Task (HR Initiates Project Setup) ---'
-    )
+    logging.info('\n--- 2. Building Delegation Task (HR Initiates Project Setup) ---')
 
     # Define the Complex Delegation Task (Executive Project Launch)
     project_delegation_intent = DelegationIntent(

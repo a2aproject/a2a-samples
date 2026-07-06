@@ -84,9 +84,7 @@ def enterprise_routes() -> list[CapabilityAnnouncement]:
 def configured_delegation_router(enterprise_routes) -> DelegationRouter:
     """Initializes the Gateway and populates its AGPTable with all enterprise routes."""
     agp_table = AGPTable()
-    central_gateway = AgentGatewayProtocol(
-        squad_name='Central_AGP_Router', agp_table=agp_table
-    )
+    central_gateway = AgentGatewayProtocol(squad_name='Central_AGP_Router', agp_table=agp_table)
 
     # Announce all capabilities
     for ann in enterprise_routes:
@@ -122,9 +120,7 @@ def test_01_core_finance_authorization_l5_sufficiency(
         ],
     )
 
-    results = configured_delegation_router.route_delegation_intent(
-        finance_intent
-    )
+    results = configured_delegation_router.route_delegation_intent(finance_intent)
 
     assert results['budget:authorize'] == 'SUCCESS'
 
@@ -204,9 +200,7 @@ def test_04_compliance_rbac_zero_trust(
         ],
     )
 
-    results = configured_delegation_router.route_delegation_intent(
-        compliance_intent
-    )
+    results = configured_delegation_router.route_delegation_intent(compliance_intent)
 
     assert results['policy:audit'] == 'SUCCESS'
 
@@ -243,9 +237,7 @@ def test_05_multi_task_failure_and_partial_success(
         ],
     )
 
-    results = configured_delegation_router.route_delegation_intent(
-        failure_intent
-    )
+    results = configured_delegation_router.route_delegation_intent(failure_intent)
 
     # CRITICAL FIX: The router only checks if a compliant route EXISTS.
     # Since Finance offers the required role/level, it passes routing (SUCCESS).

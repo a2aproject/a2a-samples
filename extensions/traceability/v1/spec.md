@@ -19,7 +19,7 @@ This is the only URI accepted for this extension.
 
 Traceability information MUST be stored in the metadata for a Message or Artifact, under a
 field with the key `github.com/a2aproject/a2a-samples/extensions/traceability/v1/traceability`,
-or an addtional artifact in the returned completed response.
+or an additional artifact in the returned completed response.
 
 ```proto
 // A Trace message that contains a collection of spans.

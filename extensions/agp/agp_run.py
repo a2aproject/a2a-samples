@@ -41,9 +41,7 @@ def run_simulation():
         cost=0.10,  # Higher cost
         policy={'security_level': 5, 'requires_PII': True},
     )
-    corporate_gateway.announce_capability(
-        eng_announcement, path='Squad_Engineering/vm_provisioner'
-    )
+    corporate_gateway.announce_capability(eng_announcement, path='Squad_Engineering/vm_provisioner')
 
     # --- Announcement 2: External Vendor Squad (Cheapest, Low Security) ---
     # Can provision VMs, but fails the PII check and only meets standard security.
@@ -64,9 +62,7 @@ def run_simulation():
         cost=0.15,
         policy={'security_level': 3, 'geo': 'US'},
     )
-    corporate_gateway.announce_capability(
-        finance_announcement, path='Squad_Finance/analysis_tool'
-    )
+    corporate_gateway.announce_capability(finance_announcement, path='Squad_Finance/analysis_tool')
 
     # --- PHASE 2: Intent Routing Simulation ---
 
@@ -79,9 +75,7 @@ def run_simulation():
         payload={'type': 'standard', 'user': 'bob'},
         policy_constraints={'security_level': 3},
     )
-    print(
-        '\n[Intent A] Requesting standard VM provisioning (Lowest cost, Security Level 3).'
-    )
+    print('\n[Intent A] Requesting standard VM provisioning (Lowest cost, Security Level 3).')
     corporate_gateway.route_intent(intent_a)
 
     # Intent B: Sensitive VM provisioning (Policy-driven, requires PII)
@@ -92,9 +86,7 @@ def run_simulation():
         payload={'type': 'sensitive', 'user': 'alice', 'data': 'ssn_data'},
         policy_constraints={'security_level': 5, 'requires_PII': True},
     )
-    print(
-        '\n[Intent B] Requesting sensitive VM provisioning (Requires PII and Security Level 5).'
-    )
+    print('\n[Intent B] Requesting sensitive VM provisioning (Requires PII and Security Level 5).')
     corporate_gateway.route_intent(intent_b)
 
     # Intent C: Requesting provisioning with security level 7 (Unmatched Policy)
@@ -104,9 +96,7 @@ def run_simulation():
         payload={'type': 'max_security'},
         policy_constraints={'security_level': 7},
     )
-    print(
-        '\n[Intent C] Requesting provisioning with security level 7 (Unmatched Policy).'
-    )
+    print('\n[Intent C] Requesting provisioning with security level 7 (Unmatched Policy).')
     corporate_gateway.route_intent(intent_c)
 
     # Intent D: Requesting HR onboarding (Unknown Capability)

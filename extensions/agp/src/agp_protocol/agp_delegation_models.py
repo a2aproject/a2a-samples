@@ -44,15 +44,11 @@ class SubIntent(BaseModel):
 class DelegationIntent(BaseModel):
     """A high-level meta-task requiring decomposition and routing to multiple squads."""
 
-    meta_task: str = Field(
-        ..., description="High-level goal (e.g., 'Setup Project Alpha')."
-    )
+    meta_task: str = Field(..., description="High-level goal (e.g., 'Setup Project Alpha').")
     sub_intents: list[SubIntent] = Field(
         ..., description='List of atomic tasks to be decomposed and routed.'
     )
-    origin_squad: str = Field(
-        ..., description="The squad initiating the request (e.g., 'HR')."
-    )
+    origin_squad: str = Field(..., description="The squad initiating the request (e.g., 'HR').")
 
     model_config = ConfigDict(extra='forbid')
 
@@ -113,7 +109,5 @@ class DelegationRouter:
         logger.info(
             '--------------------------------------------------------------------------------'
         )
-        logger.info(
-            f'[{self.squad_name}] DELEGATION COMPLETE: Processed {len(results)} sub-tasks.'
-        )
+        logger.info(f'[{self.squad_name}] DELEGATION COMPLETE: Processed {len(results)} sub-tasks.')
         return results

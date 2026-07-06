@@ -16,7 +16,7 @@ class CapabilityAnnouncement(BaseModel):
         description="The function or skill provided (e.g., 'financial_analysis:quarterly').",
     )
     version: str = Field(..., description='Version of the capability schema.')
-    cost: Optional[float] = Field(None, description='Estimated cost metric.')
+    cost: float | None = Field(None, description='Estimated cost metric.')
     policy: dict[str, Any] = Field(
         ...,
         description='Key-value pairs defining required security/data policies.',
@@ -28,9 +28,7 @@ class CapabilityAnnouncement(BaseModel):
 class IntentPayload(BaseModel):
     """The request payload routed by AGP."""
 
-    target_capability: str = Field(
-        ..., description='The capability the Intent seeks to fulfill.'
-    )
+    target_capability: str = Field(..., description='The capability the Intent seeks to fulfill.')
     payload: dict[str, Any] = Field(
         ..., description='The core data arguments required for the task.'
     )
@@ -82,9 +80,7 @@ class AgentGatewayProtocol:
         self.squad_name = squad_name
         self.agp_table = agp_table
 
-    def announce_capability(
-        self, announcement: CapabilityAnnouncement, path: str
-    ):
+    def announce_capability(self, announcement: CapabilityAnnouncement, path: str):
         """Simulates receiving a capability announcement and updating the AGP Table."""
         entry = RouteEntry(
             path=path,
@@ -97,14 +93,10 @@ class AgentGatewayProtocol:
         # Use setdefault to initialize the list if the key is new
         self.agp_table.routes.setdefault(capability_key, []).append(entry)
 
-        print(
-            f'[{self.squad_name}] ANNOUNCED: {capability_key} routed via {path}'
-        )
+        print(f'[{self.squad_name}] ANNOUNCED: {capability_key} routed via {path}')
 
     # Private method containing the core, *unmodified* routing logic
-    def __select_best_route(
-        self, intent: IntentPayload
-    ) -> Optional[RouteEntry]:
+    def __select_best_route(self, intent: IntentPayload) -> RouteEntry | None:
         """
         [Private Logic] Performs Policy-Based Routing to find the best available squad.
         """
@@ -148,7 +140,7 @@ class AgentGatewayProtocol:
         return best_route
 
     # Public, overridable method for core routing logic (used by external components)
-    def select_best_route(self, intent: IntentPayload) -> Optional[RouteEntry]:
+    def select_best_route(self, intent: IntentPayload) -> RouteEntry | None:
         """
         Public entry point for external components (like DelegationRouter)
         to retrieve the best route *without side effects*.
@@ -156,7 +148,7 @@ class AgentGatewayProtocol:
         return self.__select_best_route(intent)
 
     # Public method that is typically called by the A2A endpoint (includes side effects)
-    def route_intent(self, intent: IntentPayload) -> Optional[RouteEntry]:
+    def route_intent(self, intent: IntentPayload) -> RouteEntry | None:
         """
         Public entry point for routing an Intent payload, including printing side effects.
         """
