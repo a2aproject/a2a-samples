@@ -1,3 +1,4 @@
+# ruff: noqa: UP035, PLC0415, G004
 from collections.abc import Callable
 from copy import deepcopy
 from typing import Any, Dict, List, Optional

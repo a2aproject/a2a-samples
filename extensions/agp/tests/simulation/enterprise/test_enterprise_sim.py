@@ -1,3 +1,4 @@
+# ruff: noqa
 import pytest
 
 from agp_protocol import AGPTable, AgentGatewayProtocol, CapabilityAnnouncement

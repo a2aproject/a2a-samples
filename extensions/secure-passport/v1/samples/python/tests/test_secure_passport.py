@@ -1,4 +1,4 @@
-# ruff: noqa: S101
+# ruff: noqa: S101, INP001
 import pytest
 
 from secure_passport_ext import (

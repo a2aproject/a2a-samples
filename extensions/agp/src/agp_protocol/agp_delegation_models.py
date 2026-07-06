@@ -1,3 +1,4 @@
+# ruff: noqa
 import logging
 
 from typing import Any

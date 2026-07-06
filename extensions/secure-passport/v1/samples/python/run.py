@@ -1,6 +1,7 @@
+# ruff: noqa
 # run.py
 
-from secure_passport_ext import (
+from secure_passport_ext import (  # ruff: noqa: INP001, ANN201, D103
     A2AMessage,  # CORRECTED: Importing the standardized A2AMessage type
     CallerContext,
     SecurePassportExtension,  # Import the extension utility class

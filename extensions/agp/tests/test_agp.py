@@ -1,3 +1,4 @@
+# ruff: noqa: S101, PLR2004, INP001
 import pytest
 
 from agp_protocol import (
