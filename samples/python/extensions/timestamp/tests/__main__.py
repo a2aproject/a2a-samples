@@ -35,8 +35,12 @@ class EchoExecutor(AgentExecutor):
 
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Execute the task by echoing a text artifact and completing."""
-        task = context.current_task or new_task_from_user_message(context.message)
-        await event_queue.enqueue_event(task)
+        if context.current_task:
+            task = context.current_task
+        else:
+            task = new_task_from_user_message(context.message)
+            await event_queue.enqueue_event(task)
+
         await event_queue.enqueue_event(
             TaskStatusUpdateEvent(
                 task_id=context.task_id,

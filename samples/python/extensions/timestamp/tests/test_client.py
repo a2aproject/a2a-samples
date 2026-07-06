@@ -10,11 +10,8 @@ from pathlib import Path
 import httpx
 import pytest
 
-from a2a.client import ClientConfig, ClientFactory
+from a2a.client import A2ACardResolver, ClientConfig, ClientFactory
 from a2a.types import (
-    AgentCapabilities,
-    AgentCard,
-    AgentInterface,
     Message,
     Part,
     Role,
@@ -54,26 +51,10 @@ async def test_timestamp_extension_round_trip():
     expected_iso = datetime.datetime.fromtimestamp(_FIXED_TS, datetime.timezone.utc).isoformat()
     ext = TimestampExtension(now_fn=lambda: _FIXED_TS)
 
-    # Recreate the card on the client side for discovery
-    card = AgentCard(
-        name='Echo',
-        description='echo agent that demonstrates the timestamp extension',
-        version='1.0.0',
-        default_input_modes=['text'],
-        default_output_modes=['text'],
-        capabilities=AgentCapabilities(streaming=True),
-        supported_interfaces=[
-            AgentInterface(
-                protocol_binding='JSONRPC',
-                url=_AGENT_URL,
-                protocol_version='1.0',
-            )
-        ],
-    )
-    # Add capabilities to match the server
-    ext.add_to_card(card=card)
-
     async with httpx.AsyncClient(base_url=_AGENT_URL) as httpx_client:
+        resolver = A2ACardResolver(httpx_client=httpx_client, base_url=_AGENT_URL)
+        card = await resolver.get_agent_card()
+
         factory = wrap_client_factory(
             factory=ClientFactory(config=ClientConfig(httpx_client=httpx_client, streaming=True)),
             ext=ext,
@@ -92,24 +73,23 @@ async def test_timestamp_extension_round_trip():
         artifacts = []
         status_messages = []
         async for chunk in client.send_message(request=request):
-            kind = chunk.WhichOneof('payload')
-            if chunk.HasField('artifact_update'):
-                art = chunk.artifact_update.artifact
-                artifacts.append(art)
-                print(f'  artifact "{art.name}" @ {art.metadata[TIMESTAMP_FIELD]}')
-            elif chunk.HasField('status_update'):
-                status = chunk.status_update.status
-                if status.HasField('message'):
-                    msg = status.message
-                    status_messages.append(msg)
-                    print(
-                        f'  status={TaskState.Name(status.state)} message '
-                        f'@ {msg.metadata[TIMESTAMP_FIELD]}'
-                    )
-                else:
-                    print(f'  status={TaskState.Name(status.state)}')
-            else:
-                print(f'  event of kind {kind}')
+            match chunk.WhichOneof('payload'):
+                case 'artifact_update':
+                    art = chunk.artifact_update.artifact
+                    artifacts.append(art)
+                    print(f'  artifact "{art.name}" @ {art.metadata[TIMESTAMP_FIELD]}')
+                case 'status_update':
+                    status = chunk.status_update.status
+                    if status.HasField('message'):
+                        status_messages.append(status.message)
+                        print(
+                            f'  status={TaskState.Name(status.state)} message '
+                            f'@ {status.message.metadata[TIMESTAMP_FIELD]}'
+                        )
+                    else:
+                        print(f'  status={TaskState.Name(status.state)}')
+                case kind:
+                    print(f'  event of kind {kind}')
 
         await client.close()
 

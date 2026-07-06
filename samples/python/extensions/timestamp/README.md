@@ -12,7 +12,7 @@ The package is split into separate modules to isolate concerns and prevent clien
 
 * **`src/timestamp_ext/core.py`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
 * **`src/timestamp_ext/server.py`**: Houses server-side decorators (`_TimestampingAgentExecutor`, `_TimestampingEventQueue`) and the public `wrap_executor` function.
-* **`src/timestamp_ext/client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `wrap_client`). It isolates all client-specific Protobuf imports.
+* **`src/timestamp_ext/client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `client_interceptor`). It isolates all client-specific Protobuf imports.
 * **`src/timestamp_ext/__init__.py`**: Exposes only the core public exports for general usage.
 
 ---
