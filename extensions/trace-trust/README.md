@@ -22,4 +22,4 @@ The full technical details, including data models, required fields, and security
 
 A runnable example demonstrating the implementation of the `TraceTrustExtension` middleware utility functions for integration with the A2A SDK is provided in the `samples` directory.
 
-➡️ **[Python Sample Usage Guide](./v1/samples/python/README.md)**
+➡️ **[Python Sample (run.py)](./v1/samples/python/run.py)**

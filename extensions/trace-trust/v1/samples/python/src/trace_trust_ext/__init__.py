@@ -1,3 +1,6 @@
+# ruff: noqa: PYI036, TRY301
+import asyncio
+import inspect
 import logging
 import os
 
@@ -14,7 +17,7 @@ TRACE_TRUST_URI = 'https://github.com/a2aproject/a2a-samples/tree/main/extension
 TRACE_API_URL = os.getenv('TRACE_API_URL', 'https://traceapi-xxf56.ondigitalocean.app/v1/score')
 
 
-# Fallback type if a2a-python is not installed (for isolated testing)
+# Fallback type if a2a-sdk is not installed (for isolated testing)
 class BaseA2AMessage(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -22,28 +25,44 @@ class BaseA2AMessage(BaseModel):
 try:
     from a2a.types import A2AMessage
 except ImportError:
-    A2AMessage = BaseA2AMessage
+    A2AMessage = BaseA2AMessage  # type: ignore
 
 
 class TraceTrustExtension:
-    """
-    Middleware utility class for enforcing TRACE reputation scores on incoming A2A messages.
-    """
+    """Middleware utility class for enforcing TRACE reputation scores on incoming A2A messages."""
 
-    def __init__(self, api_key: str, min_score: float = 0.35, fail_closed: bool = True):
+    def __init__(self, api_key: str, min_score: float = 0.35, fail_closed: bool = True) -> None:
         self.api_key = api_key
         self.min_score = min_score
         self.fail_closed = fail_closed
-        self.client = httpx.Client(timeout=5.0)
+        self.client = httpx.AsyncClient(timeout=5.0)
 
-    def _get_trace_score(self, provider_id: str) -> float | None:
+    async def close(self) -> None:
+        """Closes the underlying HTTP client."""
+        await self.client.aclose()
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: Any,
+    ) -> None:
+        await self.close()
+
+    async def _get_trace_score(self, provider_id: str) -> float | None:
         """Calls the real TRACE API to fetch the global reputation score."""
         try:
-            response = self.client.post(
+            response = await self.client.post(
                 TRACE_API_URL,
                 json={
                     'provider_id': provider_id,
-                    'job': {'category': 'a2a-interaction', 'weight': 1.0},
+                    'job': {
+                        'category': 'a2a-interaction',
+                        'weight': 1.0,
+                    },
                 },
                 headers={
                     'Authorization': f'Bearer {self.api_key}',
@@ -51,26 +70,31 @@ class TraceTrustExtension:
                 },
             )
             response.raise_for_status()
-            data = response.json()
-            # TRACE API returns data -> reputation -> score
-            return data.get('data', {}).get('reputation', {}).get('score', 0.0)
+            data = response.json() or {}
+            reputation_data = data.get('data') or {}
+            reputation = reputation_data.get('reputation') or {}
+            score = reputation.get('score')
+
+            if score is None:
+                raise ValueError('Reputation score missing from TRACE API response')
+
+            return float(score)
+
         except Exception as e:
             logging.exception('TRACE API request failed')
             if self.fail_closed:
                 raise PermissionError(
-                    f'TRACE API unreachable and fail_closed is True. Denying access. Error: {e}'
+                    'TRACE API unreachable and fail_closed is True. Denying access.'
                 ) from e
             return None
 
-    def server_middleware(
+    async def server_middleware(
         self, next_handler: Callable[[A2AMessage], Any], message: A2AMessage, caller_id: str
-    ):
-        """
-        Intercepts incoming A2A messages and enforces TRACE trust policies.
-        """
+    ) -> Any:
+        """Intercepts incoming A2A messages and enforces TRACE trust policies."""
         logging.info('[TRACE Middleware] Verifying caller: %s', caller_id)
 
-        score = self._get_trace_score(caller_id)
+        score = await self._get_trace_score(caller_id)
 
         if score is None:
             logging.warning(
@@ -91,4 +115,6 @@ class TraceTrustExtension:
                 '[TRACE Middleware] ACCEPTED: Caller %s is trusted (Score: %s)', caller_id, score
             )
 
+        if inspect.iscoroutinefunction(next_handler):
+            return await next_handler(message)
         return next_handler(message)
