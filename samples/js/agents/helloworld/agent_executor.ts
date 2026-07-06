@@ -49,20 +49,22 @@ export class HelloWorldAgentExecutor implements AgentExecutor {
     const taskId = requestContext.taskId;
     const contextId = requestContext.contextId;
 
-    // 1. Collect a task from request context or create snapshot
-    const taskSnapshot: Task = existingTask ?? {
-      id: taskId,
-      contextId: contextId,
-      status: {
-        state: TaskState.TASK_STATE_SUBMITTED,
-        timestamp: new Date().toISOString(),
-        message: undefined,
-      },
-      artifacts: [],
-      history: [userMessage],
-      metadata: userMessage.metadata,
-    };
-    eventBus.publish(AgentEvent.task(taskSnapshot));
+    // 1. Collect a task from request context
+    if (!existingTask) {
+      const initialTask: Task = {
+        id: taskId,
+        contextId: contextId,
+        status: {
+          state: TaskState.TASK_STATE_SUBMITTED,
+          timestamp: new Date().toISOString(),
+          message: undefined,
+        },
+        artifacts: [],
+        history: [userMessage],
+        metadata: userMessage.metadata,
+      };
+      eventBus.publish(AgentEvent.task(initialTask));
+    }
 
     // 2. Update task status to working
     const workingStatusUpdate: TaskStatusUpdateEvent = {
