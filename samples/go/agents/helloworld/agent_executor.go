@@ -29,6 +29,9 @@ type HelloWorldAgentExecutor struct {
 	agent *HelloWorldAgent
 }
 
+// Ensure HelloWorldAgentExecutor strictly satisfies the a2asrv.AgentExecutor interface at compile time.
+var _ a2asrv.AgentExecutor = (*HelloWorldAgentExecutor)(nil)
+
 // NewHelloWorldAgentExecutor initializes a new HelloWorldAgentExecutor instance.
 func NewHelloWorldAgentExecutor() *HelloWorldAgentExecutor {
 	return &HelloWorldAgentExecutor{
