@@ -16,6 +16,7 @@ from a2a.types import (
     AgentCapabilities,
     AgentCard,
     AgentSkill,
+    AgentExtension,
 )
 from agent import ImageGenerationAgent
 from agent_executor import ImageGenerationAgentExecutor
@@ -45,6 +46,13 @@ def main(host, port):
                 'GOOGLE_API_KEY or Vertex AI environment variables not set.'
             )
 
+        trace_api_key = os.getenv('TRACE_API_KEY')
+        if not trace_api_key:
+            logger.warning(
+                'TRACE_API_KEY not set. TRACE trust middleware will not be enabled. '
+                'Set TRACE_API_KEY to enable reputation-based access control.'
+            )
+
         capabilities = AgentCapabilities(streaming=False)
         skill = AgentSkill(
             id='image_generator',
@@ -63,6 +71,19 @@ def main(host, port):
             if os.getenv('HOST_OVERRIDE')
             else f'http://{host}:{port}/'
         )
+
+        extensions = []
+        if trace_api_key:
+            extensions.append(
+                AgentExtension(
+                    uri='https://github.com/a2aproject/a2a-samples/tree/main/extensions/trace-trust',
+                    params={
+                        'minimumScoreRequired': 0.35,
+                        'failClosed': True,
+                    },
+                )
+            )
+
         agent_card = AgentCard(
             name='Image Generator Agent',
             description=(
@@ -76,12 +97,38 @@ def main(host, port):
             default_output_modes=ImageGenerationAgent.SUPPORTED_CONTENT_TYPES,
             capabilities=capabilities,
             skills=[skill],
+            extensions=extensions if extensions else None,
         )
 
         request_handler = DefaultRequestHandler(
             agent_executor=ImageGenerationAgentExecutor(),
             task_store=InMemoryTaskStore(),
         )
+
+        if trace_api_key:
+            from trace_trust_ext import TraceTrustExtension
+
+            trace_middleware = TraceTrustExtension(
+                api_key=trace_api_key,
+                min_score=0.35,
+                fail_closed=True,
+            )
+
+            original_handler = request_handler.on_message_send
+
+            async def wrapped_handler(message, context_id, task_id=None):
+                caller_id = getattr(message, 'metadata', {}).get('sender_id', 'unknown')
+                if caller_id == 'unknown' and hasattr(message, 'parts') and message.parts:
+                    caller_id = getattr(message.parts[0], 'metadata', {}).get('sender_id', 'unknown')
+                
+                await trace_middleware.server_middleware(
+                    lambda msg: original_handler(msg, context_id, task_id),
+                    message,
+                    caller_id,
+                )
+
+            request_handler.on_message_send = wrapped_handler
+
         server = A2AStarletteApplication(
             agent_card=agent_card, http_handler=request_handler
         )
