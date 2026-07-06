@@ -20,6 +20,7 @@ The implementation follows the JSON-RPC 2.0 specification and provides:
 go/
 ├── server/         # Server implementation
 ├── client/         # Client implementation
+├── extensions/     # Extensions (e.g. timestamp)
 └── models/         # Shared data structures
 ```
 
