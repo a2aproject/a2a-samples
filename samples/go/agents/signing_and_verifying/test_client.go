@@ -82,48 +82,47 @@ func runTestClient() {
 
 	// Initialize A2ACardResolver using SDK helper
 	resolver := agentcard.NewResolver(http.DefaultClient)
-	publicCard, err := resolver.Resolve(ctx, baseURL)
+
+	// 1. Fetch public agent card without verifying signature
+	_, err := resolver.Resolve(ctx, baseURL)
 	if err != nil {
 		log.Fatalf("Critical error fetching public agent card: %v", err)
 	}
+	log.Println("Successfully fetched public agent card without verification.")
 
-	// Pass verifyCardSignature to validate the signature on the public Agent Card
-	if verifyErr := verifyCardSignature(publicCard); verifyErr != nil {
+	// 2. Fetch public agent card and verify signature
+	publicCardVerified, err := resolver.Resolve(ctx, baseURL)
+	if err != nil {
+		log.Fatalf("Critical error fetching public agent card: %v", err)
+	}
+	if verifyErr := verifyCardSignature(publicCardVerified); verifyErr != nil {
 		log.Fatalf("Failed to verify public agent card signature: %v", verifyErr)
 	}
+	log.Println("Successfully fetched public agent card with verification:")
+	displayAgentCard(publicCardVerified)
 
-	log.Println("Successfully fetched public agent card:")
-
-	// Create A2A Client directly via unified card
-	client, err := a2aclient.NewFromCard(ctx, publicCard)
+	// Create A2A Client directly via verified public card
+	client, err := a2aclient.NewFromCard(ctx, publicCardVerified)
 	if err != nil {
 		log.Fatalf("Failed to create A2A client: %v", err)
 	}
 
-	// Pass verifyCardSignature to validate the signature on the extended Agent Card
-	extendedCardWithSignature, err := client.GetExtendedAgentCard(ctx, &a2a.GetExtendedAgentCardRequest{})
+	// 3. Fetch extended agent card without signature verification
+	extendedCardUnverified, err := client.GetExtendedAgentCard(ctx, &a2a.GetExtendedAgentCardRequest{})
 	if err != nil {
 		log.Fatalf("Failed to get extended agent card: %v", err)
 	}
-	if verifyErr := verifyCardSignature(extendedCardWithSignature); verifyErr != nil {
+	log.Println("Successfully fetched extended agent card without verification:")
+	displayAgentCard(extendedCardUnverified)
+
+	// 4. Fetch extended agent card and verify signature
+	extendedCardVerified, err := client.GetExtendedAgentCard(ctx, &a2a.GetExtendedAgentCardRequest{})
+	if err != nil {
+		log.Fatalf("Failed to get extended agent card: %v", err)
+	}
+	if verifyErr := verifyCardSignature(extendedCardVerified); verifyErr != nil {
 		log.Fatalf("Failed to verify extended agent card signature: %v", verifyErr)
 	}
-
-	log.Println("Successfully fetched extended agent card with signature:")
-	displayAgentCard(extendedCardWithSignature)
-	log.Println("Signature:")
-	sigJSON, err := json.MarshalIndent(extendedCardWithSignature.Signatures, "", "  ")
-	if err != nil {
-		log.Fatalf("Failed to marshal signature: %v", err)
-	}
-	log.Println(string(sigJSON))
-
-	// Fetch extended card without signature verification (signature verification is optional on client side)
-	extendedCardWithoutSignature, err := client.GetExtendedAgentCard(ctx, &a2a.GetExtendedAgentCardRequest{})
-	if err != nil {
-		log.Fatalf("Failed to get extended agent card without signature check: %v", err)
-	}
-
-	log.Println("Successfully fetched extended agent card without signature:")
-	displayAgentCard(extendedCardWithoutSignature)
+	log.Println("Successfully fetched extended agent card with verification:")
+	displayAgentCard(extendedCardVerified)
 }

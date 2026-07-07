@@ -83,7 +83,7 @@ func main() {
 
 	publicAgentCard := &a2a.AgentCard{
 		Name:               "Signed Agent",
-		Description:        "An Agent that is signed",
+		Description:        "Public card containing basic skills of the signed agent.",
 		IconURL:            serverURL + "/",
 		Version:            "1.0.0",
 		DefaultInputModes:  []string{modeText},
@@ -100,8 +100,8 @@ func main() {
 	}
 
 	extendedAgentCard := &a2a.AgentCard{
-		Name:               "Signed Agent - Extended Edition",
-		Description:        "The full-featured signed agent for authenticated users.",
+		Name:               "Signed Agent - Extended Card",
+		Description:        "Extended card containing additional capabilities of the signed agent.",
 		IconURL:            serverURL + "/",
 		Version:            "1.0.1",
 		DefaultInputModes:  []string{modeText},
