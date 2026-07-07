@@ -142,6 +142,7 @@ func main() {
 
 	requestHandler := a2asrv.NewHandler(
 		NewSignedAgentExecutor(),
+		// Serves the pre-signed extended agent card to authorized clients
 		a2asrv.WithExtendedAgentCard(signedExtendedCard),
 	)
 
