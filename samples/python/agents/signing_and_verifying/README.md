@@ -1,6 +1,6 @@
 # Signing and Verifying Example
 
-This sample demonstrates how to sign an **Agent Card** on the server side and verify its signature on the client side to establish and validate the agent's identity. 
+This sample demonstrates how to sign an **Agent Card** on the server side and verify its signature on the client side to establish and validate the agent's identity.
 
 Read more about signing and verifying AgentCards here: [Agent Card Signing](https://a2a-protocol.org/latest/specification/#84-agent-card-signing).
 
@@ -46,22 +46,22 @@ The agent publishes two cards:
    * **Verified:** The client instructs the resolver or client to verify the card's signature. The signature metadata is parsed, the publisher's public key is downloaded from the URL (`jku`) listed in the signature, and the cryptographic signature is verified against the canonicalized card payload.
 
    This flow is illustrated in the client's execution logs:
-   
+
    ```text
    # 1. Fetching the public card WITHOUT signature verification (No public keys are fetched)
    INFO:__main__:Attempting to fetch public agent card from: http://localhost:9999/.well-known/agent-card.json
    INFO:httpx:HTTP Request: GET http://localhost:9999/.well-known/agent-card.json "HTTP/1.1 200 OK"
    INFO:__main__:Successfully fetched public agent card without verification.
-   
+
    # 2. Fetching the public card WITH signature verification (Public keys are fetched and verified)
    INFO:httpx:HTTP Request: GET http://localhost:9999/.well-known/agent-card.json "HTTP/1.1 200 OK"
    INFO:httpx:HTTP Request: GET http://localhost:9999/public_keys.json "HTTP/1.1 200 OK"
    INFO:__main__:Successfully fetched public agent card with verification:
-   
+
    # 3. Fetching the extended card WITHOUT signature verification (No public keys are fetched)
    INFO:httpx:HTTP Request: POST http://localhost:9999 "HTTP/1.1 200 OK"
    INFO:__main__:Successfully fetched extended agent card without verification:
-   
+
    # 4. Fetching the extended card WITH signature verification (Public keys are fetched and verified)
    INFO:httpx:HTTP Request: POST http://localhost:9999 "HTTP/1.1 200 OK"
    INFO:httpx:HTTP Request: GET http://localhost:9999/public_keys.json "HTTP/1.1 200 OK"
