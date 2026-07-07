@@ -1,8 +1,11 @@
 # Signing and Verifying Example
 
-Signed agent used as an example for AgentCard signing and verifying.
+This sample demonstrates how to sign an **Agent Card** on the server side and verify its signature on the client side to establish and validate the agent's identity. 
 
 Read more about signing and verifying AgentCards here: [Agent Card Signing](https://a2a-protocol.org/latest/specification/#84-agent-card-signing).
+
+> [!IMPORTANT]
+> This sample is about validating the authenticity of the **Agent Card** itself (metadata and capabilities) during discovery. It is **not** about authenticating user requests or verifying client identities for agent interactions.
 
 ## Getting started
 
@@ -26,44 +29,36 @@ Read more about signing and verifying AgentCards here: [Agent Card Signing](http
    python3 test_client.py
    ```
 
-## Build Container Image
+## How it works
 
-Agent can also be built using a container file.
+The agent's publisher generates a cryptographic public/private key pair. The private key remains secure on the server, while the public key is exposed via a public URL endpoint.
 
-1. Navigate to the directory `samples/python/agents/signing_and_verifying` directory:
+1. **Signing the Agent Card (Server-Side)**
+   When the server receives a request for the agent card (either the public metadata or the authenticated extended version), it computes a signature of the card using the JSON Canonicalization Scheme (JCS) and signs it using JWS (JSON Web Signatures) with the private key. It attaches the signature block to the card, which contains a URL pointing to where the public key can be fetched.
 
-  ```bash
-  cd samples/python/agents/signing_and_verifying
-  ```
+2. **Fetching and Verifying the Card (Client-Side)**
+   When the client connects to the agent, it first downloads the agent card. It reads the signature and key URL metadata from the card, fetches the public key from the key URL, and verifies that the signature matches the canonical card payload. 
+   
+   If the signature matches, the client trusts that the agent card is authentic. If the card was tampered with in transit or signed with a different key, the signature check fails.
 
-2. Build the container file
+   This flow is illustrated in the client's execution logs:
+   
+   ```text
+   # 1. Client fetches the unsigned public card
+   INFO:__main__:Attempting to fetch public agent card from: http://localhost:9999/.well-known/agent-card.json
+   INFO:httpx:HTTP Request: GET http://localhost:9999/.well-known/agent-card.json "HTTP/1.1 200 OK"
+   
+   # 2. Client retrieves the public key matching the key ID in JWS header to verify the signature
+   INFO:httpx:HTTP Request: GET http://localhost:9999/public_keys.json "HTTP/1.1 200 OK"
+   INFO:__main__:Successfully fetched public agent card:
+   
+   # 3. Client does the same for the extended card retrieved during authenticated request
+   INFO:httpx:HTTP Request: GET http://localhost:9999/public_keys.json "HTTP/1.1 200 OK"
+   INFO:__main__:Successfully fetched extended agent card with signature:
+   ```
 
-    ```bash
-    podman build . -t signing_and_verifying-a2a-server
-    ```
 
-> [!Tip]  
-> Podman is a drop-in replacement for `docker` which can also be used in these commands.
 
-3. Run your container
-
-    ```bash
-    podman run -p 9999:9999 signing_and_verifying-a2a-server
-    ```
-
-## Validate
-
-To validate in a separate terminal, run the A2A CLI host:
-
-```bash
-cd ../../hosts/cli
-# Setup the CLI host's environment if you haven't already:
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-# Run the CLI host pointing to our agent:
-python3 __main__.py --agent http://localhost:9999
-```
 
 
 ## Disclaimer
