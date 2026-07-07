@@ -1,6 +1,6 @@
 # Signing and Verifying Example (Go)
 
-This sample demonstrates how to sign an **Agent Card** on the server side and verify its signature on the client side to establish and validate the agent's identity. 
+This sample demonstrates how to sign an **Agent Card** on the server side and verify its signature on the client side to establish and validate the agent's identity.
 
 Read more about signing and verifying AgentCards here: [Agent Card Signing](https://a2a-protocol.org/latest/specification/#84-agent-card-signing).
 
@@ -34,20 +34,20 @@ The agent publishes two cards:
    * **Verified:** The client instructs the resolver or client to verify the card's signature. The signature metadata is parsed, the publisher's public key is downloaded from the URL (`jku`) listed in the signature, and the cryptographic signature is verified against the canonicalized card payload.
 
    This flow is illustrated in the client's execution logs:
-   
+
    ```text
    # 1. Fetching the public card WITHOUT signature verification (No public keys are fetched)
    2026/07/07 14:05:15 Attempting to fetch public agent card from: http://localhost:9999/.well-known/agent-card.json
    2026/07/07 14:05:15 Successfully fetched public agent card without verification.
-   
+
    # 2. Fetching the public card WITH signature verification (Public keys are fetched and verified)
    2026/07/07 14:05:15 Successfully fetched public agent card with verification:
    2026/07/07 14:05:15 {"name":"Signed Agent","description":"Public card containing basic skills of the signed agent.", ...}
-   
+
    # 3. Fetching the extended card WITHOUT signature verification (No public keys are fetched)
    2026/07/07 14:05:15 Successfully fetched extended agent card without verification:
    2026/07/07 14:05:15 {"name":"Signed Agent - Extended Card","description":"Extended card containing additional capabilities of the signed agent.", ...}
-   
+
    # 4. Fetching the extended card WITH signature verification (Public keys are fetched and verified)
    2026/07/07 14:05:16 Successfully fetched extended agent card with verification:
    2026/07/07 14:05:16 {"name":"Signed Agent - Extended Card","description":"Extended card containing additional capabilities of the signed agent.", ...}
