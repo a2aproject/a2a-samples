@@ -10,10 +10,10 @@ The extension showcases how to enrich outgoing A2A messages and artifacts with c
 
 The package is split into separate modules to isolate concerns and prevent client-side dependencies from bloating server-side or core stamping utilities:
 
-* **`src/timestamp_ext/core.py`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
-* **`src/timestamp_ext/server.py`**: Houses server-side decorators (`_TimestampingAgentExecutor`, `_TimestampingEventQueue`) and the public `wrap_executor` function.
-* **`src/timestamp_ext/client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `client_interceptor`). It isolates all client-specific Protobuf imports.
-* **`src/timestamp_ext/__init__.py`**: Exposes only the core public exports for general usage.
+* **`timestamp_ext/core.py`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
+* **`timestamp_ext/server.py`**: Houses server-side decorators (`_TimestampingAgentExecutor`, `_TimestampingEventQueue`) and the public `wrap_executor` function.
+* **`timestamp_ext/client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `client_interceptor`). It isolates all client-specific Protobuf imports.
+* **`timestamp_ext/__init__.py`**: Exposes only the core public exports for general usage.
 
 ---
 
