@@ -92,7 +92,7 @@ func main() {
 		SupportedInterfaces: []*a2a.AgentInterface{
 			{
 				ProtocolBinding: a2a.TransportProtocolJSONRPC,
-				ProtocolVersion: a2a.Version,
+				ProtocolVersion: "1.0",
 				URL:             serverURL,
 			},
 		},
@@ -110,7 +110,7 @@ func main() {
 		SupportedInterfaces: []*a2a.AgentInterface{
 			{
 				ProtocolBinding: a2a.TransportProtocolJSONRPC,
-				ProtocolVersion: a2a.Version,
+				ProtocolVersion: "1.0",
 				URL:             serverURL,
 			},
 		},
