@@ -9,7 +9,7 @@ import pytest
 
 from a2a.client import ClientConfig, create_client
 from a2a.helpers import new_text_message
-from a2a.types.a2a_pb2 import Role, SendMessageRequest
+from a2a.types import Role, SendMessageRequest
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -64,7 +64,7 @@ async def send_message(text_query: str = 'Hi there'):
     # --8<-- [start:message_send]
     from a2a.client import ClientConfig, create_client  # noqa: PLC0415
     from a2a.helpers import new_text_message  # noqa: PLC0415
-    from a2a.types.a2a_pb2 import Role, SendMessageRequest  # noqa: PLC0415
+    from a2a.types import Role, SendMessageRequest  # noqa: PLC0415
 
     print('\nInitializing a non-streaming client.')
     config = ClientConfig(streaming=False)
@@ -105,7 +105,7 @@ async def send_steaming_message(text_query: str = 'Hi there'):
 
 async def show_extended_card():
     from a2a.helpers import display_agent_card  # noqa: PLC0415
-    from a2a.types.a2a_pb2 import GetExtendedAgentCardRequest  # noqa: PLC0415
+    from a2a.types import GetExtendedAgentCardRequest  # noqa: PLC0415
 
     public_agent_card = await get_agent_card()
     config = ClientConfig(streaming=False)
