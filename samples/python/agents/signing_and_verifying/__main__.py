@@ -83,6 +83,7 @@ public_agent_card = AgentCard(
         AgentInterface(
             protocol_binding='JSONRPC',
             url='http://localhost:9999',
+            protocol_version='1.0',
         )
     ],
     skills=[skill],
@@ -100,6 +101,7 @@ extended_agent_card = AgentCard(
         AgentInterface(
             protocol_binding='JSONRPC',
             url='http://localhost:9999',
+            protocol_version='1.0',
         )
     ],
     skills=[
