@@ -14,10 +14,10 @@ from cryptography.hazmat.primitives import serialization
 from jwt.api_jwk import PyJWK
 
 
-def _key_provider(kid: str, jku: str) -> PyJWK | str | bytes:
-    """Fetch and parse public key from JKU URL given key ID (kid) and JKU URL."""
-    if not isinstance(kid, str) or not kid:
-        raise TypeError(f'Expected kid: str, but got: {type(kid).__name__} ({kid!r})')
+def _key_provider(key_id: str, jku: str) -> PyJWK | str | bytes:
+    """Fetch and parse public key from JKU URL given key ID (key_id) and JKU URL."""
+    if not isinstance(key_id, str) or not key_id:
+        raise TypeError(f'Expected key_id: str, but got: {type(key_id).__name__} ({key_id!r})')
     if not isinstance(jku, str) or not jku:
         raise TypeError(f'Expected jku: str, but got: {type(jku).__name__} ({jku!r})')
 
@@ -28,7 +28,7 @@ def _key_provider(kid: str, jku: str) -> PyJWK | str | bytes:
         raise ValueError(f'Failed to fetch public key from JKU URL ({jku}): {err}') from err
 
     keys = response.json()
-    pem_data_str = keys.get(kid)
+    pem_data_str = keys.get(key_id)
 
     if not pem_data_str:
         raise ValueError('Invalid JWK Key ID.')

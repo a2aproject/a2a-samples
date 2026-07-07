@@ -50,8 +50,8 @@ def create_public_private_keys() -> tuple[str, str]:
 private_key, public_key = create_public_private_keys()
 
 # Save public key to a file
-kid = 'my-key'
-keys = {kid: public_key}
+key_id = 'my-key'
+keys = {key_id: public_key}
 with Path('public_keys.json').open('w') as f:
     json.dump(keys, f, indent=2)
 
@@ -112,7 +112,7 @@ extended_agent_card = AgentCard(
 signer = create_agent_card_signer(
     signing_key=private_key,
     protected_header={
-        'kid': kid,
+        'kid': key_id,
         'alg': 'ES256',
         'jku': 'http://localhost:9999/public_keys.json',
     },
