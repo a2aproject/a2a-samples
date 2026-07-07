@@ -55,8 +55,8 @@ func main() {
 	}
 
 	// Save public key to a file
-	kid := "my-key"
-	keys := map[string]string{kid: publicKeyPEM}
+	keyID := "my-key"
+	keys := map[string]string{keyID: publicKeyPEM}
 	keysJSON, err := json.MarshalIndent(keys, "", "  ")
 	if err != nil {
 		log.Fatalf("Failed to marshal keys JSON: %v", err)
@@ -124,9 +124,9 @@ func main() {
 	signer := createAgentCardSigner(
 		privateKey,
 		ProtectedHeader{
-			Kid: kid,
-			Alg: es256Alg,
-			Jku: serverURL + "/public_keys.json",
+			KeyID: keyID,
+			Alg:   es256Alg,
+			Jku:   serverURL + "/public_keys.json",
 		},
 	)
 

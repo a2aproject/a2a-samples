@@ -19,14 +19,14 @@ var (
 
 // ProtectedHeader defines the protected header parameters for JWS (RFC 7515).
 type ProtectedHeader struct {
-	Kid string `json:"kid"`
-	Alg string `json:"alg,omitempty"`
-	Jku string `json:"jku,omitempty"`
-	Typ string `json:"typ,omitempty"`
+	KeyID string `json:"kid"`
+	Alg   string `json:"alg,omitempty"`
+	Jku   string `json:"jku,omitempty"`
+	Typ   string `json:"typ,omitempty"`
 }
 
-// KeyProvider is a function type that returns a verification key (e.g., *ecdsa.PublicKey) for a given kid and jku.
-type KeyProvider func(kid, jku string) (any, error)
+// KeyProvider is a function type that returns a verification key (e.g., *ecdsa.PublicKey) for a given keyID and jku.
+type KeyProvider func(keyID, jku string) (any, error)
 
 func cleanEmpty(v any) any {
 	switch val := v.(type) {
@@ -160,7 +160,7 @@ func createSignatureVerifier(keyProvider KeyProvider, allowedAlgs []string) func
 				continue
 			}
 
-			verificationKey, err := keyProvider(protectedHeader.Kid, protectedHeader.Jku)
+			verificationKey, err := keyProvider(protectedHeader.KeyID, protectedHeader.Jku)
 			if err != nil {
 				continue
 			}

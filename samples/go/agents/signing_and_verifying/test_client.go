@@ -16,10 +16,10 @@ import (
 	"github.com/a2aproject/a2a-go/v2/a2asrv"
 )
 
-// keyProvider fetches and parses public key from JKU URL given key ID (kid) and JKU URL.
-func keyProvider(kid, jku string) (any, error) {
-	if kid == "" {
-		return nil, fmt.Errorf("expected kid: string, but got empty string")
+// keyProvider fetches and parses public key from JKU URL given key ID (keyID) and JKU URL.
+func keyProvider(keyID, jku string) (any, error) {
+	if keyID == "" {
+		return nil, fmt.Errorf("expected keyID: string, but got empty string")
 	}
 	if jku == "" {
 		return nil, fmt.Errorf("expected jku: string, but got empty string")
@@ -46,19 +46,19 @@ func keyProvider(kid, jku string) (any, error) {
 		return nil, fmt.Errorf("failed to fetch public key from JKU URL (%s): invalid JSON response: %w", jku, unmarshalErr)
 	}
 
-	pemStr, ok := keys[kid]
+	pemStr, ok := keys[keyID]
 	if !ok || pemStr == "" {
 		return nil, fmt.Errorf("invalid JWK key ID")
 	}
 
 	block, _ := pem.Decode([]byte(pemStr))
 	if block == nil {
-		return nil, fmt.Errorf("failed to decode PEM block for key ID %q", kid)
+		return nil, fmt.Errorf("failed to decode PEM block for key ID %q", keyID)
 	}
 
 	pubKey, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse PKIX public key for key ID %q: %w", kid, err)
+		return nil, fmt.Errorf("failed to parse PKIX public key for key ID %q: %w", keyID, err)
 	}
 
 	return pubKey, nil
