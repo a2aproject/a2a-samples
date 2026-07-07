@@ -10,10 +10,10 @@ The extension showcases how to enrich outgoing A2A messages and artifacts with c
 
 The package is split into separate files to isolate concerns and prevent client-side dependencies from bloating server-side or core stamping utilities:
 
-* **`core.go`**: Houses the core metadata (`URI`, `TimestampField`), the main `TimestampExtension` struct, and functional options (`WithClock`).
-* **`server.go`**: Houses server-side interceptors (`ServerInterceptor`, `NewServerInterceptor`) and `WrapExecutor`.
-* **`client.go`**: Houses client-side interceptors (`ClientInterceptor`).
-* **`timestamp_test.go`**: Houses end-to-end integration tests verifying client-server round trip.
+* **`timestamp/core.go`**: Houses the core metadata (`URI`, `TimestampField`), the main `TimestampExtension` struct, and functional options (`WithClock`).
+* **`timestamp/server.go`**: Houses server-side interceptors (`ServerInterceptor`, `NewServerInterceptor`) and `WrapExecutor`.
+* **`timestamp/client.go`**: Houses client-side interceptors (`ClientInterceptor`).
+* **`tests/timestamp_test.go`**: Houses end-to-end integration tests verifying client-server round trip.
 
 ---
 
@@ -25,7 +25,7 @@ To enable the timestamp extension on your A2A agent, advertise support in the `A
 
 ```go
 import (
-	"samples/go/extensions/timestamp"
+	"samples/go/extensions/timestamp/timestamp"
 
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv"
@@ -52,7 +52,7 @@ To request the extension from a server and read timestamps, pass `ClientIntercep
 
 ```go
 import (
-	"samples/go/extensions/timestamp"
+	"samples/go/extensions/timestamp/timestamp"
 
 	"github.com/a2aproject/a2a-go/v2/a2aclient"
 )
@@ -68,6 +68,16 @@ The installed interceptor automatically adds the `A2A-Extensions: <uri>` header 
 
 ---
 
+## Running the Showcase Server Standalone
+
+You can start the standalone HTTP server hosting the Echo agent:
+
+```bash
+go run ./tests
+```
+
+The server will start running on `http://127.0.0.1:9998`.
+
 ## Running Tests
 
 Run the integration tests:
@@ -75,3 +85,4 @@ Run the integration tests:
 ```bash
 go test -v ./...
 ```
+
