@@ -61,11 +61,16 @@ async def main() -> None:
                 base_url,
                 AGENT_CARD_WELL_KNOWN_PATH,
             )
-            # Pass verify_card_signature to validate the signature on the public Agent Card
-            public_card = await resolver.get_agent_card(
+            # 1. Fetch public agent card without verifying signature
+            _ = await resolver.get_agent_card()
+            logger.info('Successfully fetched public agent card without verification.')
+
+            # 2. Fetch public agent card and verify signature
+            public_card_verified = await resolver.get_agent_card(
                 signature_verifier=verify_card_signature,
             )
-            logger.info('Successfully fetched public agent card:')
+            logger.info('Successfully fetched public agent card with verification:')
+            display_agent_card(public_card_verified)
 
         except Exception as e:
             logger.exception(
@@ -75,27 +80,26 @@ async def main() -> None:
 
         # Create Base Client directly via unified factory
         client = await create_client(
-            agent=public_card,
+            agent=public_card_verified,
             client_config=ClientConfig(streaming=False),
         )
 
-        # Pass verify_card_signature to validate the signature on the extended Agent Card
-        extended_card_with_signature = await client.get_extended_agent_card(
+        # 3. Fetch extended agent card without signature verification
+        extended_card_unverified = await client.get_extended_agent_card(
+            GetExtendedAgentCardRequest()
+        )
+        logger.info('Successfully fetched extended agent card without verification:')
+        display_agent_card(extended_card_unverified)
+
+        # 4. Fetch extended agent card and verify signature
+        extended_card_verified = await client.get_extended_agent_card(
             GetExtendedAgentCardRequest(),
             signature_verifier=verify_card_signature,
         )
-        logger.info('Successfully fetched extended agent card with signature:')
-        display_agent_card(extended_card_with_signature)
-        logger.info('Signature:')
-        logger.info(extended_card_with_signature.signatures)
+        logger.info('Successfully fetched extended agent card with verification:')
+        display_agent_card(extended_card_verified)
 
-        extended_card_without_signature = await client.get_extended_agent_card(
-            GetExtendedAgentCardRequest()
-        )
-        logger.info(
-            'Successfully fetched extended agent card without signature:'
-        )  # Signature is only for client-side verification purpose
-        display_agent_card(extended_card_without_signature)
+        await client.close()
 
 
 if __name__ == '__main__':

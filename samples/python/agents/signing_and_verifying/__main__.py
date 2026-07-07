@@ -73,7 +73,7 @@ extended_skill = AgentSkill(
 
 public_agent_card = AgentCard(
     name='Signed Agent',
-    description='An Agent that is signed',
+    description='Public card containing basic skills of the signed agent.',
     icon_url='http://localhost:9999/',
     version='1.0.0',
     default_input_modes=['text'],
@@ -90,8 +90,8 @@ public_agent_card = AgentCard(
 )
 
 extended_agent_card = AgentCard(
-    name='Signed Agent - Extended Edition',
-    description='The full-featured signed agent for authenticated users.',
+    name='Signed Agent - Extended Card',
+    description='Extended card containing additional capabilities of the signed agent.',
     icon_url='http://localhost:9999/',
     version='1.0.1',
     default_input_modes=['text'],
@@ -131,17 +131,18 @@ async def async_extended_signer(card: AgentCard, _: Any) -> AgentCard:
     return signer(card)
 
 
-
 request_handler = DefaultRequestHandler(
     agent_executor=SignedAgentExecutor(),
     task_store=InMemoryTaskStore(),
     agent_card=public_agent_card,
     extended_agent_card=extended_agent_card,
-    extended_card_modifier=async_extended_signer, # Dynamically signs the extended agent card before returning it to authenticated clients
+    extended_card_modifier=async_extended_signer,  # Dynamically signs the extended agent card before returning it to authorized clients
 )
 
 routes = []
-routes.extend(create_agent_card_routes(public_agent_card, card_modifier=async_signer)) # Dynamically signs the public agent card before returning it to unauthenticated clients
+routes.extend(
+    create_agent_card_routes(public_agent_card, card_modifier=async_signer)
+)  # Dynamically signs the public agent card before returning it to unauthenticated clients
 routes.extend(create_jsonrpc_routes(request_handler, '/'))
 
 app = Starlette(routes=routes)
