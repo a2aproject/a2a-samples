@@ -137,7 +137,7 @@ const requestHandler = new DefaultRequestHandler(
   undefined,
   undefined,
   // Serves the extended agent card signed dynamically using signer for authorized client queries
-  extendedAgentCard,
+  async () => extendedAgentCard,
   signer
 );
 
