@@ -7,7 +7,7 @@ The three agents are intentionally trivial "echo-style" mocks — the focus is o
 *routing*, not on what the agents do:
 
 | Sub-path | Agent | What it does |
-|---|---|---|
+| --- | --- | --- |
 | `/hello` | Hello World Agent | Replies with a friendly hello |
 | `/palindrome` | Palindrome Agent | Says whether your text is a palindrome |
 | `/reverse` | Word Reverse Agent | Reverses the order of your words |
@@ -125,7 +125,7 @@ The server reads three environment variables, so the same code works whether you
 run it locally or behind a different public address:
 
 | Variable | Default | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | `A2A_BIND_HOST` | `127.0.0.1` | Host/interface the server binds to (set to `0.0.0.0` to listen on all interfaces). |
 | `A2A_PORT` | `9999` | Port the server listens on. |
 | `A2A_PUBLIC_URL` | `http://127.0.0.1:9999` | URL advertised in each Agent Card (what clients connect to). |
