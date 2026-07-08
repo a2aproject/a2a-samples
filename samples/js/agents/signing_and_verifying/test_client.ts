@@ -40,23 +40,31 @@ async function keyProvider(keyId: string, jku?: string): Promise<crypto.KeyObjec
 const verifyCardSignature = verifyAgentCardSignature(keyProvider);
 
 async function main(): Promise<void> {
-  /** Main function. */
-
   const baseUrl = 'http://localhost:9999';
 
   // Initialize AgentCardResolver
   const resolver = new DefaultAgentCardResolver();
 
-  let publicCard: AgentCard;
-  try {
-    console.log(
-      `Attempting to fetch public agent card from: ${baseUrl}${AGENT_CARD_PATH}`
-    );
-    publicCard = await resolver.resolve(baseUrl);
+  console.log(
+    `Attempting to fetch public agent card from: ${baseUrl}${AGENT_CARD_PATH}`
+  );
 
-    // Pass verifyCardSignature to validate the signature on the public Agent Card
-    await verifyCardSignature(publicCard);
-    console.log('Successfully fetched public agent card:');
+  // 1. Fetch public agent card without verifying signature
+  try {
+    await resolver.resolve(baseUrl);
+    console.log('Successfully fetched public agent card without verification.');
+  } catch (e) {
+    console.error('Critical error fetching public agent card:', e);
+    throw e;
+  }
+
+  // 2. Fetch public agent card and verify signature
+  let publicCardVerified: AgentCard;
+  try {
+    publicCardVerified = await resolver.resolve(baseUrl);
+    await verifyCardSignature(publicCardVerified);
+    console.log('Successfully fetched public agent card with verification:');
+    console.log(JSON.stringify(publicCardVerified, null, 2));
   } catch (e) {
     console.error('Critical error fetching public agent card:', e);
     throw e;
@@ -64,22 +72,20 @@ async function main(): Promise<void> {
 
   // Create Client directly via ClientFactory
   const clientFactory = new ClientFactory();
-  const client = await clientFactory.createFromAgentCard(publicCard);
+  const client = await clientFactory.createFromAgentCard(publicCardVerified);
 
-  // Pass verifyCardSignature to validate the signature on the extended Agent Card
-  const extendedCardWithSignature = await client.getAgentCard(
+  // 3. Fetch extended agent card without signature verification
+  const extendedCardUnverified = await client.getAgentCard();
+  console.log('Successfully fetched extended agent card without verification:');
+  console.log(JSON.stringify(extendedCardUnverified, null, 2));
+
+  // 4. Fetch extended agent card and verify signature
+  const extendedCardVerified = await client.getAgentCard(
     undefined,
     verifyCardSignature
   );
-
-  console.log('Successfully fetched extended agent card with signature:');
-  console.log(JSON.stringify(extendedCardWithSignature, null, 2));
-  console.log('Signature:');
-  console.log(JSON.stringify(extendedCardWithSignature.signatures, null, 2));
-
-  const extendedCardWithoutSignature = await client.getAgentCard();
-  console.log('Successfully fetched extended agent card without signature:');
-  console.log(JSON.stringify(extendedCardWithoutSignature, null, 2));
+  console.log('Successfully fetched extended agent card with verification:');
+  console.log(JSON.stringify(extendedCardVerified, null, 2));
 }
 
 main().catch((err) => {
