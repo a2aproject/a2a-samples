@@ -92,27 +92,7 @@ pip install -r requirements.txt
 
    A session looks like this:
 
-   ```text
-   Which A2A agent do you want to connect to?
-     1. Hello World Agent  (http://127.0.0.1:9999/hello) - Replies with a friendly hello.
-     2. Palindrome Agent  (http://127.0.0.1:9999/palindrome) - Tells you whether your text is a palindrome.
-     3. Word Reverse Agent  (http://127.0.0.1:9999/reverse) - Reverses the order of the words in your text.
-   Select 1, 2 or 3 (Enter to quit): 3
-
-   You're connected to the Word Reverse Agent.
-     Reverses the order of the words in your text.
-     --- from its Agent Card ---
-     - Endpoint : http://127.0.0.1:9999/reverse
-     - Protocol : JSON-RPC over HTTP
-     - Format   : text/plain in -> text/plain out
-     - Skills   : Reverse words
-
-   Type a message (empty to exit).
-   you   > agents talking to agents
-   agent > Reversed: agents to talking agents
-   you   >
-   Bye!
-   ```
+   ![A2A Multitenancy demo](./demo.gif)
 
 3. **Inspect a card** directly:
 
