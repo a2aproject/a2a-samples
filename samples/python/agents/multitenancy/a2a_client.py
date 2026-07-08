@@ -85,14 +85,12 @@ def choose_agent(
     choice = input('Select 1, 2 or 3 (Enter to quit): ').strip()
     if not choice:
         return None
-    try:
+    if choice.isdigit():
         idx = int(choice) - 1
-        if idx < 0:
-            raise IndexError
-        return agents[idx]
-    except (ValueError, IndexError):
-        print("Invalid choice.")
-        return None
+        if 0 <= idx < len(agents):
+            return agents[idx]
+    print('Invalid choice.')
+    return None
 
 
 # Friendly labels for the Agent Card's protocol binding.
