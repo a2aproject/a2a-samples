@@ -31,8 +31,8 @@ def start_server():
     server_path = Path(__file__).parent / 'a2a_server.py'
     process = subprocess.Popen(  # noqa: S603
         [sys.executable, str(server_path)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
     )
     # Poll until the server is ready instead of a fixed sleep (avoids races).
     deadline = time.time() + 15
