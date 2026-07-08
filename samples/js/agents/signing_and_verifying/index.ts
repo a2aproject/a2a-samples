@@ -62,7 +62,7 @@ const extendedSkill: AgentSkill = {
 
 const publicAgentCard: AgentCard = {
   name: 'Signed Agent',
-  description: 'An Agent that is signed',
+  description: 'Public card containing basic skills of the signed agent.',
   iconUrl: 'http://localhost:9999/',
   version: '1.0.0',
   defaultInputModes: ['text'],
@@ -89,8 +89,8 @@ const publicAgentCard: AgentCard = {
 };
 
 const extendedAgentCard: AgentCard = {
-  name: 'Signed Agent - Extended Edition',
-  description: 'The full-featured signed agent for authenticated users.',
+  name: 'Signed Agent - Extended Card',
+  description: 'Extended card containing additional capabilities of the signed agent.',
   iconUrl: 'http://localhost:9999/',
   version: '1.0.1',
   defaultInputModes: ['text'],
