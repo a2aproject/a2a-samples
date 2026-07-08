@@ -7,10 +7,10 @@ import {
 } from '@a2a-js/sdk';
 import { ClientFactory, DefaultAgentCardResolver } from '@a2a-js/sdk/client';
 
-async function keyProvider(kid: string, jku?: string): Promise<crypto.KeyObject> {
-  /** Fetch and parse public key from JKU URL given key ID (kid) and JKU URL. */
-  if (typeof kid !== 'string' || !kid) {
-    throw new TypeError(`Expected kid: string, but got: ${typeof kid} (${kid})`);
+async function keyProvider(keyId: string, jku?: string): Promise<crypto.KeyObject> {
+  /** Fetch and parse public key from JKU URL given key ID (keyId) and JKU URL. */
+  if (typeof keyId !== 'string' || !keyId) {
+    throw new TypeError(`Expected keyId: string, but got: ${typeof keyId} (${keyId})`);
   }
   if (typeof jku !== 'string' || !jku) {
     throw new TypeError(`Expected jku: string, but got: ${typeof jku} (${jku})`);
@@ -27,7 +27,7 @@ async function keyProvider(kid: string, jku?: string): Promise<crypto.KeyObject>
   }
 
   const keys = (await response.json()) as Record<string, string>;
-  const pemDataStr = keys[kid];
+  const pemDataStr = keys[keyId];
 
   if (!pemDataStr) {
     throw new Error('Invalid JWK Key ID.');

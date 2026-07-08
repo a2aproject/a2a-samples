@@ -34,8 +34,8 @@ function createPublicPrivateKeys(): { privateKey: crypto.KeyObject; publicKeyPem
 const { privateKey, publicKeyPem } = createPublicPrivateKeys();
 
 // Save public key to a file
-const kid = 'my-key';
-const keys = { [kid]: publicKeyPem };
+const keyId = 'my-key';
+const keys = { [keyId]: publicKeyPem };
 fs.writeFileSync('public_keys.json', JSON.stringify(keys, null, 2));
 
 const skill: AgentSkill = {
@@ -120,7 +120,7 @@ const extendedAgentCard: AgentCard = {
 const signer = generateAgentCardSignature(
   privateKey,
   {
-    kid: kid,
+    kid: keyId,
     alg: 'ES256',
     jku: 'http://localhost:9999/public_keys.json',
     typ: 'JWT',
