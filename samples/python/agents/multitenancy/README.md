@@ -12,20 +12,6 @@ The three agents are intentionally trivial "echo-style" mocks — the focus is o
 | `/palindrome` | Palindrome Agent | Says whether your text is a palindrome |
 | `/reverse` | Word Reverse Agent | Reverses the order of your words |
 
-## Background
-
-The moment your team ships its second or third agent, an infrastructure question
-shows up: *do we really want a separate hostname, certificate, and load balancer
-for every agent?* In practice teams put a fleet of agents behind one host. From
-the outside they share a domain; on the inside, each request still has to reach
-exactly the right agent. That's multi-tenancy.
-
-A2A is deliberately unopinionated here — it does **not** prescribe a routing
-implementation. The protocol describes
-[three complementary approaches](https://a2a-protocol.org/latest/topics/multi-tenancy/):
-URL sub-path routing, authentication-header routing, and body-based routing with
-the `tenant` field. **This demo focuses on the first one: URL sub-path routing.**
-
 ## A2A Multi-Tenancy with URL sub-path routing
 
 In A2A, multi-tenancy is possible in three ways:
@@ -108,21 +94,14 @@ ready, then — for each of the three tenant agents — sends a text message and
 checks that a text reply comes back (a black-box round-trip test per agent).
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 pytest test_demo_app.py
-```
-
-Expected output:
-
-```text
-...                                                                      [100%]
-3 passed
 ```
 
 ## Configuration
 
-The server reads three environment variables, so the same code works whether you
-run it locally or behind a different public address:
+The server reads __three environment variables__, so the same code
+works whether you run it locally or behind a different public address:
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
@@ -132,20 +111,22 @@ run it locally or behind a different public address:
 
 The client reads `A2A_PORT` too, so it targets the same port as the server.
 
-## Files
-
-- `a2a_server.py` — the three echo "brains", one small `SimpleAgentExecutor`, and
-  the Starlette app that mounts each agent's Agent Card + JSON-RPC endpoint on its
-  own sub-path.
-- `a2a_client.py` — interactive client: discovers all three agents, lets you pick
-  one from a menu, and chats with it (non-streaming, or `--mode stream`).
-- `test_demo_app.py` — `pytest` suite that boots the server and, for each agent,
-  sends a message and checks a text reply comes back.
 
 ## Disclaimer
+**Important:** The sample code provided is for demonstration purposes and
+illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building
+production applications, it is critical to treat any agent operating outside of
+your direct control as a potentially untrusted entity.
 
-This sample is for demonstration and illustrates the mechanics of A2A
-multi-tenancy. Treat any agent outside your control as untrusted: validate and
-sanitize all data received from an external agent (AgentCard fields, messages,
-artifacts, task statuses) before use, and implement appropriate auth and input
-validation in production.
+All data received from an external agent—including but not limited to its
+AgentCard, messages, artifacts, and task statuses—should be handled as untrusted
+input. For example, a malicious agent could provide an AgentCard containing
+crafted data in its fields (e.g., description, name, skills.description). If
+this data is used without sanitization to construct prompts for a Large Language
+Model (LLM), it could expose your application to prompt injection attacks.
+Failure to properly validate and sanitize this data before use can introduce
+security vulnerabilities into your application.
+
+Developers are responsible for implementing appropriate security measures, such
+as input validation and secure handling of credentials to protect their systems
+and users.
