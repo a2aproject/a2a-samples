@@ -86,9 +86,12 @@ def choose_agent(
     if not choice:
         return None
     try:
-        return agents[int(choice) - 1]
+        idx = int(choice) - 1
+        if idx < 0:
+            raise IndexError
+        return agents[idx]
     except (ValueError, IndexError):
-        print('Invalid choice.')
+        print("Invalid choice.")
         return None
 
 
