@@ -17,6 +17,8 @@ so a client just reads the card and sends requests where it points.
 
 import os
 
+from collections.abc import Callable
+
 import uvicorn
 
 from a2a.helpers import (
@@ -35,9 +37,10 @@ from a2a.types.a2a_pb2 import TaskState
 from a2a.utils.constants import AGENT_CARD_WELL_KNOWN_PATH
 from starlette.applications import Starlette
 
-BIND_HOST = os.environ.get("A2A_BIND_HOST", "127.0.0.1")
-PORT = int(os.environ.get("A2A_PORT", "9999"))
-PUBLIC_URL = os.environ.get("A2A_PUBLIC_URL", f"http://127.0.0.1:{PORT}")
+
+BIND_HOST = os.environ.get('A2A_BIND_HOST', '127.0.0.1')
+PORT = int(os.environ.get('A2A_PORT', '9999'))
+PUBLIC_URL = os.environ.get('A2A_PUBLIC_URL', f'http://127.0.0.1:{PORT}')
 
 
 # --- The three agent "brains": trivial text -> text functions. ---
@@ -50,17 +53,17 @@ def hello_world(text: str) -> str:
 
 def palindrome(text: str) -> str:
     """Report whether the input reads the same forwards and backwards."""
-    cleaned = "".join(ch.lower() for ch in text if ch.isalnum())
+    cleaned = ''.join(ch.lower() for ch in text if ch.isalnum())
     if not cleaned:
-        return "Send me some text and I will check if it is a palindrome."
-    verdict = "is" if cleaned == cleaned[::-1] else "is not"
+        return 'Send me some text and I will check if it is a palindrome.'
+    verdict = 'is' if cleaned == cleaned[::-1] else 'is not'
     return f'"{text}" {verdict} a palindrome.'
 
 
 def reverse_words(text: str) -> str:
     """Reverse the order of the words in the input."""
     if not text.strip():
-        return "Send me a sentence and I will reverse the word order."
+        return 'Send me a sentence and I will reverse the word order.'
     return f'Reversed: {" ".join(reversed(text.split()))}'
 
 
@@ -70,7 +73,7 @@ def reverse_words(text: str) -> str:
 class SimpleAgentExecutor(AgentExecutor):
     """Runs one text -> text transform; A2A does the rest of the work."""
 
-    def __init__(self, transform) -> None:
+    def __init__(self, transform: Callable[[str], str]) -> None:
         self.transform = transform
 
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
@@ -87,48 +90,53 @@ class SimpleAgentExecutor(AgentExecutor):
         updater = TaskUpdater(event_queue=event_queue, task_id=task.id, context_id=task.context_id)
         await updater.update_status(
             state=TaskState.TASK_STATE_WORKING,
-            message=new_text_message("Working on it..."),
+            message=new_text_message('Working on it...'),
         )
 
         # 3. Collect the user's text and run this tenant's transform on it.
         query = get_message_text(context.message)
-        result = self.transform(query) if query else "No text input was provided!"
+        result = self.transform(query) if query else 'No text input was provided!'
 
         # 4. Add the generated response as an artifact to the EventQueue.
-        await updater.add_artifact(parts=[new_text_part(text=result, media_type="text/plain")])
+        await updater.add_artifact(parts=[new_text_part(text=result, media_type='text/plain')])
 
         # 5. Mark the task completed.
         await updater.update_status(
             state=TaskState.TASK_STATE_COMPLETED,
-            message=new_text_message("Done!"),
+            message=new_text_message('Done!'),
         )
 
     async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Raise exception as cancel is not supported."""
-        raise NotImplementedError("Cancel is not supported.")
+        raise NotImplementedError('Cancel is not supported.')
 
 
-def build_card(
-    path: str, name: str, description: str, skill_id: str, skill_name: str, examples
+def build_card(  # noqa: PLR0913 - demo helper: one clear arg per card field
+    path: str,
+    name: str,
+    description: str,
+    skill_id: str,
+    skill_name: str,
+    examples: list[str],
 ) -> AgentCard:
     """Each agent advertises its OWN card, pointing at its OWN sub-path."""
     return AgentCard(
         # Basic identity information for this tenant's A2A server.
         name=name,
         description=description,
-        version="1.0.0",
+        version='1.0.0',
         # Default media types for the agent's interactions.
-        default_input_modes=["text/plain"],
-        default_output_modes=["text/plain"],
+        default_input_modes=['text/plain'],
+        default_output_modes=['text/plain'],
         # Supported A2A features (here, streaming responses).
         capabilities=AgentCapabilities(streaming=True),
         # The endpoint(s) where this agent can be reached. This is the heart of
         # sub-path routing: each card points clients at its own URL prefix.
         supported_interfaces=[
             AgentInterface(
-                protocol_binding="JSONRPC",
-                url=f"{PUBLIC_URL}{path}",
-                protocol_version="1.0",
+                protocol_binding='JSONRPC',
+                url=f'{PUBLIC_URL}{path}',
+                protocol_version='1.0',
             )
         ],
         # The list of AgentSkill objects this agent offers.
@@ -137,9 +145,9 @@ def build_card(
                 id=skill_id,
                 name=skill_name,
                 description=description,
-                input_modes=["text/plain"],
-                output_modes=["text/plain"],
-                tags=["a2a", "echo-example", "multi-tenancy"],
+                input_modes=['text/plain'],
+                output_modes=['text/plain'],
+                tags=['a2a', 'echo-example', 'multi-tenancy'],
                 examples=examples,
             )
         ],
@@ -149,38 +157,38 @@ def build_card(
 # One (sub-path, card, executor) entry per tenant agent.
 AGENTS = [
     (
-        "/hello",
+        '/hello',
         build_card(
-            "/hello",
-            "Hello World Agent",
-            "Replies with a friendly hello.",
-            "hello",
-            "Say hello",
-            ["hi", "hello there"],
+            '/hello',
+            'Hello World Agent',
+            'Replies with a friendly hello.',
+            'hello',
+            'Say hello',
+            ['hi', 'hello there'],
         ),
         SimpleAgentExecutor(hello_world),
     ),
     (
-        "/palindrome",
+        '/palindrome',
         build_card(
-            "/palindrome",
-            "Palindrome Agent",
-            "Tells you whether your text is a palindrome.",
-            "palindrome",
-            "Palindrome check",
-            ["racecar", "hello"],
+            '/palindrome',
+            'Palindrome Agent',
+            'Tells you whether your text is a palindrome.',
+            'palindrome',
+            'Palindrome check',
+            ['racecar', 'hello'],
         ),
         SimpleAgentExecutor(palindrome),
     ),
     (
-        "/reverse",
+        '/reverse',
         build_card(
-            "/reverse",
-            "Word Reverse Agent",
-            "Reverses the order of the words in your text.",
-            "reverse",
-            "Reverse words",
-            ["hello world", "agents talking to agents"],
+            '/reverse',
+            'Word Reverse Agent',
+            'Reverses the order of the words in your text.',
+            'reverse',
+            'Reverse words',
+            ['hello world', 'agents talking to agents'],
         ),
         SimpleAgentExecutor(reverse_words),
     ),
@@ -201,7 +209,7 @@ def build_app() -> Starlette:
         # Publish this agent's Agent Card under <sub-path>/.well-known/... so
         # clients can discover it independently of the other tenants.
         routes.extend(
-            create_agent_card_routes(card, card_url=f"{path}{AGENT_CARD_WELL_KNOWN_PATH}")
+            create_agent_card_routes(card, card_url=f'{path}{AGENT_CARD_WELL_KNOWN_PATH}')
         )
         # Mount this agent's JSON-RPC endpoint on its own sub-path.
         routes.extend(create_jsonrpc_routes(handler, rpc_url=path))
@@ -209,8 +217,8 @@ def build_app() -> Starlette:
     return Starlette(routes=routes)
 
 
-if __name__ == "__main__":
-    print(f"Serving three A2A agents (bind {BIND_HOST}:{PORT}, public {PUBLIC_URL}):")
+if __name__ == '__main__':
+    print(f'Serving three A2A agents (bind {BIND_HOST}:{PORT}, public {PUBLIC_URL}):')
     for sub_path, agent_card, _ in AGENTS:
-        print(f"  {PUBLIC_URL}{sub_path}  ->  {agent_card.name}")
+        print(f'  {PUBLIC_URL}{sub_path}  ->  {agent_card.name}')
     uvicorn.run(build_app(), host=BIND_HOST, port=PORT)
