@@ -1,4 +1,4 @@
-module samples/go/agents/signing_and_verifying
+module samples/go/agents/sign-and-verify-agent-card
 
 go 1.25.0
 

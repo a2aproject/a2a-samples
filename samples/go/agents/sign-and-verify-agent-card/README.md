@@ -1,4 +1,4 @@
-# Signing and Verifying Example (Go)
+# Sign and Verify Agent Card Example (Go)
 
 This sample demonstrates how to sign an **Agent Card** on the server side and verify its signature on the client side to establish and validate the agent's identity.
 
