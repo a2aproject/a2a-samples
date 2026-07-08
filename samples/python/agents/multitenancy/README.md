@@ -28,7 +28,7 @@ the `tenant` field. **This demo focuses on the first one: URL sub-path routing.*
 
 ## A2A Multi-Tenancy with URL sub-path routing
 
-In A2A Multi-Tenancy is possible in three ways:
+In A2A, multi-tenancy is possible in three ways:
 1. URL sub-path routing
 2. Authentication header-based routing
 3. Body-based routing with the `tenant` field
