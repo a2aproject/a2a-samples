@@ -1,7 +1,13 @@
 import asyncio
 import logging
+import subprocess
+import sys
+import time
+
+from pathlib import Path
 
 import httpx
+import pytest
 
 from a2a.client import A2ACardResolver, ClientConfig, create_client
 from a2a.helpers import display_agent_card
@@ -100,6 +106,37 @@ async def main() -> None:
         display_agent_card(extended_card_verified)
 
         await client.close()
+
+
+@pytest.fixture(scope='session', autouse=True)
+def start_server():
+    server_path = Path(__file__).parent / '__main__.py'
+    process = subprocess.Popen(  # noqa: S603
+        [sys.executable, str(server_path)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=str(Path(__file__).parent),
+    )
+    # Wait a moment for the server to start
+    time.sleep(1.5)
+
+    if process.poll() is not None:
+        raise RuntimeError(
+            f'Server failed to start (exit code {process.poll()}). Port may already be in use.'
+        )
+
+    yield
+
+    process.terminate()
+    process.wait()
+
+
+def test_client_workflow(text_query: str = 'Hi there!'):
+    """
+    This test function is intended to be used to test the client workflow
+    for multiple queries
+    """
+    asyncio.run(main())
 
 
 if __name__ == '__main__':
