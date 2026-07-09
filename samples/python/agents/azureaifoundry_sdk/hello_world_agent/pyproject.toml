@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hello-world-foundry-agent"
+version = "0.1.0"
+description = "A simple Hello World Azure AI Foundry agent example"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "azure-ai-agents>=1.0.0b1",
+    "azure-identity>=1.15.0",
+    "python-dotenv>=1.0.0",
+    "starlette>=0.37.0",
+    "uvicorn[standard]>=0.27.0",
+    "jinja2>=3.1.0",
+    "websockets>=12.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["hello_world_agent"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.5.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
