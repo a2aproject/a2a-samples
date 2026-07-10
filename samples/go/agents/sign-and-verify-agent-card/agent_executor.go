@@ -9,6 +9,8 @@ import (
 	"github.com/a2aproject/a2a-go/v2/a2asrv"
 )
 
+var _ a2asrv.AgentExecutor = (*SignedAgentExecutor)(nil)
+
 type SignedAgentExecutor struct{}
 
 func NewSignedAgentExecutor() *SignedAgentExecutor {
