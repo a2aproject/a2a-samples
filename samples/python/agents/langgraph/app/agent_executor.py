@@ -41,12 +41,17 @@ class CurrencyAgentExecutor(AgentExecutor):
 
         query = context.get_user_input()
         task = context.current_task
+
+        # The session_id param sent by the invoker agent to
+        # keep track of the conversation history.
+        session_id = context.message.message_id
+
         if not task:
             task = new_task(context.message)  # type: ignore
             await event_queue.enqueue_event(task)
         updater = TaskUpdater(event_queue, task.id, task.context_id)
         try:
-            async for item in self.agent.stream(query, task.context_id):
+            async for item in self.agent.stream(query, session_id):
                 is_task_complete = item['is_task_complete']
                 require_user_input = item['require_user_input']
 
