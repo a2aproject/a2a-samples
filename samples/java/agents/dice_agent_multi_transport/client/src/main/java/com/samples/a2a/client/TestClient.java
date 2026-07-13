@@ -160,7 +160,7 @@ public final class TestClient {
         (event, agentCard) -> {
           if (event instanceof MessageEvent messageEvent) {
             Message responseMessage = messageEvent.getMessage();
-            String text = extractTextFromParts(responseMessage.getParts());
+            String text = extractTextFromParts(responseMessage.parts());
             System.out.println("Received message: " + text);
             messageResponse.complete(text);
           } else if (event instanceof TaskUpdateEvent taskUpdateEvent) {
@@ -169,11 +169,11 @@ public final class TestClient {
                     instanceof TaskStatusUpdateEvent taskStatusUpdateEvent) {
               System.out.println(
                   "Received status-update: "
-                      + taskStatusUpdateEvent.getStatus().state().asString());
+                      + taskStatusUpdateEvent.status().state().name());
               if (taskStatusUpdateEvent.isFinal()) {
                 StringBuilder textBuilder = new StringBuilder();
                 List<Artifact> artifacts
-                        = taskUpdateEvent.getTask().getArtifacts();
+                        = taskUpdateEvent.getTask().artifacts();
                 for (Artifact artifact : artifacts) {
                   textBuilder.append(extractTextFromParts(artifact.parts()));
                 }
@@ -183,14 +183,14 @@ public final class TestClient {
             } else if (updateEvent instanceof TaskArtifactUpdateEvent
                     taskArtifactUpdateEvent) {
               List<Part<?>> parts = taskArtifactUpdateEvent
-                      .getArtifact()
+                      .artifact()
                       .parts();
               String text = extractTextFromParts(parts);
               System.out.println("Received artifact-update: " + text);
             }
           } else if (event instanceof TaskEvent taskEvent) {
             System.out.println("Received task event: "
-                    + taskEvent.getTask().getId());
+                    + taskEvent.getTask().id());
           }
         });
     return consumers;
@@ -201,7 +201,7 @@ public final class TestClient {
     if (parts != null) {
       for (final Part<?> part : parts) {
         if (part instanceof TextPart textPart) {
-          textBuilder.append(textPart.getText());
+          textBuilder.append(textPart.text());
         }
       }
     }
