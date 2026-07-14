@@ -15,7 +15,7 @@ from a2a.types import (
     SendMessageRequest,
 )
 
-from timestamp_ext.core import URI, TimestampExtension
+from core import URI, TimestampExtension
 
 
 _MESSAGING_METHODS = {'send_message', 'send_message_streaming'}

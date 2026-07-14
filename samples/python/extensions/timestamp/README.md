@@ -10,10 +10,10 @@ The extension showcases how to enrich outgoing A2A messages and artifacts with c
 
 The package is split into separate modules to isolate concerns and prevent client-side dependencies from bloating server-side or core stamping utilities:
 
-* **`timestamp_ext/core.py`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
-* **`timestamp_ext/server.py`**: Houses server-side decorators (`_TimestampingAgentExecutor`, `_TimestampingEventQueue`) and the public `wrap_executor` function.
-* **`timestamp_ext/client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `client_interceptor`). It isolates all client-specific Protobuf imports.
-* **`timestamp_ext/__init__.py`**: Exposes only the core public exports for general usage.
+* **`core.py`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
+* **`server.py`**: Houses server-side decorators (`_TimestampingAgentExecutor`, `_TimestampingEventQueue`) and the public `wrap_executor` function.
+* **`client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `client_interceptor`). It isolates all client-specific Protobuf imports.
+* **`__init__.py`**: Exposes only the core public exports for general usage.
 
 ---
 
@@ -25,8 +25,8 @@ To enable the timestamp extension on your A2A agent, advertise support in the `A
 
 ```python
 from a2a.types.a2a_pb2 import AgentCard
-from timestamp_ext.core import TimestampExtension
-from timestamp_ext.server import wrap_executor
+from timestamp.core import TimestampExtension
+from timestamp.server import wrap_executor
 
 # 1. Initialize the extension
 ext = TimestampExtension()
@@ -51,8 +51,8 @@ To request the extension from a server and read timestamps, wrap your `ClientFac
 
 ```python
 from a2a.client import ClientConfig, ClientFactory
-from timestamp_ext.core import TimestampExtension
-from timestamp_ext.client import wrap_client_factory
+from timestamp.core import TimestampExtension
+from timestamp.client import wrap_client_factory
 
 # 1. Initialize the extension
 ext = TimestampExtension()
@@ -66,6 +66,7 @@ client = factory.create(card=card)
 ```
 
 The wrapped factory installs a client interceptor that automatically adds the `A2A-Extensions: <uri>` header to every outgoing call and stamps client-side messages.
+
 
 ---
 

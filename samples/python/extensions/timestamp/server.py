@@ -1,7 +1,7 @@
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events.event_queue import Event, EventQueue
 
-from timestamp_ext.core import TimestampExtension
+from core import TimestampExtension
 
 
 def wrap_executor(executor: AgentExecutor, ext: TimestampExtension) -> AgentExecutor:

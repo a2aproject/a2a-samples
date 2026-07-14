@@ -18,8 +18,8 @@ from a2a.types import (
     SendMessageRequest,
     TaskState,
 )
-from timestamp_ext.client import wrap_client_factory
-from timestamp_ext.core import TIMESTAMP_FIELD, TimestampExtension
+from client import wrap_client_factory
+from core import TIMESTAMP_FIELD, TimestampExtension
 
 
 _AGENT_URL = 'http://127.0.0.1:9998'
@@ -156,4 +156,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
