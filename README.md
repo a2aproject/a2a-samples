@@ -58,20 +58,25 @@ Our samples demonstrate how easily complex multi-agent problems can be solved ac
 Get up and running immediately by launching a Helloworld agent and communicating with it via our Python CLI host.
 
 1. **Start the Agent Server**:
-   Open a terminal and start the Helloworld agent server:
+   Open a terminal, navigate to the Helloworld agent directory, set up a virtual environment, install the dependencies, and start the server:
 
    ```bash
    cd samples/python/agents/helloworld
-   uv run .
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   python __main__.py
    ```
 
 2. **Run the Host Client**:
-   Open a second terminal and run the CLI client to send a task to the agent:
+   Open a second terminal, navigate to the Helloworld agent directory, activate the virtual environment, and run the test client:
 
    ```bash
    cd samples/python/agents/helloworld
-   uv run test_client.py
+   source .venv/bin/activate
+   python test_client.py
    ```
+
 
 ## Repository Structure
 
