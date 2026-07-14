@@ -101,7 +101,7 @@ public class A2AController {
         // Process task asynchronously
         CompletableFuture.runAsync(() -> {
             try {
-                if (!"message/send".equals(request.method())) {
+                if (!"message/stream".equals(request.method())) {
                     sendErrorEvent(emitter, request.id(), ErrorCode.METHOD_NOT_FOUND, "Method not found");
                     return;
                 }
