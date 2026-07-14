@@ -100,7 +100,7 @@ pytest test_demo_app.py
 
 ## Configuration
 
-The server reads __three environment variables__, so the same code
+The server reads **three environment variables**, so the same code
 works whether you run it locally or behind a different public address:
 
 | Variable | Default | Purpose |
