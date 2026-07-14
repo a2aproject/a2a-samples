@@ -43,6 +43,12 @@ For example, to run the `helloworld` agent with a virtual environment:
     ```bash
     python __main__.py
     ```
+4. In another terminal, run the test client:
+    ```bash
+    cd samples/python/agents/helloworld
+    source .venv/bin/activate
+    python test_client.py
+    ```
 
 > [!TIP]
 > **Alternative: Using `uv` with `requirements.txt`**
@@ -66,6 +72,11 @@ For example, to run the `langgraph` agent:
     ```
 2. Run the agent server:
     ```bash
+    uv run .
+    ```
+3. In another terminal, navigate to the CLI directory and run the client:
+    ```bash
+    cd samples/python/hosts/cli
     uv run .
     ```
 
