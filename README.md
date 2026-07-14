@@ -43,28 +43,85 @@
   </details>
 </div>
 
-This repository contains code samples and demos which use the [Agent2Agent (A2A) Protocol](https://goo.gle/a2a).
+Welcome to the official code samples and demonstrations for the [Agent2Agent (A2A) Protocol](https://goo.gle/a2a).
 
-## Related Repositories
+We are thrilled to have you here! Whether you are exploring multi-agent architectures for the first time or building advanced interoperable agent networks, this repository provides simple, inspiring, and accessible learning resources to accelerate your development.
 
-- [A2A](https://github.com/a2aproject/A2A) - A2A Specification and documentation.
-- [a2a-python](https://github.com/a2aproject/a2a-python) - A2A Python SDK.
-- [a2a-inspector](https://github.com/a2aproject/a2a-inspector) - UI tool for inspecting A2A enabled agents.
+## Why Agent2Agent?
+
+In a world of diverse AI frameworks and ecosystems, agents need a common language to communicate, collaborate, and delegate tasks securely. The A2A protocol establishes a standardized, open standard for multi-agent interoperability.
+
+Our samples demonstrate how easily complex multi-agent problems can be solved across different languages and host applications.
+
+## Quick Start
+
+Get up and running immediately by launching a Helloworld agent and communicating with it via our Python CLI host.
+
+1. **Start the Agent Server**:
+   Open a terminal and start the Helloworld agent server:
+
+   ```bash
+   cd samples/python/agents/helloworld
+   uv run .
+   ```
+
+2. **Run the Host Client**:
+   Open a second terminal and run the CLI client to send a task to the agent:
+
+   ```bash
+   cd samples/python/agents/helloworld
+   uv run test_client.py
+   ```
+
+## Repository Structure
+
+The repository is organized into several key directories by language:
+
+| Directory | Description |
+| --- | --- |
+| [samples](/samples) | Core A2A samples organized by programming language. |
+| [samples/python](/samples/python) | Demonstrates Python agent implementations using the A2A Python SDK. |
+| [samples/go](/samples/go) | Demonstrates Go agent implementations using the A2A Go SDK. |
+| [samples/dotnet](/samples/dotnet) | Demonstrates C# agent implementations using the A2A .NET SDK. |
+| [samples/java](/samples/java) | Demonstrates Java agent implementations using the A2A Java SDK. |
+| [samples/js](/samples/js) | Demonstrates Node.js agent implementations using the A2A JavaScript SDK. |
 
 ## Contributing
 
-Contributions welcome! See the [Contributing Guide](CONTRIBUTING.md).
+We welcome and encourage contributions of all skill levels! If you have an idea for a new sample, a bug fix, or a documentation improvement, please check out our [Contributing Guide](CONTRIBUTING.md).
 
-## Getting help
+## Getting Help
 
-Please use the [issues page](https://github.com/a2aproject/a2a-samples/issues) to provide suggestions, feedback or submit a bug report.
+We are dedicated to providing a welcoming and supportive community. If you have questions, feedback, or run into any issues, please reach out on our [issues page](https://github.com/a2aproject/a2a-samples/issues).
+
+## Related Repositories
+
+| Repository | Category | Description |
+| --- | --- | --- |
+| [A2A](https://github.com/a2aproject/A2A) | Core Specification | A2A Specification and documentation. |
+| [a2a-inspector](https://github.com/a2aproject/a2a-inspector) | Tooling | UI tool for inspecting A2A enabled agents. |
+| [a2a-tck](https://github.com/a2aproject/a2a-tck) | Testing | Test suite for validating A2A Protocol compliance. |
+| [a2a-itk](https://github.com/a2aproject/a2a-itk) | Testing | Toolkit to verify compatibility across different A2A SDK implementations and versions using multi-hop traversal model and varied transport protocols. |
+| [a2a-python](https://github.com/a2aproject/a2a-python) | SDK (Python) | Official Python SDK for A2A. |
+| [a2a-go](https://github.com/a2aproject/a2a-go) | SDK (Go) | Official Go SDK for A2A. |
+| [a2a-java](https://github.com/a2aproject/a2a-java) | SDK (Java) | Official Java SDK for A2A. |
+| [a2a-js](https://github.com/a2aproject/a2a-js) | SDK (JavaScript) | Official Node.js/JavaScript SDK for A2A. |
+| [a2a-dotnet](https://github.com/a2aproject/a2a-dotnet) | SDK (C#/.NET) | Official C#/.NET SDK for A2A. |
+| [a2a-rs](https://github.com/a2aproject/a2a-rs) | SDK (Rust) | Official Rust SDK for A2A. |
 
 ## Disclaimer
 
-This repository itself is not an officially supported Google product. The code in this repository is for demonstrative purposes only.
+**Important:** The sample code provided is for demonstration purposes and illustrates the mechanics of the
+Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent
+operating outside of your direct control as a potentially untrusted entity.
 
-Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
+All data received from an external agent—including but not limited to its AgentCard, messages,
+artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent
+could provide an AgentCard containing crafted data in its fields (e.g., description, name,
+skills.description). If this data is used without sanitization to construct prompts for a Large
+Language Model (LLM), it could expose your application to prompt injection attacks. Failure to
+properly validate and sanitize this data before use can introduce security vulnerabilities into
+your application.
 
-All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
-
-Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
+> Developers are responsible for implementing appropriate security measures, such as input validation
+> and secure handling of credentials to protect their systems and users.
