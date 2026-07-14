@@ -1,4 +1,5 @@
 # ruff: noqa: S101
+import asyncio
 import datetime
 import os
 import subprocess
@@ -126,16 +127,21 @@ async def run_client(text_query: str = 'hi'):
             match chunk.WhichOneof('payload'):
                 case 'artifact_update':
                     art = chunk.artifact_update.artifact
-                    ts = art.metadata[TIMESTAMP_FIELD] if TIMESTAMP_FIELD in art.metadata else 'no timestamp'
+                    ts = (
+                        art.metadata[TIMESTAMP_FIELD]  # noqa: SIM401
+                        if TIMESTAMP_FIELD in art.metadata
+                        else 'no timestamp'
+                    )
                     print(f'  artifact "{art.name}" @ {ts}')
                 case 'status_update':
                     status = chunk.status_update.status
                     if status.HasField('message'):
-                        ts = status.message.metadata[TIMESTAMP_FIELD] if TIMESTAMP_FIELD in status.message.metadata else 'no timestamp'
-                        print(
-                            f'  status={TaskState.Name(status.state)} message '
-                            f'@ {ts}'
+                        ts = (
+                            status.message.metadata[TIMESTAMP_FIELD]  # noqa: SIM401
+                            if TIMESTAMP_FIELD in status.message.metadata
+                            else 'no timestamp'
                         )
+                        print(f'  status={TaskState.Name(status.state)} message @ {ts}')
                     else:
                         print(f'  status={TaskState.Name(status.state)}')
                 case kind:
@@ -145,7 +151,6 @@ async def run_client(text_query: str = 'hi'):
 
 
 def main():
-    import asyncio
     print(f'\nStarting interactive session with Timestamp Agent Server [{_AGENT_URL}]')
     print('Use `exit` to quit.')
     prompt = input('user > ')

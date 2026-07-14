@@ -1,6 +1,5 @@
 from a2a.server.agent_execution import AgentExecutor, RequestContext
 from a2a.server.events.event_queue import Event, EventQueue
-
 from core import TimestampExtension
 
 

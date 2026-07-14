@@ -14,7 +14,6 @@ from a2a.types import (
     AgentCard,
     SendMessageRequest,
 )
-
 from core import URI, TimestampExtension
 
 

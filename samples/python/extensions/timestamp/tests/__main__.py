@@ -22,10 +22,9 @@ from a2a.types import (
     TaskStatus,
     TaskStatusUpdateEvent,
 )
-from starlette.applications import Starlette
-
 from core import TimestampExtension
 from server import wrap_executor
+from starlette.applications import Starlette
 
 
 _AGENT_URL = 'http://127.0.0.1:9998'
