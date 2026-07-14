@@ -73,26 +73,42 @@ The wrapped factory installs a client interceptor that automatically adds the `A
 
 ### Prerequisites
 
-Ensure you have `uv` installed and sync the development dependencies:
+- **Python**: Version 3.10 or higher.
 
-```bash
-uv sync --group dev
-```
+### Quick Start
 
-### Running the Showcase Server Standalone
+1. **Set up a Virtual Environment and Install Dependencies**
 
-You can start the Starlette ASGI server hosting the Echo agent and the wrapped executor:
+   Create and activate a virtual environment, then install the required packages:
 
-```bash
-uv run python -m tests
-```
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
 
-The server will start running on `http://127.0.0.1:9998`.
+2. **Start the Server**
+
+   Run the A2A agent server locally on port `9998`:
+
+   ```bash
+   python -m tests
+   ```
+
+3. **Run the Interactive Demo Client**
+
+   In a separate terminal, activate the virtual environment and run the client to interact with the server:
+
+   ```bash
+   source .venv/bin/activate
+   python tests/test_client.py
+   ```
 
 ### Running the Integration Tests
 
 Run the end-to-end integration tests (which spin up the server in a subprocess and execute client queries):
 
 ```bash
-uv run pytest -s -v
+pytest -s -v
 ```
+
