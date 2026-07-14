@@ -1,46 +1,35 @@
 # Hello World Agent
 
-Demonstrates a foundational Agent-to-Agent (A2A) server and client implementation using the A2A Python SDK.
+Demonstrates a foundational Agent-to-Agent (A2A) server and client implementation using the A2A Go SDK.
 
 ## Overview of Core Files
 
 The sample codebase is structured around three core components.
 
-* `__main__.py`: Configures and launches the Starlette ASGI web server using Uvicorn, defines the public and extended `AgentCard` configurations, and sets up the A2A routes and request handler.
-* `agent_executor.py`: Implements the `AgentExecutor` interface (`HelloWorldAgentExecutor`) to process incoming requests, manage task lifecycle states, stream progress updates, and attach generated text artifacts.
-* `test_client.py`: Provides an asynchronous test client demonstrating how to fetch agent cards and interact with the server via both streaming and non-streaming message requests.
+* `main.go`: Configures and launches the standard `net/http` web server, defines the public and extended `AgentCard` configurations, and sets up the A2A routes and request handler.
+* `agent_executor.go`: Implements the `AgentExecutor` interface (`HelloWorldAgentExecutor`) to process incoming requests, manage task lifecycle states, stream progress updates using Go native iterators (`iter.Seq2`), and attach generated text artifacts.
+* `test_client.go`: Provides a test client demonstrating how to fetch agent cards and interact with the server via both streaming and non-streaming message requests.
 
 ## Prerequisites
 
-- **Python**: Version 3.10 or higher.
+- **Go**: Version 1.25 or higher.
 
 ## Quick Start
 
-1. **Set up a Virtual Environment and Install Dependencies**
+1. **Download Dependencies**
 
-   Create and activate a virtual environment, then install the required packages:
+   Download the required modules:
 
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
+   go mod download
    ```
 
-2. **Start the Server**
+2. **Start the Server & Run the Test Client**
 
-   Run the A2A agent server locally on port `9999`:
-
-   ```bash
-   python __main__.py
-   ```
-
-3. **Run the Test Client**
-
-   In a separate terminal, activate the virtual environment and execute the test client to verify communication with the agent:
+   Run the A2A agent server and interactive test client locally on port `9999`:
 
    ```bash
-   source .venv/bin/activate
-   python test_client.py
+   go run .
    ```
 
    **Expected Output Snippet**:
@@ -61,9 +50,9 @@ The sample codebase is structured around three core components.
       [0] http://127.0.0.1:9999  (JSONRPC)
 
     --- Capabilities ---
-    Streaming           : True
-    Push notifications  : False
-    Extended agent card : True
+    Streaming           : true
+    Push notifications  : false
+    Extended agent card : true
 
     ...
 
@@ -106,7 +95,7 @@ The agent can also be packaged and run using a container image.
 1. **Navigate to the Agent Directory**:
 
    ```bash
-   cd samples/python/agents/helloworld
+   cd samples/go/agents/helloworld
    ```
 
 2. **Build the Container Image**:
@@ -134,6 +123,7 @@ uv run . --agent http://127.0.0.1:9999
 ```
 
 ## Disclaimer
+
 **Important:** The sample code provided is for demonstration purposes and
 illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building
 production applications, it is critical to treat any agent operating outside of
