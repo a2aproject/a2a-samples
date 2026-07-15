@@ -127,7 +127,6 @@ class EvidenceBenchRemoteRunner:
             'A2A-Version': '1.0',
             'Authorization': f'Bearer {self.token}',
         }
-        client = None
         try:
             async with httpx.AsyncClient(
                 headers=headers,
@@ -148,36 +147,36 @@ class EvidenceBenchRemoteRunner:
                         accepted_output_modes=['application/json', 'text/markdown'],
                     ),
                 )
-                request = SendMessageRequest(
-                    message=message,
-                    configuration=SendMessageConfiguration(
-                        accepted_output_modes=['application/json', 'text/markdown']
-                    ),
-                )
-                state = TaskState.TASK_STATE_UNSPECIFIED
-                artifacts: dict[str, Artifact] = {}
-                async for response in client.send_message(request):
-                    payload = response.WhichOneof('payload')
-                    if payload == 'task':
-                        state = response.task.status.state
-                        for artifact in response.task.artifacts:
-                            _remember_artifact(artifacts, artifact)
-                    elif payload == 'status_update':
-                        state = response.status_update.status.state
-                    elif payload == 'artifact_update':
-                        _remember_artifact(
-                            artifacts,
-                            response.artifact_update.artifact,
-                        )
-                _require_terminal_state(state)
-                return RemoteRunResult(state=state, artifacts=artifacts)
+                try:
+                    request = SendMessageRequest(
+                        message=message,
+                        configuration=SendMessageConfiguration(
+                            accepted_output_modes=['application/json', 'text/markdown']
+                        ),
+                    )
+                    state = TaskState.TASK_STATE_UNSPECIFIED
+                    artifacts: dict[str, Artifact] = {}
+                    async for response in client.send_message(request):
+                        payload = response.WhichOneof('payload')
+                        if payload == 'task':
+                            state = response.task.status.state
+                            for artifact in response.task.artifacts:
+                                _remember_artifact(artifacts, artifact)
+                        elif payload == 'status_update':
+                            state = response.status_update.status.state
+                        elif payload == 'artifact_update':
+                            _remember_artifact(
+                                artifacts,
+                                response.artifact_update.artifact,
+                            )
+                    _require_terminal_state(state)
+                    return RemoteRunResult(state=state, artifacts=artifacts)
+                finally:
+                    await client.close()
         except ConnectorError:
             raise
         except Exception as exc:
             raise ConnectorError('Evidence Bench A2A request failed.') from exc
-        finally:
-            if client is not None:
-                await client.close()
 
 
 def _remember_artifact(artifacts: dict[str, Artifact], artifact: Artifact) -> None:
