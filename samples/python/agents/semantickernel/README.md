@@ -73,13 +73,23 @@ AZURE_OPENAI_CHAT_DEPLOYMENT_NAME="your-deployment-name"
 AZURE_OPENAI_API_VERSION="2024-12-01-preview"
 ```
 
-To switch from Azure OpenAI to OpenAI, change this line in `agent.py`:
+**For MiniMax ([platform.minimax.io](https://platform.minimax.io)):**
+
+```bash
+MINIMAX_API_KEY="your-minimax-api-key-here"
+# Optional: override the model (default: MiniMax-M2.7)
+# MINIMAX_MODEL_ID="MiniMax-M2.7-highspeed"
+```
+
+To switch providers, change this line in `agent.py`:
 
 ```python
 # From this:
 chat_service = get_chat_completion_service(ChatServices.AZURE_OPENAI)
-# To this:
+# To OpenAI:
 chat_service = get_chat_completion_service(ChatServices.OPENAI)
+# To MiniMax:
+chat_service = get_chat_completion_service(ChatServices.MINIMAX)
 ```
 
 > [!NOTE]
@@ -224,7 +234,7 @@ Content-Type: application/json
 
 And so on for multi-turn, streaming, etc.
 
-For more details, see [A2A Protocol Documentation](https://google.github.io/A2A/#/documentation) and [Semantic Kernel Docs](https://learn.microsoft.com/en-us/semantic-kernel/get-started/quick-start-guide?pivots=programming-language-python).
+For more details, see [A2A Protocol Documentation](https://google.github.io/A2A/#/documentation), [Semantic Kernel Docs](https://learn.microsoft.com/en-us/semantic-kernel/get-started/quick-start-guide?pivots=programming-language-python), and [MiniMax API (OpenAI Compatible)](https://platform.minimax.io/docs/api-reference/text-openai-api).
 
 
 ## Disclaimer

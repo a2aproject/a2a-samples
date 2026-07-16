@@ -1,17 +1,54 @@
 import os
+import re
 
 from collections.abc import AsyncIterable
 from typing import Any, Literal
 
 import httpx
 
-from langchain_core.messages import AIMessage, ToolMessage
+from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
+from langchain_core.outputs import ChatResult
 from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
+
+
+_THINK_TAG_RE = re.compile(r'<think>[\s\S]*?</think>\s*', re.DOTALL)
+
+
+class ChatMiniMax(ChatOpenAI):
+    """ChatOpenAI subclass for MiniMax.
+
+    MiniMax models may produce <think>...</think> reasoning tags.
+    This subclass strips those tags from responses and uses
+    function_calling for structured output (MiniMax does not support
+    json_schema response_format).
+    """
+
+    def with_structured_output(self, schema, *, method=None, **kwargs):
+        return super().with_structured_output(
+            schema, method='function_calling', **kwargs
+        )
+
+    def _generate(
+        self,
+        messages: list[BaseMessage],
+        stop: list[str] | None = None,
+        run_manager=None,
+        **kwargs,
+    ) -> ChatResult:
+        result = super()._generate(
+            messages, stop=stop, run_manager=run_manager, **kwargs
+        )
+        for gen in result.generations:
+            if gen.message and isinstance(gen.message.content, str):
+                gen.message.content = _THINK_TAG_RE.sub(
+                    '', gen.message.content
+                ).strip()
+        return result
 
 
 memory = MemorySaver()
@@ -80,6 +117,17 @@ class CurrencyAgent:
         model_source = os.getenv('model_source', 'google')
         if model_source == 'google':
             self.model = ChatGoogleGenerativeAI(model='gemini-2.0-flash')
+        elif model_source == 'minimax':
+            self.model = ChatMiniMax(
+                model=os.getenv(
+                    'TOOL_LLM_NAME', 'MiniMax-M2.7'
+                ),
+                openai_api_key=os.getenv('MINIMAX_API_KEY', 'EMPTY'),
+                openai_api_base=os.getenv(
+                    'TOOL_LLM_URL', 'https://api.minimax.io/v1'
+                ),
+                temperature=1.0,
+            )
         else:
             self.model = ChatOpenAI(
                 model=os.getenv('TOOL_LLM_NAME'),
