@@ -17,37 +17,37 @@ This sample agent can be used to proof-read and polish content. This agent is wr
 
 2. Create a .env file in the `content_editor` directory as follows:
 
-   ```bash
-   cp .env.example .env
-   ```
+    ```bash
+    cp .env.example .env
+    ```
 
-   Then update the `.env` file to specify your Google AI Studio API Key (note that no quotes are needed below):
+    Then update the `.env` file to specify your Google AI Studio API Key (note that no quotes are needed below):
 
-   ```bash
-   QUARKUS_LANGCHAIN4J_AI_GEMINI_API_KEY=your_api_key_here
-   ```
+    ```bash
+    QUARKUS_LANGCHAIN4J_AI_GEMINI_API_KEY=your_api_key_here
+    ```
 
 3. Run the Content Editor Agent
 
-   **NOTE:**
-   By default, the agent will start on port 10003. To override this, add the `-Dquarkus.http.port=YOUR_PORT` option at the end of the command below.
+    **NOTE:**
+    By default, the agent will start on port 10003. To override this, add the `-Dquarkus.http.port=YOUR_PORT` option at the end of the command below.
 
-   ```bash
-   mvn quarkus:dev
-   ```
+    ```bash
+    mvn quarkus:dev
+    ```
 
 4. In a separate terminal, run the A2A client and use it to send a message to the agent:
 
     ```bash
     # Connect to the agent (specify the agent URL with correct port)
-    cd samples/python/hosts/cli
+    cd samples/python/hosts/cli/cli_v10
     uv run . --agent http://localhost:10003
 
     # If you changed the port when starting the agent, use that port instead
     # uv run . --agent http://localhost:YOUR_PORT
     ```
 
-5. To make use of this agent in a content creation multi-agent system, check out the [content_creation](../../../python/hosts/content_creation/README.md) sample.
+5. To make use of this agent in a content creation multi-agent system, check out the [content_creation_v10](../../../python/hosts/content_creation_v10/README.md) sample.
 
 ## Disclaimer
 Important: The sample code provided is for demonstration purposes and illustrates the

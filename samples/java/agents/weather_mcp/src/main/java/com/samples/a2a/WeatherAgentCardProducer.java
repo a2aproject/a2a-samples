@@ -1,9 +1,11 @@
 package com.samples.a2a;
 
-import io.a2a.server.PublicAgentCard;
-import io.a2a.spec.AgentCapabilities;
-import io.a2a.spec.AgentCard;
-import io.a2a.spec.AgentSkill;
+import org.a2aproject.sdk.server.PublicAgentCard;
+import org.a2aproject.sdk.spec.AgentCapabilities;
+import org.a2aproject.sdk.spec.AgentCard;
+import org.a2aproject.sdk.spec.AgentInterface;
+import org.a2aproject.sdk.spec.AgentSkill;
+import org.a2aproject.sdk.spec.TransportProtocol;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
@@ -40,29 +42,32 @@ public final class WeatherAgentCardProducer {
   @Produces
   @PublicAgentCard
   public AgentCard agentCard() {
-    return new AgentCard.Builder()
+    return AgentCard.builder()
         .name("Weather Agent")
         .description("Helps with weather")
         .url("http://localhost:" + getHttpPort())
         .version("1.0.0")
         .capabilities(
-            new AgentCapabilities.Builder()
+            AgentCapabilities.builder()
                 .streaming(true)
                 .pushNotifications(false)
-                .stateTransitionHistory(false)
                 .build())
         .defaultInputModes(Collections.singletonList("text"))
         .defaultOutputModes(Collections.singletonList("text"))
         .skills(
             Collections.singletonList(
-                new AgentSkill.Builder()
+                AgentSkill.builder()
                     .id("weather_search")
                     .name("Search weather")
                     .description("Helps with weather in city, or states")
                     .tags(Collections.singletonList("weather"))
                     .examples(List.of("weather in LA, CA"))
                     .build()))
-        .protocolVersion("0.3.0")
+        .supportedInterfaces(
+            Collections.singletonList(
+                new AgentInterface(
+                    TransportProtocol.JSONRPC.asString(),
+                    "http://localhost:" + getHttpPort())))
         .build();
   }
 }
