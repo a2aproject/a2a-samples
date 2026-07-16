@@ -1,0 +1,45 @@
+{
+    "protocol": "acp",
+    "protocolVersion": "0.1.0",
+    "serviceId": "paid_translation.v1",
+    "agentCardUrl": "https://seller.example.com/.well-known/agent-card.json",
+    "capability": {
+        "id": "translate_text",
+        "inputModes": ["text/plain"],
+        "outputModes": ["text/plain"],
+        "maxCharacters": 500
+    },
+    "pricing": {
+        "model": "per_invocation",
+        "currency": "USD",
+        "unitAmount": "0.05",
+        "minimumCharge": "0.05"
+    },
+    "settlement": [
+        {
+            "method": "x402",
+            "network": "testnet",
+            "proofFormat": "x402-payment-header"
+        },
+        {
+            "method": "usdc-base",
+            "network": "base",
+            "proofFormat": "transaction-reference"
+        },
+        {
+            "method": "invoice",
+            "proofFormat": "buyer-account-reference"
+        }
+    ],
+    "paymentProof": {
+        "metadataKey": "https://github.com/a2aproject/a2a-samples/extensions/commerce-profile/v1/paymentProof",
+        "acceptedProofTypes": [
+            "x402-payment-header",
+            "transaction-reference",
+            "buyer-account-reference"
+        ]
+    },
+    "receipts": {
+        "receiptUrlTemplate": "https://seller.example.com/receipts/{receiptId}"
+    }
+}
