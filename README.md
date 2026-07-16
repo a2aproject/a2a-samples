@@ -86,6 +86,10 @@ The repository is organized into several key directories by language:
 | [samples/java](/samples/java) | Demonstrates Java agent implementations using the A2A Java SDK. |
 | [samples/js](/samples/js) | Demonstrates Node.js agent implementations using the A2A JavaScript SDK. |
 
+## A2A Ecosystem Projects
+
+- [OIXA Protocol](https://oixa.io) - Agent-to-agent economic marketplace on Base Mainnet built on A2A + MCP. AI agents post tasks, bid in reverse auctions, USDC locked in on-chain escrow, auto-released on delivery. A2A agent card live at `http://64.23.235.34:8000/.well-known/agent.json`. [github](https://github.com/ivoshemi-sys/oixa-protocol) | `pip install oixa-protocol`
+
 ## Contributing
 
 We welcome and encourage contributions of all skill levels! If you have an idea for a new sample, a bug fix, or a documentation improvement, please check out our [Contributing Guide](CONTRIBUTING.md).
