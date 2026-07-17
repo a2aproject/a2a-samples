@@ -1,0 +1,53 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: a2a-server
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+logging:
+  level:
+    io.github.a2ap: DEBUG
+    org.springframework.web: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# A2A specific configuration
+a2a:
+  server:
+    id: "server-hello-world"
+    name: "A2A Java Server"
+    description: "A sample A2A agent implemented in Java"
+    version: "1.0.0"
+    url: "http://localhost:${server.port}/a2a/server"
+    provider:
+      name: "A2A"
+      url: "https://github.com/google-a2a/a2a-samples"
+    documentationUrl: "https://google-a2a.github.io/A2A/"
+    capabilities:
+      streaming: true
+      pushNotifications: false
+      stateTransitionHistory: true
+    defaultInputModes:
+      - "text"
+    defaultOutputModes:
+      - "text"
+    skills:
+      - name: "hello-world"
+        description: "A simple hello world skill"
+        tags:
+          - "greeting"
+          - "basic"
+        examples:
+          - "Say hello to me"
+          - "Greet me"
+        inputModes:
+          - "text"
+        outputModes:
+          - "text"
