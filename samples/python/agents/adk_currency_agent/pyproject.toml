@@ -1,0 +1,29 @@
+[project]
+name = "currency_agent"
+version = "0.1.0"
+description = "Currency conversion agent built with ADK"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "google-adk[a2a]>=1.25.1"    
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.1",
+    "ipykernel>=7.2.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/currency_agent"]
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+currency_agent = "currency_agent.main:run"

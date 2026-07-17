@@ -2,25 +2,22 @@ import asyncio
 import json
 import re
 
-from collections.abc import Callable, Generator
+from collections.abc import AsyncGenerator, Callable, Generator
 from pathlib import Path
 from typing import Literal
-from uuid import uuid4
 
 import httpx
 
-from a2a.client import A2ACardResolver, A2AClient
+from a2a.client import (
+    A2ACardResolver,
+    create_client,
+    create_text_message_object,
+)
 from a2a.types import (
     AgentCard,
-    Message,
-    MessageSendParams,
-    Part,
-    Role,
-    SendStreamingMessageRequest,
-    SendStreamingMessageSuccessResponse,
-    TaskStatusUpdateEvent,
-    TextPart,
+    SendMessageRequest,
 )
+from a2a.utils.artifact import get_artifact_text
 from google import genai
 from jinja2 import Template
 
@@ -93,7 +90,7 @@ class Agent:
             agent_prompt = agents_template.render(agent_cards=agent_cards)
             return agents_registry, agent_prompt
 
-    def call_llm(self, prompt: str) -> str:
+    def call_llm(self, prompt: str) -> str | Generator[str]:
         """Call the LLM with the given prompt and return the response as a string or generator.
 
         Args:
@@ -102,7 +99,7 @@ class Agent:
         Returns:
             str or Generator[str]: The LLM response as a string or generator, depending on mode.
         """
-        if self.mode == 'complete':
+        if self.mode == 'stream':
             return stream_llm(prompt)
 
         result = ''
@@ -153,7 +150,7 @@ class Agent:
 
     async def send_message_to_an_agent(
         self, agent_card: AgentCard, message: str
-    ):
+    ) -> AsyncGenerator[str, None]:
         """Send a message to a specific agent and yield the streaming response.
 
         Args:
@@ -163,29 +160,17 @@ class Agent:
         Yields:
             str: The streaming response from the agent.
         """
-        async with httpx.AsyncClient() as httpx_client:
-            client = A2AClient(httpx_client, agent_card=agent_card)
-            message = MessageSendParams(
-                message=Message(
-                    role=Role.user,
-                    parts=[Part(TextPart(text=message))],
-                    message_id=uuid4().hex,
-                    task_id=uuid4().hex,
-                )
-            )
+        async with await create_client(agent_card) as client:
+            msg = create_text_message_object(content=message)
+            request = SendMessageRequest(message=msg)
 
-            streaming_request = SendStreamingMessageRequest(
-                id=str(uuid4().hex), params=message
-            )
-            async for chunk in client.send_message_streaming(streaming_request):
-                if isinstance(
-                    chunk.root, SendStreamingMessageSuccessResponse
-                ) and isinstance(chunk.root.result, TaskStatusUpdateEvent):
-                    message = chunk.root.result.status.message
-                    if message:
-                        yield message.parts[0].root.text
+            async for chunk in client.send_message(request):
+                if chunk.HasField('artifact_update'):
+                    text = get_artifact_text(chunk.artifact_update.artifact)
+                    if text:
+                        yield text
 
-    async def stream(self, question: str):
+    async def stream(self, question: str) -> AsyncGenerator[str, None]:
         """Stream the process of answering a question, possibly involving multiple agents.
 
         Args:
@@ -240,7 +225,7 @@ if __name__ == '__main__':
 
     import colorama
 
-    async def main():
+    async def main() -> None:
         """Main function to run the A2A Repo Agent client."""
         agent = Agent(
             mode='stream',

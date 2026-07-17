@@ -1,143 +1,142 @@
-import logging
+import asyncio
+import subprocess
+import sys
+import time
 
-from typing import Any
-from uuid import uuid4
+from pathlib import Path
 
-import httpx
+import pytest
 
-from a2a.client import A2ACardResolver, A2AClient
-from a2a.types import (
-    AgentCard,
-    MessageSendParams,
-    SendMessageRequest,
-    SendStreamingMessageRequest,
-)
-from a2a.utils.constants import (
-    AGENT_CARD_WELL_KNOWN_PATH,
-    EXTENDED_AGENT_CARD_PATH,
-)
+from a2a.client import ClientConfig, create_client
+from a2a.helpers import new_text_message
+from a2a.types import Role, SendMessageRequest
 
 
-async def main() -> None:
-    # Configure logging to show INFO level messages
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)  # Get a logger instance
+@pytest.fixture(scope='session', autouse=True)
+def start_server():
+    server_path = Path(__file__).parent / '__main__.py'
+    process = subprocess.Popen(  # noqa: S603
+        [sys.executable, str(server_path)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    # Wait a moment for the server to start
+    time.sleep(1.5)
 
+    yield
+
+    process.terminate()
+    process.wait()
+
+
+async def get_agent_card():
+    print('Initializes the A2ACardResolver instance with an HTTP client')
     # --8<-- [start:A2ACardResolver]
+    import httpx  # noqa: PLC0415
 
-    base_url = 'http://localhost:9999'
+    from a2a.client import A2ACardResolver  # noqa: PLC0415
 
+    # Initializes the A2ACardResolver instance with an HTTP client, base URL,
+    # and uses the default path for the agent card.
     async with httpx.AsyncClient() as httpx_client:
-        # Initialize A2ACardResolver
         resolver = A2ACardResolver(
             httpx_client=httpx_client,
-            base_url=base_url,
-            # agent_card_path uses default, extended_agent_card_path also uses default
+            base_url='http://127.0.0.1:9999',
+            # Provide agent_card_path, if your agent uses a different path
+            # agent_card_path=''  # noqa: ERA001
         )
+        public_agent_card = await resolver.get_agent_card()
         # --8<-- [end:A2ACardResolver]
+        print('\nSuccessfully fetched the public agent card:')
+    return public_agent_card
 
-        # Fetch Public Agent Card and Initialize Client
-        final_agent_card_to_use: AgentCard | None = None
 
-        try:
-            logger.info(
-                f'Attempting to fetch public agent card from: {base_url}{AGENT_CARD_WELL_KNOWN_PATH}'
-            )
-            _public_card = (
-                await resolver.get_agent_card()
-            )  # Fetches from default public path
-            logger.info('Successfully fetched public agent card:')
-            logger.info(
-                _public_card.model_dump_json(indent=2, exclude_none=True)
-            )
-            final_agent_card_to_use = _public_card
-            logger.info(
-                '\nUsing PUBLIC agent card for client initialization (default).'
-            )
+async def show_agent_card():
+    from a2a.helpers import display_agent_card  # noqa: PLC0415
 
-            if _public_card.supports_authenticated_extended_card:
-                try:
-                    logger.info(
-                        f'\nPublic card supports authenticated extended card. Attempting to fetch from: {base_url}{EXTENDED_AGENT_CARD_PATH}'
-                    )
-                    auth_headers_dict = {
-                        'Authorization': 'Bearer dummy-token-for-extended-card'
-                    }
-                    _extended_card = await resolver.get_agent_card(
-                        relative_card_path=EXTENDED_AGENT_CARD_PATH,
-                        http_kwargs={'headers': auth_headers_dict},
-                    )
-                    logger.info(
-                        'Successfully fetched authenticated extended agent card:'
-                    )
-                    logger.info(
-                        _extended_card.model_dump_json(
-                            indent=2, exclude_none=True
-                        )
-                    )
-                    final_agent_card_to_use = (
-                        _extended_card  # Update to use the extended card
-                    )
-                    logger.info(
-                        '\nUsing AUTHENTICATED EXTENDED agent card for client initialization.'
-                    )
-                except Exception as e_extended:
-                    logger.warning(
-                        f'Failed to fetch extended agent card: {e_extended}. Will proceed with public card.',
-                        exc_info=True,
-                    )
-            elif (
-                _public_card
-            ):  # supports_authenticated_extended_card is False or None
-                logger.info(
-                    '\nPublic card does not indicate support for an extended card. Using public card.'
-                )
+    public_agent_card = await get_agent_card()
+    display_agent_card(public_agent_card)
 
-        except Exception as e:
-            logger.error(
-                f'Critical error fetching public agent card: {e}', exc_info=True
-            )
-            raise RuntimeError(
-                'Failed to fetch the public agent card. Cannot continue.'
-            ) from e
 
-        # --8<-- [start:send_message]
-        client = A2AClient(
-            httpx_client=httpx_client, agent_card=final_agent_card_to_use
-        )
-        logger.info('A2AClient initialized.')
+async def send_message(text_query: str = 'Hi there'):
+    public_agent_card = await get_agent_card()
+    print('\n--- Public Agent Card - Non-Streaming Call ---')
+    # --8<-- [start:message_send]
+    from a2a.client import ClientConfig, create_client  # noqa: PLC0415
+    from a2a.helpers import new_text_message  # noqa: PLC0415
+    from a2a.types import Role, SendMessageRequest  # noqa: PLC0415
 
-        send_message_payload: dict[str, Any] = {
-            'message': {
-                'role': 'user',
-                'parts': [
-                    {'kind': 'text', 'text': 'how much is 10 USD in INR?'}
-                ],
-                'messageId': uuid4().hex,
-            },
-        }
-        request = SendMessageRequest(
-            id=str(uuid4()), params=MessageSendParams(**send_message_payload)
-        )
+    print('\nInitializing a non-streaming client.')
+    config = ClientConfig(streaming=False)
+    client = await create_client(agent=public_agent_card, client_config=config)
 
-        response = await client.send_message(request)
-        print(response.model_dump(mode='json', exclude_none=True))
-        # --8<-- [end:send_message]
+    # Creates a new text message to be sent to the A2A Server.
+    # Ex: text_query = 'Why is the sky blue?'  # noqa: ERA001
+    message = new_text_message(text_query, role=Role.ROLE_USER)
+    request = SendMessageRequest(message=message)
 
-        # --8<-- [start:send_message_streaming]
+    print('Response:')
+    async for chunk in client.send_message(request):
+        print(chunk)
+    # --8<-- [end:message_send]
+    await client.close()
 
-        streaming_request = SendStreamingMessageRequest(
-            id=str(uuid4()), params=MessageSendParams(**send_message_payload)
-        )
 
-        stream_response = client.send_message_streaming(streaming_request)
+async def send_steaming_message(text_query: str = 'Hi there'):
+    public_agent_card = await get_agent_card()
 
-        async for chunk in stream_response:
-            print(chunk.model_dump(mode='json', exclude_none=True))
-        # --8<-- [end:send_message_streaming]
+    # Creates a new text message to be sent to the A2A Server.
+    # Ex: text_query = 'Why is the sky blue?'  # noqa: ERA001
+    message = new_text_message(text_query, role=Role.ROLE_USER)
+    request = SendMessageRequest(message=message)
+
+    print('\n--- Public Agent Card - Streaming Call ---')
+    # --8<-- [start:message_stream]
+    print('\nInitializing a streaming client.')
+    client_config = ClientConfig(streaming=True)  # Streaming
+    client = await create_client(agent=public_agent_card, client_config=client_config)
+
+    print('Response:')
+    async for chunk in client.send_message(request):
+        print(chunk)
+    # --8<-- [end:message_stream]
+    await client.close()
+
+
+async def show_extended_card():
+    from a2a.helpers import display_agent_card  # noqa: PLC0415
+    from a2a.types import GetExtendedAgentCardRequest  # noqa: PLC0415
+
+    public_agent_card = await get_agent_card()
+    config = ClientConfig(streaming=False)
+    client = await create_client(agent=public_agent_card, client_config=config)
+
+    print('\n--- Extended Agent Card - Non-Streaming Call ---')
+    extended_card = await client.get_extended_agent_card(GetExtendedAgentCardRequest())
+    print('\nSuccessfully fetched the authenticated extended agent card:')
+    display_agent_card(extended_card)
+    await client.close()
+
+
+def test_client_workflow(text_query: str = 'Hi there!'):
+    """
+    This test function is intended to be used to test the client workflow
+    for multiple queries
+    """
+    asyncio.run(show_agent_card())
+    asyncio.run(send_message(text_query))
+    asyncio.run(send_steaming_message(text_query))
+    asyncio.run(show_extended_card())
+
+
+def main():
+    print('\nStarting an internactive session with A2A Server [http://127.0.0.1:9999]')
+    print('Use `exit` to quit.')
+    prompt = input('user > ')
+    while prompt and prompt != 'exit':
+        asyncio.run(send_message(prompt))
+        prompt = input('--\nuser > ')
 
 
 if __name__ == '__main__':
-    import asyncio
-
-    asyncio.run(main())
+    main()

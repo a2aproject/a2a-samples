@@ -7,29 +7,39 @@ from typing import Any
 from a2a.client import (
     Client,
     ClientCallInterceptor,
-    ClientEvent,
     ClientFactory,
-    Consumer,
 )
+from a2a.client.client import ClientCallContext
 from a2a.client.client_factory import TransportProducer
-from a2a.client.middleware import ClientCallContext
-from a2a.extensions.common import HTTP_EXTENSION_HEADER, find_extension_by_uri
+from a2a.client.interceptors import AfterArgs, BeforeArgs
+from a2a.client.service_parameters import (
+    ServiceParametersFactory,
+    with_a2a_extensions,
+)
+from a2a.extensions.common import find_extension_by_uri
 from a2a.server.agent_execution import AgentExecutor, RequestContext
-from a2a.server.events.event_queue import EventQueue
-from a2a.types import (
+from a2a.server.events.event_queue import Event, EventQueue
+from a2a.types.a2a_pb2 import (
     AgentCard,
     AgentExtension,
     Artifact,
-    GetTaskPushNotificationConfigParams,
+    CancelTaskRequest,
+    DeleteTaskPushNotificationConfigRequest,
+    GetExtendedAgentCardRequest,
+    GetTaskPushNotificationConfigRequest,
+    GetTaskRequest,
+    ListTaskPushNotificationConfigsRequest,
+    ListTaskPushNotificationConfigsResponse,
+    ListTasksRequest,
+    ListTasksResponse,
     Message,
     Role,
     SendMessageRequest,
-    SendStreamingMessageRequest,
+    StreamResponse,
+    SubscribeToTaskRequest,
     Task,
     TaskArtifactUpdateEvent,
-    TaskIdParams,
     TaskPushNotificationConfig,
-    TaskQueryParams,
     TaskStatusUpdateEvent,
 )
 
@@ -65,9 +75,7 @@ class TimestampExtension:
     # Option 2 for adding to a card: do it for them.
     def add_to_card(self, card: AgentCard) -> AgentCard:
         """Add this extension to an AgentCard."""
-        if not (exts := card.capabilities.extensions):
-            exts = card.capabilities.extensions = []
-        exts.append(self.agent_extension())
+        card.capabilities.extensions.append(self.agent_extension())
         return card
 
     def is_supported(self, card: AgentCard | None) -> bool:
@@ -76,16 +84,13 @@ class TimestampExtension:
             return find_extension_by_uri(card, URI) is not None
         return False
 
-    def activate(self, context: RequestContext) -> bool:
-        """Possibly activate this extension, depending on the request context.
+    def is_requested(self, context: RequestContext) -> bool:
+        """Returns whether the client requested this extension for the call.
 
-        The extension is considered active if the caller indicated it in an
-        X-A2A-Extensions header.
+        The extension is considered requested if the caller indicated it in
+        an A2A-Extensions header.
         """
-        if URI in context.requested_extensions:
-            context.add_activated_extension(URI)
-            return True
-        return False
+        return URI in context.requested_extensions
 
     # Option 1 for adding to a message: self-serve.
     def add_timestamp(self, o: Message | Artifact) -> None:
@@ -93,25 +98,20 @@ class TimestampExtension:
         # Respect existing timestamps.
         if self.has_timestamp(o):
             return
-        if o.metadata is None:
-            o.metadata = {}
         now = self._now_fn()
         dt = datetime.datetime.fromtimestamp(now, datetime.UTC)
         o.metadata[TIMESTAMP_FIELD] = dt.isoformat()
 
     # Option 2: assisted, but still self-serve
-    def add_if_activated(
+    def add_if_requested(
         self, o: Message | Artifact, context: RequestContext
     ) -> None:
-        """Add a timestamp to a message or artifact if the extension is active."""
-        if self.activate(context):
+        """Add a timestamp to a message or artifact if the extension is requested."""
+        if self.is_requested(context):
             self.add_timestamp(o)
 
     # Option 3 for servers: timestamp an event.
-    def timestamp_event(
-        self,
-        event: Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent,
-    ) -> None:
+    def timestamp_event(self, event: Event) -> None:
         """Add a timestamp to a server-side event."""
         for o in self._get_messages_in_event(event):
             self.add_timestamp(o)
@@ -120,23 +120,20 @@ class TimestampExtension:
     def get_timestamper(self, context: RequestContext) -> 'MessageTimestamper':
         """Returns a helper class for adding timestamps to messages/artifacts.
 
-        This detects whether the extension should be activated based on the
+        This detects whether the extension should be applied based on the
         current RequestContext. If not, timestamps are not added.
         """
-        active = self.activate(context)
-        return MessageTimestamper(active, self)
+        return MessageTimestamper(self.is_requested(context), self)
 
     def get_timestamp(self, o: Message | Artifact) -> datetime.datetime | None:
         """Get a timestamp from a message or artifact."""
-        if o.metadata and (ts := o.metadata.get(TIMESTAMP_FIELD)):
-            return datetime.datetime.fromisoformat(ts)
+        if self.has_timestamp(o):
+            return datetime.datetime.fromisoformat(o.metadata[TIMESTAMP_FIELD])
         return None
 
     def has_timestamp(self, o: Message | Artifact) -> bool:
         """Returns whether a message or artifact has a timestamp."""
-        if o.metadata:
-            return TIMESTAMP_FIELD in o.metadata
-        return False
+        return TIMESTAMP_FIELD in o.metadata
 
     # Option 5: Fully managed via a decorator. This is the most complicated, but
     # easiest for a developer to use.
@@ -144,29 +141,24 @@ class TimestampExtension:
         """Wrap an executor in a decorator that automatically adds timestamps to messages and artifacts."""
         return _TimestampingAgentExecutor(executor, self)
 
-    def request_activation_http(
+    def request_extension_http(
         self, http_kwargs: dict[str, Any]
     ) -> dict[str, Any]:
-        """Update an http_kwargs to request activation of this extension."""
-        if not (headers := http_kwargs.get('headers')):
-            headers = http_kwargs['headers'] = {}
-        header_val = URI
-        if headers.get(HTTP_EXTENSION_HEADER):
-            header_val = headers[HTTP_EXTENSION_HEADER] + ', ' + URI
-        headers[HTTP_EXTENSION_HEADER] = header_val
+        """Update an http_kwargs to request this extension."""
+        http_kwargs['headers'] = ServiceParametersFactory.create_from(
+            http_kwargs.get('headers'), [with_a2a_extensions([URI])]
+        )
         return http_kwargs
 
-    # Option 2 for clients: timestamp your JSON RPC payloads.
+    # Option 2 for clients: timestamp your outgoing requests.
     # Option 1 is to self-serve add the timestamp to your message.
-    def timestamp_request_message(
-        self, request: SendMessageRequest | SendStreamingMessageRequest
-    ) -> None:
+    def timestamp_request_message(self, request: SendMessageRequest) -> None:
         """Add a timestamp to an outgoing request."""
-        self.add_timestamp(request.params.message)
+        self.add_timestamp(request.message)
 
     # Option 3 for clients: use a client interceptor.
     def client_interceptor(self) -> ClientCallInterceptor:
-        """Get a client interceptor that activates this extension."""
+        """Get a client interceptor that requests this extension."""
         return _TimestampingClientInterceptor(self)
 
     # Option 4 for clients: wrap the client itself.
@@ -180,10 +172,11 @@ class TimestampExtension:
         return _TimestampClientFactory(factory, self)
 
     def _get_messages_in_event(
-        self,
-        event: Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent,
+        self, event: Event
     ) -> Iterable[Message | Artifact]:
-        if isinstance(event, TaskStatusUpdateEvent) and event.status.message:
+        if isinstance(event, TaskStatusUpdateEvent) and event.status.HasField(
+            'message'
+        ):
             return [event.status.message]
         if isinstance(event, TaskArtifactUpdateEvent):
             return [event.artifact]
@@ -196,18 +189,16 @@ class TimestampExtension:
     def _get_artifacts_and_messages_in_task(
         self, t: Task
     ) -> Iterable[Message | Artifact]:
-        if t.artifacts:
-            yield from t.artifacts
-        if t.history:
-            yield from (m for m in t.history if m.role == Role.agent)
-        if t.status.message:
+        yield from t.artifacts
+        yield from (m for m in t.history if m.role == Role.ROLE_AGENT)
+        if t.status.HasField('message'):
             yield t.status.message
 
 
 class MessageTimestamper:
     """Helper to add compliant timestamps to messages and artifacts.
 
-    Timestamps are only added if the extension is activated."""
+    Timestamps are only added if the extension was requested by the client."""
 
     def __init__(self, active: bool, ext: TimestampExtension):
         self._active = active
@@ -236,7 +227,7 @@ class _TimestampingAgentExecutor(AgentExecutor):
     def _maybe_wrap_queue(
         self, context: RequestContext, queue: EventQueue
     ) -> EventQueue:
-        if self._ext.activate(context):
+        if self._ext.is_requested(context):
             return _TimestampingEventQueue(queue, self._ext)
         return queue
 
@@ -253,35 +244,13 @@ class _TimestampingEventQueue(EventQueue):
         self._delegate = delegate
         self._ext = ext
 
-    async def enqueue_event(
-        self,
-        event: Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent,
-    ) -> None:
-        # If we're here, we're activated. Timestamp everything.
+    async def enqueue_event(self, event: Event) -> None:
+        # If we're here, the extension was requested. Timestamp everything.
         self._ext.timestamp_event(event)
         return await self._delegate.enqueue_event(event)
 
-    # Finish out all delegate methods.
 
-    async def dequeue_event(
-        self, no_wait: bool = False
-    ) -> Message | Task | TaskStatusUpdateEvent | TaskArtifactUpdateEvent:
-        return await self._delegate.dequeue_event(no_wait)
-
-    async def close(self) -> None:
-        return await self._delegate.close()
-
-    def tap(self) -> EventQueue:
-        return self._delegate.tap()
-
-    def is_closed(self) -> bool:
-        return self._delegate.is_closed()
-
-    def task_done(self) -> None:
-        return self._delegate.task_done()
-
-
-_MESSAGING_METHODS = {'message/send', 'message/stream'}
+_MESSAGING_METHODS = {'send_message', 'send_message_streaming'}
 
 
 class _TimestampClientFactory(ClientFactory):
@@ -301,102 +270,147 @@ class _TimestampClientFactory(ClientFactory):
     def create(
         self,
         card: AgentCard,
-        consumers: list[Consumer] | None = None,
         interceptors: list[ClientCallInterceptor] | None = None,
     ) -> Client:
-        interceptors = interceptors or []
+        interceptors = list(interceptors or [])
         interceptors.append(self._ext.client_interceptor())
-        return self._delegate.create(card, consumers, interceptors)
+        return self._delegate.create(card, interceptors)
 
 
 class _TimestampingClient(Client):
     """A Client decorator that adds timestamps to outgoing messages."""
 
     def __init__(self, delegate: Client, ext: TimestampExtension):
+        super().__init__()
         self._delegate = delegate
         self._ext = ext
 
     async def send_message(
         self,
-        request: Message,
+        request: SendMessageRequest,
         *,
         context: ClientCallContext | None = None,
-    ) -> AsyncIterator[ClientEvent | Message]:
-        self._ext.add_timestamp(request)
+    ) -> AsyncIterator[StreamResponse]:
+        self._ext.add_timestamp(request.message)
         async for e in self._delegate.send_message(request, context=context):
             yield e
 
     async def get_task(
         self,
-        request: TaskQueryParams,
+        request: GetTaskRequest,
         *,
         context: ClientCallContext | None = None,
     ) -> Task:
         return await self._delegate.get_task(request, context=context)
 
+    async def list_tasks(
+        self,
+        request: ListTasksRequest,
+        *,
+        context: ClientCallContext | None = None,
+    ) -> ListTasksResponse:
+        return await self._delegate.list_tasks(request, context=context)
+
     async def cancel_task(
-        self, request: TaskIdParams, *, context: ClientCallContext | None = None
+        self,
+        request: CancelTaskRequest,
+        *,
+        context: ClientCallContext | None = None,
     ) -> Task:
         return await self._delegate.cancel_task(request, context=context)
 
-    async def set_task_callback(
+    async def create_task_push_notification_config(
         self,
         request: TaskPushNotificationConfig,
         *,
         context: ClientCallContext | None = None,
     ) -> TaskPushNotificationConfig:
-        return await self._delegate.set_task_callback(request, context=context)
+        return await self._delegate.create_task_push_notification_config(
+            request, context=context
+        )
 
-    async def get_task_callback(
+    async def get_task_push_notification_config(
         self,
-        request: GetTaskPushNotificationConfigParams,
+        request: GetTaskPushNotificationConfigRequest,
         *,
         context: ClientCallContext | None = None,
     ) -> TaskPushNotificationConfig:
-        return await self._delegate.get_task_callback(request, context=context)
+        return await self._delegate.get_task_push_notification_config(
+            request, context=context
+        )
 
-    async def resubscribe(
-        self, request: TaskIdParams, *, context: ClientCallContext | None = None
-    ) -> AsyncIterator[ClientEvent]:
-        async for e in self._delegate.resubscribe(request, context=context):
+    async def list_task_push_notification_configs(
+        self,
+        request: ListTaskPushNotificationConfigsRequest,
+        *,
+        context: ClientCallContext | None = None,
+    ) -> ListTaskPushNotificationConfigsResponse:
+        return await self._delegate.list_task_push_notification_configs(
+            request, context=context
+        )
+
+    async def delete_task_push_notification_config(
+        self,
+        request: DeleteTaskPushNotificationConfigRequest,
+        *,
+        context: ClientCallContext | None = None,
+    ) -> None:
+        return await self._delegate.delete_task_push_notification_config(
+            request, context=context
+        )
+
+    async def subscribe(
+        self,
+        request: SubscribeToTaskRequest,
+        *,
+        context: ClientCallContext | None = None,
+    ) -> AsyncIterator[StreamResponse]:
+        async for e in self._delegate.subscribe(request, context=context):
             yield e
 
-    async def get_card(
-        self, *, context: ClientCallContext | None = None
+    async def get_extended_agent_card(
+        self,
+        request: GetExtendedAgentCardRequest,
+        *,
+        context: ClientCallContext | None = None,
+        signature_verifier: Callable[[AgentCard], None] | None = None,
     ) -> AgentCard:
-        return await self._delegate.get_card(context=context)
+        return await self._delegate.get_extended_agent_card(
+            request,
+            context=context,
+            signature_verifier=signature_verifier,
+        )
+
+    async def close(self) -> None:
+        await self._delegate.close()
 
 
 class _TimestampingClientInterceptor(ClientCallInterceptor):
-    """A client interceptor that adds timestamps to outgoing messages."""
+    """A client interceptor that adds timestamps to outgoing messages and
+    requests the timestamp extension via the A2A-Extensions header."""
 
     def __init__(self, ext: TimestampExtension):
         self._ext = ext
 
-    async def intercept(
-        self,
-        method_name: str,
-        request_payload: dict[str, Any],
-        http_kwargs: dict[str, Any],
-        agent_card: AgentCard | None,
-        context: ClientCallContext | None,
-    ) -> tuple[dict[str, Any], dict[str, Any]]:
+    async def before(self, args: BeforeArgs) -> None:
         if (
-            not self._ext.is_supported(agent_card)
-            or method_name not in _MESSAGING_METHODS
+            not self._ext.is_supported(args.agent_card)
+            or args.method not in _MESSAGING_METHODS
+            or not isinstance(args.input, SendMessageRequest)
         ):
-            return (request_payload, http_kwargs)
-        body: SendMessageRequest | SendStreamingMessageRequest
-        if method_name == 'message/send':
-            body = SendMessageRequest.model_validate(request_payload)
-        else:
-            body = SendStreamingMessageRequest.model_validate(request_payload)
-        self._ext.timestamp_request_message(body)
-        # Request that we activate the extension, and timestamp the message.
-        return (
-            body.model_dump(),
-            self._ext.request_activation_http(http_kwargs),
+            return
+        # Timestamp the outgoing message.
+        self._ext.timestamp_request_message(args.input)
+        # Request the extension via the A2A-Extensions header. Other
+        # interceptors' extensions are preserved by with_a2a_extensions.
+        if args.context is None:
+            args.context = ClientCallContext()
+        args.context.service_parameters = ServiceParametersFactory.create_from(
+            args.context.service_parameters, [with_a2a_extensions([URI])]
         )
+
+    async def after(self, args: AfterArgs) -> None:
+        return None
 
 
 __all__ = [
