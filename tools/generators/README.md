@@ -44,7 +44,7 @@ Generate Agent Cards conforming to the official A2A Protocol specification.
 
 Place your generated Agent Card at the standard discovery location:
 
-```
+```text
 https://yourdomain.com/.well-known/agent-card.json
 ```
 
@@ -60,7 +60,7 @@ See the `examples/` directory for sample Agent Cards:
 
 ## Files
 
-```
+```text
 tools/generators/
 ├── README.md
 ├── A2A_Standard_Agent_Card_Generator.ipynb
@@ -85,9 +85,9 @@ tools/generators/
 
 ## Author
 
-**Concept & Design:** Paola Di Maio — [Center for Systems, Knowledge Representation and Neuroscience, Ronin Institute](https://ronininstitute.org/)  
-**Implementation:** Claude (Anthropic)  
-**Affiliation:** Chair, [W3C AI Knowledge Representation Community Group](https://www.w3.org/community/ai-kr/)
+- **Concept & Design:** Paola Di Maio — [Center for Systems, Knowledge Representation and Neuroscience, Ronin Institute](https://ronininstitute.org/)
+- **Implementation:** Claude (Anthropic)
+- **Affiliation:** Chair, [W3C AI Knowledge Representation Community Group](https://www.w3.org/community/ai-kr/)
 
 ## License
 
