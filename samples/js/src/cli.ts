@@ -47,7 +47,7 @@ function generateId(): string { // Renamed for more general use
 let currentTaskId: string | undefined = undefined; // Initialize as undefined
 let currentContextId: string | undefined = undefined; // Initialize as undefined
 const serverUrl = process.argv[2] || "http://localhost:41241"; // Agent's base URL
-const client = new A2AClient(serverUrl);
+let client: A2AClient;
 let agentName = "Agent"; // Default, try to get from agent card later
 
 // --- Readline Setup ---
@@ -157,15 +157,16 @@ function printMessageContent(message: Message) {
   });
 }
 
-// --- Agent Card Fetching ---
+// --- Agent Card Fetching & Client Initialization ---
+// Initializes the A2AClient using fromCardUrl() and displays the agent card.
+// fromCardUrl() requires the full card URL, so we append the well-known path to the base URL.
 async function fetchAndDisplayAgentCard() {
-  // Use the client's getAgentCard method.
-  // The client was initialized with serverUrl, which is the agent's base URL.
   console.log(
     colorize("dim", `Attempting to fetch agent card from agent at: ${serverUrl}`)
   );
   try {
-    // client.getAgentCard() uses the agentBaseUrl provided during client construction
+    const cardUrl = new URL(".well-known/agent-card.json", serverUrl.endsWith("/") ? serverUrl : serverUrl + "/").toString();
+    client = await A2AClient.fromCardUrl(cardUrl);
     const card: AgentCard = await client.getAgentCard();
     agentName = card.name || "Agent"; // Update global agent name
     console.log(colorize("green", `✓ Agent Card Found:`));
