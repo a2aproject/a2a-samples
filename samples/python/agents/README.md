@@ -42,8 +42,11 @@ A travel assistant demo implemented based on Google's official [a2a-python](http
 * [**Any-Agent Adversarial Multi-Agent**](/samples/python/agents/any_agent_adversarial_multiagent/README.md)  
 Demonstrates an adversarial multi-agent system with competing attacker and defender agents using the A2A protocol and any-agent library.
 
-* [**Content Planner Agent**](/samples/python/agents/content_planner/README.md)  
+* [**Content Planner Agent**](/samples/python/agents/content_planner/README.md)
 Sample agent that creates a detailed content outline given a high-level description of the content that's needed by using Google Search and the Google ADK.
+
+* [**Blueprint Governed Agent**](/samples/python/agents/blueprint_governed_agent/README.md)
+Minimal file agent that enforces [AI Design Blueprint](https://aidesignblueprint.com) governance principles using native A2A primitives: explicit approval gate before destructive actions (`TASK_STATE_INPUT_REQUIRED`), real-time progress streaming (`TaskStatusUpdateEvent`), and mid-task cancellation (`cancel()` handler).
 
 ## Other ADK Samples
 
