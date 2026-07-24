@@ -10,8 +10,19 @@ from a2a.server.tasks import TaskUpdater
 from a2a.types import TaskState
 
 
+class EchoAgent:
+    """Echo Agent."""
+
+    async def invoke(self, user_request: str) -> str:
+        """Invoke the Echo agent to generate a response."""
+        return f'hello! ({user_request})' if user_request else 'hello!'
+
+
 class EchoExecutor(AgentExecutor):
     """Echo Executor implementation."""
+
+    def __init__(self) -> None:
+        self.agent = EchoAgent()
 
     async def execute(
         self,
@@ -34,7 +45,7 @@ class EchoExecutor(AgentExecutor):
         )
 
         query = get_message_text(context.message)
-        result = f'hello! ({query})' if query else 'hello!'
+        result = await self.agent.invoke(user_request=query)
 
         await task_updater.add_artifact(parts=[new_text_part(text=result, media_type='text/plain')])
 
