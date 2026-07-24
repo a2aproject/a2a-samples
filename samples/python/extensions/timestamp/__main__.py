@@ -11,9 +11,8 @@ from a2a.types import (
     AgentCard,
     AgentInterface,
 )
-from starlette.applications import Starlette
-
 from agent_executor import EchoExecutor
+from starlette.applications import Starlette
 from timestamp_ext.core import TimestampExtension
 from timestamp_ext.server import wrap_executor
 

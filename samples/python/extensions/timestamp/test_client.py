@@ -49,7 +49,9 @@ def start_server():
 
 @pytest.mark.asyncio
 async def test_timestamp_extension_round_trip():
-    expected_iso = datetime.datetime.fromtimestamp(TIMESTAMP_UNIX, datetime.timezone.utc).isoformat()
+    expected_iso = datetime.datetime.fromtimestamp(
+        TIMESTAMP_UNIX, datetime.timezone.utc
+    ).isoformat()
     ext = TimestampExtension(now_fn=lambda: TIMESTAMP_UNIX)
 
     async with httpx.AsyncClient(base_url=_AGENT_URL) as httpx_client:
@@ -127,8 +129,8 @@ async def run_client(text_query: str = 'hi'):
             match chunk.WhichOneof('payload'):
                 case 'artifact_update':
                     art = chunk.artifact_update.artifact
-                    ts = (  # noqa: SIM401
-                        art.metadata[TIMESTAMP_FIELD]
+                    ts = (
+                        art.metadata[TIMESTAMP_FIELD]  # noqa: SIM401
                         if TIMESTAMP_FIELD in art.metadata
                         else 'no timestamp'
                     )
@@ -136,8 +138,8 @@ async def run_client(text_query: str = 'hi'):
                 case 'status_update':
                     status = chunk.status_update.status
                     if status.HasField('message'):
-                        ts = (  # noqa: SIM401
-                            status.message.metadata[TIMESTAMP_FIELD]
+                        ts = (
+                            status.message.metadata[TIMESTAMP_FIELD]  # noqa: SIM401
                             if TIMESTAMP_FIELD in status.message.metadata
                             else 'no timestamp'
                         )

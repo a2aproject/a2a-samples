@@ -11,10 +11,10 @@ The extension showcases how to enrich outgoing A2A messages and artifacts with c
 The package is structured to isolate library concerns from runnable demonstration code:
 
 * **`timestamp_ext/`**: The core library package.
-    * **`core.py`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
-    * **`server.py`**: Houses server-side decorators (`_TimestampingAgentExecutor`, `_TimestampingEventQueue`) and the public `wrap_executor` function.
-    * **`client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `client_interceptor`). It isolates all client-specific Protobuf imports.
-    * **`__init__.py`**: Exposes only the core public exports for general usage.
+  * **`core.py`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
+  * **`server.py`**: Houses server-side decorators (`_TimestampingAgentExecutor`, `_TimestampingEventQueue`) and the public `wrap_executor` function.
+  * **`client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `client_interceptor`). It isolates all client-specific Protobuf imports.
+  * **`__init__.py`**: Exposes only the core public exports for general usage.
 * **`__main__.py`**: Configures and launches the Starlette ASGI web server demonstrating the timestamp extension on an Echo agent.
 * **`agent_executor.py`**: Implements the A2A agent executor class (`EchoExecutor`) to process and echo text requests.
 * **`test_client.py`**: An interactive CLI test client demonstrating how to wrap a client factory and inspect stamped response metadata.
@@ -63,8 +63,7 @@ ext = TimestampExtension()
 
 # 2. Wrap the client factory
 factory = wrap_client_factory(
-    factory=ClientFactory(config=ClientConfig(httpx_client=httpx_client)),
-    ext=ext
+    factory=ClientFactory(config=ClientConfig(httpx_client=httpx_client)), ext=ext
 )
 client = factory.create(card=card)
 ```
