@@ -32,7 +32,7 @@ func TestTimestampExtensionRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to listen: %v", err)
 	}
-	defer listener.Close()
+	defer func() { _ = listener.Close() }()
 
 	baseURL := fmt.Sprintf("http://%s", listener.Addr().String())
 	serverURL := fmt.Sprintf("%s/invoke", baseURL)
@@ -43,7 +43,7 @@ func TestTimestampExtensionRoundTrip(t *testing.T) {
 	go func() {
 		_ = server.Serve(listener)
 	}()
-	defer server.Close()
+	defer func() { _ = server.Close() }()
 
 	// Resolve agent card from server using base URL
 	resolvedCard, err := agentcard.DefaultResolver.Resolve(ctx, baseURL)

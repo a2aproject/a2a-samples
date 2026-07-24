@@ -28,10 +28,10 @@ To enable the timestamp extension on your A2A agent, advertise support in the `A
 
 ```go
 import (
-	"samples/go/extensions/timestamp/timestamp_ext"
+    "samples/go/extensions/timestamp/timestamp_ext"
 
-	"github.com/a2aproject/a2a-go/v2/a2a"
-	"github.com/a2aproject/a2a-go/v2/a2asrv"
+    "github.com/a2aproject/a2a-go/v2/a2a"
+    "github.com/a2aproject/a2a-go/v2/a2asrv"
 )
 
 // 1. Initialize the extension (optionally with a custom clock)
@@ -42,8 +42,8 @@ card := ext.AddToCard(&a2a.AgentCard{ ... })
 
 // 3. Setup handler with interceptor & wrapped executor
 handler := a2asrv.NewHandler(
-	timestamp_ext.WrapExecutor(&MyExecutor{}, ext),
-	a2asrv.WithExecutorContextInterceptor(timestamp_ext.NewServerInterceptor(ext)),
+    timestamp_ext.WrapExecutor(&MyExecutor{}, ext),
+    a2asrv.WithExecutorContextInterceptor(timestamp_ext.NewServerInterceptor(ext)),
 )
 ```
 
@@ -55,9 +55,9 @@ To request the extension from a server and read timestamps, pass `ClientIntercep
 
 ```go
 import (
-	"samples/go/extensions/timestamp/timestamp_ext"
+    "samples/go/extensions/timestamp/timestamp_ext"
 
-	"github.com/a2aproject/a2a-go/v2/a2aclient"
+    "github.com/a2aproject/a2a-go/v2/a2aclient"
 )
 
 // 1. Initialize the extension
