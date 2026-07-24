@@ -15,12 +15,12 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
 
       - name: GitHub Super Linter
-        uses: super-linter/super-linter/slim@v8
+        uses: super-linter/super-linter/slim@9e863354e3ff62e0727d37183162c4a88873df41 # v8
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -52,3 +52,28 @@ jobs:
           VALIDATE_BIOME_FORMAT: false
           VALIDATE_BIOME_LINT: false
           VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
+
+  go-lint:
+    name: Lint Go
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Set up Go
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version: stable
+
+      - name: Lint all Go modules
+        run: |
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+          status=0
+          while IFS= read -r dir; do
+            echo "::group::Linting $dir"
+            (cd "$dir" && golangci-lint run ./...) || status=$?
+            echo "::endgroup::"
+          done < <(find . -name go.mod -exec dirname {} \;)
+          exit $status

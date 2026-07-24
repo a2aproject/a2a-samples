@@ -1,0 +1,136 @@
+services:
+  # --- Infrastructure ---
+
+  nats:
+    image: nats:latest
+    container_name: nats
+    command: ["--jetstream", "--store_dir=/data", "--config=/etc/nats/nats.conf"]
+    volumes:
+      - ./nats.conf:/etc/nats/nats.conf:ro
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+  nats-init:
+    image: natsio/nats-box:latest
+    container_name: nats-init
+    depends_on:
+      - nats
+    restart: "no"
+    environment:
+      NATS_URL: nats://nats:4222
+    volumes:
+      - ./nats-init.sh:/nats-init.sh:ro
+    entrypoint: ["/bin/sh", "/nats-init.sh"]
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: planner
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3306:3306"
+
+  # --- Load Balancer ---
+  # Single nginx instance serving as both external and internal load balancer.
+  # External (port 8080): entry point for clients, routes to orchestrator replicas.
+  # Internal (port 80):   Host-header routing between services.
+
+  lb:
+    image: nginx:alpine
+    networks:
+      default:
+        aliases:
+          - orchestrator-svc
+          - researcher-svc
+          - analyzer-svc
+          - synthesizer-svc
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8080:8080" # external: clients → orchestrator
+      - "8081:80"   # direct access to internal LB
+    depends_on:
+      - researcher
+      - analyzer
+      - synthesizer
+
+  # --- Application Services ---
+
+  orchestrator:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      NODE_TYPE: orchestrator
+      SERVICE_URL: http://orchestrator-svc
+      NATS_URL: nats://nats:4222
+      MYSQL_DSN: root:root@tcp(mysql:3306)/planner?parseTime=true
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      REPORT_URL: ${REPORT_URL}
+    deploy:
+      replicas: 2
+    depends_on:
+      nats-init:
+        condition: service_completed_successfully
+      mysql:
+        condition: service_started
+      lb:
+        condition: service_started
+
+  researcher:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      NODE_TYPE: researcher
+      SERVICE_URL: http://researcher
+      NATS_URL: nats://nats:4222
+      MYSQL_DSN: root:root@tcp(mysql:3306)/planner?parseTime=true
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+    deploy:
+      replicas: 3
+    depends_on:
+      nats-init:
+        condition: service_completed_successfully
+      mysql:
+        condition: service_started
+
+  analyzer:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      NODE_TYPE: analyzer
+      SERVICE_URL: http://analyzer
+      NATS_URL: nats://nats:4222
+      MYSQL_DSN: root:root@tcp(mysql:3306)/planner?parseTime=true
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+    deploy:
+      replicas: 2
+    depends_on:
+      nats-init:
+        condition: service_completed_successfully
+      mysql:
+        condition: service_started
+
+  synthesizer:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      NODE_TYPE: synthesizer
+      SERVICE_URL: http://synthesizer
+      NATS_URL: nats://nats:4222
+      MYSQL_DSN: root:root@tcp(mysql:3306)/planner?parseTime=true
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+    deploy:
+      replicas: 2
+    depends_on:
+      nats-init:
+        condition: service_completed_successfully
+      mysql:
+        condition: service_started

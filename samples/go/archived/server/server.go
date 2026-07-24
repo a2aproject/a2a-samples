@@ -36,7 +36,7 @@ func NewA2AServer(agentCard models.AgentCard, handler func(*models.Task, *models
 func (s *A2AServer) Start() error {
 	mux := http.NewServeMux()
 	mux.Handle(s.basePath, s)
-	return http.ListenAndServe(fmt.Sprintf(":%d", s.port), mux)
+	return http.ListenAndServe(fmt.Sprintf(":%d", s.port), mux) //nolint:gosec // G114: sample code, not production
 }
 
 // ServeHTTP implements the http.Handler interface
@@ -60,7 +60,7 @@ func (s *A2AServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(response)
+		_ = json.NewEncoder(w).Encode(response) //nolint:errcheck
 		return
 	}
 
@@ -108,7 +108,7 @@ func (s *A2AServer) handleTaskSend(w http.ResponseWriter, req *models.JSONRPCReq
 		s.sendError(w, id, models.ErrorCodeInvalidRequest, "Invalid parameters")
 		return
 	}
-	if err := json.Unmarshal(paramsBytes, &params); err != nil {
+	if unmarshalErr := json.Unmarshal(paramsBytes, &params); unmarshalErr != nil {
 		s.sendError(w, id, models.ErrorCodeInvalidRequest, "Invalid parameters")
 		return
 	}
@@ -206,7 +206,7 @@ func (s *A2AServer) sendResponse(w http.ResponseWriter, id string, result interf
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	_ = json.NewEncoder(w).Encode(response) //nolint:errcheck
 }
 
 // sendError sends a JSON-RPC error response
@@ -225,7 +225,7 @@ func (s *A2AServer) sendError(w http.ResponseWriter, id string, code models.Erro
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	_ = json.NewEncoder(w).Encode(response) //nolint:errcheck
 }
 
 func (s *A2AServer) handleStreamingTask(w http.ResponseWriter, r *http.Request, params models.TaskSendParams) {

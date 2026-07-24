@@ -120,4 +120,4 @@ The test suite verifies:
 - JSON serialization/deserialization
 - Type validation
 - Error handling
-- Task state transitions 
+- Task state transitions

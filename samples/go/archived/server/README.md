@@ -99,4 +99,4 @@ The test suite includes examples of:
 - Getting task status
 - Canceling tasks
 - Streaming task updates
-- Error handling 
+- Error handling
