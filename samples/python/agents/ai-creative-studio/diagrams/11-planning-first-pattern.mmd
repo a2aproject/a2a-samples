@@ -1,0 +1,134 @@
+%% Planning-First Orchestration Pattern
+%% Shows how orchestrator analyzes, plans, then executes
+
+stateDiagram-v2
+    [*] --> ReceiveBrief: User submits<br/>campaign brief
+
+    state "🤔 ANALYSIS PHASE" as analysis {
+        ReceiveBrief --> AnalyzeComplexity: Analyze request
+
+        state AnalyzeComplexity {
+            [*] --> CheckKeywords: Look for keywords
+            CheckKeywords --> DetermineScope: "complete campaign"<br/>vs "just research"
+            DetermineScope --> CountAgents: How many agents needed?
+        }
+
+        CountAgents --> SimpleTask: 1 agent needed
+        CountAgents --> ComplexTask: 5 agents needed
+
+        state SimpleTask {
+            note right of SimpleTask
+                Examples:
+                • "Research the market"
+                • "Write 3 posts"
+                • "Review this copy"
+            end note
+        }
+
+        state ComplexTask {
+            note right of ComplexTask
+                Examples:
+                • "Create complete campaign"
+                • "Full social media package"
+                • "Campaign with timeline"
+            end note
+        }
+    }
+
+    state "📋 PLANNING PHASE" as planning {
+        SimpleTask --> CreateSimplePlan: Create 1-step plan
+        ComplexTask --> CreateComplexPlan: Create 5-step plan
+
+        state CreateComplexPlan {
+            [*] --> Step1: 1. Brand Strategist
+            Step1 --> Step2: 2. Copywriter
+            Step2 --> Step3: 3. Designer
+            Step3 --> Step4: 4. Critic
+            Step4 --> Step5: 5. Project Manager
+            Step5 --> [*]
+        }
+
+        CreateSimplePlan --> AnnouncePlan
+        CreateComplexPlan --> AnnouncePlan
+        AnnouncePlan --> [*]: Present plan to user
+    }
+
+    state "🚀 EXECUTION PHASE" as execution {
+        planning --> ExecuteSequentially
+
+        state "Sequential Execution with Verification" as ExecuteSequentially {
+            [*] --> CallAgent: Call next agent in plan
+
+            CallAgent --> WaitForResponse: Wait for tool_output
+
+            WaitForResponse --> VerifySuccess: Check response
+
+            state VerifySuccess <<choice>>
+            VerifySuccess --> ConfirmSuccess: ✅ Success detected
+            VerifySuccess --> ReportError: ❌ Error detected
+
+            ConfirmSuccess --> UpdateUser: Inform user of progress
+
+            UpdateUser --> CheckMoreAgents: More agents in plan?
+
+            state CheckMoreAgents <<choice>>
+            CheckMoreAgents --> CallAgent: Yes, continue
+            CheckMoreAgents --> CompileResults: No, all done
+
+            ReportError --> StopWorkflow: STOP sequence
+            StopWorkflow --> AskUser: Ask for user decision
+            AskUser --> [*]: Wait for guidance
+
+            CompileResults --> [*]: Present complete campaign
+        }
+    }
+
+    state "✅ VERIFICATION RULES" as verification {
+        state "Must Do" as must {
+            must1: ✅ WAIT for tool_output
+            must2: ✅ VERIFY success
+            must3: ✅ CONFIRM to user
+            must4: ✅ PASS context to next agent
+        }
+
+        state "Must NOT Do" as mustnot {
+            mustnot1: ❌ Assume success
+            mustnot2: ❌ Invent results
+            mustnot3: ❌ Skip verification
+            mustnot4: ❌ Continue after error
+        }
+    }
+
+    execution --> verification: Follow rules
+
+    state "🎯 OUTCOMES" as outcomes {
+        state Success {
+            s1: All agents called
+            s2: Full results presented
+            s3: User receives complete campaign
+        }
+
+        state Failure {
+            f1: Agent failed
+            f2: Workflow stopped
+            f3: Error reported to user
+            f4: Awaiting user decision
+        }
+    }
+
+    verification --> outcomes
+
+    note right of analysis
+        Key Innovation: Analyze BEFORE executing
+        Prevents premature delegation
+    end note
+
+    note right of planning
+        Key Innovation: Announce plan FIRST
+        Provides transparency to user
+    end note
+
+    note right of execution
+        Key Innovation: Verify EACH step
+        Prevents cascading failures
+    end note

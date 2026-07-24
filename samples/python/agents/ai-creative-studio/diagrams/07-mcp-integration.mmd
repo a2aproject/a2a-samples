@@ -1,0 +1,82 @@
+%% MCP Integration - Notion Connection via Model Context Protocol
+%% Shows how Project Manager connects to Notion API
+
+sequenceDiagram
+    participant Orchestrator as 🎬 Creative Director
+    participant PM as 📋 Project Manager<br/>(ADK Agent)
+    participant MCP as 🔌 McpToolset<br/>(ADK MCP Integration)
+    participant NPX as 📦 npx Process<br/>(Node.js)
+    participant NotionMCP as 🖥️ @notionhq/notion-mcp-server<br/>(MCP Server)
+    participant NotionAPI as 📝 Notion API
+
+    Note over Orchestrator: Campaign complete,<br/>need timeline
+
+    Orchestrator->>PM: Create project timeline<br/>(Campaign details via A2A)
+
+    Note over PM: Agent receives task
+
+    PM->>PM: Determine need for<br/>schema discovery
+
+    rect rgb(66, 133, 244)
+    Note over PM,NotionAPI: 🔍 DYNAMIC SCHEMA DISCOVERY
+
+    PM->>MCP: Use tool: API-retrieve-a-database<br/>(Projects DB ID)
+
+    MCP->>NPX: Start MCP server if needed<br/>npx -y @notionhq/notion-mcp-server
+
+    NPX->>NotionMCP: Launch server<br/>(Stdio transport)
+
+    NotionMCP->>NotionAPI: GET /v1/databases/{id}
+
+    NotionAPI->>NotionMCP: Database schema:<br/>- Properties<br/>- Types<br/>- Options
+
+    NotionMCP->>MCP: Return schema via MCP protocol
+
+    MCP->>PM: Schema information
+
+    Note over PM: Adapt to actual schema<br/>No hardcoded property names!
+    end
+
+    rect rgb(52, 168, 83)
+    Note over PM,NotionAPI: ✏️ CREATE PROJECT PAGE
+
+    PM->>MCP: Use tool: API-post-page<br/>(Projects DB, page content)
+
+    MCP->>NotionMCP: MCP request
+
+    NotionMCP->>NotionAPI: POST /v1/pages<br/>(Create project page)
+
+    NotionAPI->>NotionMCP: Project page created<br/>(page_id)
+
+    NotionMCP->>MCP: Success response
+
+    MCP->>PM: Project page ID
+    end
+
+    rect rgb(52, 168, 83)
+    Note over PM,NotionAPI: 📝 CREATE TASK PAGES
+
+    loop For each task (5-10 tasks)
+        PM->>MCP: Use tool: API-post-page<br/>(Tasks DB, task content + project relation)
+
+        MCP->>NotionMCP: MCP request
+
+        NotionMCP->>NotionAPI: POST /v1/pages<br/>(Create task, link to project)
+
+        NotionAPI->>NotionMCP: Task page created
+
+        NotionMCP->>MCP: Success response
+
+        MCP->>PM: Task created
+    end
+    end
+
+    Note over PM: Generate text timeline<br/>+ Notion links
+
+    PM->>Orchestrator: ✅ Timeline complete:<br/>• Text-based timeline<br/>• Project page link<br/>• Task page links
+
+    Orchestrator->>Orchestrator: Present to user
+
+    rect rgb(251, 188, 4)
+    Note over PM,NotionAPI: 🔑 KEY INNOVATIONS:<br/>• Dynamic schema discovery<br/>• Multilingual support<br/>• No hardcoded properties<br/>• Two-database architecture<br/>• Stdio MCP transport
+    end

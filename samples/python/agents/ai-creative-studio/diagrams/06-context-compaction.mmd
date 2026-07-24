@@ -1,0 +1,48 @@
+%% Lazy Context Compaction - Solving Token Limit Problem
+%% Shows how context is managed across 5-agent workflow
+
+graph TD
+    START[👤 User: Campaign Brief] --> PLAN[🎬 Create 5-Step Plan]
+
+    PLAN --> A1[🔍 Agent 1: Brand Strategist<br/>Output: ~2000 tokens]
+    A1 --> CTX1[📝 Context: Full output preserved]
+
+    CTX1 --> A2[✍️ Agent 2: Copywriter<br/>Output: ~2500 tokens]
+    A2 --> CTX2[📝 Context: Both outputs preserved]
+
+    CTX2 --> A3[🎨 Agent 3: Designer<br/>Output: ~1800 tokens]
+    A3 --> CTX3[📝 Context: All 3 outputs preserved]
+
+    CTX3 --> COMPACT{⚠️ Compaction Trigger<br/>After 3 agents}
+
+    COMPACT -->|Summarize older context| SUMMARY[🔄 Gemini Flash Summarization<br/>- Agents 1-2: Summarized ~500 tokens<br/>- Agent 3: Full output preserved]
+
+    SUMMARY --> A4[⭐ Agent 4: Critic<br/>Output: ~1500 tokens<br/>Context: Summary + Agent 3 full]
+    A4 --> CTX4[📝 Context: Summary + Agent 3 + Agent 4]
+
+    CTX4 --> A5[📋 Agent 5: Project Manager<br/>Output: ~2000 tokens<br/>Context: Summary + Recent agents full]
+    A5 --> FINAL[✅ Complete Campaign<br/>All agents successfully executed]
+
+    style START fill:#ea4335,color:#fff
+    style COMPACT fill:#fbbc04,color:#000,stroke:#333,stroke-width:3px
+    style SUMMARY fill:#4285f4,color:#fff
+    style FINAL fill:#34a853,color:#fff
+    style A1 fill:#34a853,color:#fff
+    style A2 fill:#34a853,color:#fff
+    style A3 fill:#34a853,color:#fff
+    style A4 fill:#34a853,color:#fff
+    style A5 fill:#34a853,color:#fff
+
+    subgraph "Configuration"
+        CONFIG["⚙️ EventsCompactionConfig<br/>- compaction_interval: 3<br/>- overlap_size: 1<br/>- summarizer: Gemini Flash"]
+    end
+
+    subgraph "Benefits"
+        B1["✅ Prevents token limit failures"]
+        B2["✅ Preserves recent context quality"]
+        B3["✅ Scales to 10+ agents"]
+        B4["✅ Cost efficient"]
+    end
+
+    COMPACT -.-> CONFIG
+    FINAL -.-> B1 & B2 & B3 & B4

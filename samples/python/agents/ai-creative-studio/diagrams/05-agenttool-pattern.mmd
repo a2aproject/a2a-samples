@@ -1,0 +1,64 @@
+%% AgentTool Pattern - Flexible Agent Orchestration
+%% Shows how LLM-driven routing works with wrapped agents
+
+graph TB
+    subgraph "Orchestrator - Creative Director"
+        LLM[🤖 Gemini 2.5 Flash<br/>Planning-First Instruction]
+
+        subgraph "Available Tools (AgentTool Wrappers)"
+            AT1[🔧 brand_strategist<br/>AgentTool]
+            AT2[🔧 copywriter<br/>AgentTool]
+            AT3[🔧 designer<br/>AgentTool]
+            AT4[🔧 critic<br/>AgentTool]
+            AT5[🔧 project_manager<br/>AgentTool]
+        end
+    end
+
+    subgraph "Remote A2A Agents"
+        RA1[📡 RemoteA2aAgent<br/>brand_strategist<br/>URL: https://...]
+        RA2[📡 RemoteA2aAgent<br/>copywriter<br/>URL: https://...]
+        RA3[📡 RemoteA2aAgent<br/>designer<br/>URL: https://...]
+        RA4[📡 RemoteA2aAgent<br/>critic<br/>URL: https://...]
+        RA5[📡 RemoteA2aAgent<br/>project_manager<br/>URL: https://...]
+    end
+
+    subgraph "Cloud Run Services"
+        S1[🔍 Brand Strategist<br/>A2A Server]
+        S2[✍️ Copywriter<br/>A2A Server]
+        S3[🎨 Designer<br/>A2A Server]
+        S4[⭐ Critic<br/>A2A Server]
+        S5[📋 Project Manager<br/>A2A Server]
+    end
+
+    LLM -->|1. Decides which<br/>tool to call| AT1 & AT2 & AT3 & AT4 & AT5
+
+    AT1 -.->|Wraps| RA1
+    AT2 -.->|Wraps| RA2
+    AT3 -.->|Wraps| RA3
+    AT4 -.->|Wraps| RA4
+    AT5 -.->|Wraps| RA5
+
+    RA1 -->|2. A2A Protocol<br/>HTTPS| S1
+    RA2 -->|A2A Protocol<br/>HTTPS| S2
+    RA3 -->|A2A Protocol<br/>HTTPS| S3
+    RA4 -->|A2A Protocol<br/>HTTPS| S4
+    RA5 -->|A2A Protocol<br/>HTTPS| S5
+
+    S1 & S2 & S3 & S4 & S5 -->|3. Response| RA1 & RA2 & RA3 & RA4 & RA5
+    RA1 & RA2 & RA3 & RA4 & RA5 -->|4. Unwrap| AT1 & AT2 & AT3 & AT4 & AT5
+    AT1 & AT2 & AT3 & AT4 & AT5 -->|5. Return to LLM| LLM
+
+    style LLM fill:#fbbc04,color:#000,stroke:#333,stroke-width:3px
+    style AT1 fill:#4285f4,color:#fff
+    style AT2 fill:#4285f4,color:#fff
+    style AT3 fill:#4285f4,color:#fff
+    style AT4 fill:#4285f4,color:#fff
+    style AT5 fill:#4285f4,color:#fff
+    style S1 fill:#34a853,color:#fff
+    style S2 fill:#34a853,color:#fff
+    style S3 fill:#34a853,color:#fff
+    style S4 fill:#34a853,color:#fff
+    style S5 fill:#34a853,color:#fff
+
+    classDef remoteAgent fill:#9aa0a6,color:#fff
+    class RA1,RA2,RA3,RA4,RA5 remoteAgent

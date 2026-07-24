@@ -1,0 +1,62 @@
+%% Local vs Cloud Run Configuration - Dual Configuration Pattern
+%% Shows the KEY INNOVATION for making A2A work in both environments
+
+graph TB
+    subgraph "🔧 THE CHALLENGE"
+        PROB1[Agent card must advertise<br/>correct public URL]
+        PROB2[Local: http://localhost:8082]
+        PROB3[Cloud Run: https://service-xxx.run.app:443]
+        PROB1 --> PROB2 & PROB3
+    end
+
+    subgraph "✅ THE SOLUTION: Dual Configuration"
+        subgraph "Configuration Variables"
+            LISTEN[🎧 Listening Configuration<br/>HOST = 0.0.0.0<br/>PORT = 8080/8082<br/><br/>Where uvicorn binds]
+
+            PUBLIC[🌐 Public Configuration<br/>PUBLIC_HOST = ?<br/>PUBLIC_PORT = ?<br/>PROTOCOL = ?<br/><br/>What agent card advertises]
+        end
+
+        CODE[💻 Agent Code:<br/>a2a_app = to_a2a<br/>    root_agent,<br/>    host=PUBLIC_HOST,<br/>    port=PUBLIC_PORT,<br/>    protocol=PROTOCOL<br/><br/>uvicorn.run<br/>    a2a_app,<br/>    host=HOST,<br/>    port=PORT]
+    end
+
+    subgraph "🏠 LOCAL ENVIRONMENT"
+        LOCAL_ENV[⚙️ Local .env:<br/>HOST=0.0.0.0<br/>PORT=8082<br/>PUBLIC_HOST=localhost<br/>PUBLIC_PORT=8082<br/>PROTOCOL=http]
+
+        LOCAL_CARD[📋 Agent Card:<br/>/.well-known/agent.json<br/>{<br/>  rpc_url: http://localhost:8082<br/>}]
+
+        LOCAL_SERVER[🖥️ Uvicorn Server:<br/>Listening on 0.0.0.0:8082]
+
+        LOCAL_ENV --> CODE
+        CODE --> LOCAL_CARD
+        CODE --> LOCAL_SERVER
+    end
+
+    subgraph "☁️ CLOUD RUN ENVIRONMENT"
+        CLOUD_ENV[⚙️ Cloud Run env vars<br/>set by deployment:<br/>HOST=0.0.0.0<br/>PORT=8080<br/>PUBLIC_HOST=brand-strategist-xxx.us-central1.run.app<br/>PUBLIC_PORT=443<br/>PROTOCOL=https]
+
+        CLOUD_CARD[📋 Agent Card:<br/>/.well-known/agent.json<br/>{<br/>  rpc_url: https://brand-strategist-xxx.us-central1.run.app:443<br/>}]
+
+        CLOUD_SERVER[🖥️ Uvicorn Server:<br/>Listening on 0.0.0.0:8080<br/><br/>Cloud Run routes external<br/>443 → internal 8080]
+
+        CLOUD_ENV --> CODE
+        CODE --> CLOUD_CARD
+        CODE --> CLOUD_SERVER
+    end
+
+    subgraph "🎯 DEPLOYMENT FLOW"
+        DEPLOY1[1️⃣ Deploy to Cloud Run<br/>gcloud run deploy]
+        DEPLOY2[2️⃣ Extract public URL<br/>from deployment output]
+        DEPLOY3[3️⃣ Update agent with<br/>PUBLIC_HOST/PORT/PROTOCOL]
+        DEPLOY4[4️⃣ Agent card now<br/>advertises correct URL]
+
+        DEPLOY1 --> DEPLOY2 --> DEPLOY3 --> DEPLOY4
+    end
+
+    style CODE fill:#4285f4,color:#fff,stroke:#333,stroke-width:3px
+    style LOCAL_CARD fill:#34a853,color:#fff
+    style CLOUD_CARD fill:#34a853,color:#fff
+    style PROB1 fill:#ea4335,color:#fff
+    style DEPLOY3 fill:#fbbc04,color:#000
+
+    LISTEN -.-> CODE
+    PUBLIC -.-> CODE
