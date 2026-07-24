@@ -6,9 +6,9 @@ Demonstrates a foundational Agent-to-Agent (A2A) server and client implementatio
 
 The sample codebase is structured around three core components.
 
-* `index.ts`: Configures and launches the Express web server, defines the public and extended `AgentCard` configurations, and sets up the A2A routes and request handler on port `9999`.
-* `agent_executor.ts`: Implements the `AgentExecutor` interface (`HelloWorldAgentExecutor`) to process incoming requests, manage task lifecycle states, stream progress updates, and attach generated text artifacts.
-* `test_client.ts`: Provides a test client demonstrating how to fetch agent cards and interact with the server via both streaming and non-streaming message requests, plus an interactive CLI mode.
+- `index.ts`: Configures and launches the Express web server, defines the public and extended `AgentCard` configurations, and sets up the A2A routes and request handler on port `9999`.
+- `agent_executor.ts`: Implements the `AgentExecutor` interface (`HelloWorldAgentExecutor`) to process incoming requests, manage task lifecycle states, stream progress updates, and attach generated text artifacts.
+- `test_client.ts`: Provides a test client demonstrating how to fetch agent cards and interact with the server via both streaming and non-streaming message requests, plus an interactive CLI mode.
 
 ## Prerequisites
 
@@ -18,29 +18,30 @@ The sample codebase is structured around three core components.
 
 1. **Install Dependencies**
 
-   Navigate to the sample directory and install dependencies:
+    Navigate to the sample directory and install dependencies:
 
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
 2. **Start the Server**
 
-   Run the A2A agent server locally on port `9999`:
+    Run the A2A agent server locally on port `9999`:
 
-   ```bash
-   npm start
-   ```
+    ```bash
+    npm start
+    ```
 
 3. **Run the Test Client**
 
-   In a separate terminal, execute the test client to verify communication with the agent:
+    In a separate terminal, execute the test client to verify communication with the agent:
 
-   ```bash
-   npm run client
-   ```
+    ```bash
+    npm run client
+    ```
 
 ## Disclaimer
+
 **Important:** The sample code provided is for demonstration purposes and
 illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building
 production applications, it is critical to treat any agent operating outside of
