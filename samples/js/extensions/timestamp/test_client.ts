@@ -6,7 +6,6 @@ import {
 } from '@a2a-js/sdk';
 import {
   ClientFactory,
-  ClientFactoryOptions,
   DefaultAgentCardResolver,
   JsonRpcTransportFactory,
 } from '@a2a-js/sdk/client';
@@ -16,10 +15,10 @@ import {
   wrapClientFactory,
   TIMESTAMP_FIELD,
   TimestampExtension,
-} from '../timestamp_ext/index.js';
+} from './timestamp_ext/index.js';
 
 const AGENT_URL = process.env.AGENT_URL || 'http://127.0.0.1:9998';
-const FIXED_TS = 1700000000.0;
+const TIMESTAMP_UNIX = 1700000000.0;
 
 async function getAgentCard(): Promise<AgentCard> {
   const resolver = new DefaultAgentCardResolver();
@@ -28,9 +27,9 @@ async function getAgentCard(): Promise<AgentCard> {
 }
 
 async function main(): Promise<void> {
-  const expectedIso = new Date(FIXED_TS * 1000).toISOString();
-  // Initialize with FIXED_TS for validation
-  const ext = new TimestampExtension(() => FIXED_TS);
+  const expectedIso = new Date(TIMESTAMP_UNIX * 1000).toISOString();
+  // Initialize with TIMESTAMP_UNIX for validation
+  const ext = new TimestampExtension(() => TIMESTAMP_UNIX);
 
   console.log(`Resolving agent card from ${AGENT_URL}...`);
   const card = await getAgentCard();

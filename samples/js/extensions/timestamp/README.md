@@ -14,6 +14,9 @@ The package is split into separate modules to isolate concerns and prevent clien
 * **`timestamp_ext/server.ts`**: Houses the public `wrapExecutor` function that intercepts agent execution to stamp outgoing events.
 * **`timestamp_ext/client.ts`**: Houses client-side interceptors, decorators, and factory wrappers (`wrapClientFactory`, `clientInterceptor`).
 * **`timestamp_ext/index.ts`**: Exposes only the core public exports for general usage.
+* **`index.ts`**: Configures and launches the Express web server demonstrating the timestamp extension on an Echo agent.
+* **`agent_executor.ts`**: Implements the A2A agent executor class (`EchoExecutor`) and the `EchoAgent` to process and echo text requests.
+* **`test_client.ts`**: An integration test client demonstrating how to wrap a client factory, send a message, and validate stamped response metadata.
 
 ---
 

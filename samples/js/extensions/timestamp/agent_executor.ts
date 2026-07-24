@@ -1,8 +1,5 @@
-import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  AgentCard,
-  AgentSkill,
   Artifact,
   Role,
   Task,
@@ -11,27 +8,25 @@ import {
   TaskStatusUpdateEvent,
 } from '@a2a-js/sdk';
 import {
-  AgentEvent,
   AgentExecutor,
-  DefaultExecutionEventBusManager,
-  DefaultRequestHandler,
   ExecutionEventBus,
-  InMemoryTaskStore,
+  AgentEvent,
   RequestContext,
   UnsupportedOperationError,
 } from '@a2a-js/sdk/server';
-import {
-  agentCardHandler,
-  jsonRpcHandler,
-  UserBuilder,
-} from '@a2a-js/sdk/server/express';
 
-import { TimestampExtension } from '../timestamp_ext/core.js';
-import { wrapExecutor } from '../timestamp_ext/server.js';
+class EchoAgent {
+  async invoke(userRequest: string): Promise<string> {
+    if (userRequest) {
+      return `hello! (${userRequest})`;
+    }
+    return 'hello!';
+  }
+}
 
-const AGENT_URL = 'http://127.0.0.1:9998';
+export class EchoExecutor implements AgentExecutor {
+  private agent = new EchoAgent();
 
-class EchoExecutor implements AgentExecutor {
   async execute(
     requestContext: RequestContext,
     eventBus: ExecutionEventBus
@@ -78,11 +73,23 @@ class EchoExecutor implements AgentExecutor {
     };
     eventBus.publish(AgentEvent.statusUpdate(workingStatus));
 
+    let query = '';
+    if (userMessage.parts) {
+      for (const part of userMessage.parts) {
+        if (part.content?.$case === 'text') {
+          query = part.content.value;
+          break;
+        }
+      }
+    }
+
+    const result = await this.agent.invoke(query);
+
     const artifact: Artifact = {
       artifactId: uuidv4(),
       name: 'result',
       description: 'echo result',
-      parts: [{ content: { $case: 'text', value: 'hello!' }, mediaType: 'text/plain', filename: '', metadata: {} }],
+      parts: [{ content: { $case: 'text', value: result }, mediaType: 'text/plain', filename: '', metadata: {} }],
       extensions: [],
       metadata: {},
     };
@@ -117,64 +124,3 @@ class EchoExecutor implements AgentExecutor {
     throw new UnsupportedOperationError('Cancel is not supported.');
   };
 }
-
-const fixedTs = process.env.TIMESTAMP_EXT_FIXED_CLOCK;
-const ext = fixedTs
-  ? new TimestampExtension(() => parseFloat(fixedTs))
-  : new TimestampExtension();
-
-const baseCard: AgentCard = {
-  provider: undefined,
-  name: 'Echo',
-  description: 'echo agent that demonstrates the timestamp extension',
-  version: '1.0.0',
-  defaultInputModes: ['text'],
-  defaultOutputModes: ['text'],
-  capabilities: {
-    streaming: true,
-    extendedAgentCard: false,
-    extensions: [],
-    pushNotifications: false,
-  },
-  supportedInterfaces: [
-    {
-      protocolBinding: 'JSONRPC',
-      protocolVersion: '1.0',
-      url: AGENT_URL,
-      tenant: '',
-    },
-  ],
-  skills: [],
-  securitySchemes: {},
-  securityRequirements: [],
-  signatures: [],
-};
-
-const card = ext.addToCard(baseCard);
-
-const requestHandler = new DefaultRequestHandler(
-  card,
-  new InMemoryTaskStore(),
-  wrapExecutor(new EchoExecutor(), ext),
-  new DefaultExecutionEventBusManager()
-);
-
-const app = express();
-app.use(express.json());
-
-app.use(
-  '/.well-known/agent-card.json',
-  agentCardHandler({ agentCardProvider: async () => card })
-);
-
-app.use(
-  '/',
-  jsonRpcHandler({
-    requestHandler,
-    userBuilder: UserBuilder.noAuthentication,
-  })
-);
-
-app.listen(9998, () => {
-  console.log('[TimestampEchoServer] Server started on http://127.0.0.1:9998');
-});
