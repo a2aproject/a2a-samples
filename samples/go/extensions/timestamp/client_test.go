@@ -8,20 +8,22 @@ import (
 	"testing"
 	"time"
 
-	"samples/go/extensions/timestamp/timestamp"
+	"samples/go/extensions/timestamp/timestamp_ext"
 
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2aclient"
 	"github.com/a2aproject/a2a-go/v2/a2aclient/agentcard"
 )
 
-var fixedTime = time.Unix(1700000000, 0).UTC()
+const timestampUnix = 1700000000
+
+var fixedTime = time.Unix(timestampUnix, 0).UTC()
 
 func TestTimestampExtensionRoundTrip(t *testing.T) {
 	ctx := context.Background()
 	expectedISO := fixedTime.Format(time.RFC3339Nano)
 
-	ext := timestamp.NewTimestampExtension(timestamp.WithClock(func() time.Time {
+	ext := timestamp_ext.NewTimestampExtension(timestamp_ext.WithClock(func() time.Time {
 		return fixedTime
 	}))
 
@@ -50,7 +52,7 @@ func TestTimestampExtensionRoundTrip(t *testing.T) {
 	}
 
 	// Create client with timestamp interceptor
-	client, err := a2aclient.NewFromCard(ctx, resolvedCard, a2aclient.WithCallInterceptors(timestamp.ClientInterceptor(ext)))
+	client, err := a2aclient.NewFromCard(ctx, resolvedCard, a2aclient.WithCallInterceptors(timestamp_ext.ClientInterceptor(ext)))
 	if err != nil {
 		t.Fatalf("Failed to create client: %v", err)
 	}
@@ -86,14 +88,14 @@ func TestTimestampExtensionRoundTrip(t *testing.T) {
 	}
 
 	for _, art := range artifacts {
-		ts, ok := art.Meta()[timestamp.TimestampField].(string)
+		ts, ok := art.Meta()[timestamp_ext.TimestampField].(string)
 		if !ok || ts != expectedISO {
 			t.Errorf("artifact timestamp = %v, want %v", ts, expectedISO)
 		}
 	}
 
 	for _, msg := range statusMessages {
-		ts, ok := msg.Meta()[timestamp.TimestampField].(string)
+		ts, ok := msg.Meta()[timestamp_ext.TimestampField].(string)
 		if !ok || ts != expectedISO {
 			t.Errorf("status message timestamp = %v, want %v", ts, expectedISO)
 		}
