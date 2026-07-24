@@ -1,5 +1,7 @@
 import {
   AgentCard,
+  Artifact,
+  Message,
   Role,
   SendMessageRequest,
   TaskState,
@@ -60,8 +62,8 @@ async function main(): Promise<void> {
   console.log('\n--- streaming response from the agent ---');
   const stream = client.sendMessageStream(request);
 
-  const artifacts: any[] = [];
-  const statusMessages: any[] = [];
+  const artifacts: Artifact[] = [];
+  const statusMessages: Message[] = [];
 
   for await (const chunk of stream) {
     if (chunk.payload?.$case === 'artifactUpdate') {
@@ -115,5 +117,6 @@ async function main(): Promise<void> {
 
 main().catch((err) => {
   console.error('Error running test client:', err);
+  // eslint-disable-next-line n/no-process-exit
   process.exit(1);
 });

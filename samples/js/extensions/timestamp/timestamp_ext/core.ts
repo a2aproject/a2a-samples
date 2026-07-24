@@ -5,7 +5,6 @@ import {
   Message,
   Role,
   Task,
-  TaskState,
 } from '@a2a-js/sdk';
 import {
   AgentExecutionEvent,

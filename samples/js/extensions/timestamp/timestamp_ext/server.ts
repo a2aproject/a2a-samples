@@ -1,4 +1,4 @@
-import { AgentExecutor, ExecutionEventBus, RequestContext } from '@a2a-js/sdk/server';
+import { AgentExecutor } from '@a2a-js/sdk/server';
 import { TimestampExtension, URI } from './core.js';
 
 export function wrapExecutor(

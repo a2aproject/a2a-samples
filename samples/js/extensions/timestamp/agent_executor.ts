@@ -117,6 +117,7 @@ export class EchoExecutor implements AgentExecutor {
     eventBus.publish(AgentEvent.statusUpdate(completedStatus));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public cancelTask = async (
     _taskId: string,
     _eventBus: ExecutionEventBus

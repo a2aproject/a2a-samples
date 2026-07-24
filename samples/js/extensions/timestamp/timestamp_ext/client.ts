@@ -4,8 +4,8 @@ import {
 } from '@a2a-js/sdk';
 import {
   BeforeArgs,
-  AfterArgs,
   CallInterceptor,
+  Client,
   ClientFactory,
   ClientFactoryOptions,
   ServiceParameters,
@@ -41,7 +41,7 @@ class TimestampingClientFactory extends ClientFactory {
     this.factoryWithInterceptor = new ClientFactory(newOptions);
   }
 
-  override async createFromAgentCard(agentCard: AgentCard): Promise<any> {
+  override async createFromAgentCard(agentCard: AgentCard): Promise<Client> {
     return this.factoryWithInterceptor.createFromAgentCard(agentCard);
   }
 }
@@ -77,7 +77,7 @@ class TimestampingClientInterceptor implements CallInterceptor {
     );
   }
 
-  async after(_args: AfterArgs): Promise<void> {
+  async after(): Promise<void> {
     return;
   }
 }
