@@ -1,4 +1,4 @@
-from core import TIMESTAMP_FIELD, URI, TimestampExtension
+from timestamp_ext.core import TIMESTAMP_FIELD, URI, TimestampExtension
 
 
 __all__ = [

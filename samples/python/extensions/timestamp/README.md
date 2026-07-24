@@ -8,12 +8,16 @@ The extension showcases how to enrich outgoing A2A messages and artifacts with c
 
 ## Architecture & Package Structure
 
-The package is split into separate modules to isolate concerns and prevent client-side dependencies from bloating server-side or core stamping utilities:
+The package is structured to isolate library concerns from runnable demonstration code:
 
-* **`core.py`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
-* **`server.py`**: Houses server-side decorators (`_TimestampingAgentExecutor`, `_TimestampingEventQueue`) and the public `wrap_executor` function.
-* **`client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `client_interceptor`). It isolates all client-specific Protobuf imports.
-* **`__init__.py`**: Exposes only the core public exports for general usage.
+* **`timestamp_ext/`**: The core library package.
+    * **`core.py`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
+    * **`server.py`**: Houses server-side decorators (`_TimestampingAgentExecutor`, `_TimestampingEventQueue`) and the public `wrap_executor` function.
+    * **`client.py`**: Houses client-side interceptors, decorators, and factory wrappers (`wrap_client_factory`, `client_interceptor`). It isolates all client-specific Protobuf imports.
+    * **`__init__.py`**: Exposes only the core public exports for general usage.
+* **`__main__.py`**: Configures and launches the Starlette ASGI web server demonstrating the timestamp extension on an Echo agent.
+* **`agent_executor.py`**: Implements the A2A agent executor class (`EchoExecutor`) to process and echo text requests.
+* **`test_client.py`**: An interactive CLI test client demonstrating how to wrap a client factory and inspect stamped response metadata.
 
 ---
 
@@ -25,8 +29,8 @@ To enable the timestamp extension on your A2A agent, advertise support in the `A
 
 ```python
 from a2a.types.a2a_pb2 import AgentCard
-from timestamp.core import TimestampExtension
-from timestamp.server import wrap_executor
+from timestamp_ext.core import TimestampExtension
+from timestamp_ext.server import wrap_executor
 
 # 1. Initialize the extension
 ext = TimestampExtension()
@@ -51,8 +55,8 @@ To request the extension from a server and read timestamps, wrap your `ClientFac
 
 ```python
 from a2a.client import ClientConfig, ClientFactory
-from timestamp.core import TimestampExtension
-from timestamp.client import wrap_client_factory
+from timestamp_ext.core import TimestampExtension
+from timestamp_ext.client import wrap_client_factory
 
 # 1. Initialize the extension
 ext = TimestampExtension()
@@ -93,7 +97,7 @@ The wrapped factory installs a client interceptor that automatically adds the `A
    Run the A2A agent server locally on port `9998`:
 
    ```bash
-   python -m tests
+   python __main__.py
    ```
 
 3. **Run the Interactive Demo Client**
@@ -102,7 +106,7 @@ The wrapped factory installs a client interceptor that automatically adds the `A
 
    ```bash
    source .venv/bin/activate
-   python tests/test_client.py
+   python test_client.py
    ```
 
 ### Running the Integration Tests

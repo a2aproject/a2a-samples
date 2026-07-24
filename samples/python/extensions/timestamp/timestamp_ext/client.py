@@ -14,7 +14,8 @@ from a2a.types import (
     AgentCard,
     SendMessageRequest,
 )
-from core import URI, TimestampExtension
+
+from timestamp_ext.core import URI, TimestampExtension
 
 
 _MESSAGING_METHODS = {'send_message', 'send_message_streaming'}

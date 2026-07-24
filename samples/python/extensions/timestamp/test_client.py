@@ -19,19 +19,19 @@ from a2a.types import (
     SendMessageRequest,
     TaskState,
 )
-from client import wrap_client_factory
-from core import TIMESTAMP_FIELD, TimestampExtension
+from timestamp_ext.client import wrap_client_factory
+from timestamp_ext.core import TIMESTAMP_FIELD, TimestampExtension
 
 
 _AGENT_URL = 'http://127.0.0.1:9998'
-_FIXED_TS = 1_700_000_000.0
+TIMESTAMP_UNIX = 1_700_000_000.0
 
 
 @pytest.fixture(scope='session', autouse=True)
 def start_server():
     server_path = Path(__file__).parent / '__main__.py'
     env = os.environ.copy()
-    env['TIMESTAMP_EXT_FIXED_CLOCK'] = str(_FIXED_TS)
+    env['TIMESTAMP_EXT_FIXED_CLOCK'] = str(TIMESTAMP_UNIX)
     process = subprocess.Popen(  # noqa: S603
         [sys.executable, str(server_path)],
         stdout=subprocess.PIPE,
@@ -49,8 +49,8 @@ def start_server():
 
 @pytest.mark.asyncio
 async def test_timestamp_extension_round_trip():
-    expected_iso = datetime.datetime.fromtimestamp(_FIXED_TS, datetime.timezone.utc).isoformat()
-    ext = TimestampExtension(now_fn=lambda: _FIXED_TS)
+    expected_iso = datetime.datetime.fromtimestamp(TIMESTAMP_UNIX, datetime.timezone.utc).isoformat()
+    ext = TimestampExtension(now_fn=lambda: TIMESTAMP_UNIX)
 
     async with httpx.AsyncClient(base_url=_AGENT_URL) as httpx_client:
         resolver = A2ACardResolver(httpx_client=httpx_client, base_url=_AGENT_URL)
@@ -127,8 +127,8 @@ async def run_client(text_query: str = 'hi'):
             match chunk.WhichOneof('payload'):
                 case 'artifact_update':
                     art = chunk.artifact_update.artifact
-                    ts = (
-                        art.metadata[TIMESTAMP_FIELD]  # noqa: SIM401
+                    ts = (  # noqa: SIM401
+                        art.metadata[TIMESTAMP_FIELD]
                         if TIMESTAMP_FIELD in art.metadata
                         else 'no timestamp'
                     )
@@ -136,8 +136,8 @@ async def run_client(text_query: str = 'hi'):
                 case 'status_update':
                     status = chunk.status_update.status
                     if status.HasField('message'):
-                        ts = (
-                            status.message.metadata[TIMESTAMP_FIELD]  # noqa: SIM401
+                        ts = (  # noqa: SIM401
+                            status.message.metadata[TIMESTAMP_FIELD]
                             if TIMESTAMP_FIELD in status.message.metadata
                             else 'no timestamp'
                         )
