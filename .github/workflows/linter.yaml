@@ -41,6 +41,11 @@ jobs:
           VALIDATE_JSON_PRETTIER: false
           VALIDATE_YAML_PRETTIER: false
           VALIDATE_GIT_COMMITLINT: false
+          # Go modules are linted independently below, one module at a time.
+          # Super-Linter passes all changed Go files in one invocation, which
+          # fails when a PR touches files in more than one module directory.
+          VALIDATE_GO: false
+          VALIDATE_GO_MODULES: false
           VALIDATE_JSCPD: false
           VALIDATE_JUPYTER_NBQA_BLACK: false
           VALIDATE_JUPYTER_NBQA_ISORT: false
