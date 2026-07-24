@@ -31,7 +31,9 @@ func getAgentCard(ctx context.Context) (*a2a.AgentCard, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch agent card: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("failed to fetch agent card: status code %d", resp.StatusCode)
