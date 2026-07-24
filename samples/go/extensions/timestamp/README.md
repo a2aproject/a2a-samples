@@ -8,12 +8,15 @@ The extension showcases how to enrich outgoing A2A messages and artifacts with c
 
 ## Architecture & Package Structure
 
-The package is split into separate files to isolate concerns and prevent client-side dependencies from bloating server-side or core stamping utilities:
+The package is structured to isolate library concerns from runnable demonstration code:
 
-* **`timestamp/core.go`**: Houses the core metadata (`URI`, `TimestampField`), the main `TimestampExtension` struct, and functional options (`WithClock`).
-* **`timestamp/server.go`**: Houses server-side interceptors (`ServerInterceptor`, `NewServerInterceptor`) and `WrapExecutor`.
-* **`timestamp/client.go`**: Houses client-side interceptors (`ClientInterceptor`).
-* **`tests/timestamp_test.go`**: Houses end-to-end integration tests verifying client-server round trip.
+* **`timestamp_ext/`**: The core library package.
+  * **`core.go`**: Houses the core metadata (`URI`, `TimestampField`), the main `TimestampExtension` struct, and functional options (`WithClock`).
+  * **`server.go`**: Houses server-side interceptors (`ServerInterceptor`, `NewServerInterceptor`) and `WrapExecutor`.
+  * **`client.go`**: Houses client-side interceptors (`ClientInterceptor`).
+* **`main.go`**: Configures and launches the HTTP agent server on port `9998`.
+* **`agent_executor.go`**: Implements the `echoExecutor` and `echoAgent` to process and echo text requests.
+* **`client_test.go`**: Contains end-to-end integration tests verifying the client-server round trip and compliance timestamps.
 
 ---
 
@@ -25,22 +28,22 @@ To enable the timestamp extension on your A2A agent, advertise support in the `A
 
 ```go
 import (
-	"samples/go/extensions/timestamp/timestamp"
+	"samples/go/extensions/timestamp/timestamp_ext"
 
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv"
 )
 
 // 1. Initialize the extension (optionally with a custom clock)
-ext := timestamp.NewTimestampExtension()
+ext := timestamp_ext.NewTimestampExtension()
 
 // 2. Advertise support on the agent card
 card := ext.AddToCard(&a2a.AgentCard{ ... })
 
 // 3. Setup handler with interceptor & wrapped executor
 handler := a2asrv.NewHandler(
-	timestamp.WrapExecutor(&MyExecutor{}, ext),
-	a2asrv.WithExecutorContextInterceptor(timestamp.NewServerInterceptor(ext)),
+	timestamp_ext.WrapExecutor(&MyExecutor{}, ext),
+	a2asrv.WithExecutorContextInterceptor(timestamp_ext.NewServerInterceptor(ext)),
 )
 ```
 
@@ -52,16 +55,16 @@ To request the extension from a server and read timestamps, pass `ClientIntercep
 
 ```go
 import (
-	"samples/go/extensions/timestamp/timestamp"
+	"samples/go/extensions/timestamp/timestamp_ext"
 
 	"github.com/a2aproject/a2a-go/v2/a2aclient"
 )
 
 // 1. Initialize the extension
-ext := timestamp.NewTimestampExtension()
+ext := timestamp_ext.NewTimestampExtension()
 
 // 2. Create client with interceptor
-client, err := a2aclient.NewFromCard(ctx, card, a2aclient.WithCallInterceptors(timestamp.ClientInterceptor(ext)))
+client, err := a2aclient.NewFromCard(ctx, card, a2aclient.WithCallInterceptors(timestamp_ext.ClientInterceptor(ext)))
 ```
 
 The installed interceptor automatically adds the `A2A-Extensions: <uri>` header to every outgoing call and stamps client-side messages.
@@ -73,7 +76,7 @@ The installed interceptor automatically adds the `A2A-Extensions: <uri>` header 
 You can start the standalone HTTP server hosting the Echo agent:
 
 ```bash
-go run ./tests
+go run .
 ```
 
 The server will start running on `http://127.0.0.1:9998`.

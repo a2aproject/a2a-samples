@@ -1,4 +1,4 @@
-package timestamp
+package timestamp_ext
 
 import (
 	"context"
