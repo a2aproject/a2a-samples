@@ -10,13 +10,13 @@ The extension showcases how to enrich outgoing A2A messages and artifacts with c
 
 The package is split into separate modules to isolate concerns and prevent client-side dependencies from bloating server-side or core stamping utilities:
 
-* **`timestamp_ext/core.ts`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
-* **`timestamp_ext/server.ts`**: Houses the public `wrapExecutor` function that intercepts agent execution to stamp outgoing events.
-* **`timestamp_ext/client.ts`**: Houses client-side interceptors, decorators, and factory wrappers (`wrapClientFactory`, `clientInterceptor`).
-* **`timestamp_ext/index.ts`**: Exposes only the core public exports for general usage.
-* **`index.ts`**: Configures and launches the Express web server demonstrating the timestamp extension on an Echo agent.
-* **`agent_executor.ts`**: Implements the A2A agent executor class (`EchoExecutor`) and the `EchoAgent` to process and echo text requests.
-* **`test_client.ts`**: An integration test client demonstrating how to wrap a client factory, send a message, and validate stamped response metadata.
+- **`timestamp_ext/core.ts`**: Houses the core metadata (`URI`, `TIMESTAMP_FIELD`) and the main `TimestampExtension` helper class.
+- **`timestamp_ext/server.ts`**: Houses the public `wrapExecutor` function that intercepts agent execution to stamp outgoing events.
+- **`timestamp_ext/client.ts`**: Houses client-side interceptors, decorators, and factory wrappers (`wrapClientFactory`, `clientInterceptor`).
+- **`timestamp_ext/index.ts`**: Exposes only the core public exports for general usage.
+- **`index.ts`**: Configures and launches the Express web server demonstrating the timestamp extension on an Echo agent.
+- **`agent_executor.ts`**: Implements the A2A agent executor class (`EchoExecutor`) and the `EchoAgent` to process and echo text requests.
+- **`test_client.ts`**: An integration test client demonstrating how to wrap a client factory, send a message, and validate stamped response metadata.
 
 ---
 
@@ -27,9 +27,9 @@ The package is split into separate modules to isolate concerns and prevent clien
 To enable the timestamp extension on your A2A agent, advertise support in the `AgentCard` and wrap the executor using `wrapExecutor`:
 
 ```typescript
-import { AgentCard } from '@a2a-js/sdk';
-import { TimestampExtension } from './timestamp_ext/index.js';
-import { wrapExecutor } from './timestamp_ext/index.js';
+import { AgentCard } from "@a2a-js/sdk";
+import { TimestampExtension } from "./timestamp_ext/index.js";
+import { wrapExecutor } from "./timestamp_ext/index.js";
 
 // 1. Initialize the extension
 const ext = new TimestampExtension();
@@ -39,10 +39,10 @@ const card = ext.addToCard(baseCard);
 
 // 3. Decorate your agent executor
 const requestHandler = new DefaultRequestHandler(
-  card,
-  new InMemoryTaskStore(),
-  wrapExecutor(new MyExecutor(), ext),
-  new DefaultExecutionEventBusManager()
+    card,
+    new InMemoryTaskStore(),
+    wrapExecutor(new MyExecutor(), ext),
+    new DefaultExecutionEventBusManager()
 );
 ```
 
@@ -53,17 +53,17 @@ With this single wrapper, any message or artifact emitted by `MyExecutor` is aut
 To request the extension from a server and read timestamps, wrap your `ClientFactory` using `wrapClientFactory`:
 
 ```typescript
-import { ClientFactory } from '@a2a-js/sdk/client';
-import { TimestampExtension } from './timestamp_ext/index.js';
-import { wrapClientFactory } from './timestamp_ext/index.js';
+import { ClientFactory } from "@a2a-js/sdk/client";
+import { TimestampExtension } from "./timestamp_ext/index.js";
+import { wrapClientFactory } from "./timestamp_ext/index.js";
 
 // 1. Initialize the extension
 const ext = new TimestampExtension();
 
 // 2. Wrap the client factory
 const factory = wrapClientFactory(
-  new ClientFactory({ transports: [new JsonRpcTransportFactory()] }),
-  ext
+    new ClientFactory({ transports: [new JsonRpcTransportFactory()] }),
+    ext
 );
 const client = await factory.createFromAgentCard(card);
 ```
