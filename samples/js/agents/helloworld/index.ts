@@ -129,7 +129,7 @@ async function main() {
         undefined, // eventBusManager
         undefined, // pushNotificationManager
         undefined, // pushNotificationSender
-        extendedAgentCard
+        async () => extendedAgentCard
     );
     // --8<-- [end:RequestHandler]
 
