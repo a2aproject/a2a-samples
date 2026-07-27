@@ -55,13 +55,9 @@ class HostAgent:
         self.agents: str = ''
         loop = asyncio.get_running_loop()
         # Held to keep a strong reference for the lifetime of the host agent.
-        self._init_task = loop.create_task(
-            self.init_remote_agent_addresses(remote_agent_addresses)
-        )
+        self._init_task = loop.create_task(self.init_remote_agent_addresses(remote_agent_addresses))
 
-    async def init_remote_agent_addresses(
-        self, remote_agent_addresses: list[str]
-    ) -> None:
+    async def init_remote_agent_addresses(self, remote_agent_addresses: list[str]) -> None:
         """Resolve and register agent cards for each remote agent address."""
         async with asyncio.TaskGroup() as task_group:
             for address in remote_agent_addresses:
@@ -86,9 +82,7 @@ class HostAgent:
 
     def create_agent(self) -> Agent:
         """Build the underlying ADK agent for the host."""
-        litellm_model = os.getenv(
-            'LITELLM_MODEL', 'gemini/gemini-2.0-flash-001'
-        )
+        litellm_model = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.5-flash')
         return Agent(
             model=LiteLlm(model=litellm_model),
             name='host_agent',
@@ -156,13 +150,10 @@ Current agent: {current_agent['active_agent']}
             return []
 
         return [
-            {'name': card.name, 'description': card.description}
-            for card in self.cards.values()
+            {'name': card.name, 'description': card.description} for card in self.cards.values()
         ]
 
-    async def send_message(
-        self, agent_name: str, message: str, tool_context: ToolContext
-    ) -> list:
+    async def send_message(self, agent_name: str, message: str, tool_context: ToolContext) -> list:
         """Sends a task either streaming (if supported) or non-streaming.
 
         This will send a message to the remote agent named agent_name.
@@ -223,14 +214,10 @@ Current agent: {current_agent['active_agent']}
         response = []
         if task.status.message:
             # Assume the information is in the task message.
-            response.extend(
-                await convert_parts(task.status.message.parts, tool_context)
-            )
+            response.extend(await convert_parts(task.status.message.parts, tool_context))
         if task.artifacts:
             for artifact in task.artifacts:
-                response.extend(
-                    await convert_parts(artifact.parts, tool_context)
-                )
+                response.extend(await convert_parts(artifact.parts, tool_context))
         return response
 
 
@@ -251,9 +238,7 @@ async def convert_part(part: Part, tool_context: ToolContext) -> object:
         file_id = part.root.file.name
         file_bytes = base64.b64decode(part.root.file.bytes)
         file_part = types.Part(
-            inline_data=types.Blob(
-                mime_type=part.root.file.mime_type, data=file_bytes
-            )
+            inline_data=types.Blob(mime_type=part.root.file.mime_type, data=file_bytes)
         )
         await tool_context.save_artifact(file_id, file_part)
         tool_context.actions.skip_summarization = True
