@@ -25,6 +25,8 @@ type timestampingClientInterceptor struct {
 	ext *TimestampExtension
 }
 
+var _ a2aclient.CallInterceptor = (*timestampingClientInterceptor)(nil)
+
 func (i *timestampingClientInterceptor) Before(ctx context.Context, req *a2aclient.Request) (context.Context, any, error) {
 	if !i.ext.IsSupported(req.Card) || !messagingMethods[req.Method] {
 		return ctx, nil, nil
