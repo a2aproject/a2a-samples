@@ -112,14 +112,14 @@ The merchant requests only the following claims (via selective disclosure):
 ### 1. Prerequisites
 
 - [Node.js](https://nodejs.org/) v18+
-- [pnpm](https://pnpm.io/) (the project is pnpm-pinned; `npm install` also works)
 - An OpenAI API key
 
 ### 2. Setup
 
 ```bash
-cd a2a-samples-demo
-pnpm install
+git clone https://github.com/a2aproject/a2a-samples.git
+cd a2a-samples/samples/js/extensions/oid4vp-in-task-auth
+npm install
 cp .env.example .env        # then edit .env and set OPENAI_API_KEY
 ```
 
@@ -130,9 +130,9 @@ The ports, agent URLs, and the merchant's auth-wait timeout are all configurable
 ### 3. Start the three processes (three terminals)
 
 ```bash
-pnpm run merchant     # BlueSky Stays: A2A on :10003, OID4VP verifier on :3001
-pnpm run assistant    # Travel Assistant: A2A on :10004 (forwards to the merchant)
-pnpm run client       # User CLI + wallet (talks to the assistant on :10004)
+npm run merchant     # BlueSky Stays: A2A on :10003, OID4VP verifier on :3001
+npm run assistant    # Travel Assistant: A2A on :10004 (forwards to the merchant)
+npm run client       # User CLI + wallet (talks to the assistant on :10004)
 ```
 
 Start the merchant first, then the assistant, then the client.
@@ -160,11 +160,20 @@ Example client transcript:
    • Aurora Airlines Rewards: 25% off (expires 2027-01-01T00:00:00Z)
    • Meridian Bank Travel: 10% off (expires 2027-01-01T00:00:00Z)
    • BargainTrips: 50% off (expires 2027-01-01T00:00:00Z)
+✓ Connected to "Travel Assistant".
+Type a message. Use '/new' to reset the session, '/exit' to quit.
 
 Travel Assistant > You: Book a deluxe room for 2 nights and apply my partner discount
-Travel Assistant: ⏳ working   Forwarding your request to BlueSky Stays on your behalf...
-Travel Assistant: 🔐 auth-required
-  📝 BlueSky Stays needs a partner discount voucher. I don't hold your vouchers, so please present one from your wallet.
+Sending message...
+
+Travel Assistant [10:15:02 AM]: ⏳ Status: working
+  Part 1: 📝 Text: Forwarding your request to BlueSky Stays on your behalf...
+
+Travel Assistant [10:15:02 AM]: ⏳ Status: working
+  Part 1: 📝 Text: Reviewing your booking request...
+
+Travel Assistant [10:15:05 AM]: 🔐 Status: auth-required
+  Part 1: 📝 Text: BlueSky Stays needs a partner discount voucher. I don't hold your vouchers, so please present one from your wallet.
 
 🔐 The agent requested a verifiable credential (purpose: "Apply partner discount").
 Your wallet holds 3 matching credential(s):
@@ -178,8 +187,12 @@ Presenting will disclose ONLY: {"percent_off":25,"expires_at":"2027-01-01T00:00:
 Confirm sharing? (yes/no): yes
 ✓ Presentation sent to the verifier.
 
-Travel Assistant: ✅ completed [FINAL]
-  📝 Quote for 2 nights in a deluxe room: $600.00, with your Aurora Airlines Rewards partner discount (25% off) applied -> final price $450.00.
+Travel Assistant [10:15:30 AM]: ⏳ Status: working
+  Part 1: 📝 Text: Preparing your quote...
+
+Travel Assistant [10:15:30 AM]: ✅ Status: completed [FINAL]
+  Part 1: 📝 Text: Quote for 2 nights in a deluxe room: $600.00, with your Aurora Airlines Rewards partner discount (25% off) applied -> final price $450.00.
+--- End of response stream ---
 ```
 
 ## Disclaimer
