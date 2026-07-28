@@ -6,6 +6,9 @@ Each agent can be run as its own A2A server with the instructions on its README.
 
 ## Agents Directory
 
+* [**Evidence Bench Connector**](/samples/python/agents/evidence_bench_connector/README.md)
+A thin A2A 1.0 connector that delegates scientific tasks to a user-operated Evidence Bench service and returns bounded report and provenance-summary artifacts.
+
 * [**Google ADK Facts**](/samples/python/agents/adk_facts/README.md)  
 Sample agent to give fun facts using Grounding with Google Search and ADK
 
