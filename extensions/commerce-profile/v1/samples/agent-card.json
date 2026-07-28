@@ -1,0 +1,31 @@
+{
+    "name": "Paid Translation Agent",
+    "description": "Translates short business text after payment proof is provided.",
+    "url": "https://seller.example.com/a2a",
+    "version": "0.1.0",
+    "capabilities": {
+        "streaming": false,
+        "extendedAgentCard": false,
+        "extensions": [
+            {
+                "uri": "https://github.com/a2aproject/a2a-samples/extensions/commerce-profile/v1",
+                "params": {
+                    "descriptorUrl": "https://seller.example.com/.well-known/commerce-profile.json",
+                    "supportedSettlement": ["x402", "usdc-base", "invoice"],
+                    "receiptUrlTemplate": "https://seller.example.com/receipts/{receiptId}"
+                }
+            }
+        ]
+    },
+    "defaultInputModes": ["text", "text/plain"],
+    "defaultOutputModes": ["text", "text/plain"],
+    "skills": [
+        {
+            "id": "translate_text",
+            "name": "Translate Text",
+            "description": "Translates up to 500 characters into the requested language.",
+            "tags": ["translation", "commerce-profile"],
+            "examples": ["Translate 'hello' to Spanish"]
+        }
+    ]
+}

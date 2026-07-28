@@ -1,0 +1,30 @@
+{
+    "jsonrpc": "2.0",
+    "id": "commerce-request-1",
+    "method": "message/send",
+    "params": {
+        "message": {
+            "role": "user",
+            "parts": [
+                {
+                    "type": "text",
+                    "text": "Translate 'invoice attached' to Spanish."
+                }
+            ],
+            "messageId": "msg-commerce-1",
+            "kind": "message",
+            "metadata": {
+                "https://github.com/a2aproject/a2a-samples/extensions/commerce-profile/v1/paymentProof": {
+                    "serviceId": "paid_translation.v1",
+                    "settlementMethod": "x402",
+                    "proofType": "x402-payment-header",
+                    "proof": "mock-x402-proof-token",
+                    "amount": "0.05",
+                    "currency": "USD",
+                    "nonce": "demo-nonce-123",
+                    "receiptCallbackUrl": "https://buyer.example.com/receipts"
+                }
+            }
+        }
+    }
+}
