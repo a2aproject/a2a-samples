@@ -428,9 +428,8 @@ class MerchantAgentExecutor implements AgentExecutor {
         )
             return;
 
-        const contextId = verificationSession.getTag("contextId") as
-            string | undefined;
-        if (!contextId) return;
+        const contextId = verificationSession.getTag("contextId");
+        if (typeof contextId !== "string" || !contextId) return;
 
         const result = await this.evaluatePresentation(verificationSession.id);
         this.authResults.set(contextId, result);
