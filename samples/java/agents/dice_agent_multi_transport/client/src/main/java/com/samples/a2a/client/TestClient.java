@@ -1,26 +1,26 @@
 package com.samples.a2a.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.a2a.A2A;
-import io.a2a.client.Client;
-import io.a2a.client.ClientEvent;
-import io.a2a.client.MessageEvent;
-import io.a2a.client.TaskEvent;
-import io.a2a.client.TaskUpdateEvent;
-import io.a2a.client.config.ClientConfig;
-import io.a2a.client.http.A2ACardResolver;
-import io.a2a.client.transport.grpc.GrpcTransport;
-import io.a2a.client.transport.grpc.GrpcTransportConfig;
-import io.a2a.client.transport.jsonrpc.JSONRPCTransport;
-import io.a2a.client.transport.jsonrpc.JSONRPCTransportConfig;
-import io.a2a.spec.AgentCard;
-import io.a2a.spec.Artifact;
-import io.a2a.spec.Message;
-import io.a2a.spec.Part;
-import io.a2a.spec.TaskArtifactUpdateEvent;
-import io.a2a.spec.TaskStatusUpdateEvent;
-import io.a2a.spec.TextPart;
-import io.a2a.spec.UpdateEvent;
+import org.a2aproject.sdk.A2A;
+import org.a2aproject.sdk.client.Client;
+import org.a2aproject.sdk.client.ClientEvent;
+import org.a2aproject.sdk.client.MessageEvent;
+import org.a2aproject.sdk.client.TaskEvent;
+import org.a2aproject.sdk.client.TaskUpdateEvent;
+import org.a2aproject.sdk.client.config.ClientConfig;
+import org.a2aproject.sdk.client.http.A2ACardResolver;
+import org.a2aproject.sdk.client.transport.grpc.GrpcTransport;
+import org.a2aproject.sdk.client.transport.grpc.GrpcTransportConfig;
+import org.a2aproject.sdk.client.transport.jsonrpc.JSONRPCTransport;
+import org.a2aproject.sdk.client.transport.jsonrpc.JSONRPCTransportConfig;
+import org.a2aproject.sdk.spec.AgentCard;
+import org.a2aproject.sdk.spec.Artifact;
+import org.a2aproject.sdk.spec.Message;
+import org.a2aproject.sdk.spec.Part;
+import org.a2aproject.sdk.spec.TaskArtifactUpdateEvent;
+import org.a2aproject.sdk.spec.TaskStatusUpdateEvent;
+import org.a2aproject.sdk.spec.TextPart;
+import org.a2aproject.sdk.spec.UpdateEvent;
 import io.grpc.Channel;
 import io.grpc.ManagedChannelBuilder;
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public final class TestClient {
 
       // Fetch the public agent card
       AgentCard publicAgentCard =
-              new A2ACardResolver(serverUrl).getAgentCard();
+              A2ACardResolver.builder().baseUrl(serverUrl).build().getAgentCard();
       System.out.println("Successfully fetched public agent card:");
       System.out.println(OBJECT_MAPPER.writeValueAsString(publicAgentCard));
       System.out.println("Using public agent card for client initialization.");
@@ -160,7 +160,7 @@ public final class TestClient {
         (event, agentCard) -> {
           if (event instanceof MessageEvent messageEvent) {
             Message responseMessage = messageEvent.getMessage();
-            String text = extractTextFromParts(responseMessage.getParts());
+            String text = extractTextFromParts(responseMessage.parts());
             System.out.println("Received message: " + text);
             messageResponse.complete(text);
           } else if (event instanceof TaskUpdateEvent taskUpdateEvent) {
@@ -169,11 +169,11 @@ public final class TestClient {
                     instanceof TaskStatusUpdateEvent taskStatusUpdateEvent) {
               System.out.println(
                   "Received status-update: "
-                      + taskStatusUpdateEvent.getStatus().state().asString());
+                      + taskStatusUpdateEvent.status().state().name());
               if (taskStatusUpdateEvent.isFinal()) {
                 StringBuilder textBuilder = new StringBuilder();
                 List<Artifact> artifacts
-                        = taskUpdateEvent.getTask().getArtifacts();
+                        = taskUpdateEvent.getTask().artifacts();
                 for (Artifact artifact : artifacts) {
                   textBuilder.append(extractTextFromParts(artifact.parts()));
                 }
@@ -183,14 +183,14 @@ public final class TestClient {
             } else if (updateEvent instanceof TaskArtifactUpdateEvent
                     taskArtifactUpdateEvent) {
               List<Part<?>> parts = taskArtifactUpdateEvent
-                      .getArtifact()
+                      .artifact()
                       .parts();
               String text = extractTextFromParts(parts);
               System.out.println("Received artifact-update: " + text);
             }
           } else if (event instanceof TaskEvent taskEvent) {
             System.out.println("Received task event: "
-                    + taskEvent.getTask().getId());
+                    + taskEvent.getTask().id());
           }
         });
     return consumers;
@@ -201,7 +201,7 @@ public final class TestClient {
     if (parts != null) {
       for (final Part<?> part : parts) {
         if (part instanceof TextPart textPart) {
-          textBuilder.append(textPart.getText());
+          textBuilder.append(textPart.text());
         }
       }
     }
