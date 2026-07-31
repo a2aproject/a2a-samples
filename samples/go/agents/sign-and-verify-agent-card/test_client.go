@@ -30,9 +30,7 @@ func keyProvider(keyID, jku string) (any, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch public key from JKU URL (%s): %w", jku, err)
 	}
-	defer func() {
-		_ = resp.Body.Close()
-	}()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("failed to fetch public key from JKU URL (%s): status code %d", jku, resp.StatusCode)
