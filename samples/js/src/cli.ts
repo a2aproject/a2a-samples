@@ -274,6 +274,7 @@ async function main() {
         const prefix = colorize("magenta", `\n${agentName} [${timestamp}]:`);
 
         if (event.kind === "status-update" || event.kind === "artifact-update") {
+
           const typedEvent = event as TaskStatusUpdateEvent | TaskArtifactUpdateEvent;
           printAgentEvent(typedEvent);
 
@@ -284,6 +285,15 @@ async function main() {
             // Optionally, you might want to clear currentContextId as well if a task ending implies context ending.
             // currentContextId = undefined; 
             // console.log(colorize("dim", `   Context ID also cleared as task is final.`));
+          } else if (typedEvent.kind === "status-update") {
+            if (typedEvent.taskId && typedEvent.taskId !== currentTaskId) {
+              console.log(colorize("dim", `   Task ID context updated to ${typedEvent.taskId} based on status-update event.`));
+              currentTaskId = typedEvent.taskId;
+            }
+            if (typedEvent.contextId && typedEvent.contextId !== currentContextId) {
+              console.log(colorize("dim", `   Context ID updated to ${typedEvent.contextId} based on status-update event.`));
+              currentContextId = typedEvent.contextId;
+            }
           }
 
         } else if (event.kind === "message") {
