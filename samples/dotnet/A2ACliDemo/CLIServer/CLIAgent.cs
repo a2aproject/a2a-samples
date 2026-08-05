@@ -23,16 +23,26 @@ internal record CommandExecutionResult(
 /// <summary>
 /// A CLI agent that can execute command-line tools and return results.
 /// This demonstrates how to bridge AI agents with system-level operations.
+/// 
+/// IMPORTANT: This sample should NOT be exposed to untrusted clients.
+/// The command bridge runs local system commands and is intended for
+/// development and trusted environments only.
 /// </summary>
 public class CLIAgent
 {
+    /// <summary>
+    /// Allowed commands — safe, read-only system utilities.
+    /// Interpreters and package managers (python, node, npm, dotnet) are
+    /// intentionally excluded: they accept arbitrary code as arguments,
+    /// which cannot be meaningfully constrained by an allowlist.
+    /// </summary>
     private static readonly HashSet<string> AllowedCommands = new()
     {
         // Safe read-only commands
         "dir", "ls", "pwd", "whoami", "date", "time",
         "echo", "cat", "type", "head", "tail",
         "ps", "tasklist", "netstat", "ipconfig", "ping",
-        "git", "dotnet", "node", "npm", "python"
+        "git"
     };
 
     /// <summary>
@@ -94,14 +104,16 @@ public class CLIAgent
 
     /// <summary>
     /// Executes a CLI command safely with security checks.
-    /// This is the core functionality that makes this agent useful!
+    /// Uses direct process invocation (no shell) — the command runs as the
+    /// executable and arguments are passed as an argv array. This prevents
+    /// shell metacharacter injection (;, |, &amp;&amp;, $(), backticks).
     /// </summary>
     private async Task<string> ExecuteCommandAsync(string input, CancellationToken cancellationToken)
     {
-        // Parse command and arguments
+        // Parse command and arguments into a list
         var parts = ParseCommand(input);
         var command = parts.Command;
-        var arguments = parts.Arguments;
+        var argumentList = parts.Arguments;
 
         // Security check: Only allow whitelisted commands
         if (!IsCommandAllowed(command))
@@ -110,25 +122,22 @@ public class CLIAgent
                    $"Allowed commands: {string.Join(", ", AllowedCommands)}";
         }
 
-        // Execute the command
+        // Execute the command directly — no shell, no /bin/bash -c, no cmd /c
         using var process = new Process();
 
-        // Configure process based on operating system
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.Arguments = $"/c {command} {arguments}";
-        }
-        else
-        {
-            process.StartInfo.FileName = "/bin/bash";
-            process.StartInfo.Arguments = $"-c \"{command} {arguments}\"";
-        }
-
+        process.StartInfo.FileName = command;
         process.StartInfo.UseShellExecute = false;
         process.StartInfo.RedirectStandardOutput = true;
         process.StartInfo.RedirectStandardError = true;
         process.StartInfo.CreateNoWindow = true;
+
+        // Pass arguments as a proper argv array. ArgumentList handles
+        // platform-specific quoting and never invokes a shell, so
+        // metacharacters arrive as literal argv entries.
+        foreach (var arg in argumentList)
+        {
+            process.StartInfo.ArgumentList.Add(arg);
+        }
 
         var output = new List<string>();
         var errors = new List<string>();
@@ -153,10 +162,8 @@ public class CLIAgent
         // Wait for completion with timeout
         await process.WaitForExitAsync(cancellationToken);
 
-        // Process has completed normally
-
         var result = new CommandExecutionResult(
-            Command: $"{command} {arguments}",
+            Command: $"{command} {string.Join(" ", argumentList)}",
             ExitCode: process.ExitCode,
             Output: output.AsReadOnly(),
             Errors: errors.AsReadOnly(),
@@ -167,24 +174,35 @@ public class CLIAgent
     }
 
     /// <summary>
-    /// Parses user input into command and arguments.
+    /// Parses user input into a command name and an argument list.
+    /// Arguments are returned as individual tokens — never interpolated
+    /// into a shell command string.
     /// </summary>
-    private static (string Command, string Arguments) ParseCommand(string input)
+    private static (string Command, List<string> Arguments) ParseCommand(string input)
     {
         var trimmed = input.Trim();
         var spaceIndex = trimmed.IndexOf(' ');
 
         if (spaceIndex == -1)
         {
-            return (trimmed, string.Empty);
+            return (trimmed, new List<string>());
         }
 
-        return (trimmed.Substring(0, spaceIndex), trimmed.Substring(spaceIndex + 1));
+        var command = trimmed.Substring(0, spaceIndex);
+        var argsString = trimmed.Substring(spaceIndex + 1);
+
+        // Split remaining text into individual argument tokens.
+        // Simple whitespace split is sufficient for the sample's
+        // read-only, non-shell command set.
+        var args = argsString
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .ToList();
+
+        return (command, args);
     }
 
     /// <summary>
     /// Security check: Ensures only safe commands are executed.
-    /// This is CRITICAL for security!
     /// </summary>
     private static bool IsCommandAllowed(string command)
     {
