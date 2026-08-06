@@ -22,6 +22,9 @@ Each agent can be run as its own A2A server with the instructions in its README.
 * [**Magic 8 Ball Agent (Security)**](magic_8_ball_security/README.md)  
   Sample agent that can respond to yes/no questions by consulting a Magic 8 Ball. This sample demonstrates how to secure an A2A server with Keycloak using bearer token authentication and it shows how to configure an A2A client to specify the token when sending requests.
 
+* [**Currency Exchange Rates (Multi-turn Conversations)**](currency_exchange_rates/README.md)  
+  Sample agent to provide currency conversion. This agent demonstrates multi-turn dialogue and streaming responses.
+
 ## Disclaimer
 
 Important: The sample code provided is for demonstration purposes and illustrates the
