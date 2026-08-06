@@ -5,12 +5,13 @@ from typing import Any, Literal
 
 import httpx
 
+from langchain.agents import create_agent
+from langchain.agents.structured_output import ToolStrategy
 from langchain_core.messages import AIMessage, ToolMessage
 from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
 
 
@@ -22,7 +23,7 @@ def get_exchange_rate(
     currency_from: str = 'USD',
     currency_to: str = 'EUR',
     currency_date: str = 'latest',
-):
+) -> dict:
     """Use this to get current exchange rate.
 
     Args:
@@ -37,7 +38,7 @@ def get_exchange_rate(
     """
     try:
         response = httpx.get(
-            f'https://api.frankfurter.app/{currency_date}',
+            f'https://api.frankfurter.dev/v1/{currency_date}',
             params={'from': currency_from, 'to': currency_to},
         )
         response.raise_for_status()
@@ -45,11 +46,12 @@ def get_exchange_rate(
         data = response.json()
         if 'rates' not in data:
             return {'error': 'Invalid API response format.'}
-        return data
     except httpx.HTTPError as e:
         return {'error': f'API request failed: {e}'}
     except ValueError:
         return {'error': 'Invalid JSON response from API.'}
+
+    return data
 
 
 class ResponseFormat(BaseModel):
@@ -60,24 +62,21 @@ class ResponseFormat(BaseModel):
 
 
 class CurrencyAgent:
-    """CurrencyAgent - a specialized assistant for currency convesions."""
+    """CurrencyAgent - a specialized assistant for currency conversions."""
 
     SYSTEM_INSTRUCTION = (
         'You are a specialized assistant for currency conversions. '
         "Your sole purpose is to use the 'get_exchange_rate' tool to answer questions about currency exchange rates. "
         'If the user asks about anything other than currency conversion or exchange rates, '
         'politely state that you cannot help with that topic and can only assist with currency-related queries. '
-        'Do not attempt to answer unrelated questions or use tools for other purposes.'
-    )
-
-    FORMAT_INSTRUCTION = (
-        'Set response status to input_required if the user needs to provide more information to complete the request.'
-        'Set response status to error if there is an error while processing the request.'
+        'Do not attempt to answer unrelated questions or use tools for other purposes. '
+        'Set response status to input_required if the user needs to provide more information to complete the request. '
+        'Set response status to error if there is an error while processing the request. '
         'Set response status to completed if the request is complete.'
     )
 
-    def __init__(self):
-        model_source = os.getenv('model_source', 'google')
+    def __init__(self) -> None:
+        model_source = os.getenv('MODEL_SOURCE', 'google')
         if model_source == 'google':
             self.model = ChatGoogleGenerativeAI(model='gemini-2.0-flash')
         else:
@@ -89,15 +88,18 @@ class CurrencyAgent:
             )
         self.tools = [get_exchange_rate]
 
-        self.graph = create_react_agent(
+        self.graph = create_agent(
             self.model,
             tools=self.tools,
             checkpointer=memory,
-            prompt=self.SYSTEM_INSTRUCTION,
-            response_format=(self.FORMAT_INSTRUCTION, ResponseFormat),
+            system_prompt=self.SYSTEM_INSTRUCTION,
+            response_format=ToolStrategy(ResponseFormat),
         )
 
-    async def stream(self, query, context_id) -> AsyncIterable[dict[str, Any]]:
+    async def stream(
+        self, query: str, context_id: str
+    ) -> AsyncIterable[dict[str, Any]]:
+        """Stream agent responses for the given query."""
         inputs = {'messages': [('user', query)]}
         config = {'configurable': {'thread_id': context_id}}
 
@@ -122,7 +124,8 @@ class CurrencyAgent:
 
         yield self.get_agent_response(config)
 
-    def get_agent_response(self, config):
+    def get_agent_response(self, config: dict[str, Any]) -> dict[str, Any]:
+        """Return the final structured response from the agent's current state."""
         current_state = self.graph.get_state(config)
         structured_response = current_state.values.get('structured_response')
         if structured_response and isinstance(
