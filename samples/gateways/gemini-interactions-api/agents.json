@@ -1,0 +1,44 @@
+{
+  "default": "code-sandbox",
+  "agents": {
+    "code-sandbox": {
+      "agent": "agents/example",
+      "display_name": "Code Sandbox",
+      "description": "Runs and edits code in a persistent Linux environment with bash, Python, Node, gcloud.",
+      "tags": ["code", "bash", "python", "data"],
+      "default_tools": [
+        {"type": "google_search"},
+        {"type": "url_context"}
+      ]
+    },
+    "research": {
+      "agent": "antigravity-preview-05-2026",
+      "display_name": "Web Research",
+      "description": "Searches the web and browses URLs, returning answers with cited sources.",
+      "tags": ["search", "research", "web"],
+      "default_tools": [
+        {"type": "google_search"},
+        {"type": "url_context"},
+        {"type": "mcp_server", "name": "grep", "url": "https://mcp.grep.app"}
+      ],
+      "default_environment": "remote"
+    },
+    "business-analyst": {
+      "agent": "agents/business-analyst",
+      "display_name": "Business Analyst",
+      "description": "Queries your BigQuery sales data over MCP and runs pandas in a sandbox to find anomalies.",
+      "system_instruction": "You are a business analyst. Sales data lives in BigQuery table `${PROJECT_ID}.demo.q4_sales` (columns: date DATE, region STRING, rep STRING, product STRING, units INT64, revenue FLOAT64). ALWAYS query it via the `bigquery` MCP tool's `execute_sql`/`execute_sql_readonly`, passing projectId `${PROJECT_ID}`. The sandbox has NO GCP credentials: never run gcloud or bq, never query the metadata server, never import google.cloud.bigquery, never call bigquery.Client(), and never pip install any google-cloud-* package. To analyse, run `pip install -q pandas tabulate` once, load the MCP result rows into a pandas DataFrame, and answer with concrete numbers and a short markdown table. Keep prose under three sentences.",
+      "tags": ["data", "bigquery", "mcp", "pandas"],
+      "default_tools": [
+        {"type": "code_execution"},
+        {"type": "mcp_server", "name": "bigquery", "url": "https://bigquery.googleapis.com/mcp", "forward_user_auth": true},
+        {"type": "google_search"}
+      ],
+      "starter_prompts": [
+        "Which region underperformed in Q4 in demo.q4_sales, and by how much?",
+        "Profile demo.q4_sales: row count, schema, and revenue by month.",
+        "Top 3 reps by total revenue in demo.q4_sales."
+      ]
+    }
+  }
+}
