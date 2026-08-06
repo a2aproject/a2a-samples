@@ -1,0 +1,57 @@
+%% Agent Workflow - Complete Campaign Sequence
+%% Shows sequential execution with context passing
+
+sequenceDiagram
+    participant User
+    participant CreativeDirector
+    participant BrandStrategist
+    participant Copywriter
+    participant Designer
+    participant Critic
+    participant ProjectManager
+
+    User->>CreativeDirector: 📋 Campaign Brief<br/>(Product, Audience, Goal)
+
+    Note over CreativeDirector: 🤔 PLANNING PHASE<br/>Analyze complexity<br/>Create 5-step plan
+
+    CreativeDirector->>User: 📢 Present Plan:<br/>1. Market Research<br/>2. Copywriting<br/>3. Visual Design<br/>4. Quality Review<br/>5. Project Timeline
+
+    Note over CreativeDirector: 🚀 EXECUTION PHASE<br/>Sequential with verification
+
+    rect rgb(52, 168, 83)
+    CreativeDirector->>BrandStrategist: 🔍 Research market & competitors<br/>(Brief + context)
+    BrandStrategist->>BrandStrategist: Use Google Search
+    BrandStrategist->>CreativeDirector: ✅ Audience insights<br/>Competitor analysis<br/>Trending topics
+    CreativeDirector->>User: ✓ Research complete
+    end
+
+    rect rgb(52, 168, 83)
+    CreativeDirector->>Copywriter: ✍️ Create 5 posts<br/>(Brief + insights from Step 1)
+    Copywriter->>CreativeDirector: ✅ 5 Instagram posts<br/>Captions + Hashtags + CTAs
+    CreativeDirector->>User: ✓ Copywriting complete
+    end
+
+    Note over CreativeDirector: 💾 Context Compaction Check<br/>After 3 agents: Summarize older context
+
+    rect rgb(52, 168, 83)
+    CreativeDirector->>Designer: 🎨 Generate image prompts<br/>(Posts from Step 2)
+    Designer->>CreativeDirector: ✅ Visual concepts<br/>Image generation prompts
+    CreativeDirector->>User: ✓ Design complete
+    end
+
+    rect rgb(52, 168, 83)
+    CreativeDirector->>Critic: ⭐ Review all work<br/>(Strategy + Copy + Visuals)
+    Critic->>CreativeDirector: ✅ Quality assessment<br/>Feedback + Ratings
+    CreativeDirector->>User: ✓ Review complete
+    end
+
+    rect rgb(52, 168, 83)
+    CreativeDirector->>ProjectManager: 📋 Create timeline<br/>(Complete campaign details)
+    ProjectManager->>ProjectManager: Create Notion pages
+    ProjectManager->>CreativeDirector: ✅ Project plan<br/>Timeline + Tasks + Notion links
+    CreativeDirector->>User: ✓ Timeline complete
+    end
+
+    Note over CreativeDirector: 📦 FINAL COMPILATION
+
+    CreativeDirector->>User: 🎉 Complete Campaign:<br/>• Market Research<br/>• 5 Social Media Posts<br/>• Visual Concepts<br/>• Quality Review<br/>• Project Timeline

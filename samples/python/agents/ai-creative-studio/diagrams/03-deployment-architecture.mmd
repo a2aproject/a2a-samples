@@ -1,0 +1,57 @@
+%% Deployment Architecture - Cloud Infrastructure
+%% Shows how agents are deployed across GCP services
+
+graph TB
+    subgraph "Google Cloud Platform"
+        subgraph "Vertex AI Agent Engine"
+            AE[🎬 Creative Director<br/>Orchestrator Agent<br/>- Managed Runtime<br/>- No Container<br/>- Env Vars Config]
+        end
+
+        subgraph "Cloud Run - Auto-Scaling Services"
+            CR1[🔍 brand-strategist<br/>Port: 8080<br/>Memory: 1Gi<br/>Instances: 0-10]
+            CR2[✍️ copywriter<br/>Port: 8080<br/>Memory: 1Gi<br/>Instances: 0-10]
+            CR3[🎨 designer<br/>Port: 8080<br/>Memory: 1Gi<br/>Instances: 0-10]
+            CR4[⭐ critic<br/>Port: 8080<br/>Memory: 1Gi<br/>Instances: 0-10]
+            CR5[📋 project-manager<br/>Port: 8080 + Node.js<br/>Memory: 1Gi<br/>Instances: 0-10]
+        end
+
+        subgraph "APIs & Services"
+            GEMINI[🤖 Gemini 2.5 Flash API<br/>All agents use this model]
+            LOGGING[📊 Cloud Logging<br/>A2A Protocol Logs<br/>Performance Metrics]
+        end
+    end
+
+    subgraph "External Services"
+        NOTION[📝 Notion API<br/>Task Management]
+        SEARCH[🔎 Google Search API<br/>Market Research]
+    end
+
+    subgraph "Configuration"
+        ENV[⚙️ Environment Variables<br/>- Agent URLs<br/>- API Keys<br/>- PUBLIC_HOST/PORT/PROTOCOL<br/>- Notion Credentials]
+    end
+
+    ENV -.->|Configure| AE
+    ENV -.->|Configure| CR1 & CR2 & CR3 & CR4 & CR5
+
+    AE -->|HTTPS + A2A<br/>RemoteA2aAgent| CR1
+    AE -->|HTTPS + A2A<br/>RemoteA2aAgent| CR2
+    AE -->|HTTPS + A2A<br/>RemoteA2aAgent| CR3
+    AE -->|HTTPS + A2A<br/>RemoteA2aAgent| CR4
+    AE -->|HTTPS + A2A<br/>RemoteA2aAgent| CR5
+
+    CR1 & CR2 & CR3 & CR4 & CR5 -->|LLM Calls| GEMINI
+    AE -->|LLM Calls| GEMINI
+
+    CR1 -->|Search Queries| SEARCH
+    CR5 -->|MCP Protocol<br/>npx @notionhq/notion-mcp-server| NOTION
+
+    AE & CR1 & CR2 & CR3 & CR4 & CR5 -->|Logs| LOGGING
+
+    style AE fill:#4285f4,color:#fff,stroke:#333,stroke-width:3px
+    style CR1 fill:#34a853,color:#fff
+    style CR2 fill:#34a853,color:#fff
+    style CR3 fill:#34a853,color:#fff
+    style CR4 fill:#34a853,color:#fff
+    style CR5 fill:#34a853,color:#fff
+    style GEMINI fill:#fbbc04,color:#000
+    style ENV fill:#ea4335,color:#fff

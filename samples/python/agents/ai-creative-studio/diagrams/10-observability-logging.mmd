@@ -1,0 +1,99 @@
+%% Observability & Logging - A2A Protocol Monitoring
+%% Shows comprehensive logging architecture
+
+graph TB
+    subgraph "Application Layer"
+        ORCH[🎬 Creative Director<br/>Orchestrator]
+
+        subgraph "A2A Agent Calls"
+            CALL1[📞 Call brand_strategist]
+            CALL2[📞 Call copywriter]
+            CALL3[📞 Call designer]
+            CALL4[📞 Call critic]
+            CALL5[📞 Call project_manager]
+        end
+
+        ORCH --> CALL1 & CALL2 & CALL3 & CALL4 & CALL5
+    end
+
+    subgraph "Logging Layer"
+        subgraph "A2A Protocol Logging"
+            LOG_CALL[📝 log_agent_tool_call<br/>- Agent name<br/>- Timestamp<br/>- Protocol: A2A<br/>- Query length<br/>- Query preview]
+
+            LOG_RESP[📝 log_agent_tool_response<br/>- Agent name<br/>- Timestamp<br/>- Response length<br/>- Status: success/error<br/>- Error detection]
+        end
+
+        subgraph "ADK Built-in Logging"
+            ADK_LOG[📋 LoggingPlugin<br/>- LLM requests/responses<br/>- Tool calls<br/>- Token usage<br/>- Event timeline]
+        end
+
+        subgraph "Custom Plugins"
+            TRACKER[📊 AgentDelegationTrackerPlugin<br/>- Track which agents called<br/>- Call sequence<br/>- Workflow completion<br/>- Diagnosis]
+        end
+    end
+
+    CALL1 & CALL2 & CALL3 & CALL4 & CALL5 --> LOG_CALL
+    CALL1 & CALL2 & CALL3 & CALL4 & CALL5 --> LOG_RESP
+    ORCH --> ADK_LOG
+    ORCH --> TRACKER
+
+    subgraph "Storage & Analysis"
+        CLOUD_LOG[☁️ Cloud Logging<br/>Automatic collection<br/>JSON structured logs]
+
+        FILE_LOG[📄 Local Log Files<br/>orchestrator_test.log<br/>agent_logs.txt]
+
+        LOG_CALL & LOG_RESP --> CLOUD_LOG
+        LOG_CALL & LOG_RESP --> FILE_LOG
+        ADK_LOG --> FILE_LOG
+        TRACKER --> FILE_LOG
+    end
+
+    subgraph "Analysis & Debugging Tools"
+        INSPECTOR[🔍 A2A Inspector<br/>- Web UI<br/>- Live JSONRPC messages<br/>- Agent card validation<br/>- Connect to local/cloud agents]
+
+        FETCH[📥 fetch_orchestrator_logs.sh<br/>gcloud logging read<br/>Filter A2A events]
+
+        ANALYZE[📊 analyze_agent_logs.py<br/>- Parse A2A events<br/>- Extract metrics<br/>- Workflow analysis<br/>- Performance stats]
+
+        CLOUD_LOG --> FETCH
+        FETCH --> ANALYZE
+        FILE_LOG --> ANALYZE
+    end
+
+    subgraph "Metrics & Insights"
+        M1[📈 Agent Call Counts<br/>Which agents called?<br/>How many times?]
+
+        M2[⏱️ Response Times<br/>How long per agent?<br/>Bottlenecks?]
+
+        M3[❌ Error Rates<br/>Which agents fail?<br/>Error patterns?]
+
+        M4[🔄 Workflow Completion<br/>All agents called?<br/>Sequence correct?]
+
+        ANALYZE --> M1 & M2 & M3 & M4
+        TRACKER --> M4
+    end
+
+    subgraph "Example Log Output"
+        EXAMPLE["======================================
+🔧 A2A AGENT CALL: brand_strategist
+   Timestamp: 2025-12-22T10:30:12.123Z
+   Protocol: Agent-to-Agent (A2A)
+   Query length: 450 chars
+======================================
+
+======================================
+📥 A2A AGENT RESPONSE: brand_strategist
+   Status: ✅ SUCCESS
+   Response length: 2340 chars
+======================================"]
+    end
+
+    LOG_CALL -.-> EXAMPLE
+    LOG_RESP -.-> EXAMPLE
+
+    style ORCH fill:#4285f4,color:#fff,stroke:#333,stroke-width:3px
+    style LOG_CALL fill:#34a853,color:#fff
+    style LOG_RESP fill:#34a853,color:#fff
+    style CLOUD_LOG fill:#fbbc04,color:#000
+    style INSPECTOR fill:#ea4335,color:#fff
+    style ANALYZE fill:#4285f4,color:#fff

@@ -1,0 +1,51 @@
+%% A2A Protocol Communication Flow
+%% Shows how RemoteA2aAgent communicates with A2A servers
+
+sequenceDiagram
+    participant Orchestrator as 🎬 Creative Director<br/>(Orchestrator)
+    participant AgentTool as 🔧 AgentTool<br/>(Wrapper)
+    participant A2AClient as 📡 RemoteA2aAgent<br/>(A2A Client)
+    participant Network as 🌐 HTTPS
+    participant A2AServer as 🖥️ A2A Server<br/>(Cloud Run)
+    participant Agent as 🤖 Specialist Agent<br/>(LlmAgent)
+    participant Gemini as ✨ Gemini 2.5 Flash
+
+    Note over Orchestrator: LLM decides to call agent
+
+    Orchestrator->>AgentTool: Function Call:<br/>brand_strategist(query="Research eco bottles")
+
+    AgentTool->>A2AClient: Wrap as A2A request
+
+    Note over A2AClient: Build JSONRPC 2.0 message
+
+    A2AClient->>Network: POST https://service.run.app/<br/>Content-Type: application/json<br/>{"jsonrpc": "2.0", "method": "agent/invoke"...}
+
+    Network->>A2AServer: HTTPS Request
+
+    Note over A2AServer: Parse JSONRPC<br/>Extract prompt
+
+    A2AServer->>Agent: Execute agent with prompt
+
+    Agent->>Gemini: LLM Call<br/>(System instruction + user prompt)
+
+    Note over Gemini: Generate response<br/>May use tools (google_search)
+
+    Gemini->>Agent: Generated content
+
+    Agent->>A2AServer: Agent output
+
+    Note over A2AServer: Build JSONRPC response
+
+    A2AServer->>Network: HTTP 200 OK<br/>{"jsonrpc": "2.0", "result": {"content": "..."}}
+
+    Network->>A2AClient: HTTPS Response
+
+    A2AClient->>AgentTool: Parse response<br/>Extract content
+
+    AgentTool->>Orchestrator: Return as function result
+
+    Note over Orchestrator: Verify success<br/>Continue to next agent
+
+    rect rgb(52, 168, 83)
+    Note over Orchestrator,Gemini: ✅ A2A Protocol Benefits:<br/>• Stateless communication<br/>• Standard JSONRPC format<br/>• Agent cards for discovery<br/>• Works over HTTPS<br/>• Language-agnostic
+    end

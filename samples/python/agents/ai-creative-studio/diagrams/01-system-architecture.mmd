@@ -1,0 +1,49 @@
+%% Overall System Architecture - Hub and Spoke Model
+%% Shows the orchestrator coordinating with 5 specialist agents
+
+graph TB
+    subgraph "User Interface"
+        USER[👤 User/Client]
+    end
+
+    subgraph "Orchestration Layer - Vertex AI Agent Engine"
+        CD[🎬 Creative Director<br/>Orchestrator<br/>- AgentTool Pattern<br/>- Lazy Context Compaction<br/>- Planning-First]
+    end
+
+    subgraph "Specialist Agents - Cloud Run"
+        BS[🔍 Brand Strategist<br/>Market Research<br/>+ Google Search]
+        CW[✍️ Copywriter<br/>Social Media Copy<br/>Pure LLM]
+        DS[🎨 Designer<br/>Visual Concepts<br/>Pure LLM]
+        CR[⭐ Critic<br/>Quality Review<br/>Pure LLM]
+        PM[📋 Project Manager<br/>Timeline & Tasks<br/>+ Notion MCP]
+    end
+
+    subgraph "External Services"
+        GS[🔎 Google Search API]
+        NOTION[📝 Notion API<br/>via MCP Server]
+        GEMINI[🤖 Gemini 2.5 Flash]
+    end
+
+    USER -->|Campaign Brief| CD
+    CD -->|A2A Protocol<br/>HTTPS| BS
+    CD -->|A2A Protocol<br/>HTTPS| CW
+    CD -->|A2A Protocol<br/>HTTPS| DS
+    CD -->|A2A Protocol<br/>HTTPS| CR
+    CD -->|A2A Protocol<br/>HTTPS| PM
+
+    BS -->|Uses| GS
+    PM -->|Uses| NOTION
+
+    BS & CW & DS & CR & PM -->|LLM Calls| GEMINI
+    CD -->|LLM Calls| GEMINI
+
+    CD -->|Complete Campaign| USER
+
+    style CD fill:#4285f4,color:#fff,stroke:#333,stroke-width:3px
+    style BS fill:#34a853,color:#fff
+    style CW fill:#34a853,color:#fff
+    style DS fill:#34a853,color:#fff
+    style CR fill:#34a853,color:#fff
+    style PM fill:#34a853,color:#fff
+    style USER fill:#ea4335,color:#fff
+    style GEMINI fill:#fbbc04,color:#000
