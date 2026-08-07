@@ -1,0 +1,130 @@
+/* Additional styles for the Hello World Agent web interface */
+
+/* Smooth scrolling for messages */
+.messages {
+    scroll-behavior: smooth;
+}
+
+/* Enhanced focus states */
+.message-input:focus {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Button hover effects */
+.send-button {
+    transition: all 0.3s ease;
+}
+
+.send-button:hover:not(:disabled) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Message animations */
+.message {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Status bar animations */
+.status {
+    transition: all 0.3s ease;
+}
+
+.status.hidden {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+}
+
+/* Loading spinner for connection states */
+.loading {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive improvements */
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 20px;
+    }
+    
+    .header p {
+        font-size: 12px;
+    }
+    
+    .message-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .message-content {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    }
+    
+    .container {
+        background: #1a202c;
+        color: #e2e8f0;
+    }
+    
+    .message-content {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    .message.user .message-content {
+        background: #667eea;
+        color: white;
+    }
+    
+    .message.agent .message-avatar {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    .input-container {
+        background: #2d3748;
+        border-top-color: #4a5568;
+    }
+    
+    .message-input {
+        background: #1a202c;
+        color: #e2e8f0;
+        border-color: #4a5568;
+    }
+    
+    .message-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+}
