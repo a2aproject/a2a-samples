@@ -18,6 +18,10 @@ from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
 
 
+HTTP_STATUS_OK = 200
+HTTP_STATUS_NOT_FOUND = 404
+
+
 auth0_ai = Auth0AI(
     auth0={
         'domain': os.getenv('HR_AUTH0_DOMAIN'),
@@ -32,7 +36,7 @@ with_async_user_confirmation = auth0_ai.with_async_user_confirmation(
     scopes=['read:employee'],
     user_id=lambda employee_id, **__: employee_id,
     audience=os.getenv('HR_API_AUTH0_AUDIENCE'),
-    on_authorization_request='block',  # TODO: this is just for demo purposes
+    on_authorization_request='block',  # note: this is just for demo purposes
 )
 
 
@@ -63,14 +67,14 @@ async def is_active_employee(employee_id: str) -> dict[str, Any]:
             },
         )
 
-        if response.status_code == 404:
+        if response.status_code == HTTP_STATUS_NOT_FOUND:
             return {'active': False}
-        if response.status_code == 200:
+        if response.status_code == HTTP_STATUS_OK:
             return {'active': True}
         response.raise_for_status()
     except httpx.HTTPError as e:
         return {'error': f'HR API request failed: {e}'}
-    except Exception:
+    except Exception:  # noqa: BLE001
         return {'error': 'Unexpected response from HR API.'}
 
 
@@ -95,7 +99,7 @@ def get_employee_id_by_email(work_email: str) -> dict[str, Any] | None:
         )[0]
 
         return {'employee_id': user['user_id']} if user else None
-    except Exception:
+    except Exception:  # noqa: BLE001
         return {'error': 'Unexpected response from Auth0 Management API.'}
 
 
@@ -109,6 +113,8 @@ class ResponseFormat(BaseModel):
 
 
 class HRAgent:
+    """HR Agent that handles external verification requests."""
+
     SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
 
     SYSTEM_INSTRUCTION: str = (
@@ -125,7 +131,8 @@ class HRAgent:
         'For any other tool error, set the status to "failed".'
     )
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the HR Agent."""
         self.model = ChatGoogleGenerativeAI(model='gemini-2.0-flash')
         self.tools = [
             get_employee_id_by_email,
@@ -141,6 +148,7 @@ class HRAgent:
         )
 
     async def invoke(self, query: str, context_id: str) -> dict[str, Any]:
+        """Invoke the agent with a query."""
         config: RunnableConfig = {'configurable': {'thread_id': context_id}}
         await self.graph.ainvoke({'messages': [('user', query)]}, config)
         return self.get_agent_response(config)
@@ -148,34 +156,49 @@ class HRAgent:
     async def stream(
         self, query: str, context_id: str
     ) -> AsyncIterable[dict[str, Any]]:
-        inputs: dict[str, Any] = {'messages': [('user', query)]}
+        """Stream the agent's response."""
+        inputs: dict[str, any] = {'messages': [('user', query)]}
         config: RunnableConfig = {'configurable': {'thread_id': context_id}}
 
-        async for item in self.graph.astream(
-            inputs, config, stream_mode='values'
+        async for chunk in self.graph.astream(
+            inputs, config, stream_mode='updates'
         ):
-            message = item['messages'][-1] if 'messages' in item else None
+            node_name = next(iter(chunk.keys()))
+            data = chunk[node_name]
+
+            # 1. Handle intermediate tool steps
+            messages = data.get('messages', [])
+            message = messages[-1] if messages else None
             if message:
-                if (
-                    isinstance(message, AIMessage)
-                    and message.tool_calls
-                    and len(message.tool_calls) > 0
-                ):
+                if isinstance(message, AIMessage) and message.tool_calls:
                     yield {
                         'is_task_complete': False,
                         'task_state': 'working',
-                        'content': 'Looking up the employment status...',
+                        'content': 'Looking up...',
                     }
                 elif isinstance(message, ToolMessage):
                     yield {
                         'is_task_complete': False,
                         'task_state': 'working',
-                        'content': 'Processing the employment status...',
+                        'content': 'Processing...',
                     }
 
+            # 2. ADD THIS: Handle the final structured response node
+            if node_name == 'generate_structured_response':
+                # The response is usually in a variable called 'structured_response'
+                resp = data.get('structured_response')
+                if resp:
+                    yield {
+                        'is_task_complete': resp.status == 'completed',
+                        'task_state': resp.status,
+                        'content': resp.message,
+                    }
+
+        # 3. Fallback: Always try to get the final state if the loop finishes
         yield self.get_agent_response(config)
 
     def get_agent_response(self, config: RunnableConfig) -> dict[str, Any]:
+        """Get the final agent response from the state."""
         current_state = self.graph.get_state(config)
         structured_response = current_state.values.get('structured_response')
 

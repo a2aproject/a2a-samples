@@ -14,7 +14,8 @@ from agent import HRAgent
 class HRAgentExecutor(AgentExecutor):
     """HR AgentExecutor Example."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize the HR Agent Executor."""
         self.agent = HRAgent()
 
     async def execute(
@@ -22,6 +23,7 @@ class HRAgentExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ) -> None:
+        """Execute the HR Agent."""
         query = context.get_user_input()
         task = context.current_task
 
@@ -47,7 +49,14 @@ class HRAgentExecutor(AgentExecutor):
                 )
                 await event_queue.enqueue_event(
                     TaskStatusUpdateEvent(
-                        status=TaskStatus(state=task_state),
+                        status=TaskStatus(
+                            state=task_state,
+                            message=new_agent_text_message(
+                                event['content'],
+                                task.context_id,
+                                task.id,
+                            ),
+                        ),
                         final=True,
                         context_id=task.context_id,
                         task_id=task.id,
@@ -78,4 +87,5 @@ class HRAgentExecutor(AgentExecutor):
     async def cancel(
         self, request: RequestContext, event_queue: EventQueue
     ) -> Task | None:
+        """Cancel the HR Agent (not supported)."""
         raise Exception('cancel not supported')
