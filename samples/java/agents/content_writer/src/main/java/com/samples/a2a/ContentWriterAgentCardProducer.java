@@ -3,6 +3,7 @@ package com.samples.a2a;
 import io.a2a.server.PublicAgentCard;
 import io.a2a.spec.AgentCapabilities;
 import io.a2a.spec.AgentCard;
+import io.a2a.spec.AgentInterface;
 import io.a2a.spec.AgentSkill;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -28,27 +29,27 @@ public final class ContentWriterAgentCardProducer {
   @Produces
   @PublicAgentCard
   public AgentCard agentCard() {
-    return new AgentCard.Builder()
+    return AgentCard.builder()
         .name("Content Writer Agent")
         .description(
             "An agent that can write a "
                 + "comprehensive and engaging piece of content "
                 + "based on the provided outline and high-level "
                 + "description of the content")
-        .url("http://localhost:" + httpPort)
+        .supportedInterfaces(Collections.singletonList(
+            new AgentInterface("JSONRPC", "http://localhost:" + httpPort)))
         .version("1.0.0")
         .documentationUrl("http://example.com/docs")
         .capabilities(
-            new AgentCapabilities.Builder()
+            AgentCapabilities.builder()
                 .streaming(true)
                 .pushNotifications(false)
-                .stateTransitionHistory(false)
                 .build())
         .defaultInputModes(Collections.singletonList("text"))
         .defaultOutputModes(Collections.singletonList("text"))
         .skills(
             Collections.singletonList(
-                new AgentSkill.Builder()
+                AgentSkill.builder()
                     .id("writer")
                     .name("Writes content using an outline")
                     .description(
@@ -63,7 +64,6 @@ public final class ContentWriterAgentCardProducer {
                                 + "Java. Base your writing on the given "
                                 + "outline."))
                     .build()))
-        .protocolVersion("0.3.0")
         .build();
   }
 }
