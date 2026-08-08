@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "a2a_signing_ext"
+version = "0.1.0"
+description = "This package implements the example signing extension for A2A in Python."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    # DO NOT SUBMIT: Local path.
+    "a2a-sdk @ {root:uri}/../../../../../../a2a-python",
+    "httpx>=0.28.1",
+    "jcs>=0.2.1",
+    "jwcrypto>=1.5.6",
+]
+
+[project.urls]
+Homepage = "https://github.com/a2aproject/a2a-samples"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/a2a_signing_ext"]
+
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest>=8.3.2",
+  "pytest-asyncio>=0.23.8",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
+]
