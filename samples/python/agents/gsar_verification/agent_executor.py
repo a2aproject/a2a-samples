@@ -32,9 +32,10 @@ if TYPE_CHECKING:
     from a2a.server.events import EventQueue
 
 
-# A real record, exactly as the agent's own lookup would return it -- not
-# invented for the purpose of catching a mistake, this IS the ground truth
-# both modes below are given.
+# Four real records, varied on purpose -- not one example repeated. Each
+# fabrication below (see _HALLUCINATED_FIELD) misreports a *different*
+# field, so the test set covers cabin+bags, destination, passenger name,
+# and bag count in isolation, not one memorized failure pattern.
 _DB = {
     'ZFA04Y': {
         'reservation_id': 'ZFA04Y',
@@ -43,10 +44,79 @@ _DB = {
         'destination': 'JFK',
         'cabin': 'economy',
         'baggage_allowance': 1,
-    }
+    },
+    'QRX88B': {
+        'reservation_id': 'QRX88B',
+        'passenger_name': 'Diego Ramirez',
+        'origin': 'LAX',
+        'destination': 'ORD',
+        'cabin': 'business',
+        'baggage_allowance': 2,
+    },
+    'KLM12P': {
+        'reservation_id': 'KLM12P',
+        'passenger_name': 'Aisha Bello',
+        'origin': 'ATL',
+        'destination': 'MIA',
+        'cabin': 'first',
+        'baggage_allowance': 3,
+    },
+    'WYN45T': {
+        'reservation_id': 'WYN45T',
+        'passenger_name': 'Tom Becker',
+        'origin': 'SEA',
+        'destination': 'DEN',
+        'cabin': 'economy',
+        'baggage_allowance': 0,
+    },
+}
+
+# Which single field each hallucinating summary misreports, per reservation
+# -- deliberately different across the set.
+_HALLUCINATED_FIELD = {
+    'ZFA04Y': 'cabin_and_bags',  # cabin upgraded, bag count inflated
+    'QRX88B': 'destination',  # wrong arrival city
+    'KLM12P': 'passenger_name',  # wrong traveler
+    'WYN45T': 'baggage_only',  # bag count inflated, everything else correct
 }
 
 _MODE = os.environ.get('REMOTE_AGENT_MODE', 'honest')  # "honest" | "hallucinating"
+
+
+def _honest_summary(record: dict) -> str:
+    return (
+        f'Reservation {record["reservation_id"]} for {record["passenger_name"]} — '
+        f'{record["cabin"]} class, {record["origin"]} to {record["destination"]}, '
+        f'{record["baggage_allowance"]} checked bag(s) included.'
+    )
+
+
+def _hallucinated_summary(record: dict) -> str:
+    kind = _HALLUCINATED_FIELD[record['reservation_id']]
+    if kind == 'cabin_and_bags':
+        return (
+            f'Reservation {record["reservation_id"]} for {record["passenger_name"]} — '
+            f'business class, {record["origin"]} to {record["destination"]}, '
+            f'3 checked bags included at no charge.'
+        )
+    if kind == 'destination':
+        return (
+            f'Reservation {record["reservation_id"]} for {record["passenger_name"]} — '
+            f'{record["cabin"]} class, {record["origin"]} to Denver, '
+            f'{record["baggage_allowance"]} checked bag(s) included.'
+        )
+    if kind == 'passenger_name':
+        return (
+            f'Reservation {record["reservation_id"]} for Jordan Lee — '
+            f'{record["cabin"]} class, {record["origin"]} to {record["destination"]}, '
+            f'{record["baggage_allowance"]} checked bag(s) included.'
+        )
+    # baggage_only
+    return (
+        f'Reservation {record["reservation_id"]} for {record["passenger_name"]} — '
+        f'{record["cabin"]} class, {record["origin"]} to {record["destination"]}, '
+        f'2 checked bags included.'
+    )
 
 
 class ReservationLookupAgent:
@@ -58,21 +128,12 @@ class ReservationLookupAgent:
         if record is None:
             return {}, f'No reservation found for {reservation_id!r}.'
 
-        if _MODE == 'hallucinating':
-            # Same real record, same real lookup -- the summary just doesn't
-            # match it. This is not a lookup failure; the data was right
-            # there in the artifact this same call returns.
-            summary = (
-                f'Reservation {record["reservation_id"]} for {record["passenger_name"]} — '
-                f'business class, {record["origin"]} to {record["destination"]}, '
-                f'3 checked bags included at no charge.'
-            )
-        else:
-            summary = (
-                f'Reservation {record["reservation_id"]} for {record["passenger_name"]} — '
-                f'{record["cabin"]} class, {record["origin"]} to {record["destination"]}, '
-                f'{record["baggage_allowance"]} checked bag included.'
-            )
+        # Same real record, same real lookup either way -- only the
+        # summary differs. Not a lookup failure; the true data was right
+        # there in the artifact this same call returns.
+        summary = (
+            _hallucinated_summary(record) if _MODE == 'hallucinating' else _honest_summary(record)
+        )
         return record, summary
 
 
@@ -99,14 +160,16 @@ class ReservationLookupAgentExecutor(AgentExecutor):
         reservation_id = get_message_text(context.message) or ''
         record, summary = await self.agent.invoke(reservation_id)
 
-        # The real evidence -- exactly what the lookup returned, as a
-        # structured artifact alongside the natural-language summary.
+        # The real evidence -- exactly what the lookup returned, and nothing
+        # else. Deliberately NOT also publishing `summary` as its own
+        # artifact: it's a copy of the exact claim being verified, not
+        # independent evidence, and including it let the judge treat the
+        # claim as self-confirming on one case in a broader test (see
+        # test_gsar_verification.py) -- a real methodological bug this
+        # sample's own dataset expansion caught, not a hypothetical one.
         await task_updater.add_artifact(
             parts=[new_text_part(text=json.dumps(record), media_type='application/json')],
             name='reservation_record',
-        )
-        await task_updater.add_artifact(
-            parts=[new_text_part(text=summary, media_type='text/plain')], name='summary'
         )
 
         await task_updater.update_status(

@@ -20,13 +20,24 @@ with a fabricated detail in its own summary of its own real lookup — and
 shows a host correctly telling them apart by scoring the final message
 against the artifact as evidence.
 
+The dataset is four reservations, not one — and each fabrication misreports
+a *different* field (cabin + bag count, destination, passenger name, bag
+count alone), so the test set exercises GSAR against several distinct
+failure shapes instead of one memorized pattern. This is deliberate: an
+earlier, single-example version of this sample passed cleanly, but
+broadening the dataset to four cases surfaced a real bug (see
+`agent_executor.py`'s comment on why only `reservation_record` is published
+as evidence, not a duplicate `summary` artifact) that the one-example
+version never exercised.
+
 ## Layout
 
 ```text
 gsar_verification/
-├── agent_executor.py   # the remote peer -- honest or fabricating summaries
-├── __main__.py          # serves it over real A2A (same wiring as helloworld)
-├── host_verify.py       # the new piece: GSAR-scores the peer's answer
+├── agent_executor.py            # the remote peer -- 4 reservations, honest or fabricating
+├── __main__.py                   # serves it over real A2A (same wiring as helloworld)
+├── host_verify.py                # GSAR-scores one peer answer, for manual runs
+├── test_gsar_verification.py     # real e2e smoke test: all 4 reservations x both modes
 └── requirements.txt
 ```
 
@@ -63,6 +74,28 @@ Both runs are the exact same real lookup, the exact same real artifact —
 only the peer's own summary differs. `host_verify.py` never sees which
 mode is active; it only sees the message and the artifact, same as any
 real host would.
+
+## Real e2e smoke test — all 4 reservations, both modes
+
+```bash
+export OPENAI_API_KEY=sk-...
+pytest test_gsar_verification.py -v
+```
+
+Starts the real agent server as a real subprocess (same pattern as
+`helloworld`'s own `test_client.py`, not imported/mocked), sends real A2A
+messages, and checks the real GSAR verdict — 8 cases, 4 reservations ×
+2 modes. Skipped automatically without `OPENAI_API_KEY` set, since it makes
+real, billed API calls.
+
+Confirmed with 3 full clean runs (24/24) before merging. One real,
+disclosed finding along the way: a summary misreporting only the
+destination (`QRX88B`) correctly scores in the high-0.7s rather than near
+zero, because three of the four facts in that sentence genuinely are
+grounded — GSAR reporting a proportionate score there is correct behavior,
+not noise. The test asserts on whether the fabricated claim gets flagged
+(`contradicted_claims`/`ungrounded_claims`), not a fixed score cutoff, for
+exactly that reason.
 
 ## Scope
 
