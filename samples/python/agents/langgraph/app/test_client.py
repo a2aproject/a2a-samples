@@ -1,3 +1,4 @@
+import json
 import logging
 
 from typing import Any
@@ -125,7 +126,9 @@ async def main() -> None:
         )
 
         response = await client.send_message(request)
-        print(response.model_dump(mode='json', exclude_none=True))
+        print("=== Send Message Response ===")
+        print(json.dumps(response.model_dump(mode='json', exclude_none=True), indent=2))
+        print("=" * 50)
         # --8<-- [end:send_message]
 
         # --8<-- [start:Multiturn]
@@ -147,7 +150,9 @@ async def main() -> None:
         )
 
         response = await client.send_message(request)
-        print(response.model_dump(mode='json', exclude_none=True))
+        print("=== Multi-turn First Response ===")
+        print(json.dumps(response.model_dump(mode='json', exclude_none=True), indent=2))
+        print("=" * 50)
 
         task_id = response.root.result.id
         context_id = response.root.result.context_id
@@ -168,7 +173,9 @@ async def main() -> None:
         )
 
         second_response = await client.send_message(second_request)
-        print(second_response.model_dump(mode='json', exclude_none=True))
+        print("=== Multi-turn Second Response ===")
+        print(json.dumps(second_response.model_dump(mode='json', exclude_none=True), indent=2))
+        print("=" * 50)
         # --8<-- [end:Multiturn]
 
         # --8<-- [start:send_message_streaming]
@@ -179,8 +186,13 @@ async def main() -> None:
 
         stream_response = client.send_message_streaming(streaming_request)
 
+        print("=== Streaming Response Chunks ===")
+        chunk_count = 0
         async for chunk in stream_response:
-            print(chunk.model_dump(mode='json', exclude_none=True))
+            chunk_count += 1
+            print(f"--- Chunk {chunk_count} ---")
+            print(json.dumps(chunk.model_dump(mode='json', exclude_none=True), indent=2))
+        print("=" * 50)
         # --8<-- [end:send_message_streaming]
 
 
