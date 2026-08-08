@@ -22,7 +22,7 @@ against the artifact as evidence.
 
 ## Layout
 
-```
+```text
 gsar_verification/
 ├── agent_executor.py   # the remote peer -- honest or fabricating summaries
 ├── __main__.py          # serves it over real A2A (same wiring as helloworld)
@@ -43,7 +43,7 @@ export OPENAI_API_KEY=sk-...
 python host_verify.py http://127.0.0.1:9999 ZFA04Y
 ```
 
-```
+```text
 GSAR verdict: grounding_score=1.00 decision=resolved
 ```
 
@@ -54,7 +54,7 @@ REMOTE_AGENT_MODE=hallucinating python __main__.py 9999
 python host_verify.py http://127.0.0.1:9999 ZFA04Y
 ```
 
-```
+```text
 GSAR verdict: grounding_score=0.00 decision=resolved
   contradicted: ['Reservation ZFA04Y for Mei Chen — business class, SFO to JFK, 3 checked bags included at no charge.']
 ```
