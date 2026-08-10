@@ -40,7 +40,7 @@ This sample agent connects to a weather MCP server to handle weather-related req
 
     ```bash
     # Connect to the agent (specify the agent URL with correct port)
-    cd samples/python/hosts/cli
+    cd samples/python/hosts/cli/cli_v10
     uv run . --agent http://localhost:10001
 
     # If you changed the port when starting the agent, use that port instead

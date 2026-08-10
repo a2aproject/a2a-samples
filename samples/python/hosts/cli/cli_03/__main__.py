@@ -89,7 +89,7 @@ async def cli(
         notification_receiver_port = notif_receiver_parsed.port
 
         if use_push_notifications:
-            from hosts.cli.push_notification_listener import (
+            from hosts.cli.cli_03.push_notification_listener import (
                 PushNotificationListener,
             )
 

@@ -1,9 +1,9 @@
 /// usr/bin/env jbang "$0" "$@" ; exit $?
-//DEPS io.github.a2asdk:a2a-java-sdk-client:0.3.0.Final
-//DEPS io.github.a2asdk:a2a-java-sdk-client-transport-jsonrpc:0.3.0.Final
-//DEPS io.github.a2asdk:a2a-java-sdk-client-transport-grpc:0.3.0.Final
-//DEPS io.github.a2asdk:a2a-java-sdk-client-transport-rest:0.3.0.Final
-//DEPS io.github.a2asdk:a2a-java-sdk-client-transport-spi:0.3.0.Final
+//DEPS org.a2aproject.sdk:a2a-java-sdk-client:1.0.0.Final
+//DEPS org.a2aproject.sdk:a2a-java-sdk-client-transport-jsonrpc:1.0.0.Final
+//DEPS org.a2aproject.sdk:a2a-java-sdk-client-transport-grpc:1.0.0.Final
+//DEPS org.a2aproject.sdk:a2a-java-sdk-client-transport-rest:1.0.0.Final
+//DEPS org.a2aproject.sdk:a2a-java-sdk-client-transport-spi:1.0.0.Final
 //DEPS com.fasterxml.jackson.core:jackson-databind:2.15.2
 //DEPS io.grpc:grpc-netty-shaded:1.69.1
 //DEPS org.keycloak:keycloak-authz-client:25.0.1
@@ -17,12 +17,12 @@
 package com.samples.a2a.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.a2a.A2A;
-import io.a2a.client.Client;
-import io.a2a.client.http.A2ACardResolver;
-import io.a2a.spec.A2AClientException;
-import io.a2a.spec.AgentCard;
-import io.a2a.spec.Message;
+import org.a2aproject.sdk.A2A;
+import org.a2aproject.sdk.client.Client;
+import org.a2aproject.sdk.client.http.A2ACardResolver;
+import org.a2aproject.sdk.spec.A2AClientException;
+import org.a2aproject.sdk.spec.AgentCard;
+import org.a2aproject.sdk.spec.Message;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -188,7 +188,7 @@ public final class TestClientRunner {
       System.out.println("Using transport: " + transport);
 
       // Fetch the public agent card
-      AgentCard publicAgentCard = new A2ACardResolver(serverUrl).getAgentCard();
+      AgentCard publicAgentCard = A2ACardResolver.builder().baseUrl(serverUrl).build().getAgentCard();
       System.out.println("Successfully fetched public agent card:");
       System.out.println(OBJECT_MAPPER.writeValueAsString(publicAgentCard));
       System.out.println("Using public agent card for client initialization.");
