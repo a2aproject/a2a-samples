@@ -15,9 +15,9 @@ This demo shows how to build an A2A agent that can execute command-line tools sa
 - **Input validation**: All commands are parsed and validated
 
 ### 🖥️ Cross-Platform Support
-- **Windows**: Uses `cmd.exe` for command execution
-- **Linux/Mac**: Uses `/bin/bash` for command execution
-- **Automatic detection**: Determines the OS at runtime
+- **Windows**: Executes real Windows executables directly (`whoami`, `tasklist`, `ipconfig`, ...)
+- **Linux/Mac**: Executes real Unix binaries directly (`ls`, `pwd`, `cat`, `ps`, ...)
+- **No shell**: Commands run via direct process invocation (`UseShellExecute = false`), never through `cmd.exe` or `/bin/bash` — arguments are passed as an argv array, so shell metacharacters arrive as literal text
 
 ### 📊 Rich Output
 - **Structured results**: Shows command, exit code, output, and errors
@@ -50,40 +50,39 @@ dotnet run
 
 ### File Operations
 ```bash
-CLI> dir                    # List directory (Windows)
 CLI> ls -la                 # List directory with details (Linux/Mac)
 CLI> pwd                    # Show current directory
+CLI> cat README.md          # Show file contents
 ```
 
 ### System Information
 ```bash
 CLI> whoami                 # Show current user
-CLI> date                   # Show current date and time
+CLI> ps                     # List processes (Linux/Mac)
+CLI> tasklist               # List processes (Windows)
 ```
 
 ### Development Tools
 ```bash
 CLI> git status             # Check git repository status
-CLI> dotnet --version       # Check .NET version
-CLI> node --version         # Check Node.js version
-CLI> npm --version          # Check npm version
 ```
 
 ### Network Commands
 ```bash
 CLI> ping google.com        # Test network connectivity
 CLI> ipconfig               # Show network configuration (Windows)
+CLI> netstat                # Show network connections
 ```
 
 ## Security Considerations
 
 ### Allowed Commands
-The agent only allows these command categories:
-- **File operations**: `dir`, `ls`, `pwd`, `cat`, `type`, `head`, `tail`
-- **System info**: `whoami`, `date`, `time`
+The agent only allows these commands — real executables only; shell builtins and interpreters are excluded:
+- **File operations**: `ls`, `pwd`, `cat`, `head`, `tail`
+- **System info**: `whoami`
 - **Process info**: `ps`, `tasklist`
 - **Network**: `ping`, `ipconfig`, `netstat`
-- **Development tools**: `git`, `dotnet`, `node`, `npm`, `python`
+- **Development tools**: `git`
 
 ### Blocked Commands
 Dangerous commands are blocked for security:

@@ -1,7 +1,6 @@
 using A2A;
 using System.Diagnostics;
 using System.Text.Json;
-using System.Runtime.InteropServices;
 
 namespace CLIServer;
 
@@ -31,16 +30,18 @@ internal record CommandExecutionResult(
 public class CLIAgent
 {
     /// <summary>
-    /// Allowed commands — safe, read-only system utilities.
-    /// Interpreters and package managers (python, node, npm, dotnet) are
-    /// intentionally excluded: they accept arbitrary code as arguments,
-    /// which cannot be meaningfully constrained by an allowlist.
+    /// Allowed commands — safe, read-only system utilities that resolve to
+    /// real executables on at least one platform. Interpreters and package
+    /// managers (python, node, npm, dotnet) are excluded: they accept
+    /// arbitrary code as arguments, which cannot be meaningfully constrained
+    /// by an allowlist. Shell-only builtins (dir, date, time, echo, type on
+    /// Windows; time on Unix) are excluded too: they only resolve through a
+    /// shell, and this agent executes processes directly.
     /// </summary>
     private static readonly HashSet<string> AllowedCommands = new()
     {
         // Safe read-only commands
-        "dir", "ls", "pwd", "whoami", "date", "time",
-        "echo", "cat", "type", "head", "tail",
+        "ls", "pwd", "whoami", "cat", "head", "tail",
         "ps", "tasklist", "netstat", "ipconfig", "ping",
         "git"
     };
@@ -258,7 +259,7 @@ public class CLIAgent
         return Task.FromResult(new AgentCard
         {
             Name = "CLI Agent",
-            Description = "Executes command-line tools safely. Supports common commands like 'dir', 'ls', 'git status', 'dotnet build', etc.",
+            Description = "Executes command-line tools safely. Supports common commands like 'ls', 'whoami', 'git status', 'ping'.",
             Url = agentUrl,
             Version = "1.0.0",
             DefaultInputModes = ["text"],
