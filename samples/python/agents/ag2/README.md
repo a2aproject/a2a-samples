@@ -9,13 +9,13 @@ Here is a sequence diagram that shows how the current demo implementation of the
 
 ```mermaid
 sequenceDiagram
-    participant Client as A2A Client
-    participant Server as A2A Server
-    participant Agent as AG2 (LLM + MCP Client)
+    participant Client as AG2 CodeGen Agent (A2A Client)
+    participant Server as A2A Server (JSON-RPC)
+    participant Agent as AG2 Reviewer Agent (LLM + Tools)
     participant Tool as Mypy Tool
 
-    Client->>Server: Send task with query
-    Server->>Agent: Forward query to AG2 agent
+    Client->>Server: Fetch agent card, then send task with generated code
+    Server->>Agent: Forward task to AG2 agent
     Note over Server,Agent: Real-time status updates (streaming)
 
     Agent->>Agent: LLM decides to use tool
@@ -39,15 +39,22 @@ sequenceDiagram
 ## The demo
 
 Here we have a simple demo that shows how to use the A2A protocol to communicate with an AG2 agent. We have
-- one A2A-served remote agent `a2a_python_reviewer.py`
+- one A2A-served remote agent `a2a_python_reviewer.py`, built with `A2AServer` and exposed over JSON-RPC
 - two different A2A clients, which communicate with the remote agent using the A2A protocol:
     CLI code generator `cli_codegen_a2a_client.py` and FastAPI code generator `fastapi_codegen_a2a_client.py`
+
+On the client side the remote reviewer is just an `Agent` configured with `A2AConfig`, and `Agent.as_tool()`
+turns it into a regular tool of the local code generator agent. The local LLM decides when to delegate the
+generated code for review, and the delegation goes over A2A.
+
+The sample targets **AG2 v1.0.0+** (the `ag2` package). It is not compatible with the pre-1.0 `autogen` API.
 
 ## Prerequisites
 
 - Python 3.12 or higher
 - UV package manager
 - OpenAI API Key (for default configuration)
+- AG2 v1.0.0 or higher
 
 ## Setup & Running
 
@@ -57,10 +64,10 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
     cd samples/python/agents/ag2
     ```
 
-2. Create an environment file with your API key (uses `openai gpt-4o`):
+2. Export your API key (the sample uses `openai gpt-5.6-luna`):
 
     ```bash
-    echo "OPENAI_API_KEY=your_api_key_here" > .env
+    export OPENAI_API_KEY=your_api_key_here
     ```
 
 3. Install the dependencies:
@@ -73,7 +80,7 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
     uv run a2a_python_reviewer.py
     ```
 
-5. In a new terminal, start an A2AClient interface to interact with the remote (ag2) agent. You can use one of the following clients:
+5. In a new terminal (with `OPENAI_API_KEY` exported as well), start an A2AClient interface to interact with the remote (ag2) agent. You can use one of the following clients:
 
     - **Method A: Run the CLI client**
 
@@ -91,8 +98,7 @@ Here we have a simple demo that shows how to use the A2A protocol to communicate
 
 - [A2A Protocol Documentation](https://google.github.io/A2A/#/documentation)
 - [AG2 Documentation](https://docs.ag2.ai/)
-- [AG2 A2A Documentation](https://docs.ag2.ai/latest/docs/user-guide/a2a/)
-- [MCP Documentation](https://modelcontextprotocol.io/introduction)
+- [AG2 A2A Documentation](https://docs.ag2.ai/docs/user-guide/a2a/overview)
 
 ## Disclaimer
 
