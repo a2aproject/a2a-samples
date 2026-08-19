@@ -19,7 +19,8 @@ Provides three main GitHub API functions:
 All functions include error handling and support optional parameters for filtering.
 
 ### 3. OpenAI Agent Executor (`openai_agent_executor.py`)
-- Manages the conversation flow with OpenRouter API
+- Manages the conversation flow with an OpenAI-compatible gateway API
+- Supports [OrcaRouter](https://www.orcarouter.ai) and OpenRouter out of the box
 - Converts GitHub tools to OpenAI function calling format
 - Handles tool execution and response streaming
 - Implements iterative conversation with tool calls
@@ -33,7 +34,7 @@ All functions include error handling and support optional parameters for filteri
 
 - **Python 3.10 or higher**
 - **[UV](https://docs.astral.sh/uv/)** - Python package manager
-- **OpenRouter API Key** - For AI capabilities
+- **OrcaRouter or OpenRouter API Key** - For AI capabilities
 - **GitHub Personal Access Token** (optional, but recommended for higher rate limits)
 
 ## 🚀 Step-by-Step Setup and Running
@@ -59,10 +60,13 @@ uv sync
 
 ### Step 3: Configure Environment Variables
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root. The agent uses **OrcaRouter** when `ORCAROUTER_API_KEY` is set, and falls back to OpenRouter otherwise.
 
 ```bash
-# OpenRouter API Key (required)
+# Option A: OrcaRouter API Key (preferred)
+echo "ORCAROUTER_API_KEY=your_orcarouter_api_key_here" > .env
+
+# Option B: OpenRouter API Key (fallback)
 echo "OPENROUTER_API_KEY=your_openrouter_api_key_here" > .env
 
 # GitHub Personal Access Token (optional but recommended)
