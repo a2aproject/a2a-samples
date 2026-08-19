@@ -1,6 +1,9 @@
+import inspect
 import json
 import logging
 
+from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Any
 
 from a2a.server.agent_execution import AgentExecutor
@@ -20,31 +23,46 @@ from openai import AsyncOpenAI
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
+# Named OpenAI-compatible gateway providers. The active provider is chosen in
+# __main__.py based on which API key is set.
+OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1'
+OPENROUTER_MODEL = 'anthropic/claude-3.5-sonnet'
+
+ORCAROUTER_BASE_URL = 'https://api.orcarouter.ai/v1'
+ORCAROUTER_MODEL = 'orcarouter/auto'
+
+
+@dataclass(frozen=True)
+class OpenAICompatibleProvider:
+    """Configuration for an OpenAI-compatible gateway provider."""
+
+    api_key: str
+    base_url: str
+    model: str
+    default_headers: dict[str, str] | None = None
+
 
 class OpenAIAgentExecutor(AgentExecutor):
-    """An AgentExecutor that runs an OpenAI-based Agent."""
+    """An AgentExecutor that runs an OpenAI-compatible Agent."""
 
     def __init__(
         self,
         card: AgentCard,
         tools: dict[str, Any],
-        api_key: str,
+        provider: OpenAICompatibleProvider,
         system_prompt: str,
     ):
         self._card = card
         self.tools = tools
         self.client = AsyncOpenAI(
-            api_key=api_key,
-            base_url='https://openrouter.ai/api/v1',
-            default_headers={
-                'HTTP-Referer': 'http://localhost:10007',
-                'X-Title': 'GitHub Agent',
-            },
+            api_key=provider.api_key,
+            base_url=provider.base_url,
+            default_headers=provider.default_headers,
         )
-        self.model = 'anthropic/claude-3.5-sonnet'
+        self.model = provider.model
         self.system_prompt = system_prompt
 
-    async def _process_request(
+    async def _process_request(  # noqa: PLR0912, PLR0915
         self,
         message_text: str,
         context: RequestContext,
@@ -100,7 +118,9 @@ class OpenAIAgentExecutor(AgentExecutor):
                         function_args = json.loads(tool_call.function.arguments)
 
                         logger.debug(
-                            f'Calling function: {function_name} with args: {function_args}'
+                            'Calling function: %s with args: %s',
+                            function_name,
+                            function_args,
                         )
 
                         # Execute the function
@@ -115,9 +135,7 @@ class OpenAIAgentExecutor(AgentExecutor):
                                     'error': f'Method {function_name} not found on tool instance'
                                 }
                         else:
-                            result = {
-                                'error': f'Function {function_name} not found'
-                            }
+                            result = {'error': f'Function {function_name} not found'}
 
                         # Serialize result properly - handle Pydantic models
                         if hasattr(result, 'model_dump'):
@@ -152,17 +170,15 @@ class OpenAIAgentExecutor(AgentExecutor):
                 # No more tool calls, this is the final response
                 if message.content:
                     parts = [TextPart(text=message.content)]
-                    logger.debug(f'Yielding final response: {parts}')
+                    logger.debug('Yielding final response: %s', parts)
                     await task_updater.add_artifact(parts)
                     await task_updater.complete()
                 break
 
-            except Exception as e:
-                logger.error(f'Error in OpenAI API call: {e}')
+            except Exception as exc:
+                logger.exception('Error in OpenAI API call')
                 error_parts = [
-                    TextPart(
-                        text=f'Sorry, an error occurred while processing the request: {e!s}'
-                    )
+                    TextPart(text=f'Sorry, an error occurred while processing the request: {exc!s}')
                 ]
                 await task_updater.add_artifact(error_parts)
                 await task_updater.complete()
@@ -170,17 +186,13 @@ class OpenAIAgentExecutor(AgentExecutor):
 
         if iteration >= max_iterations:
             error_parts = [
-                TextPart(
-                    text='Sorry, the request has exceeded the maximum number of iterations.'
-                )
+                TextPart(text='Sorry, the request has exceeded the maximum number of iterations.')
             ]
             await task_updater.add_artifact(error_parts)
             await task_updater.complete()
 
-    def _extract_function_schema(self, func):
-        """Extract OpenAI function schema from a Python function"""
-        import inspect
-
+    def _extract_function_schema(self, func: Callable[..., Any]) -> dict[str, object]:
+        """Extract an OpenAI function schema from a Python function."""
         # Get function signature
         sig = inspect.signature(func)
 
@@ -201,15 +213,15 @@ class OpenAIAgentExecutor(AgentExecutor):
 
             # Try to infer type from annotation
             if param.annotation != inspect.Parameter.empty:
-                if param.annotation == int:
+                if param.annotation is int:
                     param_type = 'integer'
-                elif param.annotation == float:
+                elif param.annotation is float:
                     param_type = 'number'
-                elif param.annotation == bool:
+                elif param.annotation is bool:
                     param_type = 'boolean'
-                elif param.annotation == list:
+                elif param.annotation is list:
                     param_type = 'array'
-                elif param.annotation == dict:
+                elif param.annotation is dict:
                     param_type = 'object'
 
             # Check if parameter has default value
@@ -235,8 +247,8 @@ class OpenAIAgentExecutor(AgentExecutor):
         self,
         context: RequestContext,
         event_queue: EventQueue,
-    ):
-        # Run the agent until complete
+    ) -> None:
+        """Run the agent until complete."""
         updater = TaskUpdater(event_queue, context.task_id, context.context_id)
         # Immediately notify that the task is submitted.
         if not context.current_task:
@@ -252,6 +264,7 @@ class OpenAIAgentExecutor(AgentExecutor):
         await self._process_request(message_text, context, updater)
         logger.debug('[GitHub Agent] execute exiting')
 
-    async def cancel(self, context: RequestContext, event_queue: EventQueue):
+    async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
+        """Cancel the running task."""
         # Ideally: kill any ongoing tasks.
         raise ServerError(error=UnsupportedOperationError())

@@ -1,3 +1,4 @@
+# ruff: noqa: N999 - the sample lives in a hyphenated directory
 import logging
 import os
 
@@ -14,8 +15,13 @@ from a2a.types import (
 )
 from dotenv import load_dotenv
 from openai_agent import create_agent  # type: ignore[import-not-found]
-from openai_agent_executor import (
-    OpenAIAgentExecutor,  # type: ignore[import-untyped]
+from openai_agent_executor import (  # type: ignore[import-untyped]
+    OPENROUTER_BASE_URL,
+    OPENROUTER_MODEL,
+    ORCAROUTER_BASE_URL,
+    ORCAROUTER_MODEL,
+    OpenAIAgentExecutor,
+    OpenAICompatibleProvider,
 )
 from starlette.applications import Starlette
 
@@ -28,10 +34,24 @@ logging.basicConfig()
 @click.command()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=10007)
-def main(host: str, port: int):
-    # Verify an API key is set.
-    if not os.getenv('OPENROUTER_API_KEY'):
-        raise ValueError('OPENROUTER_API_KEY environment variable not set')
+def main(host: str, port: int) -> None:
+    """Run the A2A GitHub agent server."""
+    # Pick the active provider. OrcaRouter is used when its key is set,
+    # otherwise the sample falls back to OpenRouter.
+    api_key = os.getenv('ORCAROUTER_API_KEY') or os.getenv('OPENROUTER_API_KEY')
+    if not api_key:
+        raise ValueError('ORCAROUTER_API_KEY or OPENROUTER_API_KEY environment variable not set')
+    base_url = ORCAROUTER_BASE_URL if os.getenv('ORCAROUTER_API_KEY') else OPENROUTER_BASE_URL
+    model = ORCAROUTER_MODEL if os.getenv('ORCAROUTER_API_KEY') else OPENROUTER_MODEL
+    provider = OpenAICompatibleProvider(
+        api_key=api_key,
+        base_url=base_url,
+        model=model,
+        default_headers={
+            'HTTP-Referer': 'http://localhost:10007',
+            'X-Title': 'GitHub Agent',
+        },
+    )
 
     skill = AgentSkill(
         id='github_repositories',
@@ -63,7 +83,7 @@ def main(host: str, port: int):
     agent_executor = OpenAIAgentExecutor(
         card=agent_card,
         tools=agent_data['tools'],
-        api_key=os.getenv('OPENROUTER_API_KEY'),
+        provider=provider,
         system_prompt=agent_data['system_prompt'],
     )
 
@@ -71,9 +91,7 @@ def main(host: str, port: int):
         agent_executor=agent_executor, task_store=InMemoryTaskStore()
     )
 
-    a2a_app = A2AStarletteApplication(
-        agent_card=agent_card, http_handler=request_handler
-    )
+    a2a_app = A2AStarletteApplication(agent_card=agent_card, http_handler=request_handler)
     routes = a2a_app.routes()
 
     app = Starlette(routes=routes)
