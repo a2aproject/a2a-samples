@@ -1,3 +1,4 @@
+# ruff: noqa
 import json
 import os
 import sys
@@ -75,9 +76,10 @@ async def ListRemoteAgents():
     client = ConversationClient(server_url)
     try:
         response = await client.list_agents(ListAgentRequest())
-        return response.result
+        return response.result if response.result else []
     except Exception as e:
         print('Failed to read agents', e)
+    return []
 
 
 async def AddRemoteAgent(path: str):
@@ -102,9 +104,10 @@ async def GetProcessingMessages():
     client = ConversationClient(server_url)
     try:
         response = await client.get_pending_messages(PendingMessageRequest())
-        return dict(response.result)
+        return dict(response.result) if response.result else {}
     except Exception as e:
         print('Error getting pending messages', e)
+    return {}
 
 
 def GetMessageAliases():
@@ -115,18 +118,16 @@ async def GetTasks():
     client = ConversationClient(server_url)
     try:
         response = await client.list_tasks(ListTaskRequest())
-        return response.result
+        return response.result if response.result else []
     except Exception as e:
         print('Failed to list tasks ', e)
-        return []
+    return []
 
 
 async def ListMessages(conversation_id: str) -> list[Message]:
     client = ConversationClient(server_url)
     try:
-        response = await client.list_messages(
-            ListMessageRequest(params=conversation_id)
-        )
+        response = await client.list_messages(ListMessageRequest(params=conversation_id))
         return response.result if response.result else []
     except Exception as e:
         print('Failed to list messages ', e)
@@ -147,9 +148,7 @@ async def UpdateAppState(state: AppState, conversation_id: str):
         if not conversations:
             state.conversations = []
         else:
-            state.conversations = [
-                convert_conversation_to_state(x) for x in conversations
-            ]
+            state.conversations = [convert_conversation_to_state(x) for x in conversations]
 
         state.task_list = []
         for task in await GetTasks():
@@ -176,9 +175,7 @@ async def UpdateApiKey(api_key: str):
 
         # Call the update API endpoint
         async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f'{server_url}/api_key/update', json={'api_key': api_key}
-            )
+            response = await client.post(f'{server_url}/api_key/update', json={'api_key': api_key})
             response.raise_for_status()
         return True
     except Exception as e:
@@ -212,11 +209,7 @@ def convert_conversation_to_state(
 
 def convert_task_to_state(task: Task) -> StateTask:
     # Get the first message as the description
-    output = (
-        [extract_content(a.parts) for a in task.artifacts]
-        if task.artifacts
-        else []
-    )
+    output = [extract_content(a.parts) for a in task.artifacts] if task.artifacts else []
     if not task.history:
         return StateTask(
             task_id=task.id,

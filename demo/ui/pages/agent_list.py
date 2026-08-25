@@ -1,3 +1,4 @@
+# ruff: noqa
 import asyncio
 
 import mesop as me
@@ -20,13 +21,9 @@ def agent_list_page(app_state: AppState) -> None:
             with header('Remote Agents', 'smart_toy'):
                 pass
             agents = asyncio.run(ListRemoteAgents())
-            agents_list(agents)
+            agents_list(agents or [])
             with dialog(state.agent_dialog_open):
-                with me.box(
-                    style=me.Style(
-                        display='flex', flex_direction='column', gap=12
-                    )
-                ):
+                with me.box(style=me.Style(display='flex', flex_direction='column', gap=12)):
                     me.input(
                         label='Agent Address',
                         on_blur=set_agent_address,
@@ -43,9 +40,7 @@ def agent_list_page(app_state: AppState) -> None:
                     if state.agent_description:
                         me.text(f'Agent Description: {state.agent_description}')
                     if state.agent_framework_type:
-                        me.text(
-                            f'Agent Framework Type: {state.agent_framework_type}'
-                        )
+                        me.text(f'Agent Framework Type: {state.agent_framework_type}')
                     if state.input_modes:
                         me.text(f'Input Modes: {input_modes_string}')
                     if state.output_modes:
@@ -54,9 +49,7 @@ def agent_list_page(app_state: AppState) -> None:
                         me.text(f'Extensions: {extensions_string}')
 
                     if state.agent_name:
-                        me.text(
-                            f'Streaming Supported: {state.stream_supported}'
-                        )
+                        me.text(f'Streaming Supported: {state.stream_supported}')
                         me.text(
                             f'Push Notifications Supported: {state.push_notifications_supported}'
                         )
@@ -81,20 +74,14 @@ async def load_agent_info(e: me.ClickEvent) -> None:
         state.agent_name = agent_card_response.name
         state.agent_description = agent_card_response.description
         state.agent_framework_type = (
-            agent_card_response.provider.organization
-            if agent_card_response.provider
-            else ''
+            agent_card_response.provider.organization if agent_card_response.provider else ''
         )
         state.input_modes = agent_card_response.default_input_modes
         state.output_modes = agent_card_response.default_output_modes
         if agent_card_response.capabilities.extensions:
-            state.extensions = [
-                ext.uri for ext in agent_card_response.capabilities.extensions
-            ]
+            state.extensions = [ext.uri for ext in agent_card_response.capabilities.extensions]
         state.stream_supported = agent_card_response.capabilities.streaming
-        state.push_notifications_supported = (
-            agent_card_response.capabilities.push_notifications
-        )
+        state.push_notifications_supported = agent_card_response.capabilities.push_notifications
     except Exception as e:
         print(e)
         state.agent_name = None

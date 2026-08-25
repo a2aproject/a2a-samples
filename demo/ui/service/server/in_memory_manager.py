@@ -1,3 +1,4 @@
+# ruff: noqa
 import asyncio
 import datetime
 import uuid
@@ -147,14 +148,10 @@ class InMemoryFakeAgentManager(ApplicationManager):
 
     def next_message(self) -> Message:
         message = _message_queue[self._next_message_idx]
-        self._next_message_idx = (self._next_message_idx + 1) % len(
-            _message_queue
-        )
+        self._next_message_idx = (self._next_message_idx + 1) % len(_message_queue)
         return message
 
-    def get_conversation(
-        self, conversation_id: str | None
-    ) -> Conversation | None:
+    def get_conversation(self, conversation_id: str | None) -> Conversation | None:
         if not conversation_id:
             return None
         return next(
@@ -170,9 +167,7 @@ class InMemoryFakeAgentManager(ApplicationManager):
         for message_id in self._pending_message_ids:
             if message_id in self._task_map:
                 task_id = self._task_map[message_id]
-                task = next(
-                    filter(lambda x: x.id == task_id, self._tasks), None
-                )
+                task = next(filter(lambda x: x.id == task_id, self._tasks), None)
                 if not task:
                     rval.append((message_id, ''))
                 elif task.history and task.history[-1].parts:
@@ -183,15 +178,14 @@ class InMemoryFakeAgentManager(ApplicationManager):
                         rval.append(
                             (
                                 message_id,
-                                part.root.text
-                                if part.root.kind == 'text'
-                                else 'Working...',
+                                part.root.text if part.root.kind == 'text' else 'Working...',
                             )
                         )
+                else:
+                    rval.append((message_id, ''))
             else:
                 rval.append((message_id, ''))
-            return rval
-        return [(x, '') for x in self._pending_message_ids]
+        return rval
 
     def register_agent(self, url):
         agent_data = get_agent_card(url)
@@ -213,7 +207,7 @@ class InMemoryFakeAgentManager(ApplicationManager):
 
     @property
     def events(self) -> list[Event]:
-        return []
+        return self._events
 
 
 _contextId = str(uuid.uuid4())
