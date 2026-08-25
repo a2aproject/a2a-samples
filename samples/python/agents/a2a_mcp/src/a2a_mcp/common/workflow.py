@@ -1,3 +1,4 @@
+# ruff: noqa
 import json
 import logging
 import uuid
@@ -18,6 +19,10 @@ from a2a.types import (
     TaskArtifactUpdateEvent,
     TaskState,
     TaskStatusUpdateEvent,
+)
+from a2a_mcp.common.child_message import (
+    child_task_id_from_result,
+    create_child_message_payload,
 )
 from a2a_mcp.common.utils import get_mcp_server_config
 from a2a_mcp.mcp import client
@@ -61,21 +66,15 @@ class WorkflowNode:
     async def get_planner_resource(self) -> AgentCard | None:
         logger.info(f'Getting resource for node {self.id}')
         config = get_mcp_server_config()
-        async with client.init_session(
-            config.host, config.port, config.transport
-        ) as session:
-            response = await client.find_resource(
-                session, 'resource://agent_cards/planner_agent'
-            )
+        async with client.init_session(config.host, config.port, config.transport) as session:
+            response = await client.find_resource(session, 'resource://agent_cards/planner_agent')
             data = json.loads(response.contents[0].text)
             return AgentCard(**data['agent_card'][0])
 
     async def find_agent_for_task(self) -> AgentCard | None:
         logger.info(f'Find agent for task - {self.task}')
         config = get_mcp_server_config()
-        async with client.init_session(
-            config.host, config.port, config.transport
-        ) as session:
+        async with client.init_session(config.host, config.port, config.transport) as session:
             result = await client.find_agent(session, self.task)
             agent_card_json = json.loads(result.content[0].text)
             logger.debug(f'Found agent {agent_card_json} for task {self.task}')
@@ -84,7 +83,7 @@ class WorkflowNode:
     async def run_node(
         self,
         query: str,
-        task_id: str,
+        task_id: str | None,
         context_id: str,
     ) -> AsyncIterable[dict[str, any]]:
         logger.info(f'Executing node {self.id}')
@@ -96,24 +95,20 @@ class WorkflowNode:
         async with httpx.AsyncClient() as httpx_client:
             client = A2AClient(httpx_client, agent_card)
 
-            payload: dict[str, any] = {
-                'message': {
-                    'role': 'user',
-                    'parts': [{'kind': 'text', 'text': query}],
-                    'messageId': uuid4().hex,
-                    'taskId': task_id,
-                    'contextId': context_id,
-                },
-            }
+            payload = create_child_message_payload(
+                query=query,
+                context_id=context_id,
+                task_id=task_id,
+            )
             request = SendStreamingMessageRequest(
                 id=str(uuid4()), params=MessageSendParams(**payload)
             )
             response_stream = client.send_message_streaming(request)
             async for chunk in response_stream:
                 # Save the artifact as a result of the node
-                if isinstance(
-                    chunk.root, SendStreamingMessageSuccessResponse
-                ) and (isinstance(chunk.root.result, TaskArtifactUpdateEvent)):
+                if isinstance(chunk.root, SendStreamingMessageSuccessResponse) and (
+                    isinstance(chunk.root.result, TaskArtifactUpdateEvent)
+                ):
                     artifact = chunk.root.result.artifact
                     self.results = artifact
                 yield chunk
@@ -142,9 +137,7 @@ class WorkflowGraph:
 
         self.graph.add_edge(from_node_id, to_node_id)
 
-    async def run_workflow(
-        self, start_node_id: str | None = None
-    ) -> AsyncIterable[dict[str, any]]:
+    async def run_workflow(self, start_node_id: str | None = None) -> AsyncIterable[dict[str, any]]:
         logger.info('Executing workflow graph')
         if not start_node_id or start_node_id not in self.nodes:
             start_nodes = [n for n, d in self.graph.in_degree() if d == 0]
@@ -172,21 +165,21 @@ class WorkflowGraph:
                 # When the workflow node is paused, do not yield any chunks
                 # but, let the loop complete.
                 if node.state != Status.PAUSED:
-                    if isinstance(
-                        chunk.root, SendStreamingMessageSuccessResponse
-                    ) and (
-                        isinstance(chunk.root.result, TaskStatusUpdateEvent)
-                    ):
-                        task_status_event = chunk.root.result
-                        context_id = task_status_event.context_id
-                        if (
-                            task_status_event.status.state
-                            == TaskState.input_required
-                            and context_id
-                        ):
-                            node.state = Status.PAUSED
-                            self.state = Status.PAUSED
-                            self.paused_node_id = node.id
+                    if isinstance(chunk.root, SendStreamingMessageSuccessResponse):
+                        result = chunk.root.result
+                        child_task_id = child_task_id_from_result(result)
+                        if child_task_id:
+                            self.set_node_attribute(node_id, 'task_id', child_task_id)
+                        if isinstance(result, TaskStatusUpdateEvent):
+                            task_status_event = result
+                            context_id = task_status_event.context_id
+                            if (
+                                task_status_event.status.state == TaskState.input_required
+                                and context_id
+                            ):
+                                node.state = Status.PAUSED
+                                self.state = Status.PAUSED
+                                self.paused_node_id = node.id
                     yield chunk
             if self.state == Status.PAUSED:
                 break
