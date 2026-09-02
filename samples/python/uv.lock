@@ -15,7 +15,6 @@ members = [
     "a2a-samples-marvin",
     "ag2-a2a",
     "airbnb-planner-multiagent",
-    "timestamp-ext",
     "traceability-ext",
     "veo-video-sample-agent",
 ]
@@ -73,7 +72,6 @@ dependencies = [
     { name = "google-genai" },
     { name = "litellm" },
     { name = "python-dotenv" },
-    { name = "timestamp-ext" },
 ]
 
 [package.metadata]
@@ -84,7 +82,6 @@ requires-dist = [
     { name = "google-genai", specifier = ">=1.27.0" },
     { name = "litellm" },
     { name = "python-dotenv", specifier = ">=1.1.0" },
-    { name = "timestamp-ext", editable = "extensions/timestamp" },
 ]
 
 [[package]]
@@ -128,7 +125,6 @@ dependencies = [
     { name = "a2a-sdk" },
     { name = "google-adk" },
     { name = "google-genai" },
-    { name = "timestamp-ext" },
 ]
 
 [package.metadata]
@@ -136,7 +132,6 @@ requires-dist = [
     { name = "a2a-sdk", specifier = ">=0.3.0" },
     { name = "google-adk", specifier = ">=1.7.0" },
     { name = "google-genai", specifier = ">=1.9.0" },
-    { name = "timestamp-ext", editable = "extensions/timestamp" },
 ]
 
 [[package]]
@@ -239,25 +234,20 @@ requires-dist = [
 
 [[package]]
 name = "a2a-sdk"
-version = "0.3.26"
+version = "1.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "google-api-core" },
+    { name = "googleapis-common-protos" },
     { name = "httpx" },
-    { name = "httpx-sse" },
+    { name = "json-rpc" },
+    { name = "packaging" },
     { name = "protobuf" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/be/97/a6840e01795b182ce751ca165430d46459927cde9bfab838087cbb24aef7/a2a_sdk-0.3.26.tar.gz", hash = "sha256:44068e2d037afbb07ab899267439e9bc7eaa7ac2af94f1e8b239933c993ad52d", size = 274598, upload-time = "2026-04-09T15:21:13.902Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/38/cc/59b35c518d8289bd59d20d9d216ca29ccb41c4697eb85971efe41d1adaf3/a2a_sdk-1.1.2.tar.gz", hash = "sha256:f928d8bf9a0dc0a473ee8258bd5226c1b8520a85c70e7f233c3b9b0e30a1bd10", size = 379627, upload-time = "2026-07-22T13:40:51.409Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dd/d5/51f4ee1bf3b736add42a542d3c8a3fd3fa85f3d36c17972127defc46c26f/a2a_sdk-0.3.26-py3-none-any.whl", hash = "sha256:754e0573f6d33b225c1d8d51f640efa69cbbed7bdfb06ce9c3540ea9f58d4a91", size = 151016, upload-time = "2026-04-09T15:21:12.35Z" },
-]
-
-[package.optional-dependencies]
-http-server = [
-    { name = "fastapi" },
-    { name = "sse-starlette" },
-    { name = "starlette" },
+    { url = "https://files.pythonhosted.org/packages/c1/33/d414a03d5ef5a7d6d09a20dc9f8094e7fb9edb488662ff99c535a2a62cf1/a2a_sdk-1.1.2-py3-none-any.whl", hash = "sha256:eb9a698f526dc45a9ea967d7804e7aa363ff273d2c44fbed699bc68c9399f9c9", size = 245981, upload-time = "2026-07-22T13:40:49.484Z" },
 ]
 
 [[package]]
@@ -283,28 +273,27 @@ wheels = [
 
 [[package]]
 name = "ag2"
-version = "0.11.5"
+version = "0.13.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
-    { name = "diskcache" },
-    { name = "docker" },
     { name = "fast-depends", extra = ["pydantic"] },
     { name = "httpx" },
     { name = "packaging" },
     { name = "pydantic" },
     { name = "python-dotenv" },
+    { name = "pyyaml" },
     { name = "termcolor" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/03/d5/52fd346e6bbbbe478fa47be8b1a5b2664d9ba631c9a30b4d08904812979b/ag2-0.11.5.tar.gz", hash = "sha256:ca93386c509333fee061e790a0c7e678463df0bc32a82041fe81e6a9ef448604", size = 4087816, upload-time = "2026-04-05T00:01:21.295Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/36/f7/9efbfbce9fcf5b1b838b429e6b59942b9ab518511bdf2cd7cdd43da3f1cd/ag2-0.13.0.tar.gz", hash = "sha256:f7eaca6cf927a06d76a5c4a8498dfdb36bdfc4ae52343f5a034de433c4d73bc8", size = 4530682, upload-time = "2026-05-19T10:13:52.09Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/60/b9/ebe65a6a779e3f46af630a97d4bbc5836309279bcfa51e1dbdda4dd5fea6/ag2-0.11.5-py3-none-any.whl", hash = "sha256:48921aba42a5a8239bd4a1f2131db28b6a4aca793ee3d7c7bbd469a24181e8e2", size = 1111978, upload-time = "2026-04-05T00:01:18.323Z" },
+    { url = "https://files.pythonhosted.org/packages/82/ce/61ff21de7daa67549d02329d426a59a22988b18f1b9dd7bf95bea4119725/ag2-0.13.0-py3-none-any.whl", hash = "sha256:1f0388987599c2df96b0a8d6ea0a82b9115a25e5114768e033067f7a5dc8be8a", size = 1490242, upload-time = "2026-05-19T10:13:49.366Z" },
 ]
 
 [package.optional-dependencies]
 a2a = [
-    { name = "a2a-sdk", extra = ["http-server"] },
+    { name = "a2a-sdk" },
 ]
 mcp = [
     { name = "mcp" },
@@ -2412,6 +2401,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/66/cb/50b0bbc3e504ef875aea0062cdc108077e4923fb8c1209c70c80dc043933/json_repair-0.25.2.tar.gz", hash = "sha256:161a56d7e6bbfd4cad3a614087e3e0dbd0e10d402dd20dc7db418432428cb32b", size = 20458, upload-time = "2024-06-27T16:26:15.492Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/aa/43/ac6691c7b5aa7191c964a04ae926d2bb06d9297dba1f2287df5b85cb3715/json_repair-0.25.2-py3-none-any.whl", hash = "sha256:51d67295c3184b6c41a3572689661c6128cef6cfc9fb04db63130709adfc5bf0", size = 12740, upload-time = "2024-06-27T16:26:13.823Z" },
+]
+
+[[package]]
+name = "json-rpc"
+version = "1.15.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6d/9e/59f4a5b7855ced7346ebf40a2e9a8942863f644378d956f68bcef2c88b90/json-rpc-1.15.0.tar.gz", hash = "sha256:e6441d56c1dcd54241c937d0a2dcd193bdf0bdc539b5316524713f554b7f85b9", size = 28854, upload-time = "2023-06-11T09:45:49.078Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/94/9e/820c4b086ad01ba7d77369fb8b11470a01fac9b4977f02e18659cf378b6b/json_rpc-1.15.0-py2.py3-none-any.whl", hash = "sha256:4a4668bbbe7116feb4abbd0f54e64a4adcf4b8f648f19ffa0848ad0f6606a9bf", size = 39450, upload-time = "2023-06-11T09:45:47.136Z" },
 ]
 
 [[package]]
@@ -5007,17 +5005,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/3b/17/a0fc51aefb66b7b5261ca1314afa83df0106b033f783f9a7bcbe8e741494/tiktoken-0.11.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:94f984c9831fd32688aef4348803b0905d4ae9c432303087bae370dc1381a2b8", size = 1244057, upload-time = "2025-08-08T23:57:57.628Z" },
     { url = "https://files.pythonhosted.org/packages/50/79/bcf350609f3a10f09fe4fc207f132085e497fdd3612f3925ab24d86a0ca0/tiktoken-0.11.0-cp313-cp313-win_amd64.whl", hash = "sha256:2177ffda31dec4023356a441793fed82f7af5291120751dee4d696414f54db0c", size = 883901, upload-time = "2025-08-08T23:57:59.359Z" },
 ]
-
-[[package]]
-name = "timestamp-ext"
-version = "0.1.0"
-source = { editable = "extensions/timestamp" }
-dependencies = [
-    { name = "a2a-sdk" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "a2a-sdk", specifier = ">=0.3.0" }]
 
 [[package]]
 name = "tokenizers"
