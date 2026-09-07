@@ -62,7 +62,7 @@ internal static class Program
         var agentClient = new A2AClient(new Uri(AgentUrl));
 
         Console.WriteLine("🚀 Interactive CLI Session Started!");
-        Console.WriteLine("Type commands to execute on the agent (e.g., 'dir', 'git status', 'dotnet --version')");
+        Console.WriteLine("Type commands to execute on the agent (e.g., 'ls', 'git status', 'whoami')");
         Console.WriteLine("Type 'help' for examples, 'exit' to quit");
         Console.WriteLine();
 
@@ -146,18 +146,17 @@ internal static class Program
         Console.WriteLine("=================");
         Console.WriteLine();
         Console.WriteLine("🔧 Available Commands:");
-        Console.WriteLine("  • File operations: dir, ls, pwd, cat, type");
-        Console.WriteLine("  • System info: whoami, date, time");
+        Console.WriteLine("  • File operations: ls, pwd, cat, head, tail");
+        Console.WriteLine("  • System info: whoami");
         Console.WriteLine("  • Process info: ps, tasklist");
         Console.WriteLine("  • Network: ping, ipconfig, netstat");
-        Console.WriteLine("  • Development: git, dotnet, node, npm, python");
+        Console.WriteLine("  • Development: git");
         Console.WriteLine();
         Console.WriteLine("💡 Example Commands:");
-        Console.WriteLine("  • dir              - List current directory (Windows)");
-        Console.WriteLine("  • ls -la           - List directory with details (Linux/Mac)");
-        Console.WriteLine("  • git status       - Check git repository status");
-        Console.WriteLine("  • dotnet --version - Check .NET version");
-        Console.WriteLine("  • ping google.com  - Test network connectivity");
+        Console.WriteLine("  • whoami          - Show current user");
+        Console.WriteLine("  • ls -la          - List directory with details (Linux/Mac)");
+        Console.WriteLine("  • git status      - Check git repository status");
+        Console.WriteLine("  • ping google.com - Test network connectivity");
         Console.WriteLine();
         Console.WriteLine("🎮 Special Commands:");
         Console.WriteLine("  • help     - Show this help");
@@ -178,11 +177,10 @@ internal static class Program
         var examples = new[]
         {
             "whoami",           // Show current user
-            "date",             // Show current date
-            "dotnet --version", // Check .NET version
             "git --version",    // Check Git version (if available)
+            "ping 127.0.0.1",   // Test network connectivity
             System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
-                System.Runtime.InteropServices.OSPlatform.Windows) ? "dir" : "ls"  // List directory
+                System.Runtime.InteropServices.OSPlatform.Windows) ? "whoami" : "ls"  // List directory
         };
 
         foreach (var example in examples)

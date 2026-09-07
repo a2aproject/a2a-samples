@@ -33,7 +33,7 @@ app.MapGet("/health", () => Results.Ok(new
 app.MapGet("/", () => Results.Ok(new
 {
     Message = "🖥️ CLI Agent is running!",
-    Description = "Send CLI commands like 'dir', 'ls', 'git status', 'dotnet --version'",
+    Description = "Send CLI commands like 'whoami', 'ls', 'git status', 'ping'",
     Endpoint = "/",
     Health = "/health"
 }));
