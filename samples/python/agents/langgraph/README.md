@@ -23,7 +23,7 @@ sequenceDiagram
         Server->>Client: Respond with currency information
     else Incomplete Information
         Agent->>Server: Request additional input
-        Server->>Client: Set state to "input-required"
+        Server->>Client: Set state to TASK_STATE_INPUT_REQUIRED
         Client->>Server: Send additional information
         Server->>Agent: Forward additional info
         Agent->>API: Call get_exchange_rate tool
@@ -64,33 +64,36 @@ sequenceDiagram
 
 2. Create an environment file with your API key:
 
+   If you're using a Google Gemini model (gemini-2.0-flash, etc.):
    ```bash
-   If you're using a Google Gemini model (gemini-pro, etc.):
    echo "GOOGLE_API_KEY=your_api_key_here" > .env
-  
-   
-   If you're using OpenAI or any compatible API (e.g., local LLM via Ollama, LM Studio, etc.):
-
-   echo "API_KEY=your_api_key_here" > .env  (not neccessary if have no api key)
-   echo "TOOL_LLM_URL=your_llm_url" > .env
-   echo "TOOL_LLM_NAME=your_llm_name" > .env
-
    ```
 
-3. Run the agent:
+   If you're using OpenAI or any compatible API (e.g., local LLM via Ollama, vLLM, LM Studio, etc.):
+   ```bash
+   echo "MODEL_SOURCE=openai" > .env
+   echo "API_KEY=your_api_key_here" >> .env
+   echo "TOOL_LLM_URL=your_llm_url" >> .env
+   echo "TOOL_LLM_NAME=your_llm_name" >> .env
+   ```
+
+   > [!Tip]
+   > For OpenAI-compatible models, ensure the model supports function calling / tool calling (e.g., standard chat models like `gpt-4o-mini`, `deepseek-chat`, `qwen2.5`). Reasoning/thinking models with forced tool restrictions are not recommended for tool execution.
+
+3. Run the agent server:
 
    ```bash
    # Basic run on default port 10000
-   uv run app
+   uv run python -m app
 
    # On custom host/port
-   uv run app --host 0.0.0.0 --port 8080
+   uv run python -m app --host 0.0.0.0 --port 8080
    ```
 
 4. In a separate terminal, run the test client:
 
    ```bash
-   uv run app/test_client.py
+   uv run python app/test_client.py
    ```
 
 ## Build Container Image
@@ -144,25 +147,24 @@ Agent can also be built using a container file.
 
 Request:
 
-```
+```http
 POST http://localhost:10000
 Content-Type: application/json
+A2A-Version: 1.0
 
 {
     "id": "12113c25-b752-473f-977e-c9ad33cf4f56",
     "jsonrpc": "2.0",
-    "method": "message/send",
+    "method": "SendMessage",
     "params": {
         "message": {
-            "kind": "message",
             "messageId": "120ec73f93024993becf954d03a672bc",
+            "role": "ROLE_USER",
             "parts": [
                 {
-                    "kind": "text",
                     "text": "how much is 10 USD in INR?"
                 }
-            ],
-            "role": "user"
+            ]
         }
     }
 }
@@ -170,69 +172,63 @@ Content-Type: application/json
 
 Response:
 
-```
+```json
 {
     "id": "12113c25-b752-473f-977e-c9ad33cf4f56",
     "jsonrpc": "2.0",
     "result": {
-        "artifacts": [
-            {
-                "artifactId": "08373241-a745-4abe-a78b-9ca60882bcc6",
-                "name": "conversion_result",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "10 USD is 856.2 INR."
-                    }
-                ]
-            }
-        ],
-        "contextId": "e329f200-eaf4-4ae9-a8ef-a33cf9485367",
-        "history": [
-            {
-                "contextId": "e329f200-eaf4-4ae9-a8ef-a33cf9485367",
-                "kind": "message",
-                "messageId": "120ec73f93024993becf954d03a672bc",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "how much is 10 USD in INR?"
-                    }
-                ],
-                "role": "user",
-                "taskId": "58124b63-dd3b-46b8-bf1d-1cc1aefd1c8f"
+        "task": {
+            "id": "58124b63-dd3b-46b8-bf1d-1cc1aefd1c8f",
+            "contextId": "e329f200-eaf4-4ae9-a8ef-a33cf9485367",
+            "status": {
+                "state": "TASK_STATE_COMPLETED"
             },
-            {
-                "contextId": "e329f200-eaf4-4ae9-a8ef-a33cf9485367",
-                "kind": "message",
-                "messageId": "d8b4d7de-709f-40f7-ae0c-fd6ee398a2bf",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "Looking up the exchange rates..."
-                    }
-                ],
-                "role": "agent",
-                "taskId": "58124b63-dd3b-46b8-bf1d-1cc1aefd1c8f"
-            },
-            {
-                "contextId": "e329f200-eaf4-4ae9-a8ef-a33cf9485367",
-                "kind": "message",
-                "messageId": "ee0cb3b6-c3d6-4316-8d58-315c437a2a77",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "Processing the exchange rates.."
-                    }
-                ],
-                "role": "agent",
-                "taskId": "58124b63-dd3b-46b8-bf1d-1cc1aefd1c8f"
-            }
-        ],
-        "id": "58124b63-dd3b-46b8-bf1d-1cc1aefd1c8f",
-        "kind": "task",
-        "status": {
-            "state": "completed"
+            "artifacts": [
+                {
+                    "artifactId": "08373241-a745-4abe-a78b-9ca60882bcc6",
+                    "name": "conversion_result",
+                    "parts": [
+                        {
+                            "text": "10 USD is 856.2 INR."
+                        }
+                    ]
+                }
+            ],
+            "history": [
+                {
+                    "messageId": "120ec73f93024993becf954d03a672bc",
+                    "role": "ROLE_USER",
+                    "parts": [
+                        {
+                            "text": "how much is 10 USD in INR?"
+                        }
+                    ],
+                    "taskId": "58124b63-dd3b-46b8-bf1d-1cc1aefd1c8f",
+                    "contextId": "e329f200-eaf4-4ae9-a8ef-a33cf9485367"
+                },
+                {
+                    "messageId": "d8b4d7de-709f-40f7-ae0c-fd6ee398a2bf",
+                    "role": "ROLE_AGENT",
+                    "parts": [
+                        {
+                            "text": "Looking up the exchange rates..."
+                        }
+                    ],
+                    "taskId": "58124b63-dd3b-46b8-bf1d-1cc1aefd1c8f",
+                    "contextId": "e329f200-eaf4-4ae9-a8ef-a33cf9485367"
+                },
+                {
+                    "messageId": "ee0cb3b6-c3d6-4316-8d58-315c437a2a77",
+                    "role": "ROLE_AGENT",
+                    "parts": [
+                        {
+                            "text": "Processing the exchange rates.."
+                        }
+                    ],
+                    "taskId": "58124b63-dd3b-46b8-bf1d-1cc1aefd1c8f",
+                    "contextId": "e329f200-eaf4-4ae9-a8ef-a33cf9485367"
+                }
+            ]
         }
     }
 }
@@ -242,25 +238,24 @@ Response:
 
 Request - Seq 1:
 
-```
+```http
 POST http://localhost:10000
 Content-Type: application/json
+A2A-Version: 1.0
 
 {
     "id": "27be771b-708f-43b8-8366-968966d07ec0",
     "jsonrpc": "2.0",
-    "method": "message/send",
+    "method": "SendMessage",
     "params": {
         "message": {
-            "kind": "message",
             "messageId": "296eafc9233142bd98279e4055165f12",
+            "role": "ROLE_USER",
             "parts": [
                 {
-                    "kind": "text",
                     "text": "How much is the exchange rate for 1 USD?"
                 }
-            ],
-            "role": "user"
+            ]
         }
     }
 }
@@ -268,44 +263,41 @@ Content-Type: application/json
 
 Response - Seq 2:
 
-```
+```json
 {
     "id": "27be771b-708f-43b8-8366-968966d07ec0",
     "jsonrpc": "2.0",
     "result": {
-        "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-        "history": [
-            {
-                "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-                "kind": "message",
-                "messageId": "296eafc9233142bd98279e4055165f12",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "How much is the exchange rate for 1 USD?"
-                    }
-                ],
-                "role": "user",
-                "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61"
-            }
-        ],
-        "id": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
-        "kind": "task",
-        "status": {
-            "message": {
-                "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-                "kind": "message",
-                "messageId": "f0f5f3ff-335c-4e77-9b4a-01ff3908e7be",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "Please specify which currency you would like to convert to."
-                    }
-                ],
-                "role": "agent",
-                "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61"
+        "task": {
+            "id": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+            "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
+            "status": {
+                "state": "TASK_STATE_INPUT_REQUIRED",
+                "message": {
+                    "messageId": "f0f5f3ff-335c-4e77-9b4a-01ff3908e7be",
+                    "role": "ROLE_AGENT",
+                    "parts": [
+                        {
+                            "text": "Please specify which currency you would like to convert to."
+                        }
+                    ],
+                    "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+                    "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101"
+                }
             },
-            "state": "input-required"
+            "history": [
+                {
+                    "messageId": "296eafc9233142bd98279e4055165f12",
+                    "role": "ROLE_USER",
+                    "parts": [
+                        {
+                            "text": "How much is the exchange rate for 1 USD?"
+                        }
+                    ],
+                    "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+                    "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101"
+                }
+            ]
         }
     }
 }
@@ -313,27 +305,26 @@ Response - Seq 2:
 
 Request - Seq 3:
 
-```
+```http
 POST http://localhost:10000
 Content-Type: application/json
+A2A-Version: 1.0
 
 {
     "id": "b88d818d-1192-42be-b4eb-3ee6b96a7e35",
     "jsonrpc": "2.0",
-    "method": "message/send",
+    "method": "SendMessage",
     "params": {
         "message": {
-            "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-            "kind": "message",
             "messageId": "70371e1f231f4597b65ccdf534930ca9",
+            "role": "ROLE_USER",
             "parts": [
                 {
-                    "kind": "text",
                     "text": "CAD"
                 }
             ],
-            "role": "user",
-            "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61"
+            "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+            "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101"
         }
     }
 }
@@ -341,95 +332,85 @@ Content-Type: application/json
 
 Response - Seq 4:
 
-```
+```json
 {
     "id": "b88d818d-1192-42be-b4eb-3ee6b96a7e35",
     "jsonrpc": "2.0",
     "result": {
-        "artifacts": [
-            {
-                "artifactId": "08373241-a745-4abe-a78b-9ca60882bcc6",
-                "name": "conversion_result",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "The exchange rate for 1 USD to CAD is 1.3739."
-                    }
-                ]
-            }
-        ],
-        "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-        "history": [
-            {
-                "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-                "kind": "message",
-                "messageId": "296eafc9233142bd98279e4055165f12",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "How much is the exchange rate for 1 USD?"
-                    }
-                ],
-                "role": "user",
-                "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61"
+        "task": {
+            "id": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+            "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
+            "status": {
+                "state": "TASK_STATE_COMPLETED"
             },
-            {
-                "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-                "kind": "message",
-                "messageId": "f0f5f3ff-335c-4e77-9b4a-01ff3908e7be",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "Please specify which currency you would like to convert to."
-                    }
-                ],
-                "role": "agent",
-                "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61"
-            },
-            {
-                "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-                "kind": "message",
-                "messageId": "70371e1f231f4597b65ccdf534930ca9",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "CAD"
-                    }
-                ],
-                "role": "user",
-                "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61"
-            },
-            {
-                "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-                "kind": "message",
-                "messageId": "0eb4f200-a8cd-4d34-94f8-4d223eb1b2c0",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "Looking up the exchange rates..."
-                    }
-                ],
-                "role": "agent",
-                "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61"
-            },
-            {
-                "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101",
-                "kind": "message",
-                "messageId": "41c7c03a-a772-4dc8-a868-e8c7b7defc91",
-                "parts": [
-                    {
-                        "kind": "text",
-                        "text": "Processing the exchange rates.."
-                    }
-                ],
-                "role": "agent",
-                "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61"
-            }
-        ],
-        "id": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
-        "kind": "task",
-        "status": {
-            "state": "completed"
+            "artifacts": [
+                {
+                    "artifactId": "08373241-a745-4abe-a78b-9ca60882bcc6",
+                    "name": "conversion_result",
+                    "parts": [
+                        {
+                            "text": "The exchange rate for 1 USD to CAD is 1.3739."
+                        }
+                    ]
+                }
+            ],
+            "history": [
+                {
+                    "messageId": "296eafc9233142bd98279e4055165f12",
+                    "role": "ROLE_USER",
+                    "parts": [
+                        {
+                            "text": "How much is the exchange rate for 1 USD?"
+                        }
+                    ],
+                    "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+                    "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101"
+                },
+                {
+                    "messageId": "f0f5f3ff-335c-4e77-9b4a-01ff3908e7be",
+                    "role": "ROLE_AGENT",
+                    "parts": [
+                        {
+                            "text": "Please specify which currency you would like to convert to."
+                        }
+                    ],
+                    "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+                    "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101"
+                },
+                {
+                    "messageId": "70371e1f231f4597b65ccdf534930ca9",
+                    "role": "ROLE_USER",
+                    "parts": [
+                        {
+                            "text": "CAD"
+                        }
+                    ],
+                    "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+                    "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101"
+                },
+                {
+                    "messageId": "0eb4f200-a8cd-4d34-94f8-4d223eb1b2c0",
+                    "role": "ROLE_AGENT",
+                    "parts": [
+                        {
+                            "text": "Looking up the exchange rates..."
+                        }
+                    ],
+                    "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+                    "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101"
+                },
+                {
+                    "messageId": "41c7c03a-a772-4dc8-a868-e8c7b7defc91",
+                    "role": "ROLE_AGENT",
+                    "parts": [
+                        {
+                            "text": "Processing the exchange rates.."
+                        }
+                    ],
+                    "taskId": "9d94c2d4-06e4-40e1-876b-22f5a2666e61",
+                    "contextId": "a7cc0bef-17b5-41fc-9379-40b99f46a101"
+                }
+            ]
         }
     }
 }
@@ -439,22 +420,24 @@ Response - Seq 4:
 
 Request:
 
-```
+```http
+POST http://localhost:10000
+Content-Type: application/json
+A2A-Version: 1.0
+
 {
     "id": "6d12d159-ec67-46e6-8d43-18480ce7f6ca",
     "jsonrpc": "2.0",
-    "method": "message/stream",
+    "method": "SendStreamingMessage",
     "params": {
         "message": {
-            "kind": "message",
             "messageId": "2f9538ef0984471aa0d5179ce3c67a28",
+            "role": "ROLE_USER",
             "parts": [
                 {
-                    "kind": "text",
                     "text": "how much is 10 USD in INR?"
                 }
-            ],
-            "role": "user"
+            ]
         }
     }
 }
@@ -462,16 +445,16 @@ Request:
 
 Response:
 
-```
-data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","history":[{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","kind":"message","messageId":"2f9538ef0984471aa0d5179ce3c67a28","parts":[{"kind":"text","text":"how much is 10 USD in INR?"}],"role":"user","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}],"id":"423a2569-f272-4d75-a4d1-cdc6682188e5","kind":"task","status":{"state":"submitted"}}}
+```http
+data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"task":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","history":[{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","messageId":"2f9538ef0984471aa0d5179ce3c67a28","parts":[{"text":"how much is 10 USD in INR?"}],"role":"ROLE_USER","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}],"id":"423a2569-f272-4d75-a4d1-cdc6682188e5","status":{"state":"TASK_STATE_SUBMITTED"}}}}
 
-data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","final":false,"kind":"status-update","status":{"message":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","kind":"message","messageId":"1854a825-c64f-4f30-96f2-c8aa558b83f9","parts":[{"kind":"text","text":"Looking up the exchange rates..."}],"role":"agent","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"},"state":"working"},"taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}
+data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"statusUpdate":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","status":{"message":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","messageId":"1854a825-c64f-4f30-96f2-c8aa558b83f9","parts":[{"text":"Looking up the exchange rates..."}],"role":"ROLE_AGENT","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"},"state":"TASK_STATE_WORKING"},"taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}}
 
-data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","final":false,"kind":"status-update","status":{"message":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","kind":"message","messageId":"e72127a6-4830-4320-bf23-235ac79b9a13","parts":[{"kind":"text","text":"Processing the exchange rates.."}],"role":"agent","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"},"state":"working"},"taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}
+data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"statusUpdate":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","status":{"message":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","messageId":"e72127a6-4830-4320-bf23-235ac79b9a13","parts":[{"text":"Processing the exchange rates.."}],"role":"ROLE_AGENT","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"},"state":"TASK_STATE_WORKING"},"taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}}
 
-data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"artifact":{"artifactId":"08373241-a745-4abe-a78b-9ca60882bcc6","name":"conversion_result","parts":[{"kind":"text","text":"10 USD is 856.2 INR."}]},"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","kind":"artifact-update","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}
+data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"artifactUpdate":{"artifact":{"artifactId":"08373241-a745-4abe-a78b-9ca60882bcc6","name":"conversion_result","parts":[{"text":"10 USD is 856.2 INR."}]},"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}}
 
-data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","final":true,"kind":"status-update","status":{"state":"completed"},"taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}
+data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"statusUpdate":{"contextId":"cd09e369-340a-4563-bca4-e5f2e0b9ff81","status":{"state":"TASK_STATE_COMPLETED"},"taskId":"423a2569-f272-4d75-a4d1-cdc6682188e5"}}}
 ```
 
 ## Learn More
@@ -483,8 +466,18 @@ data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"co
 
 
 ## Disclaimer
-Important: The sample code provided is for demonstration purposes and illustrates the mechanics of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to treat any agent operating outside of your direct control as a potentially untrusted entity.
 
-All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks.  Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+Important: The sample code provided is for demonstration purposes and illustrates the mechanics
+of the Agent-to-Agent (A2A) protocol. When building production applications, it is critical to
+treat any agent operating outside of your direct control as a potentially untrusted entity.
 
-Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.
+All data received from an external agent—including but not limited to its AgentCard, messages,
+artifacts, and task statuses—should be handled as untrusted input. For example, a malicious agent
+could provide an AgentCard containing crafted data in its fields (e.g., description, name,
+skills.description). If this data is used without sanitization to construct prompts for a Large
+Language Model (LLM), it could expose your application to prompt injection attacks. Failure to
+properly validate and sanitize this data before use can introduce security vulnerabilities into
+your application.
+
+Developers are responsible for implementing appropriate security measures, such as input validation
+and secure handling of credentials to protect their systems and users.

@@ -1,190 +1,132 @@
+import asyncio
 import logging
-
-from typing import Any
-from uuid import uuid4
 
 import httpx
 
-from a2a.client import A2ACardResolver, A2AClient
+from a2a.client import A2ACardResolver, ClientConfig, create_client
+from a2a.helpers import display_agent_card, new_text_message
 from a2a.types import (
     AgentCard,
-    MessageSendParams,
+    Role,
     SendMessageRequest,
-    SendStreamingMessageRequest,
 )
-from a2a.utils.constants import (
-    AGENT_CARD_WELL_KNOWN_PATH,
-    EXTENDED_AGENT_CARD_PATH,
-)
+from a2a.utils.constants import AGENT_CARD_WELL_KNOWN_PATH
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+async def _resolve_agent_card(httpx_client: httpx.AsyncClient, base_url: str) -> AgentCard:
+    # --8<-- [start:A2ACardResolver]
+    resolver = A2ACardResolver(
+        httpx_client=httpx_client,
+        base_url=base_url,
+    )
+    # --8<-- [end:A2ACardResolver]
+
+    logger.info(
+        'Attempting to fetch public agent card from: %s%s',
+        base_url,
+        AGENT_CARD_WELL_KNOWN_PATH,
+    )
+    public_card = await resolver.get_agent_card()
+    logger.info('Successfully fetched public agent card:')
+    display_agent_card(public_card)
+
+    if public_card.capabilities.extended_agent_card:
+        try:
+            logger.info('Public card supports authenticated extended card.')
+            auth_headers = {'Authorization': 'Bearer dummy-token-for-extended-card'}
+            extended_card = await resolver.get_agent_card(
+                http_kwargs={'headers': auth_headers},
+            )
+        except Exception:
+            logger.exception('Failed to fetch extended agent card. Will proceed with public card.')
+        else:
+            logger.info('Successfully fetched authenticated extended agent card:')
+            display_agent_card(extended_card)
+            return extended_card
+
+    return public_card
 
 
 async def main() -> None:
-    # Configure logging to show INFO level messages
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)  # Get a logger instance
-
-    # --8<-- [start:A2ACardResolver]
-
     base_url = 'http://localhost:10000'
 
-    async with httpx.AsyncClient() as httpx_client:
-        # Initialize A2ACardResolver
-        resolver = A2ACardResolver(
-            httpx_client=httpx_client,
-            base_url=base_url,
-            # agent_card_path uses default, extended_agent_card_path also uses default
-        )
-        # --8<-- [end:A2ACardResolver]
-
-        # Fetch Public Agent Card and Initialize Client
-        final_agent_card_to_use: AgentCard | None = None
-
+    async with httpx.AsyncClient(timeout=60.0) as httpx_client:
         try:
-            logger.info(
-                f'Attempting to fetch public agent card from: {base_url}{AGENT_CARD_WELL_KNOWN_PATH}'
-            )
-            _public_card = (
-                await resolver.get_agent_card()
-            )  # Fetches from default public path
-            logger.info('Successfully fetched public agent card:')
-            logger.info(
-                _public_card.model_dump_json(indent=2, exclude_none=True)
-            )
-            final_agent_card_to_use = _public_card
-            logger.info(
-                '\nUsing PUBLIC agent card for client initialization (default).'
-            )
-
-            if _public_card.supports_authenticated_extended_card:
-                try:
-                    logger.info(
-                        '\nPublic card supports authenticated extended card. '
-                        'Attempting to fetch from: '
-                        f'{base_url}{EXTENDED_AGENT_CARD_PATH}'
-                    )
-                    auth_headers_dict = {
-                        'Authorization': 'Bearer dummy-token-for-extended-card'
-                    }
-                    _extended_card = await resolver.get_agent_card(
-                        relative_card_path=EXTENDED_AGENT_CARD_PATH,
-                        http_kwargs={'headers': auth_headers_dict},
-                    )
-                    logger.info(
-                        'Successfully fetched authenticated extended agent card:'
-                    )
-                    logger.info(
-                        _extended_card.model_dump_json(
-                            indent=2, exclude_none=True
-                        )
-                    )
-                    final_agent_card_to_use = (
-                        _extended_card  # Update to use the extended card
-                    )
-                    logger.info(
-                        '\nUsing AUTHENTICATED EXTENDED agent card for client '
-                        'initialization.'
-                    )
-                except Exception as e_extended:
-                    logger.warning(
-                        f'Failed to fetch extended agent card: {e_extended}. '
-                        'Will proceed with public card.',
-                        exc_info=True,
-                    )
-            elif (
-                _public_card
-            ):  # supports_authenticated_extended_card is False or None
-                logger.info(
-                    '\nPublic card does not indicate support for an extended card. Using public card.'
-                )
-
+            final_agent_card_to_use = await _resolve_agent_card(httpx_client, base_url)
         except Exception as e:
-            logger.error(
-                f'Critical error fetching public agent card: {e}', exc_info=True
-            )
-            raise RuntimeError(
-                'Failed to fetch the public agent card. Cannot continue.'
-            ) from e
+            logger.exception('Critical error fetching public agent card')
+            raise RuntimeError('Failed to fetch the public agent card. Cannot continue.') from e
 
         # --8<-- [start:send_message]
-        client = A2AClient(
-            httpx_client=httpx_client, agent_card=final_agent_card_to_use
+        client = await create_client(
+            agent=final_agent_card_to_use,
+            client_config=ClientConfig(streaming=False, httpx_client=httpx_client),
         )
         logger.info('A2AClient initialized.')
 
-        send_message_payload: dict[str, Any] = {
-            'message': {
-                'role': 'user',
-                'parts': [
-                    {'kind': 'text', 'text': 'how much is 10 USD in INR?'}
-                ],
-                'message_id': uuid4().hex,
-            },
-        }
         request = SendMessageRequest(
-            id=str(uuid4()), params=MessageSendParams(**send_message_payload)
+            message=new_text_message('how much is 10 USD in INR?', role=Role.ROLE_USER)
         )
 
-        response = await client.send_message(request)
-        print(response.model_dump(mode='json', exclude_none=True))
+        async for response in client.send_message(request):
+            print(response)
         # --8<-- [end:send_message]
 
         # --8<-- [start:Multiturn]
-        send_message_payload_multiturn: dict[str, Any] = {
-            'message': {
-                'role': 'user',
-                'parts': [
-                    {
-                        'kind': 'text',
-                        'text': 'How much is the exchange rate for 1 USD?',
-                    }
-                ],
-                'message_id': uuid4().hex,
-            },
-        }
-        request = SendMessageRequest(
-            id=str(uuid4()),
-            params=MessageSendParams(**send_message_payload_multiturn),
+        first_request = SendMessageRequest(
+            message=new_text_message(
+                'How much is the exchange rate for 1 USD?', role=Role.ROLE_USER
+            )
         )
 
-        response = await client.send_message(request)
-        print(response.model_dump(mode='json', exclude_none=True))
+        task_id: str | None = None
+        context_id: str | None = None
 
-        task_id = response.root.result.id
-        context_id = response.root.result.context_id
-
-        second_send_message_payload_multiturn: dict[str, Any] = {
-            'message': {
-                'role': 'user',
-                'parts': [{'kind': 'text', 'text': 'CAD'}],
-                'message_id': uuid4().hex,
-                'task_id': task_id,
-                'context_id': context_id,
-            },
-        }
+        async for response in client.send_message(first_request):
+            if response.HasField('task'):
+                task_id = response.task.id
+                context_id = response.task.context_id
+            elif response.HasField('status_update'):
+                if response.status_update.task_id:
+                    task_id = response.status_update.task_id
+                if response.status_update.context_id:
+                    context_id = response.status_update.context_id
+            print(response)
 
         second_request = SendMessageRequest(
-            id=str(uuid4()),
-            params=MessageSendParams(**second_send_message_payload_multiturn),
+            message=new_text_message(
+                'CAD',
+                role=Role.ROLE_USER,
+                task_id=task_id,
+                context_id=context_id,
+            )
         )
 
-        second_response = await client.send_message(second_request)
-        print(second_response.model_dump(mode='json', exclude_none=True))
+        async for second_response in client.send_message(second_request):
+            print(second_response)
         # --8<-- [end:Multiturn]
 
         # --8<-- [start:send_message_streaming]
-
-        streaming_request = SendStreamingMessageRequest(
-            id=str(uuid4()), params=MessageSendParams(**send_message_payload)
+        streaming_client = await create_client(
+            agent=final_agent_card_to_use,
+            client_config=ClientConfig(streaming=True, httpx_client=httpx_client),
         )
 
-        stream_response = client.send_message_streaming(streaming_request)
+        streaming_request = SendMessageRequest(
+            message=new_text_message('how much is 10 USD in INR?', role=Role.ROLE_USER)
+        )
 
-        async for chunk in stream_response:
-            print(chunk.model_dump(mode='json', exclude_none=True))
+        async for chunk in streaming_client.send_message(streaming_request):
+            print(chunk)
         # --8<-- [end:send_message_streaming]
+
+        await client.close()
+        await streaming_client.close()
 
 
 if __name__ == '__main__':
-    import asyncio
-
     asyncio.run(main())

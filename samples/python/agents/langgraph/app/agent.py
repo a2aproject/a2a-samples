@@ -5,13 +5,15 @@ from typing import Any, Literal
 
 import httpx
 
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import AIMessage, ToolMessage
+from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 
 
 memory = MemorySaver()
@@ -22,7 +24,7 @@ def get_exchange_rate(
     currency_from: str = 'USD',
     currency_to: str = 'EUR',
     currency_date: str = 'latest',
-):
+) -> dict[str, Any]:
     """Use this to get current exchange rate.
 
     Args:
@@ -39,17 +41,33 @@ def get_exchange_rate(
         response = httpx.get(
             f'https://api.frankfurter.app/{currency_date}',
             params={'from': currency_from, 'to': currency_to},
+            follow_redirects=True,
         )
         response.raise_for_status()
-
         data = response.json()
-        if 'rates' not in data:
-            return {'error': 'Invalid API response format.'}
-        return data
     except httpx.HTTPError as e:
         return {'error': f'API request failed: {e}'}
     except ValueError:
         return {'error': 'Invalid JSON response from API.'}
+
+    if 'rates' not in data:
+        return {'error': 'Invalid API response format.'}
+    return data
+
+
+class _CompatibleChatOpenAI(ChatOpenAI):
+    """ChatOpenAI variant that defaults to function_calling for structured output."""
+
+    def with_structured_output(
+        self,
+        schema: Any = None,
+        *,
+        method: Literal['function_calling', 'json_mode', 'json_schema'] | None = None,
+        **kwargs: Any,
+    ) -> Any:
+        if method is None:
+            method = 'function_calling'
+        return super().with_structured_output(schema, method=method, **kwargs)
 
 
 class ResponseFormat(BaseModel):
@@ -60,7 +78,7 @@ class ResponseFormat(BaseModel):
 
 
 class CurrencyAgent:
-    """CurrencyAgent - a specialized assistant for currency convesions."""
+    """CurrencyAgent - a specialized assistant for currency conversions."""
 
     SYSTEM_INSTRUCTION = (
         'You are a specialized assistant for currency conversions. '
@@ -76,15 +94,17 @@ class CurrencyAgent:
         'Set response status to completed if the request is complete.'
     )
 
-    def __init__(self):
-        model_source = os.getenv('model_source', 'google')
+    model: BaseChatModel
+
+    def __init__(self) -> None:
+        model_source = os.getenv('MODEL_SOURCE', 'google')
         if model_source == 'google':
             self.model = ChatGoogleGenerativeAI(model='gemini-2.0-flash')
         else:
-            self.model = ChatOpenAI(
-                model=os.getenv('TOOL_LLM_NAME'),
-                openai_api_key=os.getenv('API_KEY', 'EMPTY'),
-                openai_api_base=os.getenv('TOOL_LLM_URL'),
+            self.model = _CompatibleChatOpenAI(
+                model=os.getenv('TOOL_LLM_NAME') or 'gpt-4o-mini',
+                api_key=SecretStr(os.getenv('API_KEY', 'EMPTY')),
+                base_url=os.getenv('TOOL_LLM_URL'),
                 temperature=0,
             )
         self.tools = [get_exchange_rate]
@@ -97,9 +117,18 @@ class CurrencyAgent:
             response_format=(self.FORMAT_INSTRUCTION, ResponseFormat),
         )
 
-    async def stream(self, query, context_id) -> AsyncIterable[dict[str, Any]]:
+    async def stream(self, query: str, context_id: str) -> AsyncIterable[dict[str, Any]]:
+        """Stream agent steps and responses for a given query.
+
+        Args:
+            query: User input query text.
+            context_id: Context/thread ID for conversation state.
+
+        Yields:
+            Dictionary containing intermediate progress or final output.
+        """
         inputs = {'messages': [('user', query)]}
-        config = {'configurable': {'thread_id': context_id}}
+        config: RunnableConfig = {'configurable': {'thread_id': context_id}}
 
         for item in self.graph.stream(inputs, config, stream_mode='values'):
             message = item['messages'][-1]
@@ -122,12 +151,18 @@ class CurrencyAgent:
 
         yield self.get_agent_response(config)
 
-    def get_agent_response(self, config):
+    def get_agent_response(self, config: RunnableConfig) -> dict[str, Any]:
+        """Extract the structured response or fallback message from state.
+
+        Args:
+            config: Runnable configuration with thread_id.
+
+        Returns:
+            Dictionary indicating completion status, user input requirement, and message content.
+        """
         current_state = self.graph.get_state(config)
         structured_response = current_state.values.get('structured_response')
-        if structured_response and isinstance(
-            structured_response, ResponseFormat
-        ):
+        if structured_response and isinstance(structured_response, ResponseFormat):
             if structured_response.status == 'input_required':
                 return {
                     'is_task_complete': False,
@@ -150,10 +185,7 @@ class CurrencyAgent:
         return {
             'is_task_complete': False,
             'require_user_input': True,
-            'content': (
-                'We are unable to process your request at the moment. '
-                'Please try again.'
-            ),
+            'content': ('We are unable to process your request at the moment. Please try again.'),
         }
 
     SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
