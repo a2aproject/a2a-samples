@@ -1,0 +1,41 @@
+{
+  "name": "Flight Search Agent",
+  "description": "Finds and prices flights",
+  "url": "http://localhost:10003",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": false
+  },
+  "defaultInputModes": [
+    "text"
+  ],
+  "defaultOutputModes": [
+    "text"
+  ],
+  "skills": [
+    {
+      "id": "flight_search",
+      "name": "Search flights",
+      "description": "Finds flights between two cities on given dates and returns fares and times",
+      "tags": [
+        "flights",
+        "travel"
+      ],
+      "examples": [
+        "cheapest flight from Lisbon to Tallinn in October"
+      ]
+    },
+    {
+      "id": "flight_status",
+      "name": "Flight status",
+      "description": "Reports whether a specific flight is on time, delayed or cancelled",
+      "tags": [
+        "flights",
+        "status"
+      ],
+      "examples": [
+        "is TP1234 delayed today?"
+      ]
+    }
+  ]
+}

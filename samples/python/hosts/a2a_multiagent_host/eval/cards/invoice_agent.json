@@ -1,0 +1,42 @@
+{
+  "name": "Invoice Agent",
+  "description": "Supplier invoice processing",
+  "url": "http://localhost:10007",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": false
+  },
+  "defaultInputModes": [
+    "text"
+  ],
+  "defaultOutputModes": [
+    "text"
+  ],
+  "skills": [
+    {
+      "id": "invoice_approve",
+      "name": "Approve a supplier invoice",
+      "description": "Approves or rejects a pending supplier invoice on a manager's behalf",
+      "tags": [
+        "invoices",
+        "finance",
+        "approval"
+      ],
+      "examples": [
+        "approve invoice INV-2201 from Acme"
+      ]
+    },
+    {
+      "id": "invoice_lookup",
+      "name": "Find an invoice",
+      "description": "Finds a supplier invoice by number, supplier or amount and shows its status",
+      "tags": [
+        "invoices",
+        "finance"
+      ],
+      "examples": [
+        "what is the status of the Acme invoice from June?"
+      ]
+    }
+  ]
+}

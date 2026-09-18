@@ -1,0 +1,1392 @@
+{
+  "summaries": {
+    "jev": {
+      "n": 52,
+      "errors": 0,
+      "accuracy": 0.9807692307692307,
+      "none_recall": 1.0,
+      "confidence_right": 0.9919607843137256,
+      "confidence_wrong": 0.91,
+      "gated_coverage": 0.9807692307692307,
+      "gated_accuracy": 0.9803921568627451,
+      "p50_ms": 830.1435420289636,
+      "p95_ms": 1001.7016249476001,
+      "tokens_in": 55786,
+      "tokens_out": 9859,
+      "cost_per_1k_usd": 0.045057923076923086
+    },
+    "gemini-2.5-flash": {
+      "n": 52,
+      "errors": 0,
+      "accuracy": 0.9807692307692307,
+      "none_recall": 1.0,
+      "confidence_right": 0.9950980392156863,
+      "confidence_wrong": 0.9,
+      "gated_coverage": 1.0,
+      "gated_accuracy": 0.9807692307692307,
+      "p50_ms": 1489.7387500386685,
+      "p95_ms": 2594.6492080111057,
+      "tokens_in": 37834,
+      "tokens_out": 11181,
+      "cost_per_1k_usd": 0.7558211538461538
+    }
+  },
+  "rows": {
+    "jev": [
+      {
+        "text": "What's the forecast for Chicago this weekend?",
+        "expected": "weather-agent__weather-search",
+        "chosen": "weather-agent__weather-search",
+        "confidence": 1.0,
+        "latency_ms": 762.3265420552343,
+        "usage": {
+          "input_tokens": 1070,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Is it going to rain in Porto tomorrow?",
+        "expected": "weather-agent__weather-search",
+        "chosen": "weather-agent__weather-search",
+        "confidence": 1.0,
+        "latency_ms": 828.4677501069382,
+        "usage": {
+          "input_tokens": 1070,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "How cold does Tallinn get in January?",
+        "expected": "weather-agent__weather-search",
+        "chosen": "weather-agent__weather-search",
+        "confidence": 0.99,
+        "latency_ms": 930.7682079961523,
+        "usage": {
+          "input_tokens": 1070,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Find me a two-bedroom place in Rome for the first week of May, four guests",
+        "expected": "airbnb-agent__airbnb-search",
+        "chosen": "airbnb-agent__airbnb-search",
+        "confidence": 0.99,
+        "latency_ms": 808.6500829085708,
+        "usage": {
+          "input_tokens": 1078,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "I need somewhere to stay in Berlin next weekend, budget 120 a night",
+        "expected": "airbnb-agent__airbnb-search",
+        "chosen": "airbnb-agent__airbnb-search",
+        "confidence": 0.91,
+        "latency_ms": 891.4201250299811,
+        "usage": {
+          "input_tokens": 1078,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Any apartments with a kitchen near the beach in Lisbon for a week in August?",
+        "expected": "airbnb-agent__airbnb-search",
+        "chosen": "airbnb-agent__airbnb-search",
+        "confidence": 0.99,
+        "latency_ms": 800.7480000378564,
+        "usage": {
+          "input_tokens": 1077,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What does a round trip from Milan to Tokyo cost in November?",
+        "expected": "flight-search-agent__flight-search",
+        "chosen": "flight-search-agent__flight-search",
+        "confidence": 1.0,
+        "latency_ms": 768.3114999672398,
+        "usage": {
+          "input_tokens": 1074,
+          "output_tokens": 190
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Earliest flight tomorrow from Lisbon to Madrid",
+        "expected": "flight-search-agent__flight-search",
+        "chosen": "flight-search-agent__flight-search",
+        "confidence": 1.0,
+        "latency_ms": 836.3189999945462,
+        "usage": {
+          "input_tokens": 1070,
+          "output_tokens": 190
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Compare fares Tallinn to Helsinki for 12 March",
+        "expected": "flight-search-agent__flight-search",
+        "chosen": "flight-search-agent__flight-search",
+        "confidence": 0.97,
+        "latency_ms": 891.194749972783,
+        "usage": {
+          "input_tokens": 1072,
+          "output_tokens": 190
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Has flight FR8402 landed yet?",
+        "expected": "flight-search-agent__flight-status",
+        "chosen": "flight-search-agent__flight-status",
+        "confidence": 0.99,
+        "latency_ms": 792.5811250461265,
+        "usage": {
+          "input_tokens": 1071,
+          "output_tokens": 190
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Is the 6pm Ryanair to Dublin delayed?",
+        "expected": "flight-search-agent__flight-status",
+        "chosen": "flight-search-agent__flight-status",
+        "confidence": 1.0,
+        "latency_ms": 911.482417024672,
+        "usage": {
+          "input_tokens": 1073,
+          "output_tokens": 190
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Check whether LH1174 is on time",
+        "expected": "flight-search-agent__flight-status",
+        "chosen": "flight-search-agent__flight-status",
+        "confidence": 1.0,
+        "latency_ms": 830.1435420289636,
+        "usage": {
+          "input_tokens": 1071,
+          "output_tokens": 190
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Move my booking XY7ZQ2 to the Sunday evening flight",
+        "expected": "flight-changes-agent__flight-change",
+        "chosen": "flight-changes-agent__flight-change",
+        "confidence": 1.0,
+        "latency_ms": 2249.740416998975,
+        "usage": {
+          "input_tokens": 1074,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "I need to cancel my flight reservation for next Tuesday",
+        "expected": "flight-changes-agent__flight-change",
+        "chosen": "flight-changes-agent__flight-change",
+        "confidence": 1.0,
+        "latency_ms": 747.303375042975,
+        "usage": {
+          "input_tokens": 1071,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Can I switch my return leg to a day later? Reference PNR K3L9M",
+        "expected": "flight-changes-agent__flight-change",
+        "chosen": "flight-changes-agent__flight-change",
+        "confidence": 1.0,
+        "latency_ms": 772.668584017083,
+        "usage": {
+          "input_tokens": 1080,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "My flight was cancelled by the airline, how do I get my money back?",
+        "expected": "flight-changes-agent__refund-request",
+        "chosen": "flight-changes-agent__refund-request",
+        "confidence": 1.0,
+        "latency_ms": 748.8927920348942,
+        "usage": {
+          "input_tokens": 1077,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Claim a refund for the flight I missed because of the strike",
+        "expected": "flight-changes-agent__refund-request",
+        "chosen": "flight-changes-agent__refund-request",
+        "confidence": 1.0,
+        "latency_ms": 976.5964160906151,
+        "usage": {
+          "input_tokens": 1073,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "The airline cancelled TP112, file a refund for booking AB12CD",
+        "expected": "flight-changes-agent__refund-request",
+        "chosen": "flight-changes-agent__refund-request",
+        "confidence": 1.0,
+        "latency_ms": 913.1662499858066,
+        "usage": {
+          "input_tokens": 1078,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Change my hotel reservation to check in a day earlier",
+        "expected": "hotel-support-agent__hotel-booking-change",
+        "chosen": "hotel-support-agent__hotel-booking-change",
+        "confidence": 1.0,
+        "latency_ms": 787.3108750209212,
+        "usage": {
+          "input_tokens": 1071,
+          "output_tokens": 193
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Upgrade the room on my existing hotel booking to a suite",
+        "expected": "hotel-support-agent__hotel-booking-change",
+        "chosen": "hotel-support-agent__hotel-booking-change",
+        "confidence": 1.0,
+        "latency_ms": 846.0431250277907,
+        "usage": {
+          "input_tokens": 1072,
+          "output_tokens": 193
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Add a third guest to my reservation at the Grand Hotel",
+        "expected": "hotel-support-agent__hotel-booking-change",
+        "chosen": "hotel-support-agent__hotel-booking-change",
+        "confidence": 1.0,
+        "latency_ms": 814.102791948244,
+        "usage": {
+          "input_tokens": 1072,
+          "output_tokens": 193
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "The hotel room smelled of smoke and the shower was broken, I want to complain",
+        "expected": "hotel-support-agent__hotel-complaint",
+        "chosen": "hotel-support-agent__hotel-complaint",
+        "confidence": 1.0,
+        "latency_ms": 729.6615419909358,
+        "usage": {
+          "input_tokens": 1077,
+          "output_tokens": 192
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Nobody at reception all night and construction noise at 7am, this stay was unacceptable",
+        "expected": "hotel-support-agent__hotel-complaint",
+        "chosen": "hotel-support-agent__hotel-complaint",
+        "confidence": 1.0,
+        "latency_ms": 816.2959159817547,
+        "usage": {
+          "input_tokens": 1078,
+          "output_tokens": 192
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "File a complaint about the cleanliness of my room last week",
+        "expected": "hotel-support-agent__hotel-complaint",
+        "chosen": "hotel-support-agent__hotel-complaint",
+        "confidence": 1.0,
+        "latency_ms": 815.78329205513,
+        "usage": {
+          "input_tokens": 1072,
+          "output_tokens": 192
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Submit a 28 EUR lunch receipt from the client meeting",
+        "expected": "expense-agent__expense-submit",
+        "chosen": "expense-agent__expense-submit",
+        "confidence": 1.0,
+        "latency_ms": 974.7221249854192,
+        "usage": {
+          "input_tokens": 1073,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "File my train ticket to Munich as a travel expense",
+        "expected": "expense-agent__expense-submit",
+        "chosen": "expense-agent__expense-submit",
+        "confidence": 1.0,
+        "latency_ms": 872.9839579900727,
+        "usage": {
+          "input_tokens": 1071,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Add a 300 USD conference fee to my expenses with the receipt attached",
+        "expected": "expense-agent__expense-submit",
+        "chosen": "expense-agent__expense-submit",
+        "confidence": 1.0,
+        "latency_ms": 854.6303330222145,
+        "usage": {
+          "input_tokens": 1077,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Was my February expense report paid out yet?",
+        "expected": "expense-agent__expense-status",
+        "chosen": "expense-agent__expense-status",
+        "confidence": 1.0,
+        "latency_ms": 2009.691416984424,
+        "usage": {
+          "input_tokens": 1070,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Has anyone approved the hotel expense I submitted last week?",
+        "expected": "expense-agent__expense-status",
+        "chosen": "expense-agent__expense-status",
+        "confidence": 1.0,
+        "latency_ms": 850.9005419909954,
+        "usage": {
+          "input_tokens": 1072,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "When will I be reimbursed for the taxi receipts?",
+        "expected": "expense-agent__expense-status",
+        "chosen": "expense-agent__expense-status",
+        "confidence": 0.99,
+        "latency_ms": 739.2669579712674,
+        "usage": {
+          "input_tokens": 1074,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Approve the pending invoice from Acme for 4,200 EUR",
+        "expected": "invoice-agent__invoice-approve",
+        "chosen": "invoice-agent__invoice-approve",
+        "confidence": 1.0,
+        "latency_ms": 945.4814998898655,
+        "usage": {
+          "input_tokens": 1077,
+          "output_tokens": 190
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Reject invoice INV-778, the amount is wrong",
+        "expected": "invoice-agent__invoice-approve",
+        "chosen": "invoice-agent__invoice-approve",
+        "confidence": 1.0,
+        "latency_ms": 1001.7016249476001,
+        "usage": {
+          "input_tokens": 1073,
+          "output_tokens": 190
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Sign off on the two supplier invoices waiting for me",
+        "expected": "invoice-agent__invoice-approve",
+        "chosen": "invoice-agent__invoice-approve",
+        "confidence": 1.0,
+        "latency_ms": 741.4025840116665,
+        "usage": {
+          "input_tokens": 1071,
+          "output_tokens": 190
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What's the status of invoice INV-2201?",
+        "expected": "invoice-agent__invoice-lookup",
+        "chosen": "invoice-agent__invoice-lookup",
+        "confidence": 1.0,
+        "latency_ms": 882.8957499936223,
+        "usage": {
+          "input_tokens": 1074,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Find the Globex invoice from March",
+        "expected": "invoice-agent__invoice-lookup",
+        "chosen": "invoice-agent__invoice-lookup",
+        "confidence": 1.0,
+        "latency_ms": 855.1420000148937,
+        "usage": {
+          "input_tokens": 1069,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Which invoices from Acme are still unpaid?",
+        "expected": "invoice-agent__invoice-lookup",
+        "chosen": "invoice-agent__invoice-lookup",
+        "confidence": 0.99,
+        "latency_ms": 817.0119590358809,
+        "usage": {
+          "input_tokens": 1070,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Translate 'where is the train station' into Portuguese",
+        "expected": "translation-agent__translate-text",
+        "chosen": "translation-agent__translate-text",
+        "confidence": 1.0,
+        "latency_ms": 796.9592079753056,
+        "usage": {
+          "input_tokens": 1071,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "How do you say thank you very much in Estonian?",
+        "expected": "translation-agent__translate-text",
+        "chosen": "translation-agent__translate-text",
+        "confidence": 1.0,
+        "latency_ms": 807.2051249910146,
+        "usage": {
+          "input_tokens": 1073,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Put this paragraph into German: We confirm receipt of your order.",
+        "expected": "translation-agent__translate-text",
+        "chosen": "translation-agent__translate-text",
+        "confidence": 1.0,
+        "latency_ms": 818.425124976784,
+        "usage": {
+          "input_tokens": 1074,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Write me a limerick about a cat",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 817.2079999931157,
+        "usage": {
+          "input_tokens": 1070,
+          "output_tokens": 185
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What is the capital of France?",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 742.7023750497028,
+        "usage": {
+          "input_tokens": 1068,
+          "output_tokens": 185
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What's 17 times 23?",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 841.0496249562129,
+        "usage": {
+          "input_tokens": 1071,
+          "output_tokens": 185
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Give me a recipe for carbonara",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 863.1193749606609,
+        "usage": {
+          "input_tokens": 1069,
+          "output_tokens": 185
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Write a Python function that reverses a string",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 898.0165000539273,
+        "usage": {
+          "input_tokens": 1070,
+          "output_tokens": 185
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Tell me a joke",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 824.1750000743195,
+        "usage": {
+          "input_tokens": 1065,
+          "output_tokens": 185
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What is the current price of Apple stock?",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 995.8755830302835,
+        "usage": {
+          "input_tokens": 1070,
+          "output_tokens": 185
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Who won the 2022 World Cup?",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 887.3816669220105,
+        "usage": {
+          "input_tokens": 1072,
+          "output_tokens": 185
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Will it be warm enough to swim during my Lisbon trip in June?",
+        "expected": "weather-agent__weather-search",
+        "chosen": "weather-agent__weather-search",
+        "confidence": 0.98,
+        "latency_ms": 775.5416251020506,
+        "usage": {
+          "input_tokens": 1075,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Book me a place to stay in Rome for two nights",
+        "expected": "airbnb-agent__airbnb-search",
+        "chosen": "airbnb-agent__airbnb-search",
+        "confidence": 0.81,
+        "latency_ms": 907.9806249355897,
+        "usage": {
+          "input_tokens": 1072,
+          "output_tokens": 191
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "I paid for a hotel that was awful, can I get compensated?",
+        "expected": "hotel-support-agent__hotel-complaint",
+        "chosen": "hotel-support-agent__hotel-complaint",
+        "confidence": 0.99,
+        "latency_ms": 1228.2219590852037,
+        "usage": {
+          "input_tokens": 1075,
+          "output_tokens": 192
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Is my reimbursement for the flight I bought in April done?",
+        "expected": "expense-agent__expense-status",
+        "chosen": "expense-agent__expense-status",
+        "confidence": 0.99,
+        "latency_ms": 840.728749986738,
+        "usage": {
+          "input_tokens": 1073,
+          "output_tokens": 189
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "My flight got moved and now I miss my hotel night, what can I do?",
+        "expected": "flight-changes-agent__flight-change",
+        "chosen": "hotel-support-agent__hotel-booking-change",
+        "confidence": 0.91,
+        "latency_ms": 803.4719999413937,
+        "usage": {
+          "input_tokens": 1078,
+          "output_tokens": 193
+        },
+        "correct": false,
+        "error": null
+      }
+    ],
+    "gemini-2.5-flash": [
+      {
+        "text": "What's the forecast for Chicago this weekend?",
+        "expected": "weather-agent__weather-search",
+        "chosen": "weather-agent__weather-search",
+        "confidence": 1.0,
+        "latency_ms": 1272.3310000728816,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 99
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Is it going to rain in Porto tomorrow?",
+        "expected": "weather-agent__weather-search",
+        "chosen": "weather-agent__weather-search",
+        "confidence": 1.0,
+        "latency_ms": 1218.9692080719396,
+        "usage": {
+          "input_tokens": 725,
+          "output_tokens": 99
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "How cold does Tallinn get in January?",
+        "expected": "weather-agent__weather-search",
+        "chosen": "weather-agent__weather-search",
+        "confidence": 0.9,
+        "latency_ms": 1367.5254579866305,
+        "usage": {
+          "input_tokens": 724,
+          "output_tokens": 138
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Find me a two-bedroom place in Rome for the first week of May, four guests",
+        "expected": "airbnb-agent__airbnb-search",
+        "chosen": "airbnb-agent__airbnb-search",
+        "confidence": 1.0,
+        "latency_ms": 1579.9563749460503,
+        "usage": {
+          "input_tokens": 734,
+          "output_tokens": 194
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "I need somewhere to stay in Berlin next weekend, budget 120 a night",
+        "expected": "airbnb-agent__airbnb-search",
+        "chosen": "airbnb-agent__airbnb-search",
+        "confidence": 1.0,
+        "latency_ms": 1846.6163339326158,
+        "usage": {
+          "input_tokens": 733,
+          "output_tokens": 216
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Any apartments with a kitchen near the beach in Lisbon for a week in August?",
+        "expected": "airbnb-agent__airbnb-search",
+        "chosen": "airbnb-agent__airbnb-search",
+        "confidence": 1.0,
+        "latency_ms": 1583.5457079811022,
+        "usage": {
+          "input_tokens": 732,
+          "output_tokens": 164
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What does a round trip from Milan to Tokyo cost in November?",
+        "expected": "flight-search-agent__flight-search",
+        "chosen": "flight-search-agent__flight-search",
+        "confidence": 1.0,
+        "latency_ms": 1197.5583749590442,
+        "usage": {
+          "input_tokens": 729,
+          "output_tokens": 96
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Earliest flight tomorrow from Lisbon to Madrid",
+        "expected": "flight-search-agent__flight-search",
+        "chosen": "flight-search-agent__flight-search",
+        "confidence": 1.0,
+        "latency_ms": 2350.2494590356946,
+        "usage": {
+          "input_tokens": 724,
+          "output_tokens": 373
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Compare fares Tallinn to Helsinki for 12 March",
+        "expected": "flight-search-agent__flight-search",
+        "chosen": "flight-search-agent__flight-search",
+        "confidence": 1.0,
+        "latency_ms": 2573.4210420632735,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 123
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Has flight FR8402 landed yet?",
+        "expected": "flight-search-agent__flight-status",
+        "chosen": "flight-search-agent__flight-status",
+        "confidence": 1.0,
+        "latency_ms": 1421.2095000548288,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 116
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Is the 6pm Ryanair to Dublin delayed?",
+        "expected": "flight-search-agent__flight-status",
+        "chosen": "flight-search-agent__flight-status",
+        "confidence": 1.0,
+        "latency_ms": 1127.1251660073176,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 70
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Check whether LH1174 is on time",
+        "expected": "flight-search-agent__flight-status",
+        "chosen": "flight-search-agent__flight-status",
+        "confidence": 1.0,
+        "latency_ms": 1358.9997919043526,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 137
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Move my booking XY7ZQ2 to the Sunday evening flight",
+        "expected": "flight-changes-agent__flight-change",
+        "chosen": "flight-changes-agent__flight-change",
+        "confidence": 1.0,
+        "latency_ms": 2339.4972500391304,
+        "usage": {
+          "input_tokens": 728,
+          "output_tokens": 362
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "I need to cancel my flight reservation for next Tuesday",
+        "expected": "flight-changes-agent__flight-change",
+        "chosen": "flight-changes-agent__flight-change",
+        "confidence": 1.0,
+        "latency_ms": 1215.8205829327926,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 57
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Can I switch my return leg to a day later? Reference PNR K3L9M",
+        "expected": "flight-changes-agent__flight-change",
+        "chosen": "flight-changes-agent__flight-change",
+        "confidence": 0.95,
+        "latency_ms": 2952.796208090149,
+        "usage": {
+          "input_tokens": 735,
+          "output_tokens": 486
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "My flight was cancelled by the airline, how do I get my money back?",
+        "expected": "flight-changes-agent__refund-request",
+        "chosen": "flight-changes-agent__refund-request",
+        "confidence": 1.0,
+        "latency_ms": 1169.160124962218,
+        "usage": {
+          "input_tokens": 732,
+          "output_tokens": 114
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Claim a refund for the flight I missed because of the strike",
+        "expected": "flight-changes-agent__refund-request",
+        "chosen": "flight-changes-agent__refund-request",
+        "confidence": 1.0,
+        "latency_ms": 1263.166791992262,
+        "usage": {
+          "input_tokens": 728,
+          "output_tokens": 109
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "The airline cancelled TP112, file a refund for booking AB12CD",
+        "expected": "flight-changes-agent__refund-request",
+        "chosen": "flight-changes-agent__refund-request",
+        "confidence": 1.0,
+        "latency_ms": 2386.6957089630887,
+        "usage": {
+          "input_tokens": 733,
+          "output_tokens": 373
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Change my hotel reservation to check in a day earlier",
+        "expected": "hotel-support-agent__hotel-booking-change",
+        "chosen": "hotel-support-agent__hotel-booking-change",
+        "confidence": 1.0,
+        "latency_ms": 1214.9004170205444,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 84
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Upgrade the room on my existing hotel booking to a suite",
+        "expected": "hotel-support-agent__hotel-booking-change",
+        "chosen": "hotel-support-agent__hotel-booking-change",
+        "confidence": 1.0,
+        "latency_ms": 2302.1484999917448,
+        "usage": {
+          "input_tokens": 727,
+          "output_tokens": 360
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Add a third guest to my reservation at the Grand Hotel",
+        "expected": "hotel-support-agent__hotel-booking-change",
+        "chosen": "hotel-support-agent__hotel-booking-change",
+        "confidence": 1.0,
+        "latency_ms": 2444.042959017679,
+        "usage": {
+          "input_tokens": 727,
+          "output_tokens": 358
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "The hotel room smelled of smoke and the shower was broken, I want to complain",
+        "expected": "hotel-support-agent__hotel-complaint",
+        "chosen": "hotel-support-agent__hotel-complaint",
+        "confidence": 1.0,
+        "latency_ms": 2613.8307499932125,
+        "usage": {
+          "input_tokens": 732,
+          "output_tokens": 436
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Nobody at reception all night and construction noise at 7am, this stay was unacceptable",
+        "expected": "hotel-support-agent__hotel-complaint",
+        "chosen": "hotel-support-agent__hotel-complaint",
+        "confidence": 1.0,
+        "latency_ms": 1634.7608329961076,
+        "usage": {
+          "input_tokens": 733,
+          "output_tokens": 166
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "File a complaint about the cleanliness of my room last week",
+        "expected": "hotel-support-agent__hotel-complaint",
+        "chosen": "hotel-support-agent__hotel-complaint",
+        "confidence": 1.0,
+        "latency_ms": 2484.7592909354717,
+        "usage": {
+          "input_tokens": 727,
+          "output_tokens": 412
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Submit a 28 EUR lunch receipt from the client meeting",
+        "expected": "expense-agent__expense-submit",
+        "chosen": "expense-agent__expense-submit",
+        "confidence": 1.0,
+        "latency_ms": 1489.7387500386685,
+        "usage": {
+          "input_tokens": 728,
+          "output_tokens": 122
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "File my train ticket to Munich as a travel expense",
+        "expected": "expense-agent__expense-submit",
+        "chosen": "expense-agent__expense-submit",
+        "confidence": 1.0,
+        "latency_ms": 1137.4117089435458,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 100
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Add a 300 USD conference fee to my expenses with the receipt attached",
+        "expected": "expense-agent__expense-submit",
+        "chosen": "expense-agent__expense-submit",
+        "confidence": 1.0,
+        "latency_ms": 1250.0594159355387,
+        "usage": {
+          "input_tokens": 732,
+          "output_tokens": 107
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Was my February expense report paid out yet?",
+        "expected": "expense-agent__expense-status",
+        "chosen": "expense-agent__expense-status",
+        "confidence": 1.0,
+        "latency_ms": 944.0327499760315,
+        "usage": {
+          "input_tokens": 725,
+          "output_tokens": 65
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Has anyone approved the hotel expense I submitted last week?",
+        "expected": "expense-agent__expense-status",
+        "chosen": "expense-agent__expense-status",
+        "confidence": 1.0,
+        "latency_ms": 1595.2032500645146,
+        "usage": {
+          "input_tokens": 727,
+          "output_tokens": 204
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "When will I be reimbursed for the taxi receipts?",
+        "expected": "expense-agent__expense-status",
+        "chosen": "expense-agent__expense-status",
+        "confidence": 1.0,
+        "latency_ms": 1398.2860000105575,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 138
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Approve the pending invoice from Acme for 4,200 EUR",
+        "expected": "invoice-agent__invoice-approve",
+        "chosen": "invoice-agent__invoice-approve",
+        "confidence": 1.0,
+        "latency_ms": 1365.8434170065448,
+        "usage": {
+          "input_tokens": 730,
+          "output_tokens": 105
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Reject invoice INV-778, the amount is wrong",
+        "expected": "invoice-agent__invoice-approve",
+        "chosen": "invoice-agent__invoice-approve",
+        "confidence": 1.0,
+        "latency_ms": 1290.6217500567436,
+        "usage": {
+          "input_tokens": 728,
+          "output_tokens": 63
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Sign off on the two supplier invoices waiting for me",
+        "expected": "invoice-agent__invoice-approve",
+        "chosen": "invoice-agent__invoice-approve",
+        "confidence": 1.0,
+        "latency_ms": 1414.7447500145063,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 159
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What's the status of invoice INV-2201?",
+        "expected": "invoice-agent__invoice-lookup",
+        "chosen": "invoice-agent__invoice-lookup",
+        "confidence": 1.0,
+        "latency_ms": 1382.8021250665188,
+        "usage": {
+          "input_tokens": 730,
+          "output_tokens": 116
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Find the Globex invoice from March",
+        "expected": "invoice-agent__invoice-lookup",
+        "chosen": "invoice-agent__invoice-lookup",
+        "confidence": 1.0,
+        "latency_ms": 2594.6492080111057,
+        "usage": {
+          "input_tokens": 723,
+          "output_tokens": 454
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Which invoices from Acme are still unpaid?",
+        "expected": "invoice-agent__invoice-lookup",
+        "chosen": "invoice-agent__invoice-lookup",
+        "confidence": 1.0,
+        "latency_ms": 1410.9479589387774,
+        "usage": {
+          "input_tokens": 724,
+          "output_tokens": 159
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Translate 'where is the train station' into Portuguese",
+        "expected": "translation-agent__translate-text",
+        "chosen": "translation-agent__translate-text",
+        "confidence": 1.0,
+        "latency_ms": 1125.5044999998063,
+        "usage": {
+          "input_tokens": 726,
+          "output_tokens": 92
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "How do you say thank you very much in Estonian?",
+        "expected": "translation-agent__translate-text",
+        "chosen": "translation-agent__translate-text",
+        "confidence": 1.0,
+        "latency_ms": 1209.4967500306666,
+        "usage": {
+          "input_tokens": 727,
+          "output_tokens": 105
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Put this paragraph into German: We confirm receipt of your order.",
+        "expected": "translation-agent__translate-text",
+        "chosen": "translation-agent__translate-text",
+        "confidence": 1.0,
+        "latency_ms": 1326.1674999957904,
+        "usage": {
+          "input_tokens": 729,
+          "output_tokens": 102
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Write me a limerick about a cat",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 1982.2831670753658,
+        "usage": {
+          "input_tokens": 725,
+          "output_tokens": 320
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What is the capital of France?",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 2096.1900000693277,
+        "usage": {
+          "input_tokens": 723,
+          "output_tokens": 334
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What's 17 times 23?",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 1710.1025419542566,
+        "usage": {
+          "input_tokens": 727,
+          "output_tokens": 303
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Give me a recipe for carbonara",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 1705.2449169568717,
+        "usage": {
+          "input_tokens": 723,
+          "output_tokens": 279
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Write a Python function that reverses a string",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 2098.603833001107,
+        "usage": {
+          "input_tokens": 724,
+          "output_tokens": 356
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Tell me a joke",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 1722.713707946241,
+        "usage": {
+          "input_tokens": 720,
+          "output_tokens": 250
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "What is the current price of Apple stock?",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 2158.1909999949858,
+        "usage": {
+          "input_tokens": 725,
+          "output_tokens": 355
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Who won the 2022 World Cup?",
+        "expected": null,
+        "chosen": null,
+        "confidence": 1.0,
+        "latency_ms": 2069.327959092334,
+        "usage": {
+          "input_tokens": 727,
+          "output_tokens": 343
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Will it be warm enough to swim during my Lisbon trip in June?",
+        "expected": "weather-agent__weather-search",
+        "chosen": "weather-agent__weather-search",
+        "confidence": 1.0,
+        "latency_ms": 959.1248750220984,
+        "usage": {
+          "input_tokens": 730,
+          "output_tokens": 63
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Book me a place to stay in Rome for two nights",
+        "expected": "airbnb-agent__airbnb-search",
+        "chosen": "airbnb-agent__airbnb-search",
+        "confidence": 0.9,
+        "latency_ms": 2065.7878750935197,
+        "usage": {
+          "input_tokens": 727,
+          "output_tokens": 330
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "I paid for a hotel that was awful, can I get compensated?",
+        "expected": "hotel-support-agent__hotel-complaint",
+        "chosen": "hotel-support-agent__hotel-complaint",
+        "confidence": 1.0,
+        "latency_ms": 1062.4974160455167,
+        "usage": {
+          "input_tokens": 730,
+          "output_tokens": 62
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "Is my reimbursement for the flight I bought in April done?",
+        "expected": "expense-agent__expense-status",
+        "chosen": "expense-agent__expense-status",
+        "confidence": 1.0,
+        "latency_ms": 2421.125499997288,
+        "usage": {
+          "input_tokens": 728,
+          "output_tokens": 428
+        },
+        "correct": true,
+        "error": null
+      },
+      {
+        "text": "My flight got moved and now I miss my hotel night, what can I do?",
+        "expected": "flight-changes-agent__flight-change",
+        "chosen": "hotel-support-agent__hotel-booking-change",
+        "confidence": 0.9,
+        "latency_ms": 3053.156041074544,
+        "usage": {
+          "input_tokens": 733,
+          "output_tokens": 525
+        },
+        "correct": false,
+        "error": null
+      }
+    ]
+  }
+}

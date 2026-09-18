@@ -1,0 +1,41 @@
+{
+  "name": "Flight Changes Agent",
+  "description": "Changes and refunds for existing flight bookings",
+  "url": "http://localhost:10004",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": false
+  },
+  "defaultInputModes": [
+    "text"
+  ],
+  "defaultOutputModes": [
+    "text"
+  ],
+  "skills": [
+    {
+      "id": "flight_change",
+      "name": "Change a flight booking",
+      "description": "Rebooks or cancels an existing flight reservation using its booking reference",
+      "tags": [
+        "flights",
+        "booking"
+      ],
+      "examples": [
+        "move my flight ABC123 to Friday"
+      ]
+    },
+    {
+      "id": "refund_request",
+      "name": "Refund a cancelled flight",
+      "description": "Files a refund claim for a cancelled or missed flight",
+      "tags": [
+        "flights",
+        "refund"
+      ],
+      "examples": [
+        "the airline cancelled my flight, I want my money back"
+      ]
+    }
+  ]
+}
