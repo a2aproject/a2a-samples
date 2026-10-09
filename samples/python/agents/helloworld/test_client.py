@@ -1,4 +1,5 @@
 import asyncio
+import os
 import subprocess
 import sys
 import time
@@ -10,6 +11,10 @@ import pytest
 from a2a.client import ClientConfig, create_client
 from a2a.helpers import new_text_message
 from a2a.types import Role, SendMessageRequest
+
+
+# Override to route through a gateway, e.g. A2A_AGENT_URL=http://localhost:3000
+AGENT_URL = os.environ.get('A2A_AGENT_URL', 'http://127.0.0.1:9999')
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -41,7 +46,7 @@ async def get_agent_card():
     async with httpx.AsyncClient() as httpx_client:
         resolver = A2ACardResolver(
             httpx_client=httpx_client,
-            base_url='http://127.0.0.1:9999',
+            base_url=AGENT_URL,
             # Provide agent_card_path, if your agent uses a different path
             # agent_card_path=''  # noqa: ERA001
         )
@@ -130,7 +135,7 @@ def test_client_workflow(text_query: str = 'Hi there!'):
 
 
 def main():
-    print('\nStarting an internactive session with A2A Server [http://127.0.0.1:9999]')
+    print(f'\nStarting an internactive session with A2A Server [{AGENT_URL}]')
     print('Use `exit` to quit.')
     prompt = input('user > ')
     while prompt and prompt != 'exit':

@@ -43,6 +43,12 @@ The sample codebase is structured around three core components.
    python test_client.py
    ```
 
+   The client connects to `http://127.0.0.1:9999` by default. To reach the agent through a proxy or gateway instead, set `A2A_AGENT_URL`:
+
+   ```bash
+   A2A_AGENT_URL=http://localhost:3000 python test_client.py
+   ```
+
    **Expected Output Snippet**:
 
    ```bash
