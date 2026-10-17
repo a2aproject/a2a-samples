@@ -5,16 +5,15 @@ from typing import Any, Literal
 
 import httpx
 
+from langchain.agents import create_agent
+from langchain.agents.structured_output import ToolStrategy
 from langchain_core.messages import AIMessage, ToolMessage
 from langchain_core.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.prebuilt import create_react_agent
+from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
 from pydantic import BaseModel
-
-
-memory = MemorySaver()
 
 
 @tool
@@ -59,6 +58,14 @@ class ResponseFormat(BaseModel):
     message: str
 
 
+# Allow the checkpointer to restore the structured response between turns.
+memory = MemorySaver(
+    serde=JsonPlusSerializer(
+        allowed_msgpack_modules=[(ResponseFormat.__module__, ResponseFormat.__name__)]
+    )
+)
+
+
 class CurrencyAgent:
     """CurrencyAgent - a specialized assistant for currency convesions."""
 
@@ -79,7 +86,7 @@ class CurrencyAgent:
     def __init__(self):
         model_source = os.getenv('model_source', 'google')
         if model_source == 'google':
-            self.model = ChatGoogleGenerativeAI(model='gemini-2.0-flash')
+            self.model = ChatGoogleGenerativeAI(model='gemini-3.8-flash')
         else:
             self.model = ChatOpenAI(
                 model=os.getenv('TOOL_LLM_NAME'),
@@ -89,12 +96,12 @@ class CurrencyAgent:
             )
         self.tools = [get_exchange_rate]
 
-        self.graph = create_react_agent(
+        self.graph = create_agent(
             self.model,
             tools=self.tools,
             checkpointer=memory,
-            prompt=self.SYSTEM_INSTRUCTION,
-            response_format=(self.FORMAT_INSTRUCTION, ResponseFormat),
+            system_prompt=f'{self.SYSTEM_INSTRUCTION} {self.FORMAT_INSTRUCTION}',
+            response_format=ToolStrategy(ResponseFormat),
         )
 
     async def stream(self, query, context_id) -> AsyncIterable[dict[str, Any]]:
