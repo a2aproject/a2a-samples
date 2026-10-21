@@ -43,59 +43,7 @@ The sample codebase is structured around three core components.
    python test_client.py
    ```
 
-   **Expected Output Snippet**:
-
-   ```bash
-   Initializes the A2ACardResolver instance with an HTTP client
-
-    Successfully fetched the public agent card:
-    ====================================================
-                        AgentCard                      
-    ====================================================
-    --- General ---
-    Name        : Hello World Agent
-    Description : Just a hello world agent
-    Version     : 0.0.1
-
-    --- Interfaces ---
-      [0] http://127.0.0.1:9999  (JSONRPC)
-
-    --- Capabilities ---
-    Streaming           : True
-    Push notifications  : False
-    Extended agent card : True
-
-    ...
-
-    history {
-      role: ROLE_USER
-      parts {
-        text: "Say hello."
-      }
-    }
-
-    history {
-      role: ROLE_AGENT
-      parts {
-        text: "Processing request..."
-      }
-    }
-    ...
-    artifacts {
-      parts {
-        text: "Hello, World! I have received your request (Say hello.)"
-        media_type: "text/plain"
-      }
-    }
-    ...
-    task_state: TASK_STATE_COMPLETED
-    message {
-      parts {
-        text: "Request is completed!"
-      }
-    }
-    ...
-   ```
+   Running `python test_client.py` starts an interactive session and waits at `user >`. Enter a message to send it to the local server; the client prints response events as they arrive. Type `exit` to quit. This interactive entry point does not display the agent card or run the streaming and extended-card demonstrations.
 
 ## Usage
 
