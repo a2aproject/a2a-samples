@@ -7,18 +7,28 @@ import (
 
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv/workqueue"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/domain"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/msgstream"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/testutil"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/msgstream"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/natstest"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
 func TestWorkQueue_WriteAndReceive(t *testing.T) {
-	testutil.SetupNATS(t)
-
-	_, js := testutil.ConnectNATS(t)
+	_, js := natstest.Connect(t)
+	natstest.ResetStreams(t, js, natstest.WorkStream)
 
 	ctx := context.Background()
-	queue, err := msgstream.CreateWorkQueue(ctx, js, domain.AgentResearcher)
+	work, err := js.Stream(ctx, natstest.WorkStream.Name)
+	if err != nil {
+		t.Fatalf("js.Stream() error = %v", err)
+	}
+	if _, err := work.CreateOrUpdateConsumer(ctx, jetstream.ConsumerConfig{
+		Name:          "researcher",
+		FilterSubject: "work.researcher",
+		AckPolicy:     jetstream.AckExplicitPolicy,
+	}); err != nil {
+		t.Fatalf("work.CreateOrUpdateConsumer() error = %v", err)
+	}
+	queue, err := msgstream.CreateWorkQueue(ctx, js, "researcher")
 	if err != nil {
 		t.Fatalf("create work queue: %v", err)
 	}

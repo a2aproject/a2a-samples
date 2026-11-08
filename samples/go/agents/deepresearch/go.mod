@@ -4,10 +4,11 @@ go 1.26.0
 
 require (
 	github.com/a2aproject/a2a-go/v2 v2.3.2-0.20260606182037-3134e71be608
+	github.com/a2aproject/a2a-samples/samples/go/integrations/mysql v0.0.0
+	github.com/a2aproject/a2a-samples/samples/go/integrations/nats v0.0.0
 	github.com/go-sql-driver/mysql v1.10.0
 	github.com/google/uuid v1.6.0
 	github.com/nats-io/nats.go v1.52.0
-	golang.org/x/sync v0.24.0
 	google.golang.org/adk v1.3.0
 	google.golang.org/genai v1.58.0
 )
@@ -40,6 +41,7 @@ require (
 	golang.org/x/crypto v0.58.0 // indirect
 	golang.org/x/mod v0.41.0 // indirect
 	golang.org/x/net v0.62.0 // indirect
+	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.43.0 // indirect
 	google.golang.org/api v0.279.0 // indirect
@@ -48,4 +50,9 @@ require (
 	google.golang.org/protobuf v1.36.12 // indirect
 	rsc.io/omap v1.2.0 // indirect
 	rsc.io/ordered v1.1.1 // indirect
+)
+
+replace (
+	github.com/a2aproject/a2a-samples/samples/go/integrations/mysql => ../../integrations/mysql
+	github.com/a2aproject/a2a-samples/samples/go/integrations/nats => ../../integrations/nats
 )

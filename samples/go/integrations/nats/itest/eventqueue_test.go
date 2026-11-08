@@ -8,14 +8,13 @@ import (
 
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv/eventqueue"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/msgstream"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/testutil"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/msgstream"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/natstest"
 )
 
 func TestEventQueue_WriteAndReplay(t *testing.T) {
-	testutil.SetupNATS(t)
-
-	_, js := testutil.ConnectNATS(t)
+	_, js := natstest.Connect(t)
+	natstest.ResetStreams(t, js, natstest.EventsStream)
 
 	ctx := context.Background()
 
