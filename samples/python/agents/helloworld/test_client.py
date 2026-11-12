@@ -131,10 +131,7 @@ def test_client_workflow(text_query: str = 'Hi there!'):
 
 def interactive_session():
     """Interactive REPL — each user input triggers send_message()."""
-    print(
-        '\nStarting an interactive session with A2A Server '
-        '[http://127.0.0.1:9999]'
-    )
+    print('\nStarting an interactive session with A2A Server [http://127.0.0.1:9999]')
     print('Use `exit` to quit.')
     prompt = input('user > ')
     while prompt and prompt != 'exit':
