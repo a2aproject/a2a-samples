@@ -129,13 +129,27 @@ def test_client_workflow(text_query: str = 'Hi there!'):
     asyncio.run(show_extended_card())
 
 
-def main():
-    print('\nStarting an internactive session with A2A Server [http://127.0.0.1:9999]')
+def interactive_session():
+    """Interactive REPL — each user input triggers send_message()."""
+    print(
+        '\nStarting an interactive session with A2A Server '
+        '[http://127.0.0.1:9999]'
+    )
     print('Use `exit` to quit.')
     prompt = input('user > ')
     while prompt and prompt != 'exit':
         asyncio.run(send_message(prompt))
         prompt = input('--\nuser > ')
+
+
+def main():
+    if '--interactive' in sys.argv or '-i' in sys.argv:
+        interactive_session()
+    else:
+        # Default: run the full documented workflow — public agent card,
+        # non-streaming, streaming and extended-card calls — matching the
+        # README's expected output and the Go sample's behaviour.
+        test_client_workflow()
 
 
 if __name__ == '__main__':
