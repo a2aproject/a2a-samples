@@ -38,7 +38,8 @@ type Record struct {
 	// Homes are the snapshots of the agent homes by context ID, saved after every turn.
 	Homes map[string]Object `json:"homes,omitempty"`
 	// Scratch are the snapshots of scratch directories by context ID, saved
-	// when the shard moves gracefully and dropped once restored.
+	// after every turn while they are within the scratch limit, and when the
+	// shard moves gracefully.
 	Scratch map[string]Object `json:"scratch,omitempty"`
 }
 

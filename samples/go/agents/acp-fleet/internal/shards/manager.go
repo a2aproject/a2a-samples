@@ -11,11 +11,16 @@ import (
 	"time"
 
 	"github.com/a2aproject/a2a-go/v2/log"
+	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/events"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/nodes"
 )
 
 // DefaultLimit is the default size limit of a snapshot.
 const DefaultLimit = 64 << 20
+
+// DefaultScratchLimit is the default size limit of the scratch snapshots
+// taken after every turn.
+const DefaultScratchLimit = 16 << 20
 
 // Agents stops the agents of a shard before it moves.
 type Agents interface {
@@ -32,9 +37,15 @@ type Config struct {
 	Dir string
 	// Limit is the size limit of a snapshot, [DefaultLimit] if zero.
 	Limit int64
+	// ScratchLimit is the size limit of the scratch snapshots taken after
+	// every turn, [DefaultScratchLimit] if zero. Larger scratch directories
+	// move only when their shard moves gracefully.
+	ScratchLimit int64
 	// Orphaned is called after this server takes a shard over from a server
 	// that died, to fail the tasks that server was working on.
 	Orphaned func(ctx context.Context, shard int)
+	// Events publishes shard moves; nil drops them.
+	Events *events.Publisher
 }
 
 // Manager claims the shards that rendezvous hashing assigns to this server
@@ -54,6 +65,9 @@ type Manager struct {
 func NewManager(cfg Config, table *Table, nodes *nodes.Registry) *Manager {
 	if cfg.Limit == 0 {
 		cfg.Limit = DefaultLimit
+	}
+	if cfg.ScratchLimit == 0 {
+		cfg.ScratchLimit = DefaultScratchLimit
 	}
 	return &Manager{cfg: cfg, table: table, nodes: nodes, owned: map[int]*Shard{}, releasing: map[int]bool{}, changed: make(chan struct{}, 1)}
 }
@@ -178,17 +192,15 @@ func (m *Manager) claim(ctx context.Context, n int) error {
 	for c, o := range next.Homes {
 		if time.Since(o.Saved) > retention {
 			delete(next.Homes, c)
+			delete(next.Scratch, c)
 			expired = append(expired, c)
 		}
-	}
-	if orphaned {
-		next.Scratch = nil
 	}
 	rev, err = m.table.swap(ctx, n, next, rev)
 	if err != nil {
 		return nil
 	}
-	s := &Shard{ID: n, dir: filepath.Join(m.cfg.Dir, key(n)), table: m.table, limit: m.cfg.Limit, rec: next, rev: rev}
+	s := &Shard{ID: n, dir: filepath.Join(m.cfg.Dir, key(n)), table: m.table, limit: m.cfg.Limit, scratchLimit: m.cfg.ScratchLimit, rec: next, rev: rev}
 	s.deleteObjects(ctx, superseded(rec, next))
 	if err := s.open(ctx); err != nil {
 		return errors.Join(fmt.Errorf("opening shard %d: %w", n, err), s.release(ctx), s.close())
@@ -202,6 +214,7 @@ func (m *Manager) claim(ctx context.Context, n int) error {
 	m.owned[n] = s
 	m.mu.Unlock()
 	log.Info(ctx, "claimed shard", "shard", n, "epoch", next.Epoch, "from", rec.Owner, "orphaned", orphaned, "conversations", len(next.Homes))
+	m.cfg.Events.Publish(ctx, events.Event{Kind: events.Claimed, Shard: n, From: rec.Owner, Orphaned: orphaned, Conversations: len(next.Homes)})
 	if orphaned && m.cfg.Orphaned != nil {
 		m.cfg.Orphaned(ctx, n)
 	}
@@ -219,6 +232,7 @@ func (m *Manager) release(ctx context.Context, agents Agents, n int) {
 		log.Warn(ctx, "releasing a shard failed, it moves when this server's heartbeat expires", "shard", n, "cause", err)
 	} else {
 		log.Info(ctx, "released shard", "shard", n, "took", time.Since(start).Round(time.Millisecond))
+		m.cfg.Events.Publish(ctx, events.Event{Kind: events.Released, Shard: n})
 	}
 	m.forget(ctx, n, s)
 }

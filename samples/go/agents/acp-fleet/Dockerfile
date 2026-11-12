@@ -20,9 +20,22 @@ FROM gcr.io/distroless/static:nonroot AS fake
 COPY --from=builder /acp-fleet /acp-fleet
 ENTRYPOINT ["/acp-fleet"]
 
-# The fleet with Gemini CLI as the ACP agent.
-FROM node:22-slim AS gemini
-RUN npm install -g @google/gemini-cli && npm cache clean --force
+# The fleet with opencode as the ACP agent, on the image a2a-serve runs it in.
+# Agent homes keep only opencode's sessions; its config and caches are shared
+# by the agents of a server, so that snapshots stay small.
+FROM ghcr.io/a2aproject/harness-opencode:latest AS opencode
+ENV AGENT_COMMAND="opencode acp" \
+    XDG_CONFIG_HOME=/opt/opencode/config \
+    XDG_CACHE_HOME=/opt/opencode/cache \
+    npm_config_cache=/opt/opencode/npm
+RUN mkdir -p /opt/opencode/config/opencode \
+ && printf '{"$schema":"https://opencode.ai/config.json","autoupdate":false,"share":"disabled"}\n' > /opt/opencode/config/opencode/opencode.json \
+ && printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1}}' \
+      '{"jsonrpc":"2.0","id":2,"method":"session/new","params":{"cwd":"/tmp","mcpServers":[]}}' \
+    | (cat; sleep 20) | HOME=/tmp/warm timeout 60 opencode acp > /dev/null 2>&1; \
+    test -d /opt/opencode/config/opencode/node_modules \
+ && rm -rf /tmp/warm \
+ && chown -R node:node /opt/opencode
 COPY --from=builder /acp-fleet /acp-fleet
 USER node
 ENTRYPOINT ["/acp-fleet"]

@@ -11,20 +11,26 @@ import (
 	"time"
 
 	"github.com/a2aproject/a2a-go/v2/log"
+	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/crowd"
+	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/events"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/fakeacp"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/mcpscratch"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/server"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/status"
+	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/watch"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+	"golang.org/x/term"
 )
 
-const usage = `usage: acp-fleet [serve | fakeacp | mcp <dir> | status]
+const usage = `usage: acp-fleet [serve | fakeacp | mcp <dir> | status | watch | crowd [users]]
 
   serve     run a fleet server, configured with environment variables (default)
   fakeacp   run the fake ACP agent on stdio
   mcp       run the scratch MCP server for <dir> on stdio
-  status    print the servers of the fleet and the shards they own`
+  status    print the servers of the fleet and the shards they own
+  watch     show the servers, shards and conversations of the fleet live
+  crowd     simulate users who talk to the fleet at FLEET_URL and check what their agents remember`
 
 func main() {
 	cmd := "serve"
@@ -45,6 +51,17 @@ func main() {
 		err = mcpscratch.Run(os.Args[2], os.Stdin, os.Stdout)
 	case "status":
 		err = printStatus()
+	case "watch":
+		err = runWatch()
+	case "crowd":
+		users := 6
+		if len(os.Args) > 2 {
+			users, err = strconv.Atoi(os.Args[2])
+			if err != nil {
+				break
+			}
+		}
+		err = runCrowd(users)
 	default:
 		err = fmt.Errorf("%s", usage)
 	}
@@ -75,6 +92,7 @@ func serve() error {
 		AgentCommand:   strings.Fields(env("AGENT_COMMAND", exe+" fakeacp")),
 		MCPCommand:     []string{exe, "mcp"},
 		Shards:         envInt("SHARDS", 64),
+		ScratchLimit:   int64(envInt("SCRATCH_LIMIT_MB", 16)) << 20,
 		IdleTimeout:    envDuration("IDLE_TIMEOUT", time.Minute),
 		DrainTimeout:   envDuration("DRAIN_TIMEOUT", time.Minute),
 		MaxAgents:      envInt("MAX_AGENTS", 8),
@@ -113,6 +131,46 @@ func printStatus() error {
 		return err
 	}
 	return status.Print(ctx, js, os.Stdout)
+}
+
+func runWatch() error {
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
+	nc, err := nats.Connect(env("NATS_URL", nats.DefaultURL), nats.MaxReconnects(-1))
+	if err != nil {
+		return err
+	}
+	defer nc.Close()
+	return watch.Run(ctx, watch.Config{
+		NATS:         nc,
+		Shards:       envInt("SHARDS", 64),
+		HeartbeatTTL: envDuration("HEARTBEAT_TTL", 8*time.Second),
+		Title:        "acp-fleet " + env("FLEET_URL", "http://localhost:8080"),
+		Size: func() (int, int) {
+			w, h, err := term.GetSize(int(os.Stdout.Fd()))
+			if err != nil {
+				return 120, 40
+			}
+			return w, h
+		},
+	}, os.Stdout)
+}
+
+func runCrowd(users int) error {
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
+	nc, err := nats.Connect(env("NATS_URL", nats.DefaultURL), nats.MaxReconnects(-1))
+	if err != nil {
+		return err
+	}
+	defer nc.Close()
+	return crowd.Run(ctx, crowd.Config{
+		URL:    env("FLEET_URL", "http://localhost:8080"),
+		Users:  users,
+		Think:  envDuration("THINK", 10*time.Second),
+		Events: events.NewPublisher(nc, ""),
+		Out:    os.Stdout,
+	})
 }
 
 func env(key, fallback string) string {

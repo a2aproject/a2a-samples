@@ -7,7 +7,9 @@ require (
 	github.com/a2aproject/a2a-samples/samples/go/integrations/mysql v0.0.0-00010101000000-000000000000
 	github.com/a2aproject/a2a-samples/samples/go/integrations/nats v0.0.0
 	github.com/go-sql-driver/mysql v1.10.1
+	github.com/google/go-cmp v0.7.0
 	github.com/nats-io/nats.go v1.55.0
+	golang.org/x/term v0.47.0
 	modernc.org/sqlite v1.62.0
 )
 

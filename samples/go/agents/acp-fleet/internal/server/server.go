@@ -19,6 +19,7 @@ import (
 	"github.com/a2aproject/a2a-go/v2/integrations/executor/a2aacp"
 	"github.com/a2aproject/a2a-go/v2/log"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/agents"
+	fleetevents "github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/events"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/nodes"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/router"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/shards"
@@ -48,6 +49,8 @@ type Config struct {
 	// MCPCommand is the command of the scratch MCP server.
 	MCPCommand []string
 	Shards     int
+	// ScratchLimit caps the scratch snapshots taken after every turn.
+	ScratchLimit int64
 	// IdleTimeout stops agents with no turns for this long.
 	IdleTimeout time.Duration
 	// DrainTimeout bounds how long a moving shard waits for turns to end.
@@ -143,9 +146,10 @@ func (s *Server) start(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	failer := tasks.NewFailer(taskStore, index, cfg.Shards)
-	s.shards = shards.NewManager(shards.Config{Count: cfg.Shards, Dir: filepath.Join(cfg.DataDir, "shards"), Orphaned: failer.Orphaned}, table, s.nodes)
-	fleetAgents := agents.New(agents.Config{Server: cfg.Name, Argv: cfg.AgentCommand, MCP: cfg.MCPCommand, ReleaseWait: cfg.DrainTimeout}, s.shards)
+	pub := fleetevents.NewPublisher(nc, cfg.Name)
+	failer := tasks.NewFailer(taskStore, index, cfg.Shards, pub)
+	s.shards = shards.NewManager(shards.Config{Count: cfg.Shards, Dir: filepath.Join(cfg.DataDir, "shards"), ScratchLimit: cfg.ScratchLimit, Orphaned: failer.Orphaned, Events: pub}, table, s.nodes)
+	fleetAgents := agents.New(agents.Config{Server: cfg.Name, Argv: cfg.AgentCommand, MCP: cfg.MCPCommand, ReleaseWait: cfg.DrainTimeout, Events: pub}, s.shards)
 
 	s.exec, err = a2aacp.NewExecutor(ctx, a2aacp.AgentFunc(fleetAgents.Start), &a2aacp.Config{
 		Pool:         &a2aacp.PoolConfig{IdleTimeout: cfg.IdleTimeout, MaxAgents: cfg.MaxAgents},
@@ -162,7 +166,7 @@ func (s *Server) start(ctx context.Context) error {
 	queue, handle := workqueue.NewPushQueue(workqueue.WriterFunc(func(ctx context.Context, p *workqueue.Payload) (a2a.TaskID, error) {
 		return rt.Write(ctx, p)
 	}))
-	rt = router.New(router.Config{NATS: nc, Nodes: s.nodes, Table: table, Shards: s.shards, Agents: fleetAgents, Index: index, Handle: handle, Wait: cfg.DrainTimeout + cfg.HeartbeatTTL})
+	rt = router.New(router.Config{NATS: nc, Nodes: s.nodes, Table: table, Shards: s.shards, Agents: fleetAgents, Index: index, Handle: handle, Wait: cfg.DrainTimeout + cfg.HeartbeatTTL, Events: pub})
 
 	card := &a2a.AgentCard{
 		Name:                "ACP fleet",

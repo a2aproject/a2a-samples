@@ -18,6 +18,7 @@ import (
 	"github.com/a2aproject/a2a-go/v2/a2asrv"
 	"github.com/a2aproject/a2a-go/v2/integrations/executor/a2aacp"
 	"github.com/a2aproject/a2a-go/v2/log"
+	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/events"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/shards"
 )
 
@@ -35,6 +36,8 @@ type Config struct {
 	MCP []string
 	// ReleaseWait is how long a moving shard waits for turns in progress to end.
 	ReleaseWait time.Duration
+	// Events publishes agent and turn events; nil drops them.
+	Events *events.Publisher
 }
 
 // Agents runs the agents of this server's shards.
@@ -90,9 +93,10 @@ func (a *Agents) Start(ctx context.Context, contextID string) (io.ReadWriteClose
 		return nil, err
 	}
 	log.Info(ctx, "started agent", "context", contextID, "shard", n, "epoch", sh.Epoch(), "scratch_lost", scratchLost)
+	a.cfg.Events.Publish(ctx, events.Event{Kind: events.AgentStarted, Shard: n, Context: contextID})
 	wrapped := a2aacp.WithCleanup(rwc, func() error {
-		defer a.stopped(contextID)
-		err := sh.Save(context.Background(), contextID)
+		defer a.stopped(contextID, n)
+		_, err := sh.Save(context.Background(), contextID)
 		if errors.Is(err, shards.ErrLost) {
 			return nil
 		}
@@ -105,7 +109,8 @@ func (a *Agents) Start(ctx context.Context, contextID string) (io.ReadWriteClose
 	return wrapped, nil
 }
 
-func (a *Agents) stopped(contextID string) {
+func (a *Agents) stopped(contextID string, shard int) {
+	a.cfg.Events.Publish(context.Background(), events.Event{Kind: events.AgentStopped, Shard: shard, Context: contextID})
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	delete(a.running, contextID)
@@ -138,11 +143,17 @@ func (a *Agents) Session(_ context.Context, execCtx *a2asrv.ExecutorContext) (a2
 	return params, nil
 }
 
-// Turn implements a2aacp Config.Turn: it saves the home when the turn ends.
+// Turn implements a2aacp Config.Turn: it saves the home and the scratch
+// directory when the turn ends.
 func (a *Agents) Turn(ctx context.Context, execCtx *a2asrv.ExecutorContext) func() {
 	a.mu.Lock()
 	a.turns[execCtx.TaskID] = execCtx.ContextID
 	a.mu.Unlock()
+	n := a.shards.Of(execCtx.ContextID)
+	turn := events.Event{Shard: n, Context: execCtx.ContextID, Task: string(execCtx.TaskID)}
+	started := turn
+	started.Kind, started.Text = events.TurnStarted, events.Snippet(execCtx.Message)
+	a.cfg.Events.Publish(ctx, started)
 	return func() {
 		defer func() {
 			a.mu.Lock()
@@ -150,12 +161,20 @@ func (a *Agents) Turn(ctx context.Context, execCtx *a2asrv.ExecutorContext) func
 			a.changed.Broadcast()
 			a.mu.Unlock()
 		}()
-		sh, ok := a.shards.Shard(a.shards.Of(execCtx.ContextID))
+		ended := turn
+		ended.Kind = events.TurnEnded
+		defer func() { a.cfg.Events.Publish(ctx, ended) }()
+		sh, ok := a.shards.Shard(n)
 		if !ok {
 			return
 		}
-		if err := sh.Save(ctx, execCtx.ContextID); err != nil {
-			log.Warn(ctx, "saving the agent home failed", "context", execCtx.ContextID, "cause", err)
+		scratchSaved, err := sh.Save(ctx, execCtx.ContextID)
+		if err != nil {
+			log.Warn(ctx, "saving the conversation failed", "context", execCtx.ContextID, "cause", err)
+			return
+		}
+		if !scratchSaved {
+			log.Info(ctx, "scratch is over the limit, it moves only with a graceful release", "context", execCtx.ContextID)
 		}
 	}
 }

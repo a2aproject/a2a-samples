@@ -25,6 +25,8 @@ type Shard struct {
 	dir   string
 	table *Table
 	limit int64
+	// scratchLimit caps the scratch snapshots taken after every turn.
+	scratchLimit int64
 
 	mu   sync.Mutex
 	rec  Record
@@ -53,8 +55,9 @@ func (s *Shard) ScratchDir(contextID string) string {
 
 // Prepare restores the agent home and the scratch directory of the
 // conversation from their snapshots if this server doesn't have them yet.
-// It reports whether the scratch directory was lost, because the shard moved
-// without a snapshot of it.
+// It reports whether the scratch directory was lost: the home has a snapshot
+// and the scratch directory has none, because it outgrew the scratch limit
+// before the conversation moved without a graceful release.
 func (s *Shard) Prepare(ctx context.Context, contextID string) (scratchLost bool, err error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -62,12 +65,13 @@ func (s *Shard) Prepare(ctx context.Context, contextID string) (scratchLost bool
 		return false, ErrLost
 	}
 	home, scratch := s.HomeDir(contextID), s.ScratchDir(contextID)
+	homeSaved := false
 	if _, err := os.Stat(home); errors.Is(err, os.ErrNotExist) {
 		obj, saved := s.rec.Homes[contextID]
 		if err := s.restore(ctx, obj, saved, home); err != nil {
 			return false, err
 		}
-		scratchLost = saved
+		homeSaved = saved
 	}
 	if _, err := os.Stat(scratch); !errors.Is(err, os.ErrNotExist) {
 		return false, nil
@@ -76,12 +80,7 @@ func (s *Shard) Prepare(ctx context.Context, contextID string) (scratchLost bool
 	if err := s.restore(ctx, obj, saved, scratch); err != nil {
 		return false, err
 	}
-	if !saved {
-		return scratchLost, nil
-	}
-	next := s.rec.clone()
-	delete(next.Scratch, contextID)
-	return false, s.commitLocked(ctx, next, nil)
+	return homeSaved && !saved, nil
 }
 
 func (s *Shard) restore(ctx context.Context, obj Object, saved bool, dir string) error {
@@ -133,37 +132,55 @@ func (s *Shard) database() (*sql.DB, error) {
 	return s.db, nil
 }
 
-// Save uploads snapshots of the conversation's agent home and of the session map.
-func (s *Shard) Save(ctx context.Context, contextID string) error {
+// Save uploads snapshots of the conversation's agent home, its scratch
+// directory if it is within the scratch limit, and the session map. It
+// reports whether it saved the scratch directory; a larger one moves only
+// with a graceful release.
+func (s *Shard) Save(ctx context.Context, contextID string) (scratchSaved bool, err error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.lost {
-		return ErrLost
+		return false, ErrLost
 	}
 	next := s.rec.clone()
 	if next.Homes == nil {
 		next.Homes = map[string]Object{}
 	}
+	if next.Scratch == nil {
+		next.Scratch = map[string]Object{}
+	}
 	var created []string
-	home, err := s.putDir(ctx, s.HomeDir(contextID), "home-"+contextID)
+	home, err := s.putDir(ctx, s.HomeDir(contextID), "home-"+contextID, s.limit)
 	if err != nil {
-		return err
+		return false, err
 	}
 	next.Homes[contextID] = home
 	created = append(created, home.Name)
+	scratch, err := s.putDir(ctx, s.ScratchDir(contextID), "scratch-"+contextID, s.scratchLimit)
+	switch {
+	case errors.Is(err, errTooLarge):
+		delete(next.Scratch, contextID)
+	case err != nil:
+		s.deleteObjects(ctx, created)
+		return false, err
+	default:
+		next.Scratch[contextID] = scratch
+		created = append(created, scratch.Name)
+		scratchSaved = true
+	}
 	sessions, err := s.putSessions(ctx)
 	if err != nil {
 		s.deleteObjects(ctx, created)
-		return err
+		return false, err
 	}
 	next.Sessions = sessions
 	created = append(created, sessions.Name)
-	return s.commitLocked(ctx, next, created)
+	return scratchSaved, s.commitLocked(ctx, next, created)
 }
 
-// release uploads the scratch directories and the session map, frees the
-// record and stops using the shard. The agents of the shard must be stopped,
-// which saved their homes.
+// release uploads the scratch directories up to the snapshot limit and the
+// session map, frees the record and stops using the shard. The agents of the
+// shard must be stopped, which saved their homes.
 func (s *Shard) release(ctx context.Context) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -180,7 +197,7 @@ func (s *Shard) release(ctx context.Context) error {
 		return err
 	}
 	for _, e := range entries {
-		obj, err := s.putDir(ctx, s.ScratchDir(e.Name()), "scratch-"+e.Name())
+		obj, err := s.putDir(ctx, s.ScratchDir(e.Name()), "scratch-"+e.Name(), s.limit)
 		if err != nil {
 			log.Warn(ctx, "scratch not saved, it is lost", "shard", s.ID, "context", e.Name(), "cause", err)
 			continue
@@ -248,9 +265,9 @@ func (s *Shard) objectName(label string) string {
 	return fmt.Sprintf("%s/e%d-%d-%s", key(s.ID), s.rec.Epoch, s.seq, label)
 }
 
-func (s *Shard) putDir(ctx context.Context, dir, label string) (Object, error) {
+func (s *Shard) putDir(ctx context.Context, dir, label string, limit int64) (Object, error) {
 	var buf bytes.Buffer
-	if err := pack(dir, &buf, s.limit); err != nil {
+	if err := pack(dir, &buf, limit); err != nil {
 		return Object{}, fmt.Errorf("packing %s: %w", dir, err)
 	}
 	return s.put(ctx, s.objectName(label+".tgz"), buf.Bytes())

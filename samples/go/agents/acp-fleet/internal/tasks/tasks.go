@@ -10,6 +10,7 @@ import (
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv/taskstore"
 	"github.com/a2aproject/a2a-go/v2/log"
+	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/events"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/shards"
 	"github.com/a2aproject/a2a-samples/samples/go/integrations/mysql/store"
 )
@@ -23,11 +24,13 @@ type Failer struct {
 	store  *store.Store
 	index  *store.Index
 	shards int
+	events *events.Publisher
 }
 
-// NewFailer returns a failer of the tasks in s, whose conversations are split into count shards.
-func NewFailer(s *store.Store, index *store.Index, count int) *Failer {
-	return &Failer{store: s, index: index, shards: count}
+// NewFailer returns a failer of the tasks in s, whose conversations are
+// split into count shards. It publishes the tasks it fails to pub.
+func NewFailer(s *store.Store, index *store.Index, count int, pub *events.Publisher) *Failer {
+	return &Failer{store: s, index: index, shards: count, events: pub}
 }
 
 // Abandoned stores the event that ends a task whose question nobody answered.
@@ -62,6 +65,7 @@ func (f *Failer) Orphaned(ctx context.Context, shard int) {
 					continue
 				}
 				log.Info(ctx, "failed orphaned task", "task", t.ID, "context", t.ContextID, "shard", shard)
+				f.events.Publish(ctx, events.Event{Kind: events.TaskFailed, Shard: shard, Context: t.ContextID, Task: string(t.ID)})
 			}
 			if res.NextPageToken == "" {
 				break

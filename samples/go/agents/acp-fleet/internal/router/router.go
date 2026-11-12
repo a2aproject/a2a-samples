@@ -13,6 +13,7 @@ import (
 	"github.com/a2aproject/a2a-go/v2/a2asrv/workqueue"
 	"github.com/a2aproject/a2a-go/v2/log"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/agents"
+	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/events"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/nodes"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/shards"
 	"github.com/a2aproject/a2a-samples/samples/go/integrations/mysql/store"
@@ -41,6 +42,8 @@ type Config struct {
 	Handle workqueue.HandlerFn
 	// Wait is how long a payload waits for its shard to get an owner.
 	Wait time.Duration
+	// Events publishes where payloads went; nil drops them.
+	Events *events.Publisher
 }
 
 // Router routes payloads to the owners of their shards.
@@ -85,6 +88,7 @@ func (r *Router) Write(ctx context.Context, p *workqueue.Payload) (a2a.TaskID, e
 	deadline := time.Now().Add(r.cfg.Wait)
 	for {
 		if r.local(ctx, contextID, p) {
+			r.routed(ctx, contextID, shard, r.cfg.Nodes.Self().Name, p)
 			return p.TaskID, nil
 		}
 		rec := r.cfg.Table.Get(shard)
@@ -93,6 +97,7 @@ func (r *Router) Write(ctx context.Context, p *workqueue.Payload) (a2a.TaskID, e
 			err := r.forward(ctx, rec.Owner, p)
 			if err == nil {
 				log.Info(ctx, "routed", "task", p.TaskID, "context", contextID, "shard", shard, "owner", rec.Owner)
+				r.routed(ctx, contextID, shard, rec.Owner, p)
 				return p.TaskID, nil
 			}
 			if !errors.Is(err, errMoved) && !errors.Is(err, nats.ErrNoResponders) {
@@ -108,6 +113,15 @@ func (r *Router) Write(ctx context.Context, p *workqueue.Payload) (a2a.TaskID, e
 		case <-time.After(pollInterval):
 		}
 	}
+}
+
+func (r *Router) routed(ctx context.Context, contextID string, shard int, owner string, p *workqueue.Payload) {
+	e := events.Event{Kind: events.Routed, Shard: shard, Context: contextID, Task: string(p.TaskID), Owner: owner}
+	if p.ExecuteRequest != nil && p.ExecuteRequest.Message != nil {
+		e.Text = events.Snippet(p.ExecuteRequest.Message)
+		e.User, _ = p.ExecuteRequest.Message.Metadata["user"].(string)
+	}
+	r.cfg.Events.Publish(ctx, e)
 }
 
 // conversation returns the context ID of the payload, giving a new conversation one.

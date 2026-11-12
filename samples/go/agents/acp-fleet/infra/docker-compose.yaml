@@ -3,6 +3,7 @@
 name: acp-fleet
 
 x-server: &server
+  image: acp-fleet:${FLEET_AGENT:-fake}
   build:
     context: ../../..
     dockerfile: agents/acp-fleet/Dockerfile
@@ -14,8 +15,9 @@ x-server: &server
     IDLE_TIMEOUT: 30s
     DRAIN_TIMEOUT: 60s
     MAX_AGENTS: "8"
-    AGENT_COMMAND: ${AGENT_COMMAND:-}
-    GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    GOOGLE_GENERATIVE_AI_API_KEY: ${GEMINI_API_KEY:-}
+    OPENCODE_CONFIG_CONTENT: '{"model":"${FLEET_MODEL:-google/gemini-3-flash-preview}"}'
+    OPENCODE_PERMISSION: '{"*":"allow","bash":"ask"}'
   # Shards live on local disk, which a crash loses.
   tmpfs:
     - /var/lib/acp-fleet:mode=1777
@@ -67,6 +69,23 @@ services:
     environment:
       <<: *env
       SERVER_NAME: server-4
+
+  # Tools that run next to the fleet: `make watch` and `make crowd`.
+  tools:
+    image: acp-fleet:fake
+    build:
+      context: ../../..
+      dockerfile: agents/acp-fleet/Dockerfile
+      target: fake
+    profiles: [tools]
+    environment:
+      NATS_URL: nats://nats:4222
+      FLEET_URL: http://lb:8080
+      HEARTBEAT_TTL: 8s
+      THINK: ${THINK:-10s}
+      TERM: ${TERM:-xterm-256color}
+    depends_on:
+      - nats
 
   lb:
     image: nginx:alpine

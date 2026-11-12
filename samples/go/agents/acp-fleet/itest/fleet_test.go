@@ -74,6 +74,11 @@ type fleet struct {
 
 func newFleet(t *testing.T, names ...string) *fleet {
 	t.Helper()
+	return newFleetWith(t, 0, names...)
+}
+
+func newFleetWith(t *testing.T, scratchLimit int64, names ...string) *fleet {
+	t.Helper()
 	_, js := natstest.Connect(t)
 	ctx := context.Background()
 	for _, bucket := range []string{"NODES", "SHARDS", "OUTBOX"} {
@@ -87,13 +92,18 @@ func newFleet(t *testing.T, names ...string) *fleet {
 
 	f := &fleet{t: t, servers: map[string]*server.Server{}}
 	for _, name := range names {
-		f.start(name)
+		f.startWith(name, scratchLimit)
 	}
 	f.waitOwned(names...)
 	return f
 }
 
 func (f *fleet) start(name string) {
+	f.t.Helper()
+	f.startWith(name, 0)
+}
+
+func (f *fleet) startWith(name string, scratchLimit int64) {
 	f.t.Helper()
 	dataDir := f.t.TempDir()
 	srv, err := server.Start(context.Background(), server.Config{
@@ -106,6 +116,7 @@ func (f *fleet) start(name string) {
 		AgentCommand:   []string{os.Args[0], "fakeacp"},
 		MCPCommand:     []string{os.Args[0], "mcp"},
 		Shards:         shardCount,
+		ScratchLimit:   scratchLimit,
 		IdleTimeout:    time.Minute,
 		DrainTimeout:   10 * time.Second,
 		MaxAgents:      8,
@@ -243,7 +254,7 @@ func TestFleet_routesEveryMessageToTheShardOwner(t *testing.T) {
 	wantReply(t, answered, "server-2: turn 3, saved. Notes: milk")
 }
 
-func TestFleet_crashedOwnersShardMovesWithItsHome(t *testing.T) {
+func TestFleet_crashedOwnersShardMovesWithItsHomeAndScratch(t *testing.T) {
 	names := []string{"server-1", "server-2", "server-3"}
 	f := newFleet(t, names...)
 	c := conversationOn("server-2", names...)
@@ -266,7 +277,23 @@ func TestFleet_crashedOwnersShardMovesWithItsHome(t *testing.T) {
 	f.waitOwned(survivors...)
 	owner := shards.Assign(shards.Of(c, shardCount), survivors)
 	wantReply(t, f.send("server-1", c, "", "remember?"),
-		owner+": turn 4, session loaded; turns 1-3 ran on server-2", "Notes: milk.", "Scratch was lost")
+		owner+": turn 4, session loaded; turns 1-3 ran on server-2", "Notes: milk.")
+	wantReply(t, f.send("server-3", c, "", "scratch after"), owner+": turn 5, scratch.txt: draft, after")
+}
+
+func TestFleet_crashLosesScratchOverTheLimit(t *testing.T) {
+	names := []string{"server-1", "server-2", "server-3"}
+	f := newFleetWith(t, 1, names...)
+	c := conversationOn("server-2", names...)
+	f.send("server-1", c, "", "scratch draft")
+
+	if err := f.remove("server-2").Kill(); err != nil {
+		t.Fatalf("Kill() error = %v", err)
+	}
+	survivors := []string{"server-1", "server-3"}
+	f.waitOwned(survivors...)
+	owner := shards.Assign(shards.Of(c, shardCount), survivors)
+	wantReply(t, f.send("server-1", c, "", "remember?"), owner+": turn 2, session loaded", "Scratch was lost")
 }
 
 func TestFleet_drainFinishesTurnsAndMovesScratch(t *testing.T) {
