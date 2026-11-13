@@ -17,11 +17,11 @@ import (
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/agents"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/cluster"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/domain"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/lease"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/msgstream"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/report"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/store"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/utils"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/mysql/store"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/lease"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/msgstream"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 	"google.golang.org/adk/model"
@@ -90,11 +90,11 @@ func Start(ctx context.Context, cfg Config) *Server {
 		outboxInterval = defaultOutboxInterval
 	}
 	outbox := utils.Must(store.NewOutbox(store.OutboxConfig{
-		DB:       db,
-		Agent:    cfg.AgentType,
-		Writer:   msgstream.NewEventWriter(js),
-		Interval: outboxInterval,
-		LeaseManager: utils.Must(lease.CreateManager(ctx, js, jetstream.KeyValueConfig{
+		DB:        db,
+		Partition: string(cfg.AgentType),
+		Writer:    msgstream.NewEventWriter(js),
+		Interval:  outboxInterval,
+		Leader: utils.Must(lease.CreateManager(ctx, js, jetstream.KeyValueConfig{
 			Bucket: "OUTBOX",
 			TTL:    outboxInterval*3 + time.Second,
 		})),
@@ -112,10 +112,10 @@ func Start(ctx context.Context, cfg Config) *Server {
 	taskStore := store.New(store.Config{
 		DB:          db,
 		Outbox:      outbox,
-		TaskIndex:   store.NewIndex(db),
+		TaskIndex:   store.NewIndex(db, string(cfg.AgentType)),
 		EventReplay: eventReplayManager,
 	})
-	workQueue := utils.Must(msgstream.CreateWorkQueue(ctx, js, cfg.AgentType))
+	workQueue := utils.Must(msgstream.CreateWorkQueue(ctx, js, string(cfg.AgentType)))
 
 	ln := utils.Must(net.Listen("tcp", listenAddr))
 

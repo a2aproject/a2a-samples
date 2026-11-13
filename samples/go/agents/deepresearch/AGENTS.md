@@ -43,18 +43,21 @@ deepresearch/
 │   ├── agents/                     # Agent executors (orchestrator, researcher, analyzer, synthesizer)
 │   ├── clusterclient/              # Async A2A client wrapper for inter-agent communication
 │   ├── domain/                     # Shared domain types (AgentType enum, Info)
-│   ├── lease/                      # NATS KV-based leader election
-│   ├── msgstream/                  # NATS-backed event queues, work queues, push sender
 │   ├── report/                     # HTTP handler for serving synthesized reports
 │   ├── server/                     # Server wiring (infra setup, handler creation)
 │   ├── statemachine/               # Generic event-sourced state machine
-│   ├── store/                      # MySQL-backed task store, indexing, transactional outbox
 │   ├── testutil/                   # Shared test helpers
 │   └── utils/                      # Small generic helpers (Must, SchemaFor)
-├── infra/                          # Docker Compose, nginx, MySQL schema, NATS bootstrap
+├── infra/                          # Docker Compose, nginx, NATS bootstrap
 ├── Dockerfile
 └── go.mod
 ```
+
+The MySQL task store and the NATS queues, leases and push sender live in the
+[`integrations/mysql`](../../integrations/mysql) and
+[`integrations/nats`](../../integrations/nats) modules, which `go.mod`
+replaces with the local directories. The MySQL schema is
+`integrations/mysql/store/schema.sql`.
 
 **Rules**:
 - All domain logic lives under `internal/` — one concern per package.
@@ -93,7 +96,7 @@ The generic `statemachine.Spec[E, S]` (driven by `statemachine.Run`) drives the 
 - **Evolve**: Apply events to state (pure state transitions, no side effects).
 - **Act**: Inspect state and decide on side effects (dispatch subtasks, call LLM, complete).
 
-### Transactional outbox (`internal/store/outbox.go`)
+### Transactional outbox (`integrations/mysql/store/outbox.go`)
 
 Guarantees atomicity between MySQL writes and NATS publishes:
 1. Insert task + outbox row (tagged with the agent type) in the same SQL transaction.
@@ -103,7 +106,7 @@ Guarantees atomicity between MySQL writes and NATS publishes:
 
 `referencedTaskLoader` wraps an `AgentExecutor` via embedding and intercepts `Execute` to inject referenced task content before delegating to the inner executor.
 
-### Leader election (`internal/lease/`)
+### Leader election (`integrations/nats/lease/`)
 
 Uses NATS KV `Create` (atomic put-if-absent) for distributed locking. Watches for key deletion to retry acquisition.
 
@@ -113,6 +116,6 @@ All services are defined in `infra/docker-compose.yaml`.
 
 ### Misc
 
-- This agent is a **self-contained Go module** (`go.mod` at the deepresearch root). It does not share code with other Go samples in the repository.
+- This agent is a Go module (`go.mod` at the deepresearch root). It shares only the `integrations/mysql` and `integrations/nats` modules with other Go samples. Docker builds it from `samples/go`, so that the integrations are in the build context.
 - The A2A SDK (`a2a-go/v2`) provides the server framework, client, types, and infrastructure interfaces (queues, stores, push). Domain logic implements these interfaces.
 - The orchestrator's workflow proceeds through stages: **research -> analyze -> follow-up research -> synthesize -> complete**.

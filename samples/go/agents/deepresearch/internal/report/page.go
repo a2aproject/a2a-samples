@@ -11,7 +11,7 @@ import (
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/log"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/domain"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/store"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/mysql/store"
 )
 
 // reportData holds the template data for rendering a report page.
@@ -44,7 +44,7 @@ func NewServer(s *store.Store) http.Handler {
 			http.Error(w, "Service unavailable", http.StatusServiceUnavailable)
 			return
 		}
-		if taskMeta.Agent != domain.AgentSynthesizer {
+		if domain.AgentType(taskMeta.Agent) != domain.AgentSynthesizer {
 			log.Warn(ctx, "task is not a synthesizer report", "author", taskMeta.Agent)
 			http.Error(w, "Report not found", http.StatusNotFound)
 			return
