@@ -30,7 +30,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: planner
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ../../../integrations/mysql/store/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     ports:
       - "3306:3306"
 
@@ -62,8 +62,8 @@ services:
 
   orchestrator:
     build:
-      context: ..
-      dockerfile: Dockerfile
+      context: ../../..
+      dockerfile: agents/deepresearch/Dockerfile
     environment:
       NODE_TYPE: orchestrator
       SERVICE_URL: http://orchestrator-svc
@@ -83,8 +83,8 @@ services:
 
   researcher:
     build:
-      context: ..
-      dockerfile: Dockerfile
+      context: ../../..
+      dockerfile: agents/deepresearch/Dockerfile
     environment:
       NODE_TYPE: researcher
       SERVICE_URL: http://researcher
@@ -101,8 +101,8 @@ services:
 
   analyzer:
     build:
-      context: ..
-      dockerfile: Dockerfile
+      context: ../../..
+      dockerfile: agents/deepresearch/Dockerfile
     environment:
       NODE_TYPE: analyzer
       SERVICE_URL: http://analyzer
@@ -119,8 +119,8 @@ services:
 
   synthesizer:
     build:
-      context: ..
-      dockerfile: Dockerfile
+      context: ../../..
+      dockerfile: agents/deepresearch/Dockerfile
     environment:
       NODE_TYPE: synthesizer
       SERVICE_URL: http://synthesizer

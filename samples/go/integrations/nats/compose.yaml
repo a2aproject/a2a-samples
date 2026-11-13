@@ -1,0 +1,7 @@
+# NATS for the integration tests: go test ./itest/
+services:
+  nats:
+    image: nats:latest
+    command: ["--jetstream"]
+    ports:
+      - "4222:4222"
