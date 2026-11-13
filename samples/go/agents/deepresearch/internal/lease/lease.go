@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"slices"
 	"sync"
+	"time"
 
 	"github.com/a2aproject/a2a-go/v2/log"
 	"github.com/nats-io/nats.go/jetstream"
@@ -21,7 +22,12 @@ type Manager struct {
 }
 
 // CreateManager creates a [Manager] using the given KV bucket configuration.
+// A bucket with a TTL gets TTL markers, since waiters learn that a crashed
+// holder's lease expired only from the marker.
 func CreateManager(ctx context.Context, js jetstream.JetStream, cfg jetstream.KeyValueConfig) (*Manager, error) {
+	if cfg.TTL > 0 && cfg.LimitMarkerTTL == 0 {
+		cfg.LimitMarkerTTL = max(cfg.TTL, time.Second)
+	}
 	kv, err := js.CreateOrUpdateKeyValue(ctx, cfg)
 	if err != nil {
 		if !errors.Is(err, jetstream.ErrBucketExists) {
