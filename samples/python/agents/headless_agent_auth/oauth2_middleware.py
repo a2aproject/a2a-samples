@@ -16,31 +16,15 @@ api_client = ApiClient(
 )
 
 
-from collections.abc import Callable
-from typing import Any
-
-from auth0_api_python import ApiClient, ApiClientOptions
-from starlette.responses import Response
-
-
-api_client = ApiClient(
-    ApiClientOptions(
-        domain=os.getenv('HR_AUTH0_DOMAIN'),
-        audience=os.getenv('HR_AGENT_AUTH0_AUDIENCE'),
-    )
-)
-
-
 class OAuth2Middleware(BaseHTTPMiddleware):
     """Starlette middleware that authenticates A2A access using an OAuth2 bearer token."""
 
     def __init__(
         self,
         app: Starlette,
-        agent_card: AgentCard | None = None,
-        public_paths: list[str] | None = None,
-    ) -> None:
-        """Initialize the OAuth2 middleware."""
+        agent_card: AgentCard = None,
+        public_paths: list[str] = None,
+    ):
         super().__init__(app)
         self.agent_card = agent_card
         self.public_paths = set(public_paths or [])
@@ -49,27 +33,16 @@ class OAuth2Middleware(BaseHTTPMiddleware):
         # AgentCard, indicating agent-level authentication/authorization.
 
         # Use app state for this demonstration (simplicity)
-        self.a2a_auth: dict[str, Any] = {}
+        self.a2a_auth = {}
 
-        # Access the modern 'security' and 'security_schemes' fields
-        # security is a list of dicts: [{'scheme_name': ['scope1', 'scope2']}]
-        security = getattr(agent_card, 'security', [])
+        # Process the Security Requirements Object: use the scopes of the first requirement.
+        # (Demonstration only: the scheme definitions in `security_schemes` are not validated.)
+        for sec_req in agent_card.security or []:
+            for scopes in sec_req.values():
+                self.a2a_auth = {'required_scopes': scopes}
+            break
 
-        if security and len(security) > 0:
-            # We take the first requirement set defined in the card
-            requirement = security[0]
-            for scheme_name, scopes in requirement.items():
-                # Store the scopes for the dispatch check
-                self.a2a_auth = {
-                    'scheme': scheme_name,
-                    'required_scopes': scopes,
-                }
-                break
-
-    async def dispatch(
-        self, request: Request, call_next: Callable[[Request], Any]
-    ) -> Response:
-        """Verify the authentication and authorization of the request."""
+    async def dispatch(self, request: Request, call_next):
         path = request.url.path
 
         # Allow public paths and anonymous access
@@ -101,13 +74,12 @@ class OAuth2Middleware(BaseHTTPMiddleware):
                         f'Missing required scopes: {missing_scopes}', request
                     )
 
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             return self._forbidden(f'Authentication failed: {e}', request)
 
         return await call_next(request)
 
-    def _forbidden(self, reason: str, request: Request) -> Response:
-        """Return a forbidden response."""
+    def _forbidden(self, reason: str, request: Request):
         accept_header = request.headers.get('accept', '')
         if 'text/event-stream' in accept_header:
             return PlainTextResponse(
@@ -119,8 +91,7 @@ class OAuth2Middleware(BaseHTTPMiddleware):
             {'error': 'forbidden', 'reason': reason}, status_code=403
         )
 
-    def _unauthorized(self, reason: str, request: Request) -> Response:
-        """Return an unauthorized response."""
+    def _unauthorized(self, reason: str, request: Request):
         accept_header = request.headers.get('accept', '')
         if 'text/event-stream' in accept_header:
             return PlainTextResponse(

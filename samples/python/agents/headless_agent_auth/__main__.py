@@ -15,8 +15,15 @@ from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
+    AgentCapabilities,
     AgentCard,
+    AgentSkill,
+    ClientCredentialsOAuthFlow,
+    OAuth2SecurityScheme,
+    OAuthFlows,
+    SecurityScheme,
 )
+from agent import HRAgent
 from agent_executor import HRAgentExecutor
 from api import hr_api
 from oauth2_middleware import OAuth2Middleware
@@ -27,14 +34,11 @@ logger = logging.getLogger()
 
 
 @click.command()
-@click.option('--host', default='0.0.0.0')  # noqa: S104
+@click.option('--host', default='0.0.0.0')
 @click.option('--port_agent', default=10050)
 @click.option('--port_api', default=10051)
-def main(host: str, port_agent: int, port_api: int) -> None:
-    """Run the HR Agent and the HR API."""
-
-    async def run_all() -> None:
-        """Run all components concurrently."""
+def main(host: str, port_agent: int, port_api: int):
+    async def run_all():
         await asyncio.gather(
             start_agent(host, port_agent),
             start_api(host, port_api),
@@ -43,46 +47,42 @@ def main(host: str, port_agent: int, port_api: int) -> None:
     asyncio.run(run_all())
 
 
-async def start_agent(host: str, port: int) -> None:
-    """Start the HR Agent server."""
-    # We define the configuration as a raw dictionary first.
-    # This avoids the "no attribute root" error by letting the AgentCard
-    # constructor handle the internal Pydantic mapping itself.
-    card_config = {
-        'name': 'Staff0 HR Agent',
-        'description': 'This agent handles external verification requests...',
-        'url': f'http://{host}:{port}/',
-        'version': '0.1.0',
-        'default_input_modes': ['application/json'],
-        'default_output_modes': ['application/json'],
-        'capabilities': {'streaming': True},
-        'skills': [
-            {
-                'id': 'is_active_employee',
-                'name': 'Check Employment Status Tool',
-                'description': 'Confirm whether a person is an active employee.',
-                'tags': ['employment status'],
-                'examples': ['Does John Doe work at Staff0?'],
-            }
+async def start_agent(host: str, port):
+    agent_card = AgentCard(
+        name='Staff0 HR Agent',
+        description='This agent handles external verification requests about Staff0 employees made by third parties.',
+        url=f'http://{host}:{port}/',
+        version='0.1.0',
+        default_input_modes=HRAgent.SUPPORTED_CONTENT_TYPES,
+        default_output_modes=HRAgent.SUPPORTED_CONTENT_TYPES,
+        capabilities=AgentCapabilities(streaming=True),
+        skills=[
+            AgentSkill(
+                id='is_active_employee',
+                name='Check Employment Status Tool',
+                description='Confirm whether a person is an active employee of the company.',
+                tags=['employment status'],
+                examples=[
+                    'Does John Doe with email jdoe@staff0.com work at Staff0?'
+                ],
+            )
         ],
-        'security_schemes': {
-            'oauth2_m2m': {
-                'type': 'oauth2',
-                'flows': {
-                    'client_credentials': {
-                        'token_url': f'https://{os.getenv("HR_AUTH0_DOMAIN")}/oauth/token',
-                        'scopes': {'read:employee_status': 'Verify status'},
-                    }
-                },
-            }
+        security_schemes={
+            'oauth2_m2m': SecurityScheme(
+                root=OAuth2SecurityScheme(
+                    flows=OAuthFlows(
+                        client_credentials=ClientCredentialsOAuthFlow(
+                            token_url=f'https://{os.getenv("HR_AUTH0_DOMAIN")}/oauth/token',
+                            scopes={
+                                'read:employee_status': 'Allows confirming whether a person is an active employee of the company.',
+                            },
+                        ),
+                    ),
+                )
+            ),
         },
-        'security': [{'oauth2_m2m': ['read:employee_status']}],
-    }
-
-    # Now, pass the WHOLE dictionary into the constructor.
-    # The SDK will convert the nested dicts into the proper
-    # OAuth2SecurityScheme objects internally.
-    agent_card = AgentCard(**card_config)
+        security=[{'oauth2_m2m': ['read:employee_status']}],
+    )
 
     request_handler = DefaultRequestHandler(
         agent_executor=HRAgentExecutor(),
@@ -103,13 +103,12 @@ async def start_agent(host: str, port: int) -> None:
         ],
     )
 
-    logger.info('Starting HR Agent server on %s:%s', host, port)
+    logger.info(f'Starting HR Agent server on {host}:{port}')
     await uvicorn.Server(uvicorn.Config(app=app, host=host, port=port)).serve()
 
 
-async def start_api(host: str, port: int) -> None:
-    """Start the HR API server."""
-    logger.info('Starting HR API server on %s:%s', host, port)
+async def start_api(host: str, port):
+    logger.info(f'Starting HR API server on {host}:{port}')
     await uvicorn.Server(
         uvicorn.Config(app=hr_api, host=host, port=port)
     ).serve()

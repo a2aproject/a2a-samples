@@ -40,52 +40,16 @@ class AgentAuth(httpx.Auth):
 
     def auth_flow(self, request: httpx.Request):
         """Handle the authentication flow."""
-        # 1. Get the schemes map
-        schemes_obj = getattr(self.agent_card, 'security_schemes', {})
-        # Handle Pydantic RootModel wrapper if it exists
-        security_schemes = (
-            schemes_obj.root if hasattr(schemes_obj, 'root') else schemes_obj
+        # The card's SecurityScheme is a RootModel; the SDK serializes aliases in camelCase.
+        scheme = self.agent_card.security_schemes['oauth2_m2m'].model_dump(
+            by_alias=True, exclude_none=True
         )
-
-        # Convert to dict if it's a Pydantic model so we can iterate keys
-        if not isinstance(security_schemes, dict):
-            security_schemes = (
-                security_schemes.model_dump()
-                if hasattr(security_schemes, 'model_dump')
-                else dict(security_schemes)
-            )
-
-        # 2. Find the OAuth2 scheme (using the key we know exists)
-        auth_scheme = security_schemes.get('oauth2_m2m')
-
-        # 3. Extract the Token URL
-        # Turn the object into a dict so we can see EVERYTHING, including aliases
-        scheme_dict = (
-            auth_scheme
-            if isinstance(auth_scheme, dict)
-            else auth_scheme.model_dump(by_alias=True)
-        )
-
-        # Look for 'flows' or 'flows' (aliased)
-        flows = scheme_dict.get('flows')
-
-        token_url = None
-        if flows:
-            # The A2A spec uses 'clientCredentials' in JSON
-            # We check every possible naming convention
-            cc_flow = (
-                flows.get('clientCredentials')
-                or flows.get('client_credentials')
-                or flows.get('client-credentials')
-            )
-
-            if cc_flow:
-                token_url = cc_flow.get('tokenUrl') or cc_flow.get('token_url')
+        token_url = scheme['flows']['clientCredentials']['tokenUrl']
 
         if not self._access_token:
             print(f'\nFetching agent access token from {token_url}...')
             get_token = GetToken(
-                domain=urlparse(str(token_url)).hostname,
+                domain=urlparse(token_url).hostname,
                 client_id=os.getenv('A2A_CLIENT_AUTH0_CLIENT_ID'),
                 client_secret=os.getenv('A2A_CLIENT_AUTH0_CLIENT_SECRET'),
             )
@@ -107,9 +71,7 @@ async def cli(
     agent: str, context_id: str | None, history: bool, debug: bool
 ) -> None:
     """Run the A2A test client."""
-    # 1. Define a robust timeout (e.g., 60 seconds)
-    # We set 'read' to None to allow the stream to stay open indefinitely
-    # as long as the server is still sending chunks.
+    # no read timeout, so streams can stay open while the agent is working
     timeout = httpx.Timeout(60.0, read=None)
 
     async with httpx.AsyncClient(timeout=timeout) as httpx_client:
@@ -205,7 +167,6 @@ def extract_output_from_result(result: Any) -> str:
             '',
         )
     elif isinstance(result, TaskArtifactUpdateEvent):
-        # Handle artifacts (though we prefer status messages for the main reply)
         if hasattr(result.artifact, 'text'):
             output = result.artifact.text
     elif hasattr(result, 'status') and result.status.message:
@@ -250,22 +211,19 @@ async def complete_task(
         async for chunk in stream_response:
             result = chunk.root.result
 
-            # 1. CAPTURE THE TASK ID (Crucial fix)
-            # The logs show the ID is in result.id OR result.task_id
+            # the task id is in result.id (Task) or result.task_id (events)
             task_id = (
                 getattr(result, 'id', None)
                 or getattr(result, 'task_id', None)
                 or task_id
             )
 
-            # 2. EXTRACT TEXT FROM STATUS UPDATES
             output = extract_output_from_result(result)
 
             if output:
-                # This will stop the "empty result chunk" messages and show you the Agent's thoughts
                 print(f'Agent: {output}')
 
-        # 3. FINAL VALIDATION: Only poll if we actually got an ID
+        # only poll the task if the stream gave us an id
         if task_id:
             get_task_response = await client.get_task(
                 GetTaskRequest(
@@ -290,13 +248,11 @@ async def complete_task(
             print('\nError: Agent stream ended without providing a Task ID.')
             return False, task_id
     else:
-        # non-streaming path
         send_message_response = await client.send_message(
             SendMessageRequest(id=str(uuid4()), params=send_params)
         )
         task = send_message_response.root.result
         task_id = task.id
-        # Simple print for non-streaming
         print(
             f'\nAgent: {next((p.root.text for p in task.status.message.parts if isinstance(p.root, TextPart)), "Done.")}'
         )
@@ -309,10 +265,6 @@ async def complete_task(
 
     # task is complete
     return True, task_id
-
-
-if __name__ == '__main__':
-    asyncio.run(cli())
 
 
 if __name__ == '__main__':
