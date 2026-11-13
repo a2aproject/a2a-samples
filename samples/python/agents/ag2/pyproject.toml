@@ -1,10 +1,12 @@
 [project]
 name = "ag2-a2a"
 version = "0.1.0"
-description = "MCP Mypy agent using A2A and AG2"
+description = "Mypy reviewer agent using A2A and AG2"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "ag2[mcp,openai,a2a]>=0.10.0",
+    "ag2[openai,a2a]>=1.0.0",
+    "a2a-sdk[http-server,grpc]>=1.1.0",
     "mypy>=1.10.0",
+    "uvicorn>=0.34.0",
 ]

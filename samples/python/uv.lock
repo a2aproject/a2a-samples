@@ -13,7 +13,6 @@ members = [
     "a2a-samples-file-chat",
     "a2a-samples-image-gen",
     "a2a-samples-marvin",
-    "ag2-a2a",
     "airbnb-planner-multiagent",
     "timestamp-ext",
     "traceability-ext",
@@ -311,21 +310,6 @@ mcp = [
 ]
 openai = [
     { name = "openai" },
-]
-
-[[package]]
-name = "ag2-a2a"
-version = "0.1.0"
-source = { virtual = "agents/ag2" }
-dependencies = [
-    { name = "ag2", extra = ["a2a", "mcp", "openai"] },
-    { name = "mypy" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "ag2", extras = ["mcp", "openai", "a2a"], specifier = ">=0.10.0" },
-    { name = "mypy", specifier = ">=1.10.0" },
 ]
 
 [[package]]
