@@ -1,146 +1,84 @@
 # ACP fleet
 
-A fleet of a2a-go servers behind a load balancer that runs ACP coding agents in cluster mode. Each conversation keeps its agent, its pending questions, its memory and its files when servers crash, drain or join.
+**Coding agents behind a load balancer that survive crashes.** Kill a server mid-conversation: the agent's memory, its files and its pending questions continue on another server.
 
 ![opencode agents keep their memory and files while a server crashes, a server joins and a server drains](demo/demo.gif)
 
-Built with [a2a-go](https://github.com/a2aproject/a2a-go) and its [`a2aacp`](https://pkg.go.dev/github.com/a2aproject/a2a-go/v2/integrations/executor/a2aacp) executor.
+Three a2a-go servers run [opencode](https://opencode.ai) agents with the [`a2aacp`](https://pkg.go.dev/github.com/a2aproject/a2a-go/v2/integrations/executor/a2aacp) executor in [a2a-go](https://github.com/a2aproject/a2a-go) cluster mode, behind nginx with no sticky sessions. NATS coordinates them and MySQL indexes tasks.
 
-## Overview
+## Quick start
 
-* Conversations are split into 64 virtual shards. Each shard is a directory with a SQLite session map, the agent homes and the scratch directories of its conversations.
-* Servers own shards by rendezvous hashing. When a server joins or leaves, only its shards move.
-* Any server takes any request and forwards it to the owner of the conversation's shard, so nginx needs no sticky sessions.
-* Agent homes, scratch directories and the session map are saved to the NATS object store after every turn, so a crash loses no memory and no files. Scratch directories over 16 MiB move only when a shard moves gracefully.
-* Every agent gets a scratch MCP server with file tools in its working directory.
-* [opencode](https://opencode.ai) on Gemini runs the agents, in the image a2a-serve runs it in. A fake ACP agent runs the fleet without model keys.
+```console
+export GEMINI_API_KEY=...   # https://aistudio.google.com/apikey
+make up-opencode            # NATS, MySQL, 3 servers, nginx on :8080
+make watch                  # terminal 1: the live view
+make crowd N=8              # terminal 2: 8 users that check what their agents remember
+```
 
-## Running
+No key? `make up` runs a [fake agent](internal/fakeacp/fakeacp.go) instead.
 
-1. Start NATS, MySQL, three servers with opencode agents and nginx on `:8080`. opencode uses Gemini; get a key at [Google AI Studio](https://aistudio.google.com/apikey):
+## Break it
 
-   ```console
-   export GEMINI_API_KEY=...
-   make up-opencode
-   ```
+```console
+make kill S=server-2        # crash: its shards move once its heartbeat expires
+make join                   # scale out: server-4 takes about a quarter of the shards
+make drain S=server-3       # graceful: running turns finish, then its shards move
+```
 
-   `make up` starts the fleet with the fake agent, which needs no key.
-
-2. Watch the fleet in one terminal:
-
-   ```console
-   make watch
-   ```
-
-3. Start a crowd of users in another:
-
-   ```console
-   make crowd N=8
-   ```
-
-   Each user asks its agent to remember a code and to keep a file of steps. Every few turns it asks for the code and the file's last line, and checks the answer.
+`watch` shows every move, and the crowd checks that the agents still know their user's code and file:
 
 ```text
-acp-fleet http://lb:8080  ·  3 servers  ·  8 conversations  ·  62 turns  ·  33 memory checks, 0 forgotten  ·  0 resent
-
-  server-1  ● live                  25 shards   2 agents   2 conversations
-  server-2  ● live                  26 shards   3 agents   3 conversations
-  server-3  ● live                  13 shards   3 agents   3 conversations
-
-  USER       SERVER     TURNS  MEMORY  NOW
-  alice      server-2       8  ✓ 4     idle
-  bob        server-2       9  ✓ 5     working: "Read bob.md and reply with the word on its last line only."
-
-  16:19:01 bob      lb → server-1 → server-2       "What is the code I asked you to remember? Reply with the code only."
+16:19:20 server-3 took 15 shards from server-2 (crashed), 3 conversations
+16:19:20 alice's turn stopped with server-2; the message is sent again
+16:19:28 ✓ alice's agent remembers the code on server-3 after moving from server-2
 ```
 
-Each message reaches a random server, which forwards it to the owner of the conversation's shard.
+## Highlights
 
-## Try it
+- **Virtual shards and rendezvous hashing.** Conversations [hash into 64 shards](internal/shards/assign.go#L16), and each shard [goes to the highest-scoring live server](internal/shards/assign.go#L25). A join or a crash moves only the shards of the server that changed.
+- **Any server takes any request.** The [router](internal/router/router.go#L82) runs a message on the owner of its shard or forwards it there over NATS.
+- **Fenced ownership.** Each shard record carries an owner, an incarnation and an epoch, and every [claim](internal/shards/manager.go#L178) and save is a [compare-and-swap](internal/shards/table.go#L160). A server that [can't renew its heartbeat](internal/nodes/nodes.go#L149) exits before others take over. A paused server can't overwrite the new owner's record.
+- **Snapshots after every turn.** The agent's home and scratch directory are [saved when each turn ends](internal/agents/agents.go#L148), so a crash loses only the turn in flight. The next owner [restores them on the conversation's next message](internal/shards/shard.go#L108), and opencode resumes its session.
+- **Delta uploads.** Snapshots are [content-defined chunks](internal/shards/chunker.go#L64) named by their SHA-256 and compressed one by one. A [save uploads only the new chunks](internal/shards/snapshot.go#L101), about 100 KB of a 5 MB agent home per turn. Unused chunks are deleted [after each save](internal/shards/shard.go#L196), and [when a shard is claimed](internal/shards/shard.go#L389).
+- **Graceful drain.** A [draining server](internal/server/server.go#L210) lets running turns finish, [stops the shard's agents](internal/agents/agents.go#L208) and [hands over its scratch directories](internal/shards/shard.go#L282).
+- **No stuck clients.** When a server dies, its successor [fails the tasks it left unfinished](internal/tasks/tasks.go#L46), so clients send them again.
+- **Proof, not anecdotes.** The [crowd](internal/crowd/crowd.go#L88) checks every agent's memory as the fleet changes, and [watch](internal/watch/watch.go#L42) draws the fleet from the `fleet.events` NATS subjects.
 
-Crash a server while the crowd works:
+## What a shard holds
 
-```console
-$ make kill S=server-2
-```
-
-```text
-  server-2  ✖ no heartbeat 5s/8s    26 shards   3 agents   3 conversations
-  ...
-  16:19:20 server-3 took 15 shards from server-2 (crashed), 3 conversations
-  16:19:20 alice's turn stopped with server-2; the message is sent again
-  16:19:28 ✓ alice's agent remembers the code on server-3 after moving from server-2
-```
-
-server-3 took the shards over once server-2's heartbeat expired, restored the agent homes and scratch directories saved after the last turns, and opencode loaded its sessions. Turns that were running on server-2 fail with a message that asks to send them again, and the crowd does.
-
-Add a server, or stop one gracefully:
-
-```console
-$ make join            # server-4 takes about a quarter of the shards; keep GEMINI_API_KEY set
-$ make drain S=server-3
-$ make status
-SERVER    INCARNATION  STATE  SHARDS  CONVERSATIONS
-server-1  2d98dd9c     live   31      2
-server-4  da9f7326     live   33      0
-```
-
-A draining server lets running turns finish, saves its shards and exits.
-
-You can also chat with the fleet yourself using the [a2a CLI](https://github.com/a2aproject/a2a-cli) v0.4.0 or later:
-
-```console
-make chat
-```
-
-`demo/record.sh` records the demo above with tmux, asciinema 3 and agg.
-
-### The fake agent
-
-`make up` runs a fake ACP agent that needs no model key. Every reply starts with the server that runs the agent, and it understands:
-
-| Message | Reply |
-| --- | --- |
-| `save <note>` | Asks permission, then appends the note to `notes.txt` in its home |
-| `scratch <text>` | Appends the text to `scratch.txt` in its scratch directory |
-| `work <seconds>` | Reports a step every second until done or canceled |
-| anything else | The turn number, where earlier turns ran, and what it remembers |
-
-## How it works
-
-| What | Where it lives | Graceful move | Crash |
+| | Where | Moves on drain | Survives a crash |
 | --- | --- | --- | --- |
-| Session map (`sessions.db`) | SQLite in the shard directory | moves with the shard | restored from the snapshot of the last turn |
-| Agent home | `homes/<context>` in the shard directory | moves with the shard | restored from the snapshot of the last turn |
-| Scratch | `scratch/<context>`, the agent's working directory | moves with the shard | restored from the snapshot of the last turn; over 16 MiB lost, and the agent is told |
-| Tasks | MySQL index and NATS events ([`integrations`](../../integrations)) | shared | shared |
+| Session map | `sessions.db` (SQLite) | yes | snapshot of the last turn |
+| Agent home | `homes/<context>` | yes | snapshot of the last turn |
+| Scratch | `scratch/<context>`, the agent's working directory | yes | snapshot of the last turn, up to 64 MiB |
+| Tasks | MySQL and NATS ([`integrations`](../../integrations)) | shared | shared |
 
-* **Membership.** Each server rewrites its record in the `NODES` KV bucket every 2 seconds. A record expires 8 seconds after its last write, and every server sees the expiry. A server that can't write its record exits.
-* **Shards.** The `SHARDS` bucket has a record per shard: the owner, an epoch, and the snapshots of its session map, homes and scratch directories in the `SHARD_DATA` object store. Every claim and save is a compare-and-swap on that record, so a server that lost a shard can't overwrite it.
-* **Routing.** The work queue is `workqueue.NewPushQueue` with a router as its writer. The router finds the conversation's shard and runs the payload if this server owns it, or forwards it to the owner with NATS request/reply. While a shard moves, its payloads wait for the new owner, except answers and cancels for turns still running on the old one.
-* **Agents.** The `a2aacp.Agent` restores a conversation's home and scratch directory on its first message, then starts the agent with `HOME` set to the home and the scratch directory as its working directory. opencode's config and caches are shared by the agents of a server, so a home holds only its sessions. `Config.Turn` saves the home and the scratch directory after every turn, `Config.SessionStore` reads the shard's SQLite map, and `Config.Abandoned` stores the failure of a question nobody answered.
-* **Takeover.** A server that claims a shard from a server that died fails the unfinished tasks of the shard's conversations, so their clients don't wait forever.
-* **Events.** Servers publish what they do on `fleet.events.*` in NATS: routed messages, turns, agents and shard moves. `make watch` draws them with the `NODES` and `SHARDS` buckets.
+Snapshots live in the `SHARD_DATA` object store, and the `SHARDS` KV bucket points at them.
+
+## More
+
+- `make chat` talks to the fleet with the [a2a CLI](https://github.com/a2aproject/a2a-cli) v0.4.0 or later. `make status` lists shard owners. `make test` runs the integration tests.
+- [`demo/record.sh`](demo/record.sh) records the GIF above with tmux, asciinema 3 and agg.
+- The fake agent understands `save <note>` (asks permission), `scratch <text>`, `work <seconds>`, `fill <file> <KiB>` and `size <file>`.
 
 ## Configuration
 
-Servers read these environment variables, set in [`infra/docker-compose.yaml`](infra/docker-compose.yaml):
+Set in [`infra/docker-compose.yaml`](infra/docker-compose.yaml):
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `SERVER_NAME` | host name | The server's name in the fleet |
-| `PUBLIC_URL` | `http://localhost:8080` | The URL in the agent card, the load balancer's |
-| `AGENT_COMMAND` | the fake agent | The ACP agent's command line |
-| `FLEET_MODEL` | `google/gemini-3-flash-preview` | The opencode model, set by `make up-opencode` |
-| `SHARDS` | `64` | The number of shards; every server must use the same |
+| `FLEET_MODEL` | `google/gemini-3-flash-preview` | opencode's model, set by `make up-opencode` |
+| `AGENT_COMMAND` | the fake agent | The ACP agent's command line; the opencode image sets it |
+| `SHARDS` | `64` | Number of shards; all servers must agree |
 | `IDLE_TIMEOUT` | `1m` | Stops agents with no turns for this long |
-| `DRAIN_TIMEOUT` | `1m` | How long a moving shard waits for its turns to end |
+| `DRAIN_TIMEOUT` | `1m` | How long a moving shard waits for its turns |
 | `MAX_AGENTS` | `8` | Agents per server |
-| `SCRATCH_LIMIT_MB` | `16` | Scratch directories over this size are saved only when their shard moves gracefully |
+| `SCRATCH_LIMIT_MB` | `64` | Larger scratch directories move only on a graceful move |
 
 ## Limitations
 
-* Snapshots are whole archives, uploaded after every turn and limited to 64 MiB. Agents that append to large files would benefit from chunked uploads.
-* opencode runs with every tool allowed except bash, which asks. The agents share their server's container, with no sandbox between them.
-* A server that dies right after a turn completes, before the snapshot lands, loses that turn's memory.
-* Clients and the servers' NATS and MySQL connections aren't authenticated.
+- A server that dies after a turn ends but before its snapshot lands loses that turn's memory.
+- A paused server can still run its agent's tools until it notices it lost the shard.
+- Agents share their server's container with no sandbox. opencode asks before bash and allows its other tools.
+- A snapshot holds at most 256 MiB. Conversations unused for 7 days are deleted when their shard next moves.
+- Clients, NATS and MySQL aren't authenticated.
