@@ -6,9 +6,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/msgstream"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/statemachine"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/testutil"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/msgstream"
 	"github.com/nats-io/nats.go/jetstream"
 )
 

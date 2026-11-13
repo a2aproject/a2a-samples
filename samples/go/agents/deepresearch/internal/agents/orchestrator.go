@@ -13,8 +13,8 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/cluster"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/msgstream"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/statemachine"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/msgstream"
 
 	"google.golang.org/adk/model"
 	"google.golang.org/adk/server/adka2a/v2"
