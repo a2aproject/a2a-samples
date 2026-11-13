@@ -188,10 +188,11 @@ class InMemoryFakeAgentManager(ApplicationManager):
                                 else 'Working...',
                             )
                         )
+                else:
+                    rval.append((message_id, ''))
             else:
                 rval.append((message_id, ''))
-            return rval
-        return [(x, '') for x in self._pending_message_ids]
+        return rval
 
     def register_agent(self, url):
         agent_data = get_agent_card(url)
@@ -213,7 +214,7 @@ class InMemoryFakeAgentManager(ApplicationManager):
 
     @property
     def events(self) -> list[Event]:
-        return []
+        return self._events
 
 
 _contextId = str(uuid.uuid4())
