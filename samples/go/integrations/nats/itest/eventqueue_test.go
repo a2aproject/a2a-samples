@@ -8,6 +8,7 @@ import (
 
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv/eventqueue"
+	"github.com/a2aproject/a2a-go/v2/a2asrv/taskstore"
 	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/msgstream"
 	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/natstest"
 )
@@ -56,5 +57,41 @@ func TestEventQueue_WriteAndReplay(t *testing.T) {
 		if gotType != wantType {
 			t.Errorf("event %d type: got %T, want %T", i, gotType, wantType)
 		}
+	}
+}
+
+func TestEventQueue_LiveReaderSkipsUserMessages(t *testing.T) {
+	_, js := natstest.Connect(t)
+	natstest.ResetStreams(t, js, natstest.EventsStream)
+	ctx := context.Background()
+
+	live, err := msgstream.CreateEventQueueManager(ctx, js)
+	if err != nil {
+		t.Fatalf("msgstream.CreateEventQueueManager() error = %v", err)
+	}
+	task := &a2a.Task{ID: a2a.NewTaskID(), ContextID: a2a.NewContextID(), Status: a2a.TaskStatus{State: a2a.TaskStateInputRequired}}
+	reader, err := live.CreateReader(ctx, task.ID)
+	if err != nil {
+		t.Fatalf("live.CreateReader() error = %v", err)
+	}
+	t.Cleanup(func() { _ = reader.Close() })
+
+	reply := a2a.NewMessageForTask(a2a.MessageRoleUser, task, a2a.NewTextPart("once"))
+	working := a2a.NewStatusUpdateEvent(task, a2a.TaskStateWorking, nil)
+	writer := msgstream.NewEventWriter(js)
+	for i, event := range []a2a.Event{reply, working} {
+		if err := writer.Write(ctx, &eventqueue.Message{Event: event, TaskVersion: taskstore.TaskVersion(i + 2), Protocol: a2a.Version}); err != nil {
+			t.Fatalf("writer.Write() error = %v", err)
+		}
+	}
+
+	readCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	got, err := reader.Read(readCtx)
+	if err != nil {
+		t.Fatalf("reader.Read() error = %v", err)
+	}
+	if _, ok := got.Event.(*a2a.TaskStatusUpdateEvent); !ok {
+		t.Fatalf("reader.Read() = %T, want the status update after the user's message", got.Event)
 	}
 }

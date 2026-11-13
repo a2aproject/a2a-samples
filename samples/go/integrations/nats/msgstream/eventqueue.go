@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"sync"
 
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv/eventqueue"
@@ -18,6 +19,9 @@ const (
 type natsEventQueueManager struct {
 	stream jetstream.Stream
 	policy jetstream.DeliverPolicy
+	// live readers skip the caller's messages: the task store publishes them
+	// as history updates, and a subscriber would take one for the final event.
+	live bool
 }
 
 var _ eventqueue.Manager = (*natsEventQueueManager)(nil)
@@ -28,16 +32,17 @@ func CreateEventReplayManager(ctx context.Context, js jetstream.JetStream) (even
 	if err != nil {
 		return nil, fmt.Errorf("nats events stream: %v", err)
 	}
-	return &natsEventQueueManager{stream, jetstream.DeliverAllPolicy}, nil
+	return &natsEventQueueManager{stream: stream, policy: jetstream.DeliverAllPolicy}, nil
 }
 
-// CreateEventQueueManager returns an [eventqueue.Manager] that delivers only new events.
+// CreateEventQueueManager returns an [eventqueue.Manager] that delivers only
+// new events, without the messages of the user.
 func CreateEventQueueManager(ctx context.Context, js jetstream.JetStream) (eventqueue.Manager, error) {
 	stream, err := js.Stream(ctx, eventsStream)
 	if err != nil {
 		return nil, fmt.Errorf("nats events stream: %v", err)
 	}
-	return &natsEventQueueManager{stream, jetstream.DeliverNewPolicy}, nil
+	return &natsEventQueueManager{stream: stream, policy: jetstream.DeliverNewPolicy, live: true}, nil
 }
 
 // CreateReader implements [eventqueue.Manager.CreateReader].
@@ -51,17 +56,17 @@ func (m *natsEventQueueManager) CreateReader(ctx context.Context, taskID a2a.Tas
 	}
 
 	msgChan := make(chan jetstream.Msg, 64)
-	var cc jetstream.ConsumeContext
-	cc, err = cons.Consume(func(msg jetstream.Msg) {
+	done := make(chan struct{})
+	cc, err := cons.Consume(func(msg jetstream.Msg) {
 		select {
 		case msgChan <- msg:
-		case <-cc.Closed():
+		case <-done:
 		}
 	})
 	if err != nil {
 		return nil, fmt.Errorf("consume %s: %w", taskID, err)
 	}
-	return &natsEventReader{msgChan: msgChan, cc: cc}, nil
+	return &natsEventReader{msgChan: msgChan, cc: cc, live: m.live, done: done}, nil
 }
 
 // CreateWriter implements [eventqueue.Manager.CreateWriter].
@@ -77,29 +82,38 @@ func (m *natsEventQueueManager) Destroy(_ context.Context, _ a2a.TaskID) error {
 type natsEventReader struct {
 	msgChan chan jetstream.Msg
 	cc      jetstream.ConsumeContext
+	live    bool
+	done    chan struct{}
+	once    sync.Once
 }
 
 // Read implements [eventqueue.Reader.Read].
 func (r *natsEventReader) Read(ctx context.Context) (*eventqueue.Message, error) {
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
+	for {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
 
-	case natsMsg, ok := <-r.msgChan:
-		if !ok {
-			return nil, eventqueue.ErrQueueClosed
+		case natsMsg, ok := <-r.msgChan:
+			if !ok {
+				return nil, eventqueue.ErrQueueClosed
+			}
+			var msg eventqueue.Message
+			if err := json.Unmarshal(natsMsg.Data(), &msg); err != nil {
+				return nil, fmt.Errorf("message parsing: %w", err)
+			}
+			if m, ok := msg.Event.(*a2a.Message); ok && r.live && m.Role == a2a.MessageRoleUser {
+				continue
+			}
+			return &msg, nil
 		}
-		var msg eventqueue.Message
-		if err := json.Unmarshal(natsMsg.Data(), &msg); err != nil {
-			return nil, fmt.Errorf("message parsing: %w", err)
-		}
-		return &msg, nil
 	}
 }
 
 // Close implements [eventqueue.Reader.Close].
 func (r *natsEventReader) Close() error {
 	r.cc.Stop()
+	r.once.Do(func() { close(r.done) })
 	return nil
 }
 
