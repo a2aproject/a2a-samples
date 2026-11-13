@@ -1,15 +1,14 @@
 import json
 import os
 import random
-from typing import Optional
 
 from collections.abc import AsyncIterable
-from typing import Any
+from typing import Any, Optional
 
 from google.adk.agents.llm_agent import LlmAgent
-from google.adk.models.lite_llm import LiteLlm
 from google.adk.artifacts import InMemoryArtifactService
 from google.adk.memory.in_memory_memory_service import InMemoryMemoryService
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.tools.tool_context import ToolContext
@@ -20,10 +19,11 @@ from google.genai import types
 request_ids = set()
 
 
+# ADK 1.12.0's tool schema parser requires typing.Optional, not PEP 604 unions.
 def create_request_form(
-    date: Optional[str] = None,
-    amount: Optional[str] = None,
-    purpose: Optional[str] = None,
+    date: Optional[str] = None,  # noqa: UP045
+    amount: Optional[str] = None,  # noqa: UP045
+    purpose: Optional[str] = None,  # noqa: UP045
 ) -> dict[str, Any]:
     """Create a request form for the employee to fill out.
 
@@ -35,24 +35,23 @@ def create_request_form(
     Returns:
         dict[str, Any]: A dictionary containing the request form data.
     """
-    request_id = 'request_id_' + str(random.randint(1000000, 9999999))
+    # Request IDs are demo identifiers, not secrets.
+    request_id = 'request_id_' + str(random.randint(1000000, 9999999))  # noqa: S311
     request_ids.add(request_id)
     return {
         'request_id': request_id,
-        'date': '<transaction date>' if not date else date,
-        'amount': '<transaction dollar amount>' if not amount else amount,
-        'purpose': '<business justification/purpose of the transaction>'
-        if not purpose
-        else purpose,
+        'date': date if date else '<transaction date>',
+        'amount': amount if amount else '<transaction dollar amount>',
+        'purpose': purpose if purpose else '<business justification/purpose of the transaction>',
     }
 
 
 def return_form(
     form_request: dict[str, Any],
     tool_context: ToolContext,
-    instructions: Optional[str] = None,
-) -> dict[str, Any]:
-    """Returns a structured json object indicating a form to complete.
+    instructions: Optional[str] = None,  # noqa: UP045 - ADK 1.12.0 tool schema compatibility.
+) -> str:
+    """Return JSON text indicating a form to complete.
 
     Args:
         form_request (dict[str, Any]): The request form data.
@@ -60,7 +59,7 @@ def return_form(
         instructions (str): Instructions for processing the form. Can be an empty string.
 
     Returns:
-        dict[str, Any]: A JSON dictionary for the form response.
+        str: The JSON-encoded form response.
     """
     if isinstance(form_request, str):
         form_request = json.loads(form_request)
@@ -118,7 +117,7 @@ class ReimbursementAgent:
 
     SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._agent = self._build_agent()
         self._user_id = 'remote_agent'
         self._runner = Runner(
@@ -130,13 +129,14 @@ class ReimbursementAgent:
         )
 
     def get_processing_message(self) -> str:
+        """Return the status message while processing a request."""
         return 'Processing the reimbursement request...'
 
     def _build_agent(self) -> LlmAgent:
         """Builds the LLM agent for the reimbursement agent."""
-        LITELLM_MODEL = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-001')
+        litellm_model = os.getenv('LITELLM_MODEL', 'gemini/gemini-2.0-flash-001')
         return LlmAgent(
-            model=LiteLlm(model=LITELLM_MODEL),
+            model=LiteLlm(model=litellm_model),
             name='reimbursement_agent',
             description=(
                 'This agent handles the reimbursement process for the employees'
@@ -171,15 +171,14 @@ class ReimbursementAgent:
             ],
         )
 
-    async def stream(self, query, session_id) -> AsyncIterable[dict[str, Any]]:
+    async def stream(self, query: str, session_id: str) -> AsyncIterable[dict[str, Any]]:
+        """Yield processing updates and the final reimbursement response."""
         session = await self._runner.session_service.get_session(
             app_name=self._agent.name,
             user_id=self._user_id,
             session_id=session_id,
         )
-        content = types.Content(
-            role='user', parts=[types.Part.from_text(text=query)]
-        )
+        content = types.Content(role='user', parts=[types.Part.from_text(text=query)])
         if session is None:
             session = await self._runner.session_service.create_session(
                 app_name=self._agent.name,
@@ -191,30 +190,22 @@ class ReimbursementAgent:
             user_id=self._user_id, session_id=session.id, new_message=content
         ):
             if event.is_final_response():
-                response = ''
-                if (
-                    event.content
-                    and event.content.parts
-                    and event.content.parts[0].text
-                ):
-                    response = '\n'.join(
-                        [p.text for p in event.content.parts if p.text]
-                    )
+                response: str | dict[str, Any] = ''
+                function_responses = event.get_function_responses()
+                form_response = next(
+                    (r for r in function_responses if r.name == 'return_form'),
+                    None,
+                )
+                if form_response:
+                    response = form_response.model_dump()
                 elif (
                     event.content
                     and event.content.parts
-                    and any(
-                        [
-                            True
-                            for p in event.content.parts
-                            if p.function_response
-                        ]
-                    )
+                    and any(p.text for p in event.content.parts)
                 ):
-                    response = next(
-                        p.function_response.model_dump()
-                        for p in event.content.parts
-                    )
+                    response = '\n'.join([p.text for p in event.content.parts if p.text])
+                elif function_responses:
+                    response = function_responses[0].model_dump()
                 yield {
                     'is_task_complete': True,
                     'content': response,

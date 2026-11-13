@@ -67,6 +67,7 @@ sequenceDiagram
    ```bash
    If you're using a Google Gemini model (gemini-pro, etc.):
    echo "GOOGLE_API_KEY=your_api_key_here" > .env
+   echo "GOOGLE_MODEL=gemini-3.8-flash" >> .env  (optional, overrides the default Gemini model)
   
    
    If you're using OpenAI or any compatible API (e.g., local LLM via Ollama, LM Studio, etc.):
