@@ -1,11 +1,12 @@
 package com.samples.a2a;
 
-import io.a2a.server.PublicAgentCard;
-import io.a2a.spec.AgentCapabilities;
-import io.a2a.spec.AgentCard;
-import io.a2a.spec.AgentInterface;
-import io.a2a.spec.AgentSkill;
-import io.a2a.spec.TransportProtocol;
+import org.a2aproject.sdk.server.PublicAgentCard;
+import org.a2aproject.sdk.spec.AgentCapabilities;
+import org.a2aproject.sdk.spec.AgentCard;
+import org.a2aproject.sdk.spec.AgentInterface;
+import org.a2aproject.sdk.spec.AgentSkill;
+import org.a2aproject.sdk.spec.Legacy_0_3_AgentInterface;
+import org.a2aproject.sdk.spec.TransportProtocol;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
@@ -31,7 +32,7 @@ public final class DiceAgentCardProducer {
   @Produces
   @PublicAgentCard
   public AgentCard agentCard() {
-    return new AgentCard.Builder()
+    return AgentCard.builder()
         .name("Dice Agent")
         .description(
             "Rolls an N-sided dice and answers questions about the "
@@ -42,16 +43,15 @@ public final class DiceAgentCardProducer {
         .version("1.0.0")
         .documentationUrl("http://example.com/docs")
         .capabilities(
-            new AgentCapabilities.Builder()
+            AgentCapabilities.builder()
                 .streaming(true)
                 .pushNotifications(false)
-                .stateTransitionHistory(false)
                 .build())
         .defaultInputModes(List.of("text"))
         .defaultOutputModes(List.of("text"))
         .skills(
             List.of(
-                new AgentSkill.Builder()
+                AgentSkill.builder()
                     .id("dice_roller")
                     .name("Roll dice")
                     .description("Rolls dice and discusses outcomes")
@@ -59,7 +59,7 @@ public final class DiceAgentCardProducer {
                     .examples(
                         List.of("Can you roll a 6-sided die?"))
                     .build(),
-                new AgentSkill.Builder()
+                AgentSkill.builder()
                     .id("prime_checker")
                     .name("Check prime numbers")
                     .description("Checks if given numbers are prime")
@@ -69,12 +69,18 @@ public final class DiceAgentCardProducer {
                             "Is 17 a prime number?",
                             "Which of these numbers are prime: 1, 4, 6, 7"))
                     .build()))
-        .protocolVersion("0.3.0")
-        .additionalInterfaces(
+        .supportedInterfaces(
             List.of(
                 new AgentInterface(TransportProtocol.GRPC.asString(),
                         "localhost:" + httpPort),
                 new AgentInterface(
+                    TransportProtocol.JSONRPC.asString(),
+                        "http://localhost:" + httpPort)))
+        .additionalInterfaces(
+            List.of(
+                new Legacy_0_3_AgentInterface(TransportProtocol.GRPC.asString(),
+                        "localhost:" + httpPort),
+                new Legacy_0_3_AgentInterface(
                     TransportProtocol.JSONRPC.asString(),
                         "http://localhost:" + httpPort)))
         .build();

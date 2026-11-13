@@ -23,13 +23,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- A2A SDK version - centralized for all agents -->
-        <io.a2a.sdk.version>0.3.2.Final</io.a2a.sdk.version>
+        <io.a2a.sdk.version>1.0.0.Final</io.a2a.sdk.version>
 
         <!-- Common dependency versions -->
         <jakarta.enterprise.cdi-api.version>4.1.0</jakarta.enterprise.cdi-api.version>
         <quarkus.platform.version>3.26.1</quarkus.platform.version>
         <quarkus.langchain4j.version>1.3.1</quarkus.langchain4j.version>
-        <protobuf.version>4.31.1</protobuf.version>
+        <protobuf.version>4.33.2</protobuf.version>
     </properties>
 
     <dependencyManagement>
@@ -45,6 +45,11 @@
             <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java-util</artifactId>
                 <version>${protobuf.version}</version>
             </dependency>
         </dependencies>
@@ -80,6 +85,16 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        </systemPropertyVariables>
+                        <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
