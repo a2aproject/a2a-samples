@@ -107,7 +107,7 @@ func TestOversizedResponse(t *testing.T) {
 	}))
 	defer server.Close()
 	transport := &formTransport{endpoint: server.URL, client: server.Client()}
-	_, err := transport.SendMessage(t.Context(), a2aclient.ServiceParams{a2a.SvcParamVersion: {string(a2a.Version)}},
+	_, err := transport.SendMessage(t.Context(), versionParams(),
 		&a2a.SendMessageRequest{Message: a2a.NewMessage(a2a.MessageRoleUser, a2a.NewTextPart("hello"))})
 	if !errors.Is(err, a2a.ErrInvalidAgentResponse) {
 		t.Fatalf("SendMessage() error = %v, want %v", err, a2a.ErrInvalidAgentResponse)
@@ -149,10 +149,16 @@ func TestUnsupportedInput(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			_, err := transport.SendMessage(t.Context(), a2aclient.ServiceParams{a2a.SvcParamVersion: {string(a2a.Version)}}, &a2a.SendMessageRequest{Message: tc.msg})
+			_, err := transport.SendMessage(t.Context(), versionParams(), &a2a.SendMessageRequest{Message: tc.msg})
 			if !errors.Is(err, a2a.ErrUnsupportedOperation) {
 				t.Fatalf("SendMessage() error = %v, want %v", err, a2a.ErrUnsupportedOperation)
 			}
 		})
 	}
+}
+
+func versionParams() a2aclient.ServiceParams {
+	params := a2aclient.ServiceParams{}
+	params.Append(a2a.SvcParamVersion, string(a2a.Version))
+	return params
 }

@@ -71,8 +71,9 @@ func (t *formTransport) SendMessage(ctx context.Context, params a2aclient.Servic
 	if req.Tenant != "" || req.Config != nil || len(req.Metadata) != 0 {
 		return nil, fmt.Errorf("request options are not supported: %w", a2a.ErrUnsupportedOperation)
 	}
-	if len(params) != 1 || len(params[a2a.SvcParamVersion]) != 1 {
-		return nil, fmt.Errorf("only the protocol version parameter is supported: %w", a2a.ErrUnsupportedOperation)
+	version := params.Get(a2a.SvcParamVersion)
+	if len(version) != 1 {
+		return nil, fmt.Errorf("the protocol version parameter is required: %w", a2a.ErrUnsupportedOperation)
 	}
 	if req.Message.Role != a2a.MessageRoleUser {
 		return nil, fmt.Errorf("only user messages are supported: %w", a2a.ErrUnsupportedOperation)
@@ -87,7 +88,7 @@ func (t *formTransport) SendMessage(ctx context.Context, params a2aclient.Servic
 		return nil, err
 	}
 	httpReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	httpReq.Header.Set(a2a.SvcParamVersion, params[a2a.SvcParamVersion][0])
+	httpReq.Header.Set(a2a.SvcParamVersion, version[0])
 	resp, err := t.client.Do(httpReq)
 	if err != nil {
 		return nil, err
