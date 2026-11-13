@@ -26,6 +26,16 @@ with Path(dir_path / 'called_tools_history.jinja').open('r') as f:
     called_tools_history_template = Template(f.read())
 
 
+def build_called_tool_record(tool: dict[str, Any], result: CallToolResult) -> dict[str, Any]:
+    """Build a called-tool history record matching called_tools_history.jinja."""
+    return {
+        'name': tool['name'],
+        'arguments': tool['arguments'],
+        'isError': result.isError,
+        'result': result.content[0].text,
+    }
+
+
 def stream_llm(prompt: str) -> Generator[str, None]:
     """Stream LLM response.
 
@@ -80,9 +90,7 @@ class Agent:
             return self.call_llm(question)
         tool_prompt = await get_mcp_tool_prompt(self.mcp_url)
         if called_tools:
-            called_tools_prompt = called_tools_history_template.render(
-                called_tools=called_tools
-            )
+            called_tools_prompt = called_tools_history_template.render(called_tools=called_tools)
         else:
             called_tools_prompt = ''
 
@@ -112,10 +120,7 @@ class Agent:
             tools (list[dict]): The tools to call.
         """
         return await asyncio.gather(
-            *[
-                call_mcp_tool(self.mcp_url, tool['name'], tool['arguments'])
-                for tool in tools
-            ]
+            *[call_mcp_tool(self.mcp_url, tool['name'], tool['arguments']) for tool in tools]
         )
 
     async def stream(self, question: str) -> AsyncGenerator[dict[str, Any]]:
@@ -128,48 +133,29 @@ class Agent:
             dict: Streaming output, including intermediate steps and final result.
         """
         called_tools = []
-        for i in range(10):
-            yield {
-                'is_task_complete': False,
-                'require_user_input': False,
-                'content': f'Step {i}',
-            }
-
-            response = ''
+        last_response = ''
+        for _ in range(10):
+            last_response = ''
             for chunk in await self.decide(question, called_tools):
-                response += chunk
+                last_response += chunk
                 yield {
                     'is_task_complete': False,
                     'require_user_input': False,
                     'content': chunk,
                 }
-            tools = self.extract_tools(response)
+            tools = self.extract_tools(last_response)
             if not tools:
                 break
             results = await self.call_tool(tools)
-
             called_tools += [
-                {
-                    'tool': tool['name'],
-                    'arguments': tool['arguments'],
-                    'isError': result.isError,
-                    'result': result.content[0].text,
-                }
+                build_called_tool_record(tool, result)
                 for tool, result in zip(tools, results, strict=True)
             ]
-            called_tools_history = called_tools_history_template.render(
-                called_tools=called_tools, question=question
-            )
-            yield {
-                'is_task_complete': False,
-                'require_user_input': False,
-                'content': called_tools_history,
-            }
 
         yield {
             'is_task_complete': True,
             'require_user_input': False,
-            'content': 'Task completed',
+            'content': last_response,
         }
 
 
