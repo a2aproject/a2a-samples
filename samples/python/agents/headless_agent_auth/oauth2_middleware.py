@@ -1,4 +1,3 @@
-import json
 import os
 
 from a2a.types import AgentCard
@@ -36,37 +35,12 @@ class OAuth2Middleware(BaseHTTPMiddleware):
         # Use app state for this demonstration (simplicity)
         self.a2a_auth = {}
 
-        # Process the Authentication Requirements Object
-        if agent_card.authentication:
-            credentials = json.loads(
-                agent_card.authentication.credentials or '{}'
-            )
-            if 'scopes' in credentials:
-                self.a2a_auth = {
-                    'required_scopes': credentials['scopes'].keys()
-                }
-
-        # # Process the Security Requirements Object
-        # for sec_req in agent_card.security or []:
-        #     # Since we pre-validated (non-exhaustive) the used parts of the Security Schemes and Security
-        #     # Requirements, the code below WILL NOT do any validation.
-
-        #     # An empty Security Requirement Object means you allow anonymous, no need to process any other Security
-        #     # Requirements Objects
-        #     if not sec_req:
-        #         break
-
-        #     # Demonstrate how one could process the Security Requirements to configure the machinery used to
-        #     # authenticate and/or authorize agent interactions.
-        #     #
-        #     # Note: This is written purely to support the sample and is for demonstration purposes only.
-        #     for name, scopes in sec_req.items():
-        #         # sec_scheme = self.agent_card.security_schemes[name]
-
-        #         # if not isinstance(sec_scheme, OAuth2SecurityScheme) or sec_scheme.flows.authorization_code is None:
-        #         #     raise NotImplementedError('Only OAuth2SecurityScheme -> ClientCredentialsOAuthFlow is supported.')
-
-        #         self.a2a_auth = { 'required_scopes': scopes }
+        # Process the Security Requirements Object: use the scopes of the first requirement.
+        # (Demonstration only: the scheme definitions in `security_schemes` are not validated.)
+        for sec_req in agent_card.security or []:
+            for scopes in sec_req.values():
+                self.a2a_auth = {'required_scopes': scopes}
+            break
 
     async def dispatch(self, request: Request, call_next):
         path = request.url.path

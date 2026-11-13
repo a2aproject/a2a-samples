@@ -67,6 +67,7 @@ sequenceDiagram
    ```bash
    If you're using a Google Gemini model (gemini-pro, etc.):
    echo "GOOGLE_API_KEY=your_api_key_here" > .env
+   echo "GOOGLE_MODEL=gemini-3.8-flash" >> .env  (optional, overrides the default Gemini model)
   
    
    If you're using OpenAI or any compatible API (e.g., local LLM via Ollama, LM Studio, etc.):
@@ -478,7 +479,7 @@ data: {"id":"6d12d159-ec67-46e6-8d43-18480ce7f6ca","jsonrpc":"2.0","result":{"co
 
 - [A2A Protocol Documentation](https://a2a-protocol.org/)
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
-- [Frankfurter API](https://www.frankfurter.app/docs/)
+- [Frankfurter API](https://frankfurter.dev/docs/)
 - [Google Gemini API](https://ai.google.dev/gemini-api)
 
 

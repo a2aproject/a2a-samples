@@ -1,5 +1,4 @@
 import asyncio
-import json
 import logging
 import os
 import sys
@@ -16,13 +15,13 @@ from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (
-    AgentAuthentication,
     AgentCapabilities,
     AgentCard,
     AgentSkill,
-    # ClientCredentialsOAuthFlow,
-    # OAuth2SecurityScheme,
-    # OAuthFlows,
+    ClientCredentialsOAuthFlow,
+    OAuth2SecurityScheme,
+    OAuthFlows,
+    SecurityScheme,
 )
 from agent import HRAgent
 from agent_executor import HRAgentExecutor
@@ -68,35 +67,21 @@ async def start_agent(host: str, port):
                 ],
             )
         ],
-        authentication=AgentAuthentication(
-            schemes=['oauth2'],
-            credentials=json.dumps(
-                {
-                    'tokenUrl': f'https://{os.getenv("HR_AUTH0_DOMAIN")}/oauth/token',
-                    'scopes': {
-                        'read:employee_status': 'Allows confirming whether a person is an active employee of the company.'
-                    },
-                }
+        security_schemes={
+            'oauth2_m2m': SecurityScheme(
+                root=OAuth2SecurityScheme(
+                    flows=OAuthFlows(
+                        client_credentials=ClientCredentialsOAuthFlow(
+                            token_url=f'https://{os.getenv("HR_AUTH0_DOMAIN")}/oauth/token',
+                            scopes={
+                                'read:employee_status': 'Allows confirming whether a person is an active employee of the company.',
+                            },
+                        ),
+                    ),
+                )
             ),
-        ),
-        # security_schemes={
-        #     'oauth2_m2m_client': OAuth2SecurityScheme(
-        #         description='',
-        #         flows=OAuthFlows(
-        #             authorization_code=ClientCredentialsOAuthFlow(
-        #                 token_url=f'https://{os.getenv("HR_AUTH0_DOMAIN")}/oauth/token',
-        #                 scopes={
-        #                     'read:employee_status': 'Allows confirming whether a person is an active employee of the company.',
-        #                 },
-        #             ),
-        #         ),
-        #     ),
-        # },
-        # security=[{
-        #     'oauth2_m2m_client': [
-        #         'read:employee_status',
-        #     ],
-        # }],
+        },
+        security=[{'oauth2_m2m': ['read:employee_status']}],
     )
 
     request_handler = DefaultRequestHandler(
@@ -112,7 +97,10 @@ async def start_agent(host: str, port):
     app.add_middleware(
         OAuth2Middleware,
         agent_card=agent_card,
-        public_paths=['/.well-known/agent.json'],
+        public_paths=[
+            '/.well-known/agent.json',
+            '/.well-known/agent-card.json',
+        ],
     )
 
     logger.info(f'Starting HR Agent server on {host}:{port}')
