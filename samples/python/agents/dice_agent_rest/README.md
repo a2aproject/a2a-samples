@@ -91,13 +91,13 @@ pip install -e .
 
 You must set `GOOGLE_API_KEY` before running anything that calls Gemini.
 
-### macOS / Linux
+### macOS / Linux (API key)
 
 ```bash
 export GOOGLE_API_KEY="YOUR_API_KEY_HERE"
 ```
 
-### Windows (PowerShell)
+### Windows PowerShell (API key)
 
 ```powershell
 $Env:GOOGLE_API_KEY = "YOUR_API_KEY_HERE"
