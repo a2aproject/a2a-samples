@@ -82,7 +82,7 @@ async def send_message(text_query: str = 'Hi there'):
     await client.close()
 
 
-async def send_steaming_message(text_query: str = 'Hi there'):
+async def send_streaming_message(text_query: str = 'Hi there'):
     public_agent_card = await get_agent_card()
 
     # Creates a new text message to be sent to the A2A Server.
@@ -125,7 +125,7 @@ def test_client_workflow(text_query: str = 'Hi there!'):
     """
     asyncio.run(show_agent_card())
     asyncio.run(send_message(text_query))
-    asyncio.run(send_steaming_message(text_query))
+    asyncio.run(send_streaming_message(text_query))
     asyncio.run(show_extended_card())
 
 
