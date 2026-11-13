@@ -96,7 +96,7 @@ git clone https://github.com/a2aproject/a2a-samples.git
 
 cd a2a-samples/samples/python/hosts/cli/
 # run cli
-uv run . http://localhost:10007
+uv run . --agent http://localhost:10007
 ```
 
 This will start an interactive CLI that connects to your GitHub agent server.
