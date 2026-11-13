@@ -147,8 +147,8 @@ func (s *Server) start(ctx context.Context) error {
 		return err
 	}
 	pub := fleetevents.NewPublisher(nc, cfg.Name)
-	failer := tasks.NewFailer(taskStore, index, cfg.Shards, pub)
-	s.shards = shards.NewManager(shards.Config{Count: cfg.Shards, Dir: filepath.Join(cfg.DataDir, "shards"), ScratchLimit: cfg.ScratchLimit, Orphaned: failer.Orphaned, Events: pub}, table, s.nodes)
+	reaper := tasks.NewReaper(taskStore, index, cfg.Shards, pub)
+	s.shards = shards.NewManager(shards.Config{Count: cfg.Shards, Dir: filepath.Join(cfg.DataDir, "shards"), ScratchLimit: cfg.ScratchLimit, Orphaned: reaper.Orphaned, Events: pub}, table, s.nodes)
 	fleetAgents := agents.New(agents.Config{Server: cfg.Name, Argv: cfg.AgentCommand, MCP: cfg.MCPCommand, ReleaseWait: cfg.DrainTimeout, Events: pub}, s.shards)
 
 	s.exec, err = a2aacp.NewExecutor(ctx, a2aacp.AgentFunc(fleetAgents.Start), &a2aacp.Config{
@@ -156,7 +156,7 @@ func (s *Server) start(ctx context.Context) error {
 		SessionStore: fleetAgents.Sessions(),
 		Session:      fleetAgents.Session,
 		Turn:         fleetAgents.Turn,
-		Abandoned:    failer.Abandoned,
+		Abandoned:    reaper.Abandoned,
 	})
 	if err != nil {
 		return err

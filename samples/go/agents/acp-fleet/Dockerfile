@@ -23,11 +23,14 @@ ENTRYPOINT ["/acp-fleet"]
 # The fleet with opencode as the ACP agent, on the image a2a-serve runs it in.
 # Agent homes keep only opencode's sessions; its config and caches are shared
 # by the agents of a server, so that snapshots stay small.
-FROM ghcr.io/a2aproject/harness-opencode:latest AS opencode
+FROM ghcr.io/a2aproject/harness-opencode:sha-ce681e07144c AS opencode
 ENV AGENT_COMMAND="opencode acp" \
     XDG_CONFIG_HOME=/opt/opencode/config \
     XDG_CACHE_HOME=/opt/opencode/cache \
     npm_config_cache=/opt/opencode/npm
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# $schema is a JSON key, not a variable.
+# hadolint ignore=SC2016
 RUN mkdir -p /opt/opencode/config/opencode \
  && printf '{"$schema":"https://opencode.ai/config.json","autoupdate":false,"share":"disabled"}\n' > /opt/opencode/config/opencode/opencode.json \
  && printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1}}' \
@@ -37,5 +40,5 @@ RUN mkdir -p /opt/opencode/config/opencode \
  && rm -rf /tmp/warm \
  && chown -R node:node /opt/opencode
 COPY --from=builder /acp-fleet /acp-fleet
-USER node
+USER 1000:1000
 ENTRYPOINT ["/acp-fleet"]

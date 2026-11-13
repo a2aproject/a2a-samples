@@ -19,23 +19,23 @@ const maxAttempts = 3
 
 var unfinished = []a2a.TaskState{a2a.TaskStateSubmitted, a2a.TaskStateWorking, a2a.TaskStateInputRequired}
 
-// Failer writes failures to the task store.
-type Failer struct {
+// Reaper writes failures to the task store.
+type Reaper struct {
 	store  *store.Store
 	index  *store.Index
 	shards int
 	events *events.Publisher
 }
 
-// NewFailer returns a failer of the tasks in s, whose conversations are
+// NewReaper returns a reaper of the tasks in s, whose conversations are
 // split into count shards. It publishes the tasks it fails to pub.
-func NewFailer(s *store.Store, index *store.Index, count int, pub *events.Publisher) *Failer {
-	return &Failer{store: s, index: index, shards: count, events: pub}
+func NewReaper(s *store.Store, index *store.Index, count int, pub *events.Publisher) *Reaper {
+	return &Reaper{store: s, index: index, shards: count, events: pub}
 }
 
 // Abandoned stores the event that ends a task whose question nobody answered.
 // It implements a2aacp Config.Abandoned.
-func (f *Failer) Abandoned(ctx context.Context, event *a2a.TaskStatusUpdateEvent) {
+func (f *Reaper) Abandoned(ctx context.Context, event *a2a.TaskStatusUpdateEvent) {
 	if err := f.apply(ctx, event.TaskID, func(*a2a.Task) *a2a.TaskStatusUpdateEvent { return event }); err != nil {
 		log.Warn(ctx, "storing an abandoned task failed", "task", event.TaskID, "cause", err)
 	}
@@ -43,7 +43,7 @@ func (f *Failer) Abandoned(ctx context.Context, event *a2a.TaskStatusUpdateEvent
 
 // Orphaned fails the unfinished tasks of the shard's conversations, after the
 // server that worked on them died.
-func (f *Failer) Orphaned(ctx context.Context, shard int) {
+func (f *Reaper) Orphaned(ctx context.Context, shard int) {
 	for _, state := range unfinished {
 		page := ""
 		for {
@@ -76,7 +76,7 @@ func (f *Failer) Orphaned(ctx context.Context, shard int) {
 }
 
 // apply stores the event that event returns for the current task, unless the task already ended.
-func (f *Failer) apply(ctx context.Context, id a2a.TaskID, event func(*a2a.Task) *a2a.TaskStatusUpdateEvent) error {
+func (f *Reaper) apply(ctx context.Context, id a2a.TaskID, event func(*a2a.Task) *a2a.TaskStatusUpdateEvent) error {
 	for range maxAttempts {
 		stored, err := f.store.Get(ctx, id)
 		if err != nil {
