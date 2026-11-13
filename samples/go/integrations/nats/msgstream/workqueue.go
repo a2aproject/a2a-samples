@@ -9,7 +9,6 @@ import (
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv/workqueue"
 	"github.com/a2aproject/a2a-go/v2/log"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/domain"
 	"github.com/nats-io/nats.go/jetstream"
 )
 
@@ -26,17 +25,18 @@ type natsWorkReadWriter struct {
 
 var _ workqueue.ReadWriter = (*natsWorkReadWriter)(nil)
 
-// CreateWorkQueue creates a NATS-backed pull work queue for the given agent type.
-func CreateWorkQueue(ctx context.Context, js jetstream.JetStream, agentType domain.AgentType) (workqueue.Queue, error) {
+// CreateWorkQueue creates a NATS-backed pull work queue for the named
+// consumer of the WORK stream, which reads the work.<name> subject.
+func CreateWorkQueue(ctx context.Context, js jetstream.JetStream, name string) (workqueue.Queue, error) {
 	ws, err := js.Stream(ctx, workStream)
 	if err != nil {
 		return nil, fmt.Errorf("nats %q stream: %w", workStream, err)
 	}
-	cons, err := ws.Consumer(ctx, string(agentType))
+	cons, err := ws.Consumer(ctx, name)
 	if err != nil {
-		return nil, fmt.Errorf("nats %q stream %q consumer: %w", workStream, agentType, err)
+		return nil, fmt.Errorf("nats %q stream %q consumer: %w", workStream, name, err)
 	}
-	subject := workSubject + "." + string(agentType)
+	subject := workSubject + "." + name
 	readWriter := &natsWorkReadWriter{jetsteam: js, consumer: cons, subject: subject}
 	return workqueue.NewPullQueue(readWriter, nil), nil
 }

@@ -11,12 +11,12 @@ import (
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv"
 	"github.com/a2aproject/a2a-go/v2/a2asrv/taskstore"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/domain"
 )
 
 // Index provides MySQL-based task indexing for fast lookups and listing.
 type Index struct {
-	db *sql.DB
+	db    *sql.DB
+	agent string
 }
 
 // IndexQueryParams specifies filters and pagination for task listing.
@@ -40,28 +40,28 @@ type IndexedTask struct {
 	ID        a2a.TaskID
 	State     a2a.TaskState
 	User      string
-	Agent     domain.AgentType
+	Agent     string
 	Version   taskstore.TaskVersion
 	ContextID string
 }
 
-// NewIndex creates an [Index] backed by the given database connection.
-func NewIndex(db *sql.DB) *Index {
-	return &Index{db}
+// NewIndex creates an [Index] backed by the given database connection. agent
+// is stored with the tasks this server creates, for agents that share the database.
+func NewIndex(db *sql.DB, agent string) *Index {
+	return &Index{db: db, agent: agent}
 }
 
 // Insert adds a new task to the index within the given transaction.
-func (*Index) Insert(ctx context.Context, tx *sql.Tx, task *a2a.Task) (taskstore.TaskVersion, error) {
+func (s *Index) Insert(ctx context.Context, tx *sql.Tx, task *a2a.Task) (taskstore.TaskVersion, error) {
 	user := "anonymous"
 	if callCtx, ok := a2asrv.CallContextFrom(ctx); ok {
 		user = callCtx.User.Name
 	}
-	info := domain.NodeInfoFrom(ctx)
 	version := taskstore.TaskVersion(1)
 	_, err := tx.ExecContext(ctx, `
 		INSERT INTO tasks (task_id, context_id, state, user, agent, version)
 		VALUES (?, ?, ?, ?, ?, ?)
-	`, string(task.ID), task.ContextID, string(task.Status.State), user, info.Agent, version)
+	`, string(task.ID), task.ContextID, string(task.Status.State), user, s.agent, version)
 	if err != nil {
 		return 0, err
 	}

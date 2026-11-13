@@ -8,25 +8,18 @@ import (
 
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2asrv/eventqueue"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/domain"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/lease"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/msgstream"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/store"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/testutil"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/mysql/mysqltest"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/mysql/store"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/lease"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/msgstream"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/natstest"
 	"github.com/nats-io/nats.go/jetstream"
 )
 
 func TestOutbox_RelaysToNATS(t *testing.T) {
-	testutil.SetupNATS(t)
-	testutil.SetupMySQL(t)
-
-	_, js := testutil.ConnectNATS(t)
-
-	db, err := sql.Open("mysql", testutil.MySQLDSN)
-	if err != nil {
-		t.Fatalf("mysql open: %v", err)
-	}
-	t.Cleanup(func() { _ = db.Close() })
+	_, js := natstest.Connect(t)
+	natstest.ResetStreams(t, js, natstest.EventsStream)
+	db := mysqltest.Open(t)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	t.Cleanup(cancel)
@@ -40,11 +33,11 @@ func TestOutbox_RelaysToNATS(t *testing.T) {
 	}
 
 	outbox, err := store.NewOutbox(store.OutboxConfig{
-		DB:           db,
-		Agent:        domain.AgentResearcher,
-		Writer:       msgstream.NewEventWriter(js),
-		Interval:     50 * time.Millisecond,
-		LeaseManager: lm,
+		DB:        db,
+		Partition: "researcher",
+		Writer:    msgstream.NewEventWriter(js),
+		Interval:  50 * time.Millisecond,
+		Leader:    lm,
 	})
 	if err != nil {
 		t.Fatalf("create outbox: %v", err)

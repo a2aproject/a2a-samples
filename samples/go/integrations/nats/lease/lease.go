@@ -71,6 +71,15 @@ func (lp *Manager) Acquire(ctx context.Context, key string, value string) (*Leas
 	}
 }
 
+// Lead acquires key like [Manager.Acquire] and returns the func that renews the lease.
+func (lp *Manager) Lead(ctx context.Context, key, holder string) (func(context.Context) error, error) {
+	l, err := lp.Acquire(ctx, key, holder)
+	if err != nil {
+		return nil, err
+	}
+	return l.Renew, nil
+}
+
 func (lp *Manager) waitKeyDeleted(ctx context.Context, key string) error {
 	watcher, err := lp.kv.Watch(ctx, key)
 	if err != nil {

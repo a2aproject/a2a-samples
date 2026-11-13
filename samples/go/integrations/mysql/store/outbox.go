@@ -10,24 +10,32 @@ import (
 
 	"github.com/a2aproject/a2a-go/v2/a2asrv/eventqueue"
 	"github.com/a2aproject/a2a-go/v2/log"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/domain"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/lease"
 )
+
+// Leader elects the server that relays the outbox, for example the lease
+// manager of the nats integration.
+type Leader interface {
+	// Lead blocks until the caller holds key, and returns the func that renews it.
+	Lead(ctx context.Context, key, holder string) (renew func(context.Context) error, err error)
+	// ReleaseAll releases the keys the caller holds.
+	ReleaseAll(ctx context.Context)
+}
 
 // OutboxConfig configures the transactional outbox relay.
 type OutboxConfig struct {
-	DB     *sql.DB
-	Agent  domain.AgentType
-	Writer eventqueue.Writer
+	DB *sql.DB
+	// Partition separates the rows of agents that share the database. Each
+	// partition has its own relay.
+	Partition string
+	Writer    eventqueue.Writer
 
-	LeaseManager *lease.Manager
-	Interval     time.Duration
+	Leader   Leader
+	Interval time.Duration
 }
 
 // Outbox implements a transactional outbox that atomically persists events with task state and relays them to NATS.
 type Outbox struct {
-	cfg       OutboxConfig
-	agentType string
+	cfg OutboxConfig
 }
 
 // NewOutbox creates a new [Outbox] with the given configuration.
@@ -35,10 +43,7 @@ func NewOutbox(cfg OutboxConfig) (*Outbox, error) {
 	if cfg.Interval <= 0 {
 		return nil, fmt.Errorf("outbox polling interval must be > 0")
 	}
-	return &Outbox{
-		cfg:       cfg,
-		agentType: string(cfg.Agent),
-	}, nil
+	return &Outbox{cfg: cfg}, nil
 }
 
 // Insert writes an event to the outbox table within the given transaction.
@@ -49,7 +54,7 @@ func (r *Outbox) Insert(ctx context.Context, tx *sql.Tx, msg *eventqueue.Message
 		return fmt.Errorf("marshal event: %w", err)
 	}
 
-	_, err = tx.ExecContext(ctx, `INSERT INTO outbox (task_id, agent, event_data) VALUES (?, ?, ?)`, string(tid), r.agentType, eventData)
+	_, err = tx.ExecContext(ctx, `INSERT INTO outbox (task_id, agent, event_data) VALUES (?, ?, ?)`, string(tid), r.cfg.Partition, eventData)
 	if err != nil {
 		return fmt.Errorf("outbox insert: %w", err)
 	}
@@ -58,12 +63,11 @@ func (r *Outbox) Insert(ctx context.Context, tx *sql.Tx, msg *eventqueue.Message
 
 // Run starts the leader-elected polling loop that relays outbox rows to NATS.
 func (r *Outbox) Run(ctx context.Context) error {
-	leaseKey := r.agentType + "-leader"
-	lm := r.cfg.LeaseManager
-	defer lm.ReleaseAll(ctx)
+	leaderKey := r.cfg.Partition + "-leader"
+	defer r.cfg.Leader.ReleaseAll(ctx)
 
 	for ctx.Err() == nil {
-		lease, err := lm.Acquire(ctx, leaseKey, r.agentType)
+		renew, err := r.cfg.Leader.Lead(ctx, leaderKey, r.cfg.Partition)
 		if errors.Is(err, context.Canceled) {
 			break
 		}
@@ -80,7 +84,7 @@ func (r *Outbox) Run(ctx context.Context) error {
 			if err != nil {
 				log.Warn(ctx, "outbox poll failed", err)
 			}
-			if err := lease.Renew(ctx); err != nil {
+			if err := renew(ctx); err != nil {
 				log.Error(ctx, "outbox lease renewal failed", err)
 				break
 			}
@@ -91,7 +95,7 @@ func (r *Outbox) Run(ctx context.Context) error {
 }
 
 func (r *Outbox) poll(ctx context.Context) error {
-	rows, err := r.cfg.DB.QueryContext(ctx, `SELECT id, event_data FROM outbox WHERE agent = ? ORDER BY id ASC LIMIT 100`, r.agentType)
+	rows, err := r.cfg.DB.QueryContext(ctx, `SELECT id, event_data FROM outbox WHERE agent = ? ORDER BY id ASC LIMIT 100`, r.cfg.Partition)
 	if err != nil {
 		return err
 	}

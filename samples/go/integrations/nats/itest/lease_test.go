@@ -2,18 +2,16 @@ package itest_test
 
 import (
 	"context"
-	"errors"
 	"testing"
 	"time"
 
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/lease"
-	"github.com/a2aproject/a2a-samples/samples/go/agents/deepresearch/internal/testutil"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/lease"
+	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/natstest"
 	"github.com/nats-io/nats.go/jetstream"
 )
 
 func TestLease_AcquireAfterHolderStopsRenewing(t *testing.T) {
-	testutil.SetupNATS(t)
-	_, js := testutil.ConnectNATS(t)
+	_, js := natstest.Connect(t)
 
 	tests := []struct {
 		name          string
@@ -28,9 +26,7 @@ func TestLease_AcquireAfterHolderStopsRenewing(t *testing.T) {
 			t.Cleanup(cancel)
 
 			cfg := jetstream.KeyValueConfig{Bucket: "LEASE_TEST", TTL: 2 * time.Second}
-			if err := js.DeleteKeyValue(ctx, cfg.Bucket); err != nil && !errors.Is(err, jetstream.ErrBucketNotFound) {
-				t.Fatalf("js.DeleteKeyValue() error = %v", err)
-			}
+			natstest.ResetKeyValue(t, js, cfg.Bucket)
 			if tc.bucketExisted {
 				if _, err := js.CreateKeyValue(ctx, cfg); err != nil {
 					t.Fatalf("js.CreateKeyValue() error = %v", err)
