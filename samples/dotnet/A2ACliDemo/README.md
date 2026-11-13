@@ -90,6 +90,13 @@ Dangerous commands are blocked for security:
 - System modification: `format`, `fdisk`, `sudo`
 - Process control: `kill`, `killall`
 
+### Limitations
+The allowlist only checks the executable name; arguments are passed through
+unchanged. Allowed tools can still read any file the process can access
+(`cat`, `head`) or run arbitrary commands through their own options (for
+example `git -c alias.x=!cmd x`). Treat this agent as a demo and never expose
+it to untrusted clients.
+
 ### Best Practices
 1. **Run with limited privileges**: Don't run as administrator/root
 2. **Network isolation**: Consider running in a sandboxed environment
