@@ -1,4 +1,3 @@
-# ruff: noqa
 import json
 import logging
 

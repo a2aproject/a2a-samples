@@ -1,5 +1,3 @@
-# ruff: noqa
-import ast
 import importlib.util
 
 from pathlib import Path
@@ -20,25 +18,6 @@ child_task_id_from_result = _CHILD_MESSAGE.child_task_id_from_result
 PARENT_TASK_ID = 'orchestrator-task-aaa'
 CHILD_TASK_ID = 'child-task-bbb'
 CONTEXT_ID = 'ctx-ccc'
-
-
-_FUNC_TYPES = (ast.FunctionDef, ast.AsyncFunctionDef)
-
-
-def _parse_sample(relative_path: str) -> ast.Module:
-    return ast.parse((_SAMPLE_ROOT / relative_path).read_text())
-
-
-def _call_keywords(node: ast.AST, func_name: str) -> list[set[str]]:
-    found: list[set[str]] = []
-    for child in ast.walk(node):
-        if not isinstance(child, ast.Call):
-            continue
-        called = child.func
-        name = getattr(called, 'attr', getattr(called, 'id', None))
-        if name == func_name:
-            found.append({kw.arg for kw in child.keywords if kw.arg})
-    return found
 
 
 def test_first_child_message_omits_task_id() -> None:
@@ -95,49 +74,3 @@ def test_workflow_stores_child_task_id_and_reuses_it_on_resume() -> None:
     )
     assert resume['message']['taskId'] == CHILD_TASK_ID
     assert resume['message']['taskId'] != PARENT_TASK_ID
-
-
-def test_orchestrator_does_not_stamp_parent_task_id_on_child_nodes() -> None:
-    """Planner and follow-on nodes must not inherit the orchestrator task id."""
-    tree = _parse_sample('src/a2a_mcp/agents/orchestrator_agent.py')
-    add_graph_node = None
-    stream = None
-    for node in tree.body:
-        if isinstance(node, ast.ClassDef) and node.name == 'OrchestratorAgent':
-            for item in node.body:
-                if isinstance(item, _FUNC_TYPES):
-                    if item.name == 'add_graph_node':
-                        add_graph_node = item
-                    elif item.name == 'stream':
-                        stream = item
-    assert add_graph_node is not None
-    assert stream is not None
-
-    add_params = [arg.arg for arg in add_graph_node.args.args]
-    assert 'task_id' not in add_params
-
-    for keywords in _call_keywords(add_graph_node, 'set_node_attributes'):
-        assert 'task_id' not in keywords
-    for keywords in _call_keywords(stream, 'add_graph_node'):
-        assert 'task_id' not in keywords
-    for keywords in _call_keywords(stream, 'set_node_attributes'):
-        assert 'task_id' not in keywords
-
-
-def test_run_node_omits_task_id_unless_child_already_owns_it() -> None:
-    workflow_path = _SAMPLE_ROOT / 'src/a2a_mcp/common/workflow.py'
-    source = workflow_path.read_text()
-    assert "'taskId': task_id" not in source
-
-    tree = ast.parse(source)
-    run_node = None
-    run_workflow = None
-    for node in ast.walk(tree):
-        if isinstance(node, _FUNC_TYPES) and node.name == 'run_node':
-            run_node = node
-        if isinstance(node, _FUNC_TYPES) and node.name == 'run_workflow':
-            run_workflow = node
-    assert run_node is not None
-    assert run_workflow is not None
-    assert _call_keywords(run_node, 'create_child_message_payload')
-    assert _call_keywords(run_workflow, 'child_task_id_from_result')

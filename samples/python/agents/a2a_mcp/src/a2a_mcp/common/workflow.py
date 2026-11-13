@@ -1,4 +1,3 @@
-# ruff: noqa
 import json
 import logging
 import uuid
@@ -167,9 +166,7 @@ class WorkflowGraph:
                 if node.state != Status.PAUSED:
                     if isinstance(chunk.root, SendStreamingMessageSuccessResponse):
                         result = chunk.root.result
-                        child_task_id = child_task_id_from_result(result)
-                        if child_task_id:
-                            self.set_node_attribute(node_id, 'task_id', child_task_id)
+                        self._store_child_task_id(node_id, result)
                         if isinstance(result, TaskStatusUpdateEvent):
                             task_status_event = result
                             context_id = task_status_event.context_id
@@ -187,6 +184,12 @@ class WorkflowGraph:
                 node.state = Status.COMPLETED
         if self.state == Status.RUNNING:
             self.state = Status.COMPLETED
+
+    def _store_child_task_id(self, node_id: str, result: object) -> None:
+        """Remember the task id the child agent assigned, for resumes."""
+        child_task_id = child_task_id_from_result(result)
+        if child_task_id:
+            self.set_node_attribute(node_id, 'task_id', child_task_id)
 
     def set_node_attribute(self, node_id, attribute, value) -> None:
         nx.set_node_attributes(self.graph, {node_id: value}, attribute)

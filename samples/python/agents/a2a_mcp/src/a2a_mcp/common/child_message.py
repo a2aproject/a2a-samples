@@ -1,4 +1,3 @@
-# ruff: noqa
 """Helpers for child-agent A2A message payloads."""
 
 from typing import Any
