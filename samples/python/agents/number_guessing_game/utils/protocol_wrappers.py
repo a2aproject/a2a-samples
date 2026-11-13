@@ -1,17 +1,20 @@
-"""utils.protocol_wrappers
-Helper functions that wrap A2A SDK types so agent code can stay focused on
-business logic.
-"""
+"""Helper functions that wrap A2A SDK types so agent code can stay focused on business logic."""
 
 from __future__ import annotations
 
 import asyncio
 import uuid
 
-from a2a.client import ClientConfig, ClientFactory, minimal_agent_card
-from a2a.client.client_task_manager import ClientTaskManager
-from a2a.types import Message, Role, Task, TaskIdParams, TextPart
-from a2a.utils.message import get_message_text
+from a2a.client import create_client, minimal_agent_card
+from a2a.helpers import get_message_text
+from a2a.types import (
+    CancelTaskRequest,
+    Message,
+    Part,
+    Role,
+    SendMessageRequest,
+    Task,
+)
 
 
 __all__ = [
@@ -28,9 +31,6 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 
-_client_factory = ClientFactory(ClientConfig())
-
-
 async def send_text_async(
     port: int,
     text: str,
@@ -38,8 +38,8 @@ async def send_text_async(
     context_id: str | None = None,
     reference_task_ids: list[str] | None = None,
     task_id: str | None = None,
-):
-    """Send *text* to the target agent via the A2A ``message/send`` operation.
+) -> Task | Message:
+    """Send *text* to the target agent via the A2A ``SendMessage`` operation.
 
     Args:
         port: TCP port where the target agent is listening.
@@ -52,32 +52,31 @@ async def send_text_async(
         Union[Task, Message]: The final object produced by the agent—normally a
         ``Task`` but may be a plain ``Message`` for very small interactions.
     """
-    client = _client_factory.create(
-        minimal_agent_card(f'http://localhost:{port}/a2a/v1')
-    )
+    # A new client (and HTTP connection pool) per call: each synchronous
+    # wrapper below runs this coroutine in its own event loop.
+    client = await create_client(minimal_agent_card(f'http://localhost:{port}/a2a/v1', ['JSONRPC']))
     msg = Message(
-        kind='message',
-        role=Role.user,
+        role=Role.ROLE_USER,
         message_id=uuid.uuid4().hex,
         context_id=context_id,
         reference_task_ids=reference_task_ids or [],
-        parts=[TextPart(text=text)],
+        parts=[Part(text=text)],
         task_id=task_id,
     )
 
-    task_manager = ClientTaskManager()
+    task: Task | None = None
     last_message: Message | None = None
 
-    async for event in client.send_message(msg):  # type: ignore[attr-defined]
-        # Unwrap tuple from transport implementations
-        if isinstance(event, tuple):
-            event = event[0]
-        # Let the SDK task manager handle state aggregation
-        await task_manager.process(event)
-        if isinstance(event, Message):
-            last_message = event
+    # Each StreamResponse holds exactly one of: task, message, status_update
+    # or artifact_update. The agent cards declare no streaming, so the client
+    # returns the final Task (or Message) in a single response.
+    async with client:
+        async for event in client.send_message(SendMessageRequest(message=msg)):
+            if event.HasField('task'):
+                task = event.task
+            elif event.HasField('message'):
+                last_message = event.message
 
-    task = task_manager.get_task()
     if task:
         return task
     if last_message is not None:
@@ -92,7 +91,7 @@ def send_text(
     context_id: str | None = None,
     reference_task_ids: list[str] | None = None,
     task_id: str | None = None,
-):
+) -> Task | Message:
     """Synchronous helper that delegates to :func:`send_text_async`.
 
     The helper transparently detects whether the caller is already running
@@ -139,9 +138,10 @@ def send_followup(
     port: int,
     resp_task: Task,
     text: str,
-):
-    """Convenience helper to send a *text* follow-up message that keeps the existing
-    conversation context and task identifiers intact.
+) -> Task | Message:
+    """Convenience helper to send a *text* follow-up message.
+
+    The message keeps the existing conversation context and task identifiers intact.
 
     Parameters
     ----------
@@ -172,10 +172,9 @@ def send_followup(
 
 
 async def _cancel_task_async(port: int, task_id: str) -> None:
-    client = _client_factory.create(
-        minimal_agent_card(f'http://localhost:{port}/a2a/v1')
-    )
-    await client.cancel_task(TaskIdParams(id=task_id))
+    client = await create_client(minimal_agent_card(f'http://localhost:{port}/a2a/v1', ['JSONRPC']))
+    async with client:
+        await client.cancel_task(CancelTaskRequest(id=task_id))
 
 
 def cancel_task(port: int, task_id: str) -> None:
@@ -203,7 +202,7 @@ def cancel_task(port: int, task_id: str) -> None:
 # ---------------------------------------------------------------------------
 
 
-def extract_text(obj: Task | Message):
+def extract_text(obj: Task | Message) -> str:
     """Return plain text from a Task or Message, using SDK helpers when possible."""
     if isinstance(obj, Message):
         return get_message_text(obj)
@@ -213,6 +212,6 @@ def extract_text(obj: Task | Message):
         for artifact in reversed(obj.artifacts):
             if artifact.parts:
                 for part in reversed(artifact.parts):
-                    if hasattr(part, 'root') and hasattr(part.root, 'text'):
-                        return part.root.text  # type: ignore[attr-defined]
+                    if part.HasField('text'):
+                        return part.text
     return ''
