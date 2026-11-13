@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/a2aproject/a2a-samples/extensions/edge-cloud-capability-contract/v1/execution-requirements.schema.json",
+  "title": "Edge-Cloud Execution Requirements",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "dataClassification",
+    "maxLatencyMs"
+  ],
+  "properties": {
+    "dataClassification": {
+      "type": "string",
+      "minLength": 1
+    },
+    "allowedSiteTypes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "edge",
+          "cloud"
+        ]
+      }
+    },
+    "allowedRegions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "maxLatencyMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "networkMode": {
+      "enum": [
+        "connected",
+        "degraded",
+        "offline"
+      ],
+      "default": "connected"
+    },
+    "idempotencyKey": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "requiredAttestation": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "requiredVerification": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

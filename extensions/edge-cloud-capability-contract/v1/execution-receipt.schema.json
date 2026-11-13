@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/a2aproject/a2a-samples/extensions/edge-cloud-capability-contract/v1/execution-receipt.schema.json",
+  "title": "Edge-Cloud Execution Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "siteId",
+    "siteType",
+    "region",
+    "contractDigest",
+    "resultDigest",
+    "verification"
+  ],
+  "properties": {
+    "siteId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "siteType": {
+      "enum": [
+        "edge",
+        "cloud"
+      ]
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1
+    },
+    "contractDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "resultDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "status"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_requested"
+          ]
+        }
+      }
+    },
+    "attestationReference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "idempotencyKeyDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}
