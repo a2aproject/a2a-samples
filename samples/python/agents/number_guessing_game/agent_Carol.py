@@ -13,12 +13,17 @@ import uuid
 
 from typing import Any
 
-from a2a.server.agent_execution.agent_executor import AgentExecutor
-from a2a.server.agent_execution.context import RequestContext
-from a2a.server.events.event_queue import EventQueue
-from a2a.server.tasks.task_updater import TaskUpdater
-from a2a.types import AgentCard, Part, TextPart
-from a2a.utils.message import get_message_text
+from a2a.helpers import get_message_text, new_task_from_user_message
+from a2a.server.agent_execution import AgentExecutor, RequestContext
+from a2a.server.events import EventQueue
+from a2a.server.tasks import TaskUpdater
+from a2a.types import (
+    AgentCapabilities,
+    AgentCard,
+    AgentInterface,
+    AgentSkill,
+    Part,
+)
 from config import AGENT_CAROL_PORT
 from utils import try_parse_json
 from utils.game_logic import process_history_payload
@@ -28,45 +33,44 @@ from utils.server import run_agent_blocking
 # ------------------ Agent card ------------------
 
 carol_skills = [
-    {
-        'id': 'history_visualiser',
-        'name': 'Guess History Visualiser',
-        'description': 'Generates a formatted text summary of guess/response history to aid the player.',
-        'tags': ['visualisation', 'demo'],
-        'inputModes': ['text/plain'],
-        'outputModes': ['text/plain'],
-        'examples': ['[{"guess": 25, "response": "Go higher"}]'],
-    },
-    {
-        'id': 'history_shuffler',
-        'name': 'Guess History Shuffler',
-        'description': 'Randomly shuffles the order of guess/response entries in a provided history list and returns JSON.',
-        'tags': ['shuffling', 'demo'],
-        'inputModes': ['text/plain'],
-        'outputModes': ['text/plain'],
-        'examples': [
-            '{"action": "shuffle", "history": [{"guess": 25, "response": "Go higher"}]}'
-        ],
-    },
+    AgentSkill(
+        id='history_visualiser',
+        name='Guess History Visualiser',
+        description='Generates a formatted text summary of guess/response history to aid the player.',
+        tags=['visualisation', 'demo'],
+        input_modes=['text/plain'],
+        output_modes=['text/plain'],
+        examples=['[{"guess": 25, "response": "Go higher"}]'],
+    ),
+    AgentSkill(
+        id='history_shuffler',
+        name='Guess History Shuffler',
+        description='Randomly shuffles the order of guess/response entries in a provided history list and returns JSON.',
+        tags=['shuffling', 'demo'],
+        input_modes=['text/plain'],
+        output_modes=['text/plain'],
+        examples=['{"action": "shuffle", "history": [{"guess": 25, "response": "Go higher"}]}'],
+    ),
 ]
 
-carol_card = AgentCard.model_validate(
-    {
-        'name': 'AgentCarol',
-        'description': 'Visualises the history of guesses and hints from AgentAlice in a readable table format.',
-        'url': f'http://localhost:{AGENT_CAROL_PORT}/a2a/v1',
-        'preferredTransport': 'JSONRPC',
-        'protocolVersion': '0.3.0',
-        'version': '1.0.0',
-        'capabilities': {
-            'streaming': False,
-            'pushNotifications': False,
-            'stateTransitionHistory': False,
-        },
-        'defaultInputModes': ['text/plain'],
-        'defaultOutputModes': ['text/plain'],
-        'skills': carol_skills,
-    }
+carol_card = AgentCard(
+    name='AgentCarol',
+    description='Visualises the history of guesses and hints from AgentAlice in a readable table format.',
+    supported_interfaces=[
+        AgentInterface(
+            protocol_binding='JSONRPC',
+            url=f'http://localhost:{AGENT_CAROL_PORT}/a2a/v1',
+            protocol_version='1.0',
+        )
+    ],
+    version='1.0.0',
+    capabilities=AgentCapabilities(
+        streaming=False,
+        push_notifications=False,
+    ),
+    default_input_modes=['text/plain'],
+    default_output_modes=['text/plain'],
+    skills=carol_skills,
 )
 
 # ------------------ SDK AgentExecutor implementation ------------------
@@ -118,34 +122,30 @@ class HistoryHelperExecutor(AgentExecutor):
         # Debug print before sending back to Bob
         self._print_guesses('Shuffled list', self._last_history)
         response_text = json.dumps(self._last_history)
-        await updater.add_artifact([Part(root=TextPart(text=response_text))])
-        # Ask for another input and signal that this is the last event for this invocation
-        await updater.requires_input(final=True)
+        await updater.add_artifact([Part(text=response_text)])
+        # Ask for another input; this interrupted state ends the invocation
+        await updater.requires_input()
 
     async def _handle_initial(
         self, raw_text: str, context: RequestContext, event_queue: EventQueue
     ) -> None:
         """Handle the first message in a new conversation."""
-        response_text = (
-            process_history_payload(raw_text) if raw_text else 'Invalid input.'
-        )
+        response_text = process_history_payload(raw_text) if raw_text else 'Invalid input.'
 
         # Remember history list if provided so we can shuffle again later
         success, parsed = try_parse_json(raw_text)
-        if (
-            success
-            and isinstance(parsed, dict)
-            and parsed.get('action') == 'shuffle'
-        ):
+        if success and isinstance(parsed, dict) and parsed.get('action') == 'shuffle':
             hist = parsed.get('history', [])
             if isinstance(hist, list):
                 self._last_history = hist
 
-        task_id = context.task_id or str(uuid.uuid4())
+        # A new conversation starts with a Task, which must be the first event.
+        task = context.current_task or new_task_from_user_message(context.message)
+        await event_queue.enqueue_event(task)
         updater = TaskUpdater(
             event_queue,
-            task_id=task_id,
-            context_id=context.context_id or str(uuid.uuid4()),
+            task_id=task.id,
+            context_id=task.context_id,
         )
         # Debug print before sending initial response
         try:
@@ -155,36 +155,28 @@ class HistoryHelperExecutor(AgentExecutor):
                 self._print_guesses('Initial list', self._last_history)
         except Exception:
             pass
-        await updater.add_artifact([Part(root=TextPart(text=response_text))])
+        await updater.add_artifact([Part(text=response_text)])
         # Ask Bob for further input
-        await updater.requires_input(final=True)
+        await updater.requires_input()
 
     # ------------------------------------------------------------------
     # AgentExecutor interface
     # ------------------------------------------------------------------
 
-    async def execute(
-        self, context: RequestContext, event_queue: EventQueue
-    ) -> None:
+    async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Process an incoming message and dispatch to the appropriate handler."""
         raw_text = get_message_text(context.message) if context.message else ''
-        is_followup = bool(
-            context.message and context.message.reference_task_ids
-        )
+        is_followup = bool(context.message and context.message.reference_task_ids)
 
         if is_followup:
             await self._handle_followup(context, raw_text, event_queue)
         else:
             await self._handle_initial(raw_text, context, event_queue)
 
-    async def cancel(
-        self, context: RequestContext, event_queue: EventQueue
-    ) -> None:
+    async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Cancel the ongoing task on explicit request from a peer agent."""
         if context.task_id:
-            print(
-                f'[Carol] Task {context.task_id} canceled on request of peer agent'
-            )
+            print(f'[Carol] Task {context.task_id} canceled on request of peer agent')
             updater = TaskUpdater(
                 event_queue,
                 task_id=context.task_id,

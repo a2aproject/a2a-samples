@@ -26,7 +26,7 @@ To make it an accessible practical introduction into A2A and the Python SDK, we 
    pip install -r requirements.txt
    ```
 
-The runtime dependencies are minimal: the official `a2a-sdk` package and `uvicorn` for the HTTP server.
+The runtime dependencies are minimal: the official `a2a-sdk` package (with its `http-server` extra) and `uvicorn` for the HTTP server.
 
 ## Running the demo
 
@@ -72,14 +72,14 @@ number_guessing_game/
 └── README.md                       # ← you are here
 ```
 
-## A2A feature coverage (SDK 0.3.x)
+## A2A feature coverage (SDK 1.1.x)
 
 Most heavy lifting (validation, error mapping, Task aggregation, etc.) is handled by the SDK.  The demo therefore focuses on **agent logic** – not protocol plumbing.
 
 | Area | Status |
 |------|--------|
-| `message/send` | Implemented via SDK helper. |
-| Task aggregation | Handled by `ClientTaskManager`. |
+| `SendMessage` | Implemented via SDK helper. |
+| Task aggregation | Handled by the SDK server; the client receives the final `Task`. |
 | Streaming & subscriptions | **Not implemented** – SDK returns `Unsupported operation`. |
 | Push notification config | Not implemented (capability flag is `false`). |
 | Transports | JSON-RPC via Starlette/Uvicorn (gRPC left as exercise). |

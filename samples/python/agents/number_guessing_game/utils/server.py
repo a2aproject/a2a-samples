@@ -8,12 +8,12 @@ from __future__ import annotations
 
 import uvicorn  # type: ignore
 
-from a2a.server.apps.jsonrpc.starlette_app import A2AStarletteApplication
-from a2a.server.request_handlers.default_request_handler import (
-    DefaultRequestHandler,
-)
-from a2a.server.tasks.inmemory_task_store import InMemoryTaskStore
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
+from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import AgentCard
+from google.protobuf.json_format import ParseDict
+from starlette.applications import Starlette
 
 
 def build_starlette_app(
@@ -33,18 +33,19 @@ def build_starlette_app(
         Starlette: Configured Starlette application with the SDK request handler
         mounted at ``/a2a/v1``.
     """
-    # Ensure we have a Pydantic AgentCard instance.
+    # Ensure we have a protobuf AgentCard instance.
     if isinstance(agent_card, dict):
-        agent_card = AgentCard.model_validate(agent_card)  # type: ignore[arg-type]
+        agent_card = ParseDict(agent_card, AgentCard())
 
     # Validate executor ---------------------------------------------------------
     if executor is None:
         raise ValueError('executor must be supplied')
 
-    handler = DefaultRequestHandler(executor, InMemoryTaskStore())
-    return A2AStarletteApplication(
-        agent_card=agent_card, http_handler=handler
-    ).build(rpc_url='/a2a/v1')
+    handler = DefaultRequestHandler(executor, InMemoryTaskStore(), agent_card)
+    routes = []
+    routes.extend(create_agent_card_routes(agent_card))
+    routes.extend(create_jsonrpc_routes(handler, '/a2a/v1'))
+    return Starlette(routes=routes)
 
 
 def run_agent_blocking(
