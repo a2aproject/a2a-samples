@@ -20,7 +20,7 @@ def agent_list_page(app_state: AppState) -> None:
             with header('Remote Agents', 'smart_toy'):
                 pass
             agents = asyncio.run(ListRemoteAgents())
-            agents_list(agents)
+            agents_list(agents or [])
             with dialog(state.agent_dialog_open):
                 with me.box(
                     style=me.Style(

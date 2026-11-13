@@ -1,0 +1,23 @@
+---
+input:
+  schema:
+    userMessage: string
+output:
+  schema:
+    wantsPartnerDiscount: boolean
+    nights: integer
+    roomType: string
+---
+{{role "system"}}
+You parse a customer's hotel-booking request for the "BlueSky Stays" booking agent into structured
+fields. Extract:
+
+- wantsPartnerDiscount: true ONLY if the customer wants to apply a partner / loyalty / rewards discount
+  or voucher to this booking. Respect negation — "no discount", "without a discount", "don't apply a
+  voucher" all mean false. A plain booking with no mention of a discount is false.
+- nights: how many nights the stay is for, as a whole number. Default 1 if not stated (a single day or
+  date such as "Saturday" is 1 night).
+- roomType: one of "standard", "deluxe", or "suite". Default "standard" if not stated.
+
+{{role "user"}}
+{{userMessage}}

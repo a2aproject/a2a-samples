@@ -44,6 +44,22 @@ Given a high-level description of the content that's needed, this sample agent c
 
 5. To make use of this agent in a content creation multi-agent system, check out the [content_creation](../../../python/hosts/content_creation/README.md) sample.
 
+## Running with Docker
+
+1. Build the image from this directory:
+
+    ```bash
+    docker build -t content-planner-agent .
+    ```
+
+2. Run the container, passing your API key (the agent listens on port 10001):
+
+    ```bash
+    docker run -p 10001:10001 -e GOOGLE_API_KEY=your_api_key_here content-planner-agent
+    ```
+
+The agent is then reachable at `http://localhost:10001`; use the CLI client from step 4 above to talk to it.
+
 ## Disclaimer
 Important: The sample code provided is for demonstration purposes and illustrates the
 mechanics of the Agent-to-Agent (A2A) protocol. When building production applications,
