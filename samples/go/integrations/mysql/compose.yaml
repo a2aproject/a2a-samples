@@ -1,0 +1,15 @@
+# NATS and MySQL for the integration tests: go test ./itest/
+services:
+  nats:
+    image: nats:latest
+    command: ["--jetstream"]
+    ports:
+      - "4222:4222"
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: planner
+    ports:
+      - "3306:3306"
