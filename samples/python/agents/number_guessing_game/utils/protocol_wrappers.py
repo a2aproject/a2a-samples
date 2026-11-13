@@ -1,7 +1,4 @@
-"""utils.protocol_wrappers
-Helper functions that wrap A2A SDK types so agent code can stay focused on
-business logic.
-"""
+"""Helper functions that wrap A2A SDK types so agent code can stay focused on business logic."""
 
 from __future__ import annotations
 
@@ -41,7 +38,7 @@ async def send_text_async(
     context_id: str | None = None,
     reference_task_ids: list[str] | None = None,
     task_id: str | None = None,
-):
+) -> Task | Message:
     """Send *text* to the target agent via the A2A ``SendMessage`` operation.
 
     Args:
@@ -94,7 +91,7 @@ def send_text(
     context_id: str | None = None,
     reference_task_ids: list[str] | None = None,
     task_id: str | None = None,
-):
+) -> Task | Message:
     """Synchronous helper that delegates to :func:`send_text_async`.
 
     The helper transparently detects whether the caller is already running
@@ -141,9 +138,10 @@ def send_followup(
     port: int,
     resp_task: Task,
     text: str,
-):
-    """Convenience helper to send a *text* follow-up message that keeps the existing
-    conversation context and task identifiers intact.
+) -> Task | Message:
+    """Convenience helper to send a *text* follow-up message.
+
+    The message keeps the existing conversation context and task identifiers intact.
 
     Parameters
     ----------
@@ -204,7 +202,7 @@ def cancel_task(port: int, task_id: str) -> None:
 # ---------------------------------------------------------------------------
 
 
-def extract_text(obj: Task | Message):
+def extract_text(obj: Task | Message) -> str:
     """Return plain text from a Task or Message, using SDK helpers when possible."""
     if isinstance(obj, Message):
         return get_message_text(obj)

@@ -1,10 +1,11 @@
-"""utils.server
-Helper utilities to host an A2A agent using the SDK server stack.
+"""Helper utilities to host an A2A agent using the SDK server stack.
 
 Minimal helpers to create a Starlette app with `DefaultRequestHandler` and run Uvicorn.
 """
 
 from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import uvicorn  # type: ignore
 
@@ -16,11 +17,15 @@ from google.protobuf.json_format import ParseDict
 from starlette.applications import Starlette
 
 
+if TYPE_CHECKING:
+    from a2a.server.agent_execution import AgentExecutor
+
+
 def build_starlette_app(
-    agent_card,
+    agent_card: AgentCard | dict,
     *,
-    executor,
-):
+    executor: AgentExecutor,
+) -> Starlette:
     """Create and return a ready-to-serve Starlette ASGI application.
 
     Args:
@@ -51,9 +56,9 @@ def build_starlette_app(
 def run_agent_blocking(
     name: str,
     port: int,
-    agent_card,
+    agent_card: AgentCard | dict,
     *,
-    executor,
+    executor: AgentExecutor,
 ) -> None:
     """Spin up a Uvicorn server for the given agent and block the current thread.
 

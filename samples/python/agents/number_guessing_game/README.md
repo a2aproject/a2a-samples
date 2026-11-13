@@ -11,9 +11,9 @@ To make it an accessible practical introduction into A2A and the Python SDK, we 
 - the minimal set of features to demonstrate some core concepts of A2A.
 
 | Agent | Role |
-|-------|------|
+| ----- | ---- |
 | **AgentAlice** | Picks a secret integer (1-100) and grades incoming guesses. |
-| **AgentBob**   | CLI front-end – relays player guesses, shows Alice’s hints, negotiates with Carol. |
+| **AgentBob** | CLI front-end – relays player guesses, shows Alice’s hints, negotiates with Carol. |
 | **AgentCarol** | Generates a text visualisation of the guess history and, on request, shuffles it until Bob is happy. |
 
 ## Requirements
@@ -77,7 +77,7 @@ number_guessing_game/
 Most heavy lifting (validation, error mapping, Task aggregation, etc.) is handled by the SDK.  The demo therefore focuses on **agent logic** – not protocol plumbing.
 
 | Area | Status |
-|------|--------|
+| ---- | ------ |
 | `SendMessage` | Implemented via SDK helper. |
 | Task aggregation | Handled by the SDK server; the client receives the final `Task`. |
 | Streaming & subscriptions | **Not implemented** – SDK returns `Unsupported operation`. |

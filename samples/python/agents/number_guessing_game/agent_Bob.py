@@ -1,10 +1,10 @@
-"""agent_Bob.py
-AgentBob – command-line front-end for the toy A2A number-guessing game.
+#!/usr/bin/env python3
+"""AgentBob - command-line front-end for the toy A2A number-guessing game.
 
 Bob mediates between a human player and two peer agents:
 
-* **AgentAlice** – holds the secret number and grades guesses.
-* **AgentCarol** – produces textual visualisations (and optional shuffles)
+* **AgentAlice** - holds the secret number and grades guesses.
+* **AgentCarol** - produces textual visualisations (and optional shuffles)
   of Bob's accumulated guess history.
 """
 
@@ -159,6 +159,7 @@ def play_game() -> None:
 
 
 def main() -> None:  # pragma: no cover
+    """Remind the player to start Alice and Carol, then play the game."""
     print("Hint: don't forget to also start Alice and Carol!")
     play_game()
 

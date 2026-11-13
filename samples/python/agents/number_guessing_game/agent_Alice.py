@@ -1,13 +1,13 @@
-"""agent_Alice.py
-AgentAlice – the evaluator in the toy A2A number-guessing demo.
+#!/usr/bin/env python3
+"""AgentAlice - the evaluator in the toy A2A number-guessing demo.
 
 This agent picks a secret integer between 1 and 100 when the process
 starts and evaluates incoming guesses sent via the A2A `SendMessage`
 operation.  For each guess it responds with one of the following hints:
 
-* ``"Go higher"`` – the guess was lower than the secret.
-* ``"Go lower"``  – the guess was higher than the secret.
-* ``"correct! attempts: <n>"`` – the guess was correct; ``n`` is the
+* ``"Go higher"`` - the guess was lower than the secret.
+* ``"Go lower"``  - the guess was higher than the secret.
+* ``"correct! attempts: <n>"`` - the guess was correct; ``n`` is the
   number of attempts taken so far.
 
 The module exposes a single public callable, :pyfunc:`alice_handler`,
@@ -16,7 +16,7 @@ which is executed via the A2A SDK server stack using
 server started in the ``__main__`` block.
 
 The agent is implemented with the official A2A Python SDK and a small helper
-layer – the code focuses on game logic rather than protocol plumbing.
+layer - the code focuses on game logic rather than protocol plumbing.
 """
 
 import uuid
@@ -75,7 +75,7 @@ alice_card = AgentCard(
 
 
 class NumberGuessExecutor(AgentExecutor):
-    """AgentExecutor implementing the number‐guessing logic directly."""
+    """AgentExecutor implementing the number-guessing logic directly."""
 
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Handle a newly received message from a peer agent."""

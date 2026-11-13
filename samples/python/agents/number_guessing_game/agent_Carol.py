@@ -1,5 +1,5 @@
-"""agent_Carol.py
-AgentCarol – helper agent that visualises or shuffles Bob's guess history.
+#!/usr/bin/env python3
+"""AgentCarol - helper agent that visualises or shuffles Bob's guess history.
 
 Carol receives plain-text JSON payloads from AgentBob and returns either
 (1) a human-readable table of the guesses so far or (2) a JSON list with
@@ -7,6 +7,7 @@ entries randomly shuffled, depending on the request.  This functionality
 is intentionally simple to keep the focus on A2A message flow.
 """
 
+import contextlib
 import json
 import random
 import uuid
@@ -84,7 +85,7 @@ class HistoryHelperExecutor(AgentExecutor):
         """Utility: print only the numeric guesses in *history* for debugging."""
         try:
             guesses = [int(item.get('guess', '?')) for item in history]
-        except Exception:
+        except Exception:  # noqa: BLE001
             guesses = []
         print(f'[Carol] {label}: {guesses}')
 
@@ -112,7 +113,7 @@ class HistoryHelperExecutor(AgentExecutor):
         )
 
         if raw_text.lower().startswith('well done'):
-            print('[Carol] Received well done – completing task')
+            print('[Carol] Received well done - completing task')
             await updater.complete()
             return
 
@@ -148,13 +149,11 @@ class HistoryHelperExecutor(AgentExecutor):
             context_id=task.context_id,
         )
         # Debug print before sending initial response
-        try:
+        with contextlib.suppress(Exception):
             if success and isinstance(parsed, list):
                 self._print_guesses('Initial list', parsed)
             else:
                 self._print_guesses('Initial list', self._last_history)
-        except Exception:
-            pass
         await updater.add_artifact([Part(text=response_text)])
         # Ask Bob for further input
         await updater.requires_input()
