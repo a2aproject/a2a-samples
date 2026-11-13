@@ -151,16 +151,16 @@ class HRAgent:
         inputs: dict[str, Any] = {'messages': [('user', query)]}
         config: RunnableConfig = {'configurable': {'thread_id': context_id}}
 
-        async for item in self.graph.astream(
-            inputs, config, stream_mode='values'
+        async for chunk in self.graph.astream(
+            inputs, config, stream_mode='updates'
         ):
-            message = item['messages'][-1] if 'messages' in item else None
+            node_name = next(iter(chunk.keys()))
+            data = chunk[node_name]
+
+            messages = data.get('messages', [])
+            message = messages[-1] if messages else None
             if message:
-                if (
-                    isinstance(message, AIMessage)
-                    and message.tool_calls
-                    and len(message.tool_calls) > 0
-                ):
+                if isinstance(message, AIMessage) and message.tool_calls:
                     yield {
                         'is_task_complete': False,
                         'task_state': 'working',
@@ -171,6 +171,16 @@ class HRAgent:
                         'is_task_complete': False,
                         'task_state': 'working',
                         'content': 'Processing the employment status...',
+                    }
+
+            # the final structured response is produced by its own graph node
+            if node_name == 'generate_structured_response':
+                resp = data.get('structured_response')
+                if resp:
+                    yield {
+                        'is_task_complete': resp.status == 'completed',
+                        'task_state': resp.status,
+                        'content': resp.message,
                     }
 
         yield self.get_agent_response(config)
