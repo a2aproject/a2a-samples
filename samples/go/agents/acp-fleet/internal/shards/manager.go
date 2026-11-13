@@ -15,12 +15,12 @@ import (
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/nodes"
 )
 
-// DefaultLimit is the default size limit of a snapshot.
-const DefaultLimit = 64 << 20
+// DefaultLimit is the default size limit of the files in a snapshot.
+const DefaultLimit = 256 << 20
 
-// DefaultScratchLimit is the default size limit of the scratch snapshots
-// taken after every turn.
-const DefaultScratchLimit = 16 << 20
+// DefaultScratchLimit is the default size limit of the files in the scratch
+// snapshots taken after every turn.
+const DefaultScratchLimit = 64 << 20
 
 // Agents stops the agents of a shard before it moves.
 type Agents interface {
@@ -204,6 +204,11 @@ func (m *Manager) claim(ctx context.Context, n int) error {
 	s.deleteObjects(ctx, superseded(rec, next))
 	if err := s.open(ctx); err != nil {
 		return errors.Join(fmt.Errorf("opening shard %d: %w", n, err), s.release(ctx), s.close())
+	}
+	if names, err := m.table.objects(ctx); err != nil {
+		log.Warn(ctx, "listing snapshot objects failed, unused ones stay until the next claim", "shard", n, "cause", err)
+	} else if err := s.sweep(ctx, names); err != nil {
+		log.Warn(ctx, "deleting unused snapshot objects failed", "shard", n, "cause", err)
 	}
 	for _, c := range expired {
 		if _, err := s.db.ExecContext(ctx, `DELETE FROM sessions WHERE context_id = ?`, c); err != nil {

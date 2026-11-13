@@ -3,6 +3,7 @@ package shards
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"maps"
 	"sync"
@@ -16,8 +17,12 @@ const (
 	recordBucket = "SHARDS"
 	objectBucket = "SHARD_DATA"
 	// retention removes the snapshots of conversations nobody used for this
-	// long. Records are bounded by the shard count and kept.
+	// long, when their shard is claimed. Records are bounded by the shard
+	// count and kept.
 	retention = 7 * 24 * time.Hour
+	// listingAge is how long the claims of a reconcile pass share one listing
+	// of the object store.
+	listingAge = 10 * time.Second
 )
 
 // Object is a snapshot in the object store.
@@ -59,6 +64,10 @@ type Table struct {
 	mu      sync.Mutex
 	records map[string]Record
 	subs    []chan struct{}
+
+	listMu   sync.Mutex
+	listed   []string
+	listedAt time.Time
 }
 
 // OpenTable creates the SHARDS bucket and the SHARD_DATA object store if
@@ -68,7 +77,8 @@ func OpenTable(ctx context.Context, js jetstream.JetStream) (*Table, error) {
 	if err != nil {
 		return nil, fmt.Errorf("creating the %s bucket: %w", recordBucket, err)
 	}
-	obj, err := js.CreateOrUpdateObjectStore(ctx, jetstream.ObjectStoreConfig{Bucket: objectBucket, TTL: retention})
+	// No TTL: an unchanged chunk stays in use for as long as its conversation.
+	obj, err := js.CreateOrUpdateObjectStore(ctx, jetstream.ObjectStoreConfig{Bucket: objectBucket})
 	if err != nil {
 		return nil, fmt.Errorf("creating the %s object store: %w", objectBucket, err)
 	}
@@ -108,6 +118,26 @@ func (t *Table) Subscribe() <-chan struct{} {
 	t.subs = append(t.subs, ch)
 	t.mu.Unlock()
 	return ch
+}
+
+// objects returns the names in the object store. The listing can be up to
+// listingAge old; objects uploaded since are missing from it.
+func (t *Table) objects(ctx context.Context) ([]string, error) {
+	t.listMu.Lock()
+	defer t.listMu.Unlock()
+	if time.Since(t.listedAt) < listingAge {
+		return t.listed, nil
+	}
+	infos, err := t.obj.List(ctx)
+	if err != nil && !errors.Is(err, jetstream.ErrNoObjectsFound) {
+		return nil, fmt.Errorf("listing %s: %w", objectBucket, err)
+	}
+	names := make([]string, 0, len(infos))
+	for _, info := range infos {
+		names = append(names, info.Name)
+	}
+	t.listed, t.listedAt = names, time.Now()
+	return t.listed, nil
 }
 
 // load reads the current record of the shard and its revision, 0 if it has none.

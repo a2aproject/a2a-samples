@@ -168,12 +168,13 @@ func (a *Agents) Turn(ctx context.Context, execCtx *a2asrv.ExecutorContext) func
 		if !ok {
 			return
 		}
-		scratchSaved, err := sh.Save(ctx, execCtx.ContextID)
+		saved, err := sh.Save(ctx, execCtx.ContextID)
 		if err != nil {
 			log.Warn(ctx, "saving the conversation failed", "context", execCtx.ContextID, "cause", err)
 			return
 		}
-		if !scratchSaved {
+		ended.Uploaded, ended.Size = saved.Uploaded, saved.Size
+		if !saved.ScratchSaved {
 			log.Info(ctx, "scratch is over the limit, it moves only with a graceful release", "context", execCtx.ContextID)
 		}
 	}

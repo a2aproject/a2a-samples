@@ -1,13 +1,14 @@
 package shards
 
 import (
-	"bytes"
 	"context"
 	"database/sql"
 	"errors"
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -34,6 +35,52 @@ type Shard struct {
 	seq  int
 	db   *sql.DB
 	lost bool
+	// manifests are the manifests of the record's snapshots by context ID,
+	// loaded on first use.
+	manifests map[string]*snapshots
+}
+
+// snapshots are the manifests of a conversation's home and scratch directory.
+type snapshots struct {
+	home, scratch *manifest
+}
+
+func (s *Shard) store(contextID string) chunkStore {
+	return chunkStore{obj: s.table.obj, prefix: fmt.Sprintf("%s/%s/", key(s.ID), filepath.Base(contextID))}
+}
+
+// snapshotsLocked returns the manifests of the conversation's snapshots in the record.
+func (s *Shard) snapshotsLocked(ctx context.Context, contextID string) (*snapshots, error) {
+	if m, ok := s.manifests[contextID]; ok {
+		return m, nil
+	}
+	m := &snapshots{}
+	var err error
+	if obj, ok := s.rec.Homes[contextID]; ok {
+		if m.home, err = s.loadManifest(ctx, obj); err != nil {
+			return nil, err
+		}
+	}
+	if obj, ok := s.rec.Scratch[contextID]; ok {
+		if m.scratch, err = s.loadManifest(ctx, obj); err != nil {
+			return nil, err
+		}
+	}
+	if s.manifests == nil {
+		s.manifests = map[string]*snapshots{}
+	}
+	s.manifests[contextID] = m
+	return m, nil
+}
+
+// loadManifest returns the manifest, or nil if it expired.
+func (s *Shard) loadManifest(ctx context.Context, obj Object) (*manifest, error) {
+	m, err := getManifest(ctx, s.table.obj, obj.Name)
+	if errors.Is(err, jetstream.ErrObjectNotFound) {
+		log.Warn(ctx, "snapshot is missing, starting empty", "object", obj.Name)
+		return nil, nil
+	}
+	return m, err
 }
 
 // Epoch returns the epoch of this server's claim.
@@ -64,38 +111,39 @@ func (s *Shard) Prepare(ctx context.Context, contextID string) (scratchLost bool
 	if s.lost {
 		return false, ErrLost
 	}
+	snaps, err := s.snapshotsLocked(ctx, contextID)
+	if err != nil {
+		return false, err
+	}
 	home, scratch := s.HomeDir(contextID), s.ScratchDir(contextID)
-	homeSaved := false
+	homeRestored := false
 	if _, err := os.Stat(home); errors.Is(err, os.ErrNotExist) {
-		obj, saved := s.rec.Homes[contextID]
-		if err := s.restore(ctx, obj, saved, home); err != nil {
+		if err := s.restore(ctx, contextID, snaps.home, home); err != nil {
 			return false, err
 		}
-		homeSaved = saved
+		homeRestored = snaps.home != nil
 	}
 	if _, err := os.Stat(scratch); !errors.Is(err, os.ErrNotExist) {
 		return false, nil
 	}
-	obj, saved := s.rec.Scratch[contextID]
-	if err := s.restore(ctx, obj, saved, scratch); err != nil {
+	if err := s.restore(ctx, contextID, snaps.scratch, scratch); err != nil {
 		return false, err
 	}
-	return homeSaved && !saved, nil
+	return homeRestored && snaps.scratch == nil, nil
 }
 
-func (s *Shard) restore(ctx context.Context, obj Object, saved bool, dir string) error {
-	if !saved {
+// restore writes the snapshot m into dir, or creates dir empty if m is nil
+// or broken.
+func (s *Shard) restore(ctx context.Context, contextID string, m *manifest, dir string) error {
+	if m == nil {
 		return os.MkdirAll(dir, 0o700)
 	}
-	r, err := s.table.obj.Get(ctx, obj.Name)
-	if errors.Is(err, jetstream.ErrObjectNotFound) {
-		log.Warn(ctx, "snapshot expired, starting empty", "object", obj.Name)
-		return os.MkdirAll(dir, 0o700)
+	err := s.store(contextID).restore(ctx, m, dir)
+	if errors.Is(err, errMissingChunk) {
+		log.Warn(ctx, "snapshot is broken, starting empty", "dir", dir, "cause", err)
+		return errors.Join(os.RemoveAll(dir), os.MkdirAll(dir, 0o700))
 	}
-	if err != nil {
-		return fmt.Errorf("downloading %s: %w", obj.Name, err)
-	}
-	return errors.Join(unpack(r, dir), r.Close())
+	return err
 }
 
 // Session returns the ACP session of the conversation.
@@ -132,16 +180,38 @@ func (s *Shard) database() (*sql.DB, error) {
 	return s.db, nil
 }
 
+// Saved describes what [Shard.Save] uploaded.
+type Saved struct {
+	// Uploaded is the compressed size of the new chunks, and Size the size
+	// of the files in the snapshots.
+	Uploaded int64
+	Size     int64
+	// ScratchSaved is false when the scratch directory outgrew the scratch
+	// limit, so it moves only with a graceful release.
+	ScratchSaved bool
+}
+
 // Save uploads snapshots of the conversation's agent home, its scratch
-// directory if it is within the scratch limit, and the session map. It
-// reports whether it saved the scratch directory; a larger one moves only
-// with a graceful release.
-func (s *Shard) Save(ctx context.Context, contextID string) (scratchSaved bool, err error) {
+// directory if it is within the scratch limit, and the session map.
+func (s *Shard) Save(ctx context.Context, contextID string) (Saved, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.lost {
-		return false, ErrLost
+		return Saved{}, ErrLost
 	}
+	prev, err := s.snapshotsLocked(ctx, contextID)
+	if err != nil {
+		return Saved{}, err
+	}
+	cs := s.store(contextID)
+	known := chunks(prev.home, prev.scratch)
+	var saved Saved
+	var created []string
+	home, err := cs.snapshot(ctx, s.HomeDir(contextID), prev.home, known, s.limit)
+	if err != nil {
+		return Saved{}, err
+	}
+	saved.Uploaded, saved.Size = home.bytes, home.size
 	next := s.rec.clone()
 	if next.Homes == nil {
 		next.Homes = map[string]Object{}
@@ -149,33 +219,61 @@ func (s *Shard) Save(ctx context.Context, contextID string) (scratchSaved bool, 
 	if next.Scratch == nil {
 		next.Scratch = map[string]Object{}
 	}
-	var created []string
-	home, err := s.putDir(ctx, s.HomeDir(contextID), "home-"+contextID, s.limit)
+	homeObj, err := cs.putManifest(ctx, s.manifestName(contextID, "home"), home.manifest)
 	if err != nil {
-		return false, err
+		return Saved{}, err
 	}
-	next.Homes[contextID] = home
-	created = append(created, home.Name)
-	scratch, err := s.putDir(ctx, s.ScratchDir(contextID), "scratch-"+contextID, s.scratchLimit)
+	next.Homes[contextID] = homeObj
+	created = append(created, homeObj.Name)
+	snaps := &snapshots{home: home.manifest}
+
+	scratch, err := cs.snapshot(ctx, s.ScratchDir(contextID), prev.scratch, maps.Clone(known), s.scratchLimit)
+	saved.Uploaded += scratch.bytes
 	switch {
 	case errors.Is(err, errTooLarge):
 		delete(next.Scratch, contextID)
 	case err != nil:
 		s.deleteObjects(ctx, created)
-		return false, err
+		return Saved{}, err
 	default:
-		next.Scratch[contextID] = scratch
-		created = append(created, scratch.Name)
-		scratchSaved = true
+		obj, err := cs.putManifest(ctx, s.manifestName(contextID, "scratch"), scratch.manifest)
+		if err != nil {
+			s.deleteObjects(ctx, created)
+			return Saved{}, err
+		}
+		next.Scratch[contextID] = obj
+		created = append(created, obj.Name)
+		snaps.scratch = scratch.manifest
+		saved.Size += scratch.size
+		saved.ScratchSaved = true
 	}
 	sessions, err := s.putSessions(ctx)
 	if err != nil {
 		s.deleteObjects(ctx, created)
-		return false, err
+		return Saved{}, err
 	}
 	next.Sessions = sessions
 	created = append(created, sessions.Name)
-	return scratchSaved, s.commitLocked(ctx, next, created)
+	if err := s.commitLocked(ctx, next, created); err != nil {
+		return Saved{}, err
+	}
+	s.replaceSnapshotsLocked(ctx, contextID, prev, snaps)
+	return saved, nil
+}
+
+// replaceSnapshotsLocked records the conversation's new snapshots and deletes
+// the chunks only the old ones had. Call it after the record points at next.
+func (s *Shard) replaceSnapshotsLocked(ctx context.Context, contextID string, prev, next *snapshots) {
+	keep := chunks(next.home, next.scratch)
+	cs := s.store(contextID)
+	var unused []string
+	for hash := range chunks(prev.home, prev.scratch) {
+		if !keep[hash] {
+			unused = append(unused, cs.chunkName(hash))
+		}
+	}
+	s.deleteObjects(ctx, unused)
+	s.manifests[contextID] = next
 }
 
 // release uploads the scratch directories up to the snapshot limit and the
@@ -192,18 +290,30 @@ func (s *Shard) release(ctx context.Context) error {
 		next.Scratch = map[string]Object{}
 	}
 	var created []string
+	replaced := map[string][2]*snapshots{}
 	entries, err := os.ReadDir(filepath.Join(s.dir, "scratch"))
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
 	for _, e := range entries {
-		obj, err := s.putDir(ctx, s.ScratchDir(e.Name()), "scratch-"+e.Name(), s.limit)
+		contextID := e.Name()
+		prev, err := s.snapshotsLocked(ctx, contextID)
 		if err != nil {
-			log.Warn(ctx, "scratch not saved, it is lost", "shard", s.ID, "context", e.Name(), "cause", err)
+			return err
+		}
+		cs := s.store(contextID)
+		res, err := cs.snapshot(ctx, s.ScratchDir(contextID), prev.scratch, chunks(prev.home, prev.scratch), s.limit)
+		var obj Object
+		if err == nil {
+			obj, err = cs.putManifest(ctx, s.manifestName(contextID, "scratch"), res.manifest)
+		}
+		if err != nil {
+			log.Warn(ctx, "scratch not saved, it is lost", "shard", s.ID, "context", contextID, "cause", err)
 			continue
 		}
-		next.Scratch[e.Name()] = obj
+		next.Scratch[contextID] = obj
 		created = append(created, obj.Name)
+		replaced[contextID] = [2]*snapshots{prev, {home: prev.home, scratch: res.manifest}}
 	}
 	sessions, err := s.putSessions(ctx)
 	if err != nil {
@@ -215,6 +325,9 @@ func (s *Shard) release(ctx context.Context) error {
 	next.Owner, next.Incarnation = "", ""
 	if err := s.commitLocked(ctx, next, created); err != nil {
 		return err
+	}
+	for contextID, r := range replaced {
+		s.replaceSnapshotsLocked(ctx, contextID, r[0], r[1])
 	}
 	s.lost = true
 	return nil
@@ -265,12 +378,47 @@ func (s *Shard) objectName(label string) string {
 	return fmt.Sprintf("%s/e%d-%d-%s", key(s.ID), s.rec.Epoch, s.seq, label)
 }
 
-func (s *Shard) putDir(ctx context.Context, dir, label string, limit int64) (Object, error) {
-	var buf bytes.Buffer
-	if err := pack(dir, &buf, limit); err != nil {
-		return Object{}, fmt.Errorf("packing %s: %w", dir, err)
+func (s *Shard) manifestName(contextID, label string) string {
+	s.seq++
+	return fmt.Sprintf("%se%d-%d-%s.json.zst", s.store(contextID).prefix, s.rec.Epoch, s.seq, label)
+}
+
+// sweep deletes the shard's objects in names that its record doesn't
+// reference: chunks of conversations that expired, and uploads of a server
+// that crashed or lost the shard before it committed them.
+func (s *Shard) sweep(ctx context.Context, names []string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	keep := map[string]bool{s.rec.Sessions.Name: true}
+	conversations := map[string]bool{}
+	for c := range s.rec.Homes {
+		conversations[c] = true
 	}
-	return s.put(ctx, s.objectName(label+".tgz"), buf.Bytes())
+	for c := range s.rec.Scratch {
+		conversations[c] = true
+	}
+	for c := range conversations {
+		snaps, err := s.snapshotsLocked(ctx, c)
+		if err != nil {
+			return err
+		}
+		cs := s.store(c)
+		keep[s.rec.Homes[c].Name], keep[s.rec.Scratch[c].Name] = true, true
+		for hash := range chunks(snaps.home, snaps.scratch) {
+			keep[cs.chunkName(hash)] = true
+		}
+	}
+	var unused []string
+	for _, name := range names {
+		if strings.HasPrefix(name, key(s.ID)+"/") && !keep[name] {
+			unused = append(unused, name)
+		}
+	}
+	if len(unused) > 0 {
+		log.Info(ctx, "deleting unused snapshot objects", "shard", s.ID, "objects", len(unused))
+	}
+	s.deleteObjects(ctx, unused)
+	return nil
 }
 
 func (s *Shard) putSessions(ctx context.Context) (Object, error) {

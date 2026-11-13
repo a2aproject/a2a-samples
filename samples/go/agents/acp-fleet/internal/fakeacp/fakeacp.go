@@ -4,6 +4,8 @@
 //	save <note>      asks permission, then appends the note to $HOME/notes.txt
 //	scratch <text>   appends the text to scratch.txt in the session's working directory
 //	work <seconds>   reports a step every second until done or canceled
+//	fill <file> <KiB> writes random bytes to the file in the working directory
+//	size <file>      reports the size and the SHA-256 of the file in the working directory
 //	anything else    replies with the turn number and the earlier messages
 //
 // Sessions are kept in $HOME/sessions, so session/load works in a new process.
@@ -12,6 +14,8 @@ package fakeacp
 import (
 	"bufio"
 	"context"
+	"crypto/rand"
+	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -233,6 +237,8 @@ func (a *agent) run(ctx context.Context, s *session, text string) (string, error
 			return "", err
 		}
 		return a.prefix(len(s.Turns)+1) + "scratch.txt: " + strings.Join(strings.Fields(string(data)), ", "), nil
+	case "fill", "size":
+		return a.file(s, cmd, arg)
 	case "work":
 		n, err := strconv.Atoi(arg)
 		if err != nil || n <= 0 {
@@ -320,6 +326,30 @@ func (a *agent) describe(s *session, text string) string {
 		sb.WriteString(". Scratch was lost when the conversation moved")
 	}
 	return sb.String()
+}
+
+func (a *agent) file(s *session, cmd, arg string) (string, error) {
+	name, kib, _ := strings.Cut(arg, " ")
+	path := filepath.Join(s.cwd, filepath.Base(name))
+	if cmd == "fill" {
+		n, err := strconv.Atoi(kib)
+		if err != nil {
+			return "", fmt.Errorf("fill %s: %w", arg, err)
+		}
+		data := make([]byte, n<<10)
+		if _, err := rand.Read(data); err != nil {
+			return "", err
+		}
+		if err := os.WriteFile(path, data, 0o600); err != nil {
+			return "", err
+		}
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	sum := sha256.Sum256(data)
+	return fmt.Sprintf("%s%s: %d bytes, sha256 %x", a.prefix(len(s.Turns)+1), filepath.Base(name), len(data), sum[:4]), nil
 }
 
 func (a *agent) prefix(n int) string { return fmt.Sprintf("%s: turn %d, ", a.cfg.Server, n) }

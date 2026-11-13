@@ -54,8 +54,8 @@ func (s *screen) lines() []string {
 	if m.failedChecks > 0 {
 		memory = red + bold + fmt.Sprintf("%d forgotten", m.failedChecks) + reset
 	}
-	add("%s%s%s  ·  %d servers  ·  %d conversations  ·  %d turns  ·  %d memory checks, %s  ·  %d resent",
-		bold, s.title, reset, live, len(m.conversations), m.turns, m.checks, memory, m.resent)
+	add("%s%s%s  ·  %d servers  ·  %d conversations  ·  %d turns  ·  %d memory checks, %s  ·  %d resent  ·  saved %s, uploaded %s",
+		bold, s.title, reset, live, len(m.conversations), m.turns, m.checks, memory, m.resent, bytesize(m.saved), bytesize(m.uploaded))
 	add("")
 
 	owned := map[string]int{}
@@ -91,7 +91,7 @@ func (s *screen) lines() []string {
 	convs := m.sortedConversations()
 	const minLogRows = 5
 	room := s.height - len(out) - minLogRows - 3
-	add("  %s%-10s %-10s %5s  %-7s %s%s", dim, "USER", "SERVER", "TURNS", "MEMORY", "NOW", reset)
+	add("  %s%-10s %-10s %5s  %-7s %-16s %s%s", dim, "USER", "SERVER", "TURNS", "MEMORY", "LAST SAVE", "NOW", reset)
 	for i, c := range convs {
 		if i >= room && room >= 0 {
 			add("  %s… %d more%s", dim, len(convs)-i, reset)
@@ -152,8 +152,26 @@ func (s *screen) conversationRow(c *conversation) string {
 	if c.movedFrom != "" && s.now.Sub(c.movedAt) < movedFor {
 		now = fmt.Sprintf("\x1b[33mmoved from %s (%s)%s %s", c.movedFrom, c.movedHow, reset, now)
 	}
-	return fmt.Sprintf("%-10s %s%-10s%s %5d  %s %s",
-		c.name(), s.color(server), server, reset, c.turns, pad(memory, 7), now)
+	save := ""
+	if c.size > 0 {
+		save = fmt.Sprintf("↑%s of %s", bytesize(c.uploaded), bytesize(c.size))
+	}
+	return fmt.Sprintf("%-10s %s%-10s%s %5d  %s %s %s",
+		c.name(), s.color(server), server, reset, c.turns, pad(memory, 7), pad(save, 16), now)
+}
+
+// bytesize formats n bytes with a binary unit.
+func bytesize(n int64) string {
+	const unit = 1024
+	if n < unit {
+		return fmt.Sprintf("%dB", n)
+	}
+	div, exp := int64(unit), 0
+	for m := n / unit; m >= unit; m /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f%c", float64(n)/float64(div), "KMGT"[exp])
 }
 
 // pad pads a string with escapes to n visible characters.

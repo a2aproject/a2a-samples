@@ -92,7 +92,7 @@ func serve() error {
 		AgentCommand:   strings.Fields(env("AGENT_COMMAND", exe+" fakeacp")),
 		MCPCommand:     []string{exe, "mcp"},
 		Shards:         envInt("SHARDS", 64),
-		ScratchLimit:   int64(envInt("SCRATCH_LIMIT_MB", 16)) << 20,
+		ScratchLimit:   int64(envInt("SCRATCH_LIMIT_MB", 64)) << 20,
 		IdleTimeout:    envDuration("IDLE_TIMEOUT", time.Minute),
 		DrainTimeout:   envDuration("DRAIN_TIMEOUT", time.Minute),
 		MaxAgents:      envInt("MAX_AGENTS", 8),

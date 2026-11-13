@@ -59,6 +59,10 @@ type Event struct {
 	Orphaned bool   `json:"orphaned,omitempty"`
 	// Conversations is the number of conversations in a moved shard.
 	Conversations int `json:"conversations,omitempty"`
+	// Uploaded is what saving the conversation after a turn uploaded, and
+	// Size the size of the files it saved.
+	Uploaded int64 `json:"uploaded,omitempty"`
+	Size     int64 `json:"size,omitempty"`
 	// Check names what the crowd checked, and OK whether the agent passed.
 	Check string `json:"check,omitempty"`
 	OK    bool   `json:"ok,omitempty"`

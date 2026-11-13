@@ -1,5 +1,5 @@
 COMPOSE := docker compose -f infra/docker-compose.yaml
-TOOLS   := $(COMPOSE) --progress quiet run --rm --no-deps
+TOOLS   := $(COMPOSE) --progress quiet run --build --rm --no-deps
 URL     := http://localhost:8080
 S       ?= server-2
 

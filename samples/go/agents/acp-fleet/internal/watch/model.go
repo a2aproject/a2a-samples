@@ -44,6 +44,9 @@ type conversation struct {
 	ok      int
 	failed  int
 	resent  int
+	// uploaded and size describe the snapshot saved after the last turn.
+	uploaded int64
+	size     int64
 	// movedFrom is the server the conversation's shard was taken from.
 	movedFrom string
 	movedAt   time.Time
@@ -75,6 +78,9 @@ type model struct {
 	checks       int
 	failedChecks int
 	resent       int
+	// uploaded and saved total the snapshots saved after turns.
+	uploaded int64
+	saved    int64
 }
 
 func newModel(count int) *model {
@@ -177,6 +183,9 @@ func (m *model) event(e events.Event) {
 		c.working = ""
 		c.turns++
 		m.turns++
+		c.uploaded, c.size = e.Uploaded, e.Size
+		m.uploaded += e.Uploaded
+		m.saved += e.Size
 	case events.TaskFailed:
 		c := m.conversation(e)
 		c.working = ""

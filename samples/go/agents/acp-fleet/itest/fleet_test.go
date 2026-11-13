@@ -2,6 +2,7 @@ package itest_test
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
@@ -14,12 +15,14 @@ import (
 
 	"github.com/a2aproject/a2a-go/v2/a2a"
 	"github.com/a2aproject/a2a-go/v2/a2aclient"
+	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/events"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/fakeacp"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/mcpscratch"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/server"
 	"github.com/a2aproject/a2a-samples/samples/go/agents/acp-fleet/internal/shards"
 	"github.com/a2aproject/a2a-samples/samples/go/integrations/mysql/mysqltest"
 	"github.com/a2aproject/a2a-samples/samples/go/integrations/nats/natstest"
+	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 )
 
@@ -327,6 +330,56 @@ func TestFleet_joiningServerTakesItsShards(t *testing.T) {
 	f.start("server-3")
 	f.waitOwned(all...)
 	wantReply(t, f.send("server-1", c, "", "scratch after"), "server-3: turn 2, scratch.txt: before, after")
+}
+
+func TestFleet_savesOnlyChangedChunksAndRestoresThemAfterACrash(t *testing.T) {
+	names := []string{"server-1", "server-2", "server-3"}
+	f := newFleet(t, names...)
+	c := conversationOn("server-2", names...)
+	nc, _ := natstest.Connect(t)
+	ended := make(chan events.Event, 16)
+	sub, err := nc.Subscribe(events.Subject+"."+string(events.TurnEnded), func(msg *nats.Msg) {
+		var e events.Event
+		if err := json.Unmarshal(msg.Data, &e); err == nil && e.Context == c {
+			ended <- e
+		}
+	})
+	if err != nil {
+		t.Fatalf("nc.Subscribe() error = %v", err)
+	}
+	t.Cleanup(func() {
+		if err := sub.Unsubscribe(); err != nil {
+			t.Logf("sub.Unsubscribe() error = %v", err)
+		}
+	})
+	turnEnded := func() events.Event {
+		t.Helper()
+		select {
+		case e := <-ended:
+			return e
+		case <-time.After(10 * time.Second):
+			t.Fatalf("no turn-ended event after 10s")
+			return events.Event{}
+		}
+	}
+
+	filled := reply(f.send("server-1", c, "", "fill big.bin 4096"))
+	if e := turnEnded(); e.Uploaded < 4<<20 {
+		t.Fatalf("first save uploaded %d bytes, want the 4 MiB file", e.Uploaded)
+	}
+	f.send("server-3", c, "", "scratch small change")
+	if e := turnEnded(); e.Uploaded > 64<<10 || e.Size < 4<<20 {
+		t.Fatalf("second save uploaded %d of %d bytes, want under 64 KiB of over 4 MiB", e.Uploaded, e.Size)
+	}
+
+	if err := f.remove("server-2").Kill(); err != nil {
+		t.Fatalf("Kill() error = %v", err)
+	}
+	survivors := []string{"server-1", "server-3"}
+	f.waitOwned(survivors...)
+	owner := shards.Assign(shards.Of(c, shardCount), survivors)
+	sum := filled[strings.LastIndex(filled, "big.bin: "):]
+	wantReply(t, f.send("server-1", c, "", "size big.bin"), owner+": turn 3, "+sum)
 }
 
 func (f *fleet) sendAsync(via, contextID, text string) *a2a.Task {
