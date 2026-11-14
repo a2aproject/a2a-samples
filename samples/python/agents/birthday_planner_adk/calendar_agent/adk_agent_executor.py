@@ -89,16 +89,10 @@ class ADKAgentExecutor(AgentExecutor):
             # 2. The function call required authorization.
             # Ideally we'd have a way to interpret whether the response is a completion for the
             # task or requires follow-up, but I'm not going to bother just yet.
-            if auth_request_function_call := get_auth_request_function_call(
-                event
-            ):
+            if auth_request_function_call := get_auth_request_function_call(event):
                 # Gather details, then suspend.
-                auth_details = self._prepare_auth_request(
-                    auth_request_function_call
-                )
-                logger.debug(
-                    'Yielding auth required response: %s', auth_details.uri
-                )
+                auth_details = self._prepare_auth_request(auth_request_function_call)
+                logger.debug('Yielding auth required response: %s', auth_details.uri)
                 await task_updater.update_status(
                     TaskState.auth_required,
                     message=new_agent_text_message(
@@ -127,9 +121,7 @@ class ADKAgentExecutor(AgentExecutor):
 
         if auth_details:
             # After auth is received, we can continue processing this request.
-            await self._complete_auth_processing(
-                context, auth_details, task_updater
-            )
+            await self._complete_auth_processing(context, auth_details, task_updater)
 
     def _prepare_auth_request(
         self, auth_request_function_call: types.FunctionCall
@@ -148,9 +140,7 @@ class ADKAgentExecutor(AgentExecutor):
         oauth2_config = auth_config.exchanged_auth_credential.oauth2
         base_auth_uri = oauth2_config.auth_uri
         if not base_auth_uri:
-            raise ValueError(
-                f'Cannot get auth uri from auth config: {auth_config}'
-            )
+            raise ValueError(f'Cannot get auth uri from auth config: {auth_config}')
         redirect_uri = f'{self._card.url}authenticate'
         oauth2_config.redirect_uri = redirect_uri
         state_token = oauth2_config.state
@@ -194,9 +184,7 @@ class ADKAgentExecutor(AgentExecutor):
             ),
         )
         del self._awaiting_auth[auth_details.state]
-        oauth2_config = (
-            auth_details.auth_config.exchanged_auth_credential.oauth2
-        )
+        oauth2_config = auth_details.auth_config.exchanged_auth_credential.oauth2
         oauth2_config.auth_response_uri = auth_uri
         auth_content = types.UserContent(
             parts=[
@@ -210,20 +198,20 @@ class ADKAgentExecutor(AgentExecutor):
             ]
         )
         await self._process_request(auth_content, context, task_updater)
-        # Extract the stored credential.
-        if context.call_context and context.call_context.user.is_authenticated:
-            await self._store_user_auth(
-                context,
-                auth_details.auth_config.auth_scheme,
-                auth_details.auth_config.raw_auth_credential,
-            )
+        # Always hoist the session credential. The documented OAuth redirect
+        # has no JWT, so call_context stays unauthenticated.
+        await self._store_user_auth(
+            context,
+            auth_details.auth_config.auth_scheme,
+            auth_details.auth_config.raw_auth_credential,
+        )
 
     async def execute(
         self,
         context: RequestContext,
         event_queue: EventQueue,
-    ):
-        # Run the agent until either complete or the task is suspended.
+    ) -> None:
+        """Run the agent until the task completes or is suspended."""
         updater = TaskUpdater(event_queue, context.task_id, context.context_id)
         # Immediately notify that the task is submitted.
         if not context.current_task:
@@ -238,11 +226,12 @@ class ADKAgentExecutor(AgentExecutor):
         )
         logger.debug('[Calendar] execute exiting')
 
-    async def cancel(self, context: RequestContext, event_queue: EventQueue):
-        # Ideally: kill any ongoing tasks.
+    async def cancel(self, context: RequestContext, event_queue: EventQueue) -> None:
+        """Cancel is not supported for the calendar agent."""
         raise ServerError(error=UnsupportedOperationError())
 
-    async def on_auth_callback(self, state: str, uri: str):
+    async def on_auth_callback(self, state: str, uri: str) -> None:
+        """Resume an in-flight OAuth callback."""
         self._awaiting_auth[state].set_result(uri)
 
     async def _upsert_session(self, context: RequestContext) -> Session:
@@ -262,9 +251,9 @@ class ADKAgentExecutor(AgentExecutor):
         return await self._ensure_auth(session)
 
     async def _ensure_auth(self, session: Session) -> Session:
-        if (
-            stored_cred := self._credentials.get(session.user_id)
-        ) and not session.state.get(stored_cred.key):
+        if (stored_cred := self._credentials.get(session.user_id)) and not session.state.get(
+            stored_cred.key
+        ):
             event_action = EventActions(
                 state_delta={
                     stored_cred.key: stored_cred.credential,
@@ -301,10 +290,8 @@ class ADKAgentExecutor(AgentExecutor):
         )
         stored_credential = session.state.get(credential_key)
         if stored_credential:
-            self._credentials[context.call_context.user.user_name] = (
-                StoredCredential(
-                    key=credential_key, credential=stored_credential
-                )
+            self._credentials[session.user_id] = StoredCredential(
+                key=credential_key, credential=stored_credential
             )
 
 
@@ -321,15 +308,11 @@ def convert_a2a_part_to_genai(part: Part) -> types.Part:
     if isinstance(part, FilePart):
         if isinstance(part.file, FileWithUri):
             return types.Part(
-                file_data=types.FileData(
-                    file_uri=part.file.uri, mime_type=part.file.mime_type
-                )
+                file_data=types.FileData(file_uri=part.file.uri, mime_type=part.file.mime_type)
             )
         if isinstance(part.file, FileWithBytes):
             return types.Part(
-                inline_data=types.Blob(
-                    data=part.file.bytes, mime_type=part.file.mime_type
-                )
+                inline_data=types.Blob(data=part.file.bytes, mime_type=part.file.mime_type)
             )
         raise ValueError(f'Unsupported file type: {type(part.file)}')
     raise ValueError(f'Unsupported part type: {type(part)}')
@@ -390,7 +373,5 @@ def get_auth_config(
     if not auth_request_function_call.args or not (
         auth_config := auth_request_function_call.args.get('authConfig')
     ):
-        raise ValueError(
-            f'Cannot get auth config from function call: {auth_request_function_call}'
-        )
+        raise ValueError(f'Cannot get auth config from function call: {auth_request_function_call}')
     return AuthConfig.model_validate(auth_config)
