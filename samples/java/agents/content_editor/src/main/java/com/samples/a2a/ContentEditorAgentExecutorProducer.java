@@ -6,17 +6,16 @@ import jakarta.inject.Inject;
 
 import java.util.List;
 
-import io.a2a.server.agentexecution.AgentExecutor;
-import io.a2a.server.agentexecution.RequestContext;
-import io.a2a.server.events.EventQueue;
-import io.a2a.server.tasks.TaskUpdater;
-import io.a2a.spec.JSONRPCError;
-import io.a2a.spec.Message;
-import io.a2a.spec.Part;
-import io.a2a.spec.Task;
-import io.a2a.spec.TaskNotCancelableError;
-import io.a2a.spec.TaskState;
-import io.a2a.spec.TextPart;
+import org.a2aproject.sdk.server.agentexecution.AgentExecutor;
+import org.a2aproject.sdk.server.agentexecution.RequestContext;
+import org.a2aproject.sdk.server.tasks.AgentEmitter;
+import org.a2aproject.sdk.spec.A2AError;
+import org.a2aproject.sdk.spec.Message;
+import org.a2aproject.sdk.spec.Part;
+import org.a2aproject.sdk.spec.Task;
+import org.a2aproject.sdk.spec.TaskNotCancelableError;
+import org.a2aproject.sdk.spec.TaskState;
+import org.a2aproject.sdk.spec.TextPart;
 
 /**
  * Producer for content editor agent executor.
@@ -72,14 +71,12 @@ public final class ContentEditorAgentExecutorProducer {
 
         @Override
         public void execute(final RequestContext context,
-                            final EventQueue eventQueue) throws JSONRPCError {
-            final TaskUpdater updater = new TaskUpdater(context, eventQueue);
-
+                            final AgentEmitter emitter) throws A2AError {
             // mark the task as submitted and start working on it
             if (context.getTask() == null) {
-                updater.submit();
+                emitter.submit();
             }
-            updater.startWork();
+            emitter.startWork();
 
             // extract the text from the message
             final String assignment = extractTextFromMessage(
@@ -93,16 +90,16 @@ public final class ContentEditorAgentExecutorProducer {
             final List<Part<?>> parts = List.of(responsePart);
 
             // add the response as an artifact and complete the task
-            updater.addArtifact(parts, null, null, null);
-            updater.complete();
+            emitter.addArtifact(parts, null, null, null);
+            emitter.complete();
         }
 
         private String extractTextFromMessage(final Message message) {
             final StringBuilder textBuilder = new StringBuilder();
-            if (message.getParts() != null) {
-                for (final Part part : message.getParts()) {
+            if (message.parts() != null) {
+                for (final Part part : message.parts()) {
                     if (part instanceof TextPart textPart) {
-                        textBuilder.append(textPart.getText());
+                        textBuilder.append(textPart.text());
                     }
                 }
             }
@@ -111,22 +108,21 @@ public final class ContentEditorAgentExecutorProducer {
 
         @Override
         public void cancel(final RequestContext context,
-                           final EventQueue eventQueue) throws JSONRPCError {
+                           final AgentEmitter emitter) throws A2AError {
             final Task task = context.getTask();
 
-            if (task.getStatus().state() == TaskState.CANCELED) {
+            if (task.status().state() == TaskState.TASK_STATE_CANCELED) {
                 // task already cancelled
                 throw new TaskNotCancelableError();
             }
 
-            if (task.getStatus().state() == TaskState.COMPLETED) {
+            if (task.status().state() == TaskState.TASK_STATE_COMPLETED) {
                 // task already completed
                 throw new TaskNotCancelableError();
             }
 
             // cancel the task
-            final TaskUpdater updater = new TaskUpdater(context, eventQueue);
-            updater.cancel();
+            emitter.cancel();
         }
     }
 }
