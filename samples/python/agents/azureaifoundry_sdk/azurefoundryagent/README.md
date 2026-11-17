@@ -6,9 +6,15 @@ A demonstration project showcasing the integration of Azure AI Foundry with the 
 
 This sample uses A2A SDK `>=1.1.2,<2.0`, protobuf message parts, and the A2A 1.0 JSON-RPC binding. Its server, executor, and client must use that SDK contract together.
 
-The Azure backend remains the classic Foundry Agents API with agents, threads, messages, and runs. The lockfile retains `azure-ai-agents==1.0.0` and `azure-ai-projects==1.0.0b11`. This is not a migration to Azure AI Projects 2.x or the newer Responses/conversation APIs. Use a project endpoint supported by the classic SDK. Calendar tool results are simulated and require no Microsoft Graph calendar access.
+The Azure backend remains the classic Foundry Agents API with agents, threads, messages, and runs.
+The lockfile retains `azure-ai-agents==1.0.0` and `azure-ai-projects==1.0.0b11`.
+This is not a migration to Azure AI Projects 2.x or the newer Responses/conversation APIs.
+Use a project endpoint supported by the classic SDK. Calendar tool results are simulated and require no Microsoft Graph calendar access.
 
-Live validation on November 16, 2026 used GPT-5 mini `2025-08-07` with an East US 2 Global Standard deployment. The included client completed both messaging modes and reused conversation context. A separate request with exact UTC timestamps exercised the availability tool; both calendar tools completed real provider tool-call cycles. Model quota and deployment availability depend on the subscription and region.
+Live validation on November 16, 2026 used GPT-5 mini `2025-08-07` with an East US 2 Global Standard deployment.
+The included client completed both messaging modes and reused conversation context.
+A separate request with exact UTC timestamps exercised the availability tool; both calendar tools completed real provider tool-call cycles.
+Model quota and deployment availability depend on the subscription and region.
 
 ## Offline regression tests
 
@@ -31,7 +37,7 @@ The tests cover imports, server startup, agent-card discovery, protobuf parts, t
 
 ## Project Structure
 
-```
+```text
 ├── foundry_agent.py           # AI Foundry calendar agent 
 ├── foundry_agent_executor.py  # A2A framework executor
 ├── __main__.py                # Main application
@@ -115,7 +121,7 @@ The client uses `A2A_BASE_URL` when set, otherwise `http://localhost:10007`. It 
 
 ### Conversation Examples
 
-```
+```text
 User: Hello, can you help me manage my calendar?
 Agent: Of course! I'm the AI Foundry calendar agent, and I can help you check schedule availability, view upcoming events, and optimize your schedule. What do you need help with?
 
@@ -127,7 +133,7 @@ Agent: Let me check your availability for tomorrow from 2 PM to 3 PM...
 
 ### Core Components
 
-1. **FoundryCalendarAgent**: 
+1. **FoundryCalendarAgent**:
    - Core implementation of Azure AI Foundry agent
    - Handles conversation logic and tool calls
 
