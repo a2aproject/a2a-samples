@@ -4,10 +4,11 @@ import os
 import click
 import uvicorn
 
-from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import create_agent_card_routes, create_jsonrpc_routes
 from a2a.server.tasks import InMemoryTaskStore
-from a2a.types import AgentCapabilities, AgentCard, AgentSkill
+from a2a.types import AgentCapabilities, AgentCard, AgentInterface, AgentSkill
+from a2a.utils.constants import PROTOCOL_VERSION_CURRENT, TransportProtocol
 from dotenv import load_dotenv
 from foundry_agent_executor import create_foundry_agent_executor
 from starlette.applications import Starlette
@@ -25,7 +26,7 @@ logger = logging.getLogger(__name__)
 @click.command()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=10007)
-def main(host: str, port: int):
+def main(host: str, port: int) -> None:
     """Run the AI Foundry A2A demo server."""
     # Verify required environment variables
     required_env_vars = [
@@ -35,9 +36,7 @@ def main(host: str, port: int):
 
     missing_vars = [var for var in required_env_vars if not os.getenv(var)]
     if missing_vars:
-        raise ValueError(
-            f'Missing required environment variables: {", ".join(missing_vars)}'
-        )
+        raise ValueError(f'Missing required environment variables: {", ".join(missing_vars)}')
 
     # Define agent skills
     skills = [
@@ -81,10 +80,16 @@ def main(host: str, port: int):
         name='AI Foundry Calendar Agent',
         description='An intelligent calendar management agent powered by Azure AI Foundry. '
         'I can help you check availability, manage events, and optimize your schedule.',
-        url=f'http://{host}:{port}/',
+        supported_interfaces=[
+            AgentInterface(
+                url=f'http://{host}:{port}/',
+                protocol_binding=TransportProtocol.JSONRPC,
+                protocol_version=PROTOCOL_VERSION_CURRENT,
+            )
+        ],
         version='1.0.0',
-        default_input_modes=['text'],
-        default_output_modes=['text'],
+        default_input_modes=['text/plain'],
+        default_output_modes=['text/plain'],
         capabilities=AgentCapabilities(streaming=True),
         skills=skills,
     )
@@ -94,16 +99,11 @@ def main(host: str, port: int):
 
     # Create request handler
     request_handler = DefaultRequestHandler(
-        agent_executor=agent_executor, task_store=InMemoryTaskStore()
+        agent_executor=agent_executor, task_store=InMemoryTaskStore(), agent_card=agent_card
     )
 
-    # Create A2A application
-    a2a_app = A2AStarletteApplication(
-        agent_card=agent_card, http_handler=request_handler
-    )
-
-    # Get routes
-    routes = a2a_app.routes()
+    routes = create_agent_card_routes(agent_card)
+    routes.extend(create_jsonrpc_routes(request_handler, '/'))
 
     # Add health check endpoint
     async def health_check(request: Request) -> PlainTextResponse:
@@ -115,10 +115,10 @@ def main(host: str, port: int):
     app = Starlette(routes=routes)
 
     # Log startup information
-    logger.info(f'Starting AI Foundry Calendar Agent on {host}:{port}')
-    logger.info(f'Agent card: {agent_card.name}')
-    logger.info(f'Skills: {[skill.name for skill in skills]}')
-    logger.info(f'Health check available at: http://{host}:{port}/health')
+    logger.info('Starting AI Foundry Calendar Agent on %s:%s', host, port)
+    logger.info('Agent card: %s', agent_card.name)
+    logger.info('Skills: %s', [skill.name for skill in skills])
+    logger.info('Health check available at: http://%s:%s/health', host, port)
 
     # Run the server
     uvicorn.run(app, host=host, port=port)
