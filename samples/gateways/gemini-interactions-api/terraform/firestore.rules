@@ -1,0 +1,15 @@
+// Deny-all Firestore Security Rules for the A2A bridge session store.
+//
+// The bridge accesses Firestore server-side via the runtime service account
+// (roles/datastore.user, the Admin/IAM path), which BYPASSES Security Rules.
+// These rules therefore only govern client SDK / REST data-plane access, of
+// which the bridge has none. Denying everything is intentional defense in
+// depth: it does NOT break the bridge.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
