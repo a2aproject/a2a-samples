@@ -1,10 +1,10 @@
-"""agent_Bob.py
-AgentBob – command-line front-end for the toy A2A number-guessing game.
+#!/usr/bin/env python3
+"""AgentBob - command-line front-end for the toy A2A number-guessing game.
 
 Bob mediates between a human player and two peer agents:
 
-* **AgentAlice** – holds the secret number and grades guesses.
-* **AgentCarol** – produces textual visualisations (and optional shuffles)
+* **AgentAlice** - holds the secret number and grades guesses.
+* **AgentCarol** - produces textual visualisations (and optional shuffles)
   of Bob's accumulated guess history.
 """
 
@@ -81,14 +81,9 @@ def _negotiate_sorted_history(
     if resp_task is None:
         return attempts
 
-    print(
-        f'[Bob] Received Task {resp_task.id} with state={resp_task.status.state}'
-    )
+    print(f'[Bob] Received Task {resp_task.id} with state={TaskState.Name(resp_task.status.state)}')
 
-    while (
-        resp_task.status.state == TaskState.input_required
-        and attempts < max_attempts
-    ):
+    while resp_task.status.state == TaskState.TASK_STATE_INPUT_REQUIRED and attempts < max_attempts:
         # Evaluate the list *before* deciding what follow-up to send
         maybe_hist = _extract_history_from_task(resp_task)
         if isinstance(maybe_hist, list):
@@ -100,9 +95,7 @@ def _negotiate_sorted_history(
             game_history.clear()
             game_history.extend(maybe_hist)
             print(f'[Bob] History is sorted after {attempts} attempt(s)')
-            print(
-                '(We do sorting by random to illustrate multi-turn communication)'
-            )
+            print('(We do sorting by random to illustrate multi-turn communication)')
             resp_task = send_followup(AGENT_CAROL_PORT, resp_task, 'Well done!')  # type: ignore[assignment]
             break
 
@@ -111,20 +104,13 @@ def _negotiate_sorted_history(
         print(f"[Bob] Attempt {attempts}: sending 'Try again'")
         resp_obj = send_followup(AGENT_CAROL_PORT, resp_task, 'Try again')
         if not isinstance(resp_obj, Task):
-            print(
-                '[Bob] Did not receive Task in response; aborting negotiation'
-            )
+            print('[Bob] Did not receive Task in response; aborting negotiation')
             break
         resp_task = resp_obj
-        print(f'[Bob] Carol responded with state={resp_task.status.state}')
+        print(f'[Bob] Carol responded with state={TaskState.Name(resp_task.status.state)}')
 
-    if (
-        resp_task.status.state == TaskState.input_required
-        and attempts >= max_attempts
-    ):
-        print(
-            f'[Bob] Reached maximum attempts ({max_attempts}). Cancelling task.'
-        )
+    if resp_task.status.state == TaskState.TASK_STATE_INPUT_REQUIRED and attempts >= max_attempts:
+        print(f'[Bob] Reached maximum attempts ({max_attempts}). Cancelling task.')
         cancel_task(AGENT_CAROL_PORT, resp_task.id)
 
     return attempts
@@ -161,9 +147,7 @@ def play_game() -> None:
 
         total_attempts = _negotiate_sorted_history()
         if total_attempts:
-            print(
-                f'Asked Carol to re-do the visualisation {total_attempts} times'
-            )
+            print(f'Asked Carol to re-do the visualisation {total_attempts} times')
 
         _visualise_history()
 
@@ -175,6 +159,7 @@ def play_game() -> None:
 
 
 def main() -> None:  # pragma: no cover
+    """Remind the player to start Alice and Carol, then play the game."""
     print("Hint: don't forget to also start Alice and Carol!")
     play_game()
 
