@@ -169,8 +169,8 @@ func (s *Server) start(ctx context.Context) error {
 	rt = router.New(router.Config{NATS: nc, Nodes: s.nodes, Table: table, Shards: s.shards, Agents: fleetAgents, Index: index, Handle: handle, Wait: cfg.DrainTimeout + cfg.HeartbeatTTL, Events: pub})
 
 	card := &a2a.AgentCard{
-		Name:                "opencode fleet",
-		Description:         "opencode agents in a2a-go cluster mode, in virtual shards that move between servers.",
+		Name:                "OpenCode fleet",
+		Description:         "OpenCode agents in a2a-go cluster mode, in virtual shards that move between servers.",
 		Version:             "1.0.0",
 		SupportedInterfaces: []*a2a.AgentInterface{a2a.NewAgentInterface(cfg.PublicURL, a2a.TransportProtocolHTTPJSON)},
 		Capabilities:        a2a.AgentCapabilities{Streaming: true, Extensions: []a2a.AgentExtension{structuredinput.NewExtension(structuredinput.DefaultDraft)}},

@@ -20,8 +20,8 @@ FROM gcr.io/distroless/static:nonroot AS fake
 COPY --from=builder /opencode-fleet /opencode-fleet
 ENTRYPOINT ["/opencode-fleet"]
 
-# The fleet with opencode as the ACP agent, on the image a2a-serve runs it in.
-# Agent homes keep only opencode's sessions; its config and caches are shared
+# The fleet with OpenCode as the ACP agent, on the image a2a-serve runs it in.
+# Agent homes keep only OpenCode's sessions; its config and caches are shared
 # by the agents of a server, so that snapshots stay small.
 FROM ghcr.io/a2aproject/harness-opencode:sha-ce681e07144c AS opencode
 ENV AGENT_COMMAND="opencode acp" \

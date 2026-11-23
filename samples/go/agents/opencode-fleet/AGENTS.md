@@ -1,8 +1,8 @@
-# AGENTS.md — opencode fleet
+# AGENTS.md — OpenCode fleet
 
 ## Project overview
 
-A fleet of a2a-go servers that runs opencode agents over ACP with the `a2aacp` executor in cluster mode. Conversations are split into virtual shards that move between servers. See `README.md` for the design.
+A fleet of a2a-go servers that runs OpenCode agents over ACP with the `a2aacp` executor in cluster mode. Conversations are split into virtual shards that move between servers. See `README.md` for the design.
 
 ## Layout
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Records the fleet demo: opencode agents serve a crowd of users while a
+# Records the fleet demo: OpenCode agents serve a crowd of users while a
 # server crashes, a server joins and a server drains. Writes demo/demo.cast
 # and, with agg installed, demo/demo.gif.
 #
@@ -124,7 +124,7 @@ busiest() {
 		awk -v skip="${1:-}" 'NR > 1 && $3 == "live" && $1 != skip { print $5, $1 }' | sort -rn | head -n 1 | cut -d' ' -f2
 }
 
-log "starting the fleet with opencode (off camera)"
+log "starting the fleet with OpenCode (off camera)"
 make -C "$DIR" clean >/dev/null 2>&1 || true
 make -C "$DIR" up-opencode >/dev/null 2>&1 || die "make up-opencode failed"
 "${COMPOSE[@]}" --profile tools build tools >/dev/null 2>&1
@@ -141,7 +141,7 @@ t set-option -g pane-border-format ' #{@title} '
 t set-option -p -t demo:main.0 @title "make watch: what the fleet does"
 wait_ready watch 30
 t split-window -v -l 36% -t demo:main.0 "$(shell crowd)"
-t set-option -p -t demo:main.1 @title "make crowd: $USERS users of opencode agents, behind nginx"
+t set-option -p -t demo:main.1 @title "make crowd: $USERS users of OpenCode agents, behind nginx"
 wait_ready crowd 30
 t split-window -h -l 45% -t demo:main.1 "$(shell ops)"
 t set-option -p -t demo:main.2 @title "you: operate the fleet"

@@ -1,10 +1,10 @@
-# opencode fleet
+# OpenCode fleet
 
 **Coding agents behind a load balancer that survive crashes.** Kill a server mid-conversation: the agent's memory, its files and its pending questions continue on another server.
 
-![opencode agents keep their memory and files while a server crashes, a server joins and a server drains](demo/demo.gif)
+![OpenCode agents keep their memory and files while a server crashes, a server joins and a server drains](demo/demo.gif)
 
-Three a2a-go servers run [opencode](https://opencode.ai) agents with the [`a2aacp`](https://pkg.go.dev/github.com/a2aproject/a2a-go/v2/integrations/executor/a2aacp) executor in [a2a-go](https://github.com/a2aproject/a2a-go) cluster mode, behind nginx with no sticky sessions. NATS coordinates them and MySQL indexes tasks.
+Three a2a-go servers run [OpenCode](https://opencode.ai) agents with the [`a2aacp`](https://pkg.go.dev/github.com/a2aproject/a2a-go/v2/integrations/executor/a2aacp) executor in [a2a-go](https://github.com/a2aproject/a2a-go) cluster mode, behind nginx with no sticky sessions. NATS coordinates them and MySQL indexes tasks.
 
 ## Quick start
 
@@ -38,7 +38,7 @@ make drain S=server-3       # graceful: running turns finish, then its shards mo
 - **Virtual shards and rendezvous hashing.** Conversations [hash into 64 shards](internal/shards/assign.go#L16), and each shard [goes to the highest-scoring live server](internal/shards/assign.go#L25). A join or a crash moves only the shards of the server that changed.
 - **Any server takes any request.** The [router](internal/router/router.go#L82) runs a message on the owner of its shard or forwards it there over NATS.
 - **Fenced ownership.** Each shard record carries an owner, an incarnation and an epoch, and every [claim](internal/shards/manager.go#L178) and save is a [compare-and-swap](internal/shards/table.go#L160). A server that [can't renew its heartbeat](internal/nodes/nodes.go#L149) exits before others take over. A paused server can't overwrite the new owner's record.
-- **Snapshots after every turn.** The agent's home and scratch directory are [saved when each turn ends](internal/agents/agents.go#L148), so a crash loses only the turn in flight. The next owner [restores them on the conversation's next message](internal/shards/shard.go#L108), and opencode resumes its session.
+- **Snapshots after every turn.** The agent's home and scratch directory are [saved when each turn ends](internal/agents/agents.go#L148), so a crash loses only the turn in flight. The next owner [restores them on the conversation's next message](internal/shards/shard.go#L108), and OpenCode resumes its session.
 - **Delta uploads.** Snapshots are [content-defined chunks](internal/shards/chunker.go#L64) named by their SHA-256 and compressed one by one. A [save uploads only the new chunks](internal/shards/snapshot.go#L101), about 100 KB of a 5 MB agent home per turn. Unused chunks are deleted [after each save](internal/shards/shard.go#L196), and [when a shard is claimed](internal/shards/shard.go#L389).
 - **Graceful drain.** A [draining server](internal/server/server.go#L210) lets running turns finish, [stops the shard's agents](internal/agents/agents.go#L208) and [hands over its scratch directories](internal/shards/shard.go#L282).
 - **No stuck clients.** When a server dies, its successor [fails the tasks it left unfinished](internal/tasks/tasks.go#L46), so clients send them again.
@@ -67,8 +67,8 @@ Set in [`infra/docker-compose.yaml`](infra/docker-compose.yaml):
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `FLEET_MODEL` | `google/gemini-3-flash-preview` | opencode's model, set by `make up-opencode` |
-| `AGENT_COMMAND` | the fake agent | The ACP agent's command line; the opencode image sets it |
+| `FLEET_MODEL` | `google/gemini-3-flash-preview` | OpenCode's model, set by `make up-opencode` |
+| `AGENT_COMMAND` | the fake agent | The ACP agent's command line; the OpenCode image sets it |
 | `SHARDS` | `64` | Number of shards; all servers must agree |
 | `IDLE_TIMEOUT` | `1m` | Stops agents with no turns for this long |
 | `DRAIN_TIMEOUT` | `1m` | How long a moving shard waits for its turns |
@@ -79,6 +79,6 @@ Set in [`infra/docker-compose.yaml`](infra/docker-compose.yaml):
 
 - A server that dies after a turn ends but before its snapshot lands loses that turn's memory.
 - A paused server can still run its agent's tools until it notices it lost the shard.
-- Agents share their server's container with no sandbox. opencode asks before bash and allows its other tools.
+- Agents share their server's container with no sandbox. OpenCode asks before bash and allows its other tools.
 - A snapshot holds at most 256 MiB. Conversations unused for 7 days are deleted when their shard next moves.
 - Clients, NATS and MySQL aren't authenticated.

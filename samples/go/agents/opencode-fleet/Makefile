@@ -14,7 +14,7 @@ up:
 	@printf 'FLEET_AGENT=fake\n' > infra/.env
 	$(COMPOSE) up -d --build
 
-## up-opencode: the same with opencode on Gemini as the agent; needs GEMINI_API_KEY
+## up-opencode: the same with OpenCode on Gemini as the agent; needs GEMINI_API_KEY
 up-opencode:
 	@test -n "$$GEMINI_API_KEY" || { echo "set GEMINI_API_KEY" >&2; exit 1; }
 	@printf 'FLEET_AGENT=opencode\nFLEET_MODEL=%s\n' "$(FLEET_MODEL)" > infra/.env
