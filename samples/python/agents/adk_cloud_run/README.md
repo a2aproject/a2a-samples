@@ -4,7 +4,7 @@ This sample uses the Agent Development Kit (ADK) to create a simple calendar upd
 
 ## Prerequisites
 
-- Python 3.10 or higher
+- Python 3.14 or higher
 - [UV](https://docs.astral.sh/uv/)
 - Access to an LLM and API Key
 
@@ -12,21 +12,21 @@ This sample uses the Agent Development Kit (ADK) to create a simple calendar upd
 
 1. Navigate to the samples directory:
 
-```shell
-cd samples/python/agents/adk_cloud_run
-````
+   ```shell
+   cd samples/python/agents/adk_cloud_run
+   ```
 
 2. Create an environment file with your API key:
 
-```shell
-echo "GOOGLE_API_KEY=your_api_key_here" > .env
-```
+   ```shell
+   echo "GOOGLE_API_KEY=your_api_key_here" > .env
+   ```
 
 3. Run an agent:
 
-```shell
-uv run .
-```
+   ```shell
+   uv run .
+   ```
 
 ## Setup Config Google Cloud Run
 
@@ -47,7 +47,10 @@ Below roles allow cloud run service to access secrets and invoke `predict` API o
 ```shell
 gcloud projects add-iam-policy-binding "{your-project-id}" \
   --member="serviceAccount:a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
-  --role="roles/secretmanager.secretAccessor" \
+  --role="roles/secretmanager.secretAccessor"
+
+gcloud projects add-iam-policy-binding "{your-project-id}" \
+  --member="serviceAccount:a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
   --role="roles/aiplatform.user"
 ```
 
@@ -56,9 +59,11 @@ If using AlloyDb, then also add below IAM role bindings.
 ```shell
 gcloud projects add-iam-policy-binding "{your-project-id}" \
   --member="serviceAccount:a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
-  --role="roles/alloydb.client" \
-  --role="roles/serviceusage.serviceUsageConsumer" \
-  --role="roles/secretmanager.secretAccessor"
+  --role="roles/alloydb.client"
+
+gcloud projects add-iam-policy-binding "{your-project-id}" \
+  --member="serviceAccount:a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
+  --role="roles/serviceusage.serviceUsageConsumer"
 ```
 
 ### Configure Secrets
@@ -85,7 +90,7 @@ When deploying a service to Cloud Run, it returns a `run.app` URL to query the r
 
 #### IAM based Authentication
 
-IAM can be used for [service-to-service authentication](https://cloud.google.com/run/docs/authenticating/service-to-service) if the clients are within GCP. Agentspace is one such example of an internal client. The clients can use service accounts and they need to be given IAM role: `roles/run.invoker`
+IAM can be used for [service-to-service authentication](https://cloud.google.com/run/docs/authenticating/service-to-service) if the clients are within GCP. Gemini Enterprise is one such example of an internal client. The clients can use service accounts and they need to be given IAM role: `roles/run.invoker`
 
 #### Public Access
 
@@ -103,10 +108,10 @@ gcloud run deploy sample-a2a-agent \
     --memory "1Gi" \
     --region="us-central1" \
     --project="{your-project-id}" \
-    --service-account a2a-service-account \
+    --service-account="a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
     --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=true,\
 GOOGLE_CLOUD_PROJECT="{your-project-id}",\
-GOOGLE_CLOUD_LOCATION="us-central1",\
+GOOGLE_CLOUD_LOCATION="global",\
 APP_URL="TEMPORARY_URL"
 
 ```
@@ -122,10 +127,10 @@ gcloud run deploy sample-a2a-agent \
     --region="us-central1" \
     --project="{your-project-id}" \
     --update-secrets=DB_USER=alloy_db_user:latest,DB_PASS=alloy_db_pass:latest \
-    --service-account a2a-service-account \
+    --service-account="a2a-service-account@{your-project-id}.iam.gserviceaccount.com" \
     --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=true,\
 GOOGLE_CLOUD_PROJECT="{your-project-id}",\
-GOOGLE_CLOUD_LOCATION="us-central1",\
+GOOGLE_CLOUD_LOCATION="global",\
 USE_ALLOY_DB="True",\
 DB_INSTANCE="projects/{your-project-id}/locations/us-central1/clusters/{my-cluster}/instances/primary-instance",\
 DB_NAME="postgres",\
@@ -145,13 +150,31 @@ gcloud run services update sample-a2a-agent \
 
 ## Testing your Agent
 
-You can test your live agent with the A2A CLI, available at `a2a-samples/samples/python/hosts/cli`.
-
-The following command allows you to authenticate and interact with your A2A enabled agent in Cloud Run.
+The following commands let you fetch the A2A v1.0 agent card and send a message to your Cloud Run service:
 
 ```shell
-cd /path/to/cli
-uv run . --agent {your-cloud-run-service-url} --bearer-token "$(gcloud auth print-identity-token)
+curl -s \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  "{your-cloud-run-service-url}/.well-known/agent-card.json"
+```
+
+```shell
+curl -s -X POST "{your-cloud-run-service-url}" \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  -H "Content-Type: application/json" \
+  -H "A2A-Version: 1.0" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "1",
+    "method": "SendMessage",
+    "params": {
+      "message": {
+        "role": "ROLE_USER",
+        "parts": [{"text": "Add a calendar event for Team Sync on 2026-11-27 at 10:00"}],
+        "messageId": "msg-1"
+      }
+    }
+  }'
 ```
 
 ## Disclaimer
@@ -160,6 +183,11 @@ Important: The sample code provided is for demonstration purposes and illustrate
 
 All data received from an external agent—including but not limited to its AgentCard, messages, artifacts, and task statuses—should be handled as untrusted input.
 
-For example, a malicious agent could provide an AgentCard containing crafted data in its fields (e.g., description, name, skills.description). If this data is used without sanitization to construct prompts for a Large Language Model (LLM), it could expose your application to prompt injection attacks. Failure to properly validate and sanitize this data before use can introduce security vulnerabilities into your application.
+For example, a malicious agent could provide an AgentCard containing crafted
+data in its fields (e.g., description, name, skills.description). If this data
+is used without sanitization to construct prompts for a Large Language Model
+(LLM), it could expose your application to prompt injection attacks. Failure to
+properly validate and sanitize this data before use can introduce security
+vulnerabilities into your application.
 
 Developers are responsible for implementing appropriate security measures, such as input validation and secure handling of credentials to protect their systems and users.

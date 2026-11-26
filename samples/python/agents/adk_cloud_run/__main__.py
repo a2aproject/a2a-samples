@@ -3,17 +3,23 @@ import functools
 import logging
 import os
 
+from typing import Any
+
 import click
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 import uvicorn
 
-from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.routes import (
+    create_agent_card_routes,
+    create_jsonrpc_routes,
+)
 from a2a.server.tasks import DatabaseTaskStore, InMemoryTaskStore
 from a2a.types import (
     AgentCapabilities,
     AgentCard,
+    AgentInterface,
     AgentSkill,
 )
 from agent import root_agent as calendar_agent
@@ -38,14 +44,15 @@ async def create_sqlalchemy_engine(
     user: str,
     password: str,
     db: str,
-    refresh_strategy: str = 'background',
+    refresh_strategy: str = 'lazy',
 ) -> tuple[sqlalchemy.ext.asyncio.engine.AsyncEngine, AsyncConnector]:
-    """Creates a connection pool for an AlloyDB instance and returns the pool
-    and the connector. Callers are responsible for closing the pool and the
-    connector.
+    """Create a connection pool for an AlloyDB instance.
+
+    Returns the pool and the connector. Callers are responsible for closing
+    the pool and the connector.
 
     Args:
-        instance_uri (str):
+        inst_uri (str):
             The instance URI specifies the instance relative to the project,
             region, and cluster. For example:
             "projects/my-project/locations/us-central1/clusters/my-cluster/instances/my-instance"
@@ -78,9 +85,11 @@ async def create_sqlalchemy_engine(
     return engine, connector
 
 
-def make_sync(func):
+def make_sync(func: Any) -> Any:
+    """Wrap an async Click command so it runs synchronously."""
+
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
         return asyncio.run(func(*args, **kwargs))
 
     return wrapper
@@ -90,15 +99,23 @@ def make_sync(func):
 @click.option('--host', default='localhost')
 @click.option('--port', default=10002)
 @make_sync
-async def main(host, port):
+async def main(host: str, port: int) -> None:
+    """Start the A2A calendar agent server."""
+    app_url = os.getenv('APP_URL', f'http://{host}:{port}')
     agent_card = AgentCard(
         name=calendar_agent.name,
         description=calendar_agent.description,
         version='1.0.0',
-        url=os.environ['APP_URL'],
         default_input_modes=['text', 'text/plain'],
         default_output_modes=['text', 'text/plain'],
         capabilities=AgentCapabilities(streaming=True),
+        supported_interfaces=[
+            AgentInterface(
+                protocol_binding='JSONRPC',
+                url=app_url,
+                protocol_version='1.0',
+            )
+        ],
         skills=[
             AgentSkill(
                 id='add_calendar_event',
@@ -114,16 +131,16 @@ async def main(host, port):
 
     use_alloy_db_str = os.getenv('USE_ALLOY_DB', 'False')
     if use_alloy_db_str.lower() == 'true':
-        DB_INSTANCE = os.environ['DB_INSTANCE']
-        DB_NAME = os.environ['DB_NAME']
-        DB_USER = os.environ['DB_USER']
-        DB_PASS = os.environ['DB_PASS']
+        db_instance = os.environ['DB_INSTANCE']
+        db_name = os.environ['DB_NAME']
+        db_user = os.environ['DB_USER']
+        db_pass = os.environ['DB_PASS']
 
-        engine, connector = await create_sqlalchemy_engine(
-            DB_INSTANCE,
-            DB_USER,
-            DB_PASS,
-            DB_NAME,
+        engine, _connector = await create_sqlalchemy_engine(
+            db_instance,
+            db_user,
+            db_pass,
+            db_name,
         )
         task_store = DatabaseTaskStore(engine)
     else:
@@ -134,12 +151,13 @@ async def main(host, port):
             agent=calendar_agent,
         ),
         task_store=task_store,
+        agent_card=agent_card,
     )
 
-    a2a_app = A2AStarletteApplication(
-        agent_card=agent_card, http_handler=request_handler
-    )
-    routes = a2a_app.routes()
+    routes = [
+        *create_agent_card_routes(agent_card),
+        *create_jsonrpc_routes(request_handler, '/'),
+    ]
     app = Starlette(
         routes=routes,
         middleware=[],
