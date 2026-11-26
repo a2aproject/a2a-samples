@@ -142,10 +142,13 @@ Fetch the agent card:
 curl http://localhost:10101/.well-known/agent-card.json
 ```
 
-Send a message (`POST /v1/message:send`; use `/v1/message:stream` for streaming):
+Send a message (`POST /v1/message:send`; use `/v1/message:stream` for streaming).
+A2A 1.x servers require the `A2A-Version: 1.0` header, and message text goes in
+`parts`:
 
 ```bash
 curl -X POST http://localhost:10101/v1/message:send \
   -H 'Content-Type: application/json' \
-  -d '{"message": {"messageId": "msg-1", "role": "ROLE_USER", "content": [{"text": "Roll a 6 sided dice"}]}}'
+  -H 'A2A-Version: 1.0' \
+  -d '{"message": {"messageId": "msg-1", "role": "ROLE_USER", "parts": [{"text": "Roll a 6 sided dice"}]}}'
 ```
