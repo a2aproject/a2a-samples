@@ -22,6 +22,7 @@ class DiceAgentExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ) -> None:
+        """Run the dice agent for a request and publish task updates."""
         query = get_message_text(context.message)
         task = context.current_task
 

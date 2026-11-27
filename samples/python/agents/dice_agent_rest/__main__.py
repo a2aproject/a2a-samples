@@ -27,14 +27,12 @@ logging.basicConfig()
 @click.option('--host', 'host', default='localhost')
 @click.option('--port', 'port', default=10101)
 def main(host: str, port: int) -> None:
+    """Start the dice agent A2A REST server."""
     # Verify an API key is set.
     # Not required if using Vertex AI APIs.
-    if os.getenv('GOOGLE_GENAI_USE_VERTEXAI') != 'TRUE' and not os.getenv(
-        'GOOGLE_API_KEY'
-    ):
+    if os.getenv('GOOGLE_GENAI_USE_VERTEXAI') != 'TRUE' and not os.getenv('GOOGLE_API_KEY'):
         raise ValueError(
-            'GOOGLE_API_KEY environment variable not set and '
-            'GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
+            'GOOGLE_API_KEY environment variable not set and GOOGLE_GENAI_USE_VERTEXAI is not TRUE.'
         )
 
     skills = [
