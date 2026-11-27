@@ -10,7 +10,7 @@ from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
 
-def roll_dice(N: int = 6) -> int:
+def roll_dice(N: int = 6) -> int:  # noqa: N803 - `N` is the tool parameter name the model sees
     """Rolls an N sided dice. If number of sides aren't given, uses 6.
 
     Args:
@@ -19,7 +19,7 @@ def roll_dice(N: int = 6) -> int:
     Returns:
       A number between 1 and N, inclusive
     """
-    return random.randint(1, N)
+    return random.randint(1, N)  # noqa: S311 - dice roll, not cryptographic
 
 
 def check_prime(nums: list[int]) -> str:
@@ -32,8 +32,8 @@ def check_prime(nums: list[int]) -> str:
       A str indicating which number is prime.
     """
     primes = set()
-    for number in nums:
-        number = int(number)
+    for raw_number in nums:
+        number = int(raw_number)
         if number <= 1:
             continue
         is_prime = True
@@ -51,8 +51,9 @@ def check_prime(nums: list[int]) -> str:
 
 
 def create_agent() -> LlmAgent:
+    """Create the dice-rolling ADK agent."""
     return LlmAgent(
-        model='gemini-2.0-flash-001',
+        model='gemini-3.6-flash',
         name='dice_roll_agent',
         instruction="""
 You roll dice and answer questions about the outcome of the dice rolls.
@@ -96,17 +97,14 @@ class DiceAgent:
             memory_service=InMemoryMemoryService(),
         )
 
-    async def stream(
-        self, query, session_id
-    ) -> AsyncIterable[tuple[bool, str]]:
+    async def stream(self, query: str, session_id: str) -> AsyncIterable[tuple[bool, str]]:
+        """Run the agent on a query and yield (is_final, text) updates."""
         session = await self._runner.session_service.get_session(
             app_name=self._agent.name,
             user_id=self._user_id,
             session_id=session_id,
         )
-        content = types.Content(
-            role='user', parts=[types.Part.from_text(text=query)]
-        )
+        content = types.Content(role='user', parts=[types.Part.from_text(text=query)])
         if session is None:
             session = await self._runner.session_service.create_session(
                 app_name=self._agent.name,
